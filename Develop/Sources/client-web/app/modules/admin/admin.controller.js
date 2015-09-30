@@ -1,7 +1,6 @@
 /**
  * Created by hoanglvq on 9/22/15.
  */
-console.log('AdminController');
 function AdminController($state) {
     this.menu = [
         {

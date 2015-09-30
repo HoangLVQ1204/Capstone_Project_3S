@@ -10,6 +10,9 @@ var uiRoutes   = require('angular-ui-router');
 var ngAnimate  = require('angular-animate');
 var ngAria     = require('angular-aria');
 var ngMdIcons  = require('angular-material-icons');
+var uibs       = require('angular-ui-bootstrap');
+
+console.log(uibs);
 
 // Others
 var oclazyload = require('oclazyload');
@@ -17,7 +20,7 @@ var material   = require('angular-material');
 
 
 // Css
-//require('./app.css');
+require('./app.css');
 
 // Modules
 var appDirective = require('./app.directive');
@@ -25,6 +28,8 @@ var common       = require('./modules/common/common');
 
 //var storeRouting = require('modules/store/store.routing');
 var adminRouting = require('./modules/admin/admin.routing');
+var guestRouting = require('./modules/guest/guest.routing');
+var loginRouting = require('./modules/login/login.routing');
 
 /* Script */
 angular.module('app', [
@@ -34,13 +39,15 @@ angular.module('app', [
     'ngMdIcons',
     oclazyload,
     'ngMaterial',
+    'ui.bootstrap',
     common.name,
-    //storeRouting.name,
-    adminRouting.name
+    adminRouting.name,
+    guestRouting.name,
+    loginRouting.name
 ]).config(function($stateProvider,$urlRouterProvider,$mdThemingProvider){
 
     // Set up theme
-    $mdThemingProvider.theme('altTheme')
+    $mdThemingProvider.theme('default')
         .primaryPalette('green');
 
     $urlRouterProvider.otherwise('/');

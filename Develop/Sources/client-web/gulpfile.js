@@ -19,10 +19,13 @@ var paths = {
     app: 'app/**/*.{js,css,html}',
     js: 'app/**/*!(.spec.js).js',
     toCopy: 'app/index.html',
-    dest: 'dist'
+    dest: 'dist',
+    blankTemplates: 'templates/component/*.**'
+
 };
 
 /* Define HELPER FUNCTION */
+
 
 /* Define GULP TASK */
 
@@ -77,5 +80,26 @@ gulp.task('watch', function() {
     gulp.watch(paths.app, [build_env, browser.reload]);
     gulp.watch(paths.toCopy, ['copy', browser.reload]);
 });
+
+// Help to generate module follow template in TEMPLATES forlder
+gulp.task('module', function(){
+    var cap = function(val){
+        return val.charAt(0).toUpperCase() + val.slice(1);
+    };
+    var name       = yargs.name;
+    var parentPath = yargs.parent || '';
+    var destPath   = path.join('app/modules/'+parentPath,name);
+    console.log("PATH: "+destPath);
+
+    return gulp.src(paths.blankTemplates)
+        .pipe($.template({
+            name: name,
+            upCaseName: cap(name)
+        }))
+        .pipe($.rename(function(path){
+            path.basename = path.basename.replace('component',name);
+        }))
+        .pipe(gulp.dest(destPath));
+})
 
 gulp.task('default', $.sequence('cleanDist',build_env,'copy','serve','watch'));

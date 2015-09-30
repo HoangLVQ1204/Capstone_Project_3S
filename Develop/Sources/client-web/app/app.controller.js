@@ -6,7 +6,7 @@ function AppController($state, authService){
     var checkType =
     authService.userIsLoggedIn(function(role){
         if(role.isAdmin){
-            $state.go('app.admin');
+            $state.go('app.login');
         }else if(role.isStore){
             $state.go('app.store');
         }else{
