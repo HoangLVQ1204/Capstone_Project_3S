@@ -39,7 +39,7 @@ angular.module('app', [
     'ngMdIcons',
     oclazyload,
     'ngMaterial',
-    'ui.bootstrap',
+    uibs,
     common.name,
     adminRouting.name,
     guestRouting.name,
