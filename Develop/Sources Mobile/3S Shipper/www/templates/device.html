@@ -1,0 +1,23 @@
+<ion-view>
+  <ion-header-bar class="bar-stable">
+    <h1>Device Information</h1>
+  </ion-header-bar>
+  <ion-content ng-controller="DeviceCtrl" padding="true">
+    <div class="item item-text-wrap">
+      <ul class="list">
+        <li class="item">
+          Manufacturer: {{manufacturer}}
+        </li>
+        <li class="item">
+          Model: {{model}}
+        </li>
+        <li class="item">
+          Platform: {{platform}}
+        </li>
+        <li class="item">
+          UUID: {{uuid}}
+        </li>
+      </ul>
+    </div>
+  </ion-content>
+</ion-view>
