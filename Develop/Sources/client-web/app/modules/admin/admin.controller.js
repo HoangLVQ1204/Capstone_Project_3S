@@ -30,6 +30,8 @@ function AdminController($state) {
         },
     ]
     this.title = 'This is Admin Page';
+
+
 }
 
 AdminController.$inject = ['$state'];

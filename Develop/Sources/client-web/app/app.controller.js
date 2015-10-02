@@ -26,7 +26,8 @@ function AppController($state, authService){
 
     var fonts = [].concat(iconData);
 
-    console.log(fonts);
+
 }
 AppController.$inject = ['$state','authService'];
 module.exports = AppController;
+

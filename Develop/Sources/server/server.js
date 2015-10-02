@@ -6,6 +6,7 @@ var config = require('./config/config');
 
 // setup app management
 require('./management/middleware_manage')(app);
+
 // setup routes
 require('./management/api_manage')(app);
 
@@ -15,5 +16,9 @@ app.use(function(err, req, res, next) {
 	res.status(500).send('Oops');
 })
 
-
-module.exports = app;
+// setup database, start server after syncing database
+app.get('models').sequelize.sync().then(function() {
+	app.listen(config.port, function() {
+		logger.log('Listening on http://localhost:' + config.port);
+	});
+});

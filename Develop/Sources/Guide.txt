@@ -1,0 +1,35 @@
+Thuốc sử dụng SOURCE
+
+- Lần đầu tiên chạy source cần phải cài đặt trước tiên:
+
+  npm install -g nodemon, gulp, bower, sequelize-auto, pg
+
+- Trước khi chạy bất kỳ câu lệnh nào, cần thực hiện câu lệnh để update package (server, client):
+
+  npm install
+  bower install
+
+- Khởi động server:
+
+  Sources/server: nodemon server.js
+
+- Khởi động client-web:
+
+  Sources/client-web: gulp
+
+- Tool helps:
+
+  + Gen component:
+
+    Sources/client-web: gulp component --path=<value> --name=<value>
+
+    --path=<value> : đường dẫn đến thư mục cần GEN component
+    --name=<value> : tên của compoent cần GEN
+
+  + Gen models:
+
+    Sources/server: sequelize-auto -o "./models-gen" -d <name DB> -h localhost -u <username DB> -p 5432 -x <password DB> -e postgres
+
+    -d <name DB>     : nhập tên Database
+    -u <username DB> : nhập username của tài khoản đã được gán quyền cho Database trên
+    -x <password DB> : nhập password của tài khoản đã được gán quyền cho Database trên

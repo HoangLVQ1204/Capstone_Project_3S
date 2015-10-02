@@ -82,12 +82,12 @@ gulp.task('watch', function() {
 });
 
 // Help to generate module follow template in TEMPLATES forlder
-gulp.task('module', function(){
+gulp.task('component', function(){
     var cap = function(val){
         return val.charAt(0).toUpperCase() + val.slice(1);
     };
     var name       = yargs.name;
-    var parentPath = yargs.parent || '';
+    var parentPath = yargs.path || '';
     var destPath   = path.join('app/modules/'+parentPath,name);
     console.log("PATH: "+destPath);
 

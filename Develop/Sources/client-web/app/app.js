@@ -11,16 +11,18 @@ var ngAnimate  = require('angular-animate');
 var ngAria     = require('angular-aria');
 var ngMdIcons  = require('angular-material-icons');
 var uibs       = require('angular-ui-bootstrap');
+var leaflet    = require('leaflet');
 
-console.log(uibs);
+
 
 // Others
-var oclazyload = require('oclazyload');
-var material   = require('angular-material');
-
+var oclazyload   = require('oclazyload');
+var material     = require('angular-material');
+var bootstrap    = require('bootstrap');
+var uibootstrap  = require('angular-ui-bootstrap');
 
 // Css
-require('./app.css');
+require('./public/css/app.css');
 
 // Modules
 var appDirective = require('./app.directive');
@@ -29,7 +31,7 @@ var common       = require('./modules/common/common');
 //var storeRouting = require('modules/store/store.routing');
 var adminRouting = require('./modules/admin/admin.routing');
 var guestRouting = require('./modules/guest/guest.routing');
-var loginRouting = require('./modules/login/login.routing');
+var loginRouting = require('./modules/guest/components/login/login.routing');
 
 /* Script */
 angular.module('app', [
@@ -39,7 +41,7 @@ angular.module('app', [
     'ngMdIcons',
     oclazyload,
     'ngMaterial',
-    uibs,
+    uibootstrap,
     common.name,
     adminRouting.name,
     guestRouting.name,
@@ -58,3 +60,10 @@ angular.module('app', [
             template: '<app></app>'
         })
 }).directive('app', appDirective);
+
+
+
+
+
+
+
