@@ -26,15 +26,16 @@ require('./public/css/app.css');
 
 // Modules
 var appDirective = require('./app.directive');
-var common       = require('./modules/common/common');
+var common       = require('./components/common/common');
 
-//var storeRouting = require('modules/store/store.routing');
-var adminRouting = require('./modules/admin/admin.routing');
-var guestRouting = require('./modules/guest/guest.routing');
-var loginRouting = require('./modules/guest/components/login/login.routing');
+// Admin page
+//var admin.dashboard = require('components/admin.dashboard/admin.dashboard.routing');
+
+// Store page
 
 /* Script */
 angular.module('app', [
+    // Libs
     uiRoutes,
     ngAnimate,
     ngAria,
@@ -42,10 +43,10 @@ angular.module('app', [
     oclazyload,
     'ngMaterial',
     uibootstrap,
+
+    // components
     common.name,
-    adminRouting.name,
-    guestRouting.name,
-    loginRouting.name
+    //admin.dashboard.name
 ]).config(function($stateProvider,$urlRouterProvider,$mdThemingProvider){
 
     // Set up theme

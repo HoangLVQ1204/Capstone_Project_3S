@@ -88,7 +88,7 @@ gulp.task('component', function(){
     };
     var name       = yargs.name;
     var parentPath = yargs.path || '';
-    var destPath   = path.join('app/modules/'+parentPath,name);
+    var destPath   = path.join('app/components/'+parentPath,name);
     console.log("PATH: "+destPath);
 
     return gulp.src(paths.blankTemplates)

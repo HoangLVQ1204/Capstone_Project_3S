@@ -2,32 +2,107 @@
  * Created by hoanglvq on 9/22/15.
  */
 
-function AppController($state, authService){
-    var checkType =
+function AppController($scope,$state, authService){
+
+    var menuAdmin = [
+        {
+            title   : 'Dashboard',
+            icon    : '',
+            state   : 'app.admin.dasboard',
+            accessby: '',
+            subMenu : []
+
+        },
+        {
+            title   : 'Order',
+            icon    : '',
+            state   : 'app.admin.order',
+            accessby: '',
+            subMenu : [
+                {
+                    title: 'Add New Order',
+                    icon: '',
+                    state: '',
+                    accessby: ''
+                },
+                {
+                    title: 'View Order\'s List',
+                    icon: '',
+                    state: '',
+                    accessby: ''
+                }
+            ]
+        },
+        {
+            title   : 'Shipper',
+            icon    : '',
+            state   : 'app.admin.dasboard',
+            accessby: '',
+            subMenu : [
+                {
+                    title: 'Add New Order',
+                    icon: '',
+                    state: '',
+                    accessby: ''
+                },
+                {
+                    title: 'View Order\'s List',
+                    icon: '',
+                    state: '',
+                    accessby: ''
+                }
+            ]
+        }
+    ]
+    var menuStore = [
+        {
+            title   : 'Dashboard',
+            icon    : '',
+            state   : 'app.store.dasboard',
+            accessby: '',
+            subMenu : []
+
+        },
+        {
+            title   : 'Order',
+            icon    : '',
+            state   : 'app.store.order',
+            accessby: '',
+            subMenu : []
+        },
+        {
+            title   : 'Report',
+            icon    : '',
+            state   : 'app.store.report',
+            accessby: '',
+            subMenu : []
+        },
+        {
+            title   : 'Feaback',
+            icon    : '',
+            state   : 'app.store.feaback',
+            accessby: '',
+            subMenu : []
+        }
+    ]
+
     authService.userIsLoggedIn(function(role){
         if(role.isAdmin){
-            $state.go('app.login');
+            $scope.menu = menuStore;
+            //$state.go('app.common.login');
         }else if(role.isStore){
-            $state.go('app.store');
+            $scope.menu = menuStore;
+            //$state.go('app.store');
         }else{
             $state.go('app.guest');
         }
     });
 
-    var iconData = [
-        {name: 'icon-home'        , color: "#777" },
-        {name: 'icon-user-plus'   , color: "rgb(89, 226, 168)" },
-        {name: 'icon-google-plus2', color: "#A00" },
-        {name: 'icon-youtube4'    , color:"#00A" },
-        // Use theming to color the font-icon
-        {name: 'icon-settings'    , color:"#A00", theme:"md-warn md-hue-5"}
-    ];
-    // Create a set of sizes...
 
-    var fonts = [].concat(iconData);
+
 
 
 }
-AppController.$inject = ['$state','authService'];
+AppController.$inject = ['$scope','$state','authService'];
 module.exports = AppController;
 

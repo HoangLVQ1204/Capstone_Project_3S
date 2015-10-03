@@ -26,7 +26,7 @@ Thuốc sử dụng SOURCE
     --path=<value> : đường dẫn đến thư mục cần GEN component
     --name=<value> : tên của compoent cần GEN
 
-  + Gen models:
+  + Gen models
 
     Sources/server: sequelize-auto -o "./models-gen" -d <name DB> -h localhost -u <username DB> -p 5432 -x <password DB> -e postgres
 
