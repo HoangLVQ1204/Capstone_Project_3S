@@ -1,8 +1,6 @@
 /**
  * Created by Kaka Hoang Huy on 9/30/2015.
  */
-var app = angular.module('history', ['ngCordova']);
-
 app.controller('HistoryCtrl', function ($scope) {
   $scope.historyorders = [
     { code: '123453', fee: 12000, id: 1 },
