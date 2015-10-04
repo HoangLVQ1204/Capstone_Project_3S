@@ -16,7 +16,8 @@ var build_env = (process.env.NODE_ENV === 'production' ? 'compress_and_build' : 
 /* Define PATHS */
 var paths = {
     entry: 'app/app.js',
-    app: 'app/**/*.{js,css,html}',
+    app: 'app/*.{js,css,html}',
+    component: 'app/components/**/*.{js,css,html}',
     js: 'app/**/*!(.spec.js).js',
     toCopy: 'app/index.html',
     dest: 'dist',
@@ -79,6 +80,7 @@ gulp.task('copy', function() {
 gulp.task('watch', function() {
     gulp.watch(paths.app, [build_env, browser.reload]);
     gulp.watch(paths.toCopy, ['copy', browser.reload]);
+    gulp.watch(paths.component, [build_env, browser.reload]);
 });
 
 // Help to generate module follow template in TEMPLATES forlder
@@ -87,8 +89,7 @@ gulp.task('component', function(){
         return val.charAt(0).toUpperCase() + val.slice(1);
     };
     var name       = yargs.name;
-    var parentPath = yargs.path || '';
-    var destPath   = path.join('app/components/'+parentPath,name);
+    var destPath   = path.join('app/components/',name);
     console.log("PATH: "+destPath);
 
     return gulp.src(paths.blankTemplates)

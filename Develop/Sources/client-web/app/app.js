@@ -29,9 +29,12 @@ var appDirective = require('./app.directive');
 var common       = require('./components/common/common');
 
 // Admin page
-//var admin.dashboard = require('components/admin.dashboard/admin.dashboard.routing');
 
 // Store page
+
+// Login
+var login = require('./components/common.login/login.routing.js');
+var dashboard = require('./components/admin.dashboard/admin.dashboard.routing.js');
 
 /* Script */
 angular.module('app', [
@@ -45,8 +48,9 @@ angular.module('app', [
     uibootstrap,
 
     // components
-    common.name,
-    //admin.dashboard.name
+//    common.name,
+    dashboard.name
+//    login.name
 ]).config(function($stateProvider,$urlRouterProvider,$mdThemingProvider){
 
     // Set up theme

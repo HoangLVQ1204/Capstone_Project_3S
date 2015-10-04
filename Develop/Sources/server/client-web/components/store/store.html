@@ -10,10 +10,12 @@
         </md-toolbar>
         <md-list>
             <md-list-item ng-repeat="item in menu" md-ink-ripple layout="row" layout-align="start center">
-                <div class="inset">
-                    <ng-md-icon icon="{{item.icon}}"></ng-md-icon>
-                </div>
-                <div class="inset">{{item.title}}</div>
+                <a ui-sref="{{item.state}}">
+                    <div class="inset">
+                        <ng-md-icon icon="{{item.icon}}"></ng-md-icon>
+                    </div>
+                    <div class="inset">{{item.title}}</div>
+                </a>
             </md-list-item>
             <md-divider></md-divider>
         </md-list>

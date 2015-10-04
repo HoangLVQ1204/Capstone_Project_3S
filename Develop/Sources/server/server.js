@@ -10,6 +10,19 @@ require('./management/middleware_manage')(app);
 // setup routes
 require('./management/api_manage')(app);
 
+
+//app.get('/', function(req,res){
+//	res.render('./client-web/index.html');
+//});
+//
+//app.get('/client-web/:name', function(req,res){
+//	var name = req.params.name;
+//	res.render('partials/' + name);
+//});
+
+
+
+
 // setup global error handler
 app.use(function(err, req, res, next) {
 	logger.error(err.stack);

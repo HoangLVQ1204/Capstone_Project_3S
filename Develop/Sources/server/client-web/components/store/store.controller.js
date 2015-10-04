@@ -2,7 +2,7 @@
  * Created by hoanglvq on 9/22/15.
  */
 
-function AppController($scope,$state, authService){
+function storeController($scope,$state){
 
     var menuAdmin = [
         {
@@ -58,7 +58,7 @@ function AppController($scope,$state, authService){
         {
             title   : 'Dashboard',
             icon    : '',
-            state   : 'app.store.dasboard',
+            state   : 'store.dasboard',
             accessby: '',
             subMenu : []
 
@@ -66,27 +66,27 @@ function AppController($scope,$state, authService){
         {
             title   : 'Order',
             icon    : '',
-            state   : 'app.store.order',
+            state   : 'store.order',
             accessby: '',
             subMenu : []
         },
         {
             title   : 'Report',
             icon    : '',
-            state   : 'app.store.report',
+            state   : 'store.report',
             accessby: '',
             subMenu : []
         },
         {
             title   : 'Feaback',
             icon    : '',
-            state   : 'app.store.feaback',
+            state   : 'store.feaback',
             accessby: '',
             subMenu : []
         }
     ]
-    $scope.menu = menuAdmin;
-    $state.go('app.login');
+    $scope.menu = menuStore;
+    //$state.go('app.login');
     
 //    authService.userIsLoggedIn(function(role){
 //        if(role.isAdmin){
@@ -97,9 +97,8 @@ function AppController($scope,$state, authService){
 //            //$state.go('app.store');
 //        }
 //    });
-
-
 }
-AppController.$inject = ['$scope','$state','authService'];
-module.exports = AppController;
+
+storeController.$inject = ['$scope','$state'];
+angular.module('app').controller('storeController',storeController);
 
