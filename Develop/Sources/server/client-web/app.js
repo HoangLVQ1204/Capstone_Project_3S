@@ -17,13 +17,28 @@ angular.module('app', [
 
     // Set up Routes
     $urlRouterProvider.otherwise('/store/dashboard');
+
     $stateProvider
-        .state('home',{
+        //.state('home',{
+        //
+        //})
+        //.state('login',{
+        //
+        //})
+        //.state('store',{
+        //    //abstract: true,
+        //    url: '/store',
+        //    template: '<store></store>'
+        //})
+        //.state('store.dashboard',{
+        //    url: '/dashboard',
+        //    template: '<store-dashboard></store-dashboard>'
+        //})
+        //.state('store.order',{
+        //    url: '/order',
+        //    template: '<store-order></store-order>'
+        //})
 
-        })
-        .state('login',{
-
-        })
         .state('store',{
             abstract: true,
             url: '',
@@ -37,6 +52,7 @@ angular.module('app', [
             url: '/store/order',
             template: '<store-order></store-order>'
         })
+
         //.state('store.report',{
         //    url: '/store/report',
         //    template: '<store-report></store-report>'

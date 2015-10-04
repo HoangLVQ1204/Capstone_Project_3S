@@ -10,13 +10,29 @@
         </md-toolbar>
         <md-list>
             <md-list-item ng-repeat="item in menu" md-ink-ripple layout="row" layout-align="start center">
-                <a ui-sref="{{item.state}}">
+
                     <div class="inset">
                         <ng-md-icon icon="{{item.icon}}"></ng-md-icon>
                     </div>
-                    <div class="inset">{{item.title}}</div>
-                </a>
+                    <div class="inset"><a ui-sref="{{item.state}}">{{item.title}}</a></div>
+
             </md-list-item>
+            <!--<md-list-item md-ink-ripple layout="row" layout-align="start center">-->
+
+                <!--<div class="inset">-->
+                    <!--<ng-md-icon></ng-md-icon>-->
+                <!--</div>-->
+                <!--<div class="inset"><a ui-sref="dashboard">Dashboard</a></div>-->
+
+            <!--</md-list-item>-->
+            <!--<md-list-item md-ink-ripple layout="row" layout-align="start center">-->
+
+                <!--<div class="inset">-->
+                    <!--<ng-md-icon></ng-md-icon>-->
+                <!--</div>-->
+                <!--<div class="inset"><a ui-sref="order">Order</a></div>-->
+
+            <!--</md-list-item>-->
             <md-divider></md-divider>
         </md-list>
     </md-sidenav>

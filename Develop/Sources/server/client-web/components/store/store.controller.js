@@ -58,7 +58,7 @@ function storeController($scope,$state){
         {
             title   : 'Dashboard',
             icon    : '',
-            state   : 'store.dasboard',
+            state   : 'store.dashboard',
             accessby: '',
             subMenu : []
 
