@@ -8,5 +8,5 @@ app.controller('OrdersCtrl', function ($scope) {
     { code: '201093', id: 3 },
     { code: '240593', id: 4 }
   ];
-})
+});
 
