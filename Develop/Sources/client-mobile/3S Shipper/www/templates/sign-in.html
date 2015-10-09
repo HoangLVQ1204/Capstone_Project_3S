@@ -1,8 +1,11 @@
-<ion-view ng-controller="SignInCtrl">
-  <ion-header-bar class="bar-balanced">
-    <h1 class="title">Sign-in</h1>
-  </ion-header-bar>
+<ion-view ng-controller="SignInCtrl" style="margin-top:100px">
+  <!--<ion-header-bar class="padding">-->
+    <!--<h1 class="title">3S Shipper</h1>-->
+  <!--</ion-header-bar>-->
   <ion-content>
+    <div>
+      <h1 class="title" style="text-align: center">3S Shipper</h1>
+    </div>
       <div class="list">
         <label class="item item-input">
           <span class="input-label">Username :</span>
@@ -13,7 +16,7 @@
           <input type="password" ng-model="shipper.password">
         </label>
         <label class="">
-          <button class="button button-block button-balanced" ng-click="signIn(shipper)">Log in</button>
+          <button class="button button-block button-assertive" ng-click="signIn(shipper)">Log in</button>
         </label>
         <p class="text-center">
           <a href="#/forgot-password">Forgot password</a>
