@@ -10,7 +10,7 @@
         <ion-pane>
           <ion-content >
             <ion-list>
-              <ion-item class="item-icon-right" ng-repeat="order in orders" type="item-text-wrap" href="#/app/detail/{{order.id}}">
+              <ion-item class="item-icon-right" ng-show="{{order.ordertypeid == 1}}" ng-repeat="order in orders" type="item-text-wrap" href="#/app/detail/{{order.id}}">
                 <div id="statusOrder">
                   <p>{{order.statusid}}</p>
                 </div>
@@ -28,10 +28,17 @@
       <ion-tab title="Ship" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart">
         <ion-pane>
           <ion-content >
-            <h1>Ship</h1>
             <ion-list>
-              <ion-item>
-
+              <ion-item class="item-icon-right" ng-show="{{order.ordertypeid == 2}}" ng-repeat="order in orders" type="item-text-wrap" href="#/app/detail/{{order.id}}">
+                <div id="statusOrder">
+                  <p>{{order.statusid}}</p>
+                </div>
+                <div>
+                  <h2>{{order.code}}</h2>
+                  <p><i class="ion-ios-flag"></i> {{order.pickupaddress}}</p>
+                  <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
+                </div>
+                <i class="icon ion-chevron-right icon-accessory"></i>
               </ion-item>
             </ion-list>
           </ion-content>
@@ -40,7 +47,19 @@
       <ion-tab title="HotShip" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart">
         <ion-pane>
           <ion-content>
-            <h1>HotShip</h1>
+            <ion-list>
+              <ion-item class="item-icon-right" ng-show="{{order.ordertypeid == 3}}" ng-repeat="order in orders" type="item-text-wrap" href="#/app/detail/{{order.id}}">
+                <div id="statusOrder">
+                  <p>{{order.statusid}}</p>
+                </div>
+                <div>
+                  <h2>{{order.code}}</h2>
+                  <p><i class="ion-ios-flag"></i> {{order.pickupaddress}}</p>
+                  <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
+                </div>
+                <i class="icon ion-chevron-right icon-accessory"></i>
+              </ion-item>
+            </ion-list>
           </ion-content>
         </ion-pane>
       </ion-tab>
