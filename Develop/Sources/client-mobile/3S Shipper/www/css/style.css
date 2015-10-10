@@ -1,8 +1,27 @@
 /* Empty. Add your own CSS if you like */
-#typeIssue {
-height: 38px;
+#statusOrder{
+  float: left;
+  margin: 8px 10px 8px 0px;
 }
-.item-select select {
-  left: 0;
-  width: 100%;
+
+#statusOrder > p {
+  border-color: #33CD5F;
+  background: transparent none repeat scroll 0% 0%;
+  color: #33CD5F;
+  padding: 0 12px;
+  width: 100px;
+  min-height: 47px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 2px;
+  vertical-align: top;
+  text-align: center;
+  text-overflow: ellipsis;
+  font-size: 16px;
+  line-height: 42px;
+  cursor: pointer;
+}
+
+#statusOrder + div > h2 {
+  font-weight: bold;
 }

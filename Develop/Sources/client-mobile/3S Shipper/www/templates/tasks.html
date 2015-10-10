@@ -1,15 +1,24 @@
 
-<ion-view title="In Working Order">
+<ion-view title="Tasks">
+  <ion-nav-back-button>
+  </ion-nav-back-button>
   <!--<ion-nav-buttons side="left">-->
     <!--<button menu-toggle="left" class="button button-icon icon ion-navicon"></button>-->
   <!--</ion-nav-buttons>-->
-    <ion-tabs class="tabs-icon-top tabs-color-active-positive">
+    <ion-tabs class="tabs-icon-top tabs-striped tabs-color-balanced">
       <ion-tab title="Pickup" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart">
         <ion-pane>
           <ion-content >
             <ion-list>
-              <ion-item class="item-icon-right" ng-repeat="orderTask in orderTasks" type="item-text-wrap" href="#/app/detail/{{orderTask.orderID}}">
-                <h2>{{orderTask.orderID}}.&nbsp;{{orderTask.title}} </h2>
+              <ion-item class="item-icon-right" ng-repeat="order in orders" type="item-text-wrap" href="#/app/detail/{{order.id}}">
+                <div id="statusOrder">
+                  <p>{{order.statusid}}</p>
+                </div>
+                <div>
+                  <h2>{{order.code}}</h2>
+                  <p><i class="ion-ios-flag"></i> {{order.pickupaddress}}</p>
+                  <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
+                </div>
                 <i class="icon ion-chevron-right icon-accessory"></i>
               </ion-item>
             </ion-list>
@@ -20,6 +29,11 @@
         <ion-pane>
           <ion-content >
             <h1>Ship</h1>
+            <ion-list>
+              <ion-item>
+
+              </ion-item>
+            </ion-list>
           </ion-content>
         </ion-pane>
       </ion-tab>
@@ -32,9 +46,3 @@
       </ion-tab>
     </ion-tabs>
 </ion-view>
-
-<style type="text/css">
-  /*.has-header {*/
-    /*top: 0px !important;*/
-  /*}*/
-</style>
