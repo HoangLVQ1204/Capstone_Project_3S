@@ -1,1 +1,8 @@
 /* Empty. Add your own CSS if you like */
+#typeIssue {
+height: 38px;
+}
+.item-select select {
+  left: 0;
+  width: 100%;
+}

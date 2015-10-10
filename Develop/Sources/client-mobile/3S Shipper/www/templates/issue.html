@@ -1,5 +1,25 @@
 <ion-view view-title="Issue">
-  <ion-content>
-    <h1>Issue</h1>
+  <ion-content class="">
+    <div class="list">
+      <div class="item item-divider">Type</div>
+      <label class="item item-input item-select" id="typeIssue">
+          <div class="input-label">
+            Type
+          </div>
+        <select>
+          <option>Blue</option>
+          <option selected>Green</option>
+          <option>Red</option>
+        </select>
+      </label>
+
+      <div class="item item-divider">Issue</div>
+      <label class="item item-input">
+        <textarea name="issueContent" style="height: 200px"></textarea>
+      </label>
+      <button class="button button-block button-stable">
+        Send
+      </button>
+    </div>
   </ion-content>
 </ion-view>
