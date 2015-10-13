@@ -4,7 +4,7 @@ roleID int PRIMARY KEY,
 roleName varchar(20)
 );
 
-CREATE TABLE UserLogin
+CREATE TABLE UserLogin 
 (
 username varchar(8) PRIMARY KEY,
 password varchar(255),
@@ -23,7 +23,7 @@ identityCard varchar(10),
 address varchar(100),
 DoB date,
 email varchar(50),
-phoneNumber varchar(9)
+phoneNumber varchar(11)
 );
 
 CREATE TABLE ShipperStatus

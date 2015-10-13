@@ -11,9 +11,9 @@ var sequelize = new Sequelize(config.db.url);
 
 var db = {};
 
-// console.log('array:', globber.getGlobbedFiles('./server/api/*/models/*.js'));
+ console.log('array:', globber.getGlobbedFiles('./api/*/models/*.js'));
 
-globber.getGlobbedFiles('./server/api/*/models/*.js').forEach(function(routePath) {
+globber.getGlobbedFiles('./api/*/models/*.js').forEach(function(routePath) {
 
     // console.log('get route:', path.resolve(routePath));
 

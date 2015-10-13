@@ -28,6 +28,7 @@ module.exports = function(app) {
                 'Status': 'B1'
             }
         })
+        okReturn()
         .then(function(users) {
             res.status(200).json(users.map(function(user) {
                 return user.toJSON();
@@ -131,3 +132,8 @@ module.exports = function(app) {
   }
 }
 */
+
+
+var okReturn = function(){
+    return "OKKKKKK";
+}

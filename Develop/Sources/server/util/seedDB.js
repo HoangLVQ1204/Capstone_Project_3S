@@ -77,6 +77,15 @@ var categories = [
 	}
 ];
 
+var issues = [
+	{
+		issueId: "1",
+		category: "pass1",
+		piority: "email1@mail.com",
+		Role: "teacher",
+		Token: "token1"
+	}
+];
 
 module.exports = function(app) {	
 	var db = app.get('models');
