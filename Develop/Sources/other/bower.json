@@ -1,0 +1,21 @@
+{
+  "name": "client-web",
+  "version": "0.0.0",
+  "authors": [
+    "HoangLVQ <hoanglvqse90184@fpt.edu.>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/libs/bower-components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-material": "~0.11.1",
+    "jquery": "~2.1.4",
+    "bootstrap": "~3.3.5"
+  }
+}

@@ -77,6 +77,36 @@ var categories = [
 	}
 ];
 
+var shipper = [
+	{
+		shipperid: "SP1",
+		identitycard: "123456",
+		address: "Ha Noi",
+		dob: new Date("12/04/1992"),
+		email: "sp1@gmail.com",
+		phonenumber:"0924500699",
+		statusid: "shipping"
+	},
+	{
+		shipperid: "SP1",
+		identitycard: "123456",
+		address: "Ha Noi",
+		dob: new Date("12/04/1992"),
+		email: "sp1@gmail.com",
+		phonenumber:"0924500699",
+		statusid: "shipping"
+	},
+	{
+		shipperid: "SP1",
+		identitycard: "123456",
+		address: "Ha Noi",
+		dob: new Date("12/04/1992"),
+		email: "sp1@gmail.com",
+		phonenumber:"0924500699",
+		statusid: "shipping"
+	},
+]
+
 
 module.exports = function(app) {	
 	var db = app.get('models');

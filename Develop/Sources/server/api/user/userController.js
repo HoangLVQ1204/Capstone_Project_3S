@@ -21,8 +21,14 @@ module.exports = function(app) {
         });
     }; 
 
+
+    /*
+           attributes:
+     */
     var get = function(req, res, next) {
+        console.log('gettt', db.User);
         db.User.findAll({
+
             attributes: ['UserId', 'Username', 'Role'],
             where: {
                 'Status': 'B1'

@@ -12,10 +12,10 @@ require('./management/api_manage')(app);
 
 
 //app.get('/', function(req,res){
-//	res.render('./client-web/index.html');
+//	res.render('./other/index.html');
 //});
 //
-//app.get('/client-web/:name', function(req,res){
+//app.get('/other/:name', function(req,res){
 //	var name = req.params.name;
 //	res.render('partials/' + name);
 //});

@@ -4,7 +4,7 @@ module.exports = function(app){
 
  	app.param('user_id', controller.params);
  	
-    app.route('/api/users')
+    app.route('/users')
     	.get(controller.get)
     	.post(controller.post);
 

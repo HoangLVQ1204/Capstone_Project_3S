@@ -21,6 +21,7 @@ var app = angular.module('starter', ['ionic', 'ngCordova']);
     });
   })
 
+
 app.config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
 
