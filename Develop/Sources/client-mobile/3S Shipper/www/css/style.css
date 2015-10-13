@@ -1,1 +1,66 @@
 /* Empty. Add your own CSS if you like */
+#statusOrder{
+  float: left;
+  margin: 8px 10px 8px 0px;
+}
+
+#statusOrder > p {
+  border-color: #33CD5F;
+  background: transparent none repeat scroll 0% 0%;
+  color: #33CD5F;
+  padding: 0 12px;
+  width: 100px;
+  min-height: 47px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 2px;
+  vertical-align: top;
+  text-align: center;
+  text-overflow: ellipsis;
+  font-size: 16px;
+  line-height: 42px;
+  cursor: pointer;
+}
+
+#statusOrder + div > h2 {
+  font-weight: bold;
+}
+
+.item > .input-label {
+  font-weight: bold;
+}
+.item > textarea {
+  height: 100px;
+  width: 100%;
+  margin-top: 12px;
+}
+#content {
+  position: relative;
+  margin-top: 100px;
+  background-color: white;
+  box-shadow: 0px 3px 10px rgba(0,0,0,0.4);
+  padding-top: 200px;
+}
+#profile-info {
+  position: absolute;
+  top: -95px;
+  width: 100%;
+  z-index: 2;
+  text-align: center;
+}
+#profile-name {
+  color: #444;
+  font-size: 26px;
+}
+#profile-image {
+  display: block;
+  border-radius: 100px;
+  border: 1px solid #fff;
+  width: 128px;
+  height: 128px;
+  margin: 30px auto 0;
+  box-shadow: 0px 0px 4px rgba(0,0,0,0.7);
+}
+#listProfile > div > p {
+  font-size: 1.2em;
+}

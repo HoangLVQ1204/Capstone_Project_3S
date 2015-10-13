@@ -1,5 +1,27 @@
-<ion-view view-title="Profile">
+<ion-view view-title="Profile" ng-controller="ProfileCtrl">
   <ion-content>
-    <h1>Profile</h1>
+    <div id="content">
+      <div id="profile-info">
+        <img id="profile-image" src="img/profile1.png">
+        <h3 id="profile-name">{{profile.name}}</h3>
+      </div>
+      <div class="list" id="listProfile">
+        <div class="item">
+          <p><i class="ion-android-calendar"></i>&nbsp;&nbsp;Date of Birtd: {{profile.dob}}</p>
+        </div>
+        <div class="item">
+          <p><i class="ion-card"></i>&nbsp;&nbsp;Identity Card: {{profile.identitycard}}</p>
+        </div>
+        <div class="item">
+          <p><i class="ion-ios-telephone"></i>&nbsp;&nbsp;Phone Number: {{profile.phonenumber}}</p>
+        </div>
+        <div class="item">
+          <p><i class="ion-email"></i>&nbsp;&nbsp;Email: {{profile.email}}</p>
+        </div>
+        <div class="item">
+          <p><i class="ion-android-home"></i>&nbsp;&nbsp;Address: {{profile.address}}</p>
+        </div>
+      </div>
+    </div>
   </ion-content>
 </ion-view>

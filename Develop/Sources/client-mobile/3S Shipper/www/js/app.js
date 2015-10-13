@@ -96,6 +96,17 @@ app.config(function ($stateProvider, $urlRouterProvider) {
           }
         }
       })
+
+      .state('app.tasks', {
+        url: '/tasks',
+        //abstract: true,
+        views: {
+          'menuContent': {
+            templateUrl: 'templates/tasks.html',
+            controller: 'TasksCtrl'
+          }
+        }
+      })
     ;
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/sign-in');
