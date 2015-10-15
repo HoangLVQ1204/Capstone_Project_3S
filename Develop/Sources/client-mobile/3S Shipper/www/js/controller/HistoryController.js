@@ -3,12 +3,37 @@
  */
 app.controller('HistoryCtrl', function ($scope) {
   $scope.historyorders = [
-    { code: '123453', fee: 12000, id: 1 },
-    { code: '423434', fee: 25000, id: 2 },
-    { code: '201093', fee: 30000, id: 3 },
-    { code: '240593', fee: 22000, id: 4 }
+    {
+      id: 1,
+      code: 'ORD001-001',
+      statusid: 'Done',
+      date: '15/10/2015',
+      fee: '20.000',
+      COD: '300.000'
+    }, {
+      id: 2,
+      code: 'ORD002-202',
+      statusid: 'Done',
+      date: '14/10/2015',
+      fee: '20.000',
+      COD: '300.000'
+    }, {
+      id: 3,
+      code: 'ORD888-222',
+      statusid: 'Cancel',
+      date: '15/10/2015',
+      fee: '20.000',
+      COD: '300.000'
+    }, {
+      id: 4,
+      code: 'ORD999-000',
+      statusid: 'Cancel',
+      date: '14/10/2015',
+      fee: '20.000',
+      COD: '300.000'
+    }
   ];
-})
+});
 
 app.controller('DetailCtrl', function ($scope, $stateParams) {
 });
