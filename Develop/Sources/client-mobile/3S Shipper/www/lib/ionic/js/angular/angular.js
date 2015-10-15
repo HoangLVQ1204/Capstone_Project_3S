@@ -1908,7 +1908,7 @@ function setupModuleLoader(window) {
      *
      * # Module
      *
-     * A module is a collection of services, directives, controllers, filters, and configuration information.
+     * A module is a collection of services, directives, manages, filters, and configuration information.
      * `angular.module` is used to configure the {@link auto.$injector $injector}.
      *
      * ```js
@@ -2125,7 +2125,7 @@ function setupModuleLoader(window) {
            * @ngdoc method
            * @name angular.Module#controller
            * @module ng
-           * @param {string|Object} name Controller name, or an object map of controllers where the
+           * @param {string|Object} name Controller name, or an object map of manages where the
            *    keys are the names and the values are the constructors.
            * @param {Function} constructor Controller constructor function.
            * @description
@@ -2528,7 +2528,7 @@ function publishExternalAPI(angular) {
  * Wraps a raw DOM element or HTML string as a [jQuery](http://jquery.com) element.
  *
  * If jQuery is available, `angular.element` is an alias for the
- * [jQuery](http://api.jquery.com/jQuery/) function. If jQuery is not available, `angular.element`
+ * [jQuery](http://routes.jquery.com/jQuery/) function. If jQuery is not available, `angular.element`
  * delegates to Angular's built-in subset of jQuery, called "jQuery lite" or "jqLite."
  *
  * <div class="alert alert-success">jqLite is a tiny, API-compatible subset of jQuery that allows
@@ -2543,41 +2543,41 @@ function publishExternalAPI(angular) {
  * ## Angular's jqLite
  * jqLite provides only the following jQuery methods:
  *
- * - [`addClass()`](http://api.jquery.com/addClass/)
- * - [`after()`](http://api.jquery.com/after/)
- * - [`append()`](http://api.jquery.com/append/)
- * - [`attr()`](http://api.jquery.com/attr/) - Does not support functions as parameters
- * - [`bind()`](http://api.jquery.com/bind/) - Does not support namespaces, selectors or eventData
- * - [`children()`](http://api.jquery.com/children/) - Does not support selectors
- * - [`clone()`](http://api.jquery.com/clone/)
- * - [`contents()`](http://api.jquery.com/contents/)
- * - [`css()`](http://api.jquery.com/css/) - Only retrieves inline-styles, does not call `getComputedStyle()`. As a setter, does not convert numbers to strings or append 'px'.
- * - [`data()`](http://api.jquery.com/data/)
- * - [`detach()`](http://api.jquery.com/detach/)
- * - [`empty()`](http://api.jquery.com/empty/)
- * - [`eq()`](http://api.jquery.com/eq/)
- * - [`find()`](http://api.jquery.com/find/) - Limited to lookups by tag name
- * - [`hasClass()`](http://api.jquery.com/hasClass/)
- * - [`html()`](http://api.jquery.com/html/)
- * - [`next()`](http://api.jquery.com/next/) - Does not support selectors
- * - [`on()`](http://api.jquery.com/on/) - Does not support namespaces, selectors or eventData
- * - [`off()`](http://api.jquery.com/off/) - Does not support namespaces or selectors
- * - [`one()`](http://api.jquery.com/one/) - Does not support namespaces or selectors
- * - [`parent()`](http://api.jquery.com/parent/) - Does not support selectors
- * - [`prepend()`](http://api.jquery.com/prepend/)
- * - [`prop()`](http://api.jquery.com/prop/)
- * - [`ready()`](http://api.jquery.com/ready/)
- * - [`remove()`](http://api.jquery.com/remove/)
- * - [`removeAttr()`](http://api.jquery.com/removeAttr/)
- * - [`removeClass()`](http://api.jquery.com/removeClass/)
- * - [`removeData()`](http://api.jquery.com/removeData/)
- * - [`replaceWith()`](http://api.jquery.com/replaceWith/)
- * - [`text()`](http://api.jquery.com/text/)
- * - [`toggleClass()`](http://api.jquery.com/toggleClass/)
- * - [`triggerHandler()`](http://api.jquery.com/triggerHandler/) - Passes a dummy event object to handlers.
- * - [`unbind()`](http://api.jquery.com/unbind/) - Does not support namespaces
- * - [`val()`](http://api.jquery.com/val/)
- * - [`wrap()`](http://api.jquery.com/wrap/)
+ * - [`addClass()`](http://routes.jquery.com/addClass/)
+ * - [`after()`](http://routes.jquery.com/after/)
+ * - [`append()`](http://routes.jquery.com/append/)
+ * - [`attr()`](http://routes.jquery.com/attr/) - Does not support functions as parameters
+ * - [`bind()`](http://routes.jquery.com/bind/) - Does not support namespaces, selectors or eventData
+ * - [`children()`](http://routes.jquery.com/children/) - Does not support selectors
+ * - [`clone()`](http://routes.jquery.com/clone/)
+ * - [`contents()`](http://routes.jquery.com/contents/)
+ * - [`css()`](http://routes.jquery.com/css/) - Only retrieves inline-styles, does not call `getComputedStyle()`. As a setter, does not convert numbers to strings or append 'px'.
+ * - [`data()`](http://routes.jquery.com/data/)
+ * - [`detach()`](http://routes.jquery.com/detach/)
+ * - [`empty()`](http://routes.jquery.com/empty/)
+ * - [`eq()`](http://routes.jquery.com/eq/)
+ * - [`find()`](http://routes.jquery.com/find/) - Limited to lookups by tag name
+ * - [`hasClass()`](http://routes.jquery.com/hasClass/)
+ * - [`html()`](http://routes.jquery.com/html/)
+ * - [`next()`](http://routes.jquery.com/next/) - Does not support selectors
+ * - [`on()`](http://routes.jquery.com/on/) - Does not support namespaces, selectors or eventData
+ * - [`off()`](http://routes.jquery.com/off/) - Does not support namespaces or selectors
+ * - [`one()`](http://routes.jquery.com/one/) - Does not support namespaces or selectors
+ * - [`parent()`](http://routes.jquery.com/parent/) - Does not support selectors
+ * - [`prepend()`](http://routes.jquery.com/prepend/)
+ * - [`prop()`](http://routes.jquery.com/prop/)
+ * - [`ready()`](http://routes.jquery.com/ready/)
+ * - [`remove()`](http://routes.jquery.com/remove/)
+ * - [`removeAttr()`](http://routes.jquery.com/removeAttr/)
+ * - [`removeClass()`](http://routes.jquery.com/removeClass/)
+ * - [`removeData()`](http://routes.jquery.com/removeData/)
+ * - [`replaceWith()`](http://routes.jquery.com/replaceWith/)
+ * - [`text()`](http://routes.jquery.com/text/)
+ * - [`toggleClass()`](http://routes.jquery.com/toggleClass/)
+ * - [`triggerHandler()`](http://routes.jquery.com/triggerHandler/) - Passes a dummy event object to handlers.
+ * - [`unbind()`](http://routes.jquery.com/unbind/) - Does not support namespaces
+ * - [`val()`](http://routes.jquery.com/val/)
+ * - [`wrap()`](http://routes.jquery.com/wrap/)
  *
  * ## jQuery/jqLite Extras
  * Angular also provides the following additional methods and events to both jQuery and jqLite:
@@ -2951,7 +2951,7 @@ function jqLiteInheritedData(element, name, value) {
 
     // If dealing with a document fragment node with a host element, and no parent, use the host
     // element as the parent. This enables directives within a Shadow DOM or polyfilled Shadow DOM
-    // to lookup parent controllers.
+    // to lookup parent manages.
     element = element.parentNode || (element.nodeType === NODE_TYPE_DOCUMENT_FRAGMENT && element.host);
   }
 }
@@ -5446,11 +5446,11 @@ function Browser(window, document, $log, $sniffer) {
    *
    * SETTER:
    * With at least one argument, this method sets url to new value.
-   * If html5 history api supported, pushState/replaceState is used, otherwise
+   * If html5 history routes supported, pushState/replaceState is used, otherwise
    * location.href/location.replace is used.
    * Returns its own instance to allow chaining
    *
-   * NOTE: this api is intended for use only by the $location service. Please use the
+   * NOTE: this routes is intended for use only by the $location service. Please use the
    * {@link ng.$location $location service} to change url.
    *
    * @param {string} url New url (when used as setter)
@@ -6374,7 +6374,7 @@ function $TemplateCacheProvider() {
  *
  * * A string. For example `<div red-on-hover>{{delete_str}}</div>`.
  * * A function which takes two arguments `tElement` and `tAttrs` (described in the `compile`
- *   function api below) and returns a string value.
+ *   function routes below) and returns a string value.
  *
  *
  * #### `templateUrl`
@@ -6391,7 +6391,7 @@ function $TemplateCacheProvider() {
  * Template loading is asynchronous even if the template has been preloaded into the {@link $templateCache}
  *
  * You can specify `templateUrl` as a string representing the URL or as a function which takes two
- * arguments `tElement` and `tAttrs` (described in the `compile` function api below) and returns
+ * arguments `tElement` and `tAttrs` (described in the `compile` function routes below) and returns
  * a string value representing the url.  In either case, the template URL is passed through {@link
  * $sce#getTrustedResourceUrl $sce.getTrustedResourceUrl}.
  *
@@ -6496,7 +6496,7 @@ function $TemplateCacheProvider() {
  *     between all directive linking functions.
  *
  *   * `controller` - the directive's required controller instance(s) - Instances are shared
- *     among all directives, which allows the directives to use the controllers as a communication
+ *     among all directives, which allows the directives to use the manages as a communication
  *     channel. The exact value depends on the directive's `require` property:
  *       * no controller(s) required: the directive's own controller, or `undefined` if it doesn't have one
  *       * `string`: the controller instance
@@ -6510,7 +6510,7 @@ function $TemplateCacheProvider() {
  *
  *   * `transcludeFn` - A transclude linking function pre-bound to the correct transclusion scope.
  *     This is the same as the `$transclude`
- *     parameter of directive controllers, see there for details.
+ *     parameter of directive manages, see there for details.
  *     `function([scope], cloneLinkingFn, futureParentElement)`.
  *
  * #### Pre-linking function
@@ -6773,7 +6773,7 @@ function $TemplateCacheProvider() {
  *        directives; if given, it will be passed through to the link functions of
  *        directives found in `element` during compilation.
  *      * `transcludeControllers` - an object hash with keys that map controller names
- *        to controller instances; if given, it will make the controllers
+ *        to controller instances; if given, it will make the manages
  *        available to directives.
  *      * `futureParentElement` - defines the parent to which the `cloneAttachFn` will add
  *        the cloned elements; only needed for transcludes that are allowed to contain non html
@@ -7842,7 +7842,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
             childTranscludeFn = compile($template, transcludeFn, terminalPriority,
                                         replaceDirective && replaceDirective.name, {
                                           // Don't pass in:
-                                          // - controllerDirectives - otherwise we'll create duplicates controllers
+                                          // - controllerDirectives - otherwise we'll create duplicates manages
                                           // - newIsolateScopeDirective or templateDirective - combining templates with
                                           //   element transclusion doesn't make sense.
                                           //
@@ -8039,7 +8039,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
           // For directives with element transclusion the element is a comment,
           // but jQuery .data doesn't support attaching data to comment nodes as it's hard to
           // clean up (http://bugs.jquery.com/ticket/8335).
-          // Instead, we save the controllers for the element in a local hash and attach to .data
+          // Instead, we save the manages for the element in a local hash and attach to .data
           // later, once we have the actual element.
           elementControllers[directive.name] = controllerInstance;
           if (!hasElementTranscludeDirective) {
@@ -8879,7 +8879,7 @@ function identifierForController(controller, ident) {
  * @name $controllerProvider
  * @description
  * The {@link ng.$controller $controller service} is used by Angular to create new
- * controllers.
+ * manages.
  *
  * This provider allows controller registration via the
  * {@link ng.$controllerProvider#register register} method.
@@ -8891,7 +8891,7 @@ function $ControllerProvider() {
   /**
    * @ngdoc method
    * @name $controllerProvider#register
-   * @param {string|Object} name Controller name, or an object map of controllers where the keys are
+   * @param {string|Object} name Controller name, or an object map of manages where the keys are
    *    the names and the values are the constructors.
    * @param {Function|Array} constructor Controller constructor fn (optionally decorated with DI
    *    annotations in the array notation).
@@ -8939,7 +8939,7 @@ function $ControllerProvider() {
      * @return {Object} Instance of given controller.
      *
      * @description
-     * `$controller` service is responsible for instantiating controllers.
+     * `$controller` service is responsible for instantiating manages.
      *
      * It's just a simple call to {@link auto.$injector $injector}, but extracted into
      * a service, so that one can override this service with [BC version](https://gist.github.com/1649788).
@@ -14430,7 +14430,7 @@ function $ParseProvider() {
  *
  * - $q is integrated with the {@link ng.$rootScope.Scope} Scope model observation
  *   mechanism in angular, which means faster propagation of resolution or rejection into your
- *   models and avoiding unnecessary browser repaints, which would result in flickering UI.
+ *   entities and avoiding unnecessary browser repaints, which would result in flickering UI.
  * - Q has many more features than $q, but that comes at a cost of bytes. $q is tiny, but contains
  *   all the important functionality needed for common async tasks.
  *
@@ -15588,7 +15588,7 @@ function $RootScopeProvider() {
        * iterations exceeds 10.
        *
        * Usually, you don't call `$digest()` directly in
-       * {@link ng.directive:ngController controllers} or in
+       * {@link ng.directive:ngController manages} or in
        * {@link ng.$compileProvider#directive directives}.
        * Instead, you should call {@link ng.$rootScope.Scope#$apply $apply()} (typically from within
        * a {@link ng.$compileProvider#directive directive}), which will force a `$digest()`.
@@ -17771,7 +17771,7 @@ var originUrl = urlResolve(window.location.href);
  * Parsing means that the anchor node's host, hostname, protocol, port, pathname and related
  * properties are all populated to reflect the normalized URL.  This approach has wide
  * compatibility - Safari 1+, Mozilla 1+, Opera 7+,e etc.  See
- * http://www.aptana.com/reference/html/api/HTMLAnchorElement.html
+ * http://www.aptana.com/reference/html/routes/HTMLAnchorElement.html
  *
  * Implementation Notes for IE
  * ---------------------------
@@ -17791,7 +17791,7 @@ var originUrl = urlResolve(window.location.href);
  *
  * References:
  *   http://developer.mozilla.org/en-US/docs/Web/API/HTMLAnchorElement
- *   http://www.aptana.com/reference/html/api/HTMLAnchorElement.html
+ *   http://www.aptana.com/reference/html/routes/HTMLAnchorElement.html
  *   http://url.spec.whatwg.org/#urlutils
  *   https://github.com/angular/angular.js/pull/2902
  *   http://james.padolsey.com/javascript/parsing-urls-with-the-dom/
@@ -21288,7 +21288,7 @@ var inputType = {
    * @param {string} ngModel Assignable angular expression to data-bind to.
    * @param {string} value The value to which the `ngModel` expression should be set when selected.
    *    Note that `value` only supports `string` values, i.e. the scope model needs to be a string,
-   *    too. Use `ngValue` if you need complex models (`number`, `object`, ...).
+   *    too. Use `ngValue` if you need complex entities (`number`, `object`, ...).
    * @param {string=} name Property name of the form under which the control is published.
    * @param {string=} ngChange Angular expression to be executed when input changes due to user
    *    interaction with the input element.
@@ -22027,7 +22027,7 @@ var CONSTANT_VALUE_REGEXP = /^(true|false|\d+)$/;
  * Likewise, `ngValue` can be used to generate `<option>` elements for
  * the {@link select `select`} element. In that case however, only strings are supported
  * for the `value `attribute, so the resulting `ngModel` will always be a string.
- * Support for `select` models with non-string values is available via `ngOptions`.
+ * Support for `select` entities with non-string values is available via `ngOptions`.
  *
  * @element input
  * @param {string=} ngValue angular expression, whose value will be bound to the `value` attribute
@@ -22842,7 +22842,7 @@ var ngCloakDirective = ngDirective({
  * * Controller — The `ngController` directive specifies a Controller class; the class contains business
  *   logic behind the application to decorate the scope with functions and values
  *
- * Note that you can also attach controllers to the DOM by declaring it in a route definition
+ * Note that you can also attach manages to the DOM by declaring it in a route definition
  * via the {@link ngRoute.$route $route} service. A common mistake is to declare the controller
  * again using `ng-controller` in the template itself.  This will cause the controller to be attached
  * and executed twice.
@@ -22879,8 +22879,8 @@ var ngCloakDirective = ngDirective({
  * and avoiding scope.
  *
  * * Using `controller as` makes it obvious which controller you are accessing in the template when
- * multiple controllers apply to an element.
- * * If you are writing your controllers as classes you have easier access to the properties and
+ * multiple manages apply to an element.
+ * * If you are writing your manages as classes you have easier access to the properties and
  * methods, which will appear on the scope, from inside the controller code.
  * * Since there is always a `.` in the bindings, you don't have to worry about prototypal
  * inheritance masking primitives.
@@ -24075,7 +24075,7 @@ var ngIncludeDirective = ['$templateRequest', '$anchorScroll', '$animate',
               ctrl.template = response;
 
               // Note: This will also link all children of ng-include that were contained in the original
-              // html. If that content contains controllers, ... they could pollute/change the scope.
+              // html. If that content contains manages, ... they could pollute/change the scope.
               // However, using ng-include on an element with additional content does not make sense...
               // Note: We can't remove them in the cloneAttchFn of $transclude as that
               // function is called before linking the content, which would apply child
@@ -24149,7 +24149,7 @@ var ngIncludeFillContentDirective = ['$compile',
  * <div class="alert alert-danger">
  * The only appropriate use of `ngInit` is for aliasing special properties of
  * {@link ng.directive:ngRepeat `ngRepeat`}, as seen in the demo below. Besides this case, you
- * should use {@link guide/controller controllers} rather than `ngInit`
+ * should use {@link guide/controller manages} rather than `ngInit`
  * to initialize values on a scope.
  * </div>
  * <div class="alert alert-warning">
@@ -24406,7 +24406,7 @@ is set to `true`. The parse error is stored in `ngModel.$error.parse`.
  *      is delivered then the validation status will be set to true when fulfilled and false when rejected.
  *      When the asynchronous validators are triggered, each of the validators will run in parallel and the model
  *      value will only be updated once all validators have been fulfilled. As long as an asynchronous validator
- *      is unfulfilled, its key will be added to the controllers `$pending` property. Also, all asynchronous validators
+ *      is unfulfilled, its key will be added to the manages `$pending` property. Also, all asynchronous validators
  *      will only run once all synchronous validators have passed.
  *
  * Please note that if $http is used then it is important that the server returns a success HTTP response code
@@ -25235,7 +25235,7 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
  *
  * ## Animation Hooks
  *
- * Animations within models are triggered when any of the associated CSS classes are added and removed
+ * Animations within entities are triggered when any of the associated CSS classes are added and removed
  * on the input element which is attached to the model. These classes are: `.ng-pristine`, `.ng-dirty`,
  * `.ng-invalid` and `.ng-valid` as well as any other validations that are performed on the model itself.
  * The animations that are triggered within ngModel are similar to how they work in ngClass and
@@ -25293,7 +25293,7 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
  * Sometimes it's helpful to bind `ngModel` to a getter/setter function.  A getter/setter is a
  * function that returns a representation of the model when called with zero arguments, and sets
  * the internal state of a model when called with an argument. It's sometimes useful to use this
- * for models that have an internal representation that's different from what the model exposes
+ * for entities that have an internal representation that's different from what the model exposes
  * to the view.
  *
  * <div class="alert alert-success">
@@ -25413,7 +25413,7 @@ var DEFAULT_REGEXP = /(\s+|^)default(\s+|$)/;
  *
  * The easiest way to reference the control's {@link ngModel.NgModelController `$rollbackViewValue`}
  * method is by making sure the input is placed inside a form that has a `name` attribute. This is
- * important because `form` controllers are published to the related scope under the name in their
+ * important because `form` manages are published to the related scope under the name in their
  * `name` attribute.
  *
  * Any pending changes will take place immediately when an enclosing form is submitted via the

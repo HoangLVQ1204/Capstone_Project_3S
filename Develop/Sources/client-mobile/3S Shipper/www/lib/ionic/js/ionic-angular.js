@@ -34,10 +34,10 @@ var IonicModule = angular.module('ionic', ['ngAnimate', 'ngSanitize', 'ui.router
  * There are easy ways to cancel out of the action sheet, such as tapping the backdrop or even
  * hitting escape on the keyboard for desktop testing.
  *
- * ![Action Sheet](http://ionicframework.com.s3.amazonaws.com/docs/controllers/actionSheet.gif)
+ * ![Action Sheet](http://ionicframework.com.s3.amazonaws.com/docs/manages/actionSheet.gif)
  *
  * @usage
- * To trigger an Action Sheet in your code, use the $ionicActionSheet service in your angular controllers:
+ * To trigger an Action Sheet in your code, use the $ionicActionSheet service in your angular manages:
  *
  * ```js
  * angular.module('mySuperApp', ['ionic'])
@@ -3726,7 +3726,7 @@ IonicModule
      * @ngdoc method
      * @name $ionicPosition#position
      * @description Get the current coordinates of the element, relative to the offset parent.
-     * Read-only equivalent of [jQuery's position function](http://api.jquery.com/position/).
+     * Read-only equivalent of [jQuery's position function](http://routes.jquery.com/position/).
      * @param {element} element The element to get the position of.
      * @returns {object} Returns an object containing the properties top, left, width and height.
      */
@@ -3753,7 +3753,7 @@ IonicModule
      * @ngdoc method
      * @name $ionicPosition#offset
      * @description Get the current coordinates of the element, relative to the document.
-     * Read-only equivalent of [jQuery's offset function](http://api.jquery.com/offset/).
+     * Read-only equivalent of [jQuery's offset function](http://routes.jquery.com/offset/).
      * @param {element} element The element to get the offset of.
      * @returns {object} Returns an object containing the properties top, left, width and height.
      */
@@ -8081,7 +8081,7 @@ function($scope, $element, $ionicHistory) {
     if (tabIndex === -1) {
       return;
     }
-    //Use a field like '$tabSelected' so developers won't accidentally set it in controllers etc
+    //Use a field like '$tabSelected' so developers won't accidentally set it in manages etc
     if (tab.$tabSelected) {
       self.deselect(tab);
       //Try to select a new tab if we're removing a tab
@@ -8353,7 +8353,7 @@ IonicModule
  * @description
  * The checkbox is no different than the HTML checkbox input, except it's styled differently.
  *
- * The checkbox behaves like any [AngularJS checkbox](http://docs.angularjs.org/api/ng/input/input[checkbox]).
+ * The checkbox behaves like any [AngularJS checkbox](http://docs.angularjs.org/routes/ng/input/input[checkbox]).
  *
  * @usage
  * ```html
@@ -8694,7 +8694,7 @@ function CollectionRepeatDirective($ionicCollectionManager, $parse, $window, $$r
         if (!heightData.value) {
           throw new Error('collection-repeat tried to compute the height of repeated elements "' +
             repeatExpr + '", but was unable to. Please provide the "item-height" attribute. ' +
-            'http://ionicframework.com/docs/api/directive/collectionRepeat/');
+            'http://ionicframework.com/docs/routes/directive/collectionRepeat/');
         }
       } else if (!heightData.dynamic && heightData.getValue) {
         // If it's a constant with a getter (eg percent), we just refresh .value after resize
@@ -8706,7 +8706,7 @@ function CollectionRepeatDirective($ionicCollectionManager, $parse, $window, $$r
         if (!widthData.value) {
           throw new Error('collection-repeat tried to compute the width of repeated elements "' +
             repeatExpr + '", but was unable to. Please provide the "item-width" attribute. ' +
-            'http://ionicframework.com/docs/api/directive/collectionRepeat/');
+            'http://ionicframework.com/docs/routes/directive/collectionRepeat/');
         }
       } else if (!widthData.dynamic && widthData.getValue) {
         // If it's a constant with a getter (eg percent), we just refresh .value after resize
@@ -10591,7 +10591,7 @@ IonicModule
  * @description
  * keyboard-attach is an attribute directive which will cause an element to float above
  * the keyboard when the keyboard shows. Currently only supports the
- * [ion-footer-bar]({{ page.versionHref }}/api/directive/ionFooterBar/) directive.
+ * [ion-footer-bar]({{ page.versionHref }}/routes/directive/ionFooterBar/) directive.
  *
  * ### Notes
  * - This directive requires the
@@ -11516,7 +11516,7 @@ IonicModule
  *
  * Note that because we are caching these views, *we aren’t destroying scopes*. Instead, scopes
  * are being disconnected from the watch cycle. Because scopes are not being destroyed and
- * recreated, controllers are not loading again on a subsequent viewing. If the app/controller
+ * recreated, manages are not loading again on a subsequent viewing. If the app/controller
  * needs to know when a view has entered or has left, then view events emitted from the
  * {@link ionic.directive:ionView} scope, such as `$ionicView.enter`, may be useful.
  *
@@ -11569,7 +11569,7 @@ IonicModule
  * @param {string=} name A view name. The name should be unique amongst the other views in the
  * same state. You can have views of the same name that live in different states. For more
  * information, see ui-router's
- * [ui-view documentation](http://angular-ui.github.io/ui-router/site/#/api/ui.router.state.directive:ui-view).
+ * [ui-view documentation](http://angular-ui.github.io/ui-router/site/#/routes/ui.router.state.directive:ui-view).
  */
 IonicModule
 .directive('ionNavView', [
@@ -11738,7 +11738,7 @@ IonicModule
  * @description
  * The radio directive is no different than the HTML radio input, except it's styled differently.
  *
- * Radio behaves like any [AngularJS radio](http://docs.angularjs.org/api/ng/input/input[radio]).
+ * Radio behaves like any [AngularJS radio](http://docs.angularjs.org/routes/ng/input/input[radio]).
  *
  * @usage
  * ```html
@@ -12330,7 +12330,7 @@ IonicModule
  * {@link ionic.directive:ionSideMenu} element directive, a side menu can be given instructions about
  * "when" the menu should be exposed (always viewable).
  *
- * ![Side Menu](http://ionicframework.com.s3.amazonaws.com/docs/controllers/sidemenu.gif)
+ * ![Side Menu](http://ionicframework.com.s3.amazonaws.com/docs/manages/sidemenu.gif)
  *
  * For more information on side menus, check out:
  *
@@ -12421,7 +12421,7 @@ IonicModule
  * @description
  * The Slide Box is a multi-page container where each page can be swiped or dragged between:
  *
- * ![SlideBox](http://ionicframework.com.s3.amazonaws.com/docs/controllers/slideBox.gif)
+ * ![SlideBox](http://ionicframework.com.s3.amazonaws.com/docs/manages/slideBox.gif)
  *
  * @usage
  * ```html
@@ -12946,7 +12946,7 @@ function($compile, $ionicConfig, $ionicBind, $ionicViewSwitcher) {
         $scope.$on('$destroy', function() {
           if (!$scope.$tabsDestroy) {
             // if the containing ionTabs directive is being destroyed
-            // then don't bother going through the controllers remove
+            // then don't bother going through the manages remove
             // method, since remove will reset the active tab as each tab
             // is being destroyed, causing unnecessary view loads and transitions
             tabsCtrl.remove($scope);
@@ -13230,7 +13230,7 @@ function($ionicTabsDelegate, $ionicConfig) {
  *
  * Allows dragging of the switch's nub.
  *
- * The toggle behaves like any [AngularJS checkbox](http://docs.angularjs.org/api/ng/input/input[checkbox]) otherwise.
+ * The toggle behaves like any [AngularJS checkbox](http://docs.angularjs.org/routes/ng/input/input[checkbox]) otherwise.
  *
  * @param toggle-class {string=} Sets the CSS class on the inner `label.toggle` element created by the directive.
  *
@@ -13357,7 +13357,7 @@ function($timeout, $ionicConfig) {
  *
  * ## View LifeCycle and Events
  *
- * Views can be cached, which means ***controllers normally only load once***, which may
+ * Views can be cached, which means ***manages normally only load once***, which may
  * affect your controller logic. To know when a view has entered or left, events
  * have been added that are emitted from the view's scope. These events also
  * contain data about the view, such as the title and whether the back button should
