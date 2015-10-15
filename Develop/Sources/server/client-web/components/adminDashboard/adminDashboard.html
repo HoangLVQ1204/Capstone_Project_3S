@@ -1,0 +1,118 @@
+<div  layout="column">
+<div>
+    <h1 class="md-headline admin-headline">&nbsp; &nbsp;Dashboard</h1>
+</div>
+<div layout="row" layout-margin layout-fill layout-padding layout-align="space-around center">
+    <div flex="30" flex-order="1" class="admin-background-red" layout="column">
+        <div layout="row" flex="80" layout-margin layout-fill layout-padding>
+            <div flex="60">
+                <span class="admin-white-text admin-text-size-12">ORDER TODAY</span><br><br>
+                <span class="admin-white-text admin-text-size-30">1365</span>
+            </div>
+
+            <div flex="40">
+                <img ng-src="public/image/admin/order.png" class="admin-image-medium-size">
+            </div>
+        </div>
+        <div layout="row" flex="20" layout-margin layout-fill layout-padding>
+            <div flex="60">
+                <span class="admin-white-text admin-text-size-10">SHIPPING</span><br>
+                <span class="admin-white-text admin-text-size-20">1365</span>
+            </div>
+
+            <div flex="40">
+                <span class="admin-white-text admin-text-size-10">DONE</span><br>
+                <span class="admin-white-text admin-text-size-20">1365</span>
+            </div>
+        </div>
+    </div>
+
+    <div flex="30" flex-order="2" class="admin-background-green" layout="column">
+        <div layout="row" flex="80" layout-margin layout-fill layout-padding>
+            <div flex="60">
+                <span class="admin-white-text admin-text-size-12">ADDING REQUEST</span><br><br>
+                <span class="admin-white-text admin-text-size-30">1365</span>
+            </div>
+
+            <div flex="40">
+                <img ng-src="public/image/admin/store.png" class="admin-image-medium-size">
+            </div>
+        </div>
+        <div layout="row" flex="20" layout-margin layout-fill layout-padding>
+            <div flex="60">
+                <span class="admin-white-text admin-text-size-10">SHIPPING</span><br>
+                <span class="admin-white-text admin-text-size-20">1365</span>
+            </div>
+
+            <div flex="40">
+                <span class="admin-white-text admin-text-size-10">DONE</span><br>
+                <span class="admin-white-text admin-text-size-20">1365</span>
+            </div>
+        </div>
+    </div>
+
+    <div flex="30" flex-order="3" class="admin-background-light-blue" layout="column">
+        <div layout="row" flex="80" layout-margin layout-fill layout-padding>
+            <div flex="60">
+                <span class="admin-white-text admin-text-size-12">ORDER TODAY</span><br><br>
+                <span class="admin-white-text admin-text-size-30">1365</span>
+            </div>
+
+            <div flex="40">
+                <img ng-src="public/image/admin/shipper.png" class="admin-image-medium-size">
+            </div>
+        </div>
+        <div layout="row" flex="20" layout-margin layout-fill layout-padding>
+            <div flex="60">
+                <span class="admin-white-text admin-text-size-10">SHIPPING</span><br>
+                <span class="admin-white-text admin-text-size-20">1365</span>
+            </div>
+
+            <div flex="40">
+                <span class="admin-white-text admin-text-size-10">DONE</span><br>
+                <span class="admin-white-text admin-text-size-20">1365</span>
+            </div>
+        </div>
+    </div>
+</div>
+    <div layout="row" flex="70" layout-margin layout-fill layout-padding>
+        <div flex="30" layout="column">
+            <div >
+            <md-toolbar class="md-hue-1" style="background: #0AA699">
+                    <span flex></span>
+                    <div layout="column" layout-align="space-between start" class="admin-padding-text admin-white-text">
+                        <div class="admin-text-size-30">Shipper</div>
+                        <div class="admin-text-size-12">Shippers in 3S</div>
+                    </div>
+
+                </md-toolbar>
+            </div>
+
+            <div>
+                <md-input-container flex md-no-float>
+                    <label>Search Store's name</label>
+                    <input type="text"/>
+                </md-input-container>
+            </div>
+            <div>
+                <md-virtual-repeat-container id="vertical-container" style="height: 200px">
+                <div  md-virtual-repeat="item in todos" layout="row" >
+                    <div flex="30">
+                    <img ng-src="public/image/admin/shipper.png" style="height: 50px;width: 50px" class="md-avatar"/>
+                    </div>
+                    <div layout-align="start start" layout="column">
+                        <span class="md-title">{{ item.who }}</span>
+                        <span class="admin-text-size-10">{{item.what}}</span>
+                    </div>
+
+                </div>
+            </md-virtual-repeat-container>
+            </div>
+        </div>
+        <div flex="70" style="border: solid">
+
+        </div>
+
+
+    </div>
+</div>

@@ -1,0 +1,37 @@
+.admin-white-text{
+    color: white;
+}
+.admin-headline{
+    color: #9E9E9E;
+}
+.admin-text-size-12{
+    font-size: 12px;
+}
+.admin-text-size-30{
+     font-size: 30px;
+ }
+.admin-text-size-20{
+    font-size: 20px;
+}
+.admin-text-size-10{
+    font-size: 10px;
+}
+.admin-background-red{
+    background: #F44336;
+}
+.admin-background-green{
+    background: #4CAF50;
+}
+.admin-background-light-blue{
+    background: #00BCD4;
+}
+.admin-image-medium-size{
+    width: 100px;
+    height: 100px;
+}
+.admin-padding-text{
+    padding-top: 25px;
+    padding-right: 50px;
+    padding-bottom: 25px;
+    padding-left: 25px;
+}

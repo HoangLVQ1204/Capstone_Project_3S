@@ -1,0 +1,35 @@
+<div  layout="column">
+    <div>
+        <h1 class="md-display-1 admin-headline">&nbsp; &nbsp;Store's List</h1>
+    </div>
+
+    <div>
+
+        <md-data-table-toolbar>
+            <h2 class="md-title">Nutrition</h2>
+        </md-data-table-toolbar>
+
+        <md-data-table-container>
+            <table md-data-table md-row-select="selected" md-progress="deferred">
+                <thead md-order="name" md-trigger="onNameChange">
+                <tr>
+                    <th name="Store's Name" order-by="name"></th>
+                    <th name="Address"></th>
+                    <th name="Registered Date"></th>
+                    <th name="Phone Number"></th>
+
+                </thead>
+                <tbody>
+                <tr md-auto-select ng-repeat="store in stores">
+                    <td>{{store.name}}</td>
+                    <td>{{store.address}}</td>
+                    <td>{{store.registeredDate}}</td>
+                    <td>{{store.phoneNumber}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </md-data-table-container>
+
+        <md-data-table-pagination md-limit="query.limit" md-page="query.page" md-total="{{stores.size}}" md-trigger="onPaginationChange"></md-data-table-pagination>
+    </div>
+</div>
