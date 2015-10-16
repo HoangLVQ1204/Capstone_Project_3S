@@ -21,7 +21,7 @@ app.use(methodOverride());
 // setup routes
 require('./routes')(app);
 
- // seed the database
+// seed the database
 if (config.seed) {
 	require('./util/seedDB')(app);
 };
