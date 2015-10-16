@@ -1,9 +1,28 @@
 <ion-view view-title="History">
   <ion-content>
     <ion-list>
-      <ion-item ng-repeat="order in historyorders" href="#/app/detail/{{order.id}}">
-        Order 3S_{{order.code}} {{order.fee}}đ
+      <ion-item class="item-icon-right" ng-repeat="order in historyorders" type="item-text-wrap" href="#/app/detail/{{order.id}}">
+        <div id="statusOrder">
+          <p>{{order.statusid}}</p>
+        </div>
+        <div>
+          <h2>{{order.code}}</h2>
+          <p><i class="ion-ios-clock"></i> {{order.date}}</p>
+          <p><i class="ion-social-usd-outline"></i> {{order.fee}} VND</p>
+          <p><i class="ion-bag"></i> {{order.COD}} VND</p>
+        </div>
+        <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
     </ion-list>
   </ion-content>
+
+  <script>
+    function studentController($scope,$http) {
+      var url = "localhost:3000/api/history";
+
+      $http.get(url).success( function(response) {
+        $scope.historyorders = response;
+      });
+    }
+  </script>
 </ion-view>

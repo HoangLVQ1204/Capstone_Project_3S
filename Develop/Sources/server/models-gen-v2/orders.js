@@ -22,11 +22,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       primaryKey: true
     },
-    pickupaddress: {
+    date: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    deliveryaddress: {
+    fee: {
       type: DataTypes.STRING,
       allowNull: true
     },
