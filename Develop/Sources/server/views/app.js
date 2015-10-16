@@ -4,16 +4,8 @@
 
 /* Script */
 angular.module('app', [
-    'ui.router',
-    'ngAnimate',
-    'ngAria',
-    'ngMdIcons',
-    'ngMaterial'
-]).config(function($stateProvider,$urlRouterProvider,$mdThemingProvider){
-
-    // Set up Theme
-    $mdThemingProvider.theme('default')
-        .primaryPalette('green');
+    'ui.router'
+]).config(function($stateProvider,$urlRouterProvider){
 
     // Set up Routes
     $urlRouterProvider.otherwise('/store/dashboard');

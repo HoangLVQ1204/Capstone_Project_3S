@@ -192,9 +192,9 @@ module.exports = function(app) {
 
 	return cleanDB()
 		.then(createUsers)
-		.then(createCategories)
-		.then(createPosts)
-		.then(createPostCategory)
+		//.then(createCategories)
+		//.then(createPosts)
+		//.then(createPostCategory)
 		.then(logger.log.bind(logger))
 		.catch(logger.log.bind(logger));
 }
