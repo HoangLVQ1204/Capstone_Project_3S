@@ -6,7 +6,7 @@ var express 	   = require('express');
 var logger         = require('./util/logger');
 var config         = require('./config/config');
 var models 		   = require('./entities');
-
+var cors = require('cors');
 var app            = express();
 
 // setup middleware
@@ -17,14 +17,14 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(methodOverride());
-
+app.use(cors());
 // setup routes
 require('./routes')(app);
 
 // seed the database
-if (config.seed) {
-	require('./util/seedDB')(app);
-};
+//if (config.seed) {
+//	require('./util/seedDB')(app);
+//};
 
 // setup global error handler
 app.use(function(err, req, res, next) {

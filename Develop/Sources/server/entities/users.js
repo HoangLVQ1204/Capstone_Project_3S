@@ -32,8 +32,24 @@ module.exports = function(sequelize, DataTypes) {
         return users.findAll({});
       },
 
-      promiseDemo: function(){
-        return Promise.resolve(["xxx"]);
+      getOneUser: function(username){
+        return users.findOne({
+          where:{
+            'username':username,
+          }
+        });
+      },
+
+      postOneUser: function(newUser){
+        return users.build(newUser).save();
+      },
+
+      deleteUser: function (user) {
+        return user.destroy()
+      },
+
+      putUser: function(currentUser){
+        return currentUser.save();
       }
     }
 

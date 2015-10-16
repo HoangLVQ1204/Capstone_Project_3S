@@ -10,11 +10,11 @@ module.exports = function(app){
 			controller.get(next).then(function(user){
 				res.status(200).json(user);
 			})
-		});
-    	//.post(controller.post);
+		})
+    	.post(controller.post);
 
-    //app.route('/api/users/:user_id')
-    //	.get(controller.getOne)
-    //	.put(controller.put)
-    //	.delete(controller.del);
+    app.route('/api/users/:user_id')
+    	.get(controller.getOne)
+    	.put(controller.put)
+    	.delete(controller.del);
 }
