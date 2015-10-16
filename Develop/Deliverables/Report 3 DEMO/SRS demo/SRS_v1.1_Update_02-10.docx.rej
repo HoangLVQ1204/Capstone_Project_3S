@@ -1,0 +1,10 @@
+diff a/Develop/Deliverables/Report 3 DEMO/SRS demo/SRS_v1.1_Update_02-10.docx b/Develop/Deliverables/Report 3 DEMO/SRS demo/SRS_v1.1_Update_02-10.docx	(rejected hunks)
+@@ -842,7 +842,7 @@
+ 
+        Figure 11: Sequence Diagram for Block and Unblock Store Use case
+ 
+-UC- 109: View Store's details
++UC- 109: View Store's details Sai ảnh 
+ 
+              Figure 11: Screen of View Store's Details Use case
+ 
