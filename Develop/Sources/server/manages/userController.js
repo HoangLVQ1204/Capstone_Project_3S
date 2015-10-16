@@ -47,9 +47,9 @@ module.exports = function(app) {
         var user = req.user;
         var update = req.body;
         //console.log(req.user.username, req.body);
-
-        user.username = update.username;
         user.password = update.password;
+        user.username = update.username;
+
 
         return db.users.putUser(user)
             .then(function(saved) {
