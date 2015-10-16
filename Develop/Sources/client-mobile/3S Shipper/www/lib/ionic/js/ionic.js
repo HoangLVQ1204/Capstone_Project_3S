@@ -607,7 +607,7 @@ window.ionic.version = '1.1.0';
 
 /* eslint camelcase:0 */
 /**
-  * Simple gesture controllers with some common gestures that emit
+  * Simple gesture manages with some common gestures that emit
   * gesture events.
   *
   * Ported from github.com/EightMedia/hammer.js Gestures - thanks!
@@ -3459,8 +3459,8 @@ ionic.DomUtil.ready(function() {
  * On both Android and iOS, Ionic will attempt to prevent the keyboard from
  * obscuring inputs and focusable elements when it appears by scrolling them
  * into view.  In order for this to work, any focusable elements must be within
- * a [Scroll View](http://ionicframework.com/docs/api/directive/ionScroll/)
- * or a directive such as [Content](http://ionicframework.com/docs/api/directive/ionContent/)
+ * a [Scroll View](http://ionicframework.com/docs/routes/directive/ionScroll/)
+ * or a directive such as [Content](http://ionicframework.com/docs/routes/directive/ionContent/)
  * that has a Scroll View.
  *
  * It will also attempt to prevent the native overflow scrolling on focus,

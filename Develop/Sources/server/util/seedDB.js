@@ -5,25 +5,25 @@ logger.log('Seeding the Database');
 
 var users = [
 	{
-		Username: "user1",
-		Password: "pass1",
-		Email: "email1@mail.com",
-		Role: "teacher",
-		Token: "token1"			
+		username: "hoang",
+		password: "pass1",
+		userrole: "1",
+		userstatus: "3",
+		token: "token1"
 	},
 	{
-		Username: "user2",
-		Password: "pass2",
-		Email: "email2@mail.com",
-		Role: "student",
-		Token: "token2"			
+		username: "huy",
+		password: "pass2",
+		userrole: "2",
+		userstatus: "1",
+		token: "token2"
 	},
 	{
-		Username: "user3",
-		Password: "pass3",
-		Email: "email3@mail.com",
-		Role: "student",
-		Token: "token3"			
+		username: "quyen",
+		password: "pass3",
+		userrole: "3",
+		userstatus: "2",
+		token: "token3"
 	}
 ];
 
@@ -121,7 +121,7 @@ module.exports = function(app) {
 
 	var cleanDB = function() {
 		logger.log('... cleaning the DB');
-		var cleanPromises = [db.PostCategory, db.Post, db.Category, db.User]
+		var cleanPromises = [db.users]
 			.map(function(model) {				
 				return model.destroy({
 					where: {}
@@ -130,9 +130,10 @@ module.exports = function(app) {
 		return Promise.all(cleanPromises);
 	};
 
+
 	var createUsers = function(data) {			
 		var promises = users.map(function(user) {
-			return createInstance(db.User, user);
+			return createInstance(db.users, user);
 		});
 
 		return Promise.all(promises)
@@ -141,59 +142,59 @@ module.exports = function(app) {
 			});
 	};
 
-	var createCategories = function(data) {		
-		var promises = categories.map(function(category) {
-			return createInstance(db.Category, category);
-		});
-
-		return Promise.all(promises)
-			.then(function(categories) {				
-				return _.merge({categories: categories}, data || {});
-			});	
-	};
-
-	var createPosts = function(data) {
-		var promises = posts.map(function(post) {
-			post.UserId = data.users[0].UserId;
-			return createInstance(db.Post, post);
-		});
-
-		return Promise.all(promises)
-			.then(function(posts) {				
-				return _.merge({posts: posts}, data || {});
-			});
-	};
-
-	var createPostCategory = function(data) {				
-		var promises = [];
-		for (i = 0; i < posts.length; ++i) {
-			for (k = 0; k < categories.length; ++k) {				
-				promises.push({
-					PostId: data.posts[i].PostId,
-					CategoryId: data.categories[k].CategoryId
-				});
-			}
-		}		
-		promises = promises.map(function(p) {
-			return createInstance(db.PostCategory, p);
-		})
-
-		return Promise.all(promises)
-			.then(function(saved) {
-				var result = 'Seeded DB with ' +
-					data.users.length + ' Users, ' +
-					data.categories.length + ' Categories, ' +
-					data.posts.length + ' Posts';
-
-				return result;
-			});
-	}
+	//var createCategories = function(data) {
+	//	var promises = categories.map(function(category) {
+	//		return createInstance(db.Category, category);
+	//	});
+    //
+	//	return Promise.all(promises)
+	//		.then(function(categories) {
+	//			return _.merge({categories: categories}, data || {});
+	//		});
+	//};
+    //
+	//var createPosts = function(data) {
+	//	var promises = posts.map(function(post) {
+	//		post.UserId = data.users[0].UserId;
+	//		return createInstance(db.Post, post);
+	//	});
+    //
+	//	return Promise.all(promises)
+	//		.then(function(posts) {
+	//			return _.merge({posts: posts}, data || {});
+	//		});
+	//};
+    //
+	//var createPostCategory = function(data) {
+	//	var promises = [];
+	//	for (i = 0; i < posts.length; ++i) {
+	//		for (k = 0; k < categories.length; ++k) {
+	//			promises.push({
+	//				PostId: data.posts[i].PostId,
+	//				CategoryId: data.categories[k].CategoryId
+	//			});
+	//		}
+	//	}
+	//	promises = promises.map(function(p) {
+	//		return createInstance(db.PostCategory, p);
+	//	})
+    //
+	//	return Promise.all(promises)
+	//		.then(function(saved) {
+	//			var result = 'Seeded DB with ' +
+	//				data.users.length + ' Users, ' +
+	//				data.categories.length + ' Categories, ' +
+	//				data.posts.length + ' Posts';
+    //
+	//			return result;
+	//		});
+	//}
 
 	return cleanDB()
 		.then(createUsers)
 		.then(createCategories)
 		.then(createPosts)
 		.then(createPostCategory)
-		.then(logger.log.bind(logger))		
+		.then(logger.log.bind(logger))
 		.catch(logger.log.bind(logger));
 }
