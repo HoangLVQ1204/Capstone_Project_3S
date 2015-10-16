@@ -24,7 +24,7 @@ module.exports = function(app) {
     }; 
 
     var get = function(next) {
-        return db.users.getAllUsers()
+        return db.user.getAllUsers()
         .then(function(users) {
                 return users;
         }, function(err) {

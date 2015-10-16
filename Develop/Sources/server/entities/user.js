@@ -2,7 +2,7 @@
 
 module.exports = function(sequelize, DataTypes) {
 
-  var users = sequelize.define('users', {
+  var user = sequelize.define('user', {
     username: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -23,13 +23,18 @@ module.exports = function(sequelize, DataTypes) {
     token: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    workingstatusid: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      primaryKey: true
     }
   }, {
     freezeTableName: true,
     timestamps: false,
     classMethods: {
       getAllUsers: function() {
-        return users.findAll({});
+        return user.findAll({});
       },
 
       promiseDemo: function(){
@@ -41,7 +46,7 @@ module.exports = function(sequelize, DataTypes) {
 
   //users.removeAttribute('id');
 
-  return users;
+  return user;
 };
 
 /*
