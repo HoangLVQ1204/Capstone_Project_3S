@@ -23,7 +23,20 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     freezeTableName: true,
-    timestamps: false
+    timestamps: false,
+    classMethods: {
+      getAllTaskOfShipper: function(model, shipperid, taskdate) {
+        return task.findAll({
+          where: {
+            shipperid: shipperid,
+            taskdate: taskdate
+          },
+          include: [
+            {model: model}
+          ]
+        });
+      }
+    }
   });
   return task;
 };
