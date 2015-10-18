@@ -21,16 +21,25 @@ module.exports = function(app) {
         }, function(err) {
             next(err);
         });
-    }; 
-
-    var get = function(next) {
-        return db.users.getAllUsers()
-        .then(function(users) {
-                return users;
-        }, function(err) {
-            next(err);
-        })
     };
+
+    var get = function(req,res,next) {
+        return db.users.getAllUsers()
+            .then(function(users) {
+                res.status(200).json(users);
+            }, function(err) {
+                next(err);
+            })
+    };
+
+    //var get = function(req,res,next) {
+    //    return db.users.getAllUsers()
+    //    .then(function(users) {
+    //            return users;
+    //    }, function(err) {
+    //        next(err);
+    //    })
+    //};
 
 
     //var getOne = function(req, res, next) {

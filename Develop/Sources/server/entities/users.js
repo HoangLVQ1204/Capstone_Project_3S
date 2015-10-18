@@ -30,11 +30,17 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       getAllUsers: function() {
         return users.findAll({});
-      },
-
-      promiseDemo: function(){
-        return Promise.resolve(["xxx"]);
       }
+      ,
+      //getUser: function(user){
+      //  return users.findOne({
+      //    attributes: ['username','userrole','userstatus'],
+      //    where:{
+      //      'username': user.username,
+      //
+      //    }
+      //  })
+      //}
     }
 
   });

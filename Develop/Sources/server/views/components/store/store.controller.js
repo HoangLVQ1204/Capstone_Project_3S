@@ -85,7 +85,10 @@ function storeController($scope,$state){
             subMenu : []
         }
     ]
+
     $scope.menu = menuStore;
+
+    //document.getElementById("btnDemo").onclick = function() {alert("Hello")};
     //$state.go('app.login');
     
 //    authService.userIsLoggedIn(function(role){
@@ -97,6 +100,12 @@ function storeController($scope,$state){
 //            //$state.go('app.store');
 //        }
 //    });
+
+    $scope.$on('$viewContentLoaded', function(event) {
+
+        caplet();
+
+    });
 }
 
 storeController.$inject = ['$scope','$state'];
