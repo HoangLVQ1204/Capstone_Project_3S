@@ -23,7 +23,7 @@ require('./routes')(app);
 
 // seed the database
 if (config.seed) {
-	require('./util/seedDB')(app);
+	//require('./util/seedDB')(app);
 };
 
 // setup global error handler
