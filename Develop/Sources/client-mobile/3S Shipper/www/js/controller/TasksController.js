@@ -8,78 +8,78 @@ app.controller('TasksCtrl', function ($scope) {
     code: 'ORD001-001',
     statusid: 'Done',
     ordertypeid: 1,
-    date: 'Đại Học Công Nghiệp - Từ Liêm - Hà Nội',
-    fee: 'Đại Học Cảnh Sát - Cổ Nhuế - Hà Nội'
+    pickupaddress: 'Đại Học Công Nghiệp - Từ Liêm - Hà Nội',
+    deliveryaddress: 'Đại Học Cảnh Sát - Cổ Nhuế - Hà Nội'
   }, {
     id: 2,
     code: 'ORD002-202',
     statusid: 'Picking',
     ordertypeid: 2,
-    date: 'Từ Liêm - Hà Nôi',
-    fee: 'Quận Đống Đa - Hà Nội'
+    pickupaddress: 'Từ Liêm - Hà Nôi',
+    deliveryaddress: 'Quận Đống Đa - Hà Nội'
   }, {
     id: 3,
     code: 'ORD888-222',
     statusid: 'Delivering',
     ordertypeid: 2,
-    date: 'Phường Nguyễn Du - Quận Hai Bà Trưng - Hà Nội',
-    fee: 'Phường Quỳnh Mai - Quận Hai Bà Trưng - Hà Nội'
+    pickupaddress: 'Phường Nguyễn Du - Quận Hai Bà Trưng - Hà Nội',
+    deliveryaddress: 'Phường Quỳnh Mai - Quận Hai Bà Trưng - Hà Nội'
   }, {
     id: 4,
     code: 'ORD999-000',
     statusid: 'Pending',
     ordertypeid: 1,
-    date: 'Phường Bồ Đề - Long Biên - Hà Nội',
-    fee: 'Mễ Trì - Nam Từ Liêm - Hà Nội'
+    pickupaddress: 'Phường Bồ Đề - Long Biên - Hà Nội',
+    deliveryaddress: 'Mễ Trì - Nam Từ Liêm - Hà Nội'
   }, {
     id: 5,
     code: 'ORD222-123',
     statusid: 'Picking',
     ordertypeid: 2,
-    date: 'Xuân Phương - NamTừ Liêm - Hà Nôi',
-    fee: 'Tràng Tiền - Hoàn Kiếm - Hà Nội'
+    pickupaddress: 'Xuân Phương - NamTừ Liêm - Hà Nôi',
+    deliveryaddress: 'Tràng Tiền - Hoàn Kiếm - Hà Nội'
   }, {
     id: 6,
     code: 'ORD002-90933',
     statusid: 'Pending',
     ordertypeid: 1,
-    date: 'Quang Trung - Hà Đông - Hà Nôi',
-    fee: 'Hàng Bông - Quận Hoàn Kiếm - Hà Nội'
+    pickupaddress: 'Quang Trung - Hà Đông - Hà Nôi',
+    deliveryaddress: 'Hàng Bông - Quận Hoàn Kiếm - Hà Nội'
   }, {
     id: 7,
     code: 'ORD022-252',
     statusid: 'Picking',
     ordertypeid: 2,
-    date: 'Từ Liêm - Hà Nôi',
-    fee: 'Quận Đống Đa - Hà Nội'
+    pickupaddress: 'Từ Liêm - Hà Nôi',
+    deliveryaddress: 'Quận Đống Đa - Hà Nội'
   }, {
     id: 8,
     code: 'ORD032302-222',
     statusid: 'Delivering',
     ordertypeid: 2,
-    date: 'Xuân Phương - Nam Từ Liêm - Hà Nôi',
-    fee: 'Quận Đống Đa - Hà Nội'
+    pickupaddress: 'Xuân Phương - Nam Từ Liêm - Hà Nôi',
+    deliveryaddress: 'Quận Đống Đa - Hà Nội'
   }, {
     id: 9,
     code: 'ORD03232302-222',
     statusid: 'Delivering',
     ordertypeid: 3,
-    date: 'Xuân Phương - Nam Từ Liêm - Hà Nôi',
-    fee: 'Quận Đống Đa - Hà Nội'
+    pickupaddress: 'Xuân Phương - Nam Từ Liêm - Hà Nôi',
+    deliveryaddress: 'Quận Đống Đa - Hà Nội'
   }, {
     id: 10,
     code: 'ORD032302-09090',
     statusid: 'Pending',
     ordertypeid: 3,
-    date: 'Xuân Phương - Bắc Từ Liêm - Hà Nôi',
-    fee: 'Quận Đống Đa - Hà Nội'
+    pickupaddress: 'Xuân Phương - Bắc Từ Liêm - Hà Nôi',
+    deliveryaddress: 'Quận Đống Đa - Hà Nội'
   }, {
     id: 11,
     code: 'ORD032eee302-222',
     statusid: 'Delivering',
     ordertypeid: 3,
-    date: 'Xuân Phương - Nam Từ Liêm - Hà Nôi',
-    fee: 'Quận Nam Từ Liêm - Hà Nội'
+    pickupaddress: 'Xuân Phương - Nam Từ Liêm - Hà Nôi',
+    deliveryaddress: 'Quận Nam Từ Liêm - Hà Nội'
   }
   ];
 });
