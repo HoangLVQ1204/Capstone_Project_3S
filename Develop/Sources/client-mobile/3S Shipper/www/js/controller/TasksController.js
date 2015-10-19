@@ -83,11 +83,10 @@ app.controller('TasksCtrl', ['$scope', 'dataService', function($scope, dataFacto
   }
   ];
 
-  var urlBase = 'http://localhost:3000/api/tasks';
-  var data = {};
   getDataFromServer();
 
   function getDataFromServer() {
+    var urlBase = 'http://localhost:3000/api/tasks';
     dataFactory.getDataServer(urlBase)
       .success(function (rs) {
         $scope.orders = rs;
