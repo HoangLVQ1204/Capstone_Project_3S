@@ -1,7 +1,7 @@
 /**
  * Created by Nguyen Van Quyen on 10/6/2015.
  */
-app.controller('TasksCtrl', ['$scope', 'dataFactory', function($scope, dataFactory) {
+app.controller('TasksCtrl', ['$scope', 'dataService', function($scope, dataFactory) {
 
   $scope.orders = [{
     id: 1,
@@ -82,13 +82,13 @@ app.controller('TasksCtrl', ['$scope', 'dataFactory', function($scope, dataFacto
     fee: 'Quận Nam Từ Liêm - Hà Nội'
   }
   ];
-  $scope.orders = [];
+
   var urlBase = 'http://localhost:3000/api/tasks';
   var data = {};
   getDataFromServer();
 
   function getDataFromServer() {
-    dataFactory.getDataServer(urlBase, data)
+    dataFactory.getDataServer(urlBase)
       .success(function (rs) {
         $scope.orders = rs;
         alert(111);

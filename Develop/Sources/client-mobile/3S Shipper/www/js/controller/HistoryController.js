@@ -1,7 +1,7 @@
 /**
  * Created by Kaka Hoang Huy on 9/30/2015.
  */
-app.controller('HistoryCtrl', function ($scope) {
+app.controller('HistoryCtrl', ['$scope', 'dataService', function ($scope, dataFactory) {
   $scope.historyorders = [
     {
       id: 1,
@@ -33,7 +33,19 @@ app.controller('HistoryCtrl', function ($scope) {
       COD: '300.000'
     }
   ];
-});
 
-app.controller('DetailCtrl', function ($scope, $stateParams) {
-});
+  getHistoryFromServer();
+
+  function getHistoryFromServer() {
+    var urlBase = 'http://localhost:3000/api/history';
+    dataFactory.getDataServer(urlBase)
+      .success(function (rs) {
+        $scope.historyorders = rs;
+        //alert(111);
+        console.log(rs);
+      })
+      .error(function (error) {
+        console.log('Unable to load customer data: ' + error);
+      });
+  }
+}]);

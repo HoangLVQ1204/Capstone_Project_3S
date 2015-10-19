@@ -3,13 +3,13 @@
     <ion-list>
       <ion-item class="item-icon-right" ng-repeat="order in historyorders" type="item-text-wrap" href="#/app/detail/{{order.id}}">
         <div id="statusOrder">
-          <p>{{order.statusid}}</p>
+          <p>{{order.orders.statusid}}</p>
         </div>
         <div>
-          <h2>{{order.code}}</h2>
+          <h2>{{order.orders.code}}</h2>
           <p><i class="ion-ios-clock"></i> {{order.date}}</p>
-          <p><i class="ion-social-usd-outline"></i> {{order.fee}} VND</p>
-          <p><i class="ion-bag"></i> {{order.COD}} VND</p>
+          <p><i class="ion-social-usd-outline"></i> {{order.orders.fee}} VND</p>
+          <p><i class="ion-bag"></i> {{order.orders.COD}} VND</p>
         </div>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
