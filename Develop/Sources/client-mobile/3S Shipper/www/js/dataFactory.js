@@ -2,12 +2,12 @@
  * Created by Kaka Hoang Huy on 10/18/2015.
  */
 
-app.factory('dataFactory', ['$http', function ($http) {
+app.factory('dataService', ['$http', function ($http) {
 
   var dataFactory = {};
 
-  dataFactory.getDataServer = function (urlBase, data) {
-    return $http.get(urlBase, data);
+  dataFactory.getDataServer = function (urlBase) {
+    return $http.get(urlBase);
   };
 
   dataFactory.postDataServer = function (urlBase, data) {
@@ -18,8 +18,8 @@ app.factory('dataFactory', ['$http', function ($http) {
     return $http.put(urlBase, data)
   };
 
-  dataFactory.deleteDataServer = function (urlBase, data) {
-    return $http.delete(urlBase + '/' + id);
+  dataFactory.deleteDataServer = function (urlBase) {
+    return $http.delete(urlBase);
   };
 
   return dataFactory;
