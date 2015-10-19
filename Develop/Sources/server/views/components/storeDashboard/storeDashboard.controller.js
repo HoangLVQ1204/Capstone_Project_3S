@@ -10,6 +10,7 @@ function storeDashboardController($scope,$state){
 
     });
 
+
 }
 
 storeDashboardController.$inject = ['$scope','$state'];

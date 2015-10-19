@@ -1,8 +1,8 @@
 /* jshint indent: 2 */
-
+//var bycypt = require('bcrypt');
 module.exports = function(sequelize, DataTypes) {
 
-  var users = sequelize.define('users', {
+  var user = sequelize.define('user', {
     username: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -29,11 +29,11 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     classMethods: {
       getAllUsers: function() {
-        return users.findAll({});
+        return user.findAll({});
       },
 
       getOneUser: function(username){
-        return users.findOne({
+        return user.findOne({
           where:{
             'username':username,
           }
@@ -41,18 +41,25 @@ module.exports = function(sequelize, DataTypes) {
       },
 
       postOneUser: function(newUser){
-        return users.build(newUser).save();
+        return user.build(newUser).save();
       },
 
-      deleteUser: function (user) {
-        return user.destroy()
+      deleteUser: function (users) {
+        return users.destroy()
       },
 
-      putUser: function(currentUser){
+      putUser: function(currentUser) {
         return currentUser.save();
+      },
 
+      authenticate: function(plainTextPassword) {
+        if (!plainTextPassword) {
+          return ''
+        } else {
+          var salt = b
+        }
       }
-      ,
+
       //getUser: function(user){
       //  return users.findOne({
       //    attributes: ['username','userrole','userstatus'],
@@ -68,7 +75,7 @@ module.exports = function(sequelize, DataTypes) {
 
   //users.removeAttribute('id');
 
-  return users;
+  return user;
 };
 
 /*

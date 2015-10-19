@@ -8,7 +8,7 @@ module.exports = function(app) {
 
     var db = app.get('models');
 
-    var get = function(next) {
+    var get = function(req,res,next) {
         var shipperid = 'hoang';
         var taskdate = '2015-10-17';
         var Task = db.task;
@@ -19,7 +19,7 @@ module.exports = function(app) {
         });
         return Task.getAllTaskOfShipper(Order, shipperid, taskdate)
             .then(function(tasks) {
-                return tasks;
+                res.status(200).json(tasks);
             }, function(err) {
                 next(err);
             })

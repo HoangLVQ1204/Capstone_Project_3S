@@ -5,9 +5,9 @@
 angular.module('app')
     .directive('adminStoreList', function() {
         return {
-            controller: 'adminStoreList',
+            controller: 'adminStoreListController',
             templateUrl: '/components/adminStoreList/adminStoreList.html',
-            controllerAs: 'adminStoreList',
+            controllerAs: 'adminStoreListController',
             scope: {},
             replace: true,
             restrict: 'E'

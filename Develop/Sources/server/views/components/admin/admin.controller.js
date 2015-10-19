@@ -5,7 +5,7 @@
 function adminController($scope,$state){
 
 
-    $rootScope.$on('$viewContentLoaded', function(event) {
+    $scope.$watch('$viewContentLoaded', function(event) {
 
         caplet();
 

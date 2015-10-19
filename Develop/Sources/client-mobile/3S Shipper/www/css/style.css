@@ -1,16 +1,22 @@
 /* Empty. Add your own CSS if you like */
-#statusOrder{
-  float: left;
-  margin: 8px 10px 8px 0px;
+
+/*---START StyleSheet of Task & History---*/
+.titleContent {
+  position: relative;
+  width: 450px;
+  min-height: 80px;
+}
+.titleContent div:first-child {
+  position: absolute; left: 0; top: 15px;
 }
 
-#statusOrder > p {
+.titleContent div:first-child > p {
   border-color: #33CD5F;
   background: transparent none repeat scroll 0% 0%;
   color: #33CD5F;
   padding: 0 12px;
-  width: 100px;
-  min-height: 47px;
+  width: 110px;
+  min-height: 50px;
   border-width: 1px;
   border-style: solid;
   border-radius: 2px;
@@ -22,8 +28,14 @@
   cursor: pointer;
 }
 
-#statusOrder + div > h2 {
+.titleContent div:nth-child(2) {
+  position: absolute;
+  margin-left: 150px;
+}
+
+.titleContent div:nth-child(2) > h2 {
   font-weight: bold;
+  color: #EF473A;
 }
 
 .item > .input-label {
@@ -34,6 +46,9 @@
   width: 100%;
   margin-top: 12px;
 }
+/* ---END StyleSheet of Task & History---*/
+
+/*---START StyleSheet of Profile---*/
 #content {
   position: relative;
   margin-top: 100px;
@@ -64,3 +79,4 @@
 #listProfile > div > p {
   font-size: 1.2em;
 }
+/*---END StyleSheet of Profile---*/

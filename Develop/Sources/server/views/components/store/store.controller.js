@@ -5,6 +5,7 @@
 function storeController($scope,$state){
 
 
+
     //document.getElementById("btnDemo").onclick = function() {alert("Hello")};
     //$state.go('app.login');
     
@@ -21,7 +22,6 @@ function storeController($scope,$state){
     $scope.$watch('$viewContentLoaded', function(event) {
 
         caplet();
-
     });
 }
 

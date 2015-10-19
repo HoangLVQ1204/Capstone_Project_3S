@@ -16,8 +16,17 @@ angular.module('app', [
     }]);
 
     $stateProvider
-        .state('store',{
+        .state('admin',{
            // abstract: true,
+            url: '/admin',
+            template: '<admin></admin>'
+        })
+        .state('admin.storeList',{
+            url: '/storeList',
+            template: '<admin-store-list></admin-store-list>'
+        })
+        .state('store',{
+            //abstract:true,
             url: '/store',
             template: '<store></store>'
         })
@@ -26,7 +35,7 @@ angular.module('app', [
             template: '<store-dashboard></store-dashboard>'
         })
         .state('store.order',{
-            url: '/store/order',
+            url: '/order',
             template: '<store-order></store-order>'
         })
 

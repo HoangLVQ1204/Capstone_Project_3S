@@ -27,9 +27,7 @@
 
 <body>
 
-<div id="wrapper">
-    <div ui-view></div>
-</div>
+<div ui-view id="wrapper"></div>
 
 
 
@@ -56,6 +54,8 @@
 <!-- Library Themes Customize-->
 <script src="/assets/js/caplet.custom.js"></script>
 
+<script type="text/javascript" src="assets/plugins/datable/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="assets/plugins/datable/dataTables.bootstrap.js"></script>
 
 <!--<script src="/libs/jquery/dist/jquery.min.js"></script>-->
 <script src="/libs/angular/angular.min.js"></script>
@@ -64,6 +64,11 @@
 
 <script src="/app.js"></script>
 
+<script src="/components/admin/admin.controller.js"></script>
+<script src="/components/admin/admin.directive.js"></script>
+
+<script src="/components/adminStoreList/adminStoreList.controller.js"></script>
+<script src="/components/adminStoreList/adminStoreList.directive.js"></script>
 
 <script src="/components/store/store.controller.js"></script>
 <script src="/components/store/store.directive.js"></script>
