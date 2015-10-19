@@ -4,7 +4,9 @@
 
 function storeDashboardController($scope,$state){
 
-
+    $scope.$watch('$viewContentLoaded', function(event) {
+        caplet();
+    });
 }
 
 storeDashboardController.$inject = ['$scope','$state'];

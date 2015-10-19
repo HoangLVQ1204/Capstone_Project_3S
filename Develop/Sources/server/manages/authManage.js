@@ -42,7 +42,9 @@ module.exports  = function(app){
                             next();
                         }
                     }
-                })
+                },function(err){
+                   next(err);
+                });
         }
     }
 }

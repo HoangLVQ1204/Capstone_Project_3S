@@ -33,15 +33,15 @@ angular.module('app', [
 
         .state('store',{
             abstract: true,
-            url: '',
+            url: '/store',
             template: '<store></store>'
         })
         .state('store.dashboard',{
-            url: '/store/dashboard',
+            url: '/dashboard',
             template: '<store-dashboard></store-dashboard>'
         })
         .state('store.order',{
-            url: '/store/order',
+            url: '/order',
             template: '<store-order></store-order>'
         })
 

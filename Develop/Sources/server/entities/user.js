@@ -1,5 +1,5 @@
 /* jshint indent: 2 */
-
+//var bycypt = require('bcrypt');
 module.exports = function(sequelize, DataTypes) {
 
   var users = sequelize.define('users', {
@@ -30,8 +30,14 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       getAllUsers: function() {
         return users.findAll({});
+      },
+      authenticate: function(plainTextPassword){
+        if(!plainTextPassword){
+          return ''
+        }else{
+          var salt = b
+        }
       }
-      ,
       //getUser: function(user){
       //  return users.findOne({
       //    attributes: ['username','userrole','userstatus'],

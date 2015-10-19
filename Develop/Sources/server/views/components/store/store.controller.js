@@ -88,6 +88,7 @@ function storeController($scope,$state){
 
     $scope.menu = menuStore;
 
+
     //document.getElementById("btnDemo").onclick = function() {alert("Hello")};
     //$state.go('app.login');
     
@@ -101,10 +102,8 @@ function storeController($scope,$state){
 //        }
 //    });
 
-    $scope.$on('$viewContentLoaded', function(event) {
-
+    $scope.$watch('$viewContentLoaded', function(event) {
         caplet();
-
     });
 }
 

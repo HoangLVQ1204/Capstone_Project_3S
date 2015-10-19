@@ -1,4 +1,4 @@
-/*
+﻿/*
 DROP TABLE BannedHistoryLogs;
 DROP TABLE UpdatingLogs;
 DROP TABLE OrderIssues;
@@ -120,19 +120,11 @@ typeName varchar(20)
 --Loai chuyen nhanh hay cham--
 );
 
-CREATE TABLE Task
-(
-taskID int PRIMARY KEY,
-shipperID varchar(8) REFERENCES "user"(username),
-adminID varchar(8) REFERENCES "user"(username),
-taskDate date
-);
 
 CREATE TABLE "order"
 (
 orderID varchar(8) PRIMARY KEY,
 storeID varchar(8) REFERENCES Store(storeID),
-taskID int REFERENCES Task(taskID),
 orderTypeID int REFERENCES OrderType(typeID),
 pickUpAddress varchar(100),
 deliveryAddress varchar(100),
@@ -146,6 +138,14 @@ fee BIGINT,
 CoD BIGINT,
 pickUpAddressCoordination text,
 deliveryAddressCoordination text
+);
+CREATE TABLE Task
+(
+taskID int PRIMARY KEY,
+orderID varchar(8) REFERENCES "order"(orderID),
+shipperID varchar(8) REFERENCES "user"(username),
+adminID varchar(8) REFERENCES "user"(username),
+taskDate date
 );
 
 CREATE TABLE Goods
@@ -247,7 +247,7 @@ DROP TABLE Issue;
 DROP TABLE IssuePriority;
 DROP TABLE IssueCategory;
 DROP TABLE ConfirmationCode;
-DROP TABLE ConfirmationCodeTypes;
+DROP TABLE ConfirmationCodeType;
 DROP TABLE Goods;
 DROP TABLE "order";
 DROP TABLE Task;
@@ -260,7 +260,7 @@ DROP TABLE Store;
 DROP TABLE Profile;
 DROP TABLE "user";
 DROP TABLE WorkingStatus;
-DROP TABLE Role;
-*/
+DROP TABLE Role;*/
+
 
 
