@@ -7,6 +7,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
+    orderid: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      primaryKey: true
+    },
     shipperid: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -23,20 +28,7 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     freezeTableName: true,
-    timestamps: false,
-    classMethods: {
-      getAllTaskOfShipper: function(model, shipperid, taskdate) {
-        return task.findAll({
-          where: {
-            //shipperid: shipperid,
-            //taskdate: taskdate
-          },
-          include: [
-            {model: model}
-          ]
-        });
-      }
-    }
+    timestamps: false
   });
   return task;
 };

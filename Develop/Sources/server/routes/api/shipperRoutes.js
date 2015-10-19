@@ -6,6 +6,6 @@ module.exports = function(app) {
 
     var shipperCtrl = require('./../../manages/shipperController')(app);
 
-    app.get('/tasks', shipperCtrl.get);
+    app.get('/api/tasks', shipperCtrl.get);
 
 }

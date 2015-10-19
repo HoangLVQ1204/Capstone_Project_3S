@@ -10,14 +10,22 @@ module.exports = function(app) {
 
     var get = function(req,res,next) {
         var shipperid = 'hoang';
-        var taskdate = '2015-10-17';
+        var taskdate = '2015-02-09';
         var Task = db.task;
         var Order = db.order;
-        Task.hasMany(db.order, {
-            foreignKey: 'taskid',
+        var OrderStatus = db.orderstatus;
+        //get all task of shipper
+        Order.hasMany(Task, {
+            foreignKey: 'orderid',
             constraints: false
         });
-        return Task.getAllTaskOfShipper(Order, shipperid, taskdate)
+        //get status name of order
+        Order.belongsTo(OrderStatus, {
+            foreignKey: 'statusid',
+            constraints: false
+        });
+
+        return Order.getAllTaskOfShipper(Task, OrderStatus, shipperid, taskdate)
             .then(function(tasks) {
                 res.status(200).json(tasks);
             }, function(err) {

@@ -10,10 +10,10 @@
               <ion-item class="item-icon-right" ng-show="{{order.ordertypeid == 1}}" ng-repeat="order in orders" type="item-text-wrap" href="#/app/detail/{{order.id}}">
                 <div class="titleContent">
                   <div>
-                    <p>{{order.statusid}}</p>
+                    <p>{{order.orderstatus.statusname}}</p>
                   </div>
                   <div>
-                    <h2>{{order.code}}</h2>
+                    <h2>{{order.orderid}}</h2>
                     <p><i class="ion-ios-flag"></i> {{order.pickupaddress}}</p>
                     <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
                   </div>
@@ -31,10 +31,10 @@
               <ion-item class="item-icon-right" ng-show="{{order.ordertypeid == 2}}" ng-repeat="order in orders" type="item-text-wrap" href="#/app/detail/{{order.id}}">
                 <div class="titleContent">
                   <div>
-                    <p>{{order.statusid}}</p>
+                    <p>{{order.orderstatus.statusname}}</p>
                   </div>
                   <div>
-                    <h2>{{order.code}}</h2>
+                    <h2>{{order.orderid}}</h2>
                     <p><i class="ion-ios-flag"></i> {{order.pickupaddress}}</p>
                     <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
                   </div>
@@ -52,10 +52,10 @@
               <ion-item class="item-icon-right" ng-show="{{order.ordertypeid == 3}}" ng-repeat="order in orders" type="item-text-wrap" href="#/app/detail/{{order.id}}">
                <div class="titleContent">
                  <div>
-                   <p>{{order.statusid}}</p>
+                   <p>{{order.orderstatus.statusname}}</p>
                  </div>
                  <div>
-                   <h2>{{order.code}}</h2>
+                   <h2>{{order.orderid}}</h2>
                    <p><i class="ion-ios-flag"></i> {{order.pickupaddress}}</p>
                    <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
                  </div>

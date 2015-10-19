@@ -12,11 +12,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       primaryKey: true
     },
-    taskid: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      primaryKey: true
-    },
     ordertypeid: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -74,7 +69,23 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     freezeTableName: true,
-    timestamps: false
+    timestamps: false,
+    classMethods: {
+      getAllTaskOfShipper: function(taskOrder, orderStatusModel, shipperid, taskdate) {
+        return order.findAll({
+          include: [{
+            model: taskOrder,
+            where: {
+              shipperid: shipperid,
+              taskdate: taskdate
+            }
+          },{
+            model: orderStatusModel
+          }
+          ]
+        });
+      }
+    }
   });
   return order;
 };
