@@ -11,8 +11,8 @@ var app            = express();
 
 // setup middleware
 app.set('models', models);
-app.use(express.static(path.resolve('other')));
-app.use('/libs',express.static(path.join(__dirname, '../node_modules')));
+app.use(express.static(path.resolve('views')));
+app.use('/libs',express.static(path.resolve('node_modules')));
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -22,9 +22,7 @@ app.use(cors());
 require('./routes')(app);
 
 // seed the database
-//if (config.seed) {
-//	require('./util/seedDB')(app);
-//};
+
 
 // setup global error handler
 app.use(function(err, req, res, next) {

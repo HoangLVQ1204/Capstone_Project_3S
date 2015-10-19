@@ -2,7 +2,7 @@
 
 module.exports = function(sequelize, DataTypes) {
 
-  var user = sequelize.define('user', {
+  var users = sequelize.define('users', {
     username: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -29,11 +29,11 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     classMethods: {
       getAllUsers: function() {
-        return user.findAll({});
+        return users.findAll({});
       },
 
       getOneUser: function(username){
-        return user.findOne({
+        return users.findOne({
           where:{
             'username':username,
           }
@@ -41,23 +41,34 @@ module.exports = function(sequelize, DataTypes) {
       },
 
       postOneUser: function(newUser){
-        return user.build(newUser).save();
+        return users.build(newUser).save();
       },
 
-      deleteUser: function (users) {
-        return users.destroy()
+      deleteUser: function (user) {
+        return user.destroy()
       },
 
       putUser: function(currentUser){
         return currentUser.save();
+
       }
+      ,
+      //getUser: function(user){
+      //  return users.findOne({
+      //    attributes: ['username','userrole','userstatus'],
+      //    where:{
+      //      'username': user.username,
+      //
+      //    }
+      //  })
+      //}
     }
 
   });
 
   //users.removeAttribute('id');
 
-  return user;
+  return users;
 };
 
 /*

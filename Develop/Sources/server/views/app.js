@@ -4,48 +4,25 @@
 
 /* Script */
 angular.module('app', [
-    'ui.router',
-    'ngAnimate',
-    'ngAria',
-    'ngMdIcons',
-    'ngMaterial'
-]).config(function($stateProvider,$urlRouterProvider,$mdThemingProvider){
-
-    // Set up Theme
-    $mdThemingProvider.theme('default')
-        .primaryPalette('green');
+    'ui.router'
+]).config(function($stateProvider,$urlRouterProvider){
 
     // Set up Routes
-    $urlRouterProvider.otherwise('/store/dashboard');
+    //$urlRouterProvider.otherwise('/store');
+
+    $urlRouterProvider.when('/store/dashboard',  ['$state', function ($state) {
+        $state.go('store.dashboard');
+        //caplet();
+    }]);
 
     $stateProvider
-        //.state('home',{
-        //
-        //})
-        //.state('login',{
-        //
-        //})
-        //.state('store',{
-        //    //abstract: true,
-        //    url: '/store',
-        //    template: '<store></store>'
-        //})
-        //.state('store.dashboard',{
-        //    url: '/dashboard',
-        //    template: '<store-dashboard></store-dashboard>'
-        //})
-        //.state('store.order',{
-        //    url: '/order',
-        //    template: '<store-order></store-order>'
-        //})
-
         .state('store',{
-            abstract: true,
-            url: '',
+           // abstract: true,
+            url: '/store',
             template: '<store></store>'
         })
         .state('store.dashboard',{
-            url: '/store/dashboard',
+            url: '/dashboard',
             template: '<store-dashboard></store-dashboard>'
         })
         .state('store.order',{

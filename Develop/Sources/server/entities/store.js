@@ -1,6 +1,7 @@
 /* jshint indent: 2 */
 
 
+
 module.exports = function(sequelize, DataTypes) {
   var store = sequelize.define('store', {
     storeid: {
@@ -74,4 +75,5 @@ module.exports = function(sequelize, DataTypes) {
 
   });
   return store;
+
 };

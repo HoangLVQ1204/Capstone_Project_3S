@@ -20,6 +20,8 @@ module.exports = function(app) {
     }; 
 
     var get = function(req, res, next) {
+
+
         return db.store.getAllStores()
         .then(function(store) {
                 res.status(200).json(store);
