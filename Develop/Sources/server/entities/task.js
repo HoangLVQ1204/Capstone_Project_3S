@@ -28,8 +28,8 @@ module.exports = function(sequelize, DataTypes) {
       getAllTaskOfShipper: function(model, shipperid, taskdate) {
         return task.findAll({
           where: {
-            shipperid: shipperid,
-            taskdate: taskdate
+            //shipperid: shipperid,
+            //taskdate: taskdate
           },
           include: [
             {model: model}
