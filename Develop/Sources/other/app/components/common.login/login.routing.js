@@ -5,8 +5,8 @@ module.exports = angular.module('login.routing', [])
         $urlRouterProvider.otherwise('/');
         $stateProvider
             .state('app.login',{
-                url : '/login',
-                template: '<login></login>',
+                url : '/user',
+                template: '<user></user>',
                 resolve:
                 {
                     loadGuestModule: function($q, $ocLazyLoad) {

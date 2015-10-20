@@ -10,8 +10,6 @@ var cors           = require('cors'); // Allow Cross-Origin Resource Sharing (to
 
 var app = express();
 
-// Call CORS
-app.use(cors());
 
 // setup middleware
 app.set('models', models);
@@ -21,7 +19,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(methodOverride());
-
+app.use(cors());
 
 // setup routes
 require('./routes')(app);
@@ -34,6 +32,12 @@ if (config.seed) {
 
 // setup global error handler
 app.use(function (err, req, res, next) {
+    console.log("eee");
+    if (err.name === 'UnauthorizedError') {
+        logger.error('UnauthorizedError');
+        res.status(401).send('Invalid token');
+        return;
+    }
     logger.error(err.stack);
     res.status(500).send('Oops');
 })

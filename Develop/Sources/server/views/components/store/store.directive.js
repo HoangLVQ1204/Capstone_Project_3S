@@ -3,7 +3,7 @@ angular.module('app')
             return {
                 controller: 'storeController',
                 templateUrl: '/components/store/store.html',
-                controllerAs: 'store',
+                controllerAs: 'vm',
                 scope: {},
                 replace: true,
                 restrict: 'E'
