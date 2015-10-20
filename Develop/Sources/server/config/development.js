@@ -2,8 +2,9 @@
 
 
 module.exports = {
-	logging: true,	
+	logging: true,
+	seed: true,
 	db: {
-		 url: 'postgres://englishaholic:englishaholic@localhost:5432/englishaholic',		
+		 url: 'postgres://hoanglvq:dothebest1204@localhost:5432/englishaholic',
 	}
 };

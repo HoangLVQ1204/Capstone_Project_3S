@@ -1,27 +1,30 @@
-var logger = require('./util/logger');
-var express = require('express');
-var app = express();
-var config = require('./config/config');
+var bodyParser     = require('body-parser');
+var morgan 		   = require('morgan');
+var methodOverride = require('method-override');
+var path           = require('path');
+var express 	   = require('express');
+var logger         = require('./util/logger');
+var config         = require('./config/config');
+var models 		   = require('./entities');
 
+var app            = express();
 
-// setup app management
-require('./management/middleware_manage')(app);
+// setup middleware
+app.set('models', models);
+app.use(express.static(path.resolve('views')));
+app.use('/libs',express.static(path.resolve('node_modules')));
+app.use(morgan('dev'));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(methodOverride());
 
 // setup routes
-require('./management/api_manage')(app);
+require('./routes')(app);
 
-
-//app.get('/', function(req,res){
-//	res.render('./client-web/index.html');
-//});
-//
-//app.get('/client-web/:name', function(req,res){
-//	var name = req.params.name;
-//	res.render('partials/' + name);
-//});
-
-
-
+// seed the database
+if (config.seed) {
+	require('./util/seedDB')(app);
+};
 
 // setup global error handler
 app.use(function(err, req, res, next) {
