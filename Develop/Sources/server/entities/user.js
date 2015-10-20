@@ -1,8 +1,8 @@
 /* jshint indent: 2 */
-
+//var bycypt = require('bcrypt');
 module.exports = function(sequelize, DataTypes) {
 
-  var user = sequelize.define('user', {
+  var users = sequelize.define('users', {
     username: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -23,30 +23,37 @@ module.exports = function(sequelize, DataTypes) {
     token: {
       type: DataTypes.STRING,
       allowNull: true
-    },
-    workingstatusid: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      primaryKey: true
     }
   }, {
     freezeTableName: true,
     timestamps: false,
     classMethods: {
       getAllUsers: function() {
-        return user.findAll({});
+        return users.findAll({});
       },
-
-      promiseDemo: function(){
-        return Promise.resolve(["xxx"]);
+      authenticate: function(plainTextPassword){
+        if(!plainTextPassword){
+          return ''
+        }else{
+          var salt = b
+        }
       }
+      //getUser: function(user){
+      //  return users.findOne({
+      //    attributes: ['username','userrole','userstatus'],
+      //    where:{
+      //      'username': user.username,
+      //
+      //    }
+      //  })
+      //}
     }
 
   });
 
   //users.removeAttribute('id');
 
-  return user;
+  return users;
 };
 
 /*

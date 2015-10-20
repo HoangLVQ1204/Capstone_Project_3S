@@ -4,7 +4,9 @@
 //var loginRoutes = require('./loginRoutes');
 
 var userRoutes = require('./api/userRoutes');
+var shipperRoutes = require('./api/shipperRoutes');
 module.exports = function (app) {
     userRoutes(app);
+    shipperRoutes(app);
 }
 

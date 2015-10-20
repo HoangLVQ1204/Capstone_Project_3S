@@ -1,4 +1,4 @@
-    $(function() {
+    var caplet = function() {
 			   
 		//////////     MOBILE CHECK    //////////   
 		var iOS = /(iPad|iPhone|iPod)/g.test( navigator.userAgent );
@@ -918,6 +918,6 @@
 				}, 500);  
 				
 		 });
-    });
+    };
     
     
