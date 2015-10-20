@@ -73,14 +73,17 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       getAllTaskOfShipper: function(taskOrder, orderStatusModel, shipperid, taskdate) {
         return order.findAll({
+          attributes: ['orderid', 'ordertypeid', 'pickupaddress', 'deliveryaddress', 'pickupdate', 'deliverydate', 'statusid'],
           include: [{
             model: taskOrder,
+            attributes: ['tasktype', 'taskdate'],
             where: {
               shipperid: shipperid,
               taskdate: taskdate
             }
           },{
-            model: orderStatusModel
+            model: orderStatusModel,
+            attributes: ['statusname']
           }
           ]
         });
