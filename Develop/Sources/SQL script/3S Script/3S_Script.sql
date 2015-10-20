@@ -54,6 +54,7 @@ insert into stock values ('2', 'Hoan Kiem Stock', 'Hoan Kiem - Ha Noi', 'quyen',
 -- Shipper gap issue thi pending don hang: 5
 -- Neu store huy don hang: 6
 -- K/H khong nhan hang thi se return ve store or stock: 7
+-- Done: 8
 insert into orderstatus values ('1', 'Waiting');
 insert into orderstatus values ('2', 'Carrying');
 insert into orderstatus values ('3', 'In Stock');
@@ -61,6 +62,7 @@ insert into orderstatus values ('4', 'Delivering');
 insert into orderstatus values ('5', 'Pending');
 insert into orderstatus values ('6', 'Canceled');
 insert into orderstatus values ('7', 'Returning');
+insert into orderstatus values ('8', 'Done');
 
 -- ordertype
 
@@ -69,14 +71,14 @@ insert into ordertype  values ('2', 'express');
 
 
 -- order
-insert into "order" values ('ord1', 'str1', '1', 'Tu Liem - Ha Noi', 'Cau Giay - Ha Noi', '2015-3-19', '2015-3-21', '01687555261', 'Nguyen Van Quyen', '1', '1', '20000', '0', '23232,32323', '2323,23232');
-insert into "order" values ('ord2', 'str2', '2', 'Ho Tung Mau - Ha Noi', 'Hoan Kiem - Ha Noi', '2015-5-23', '2015-5-25', '0988627075', 'Nguyen Van Long', '2', '2', '0', '2000000', '2323,-23233', '2323,-23233');
-insert into "order" values ('ord3', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '2', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord1', 'str1', '1', 'Tu Liem - Ha Noi', 'Cau Giay - Ha Noi', '2015-3-19', '2015-3-21', '01687555261', 'Nguyen Van Quyen', '1', '1', 'false' ,'20000', '0', '23232,32323', '2323,23232');
+insert into "order" values ('ord2', 'str2', '2', 'Ho Tung Mau - Ha Noi', 'Hoan Kiem - Ha Noi', '2015-5-23', '2015-5-25', '0988627075', 'Nguyen Van Long', '2', '2', 'false', '0', '2000000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord3', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '2', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
 
 -- task
-insert into task values ('1','ord1', 'hoang', 'quyen', '2015-2-9');
-insert into task values ('2','ord2', 'nhung', 'quyen', '2015-2-10');
-insert into task values ('3','ord3', 'nhung', 'huy', '2015-2-15');
+insert into task values ('1','ord1', 'hoang', 'quyen', '1','2015-2-9');
+insert into task values ('2','ord2', 'nhung', 'quyen', '1', '2015-2-10');
+insert into task values ('3','ord3', 'nhung', 'huy', '2', '2015-2-15');
 
 -- goods
 

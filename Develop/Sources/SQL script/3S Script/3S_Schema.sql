@@ -1,29 +1,4 @@
-﻿/*
-DROP TABLE BannedHistoryLogs;
-DROP TABLE UpdatingLogs;
-DROP TABLE OrderIssues;
-DROP TABLE Issues;
-DROP TABLE IssuePriorities;
-DROP TABLE IssueCategories;
-DROP TABLE Tasks;
-DROP TABLE ConfirmationCodes;
-DROP TABLE ConfirmationCodeTypes;
-DROP TABLE Orders;
-DROP TABLE Goods;
-DROP TABLE OrderTypes;
-DROP TABLE OrderStatus;
-DROP TABLE Stocks;
-DROP TABLE GeneralLedgers;
-DROP TABLE TransferLedgers;
-DROP TABLE ManageStores;
-DROP TABLE Stores;
-DROP TABLE StoreManagers;
-DROP TABLE Shippers;
-DROP TABLE ShipperStatus;
-DROP TABLE Admins;
-DROP TABLE UserLogin;
-DROP TABLE Roles;
-*/
+﻿
 
 CREATE TABLE Role
 (
@@ -134,17 +109,20 @@ recipientPhone varchar(11),
 recipientName varchar(50),
 ledgerID int REFERENCES GeneralLedger(ledgerID),
 statusID  int REFERENCES OrderStatus(statusID),
+isPending boolean,
 fee BIGINT,
 CoD BIGINT,
 pickUpAddressCoordination text,
 deliveryAddressCoordination text
 );
+
 CREATE TABLE Task
 (
 taskID int PRIMARY KEY,
 orderID varchar(8) REFERENCES "order"(orderID),
 shipperID varchar(8) REFERENCES "user"(username),
 adminID varchar(8) REFERENCES "user"(username),
+tasktype int NOT NULL,
 taskDate date
 );
 
@@ -249,8 +227,8 @@ DROP TABLE IssueCategory;
 DROP TABLE ConfirmationCode;
 DROP TABLE ConfirmationCodeType;
 DROP TABLE Goods;
-DROP TABLE "order";
 DROP TABLE Task;
+DROP TABLE "order";
 DROP TABLE OrderType;
 DROP TABLE OrderStatus;
 DROP TABLE Stock;
