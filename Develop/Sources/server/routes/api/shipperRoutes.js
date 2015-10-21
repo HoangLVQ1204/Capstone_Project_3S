@@ -17,4 +17,7 @@ module.exports = function (app) {
 
     app.param('orderid', shipperCtrl.paramOrderId);
 
+    app.route('/api/statuslist')
+        .get(shipperCtrl.getStatusList);
+
 }
