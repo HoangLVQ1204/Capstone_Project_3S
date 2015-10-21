@@ -1,4 +1,4 @@
-﻿-- role
+﻿	-- role
 insert into role values ('1', 'Shipper');
 insert into role values ('2', 'Store');
 insert into role values ('3', 'Admin');
@@ -67,14 +67,16 @@ insert into orderstatus values ('7', 'Returning');
 insert into ordertype  values ('1', 'normal');
 insert into ordertype  values ('2', 'express');
 
--- task
-insert into task values ('1', 'hoang', 'quyen', '2015-2-9');
-insert into task values ('2', 'nhung', 'quyen', '2015-2-10');
-insert into task values ('3', 'nhung', 'huy', '2015-2-15');
 
 -- order
-insert into "order" values ('ord1', 'str1', '1', '1', 'Tu Liem - Ha Noi', 'Cau Giay - Ha Noi', '2015-3-19', '2015-3-21', '01687555261', 'Nguyen Van Quyen', '1', '1', '20000', '0', '23232,32323', '2323,23232');
-insert into "order" values ('ord2', 'str2', '2', '2', 'Ho Tung Mau - Ha Noi', 'Hoan Kiem - Ha Noi', '2015-5-23', '2015-5-25', '0988627075', 'Nguyen Van Long', '2', '2', '0', '2000000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord1', 'str1', '1', 'Tu Liem - Ha Noi', 'Cau Giay - Ha Noi', '2015-3-19', '2015-3-21', '01687555261', 'Nguyen Van Quyen', '1', '1', '20000', '0', '23232,32323', '2323,23232');
+insert into "order" values ('ord2', 'str2', '2', 'Ho Tung Mau - Ha Noi', 'Hoan Kiem - Ha Noi', '2015-5-23', '2015-5-25', '0988627075', 'Nguyen Van Long', '2', '2', '0', '2000000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord3', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '2', '10000', '400000', '2323,-23233', '2323,-23233');
+
+-- task
+insert into task values ('1','ord1', 'hoang', 'quyen', '2015-2-9');
+insert into task values ('2','ord2', 'nhung', 'quyen', '2015-2-10');
+insert into task values ('3','ord3', 'nhung', 'huy', '2015-2-15');
 
 -- goods
 

@@ -2,14 +2,16 @@
   <ion-content>
     <ion-list>
       <ion-item class="item-icon-right" ng-repeat="order in historyorders" type="item-text-wrap" href="#/app/detail/{{order.id}}">
-        <div id="statusOrder">
-          <p>{{order.statusid}}</p>
-        </div>
-        <div>
-          <h2>{{order.code}}</h2>
-          <p><i class="ion-ios-clock"></i> {{order.date}}</p>
-          <p><i class="ion-social-usd-outline"></i> {{order.fee}} VND</p>
-          <p><i class="ion-bag"></i> {{order.COD}} VND</p>
+        <div class="titleContent">
+          <div>
+            <p>{{order.statusid}}</p>
+          </div>
+          <div>
+            <h2>{{order.code}}</h2>
+            <p><i class="ion-ios-clock"></i> {{order.date}}</p>
+            <p><i class="ion-social-usd-outline">&nbsp;Fee:</i> {{order.fee}} VND</p>
+            <p><i class="ion-social-usd-outline">&nbsp;COD:</i> {{order.COD}} VND</p>
+          </div>
         </div>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
