@@ -87,6 +87,38 @@ module.exports = function(sequelize, DataTypes) {
           }
           ]
         });
+      },
+
+      getAllOrders: function (oderstatusModel, store_id) {
+        return order.findAll({
+          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid'],
+          //where :{
+          //    //'storeid' :store_id
+          //},
+          include: [
+            {'model': oderstatusModel}
+          ]
+        });
+      },
+
+      getOneOrder: function (order_id) {
+        return order.findOne({
+          where: {
+            'orderid': order_id
+          }
+        })
+      },
+
+      putOrder: function (order) {
+        return order.save();
+      },
+
+      postOneOrder: function(newOrder){
+        return order.build(newOrder).save();
+      },
+
+      putOrder: function (currentOrder) {
+        return currentOrder.save();
       }
     }
   });
