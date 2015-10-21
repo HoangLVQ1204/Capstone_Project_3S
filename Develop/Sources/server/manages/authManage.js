@@ -8,10 +8,22 @@ var fs          = require('fs');
 
 
 module.exports  = function(app){
+
+    /*
+     * By HoangLVQ - 22/10/2015
+     *
+     * This function is used to get entity
+     *
+     * */
     var db = app.get('models');
 
+    /*
+     * By HoangLVQ - 22/10/2015
+     *
+     * This function is used to check token if valid
+     *
+     * */
     var checkToken = function(){
-
       return function(req,res,next){
 
           expressJwt(req,res,next);
@@ -19,11 +31,20 @@ module.exports  = function(app){
       }
     };
 
+    /*
+    * By HoangLVQ - 22/10/2015
+    *
+    * This function is used to check role of current login user
+    * (1) : shipper
+    * (2) : store
+    * (3) : admin
+    *
+    * */
     var checkRole = function(){
         return function(req,res,next){
 
             var currentRoute        = req.route.path;
-            var currentRole         = req.user.user.userrole;
+            var currentRole         = req.user.userrole;
             var currentAccessRoles  = [];
             config.pathAccessRole.forEach(function(item){
                 console.log(item);
@@ -33,20 +54,21 @@ module.exports  = function(app){
                 }
             });
 
-            console.log(currentAccessRoles);
-
             if(currentAccessRoles.indexOf(currentRole) != -1){
-                console.log("ok");
                 next();
             }else{
                 console.log("err");
                 res.status(401).send('Your permission is denied');
             }
-
-
         }
     }
 
+    /*
+     * By HoangLVQ - 22/10/2015
+     *
+     * This function is used to verify user if user is exist
+     *
+     * */
     var verifyUser = function(){
         return function(req,res,next){
             var userName = req.body.username;
@@ -57,7 +79,7 @@ module.exports  = function(app){
                 return;
             }
 
-            db.users.findUserByUsername(userName)
+            db.user.findUserByUsername(userName)
                 .then(function(user){
                     if(!user){
                         res.status(401).send('No user with the given username');
@@ -67,8 +89,24 @@ module.exports  = function(app){
                             res.status(401).send('Wrong password');
                         }else{
 
-                            req.user = user;
-                            next();
+                            if(user.userrole == 2 ){
+                                 db.managestore.getStoresOfUser(user.username)
+                                    .then(function(listStore){
+                                         var stores = listStore.map(function(data){
+                                             console.log(data.toJSON().storeid);
+                                             return data.toJSON().storeid;
+                                         });
+                                         user.stores = stores;
+                                         req.user = user;
+                                         next();
+                                    },function(err){
+                                       next(err);
+                                    });
+                            }else{
+                                req.user = user;
+                                next();
+                            }
+
                         }
                     }
                 },function(err){
@@ -77,20 +115,36 @@ module.exports  = function(app){
         }
     }
 
+    /*
+     * By HoangLVQ - 22/10/2015
+     *
+     * This function is used to generate a new token for client
+     *
+     * */
     var signToken = function(user){
 
         return jwt.sign(
             {
-                user: user,
-                time: new Date()
+                username       : user.username,
+                userrole       : user.userrole,
+                userstatus     : user.userstatus,
+                workingstatusid: user.workingstatusid,
+                stores         : user.stores,
+                time           : new Date()
             },
             config.secrets.jwt,
             {
-                expiresInMinutes: config.expireTime
+                expiresIn: config.expireTime
             }
         )
     }
 
+    /*
+     * By HoangLVQ - 22/10/2015
+     *
+     * This function is used to sign in
+     *
+     * */
     var signIn = function (){
 
         return function(req,res,next){

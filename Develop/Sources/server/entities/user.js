@@ -3,7 +3,7 @@ var bcrypt = require('bcryptjs');
 
 module.exports = function(sequelize, DataTypes) {
 
-  var user = sequelize.define('users', {
+  var user = sequelize.define('user', {
     username: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -21,8 +21,8 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    token: {
-      type: DataTypes.STRING,
+    workingstatusid: {
+      type: DataTypes.INTEGER,
       allowNull: true
     }
   }, {
@@ -53,19 +53,7 @@ module.exports = function(sequelize, DataTypes) {
         })
       }
     }
-
   });
-
-  //var beforeSave = function(user){
-  //  if(!user.changed('password')) return;
-  //  user.password = user.encryptPassword(user.password);
-  //}
-  //
-  //User.beforeCreate(beforeSave);
-  //User.beforeUpdate(beforeSave);
-
-  //users.removeAttribute('id');
-
   return user;
 };
 

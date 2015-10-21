@@ -26,9 +26,9 @@ require('./routes')(app);
 
 // seed the database
 if (config.seed) {
-    //require('./util/seedDB')(app);
+    console.log("xxx");
+    require('./util/seedDB')(app);
 }
-;
 
 // setup global error handler
 app.use(function (err, req, res, next) {
