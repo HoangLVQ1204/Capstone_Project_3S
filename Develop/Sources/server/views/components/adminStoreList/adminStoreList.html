@@ -1,6 +1,6 @@
 <div>
 
-    <div id="main" class="nav-collapse" style="margin-left: 0px;">
+    <div class="nav-collapse" style="margin-left: 0px;">
 
         <ol class="breadcrumb">
             <li><a href="#">Home</a></li>
@@ -22,34 +22,46 @@
                         </header>
 
 
+
                         <div class="panel-body">
-                            <div class="btn-group dropdown">
-                                <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
-                                    SHIPPER
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#">STORE</a></li>
-                                </ul>
-                            </div>
+
                             <form>
 
-                                <table class="table table-striped" id="table-example">
+                                <table class="table table-striped" st-predicate="{{selected.value}}" search-watch-model="search" st-table="displayedCollection" st-safe-src="storeList">
+
+                                    <div class="row" >
+                                        <div class="col-sm-4">
+                                            <!--<select  class="selectpicker form-control show-menu-arrow" ng-repeat="option in searchOptions">-->
+                                                <!--&lt;!&ndash;<option data-icon="fa fa-user" id="predicate" ng-model="selectedPredicate" ng-options="option in predicates"></option>&ndash;&gt;-->
+                                                <!--<option ng-repeat="options in searchOptions" value="{{options.option}}">{{options.option}}</option>-->
+                                            <!--</select>-->
+                                            <select
+                                                    class="form-control"
+                                                    ng-options="options.option for options in searchOptions" ng-model="selected">
+
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6 pull-right">
+                                            <div class="input-icon"> <i class="fa fa-search ico"></i>
+
+                                            <input type="search" class="form-control" placeholder="Search" ng-model="search">
+                                            </div>
+                                        </div>
+                                    </div>
                                     <thead>
                                     <tr>
-
-                                        <th class="text-center">Store's name</th>
-                                        <th class="text-center">Address</th>
-                                        <th class="text-center">Payment</th>
-                                        <th class="text-center">Option</th>
+                                        <th st-sort="name" class="text-center">Store's name</th>
+                                        <th st-sort="address" class="text-center">Address</th>
+                                        <th st-sort="payment" class="text-center">Payment</th>
+                                        <th class="text-center">Options</th>
                                     </tr>
-
                                     </thead>
                                     <tbody align="center" >
-                                    <tr class="odd gradeX" ng-repeat="x in storeList">
+
+                                    <tr class="odd gradeX" ng-repeat= "x in displayedCollection">
                                         <td>{{x.name}}</td>
                                         <td>{{x.address}}</td>
-                                        <td class="center"> 4</td>
+                                        <td class="center"> {{x.generalledgers[0].balance}}</td>
                                         <td>
                                         <span class="tooltip-area">
                                         <a href="javascript:void(0)" class="btn btn-default btn-sm" title="Edit"><i class="fa fa-edit (alias)"></i></a>
@@ -59,8 +71,14 @@
                                         </span>
                                         </td>
                                     </tr>
-
                                     </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="5" class="text-right">
+                                            <div st-pagination="" st-items-by-page="2"></div>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
                                 </table>
                             </form>
                         </div>

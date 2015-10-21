@@ -3,6 +3,7 @@ var _ = require('lodash');
 module.exports = function(app) {
 
     var db = app.get('models');
+    //db.generalledger.belongsTo(db.store);
     db.store.hasMany(db.generalledger,  {foreignKey : 'storeid'});
 
     var params = function(req, res, next, storeid) {
@@ -84,10 +85,28 @@ module.exports = function(app) {
             })
     };
 
-    var getLedger = function(req, res, next){
-        return db.store.getAllStoreLedger(req.store.storeid)
+    var getAllLedger = function(req, res, next){
+        return db.store.getAllStoreLedger(db.generalledger)
             .then(function(store) {
                 res.status(200).json(store);
+            }, function(err) {
+                next(err);
+            })
+    };
+
+    var getLedger = function(req, res, next){
+        return db.store.getAllStores()
+            .map(function(store) {
+               console.log(store.storeid);
+               (db.generalledger.getBalance(store.storeid).then(function(ledger) {
+                   if (ledger)
+                   {
+                       store.payment = ledger.payment;
+                       res.status(200).json(store);
+                   }
+
+                }));
+
             }, function(err) {
                 next(err);
             })
@@ -101,7 +120,8 @@ module.exports = function(app) {
         del: del,
         params: params,
         getBalance: getBalance,
-        getLedger: getLedger,
+        getAllLedger: getAllLedger,
+        getLedger: getLedger
     }
 }
 

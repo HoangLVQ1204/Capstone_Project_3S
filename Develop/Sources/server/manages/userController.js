@@ -5,7 +5,7 @@ module.exports = function(app) {
     var db = app.get('models');
 
     var params = function(req, res, next, user_id) {
-        return db.users.getOneUser(user_id)
+        return db.user.getOneUser(user_id)
         .then(function(user) {
             if (user) {
                 req.user = user;
@@ -19,7 +19,7 @@ module.exports = function(app) {
     };
 
     var get = function(req,res,next) {
-        return db.users.getAllUsers()
+        return db.user.getAllUsers()
             .then(function(users) {
                 res.status(200).json(users);
             }, function(err) {
@@ -44,7 +44,7 @@ module.exports = function(app) {
     var post = function(req, res, next) {
         var newUser = req.body;
         newUser.Token = newUser.Username;
-        return db.users.postOneUser(newUser)
+        return db.user.postOneUser(newUser)
             .then(function(user) {
                 res.status(201).json(user);
             }, function(err) {
@@ -60,7 +60,7 @@ module.exports = function(app) {
         user.username = update.username;
         user.password = update.password;
 
-        return db.users.putUser(user)
+        return db.user.putUser(user)
             .then(function(saved) {
                 if (saved) {
                     res.status(201).json(user);
@@ -73,7 +73,7 @@ module.exports = function(app) {
     };
     //
     var del = function(req, res, next) {
-        return db.users.deleteUser(req.user)
+        return db.user.deleteUser(req.user)
             .then(function() {
                 res.status(200).json(req.user.toJSON());
             }, function(err) {

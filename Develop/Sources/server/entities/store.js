@@ -62,14 +62,25 @@ module.exports = function(sequelize, DataTypes) {
       },
 
 
-      getAllStoreLedger: function(storeid){
+      getAllStoreLedger: function(generalledger){
         //generalledger.belongsTo(store);
 
-            return store.findAll({where: {
-              'storeid': storeid
-            }, include: [generalledger]});
+            return store.findAll({
+              include: [{
+                model: generalledger,
+                where: {
 
+                }, limit: 1, order: 'payDate DESC'
+              }]
+            });
       }
+          //,
+
+      //getStoreLedger: function(generalledger, storeid){
+      //  //generalledger.belongsTo(store);
+      //
+      //  return store.findAll({where:{'storeid':storeid},include: [generalledger]});
+      //}
 
     }
 

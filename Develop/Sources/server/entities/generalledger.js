@@ -39,7 +39,17 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     freezeTableName: true,
-    timestamps: false
-  });
+    timestamps: false,
+    classMethods: {
+
+      getBalance: function(storeid){
+        return generalledger.findOne({
+          where:{
+            'storeid':storeid,
+          }, limit: 1, order: 'payDate DESC'
+        });
+      }
+  }
+});
   return generalledger;
 };

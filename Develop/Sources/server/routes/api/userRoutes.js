@@ -5,8 +5,8 @@ module.exports = function(app){
 
  	app.param('user_id', controller.params);
 
-	app.get('/users',controller.get);
-	//.post(controller.post);
+	app.get('/users',controller.get)
+	.post(controller.post);
 
 
 

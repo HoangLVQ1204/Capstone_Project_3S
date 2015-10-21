@@ -4,7 +4,8 @@
 
 /* Script */
 angular.module('app', [
-    'ui.router'
+    'ui.router',
+    'smart-table'
 ]).config(function($stateProvider,$urlRouterProvider){
 
     // Set up Routes
