@@ -22,7 +22,6 @@ userRole int REFERENCES Role(roleID),
 -- 0 la admin, 1  --
 userStatus int,
  --0 la chua accept, 1 la bi ban, 2 la binh thuong--
- token varchar(255),
  workingStatusID int REFERENCES WorkingStatus(statusID)
  );
 
