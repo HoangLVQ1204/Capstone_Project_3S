@@ -71,6 +71,12 @@ module.exports = function(sequelize, DataTypes) {
     freezeTableName: true,
     timestamps: false,
     classMethods: {
+      associate: function(db) {
+        order.belongsTo(db.orderstatus, {
+          foreignKey: 'statusid',
+          constraints: false
+        });
+      },
       getAllTaskOfShipper: function(taskOrder, orderStatusModel, shipperid, taskdate) {
         return order.findAll({
           attributes: ['orderid', 'ordertypeid', 'pickupaddress', 'deliveryaddress', 'pickupdate', 'deliverydate', 'statusid'],

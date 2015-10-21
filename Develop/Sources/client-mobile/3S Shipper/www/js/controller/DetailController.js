@@ -43,7 +43,22 @@ app.directive('map', function () {
       lgt: "105.52563034439083"
     };
 
+    $scope.statuslist = [];
+
     getDetailFromServer();
+
+    getListStatusFromServer();
+
+    function getListStatusFromServer() {
+      var urlBase = 'http://localhost:3000/api/status';
+      dataFactory.getDataServer(urlBase)
+        .success(function (rs) {
+          $scope.statuslist = rs;
+        })
+        .error(function (error) {
+          console.log('Unable to load order status list data: ' + error);
+        });
+    }
 
     function getDetailFromServer() {
       var urlBase = 'http://localhost:3000/api/detail/' + $stateParams.orderId;

@@ -61,7 +61,7 @@
       </div>
     </div>
     <!--<div class="bar bar-footer">-->
-      <button ng-controller="DetailCtrl" ng-show="{{1 == 1}}" class="button button-full button-assertive" ng-click="saveDetails()">Save
+      <button ng-controller="DetailCtrl" ng-repeat="status in statuslist" ng-show="{{1 == 1}}" class="button button-full button-assertive" ng-click="saveDetails()">{{status}}
       </button>
 
     <!--</div>-->
