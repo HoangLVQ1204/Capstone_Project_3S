@@ -8,22 +8,19 @@ var users = [
 		username: "hoang",
 		password: "$2a$10$rrMc9Bwlu0IySsKxPOnsq.uOHH1.2Gxc4ZMklJUOHAdQzFLmM9QOO",
 		userrole: "1",
-		userstatus: "3",
-		token: "token1"
+		userstatus: "3"
 	},
 	{
 		username: "huy",
 		password: "pass2",
 		userrole: "2",
-		userstatus: "1",
-		token: "token2"
+		userstatus: "1"
 	},
 	{
 		username: "quyen",
 		password: "pass3",
 		userrole: "3",
-		userstatus: "2",
-		token: "token3"
+		userstatus: "2"
 	}
 ];
 

@@ -18,7 +18,7 @@ var sequelize = new Sequelize(config.db.url);
 var db = {};
 
 
-globber.getGlobbedFiles('./entities/**/!(index.js)').forEach(function(routePath) {
+globber.getGlobbedFiles('./entities-draft/**/!(index.js)').forEach(function(routePath) {
 
     console.log('get route:', path.resolve(routePath));
 
