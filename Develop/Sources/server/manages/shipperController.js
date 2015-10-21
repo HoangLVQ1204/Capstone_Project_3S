@@ -149,11 +149,18 @@ module.exports = function (app) {
         return res.status(200).json(req.detail);
     };
 
+    var getStatusList = function (req, res, next) {
+        var OrderStatus = db.orderstatus;
+        OrderStatus.getListStatus();
+        return res.status(200).json(req.detail);
+    };
+
     return {
         getTask: getTask,
         getHistory: getHistory,
         getDetail: getDetail,
-        paramOrderId: paramOrderId
+        paramOrderId: paramOrderId,
+        getStatusList: getStatusList
     }
 
 }
