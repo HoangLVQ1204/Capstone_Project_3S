@@ -26,7 +26,7 @@ function storeDashboardController($scope,$state,dataService){
 }
 
 
-storeDashboardController.$inject = ['$scope','$state'];
+storeDashboardController.$inject = ['$scope','$state','dataService'];
 
 angular.module('app').controller('storeDashboardController',storeDashboardController);
 
