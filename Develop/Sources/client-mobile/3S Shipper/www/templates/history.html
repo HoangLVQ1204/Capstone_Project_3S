@@ -8,23 +8,13 @@
           </div>
           <div>
             <h2>{{order.code}}</h2>
-            <p><i class="ion-ios-clock"></i> {{order.date}}</p>
-            <p><i class="ion-social-usd-outline">&nbsp;Fee:</i> {{order.fee}} VND</p>
-            <p><i class="ion-social-usd-outline">&nbsp;COD:</i> {{order.COD}} VND</p>
+            <p><i class="ion-ios-clock"></i> {{order.date | date : 'HH:mm dd-MM-yy'}}</p>
+            <p><i class="ion-social-usd-outline">&nbsp;Fee:</i> {{order.fee | number}} VND</p>
+            <p><i class="ion-social-usd-outline">&nbsp;COD:</i> {{order.COD | number}} VND</p>
           </div>
         </div>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
     </ion-list>
   </ion-content>
-
-  <script>
-    function studentController($scope,$http) {
-      var url = "localhost:3000/api/history";
-
-      $http.get(url).success( function(response) {
-        $scope.historyorders = response;
-      });
-    }
-  </script>
 </ion-view>

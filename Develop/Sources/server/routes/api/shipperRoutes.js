@@ -9,12 +9,12 @@ module.exports = function (app) {
     app.get('/api/tasks', shipperCtrl.get);
 
     app.route('/api/history')
-        .get(function (req, res, next) {
-            var shipperId = '1';
-            shipperCtrl.getHistory(shipperId, next).then(function (tasks) {
-                res.status(200).json(tasks);
-            })
-        });
-    app.get('/api/tasks', shipperCtrl.get);
+        .get(shipperCtrl.getHistory);
+
+
+    app.route('/api/detail/:orderid')
+        .get(shipperCtrl.getDetail);
+
+    app.param('orderid', shipperCtrl.paramOrderId);
 
 }
