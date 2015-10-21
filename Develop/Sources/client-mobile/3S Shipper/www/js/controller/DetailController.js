@@ -66,6 +66,7 @@ app.directive('map', function () {
             });
           }
           rebuildMap(points,center);
+
         })
         .error(function (error) {
           console.log('Unable to load customer data: ' + error);

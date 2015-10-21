@@ -54,15 +54,16 @@
         <label class="item item-input">
           <span class="input-label">Goods Information:</span>
           <p class="">
-            Weight: {{order.weight}}<br/>
+            Weight: {{order.weight}} (g)<br/>
             Size: {{order.lengthsize}} x {{order.widthsize}} x {{order.heightsize}} (cm)
           </p>
         </label>
       </div>
     </div>
     <!--<div class="bar bar-footer">-->
-      <button ng-controller="DetailCtrl" class="button button-full button-assertive" ng-click="saveDetails()">Save
+      <button ng-controller="DetailCtrl" ng-show="{{1 == 1}}" class="button button-full button-assertive" ng-click="saveDetails()">Save
       </button>
+
     <!--</div>-->
     <!--<button class="button button-positive button-block  icon-left ion-android-arrow-back">Back to list</button>-->
   </ion-content>
