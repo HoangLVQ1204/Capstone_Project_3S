@@ -32,7 +32,7 @@ if (config.seed) {
 
 // setup global error handler
 app.use(function (err, req, res, next) {
-    console.log("eee");
+    console.log(err.name);
     if (err.name === 'UnauthorizedError') {
         logger.error('UnauthorizedError');
         res.status(401).send('Invalid token');

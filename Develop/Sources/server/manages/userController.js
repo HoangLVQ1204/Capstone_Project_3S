@@ -24,7 +24,11 @@ module.exports = function(app) {
     };
 
     var get = function(req,res,next) {
-        console.log("get");
+        var user = req.user;
+
+
+        console.log(user);
+
         return db.users.getAllUsers()
             .then(function(users) {
                 res.status(200).json(users);

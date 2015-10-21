@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var accessRole = require('./accessRole.json');
 
 var config = {
 	dev: 'development',
@@ -8,7 +9,8 @@ var config = {
 	expireTime: 24*60*10,
 	secrets: {
 		jwt: process.env.JWT || 'hoanglvqse90184'
-	}
+	},
+	pathAccessRole: accessRole
 };
 
 process.env.NODE_ENV = process.env.NODE_ENV || config.dev;
