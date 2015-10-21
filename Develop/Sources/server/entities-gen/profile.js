@@ -1,43 +1,38 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  var profile =  sequelize.define('profile', {
+  return sequelize.define('profile', { 
     username: {
       type: DataTypes.STRING,
       allowNull: false,
-      primaryKey: true
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
     },
     identitycard: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
     },
     address: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
     },
     dob: {
       type: DataTypes.DATE,
-      allowNull: true
+      allowNull: true,
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
     },
     phonenumber: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
     },
     addresscoordination: {
       type: DataTypes.TEXT,
-      allowNull: true
+      allowNull: true,
     }
-  }, {
-    freezeTableName: true,
-    timestamps: false
   });
-  return profile
 };

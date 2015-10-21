@@ -1,32 +1,26 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  var stock = sequelize.define('stock', {
+  return sequelize.define('stock', { 
     stockid: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
     },
     address: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
     },
     adminid: {
       type: DataTypes.STRING,
       allowNull: true,
-      primaryKey: true
     },
     addresscoordination: {
       type: DataTypes.TEXT,
-      allowNull: true
+      allowNull: true,
     }
-  }, {
-    freezeTableName: true,
-    timestamps: false
   });
-  return stock;
 };
