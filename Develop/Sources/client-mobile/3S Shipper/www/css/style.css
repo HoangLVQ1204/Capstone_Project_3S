@@ -1,10 +1,47 @@
 /* Empty. Add your own CSS if you like */
 
-/*---START StyleSheet of Task & History---*/
+
+
+/*START Common*/
+i {
+  font-size: 20px;
+}
+/*waitting status*/
+.statusWt {
+  background-color: #337ab7;
+}
+/*done status*/
+.statusDn {
+  background-color: #5cb85c
+}
+/*pending status*/
+.statusPd {
+  background-color: #f0ad4e
+}
+/*cancel status*/
+.statusCan {
+  background-color: #d9534f;
+}
+.label {
+  display: inline;
+  padding: .1em .6em .1em;
+  font-size: 75%;
+  font-weight: 500;
+  line-height: 1;
+  color: #fff !important;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25em;
+}
+
+/*END Common*/
+
+/*---START Task & History---*/
 .titleContent {
   position: relative;
   width: 450px;
-  min-height: 80px;
+  min-height: 110px;
 }
 
 .titleContent div:first-child {
@@ -13,32 +50,32 @@
   top: 15px;
 }
 
-.titleContent div:first-child > p {
-  border-color: #33CD5F;
-  background: transparent none repeat scroll 0% 0%;
-  color: #33CD5F;
-  padding: 0 12px;
-  width: 110px;
+.titleContent div:first-child > img {
+
+  padding: 0 5px;
+  width: 70px;
   min-height: 50px;
-  border-width: 1px;
-  border-style: solid;
-  border-radius: 2px;
-  vertical-align: top;
-  text-align: center;
-  text-overflow: ellipsis;
-  font-size: 16px;
-  line-height: 42px;
-  cursor: pointer;
 }
 
 .titleContent div:nth-child(2) {
   position: absolute;
-  margin-left: 150px;
+  margin-left: 100px;
 }
 
 .titleContent div:nth-child(2) > h2 {
   font-weight: bold;
-  color: #EF473A;
+  color: #9B9B9B;
+  font-size: 1.2em;
+}
+
+/*Side left - Header bar && nav bar*/
+.clBar {
+  background-color: #3F51B5;
+  border-color: #3F51B5 ;
+  color: #fff;
+}
+.clBar > h1:first-child {
+  color: #fff;
 }
 
 .item > .input-label {
@@ -50,7 +87,6 @@
   width: 100%;
   margin-top: 12px;
 }
-
 /* ---END StyleSheet of Task & History---*/
 
 /*---START StyleSheet of Profile---*/

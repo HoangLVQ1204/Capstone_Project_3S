@@ -50,7 +50,7 @@ angular.module('app', [
     // components
 //    common.name,
     dashboard.name
-//    login.name
+//    user.name
 ]).config(function($stateProvider,$urlRouterProvider,$mdThemingProvider){
 
     // Set up theme

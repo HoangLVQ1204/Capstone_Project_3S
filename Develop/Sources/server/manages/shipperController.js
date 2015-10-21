@@ -8,7 +8,7 @@ module.exports = function (app) {
 
     var db = app.get('models');
 
-    var get = function (req, res, next) {
+    var getTask = function(req,res,next) {
         var shipperid = 'hoang';
         var taskdate = '2015-02-09';
         var Task = db.task;
@@ -27,7 +27,33 @@ module.exports = function (app) {
 
         return Order.getAllTaskOfShipper(Task, OrderStatus, shipperid, taskdate)
             .then(function (tasks) {
-                res.status(200).json(tasks);
+                var group = {};
+                if (_.isEmpty(tasks) == false) {
+                    var listTasks=[];
+                    _.each(tasks, function(task){
+                        listTasks.push({'orderid': task.dataValues.orderid, 'ordertypeid': task.dataValues.ordertypeid,
+                            'statusid': task.dataValues.statusid, 'statusname':  task['orderstatus'].dataValues.statusname, 'tasktype': task['tasks'][0].dataValues.tasktype,
+                            'pickupaddress': task.dataValues.pickupaddress, 'deliveryaddress': task.dataValues.deliveryaddress,
+                            'pickupdate': task.dataValues.pickupdate, 'deliverydate': task.dataValues.deliverydate
+                        });
+                    });
+                    //Group by order type
+                    group['Pickup'] = group['Pickup'] || [];
+                    group['Ship'] = group['Ship'] || [];
+                    group['Express'] = group['Express'] || [];
+                    _.each(listTasks, function(item){
+                        if(_.isEqual(item['ordertypeid'], 1)) {
+                            if(_.isEqual(item['tasktype'], 1)) {
+                                group['Pickup'].push(item);
+                            } else {
+                                group['Ship'].push(item);
+                            }
+                        } else {
+                            group['Express'].push(item);
+                        }
+                    });
+                }
+                res.status(200).json(group);
             }, function (err) {
                 next(err);
             })
@@ -124,7 +150,7 @@ module.exports = function (app) {
     };
 
     return {
-        get: get,
+        getTask: getTask,
         getHistory: getHistory,
         getDetail: getDetail,
         paramOrderId: paramOrderId
