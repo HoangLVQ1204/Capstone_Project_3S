@@ -4,6 +4,9 @@
 
 function storeOrderController($scope,$state){
 
+    $scope.$watch('$viewContentLoaded', function(event) {
+        caplet();
+    });
 
 }
 

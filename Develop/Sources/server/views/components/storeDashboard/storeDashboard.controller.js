@@ -2,22 +2,21 @@
  * Created by hoanglvq on 9/22/15.
  */
 
+function storeDashboardController($scope,$state){
 
-function storeDashboardController($scope,$rootScope,$state){
 
     $scope.$watch('$viewContentLoaded', function(event) {
         caplet();
-
     });
 
     //getDataFromServer();
     //
     //function getDataFromServer() {
-    //    var urlBase = 'http://localhost:3000/api/history';
+    //    var urlBase = 'http://localhost:3000/orders';
     //    dataService.getDataServer(urlBase)
     //        .success(function (rs) {
-    //            $scope.orders = rs;
-    //            alert(111);
+    //            $scope.ordersWaiting = rs['Waiting'];
+    //            $scope.orderCarring = rs['Carrying'];
     //            console.log(rs);
     //        })
     //        .error(function (error) {
@@ -27,7 +26,7 @@ function storeDashboardController($scope,$rootScope,$state){
 }
 
 
-storeDashboardController.$inject = ['$scope','$rootScope','$state'];
+storeDashboardController.$inject = ['$scope','$state'];
 
 angular.module('app').controller('storeDashboardController',storeDashboardController);
 
