@@ -9,7 +9,7 @@ angular.module('app', [
 ]).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider){
 
     // Set up Routes
-    $urlRouterProvider.otherwise('/store');
+    $urlRouterProvider.otherwise('/store/dashboard');
 
     $stateProvider
         .state('login',{
@@ -21,8 +21,9 @@ angular.module('app', [
             url: '/admin',
             template: '<admin></admin>'
         })
+
         .state('store',{
-            //abstract: true,
+            abstract: true,
             url: '/store',
             template: '<store></store>'
         })
