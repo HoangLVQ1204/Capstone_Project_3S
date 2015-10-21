@@ -1,8 +1,8 @@
 angular.module('app')
-    .directive('store', function() {
+    .directive('admin', function() {
             return {
-                controller: 'storeController',
-                templateUrl: '/components/store/store.html',
+                controller: 'adminController',
+                templateUrl: '/components/admin/admin.html',
                 controllerAs: 'vm',
                 scope: {},
                 replace: true,

@@ -6,7 +6,7 @@ logger.log('Seeding the Database');
 var users = [
 	{
 		username: "hoang",
-		password: "pass1",
+		password: "$2a$10$rrMc9Bwlu0IySsKxPOnsq.uOHH1.2Gxc4ZMklJUOHAdQzFLmM9QOO",
 		userrole: "1",
 		userstatus: "3",
 		token: "token1"

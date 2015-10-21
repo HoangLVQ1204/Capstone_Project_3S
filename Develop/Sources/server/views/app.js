@@ -4,35 +4,25 @@
 
 /* Script */
 angular.module('app', [
-    'ui.router'
-]).config(function($stateProvider,$urlRouterProvider){
+    'ui.router',
+    'angular-jwt'
+]).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider){
 
     // Set up Routes
-    $urlRouterProvider.otherwise('/store/dashboard');
+    $urlRouterProvider.otherwise('/store');
 
     $stateProvider
-        //.state('home',{
-        //
-        //})
-        //.state('login',{
-        //
-        //})
-        //.state('store',{
-        //    //abstract: true,
-        //    url: '/store',
-        //    template: '<store></store>'
-        //})
-        //.state('store.dashboard',{
-        //    url: '/dashboard',
-        //    template: '<store-dashboard></store-dashboard>'
-        //})
-        //.state('store.order',{
-        //    url: '/order',
-        //    template: '<store-order></store-order>'
-        //})
-
+        .state('login',{
+            url: '/auth/login',
+            template: '<login></login>'
+        })
+        .state('admin',{
+            //abstract: true,
+            url: '/admin',
+            template: '<admin></admin>'
+        })
         .state('store',{
-            abstract: true,
+            //abstract: true,
             url: '/store',
             template: '<store></store>'
         })
@@ -45,15 +35,19 @@ angular.module('app', [
             template: '<store-order></store-order>'
         })
 
-        //.state('store.report',{
-        //    url: '/store/report',
-        //    template: '<store-report></store-report>'
-        //})
-        //.state('store.feeback',{
-        //    url: '/store/feeback',
-        //    template: '<store-feedback></store-feedback>'
-        //})
+    jwtInterceptorProvider.tokenGetter = function(){
+        return localStorage.getItem('EHID');
+    };
 
+    $httpProvider.interceptors.push('jwtInterceptor');
+
+}).run(function($rootScope){
+    $rootScope.$on('$stateChangeSuccess', function(e, toState){
+        if (toState.name == "login")
+            $rootScope.styleBody = "full-lg";
+        else
+            $rootScope.styleBody = "leftMenu nav-collapse";
+    })
 })
 
 

@@ -233,7 +233,19 @@
     //////////     MAIN SHOW CONTENT     //////////
     //////////////////////////////////////////////////////////////////////
     -->
-    <div ui-view id="main"></div>
+    <div id="main">
+        <button type="button" id="{{buttonId}}">hello</button>
+        <ul>
+            <li ng-repeat="x in menu">
+                <span><i class="{{x.icon}}"></i>{{x.title}}</span>
+                <ul>
+                    <li ng-repeat="sub in x.subMenu">
+                        <a href="#">{{sub.title}}</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
     <!-- //main-->
 
     <!--

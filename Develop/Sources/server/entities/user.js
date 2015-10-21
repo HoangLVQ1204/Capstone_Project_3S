@@ -1,8 +1,9 @@
 /* jshint indent: 2 */
-//var bycypt = require('bcrypt');
+var bcrypt = require('bcryptjs');
+
 module.exports = function(sequelize, DataTypes) {
 
-  var users = sequelize.define('users', {
+  var user = sequelize.define('users', {
     username: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -27,33 +28,50 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     freezeTableName: true,
     timestamps: false,
-    classMethods: {
-      getAllUsers: function() {
-        return users.findAll({});
-      },
+    instanceMethods: {
       authenticate: function(plainTextPassword){
+        console.log("old: "+plainTextPassword);
+        console.log("old gen: "+ bcrypt.hashSync(plainTextPassword,bcrypt.genSaltSync(10)));
+        console.log("new: "+this.password);
+
+        return bcrypt.compareSync(plainTextPassword, this.password);
+      },
+      encyptPassword: function(plainTextPassword){
         if(!plainTextPassword){
           return ''
         }else{
-          var salt = b
+          var salt = bcrypt.genSaltSync(10);
+          return bcrypt.hashSync(plainTextPassword,salt);
         }
       }
-      //getUser: function(user){
-      //  return users.findOne({
-      //    attributes: ['username','userrole','userstatus'],
-      //    where:{
-      //      'username': user.username,
-      //
-      //    }
-      //  })
-      //}
+    },
+    classMethods: {
+      getAllUsers: function() {
+        return user.findAll({});
+      },
+      findUserByUsername:  function(username){
+        return user.findOne({
+          where: {
+            username: username
+          }
+        })
+      }
     }
+
 
   });
 
+  //var beforeSave = function(user){
+  //  if(!user.changed('password')) return;
+  //  user.password = user.encryptPassword(user.password);
+  //}
+  //
+  //User.beforeCreate(beforeSave);
+  //User.beforeUpdate(beforeSave);
+
   //users.removeAttribute('id');
 
-  return users;
+  return user;
 };
 
 /*
