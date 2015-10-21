@@ -30,18 +30,25 @@ module.exports = function (sequelize, DataTypes) {
         freezeTableName: true,
         timestamps: false,
         classMethods: {
-            getAllHistoryOfShipper: function (shipperid, model) {
+            getAllHistoryOfShipper: function (shipperid, modelOrder, modelOrderStatus) {
                 return task.findAll({
                     attributes: [['taskid', 'id'],['taskdate','date']],
                     where: {
-                        //shipperid: shipperid,
+                        shipperid: shipperid,
                         //taskdate: taskdate
                     },
                     include: [
                         {
-                            model: model,
+                            model: modelOrder,
                             //limit: 1,
-                            attributes: [['orderid', 'code'], 'statusid', 'fee', 'cod']
+                            attributes: [['orderid', 'code'], 'statusid', 'fee', 'cod'],
+                            where:{
+                                //statusid: '1 or 2'
+                            },
+                            include: {
+                                model: modelOrderStatus,
+                                attributes: [['statusname', 'statusid']]
+                            }
                         }
                     ]
                 });

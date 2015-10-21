@@ -8,17 +8,15 @@ angular.module('app')
 
         var saveToken = function(token){
             window.localStorage.setItem(tag,token);
-
         }
 
         var signIn = function(data){
-            console.log(data);
             return $http({
                 data,
                 url: 'http://localhost:3000/auth/signin',
                 method: 'POST'
             }).then(function(data){
-
+                console.log("Token Return: "+data.data.token);
                 saveToken(data.data.token);
             });
         }

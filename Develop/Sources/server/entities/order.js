@@ -88,7 +88,22 @@ module.exports = function(sequelize, DataTypes) {
           ]
         });
       },
-
+	  
+      getOrderDetailById: function (orderStatusModel, goodsModel, orderid) {
+        return order.findOne({
+          attributes:{ exclude: ['ledgerid','statusid']},
+          where: {
+            //orderid: orderid
+          },
+          include: [{
+            model: orderStatusModel,
+            attributes: [['statusname','status']]
+          }, {
+            model: goodsModel
+          }]
+        });
+	  },
+	  
       getAllOrders: function (oderstatusModel, store_id) {
         return order.findAll({
           attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid'],

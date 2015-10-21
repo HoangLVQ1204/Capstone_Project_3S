@@ -2,8 +2,18 @@
  * Created by hoanglvq on 9/22/15.
  */
 
-function adminController($scope,$state){
-
+function adminController($scope,$state,$http){
+    $scope.getUser = function(){
+        console.log("get Users");
+        return $http({
+            url: 'http://localhost:3000/users',
+            method: 'GET'
+        }).then(function(data){
+            $scope.data  = data;
+        }).catch(function(error){
+            console.log(error);
+        });
+    }
     $scope.$watch('$viewContentLoaded', function(event) {
 
         $('nav#menu-ver').mmenu({
@@ -22,6 +32,6 @@ function adminController($scope,$state){
     });
 }
 
-adminController.$inject = ['$scope','$state'];
+adminController.$inject = ['$scope','$state','$http'];
 angular.module('app').controller('adminController',adminController);
 

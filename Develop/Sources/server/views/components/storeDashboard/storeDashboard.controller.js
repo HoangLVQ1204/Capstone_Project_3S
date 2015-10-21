@@ -2,7 +2,6 @@
  * Created by hoanglvq on 9/22/15.
  */
 
-
 function storeDashboardController($scope,$state){
 
 

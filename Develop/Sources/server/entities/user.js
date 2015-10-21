@@ -30,10 +30,6 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     instanceMethods: {
       authenticate: function(plainTextPassword){
-        console.log("old: "+plainTextPassword);
-        console.log("old gen: "+ bcrypt.hashSync(plainTextPassword,bcrypt.genSaltSync(10)));
-        console.log("new: "+this.password);
-
         return bcrypt.compareSync(plainTextPassword, this.password);
       },
       encyptPassword: function(plainTextPassword){
@@ -57,7 +53,6 @@ module.exports = function(sequelize, DataTypes) {
         })
       }
     }
-
 
   });
 

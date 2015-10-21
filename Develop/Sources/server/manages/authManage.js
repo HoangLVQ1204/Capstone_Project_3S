@@ -2,24 +2,50 @@
  * Created by hoanglvq on 10/17/15.
  */
 var jwt         = require('jsonwebtoken');
-var expressJwt  = require('express-jwt');
 var config      = require('../config/config');
-var checkToken  = expressJwt({ secret: config.secrets.jwt });
+var expressJwt  = require('express-jwt')({ secret: config.secrets.jwt });
+var fs          = require('fs');
+
 
 module.exports  = function(app){
     var db = app.get('models');
 
     var checkToken = function(){
+
       return function(req,res,next){
-          console.log(req.query);
-          if(req.query && req.query.hasOwnProperty('access_token')){
-              req.headers.authorization = 'Bearer' + req.query.access_token;
-          }
-          console.log("TOKEN",req.query.access_token);
-          checkToken(req,res,next);
+
+          expressJwt(req,res,next);
+
       }
     };
 
+    var checkRole = function(){
+        return function(req,res,next){
+
+            var currentRoute        = req.route.path;
+            var currentRole         = req.user.user.userrole;
+            var currentAccessRoles  = [];
+            config.pathAccessRole.forEach(function(item){
+                console.log(item);
+                if(item.url == currentRoute){
+                    currentAccessRoles = item.role;
+                    return;
+                }
+            });
+
+            console.log(currentAccessRoles);
+
+            if(currentAccessRoles.indexOf(currentRole) != -1){
+                console.log("ok");
+                next();
+            }else{
+                console.log("err");
+                res.status(401).send('Your permission is denied');
+            }
+
+
+        }
+    }
 
     var verifyUser = function(){
         return function(req,res,next){
@@ -69,9 +95,6 @@ module.exports  = function(app){
 
         return function(req,res,next){
 
-            //var userName = req.body.userName;
-            //var token    = req.body.token;
-
             var newToken = signToken(req.user);
 
             console.log("New Token: "+newToken);
@@ -85,6 +108,7 @@ module.exports  = function(app){
     return {
         verifyUser: verifyUser,
         signIn : signIn,
-        checkToken: checkToken
+        checkToken: checkToken,
+        checkRole: checkRole
     }
 }
