@@ -11,11 +11,11 @@ insert into workingstatus values ('3', 'Busy');
 
 -- user
 
-insert into "user" values ('hoang', 'pass1', '1', '3', 'token1', '1');
-insert into "user" values ('huy', 'pass2', '3', '1', 'token2', '1');
-insert into "user" values ('quyen', 'pass3', '3', '2', 'token3', '1');
-insert into "user" values ('khanh', 'pass4', '2', '3', 'token4', '1');
-insert into "user" values ('nhung', 'pass5', '1', '1', 'token5', '1');
+insert into "user" values ('hoang', 'pass1', '1', '3', '1');
+insert into "user" values ('huy', 'pass2', '3', '1', '1');
+insert into "user" values ('quyen', 'pass3', '3', '2', '1');
+insert into "user" values ('khanh', 'pass4', '2', '3', '1');
+insert into "user" values ('nhung', 'pass5', '1', '1', '1');
 
 -- profile
 
