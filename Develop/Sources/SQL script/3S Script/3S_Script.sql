@@ -11,11 +11,12 @@ insert into workingstatus values ('3', 'Busy');
 
 -- user
 
-insert into "user" values ('hoang', 'pass1', '1', '3', '1');
-insert into "user" values ('huy', 'pass2', '3', '1', '1');
-insert into "user" values ('quyen', 'pass3', '3', '2', '1');
-insert into "user" values ('khanh', 'pass4', '2', '3', '1');
-insert into "user" values ('nhung', 'pass5', '1', '1', '1');
+insert into "user" values ('hoang', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '3', '1', '1');
+insert into "user" values ('huy', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '1', '1', '1');
+insert into "user" values ('quyen', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '1', '1', '1');
+insert into "user" values ('khanh', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '1', '1');
+insert into "user" values ('nhung', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '1', '1');
+insert into "user" values ('khoang', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '3', '1', '1');
 
 -- profile
 

@@ -432,9 +432,9 @@ function htmlParser(html, handler) {
 
 var hiddenPre=document.createElement("pre");
 /**
- * decodes all entities into regular string
+ * decodes all entities-draft into regular string
  * @param value
- * @returns {string} A string with decoded entities.
+ * @returns {string} A string with decoded entities-draft.
  */
 function decodeEntities(value) {
   if (!value) { return ''; }

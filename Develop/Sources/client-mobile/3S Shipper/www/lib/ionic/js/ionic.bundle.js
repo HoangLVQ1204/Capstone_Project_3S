@@ -30115,7 +30115,7 @@ var inputType = {
    * @param {string} ngModel Assignable angular expression to data-bind to.
    * @param {string} value The value to which the `ngModel` expression should be set when selected.
    *    Note that `value` only supports `string` values, i.e. the scope model needs to be a string,
-   *    too. Use `ngValue` if you need complex entities (`number`, `object`, ...).
+   *    too. Use `ngValue` if you need complex entities-draft (`number`, `object`, ...).
    * @param {string=} name Property name of the form under which the control is published.
    * @param {string=} ngChange Angular expression to be executed when input changes due to user
    *    interaction with the input element.
@@ -30854,7 +30854,7 @@ var CONSTANT_VALUE_REGEXP = /^(true|false|\d+)$/;
  * Likewise, `ngValue` can be used to generate `<option>` elements for
  * the {@link select `select`} element. In that case however, only strings are supported
  * for the `value `attribute, so the resulting `ngModel` will always be a string.
- * Support for `select` entities with non-string values is available via `ngOptions`.
+ * Support for `select` entities-draft with non-string values is available via `ngOptions`.
  *
  * @element input
  * @param {string=} ngValue angular expression, whose value will be bound to the `value` attribute
@@ -34062,7 +34062,7 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
  *
  * ## Animation Hooks
  *
- * Animations within entities are triggered when any of the associated CSS classes are added and removed
+ * Animations within entities-draft are triggered when any of the associated CSS classes are added and removed
  * on the input element which is attached to the model. These classes are: `.ng-pristine`, `.ng-dirty`,
  * `.ng-invalid` and `.ng-valid` as well as any other validations that are performed on the model itself.
  * The animations that are triggered within ngModel are similar to how they work in ngClass and
@@ -34120,7 +34120,7 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
  * Sometimes it's helpful to bind `ngModel` to a getter/setter function.  A getter/setter is a
  * function that returns a representation of the model when called with zero arguments, and sets
  * the internal state of a model when called with an argument. It's sometimes useful to use this
- * for entities that have an internal representation that's different from what the model exposes
+ * for entities-draft that have an internal representation that's different from what the model exposes
  * to the view.
  *
  * <div class="alert alert-success">
@@ -41359,9 +41359,9 @@ function htmlParser(html, handler) {
 
 var hiddenPre=document.createElement("pre");
 /**
- * decodes all entities into regular string
+ * decodes all entities-draft into regular string
  * @param value
- * @returns {string} A string with decoded entities.
+ * @returns {string} A string with decoded entities-draft.
  */
 function decodeEntities(value) {
   if (!value) { return ''; }

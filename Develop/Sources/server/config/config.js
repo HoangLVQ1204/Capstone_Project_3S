@@ -6,7 +6,7 @@ var config = {
 	prod: 'production',
 	test: 'testing',
 	port: process.env.PORT || 3000,
-	expireTime: 24*60*10,
+	expireTime: 24*60*10*60,
 	secrets: {
 		jwt: process.env.JWT || 'hoanglvqse90184'
 	},
