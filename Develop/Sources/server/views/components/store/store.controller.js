@@ -4,9 +4,6 @@
 
 function storeController($scope,$state){
 
-
-    });
-
     //document.getElementById("btnDemo").onclick = function() {alert("Hello")};
     //$state.go('app.login');
     

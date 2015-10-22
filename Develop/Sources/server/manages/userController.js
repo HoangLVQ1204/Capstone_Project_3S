@@ -5,7 +5,7 @@ module.exports = function(app) {
     var db = app.get('models');
 
     var params = function(req, res, next, user_id) {
-        return db.user.getOneUser(user_id)
+        return db.user.findUserByUsername(user_id)
         .then(function(user) {
             if (user) {
                 req.user = user;
