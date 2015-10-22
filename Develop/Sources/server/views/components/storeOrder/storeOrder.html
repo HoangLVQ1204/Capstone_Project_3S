@@ -1,3 +1,317 @@
 <div>
-    <h1>This is Order</h1>
+    <ol class="breadcrumb">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Form</a></li>
+        <li class="active">Form Wizard</li>
+    </ol>
+    <!-- //breadcrumb-->
+
+    <div id="content">
+
+        <div class="row">
+
+            <div class="col-lg-7">
+                <h1><strong>Create</strong> Order</h1>
+                <br>
+
+                <form id="validate-wizard" class="wizard-step">
+                    <ul>
+                        <li><a href="#step1" data-toggle="tab">1</a></li>
+                        <li><a href="#step2" data-toggle="tab">2</a></li>
+                        <li><a href="#step3" data-toggle="tab">3</a></li>
+                        <li><a href="#step4" data-toggle="tab">3</a></li>
+                    </ul>
+                    <div class="progress progress-stripes progress-sm" style="margin:0">
+                        <div class="progress-bar" data-color="theme"></div>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane fade" id="step1" parsley-validate parsley-bind>
+                            <h3>Delivery information</h3><br>
+
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label class="control-label">Full name</label>
+                                    <input type="text" class="form-control"
+                                           parsley-rangelength="[5,15]"
+                                           placeholder="Your customer name">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="control-label">Phone</label>
+                                    <input type="text" class="form-control"
+                                           parsley-type="phone"
+                                           placeholder="(XXX) XXXX XXX">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label">Address</label>
+                                    <textarea class="form-control" parsley-trigger="keyup" rows="1"
+                                              placeholder="Enter customer address"></textarea>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-4">
+                                    <label class="control-label">City</label>
+                                    <select class="selectpicker form-control" parsley-trigger="keyup" multiple>
+                                        <option value="Australia">Ha Noi</option>
+                                        <option value="China">Hai Phong</option>
+                                        <option value="Japan">Thanh Hoa</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="control-label">District</label>
+                                    <select class="selectpicker form-control" multiple>
+                                        <option value="Australia">Hai Ba Trung</option>
+                                        <option value="China">Cau Giay</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="control-label">Street</label>
+                                    <select class="selectpicker form-control" multiple>
+                                        <option value="Australia">Tran Duy Hung</option>
+                                        <option value="China">Truong Trinh</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="tab-pane fade" id="step2" parsley-validate parsley-bind>
+                            <h3>Order information</h3><br>
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label class="control-label">Category</label>
+                                    <select class="selectpicker form-control" multiple>
+                                        <option value="Australia">Foods</option>
+                                        <option value="China">Clothes</option>
+                                        <option value="Japan">Other</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="control-label">Goods</label>
+                                    <input type="text" class="form-control"
+                                           parsley-rangelength="[5,15]"
+                                           placeholder="Good name">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label class="control-label">Amount</label>
+                                    <input type="text" class="form-control " parsley-min="0" placeholder="0">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="control-label">Weight</label>
+                                    <input type="text" class="form-control"
+                                           parsley-min="0"
+                                           placeholder="Gram">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="control-label">Length</label>
+                                    <input type="text" class="form-control"
+                                           parsley-min="0"
+                                           placeholder="mm">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="control-label">Width</label>
+                                    <input type="text" class="form-control"
+                                           parsley-min="0"
+                                           placeholder="mm">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="control-label">High</label>
+                                    <input type="text" class="form-control"
+                                           parsley-min="0"
+                                           placeholder="mm">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <div class="iCheck" data-color="red">
+                                        <input type="checkbox" name="express" value="1">
+                                        <label>Express</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class=" iCheck " data-color="red">
+                                        <input type="checkbox" name="cod" value="1">
+                                        <label> Cash on delivery </label>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label class="control-label">Date</label>
+                                    <input type="text" class="form-control"
+                                           parsley-rangelength="[5,15]"
+                                           placeholder="Unit: Vietnam dong">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="control-label">Amount</label>
+                                    <input type="text" class="form-control"
+                                           parsley-rangelength="[5,15]"
+                                           placeholder="Unit: Vietnam dong">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="step3" parsley-validate parsley-bind>
+                            <h3>Pickup information</h3><br>
+
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label class="control-label">Store</label>
+                                    <select class="selectpicker form-control" multiple>
+                                        <option value="kfc1">KFC1</option>
+                                        <option value="kfc2">KFC2</option>
+                                        <option value="kfc3">KFC3</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="control-label">Phone</label>
+                                    <input type="text" class="form-control"
+                                           parsley-rangelength="[5,15]"
+                                           placeholder="Your store phone munber">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Address</label>
+                                    <textarea class="form-control" parsley-trigger="keyup" rows="1"
+                                              placeholder="Enter customer address"></textarea>
+                            </div>
+                        </div>
+
+                        <footer class="row">
+                            <div class="col-sm-5">
+                                <section class="wizard">
+                                    <button type="button" class="btn btn-inverse previous"><i
+                                            class="fa fa-angle-left"></i> Previous
+                                    </button>
+                                    <button type="button" class="btn btn-theme next" >Next <i
+                                            class="fa fa-angle-right" ></i></button>
+                                </section>
+                            </div>
+                            <div class="col-sm-8 align-lg-right">
+                                <div class="wizard-status">Wizard step : <span></span></div>
+                            </div>
+                        </footer>
+                    </div>
+                </form>
+
+
+            </div>
+            <!-- //content > row > col-lg-12 -->
+            <div class="column col-lg-5">
+                <div class=""><br><br><br>
+                    <div class="panel">
+                        <div class="panel-heading"><h3><strong>Additional</strong> Information </h3></div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <div class="col-md-8 align-lg-right">
+                                    <label class="control-label"><h4>Code for shiper</h4></label>
+                                </div>
+                                <label class="control-label col-md-4">3@D1</label>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8 align-lg-right">
+                                    <label class="control-label"><h4>Code for customer</h4></label>
+                                </div>
+                                <label class="control-label col-md-4">D4$2</label>
+                            </div>
+                            <div>
+                                <label>
+                                    <hr>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-8 align-lg-right">Cash on delivery:</label>
+                                <label class="control-label col-md-4">0d</label>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-8 align-lg-right">Ship fee:</label>
+                                <label class="control-label col-md-4">0d</label>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-8 align-lg-right">Total:</label>
+                                <label class="control-label col-md-4">0d</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="">
+                    <div class="panel">
+                        <div class="panel-heading"><h3><strong>Draff</strong> Order </h3></div>
+                        <div class="panel-body">
+                            <form>
+                                <ul ng-repeat="item in orderCarring">
+                                    <li class="list-group-item">{{item.orderid +" | " + item.recipientname + " | " +item.recipientphone}}</li>
+                                </ul>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <!-- //content > row-->
+
+        </div>
+        <!-- //content-->
+
+
+    </div>
+    <!-- //main-->
 </div>
+<script>
+    $(document).ready(function () {
+        $('#rootwizard').bootstrapWizard({
+            tabClass: "nav-wizard",
+            onTabShow: function (tab, navigation, index) {
+                tab.prevAll().addClass('completed');
+                tab.nextAll().removeClass('completed');
+                if (tab.hasClass("active")) {
+                    tab.removeClass('completed');
+                }
+                var $total = navigation.find('li').length;
+                var $current = index + 1;
+                var $percent = ($current / $total) * 100;
+                $('#rootwizard').find('.progress-bar').css({width: $percent + '%'});
+                $('#rootwizard').find('.wizard-status span').html($current + " / " + $total);
+            }
+        });
+
+        $('#validate-wizard').bootstrapWizard({
+            tabClass: "nav-wizard",
+            onNext: function (tab, navigation, index) {
+                var content = $('#step' + index);
+                if (typeof  content.attr("parsley-validate") != 'undefined') {
+                    var $valid = content.parsley('validate');
+                    if (!$valid) {
+                        return false;
+                    }
+                }
+                ;
+                // Set the name for the next tab
+                $('#step4 h3').find("span").html($('#fullname').val());
+            },
+            onTabClick: function (tab, navigation, index) {
+                $.notific8('Please click <strong>next button</strong> to wizard next step!! ', {
+                    life: 5000,
+                    theme: "danger",
+                    heading: " Wizard Tip :); "
+                });
+                return false;
+            },
+            onTabShow: function (tab, navigation, index) {
+                tab.prevAll().addClass('completed');
+                tab.nextAll().removeClass('completed');
+                if (tab.hasClass("active")) {
+                    tab.removeClass('completed');
+                }
+                var $total = navigation.find('li').length;
+                var $current = index + 1;
+                var $percent = ($current / $total) * 100;
+                $('#validate-wizard').find('.progress-bar').css({width: $percent + '%'});
+                $('#validate-wizard').find('.wizard-status span').html($current + " / " + $total);
+            }
+        });
+
+    });
+</script>

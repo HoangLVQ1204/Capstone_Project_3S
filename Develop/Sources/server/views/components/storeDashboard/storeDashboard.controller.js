@@ -17,7 +17,6 @@ function storeDashboardController($scope,$state,dataService){
             .success(function (rs) {
                 $scope.ordersWaiting = rs['Waiting'];
                 $scope.orderCarring = rs['Carrying'];
-                console.log(rs);
             })
             .error(function (error) {
                 console.log('Unable to load customer data: ' + error);
