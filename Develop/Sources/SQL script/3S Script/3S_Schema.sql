@@ -84,14 +84,16 @@ addressCoordination text
 CREATE TABLE OrderStatus
 (
 statusID int PRIMARY KEY,
-statusName varchar(20)
+statusName varchar(20),
+nextAction varchar(20)
 --Status cua don hang: gathering, delivering,....--
 );
 
 CREATE TABLE OrderType
 (
 typeID int PRIMARY KEY,
-typeName varchar(20)
+typeName varchar(20),
+nextAction varchar(20)
 --Loai chuyen nhanh hay cham--
 );
 

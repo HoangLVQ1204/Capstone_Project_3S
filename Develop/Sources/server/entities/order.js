@@ -84,19 +84,23 @@ module.exports = function(sequelize, DataTypes) {
           foreignKey: 'statusid',
           constraints: false
         });
+        order.hasMany(db.task, {
+          foreignKey: 'orderid',
+          constraints: false
+        });
       },
-      getAllTaskOfShipper: function(taskOrder, orderStatusModel, shipperid, taskdate) {
+      getAllTaskOfShipper: function(task, orderstatus, shipperid, taskdate) {
         return order.findAll({
           attributes: ['orderid', 'ordertypeid', 'pickupaddress', 'deliveryaddress', 'pickupdate', 'deliverydate', 'statusid'],
           include: [{
-            model: taskOrder,
+            model: task,
             attributes: ['tasktype', 'taskdate'],
             where: {
               shipperid: shipperid,
               taskdate: taskdate
             }
           },{
-            model: orderStatusModel,
+            model: orderstatus,
             attributes: ['statusname']
           }
           ]
