@@ -31,7 +31,7 @@
                             <div class="form-group row">
                                 <div class="col-md-6">
                                     <label class="control-label">Full name</label>
-                                    <input type="text" class="form-control"
+                                    <input type="text" name="" class="form-control"
                                            parsley-rangelength="[5,15]"
                                            placeholder="Your customer name">
                                 </div>
@@ -51,7 +51,8 @@
                             <div class="form-group row">
                                 <div class="col-md-4">
                                     <label class="control-label">City</label>
-                                    <select class="selectpicker form-control" parsley-trigger="keyup" multiple>
+                                    <select class="selectpicker form-control" parsley-trigger="keyup">
+                                        <option value="">Select your city</option>
                                         <option value="Australia">Ha Noi</option>
                                         <option value="China">Hai Phong</option>
                                         <option value="Japan">Thanh Hoa</option>
@@ -59,27 +60,43 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="control-label">District</label>
-                                    <select class="selectpicker form-control" multiple>
+                                    <select class="selectpicker form-control" >
+                                        <option value="">Selcect your district</option>
                                         <option value="Australia">Hai Ba Trung</option>
                                         <option value="China">Cau Giay</option>
                                     </select>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="control-label">Street</label>
-                                    <select class="selectpicker form-control" multiple>
+                                    <select class="selectpicker form-control" >
+                                        <option value="">Select your street</option>
                                         <option value="Australia">Tran Duy Hung</option>
                                         <option value="China">Truong Trinh</option>
                                     </select>
                                 </div>
                             </div>
-
+                            <hr>
+                            <footer class="row">
+                                <div class="col-sm-5">
+                                    <section class="wizard">
+                                        <button type="button" class="btn btn-inverse previous"><i
+                                                class="fa fa-angle-left"></i> Previous
+                                        </button>
+                                        <button type="button" class="btn btn-theme next" >Next <i
+                                                class="fa fa-angle-right" ></i></button>
+                                    </section>
+                                </div>
+                                <div class="col-sm-7 align-lg-right">
+                                    <div class="wizard-status">Wizard step : <span></span></div>
+                                </div>
+                            </footer>
                         </div>
                         <div class="tab-pane fade" id="step2" parsley-validate parsley-bind>
                             <h3>Order information</h3><br>
                             <div class="form-group row">
                                 <div class="col-md-6">
                                     <label class="control-label">Category</label>
-                                    <select class="selectpicker form-control" multiple>
+                                    <select class="selectpicker form-control" >
                                         <option value="Australia">Foods</option>
                                         <option value="China">Clothes</option>
                                         <option value="Japan">Other</option>
@@ -151,6 +168,21 @@
                                            placeholder="Unit: Vietnam dong">
                                 </div>
                             </div>
+                            <hr>
+                            <footer class="row">
+                                <div class="col-sm-5">
+                                    <section class="wizard">
+                                        <button type="button" class="btn btn-inverse previous"><i
+                                                class="fa fa-angle-left"></i> Previous
+                                        </button>
+                                        <button type="button" class="btn btn-theme next" >Next <i
+                                                class="fa fa-angle-right" ></i></button>
+                                    </section>
+                                </div>
+                                <div class="col-sm-7 align-lg-right">
+                                    <div class="wizard-status">Wizard step : <span></span></div>
+                                </div>
+                            </footer>
                         </div>
                         <div class="tab-pane fade" id="step3" parsley-validate parsley-bind>
                             <h3>Pickup information</h3><br>
@@ -158,7 +190,7 @@
                             <div class="form-group row">
                                 <div class="col-md-6">
                                     <label class="control-label">Store</label>
-                                    <select class="selectpicker form-control" multiple>
+                                    <select class="selectpicker form-control" >
                                         <option value="kfc1">KFC1</option>
                                         <option value="kfc2">KFC2</option>
                                         <option value="kfc3">KFC3</option>
@@ -176,22 +208,22 @@
                                     <textarea class="form-control" parsley-trigger="keyup" rows="1"
                                               placeholder="Enter customer address"></textarea>
                             </div>
+                            <hr>
+                            <footer class="row">
+                                <div class="col-sm-5">
+                                    <section class="wizard">
+                                        <button type="button" class="btn btn-inverse previous"><i
+                                                class="fa fa-angle-left"></i> Previous
+                                        </button>
+                                        <button type="button" class="btn btn-theme next" >Submit <i
+                                                class="fa fa-angle-right" ></i></button>
+                                    </section>
+                                </div>
+                                <div class="col-sm-7 align-lg-right">
+                                    <div class="wizard-status">Wizard step : <span></span></div>
+                                </div>
+                            </footer>
                         </div>
-
-                        <footer class="row">
-                            <div class="col-sm-5">
-                                <section class="wizard">
-                                    <button type="button" class="btn btn-inverse previous"><i
-                                            class="fa fa-angle-left"></i> Previous
-                                    </button>
-                                    <button type="button" class="btn btn-theme next" >Next <i
-                                            class="fa fa-angle-right" ></i></button>
-                                </section>
-                            </div>
-                            <div class="col-sm-8 align-lg-right">
-                                <div class="wizard-status">Wizard step : <span></span></div>
-                            </div>
-                        </footer>
                     </div>
                 </form>
 

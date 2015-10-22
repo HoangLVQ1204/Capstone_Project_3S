@@ -127,9 +127,6 @@ module.exports = function(sequelize, DataTypes) {
         })
       },
 
-      putOrder: function (order) {
-        return order.save();
-      },
 
       postOneOrder: function(newOrder){
         return order.build(newOrder).save();
