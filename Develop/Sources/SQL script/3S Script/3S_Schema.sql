@@ -48,7 +48,7 @@ address varchar(100),
 addressCoordination text,
 phoneNumber varchar(11),
 email varchar(50),
-registerDated timestamp
+registeredDate timestamp
 );
 
 CREATE TABLE ManageStore
@@ -85,7 +85,8 @@ CREATE TABLE OrderStatus
 (
 statusID int PRIMARY KEY,
 statusName varchar(20),
-nextAction varchar(20)
+nextAction varchar(50),
+requiredCode boolean
 --Status cua don hang: gathering, delivering,....--
 );
 

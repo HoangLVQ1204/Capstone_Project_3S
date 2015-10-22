@@ -59,15 +59,15 @@ insert into stock values ('2', 'Hoan Kiem Stock', 'Hoan Kiem - Ha Noi', 'khoangk
 -- Neu store huy don hang: 6
 -- K/H khong nhan hang thi se return ve store or stock: 7
 -- Done: 8
-insert into orderstatus values ('1', 'Waiting', 'Start');
-insert into orderstatus values ('2', 'Picking up', 'Check code pick up');
-insert into orderstatus values ('3', 'Bring to stock', 'Check code in stock');
-insert into orderstatus values ('4', 'In stock', 'Start deliver');
-insert into orderstatus values ('5', 'Delivering', 'Check code with cust');
-insert into orderstatus values ('6', 'Pending');
-insert into orderstatus values ('7', 'Canceled');
-insert into orderstatus values ('8', 'Returning to stock', 'Check code return');
-insert into orderstatus values ('9', 'Done');
+insert into orderstatus values ('1', 'Waiting', 'Start', 'false');
+insert into orderstatus values ('2', 'Picking up', 'Check code pick up', 'true');
+insert into orderstatus values ('3', 'Bring to stock', 'Check code in stock', 'true');
+insert into orderstatus values ('4', 'In stock', 'Start deliver', 'false');
+insert into orderstatus values ('5', 'Delivering', 'Check code with customer', 'true');
+insert into orderstatus values ('6', 'Pending', NULL, 'false');
+insert into orderstatus values ('7', 'Canceled', NULL, 'false');
+insert into orderstatus values ('8', 'Returning to stock', 'Check code return', 'true');
+insert into orderstatus values ('9', 'Done', NULL, 'false');
 
 -- ordertype
 
