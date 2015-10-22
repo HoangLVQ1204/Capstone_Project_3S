@@ -22,6 +22,10 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: true,
             primaryKey: true
         },
+        tasktype: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
         taskdate: {
             type: DataTypes.DATE,
             allowNull: true

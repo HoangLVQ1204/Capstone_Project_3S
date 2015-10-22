@@ -51,6 +51,14 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       primaryKey: true
     },
+    ispending: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
+    },
+    isdraff: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
+    },
     fee: {
       type: DataTypes.BIGINT,
       allowNull: true
@@ -69,26 +77,30 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     freezeTableName: true,
-            timestamps: false,
-            classMethods: {
-              associate: function(db) {
-                order.belongsTo(db.orderstatus, {
-                  foreignKey: 'statusid',
-                  constraints: false
-                });
-              },
-              getAllTaskOfShipper: function(taskOrder, orderStatusModel, shipperid, taskdate) {
-                return order.findAll({
-                  attributes: ['orderid', 'ordertypeid', 'pickupaddress', 'deliveryaddress', 'pickupdate', 'deliverydate', 'statusid'],
-                  include: [{
-                    model: taskOrder,
+    timestamps: false,
+    classMethods: {
+      associate: function(db) {
+        order.belongsTo(db.orderstatus, {
+          foreignKey: 'statusid',
+          constraints: false
+        });
+        order.hasMany(db.task, {
+          foreignKey: 'orderid',
+          constraints: false
+        });
+      },
+      getAllTaskOfShipper: function(task, orderstatus, shipperid, taskdate) {
+        return order.findAll({
+          attributes: ['orderid', 'ordertypeid', 'pickupaddress', 'deliveryaddress', 'pickupdate', 'deliverydate', 'statusid'],
+          include: [{
+            model: task,
             attributes: ['tasktype', 'taskdate'],
             where: {
               shipperid: shipperid,
               taskdate: taskdate
             }
           },{
-            model: orderStatusModel,
+            model: orderstatus,
             attributes: ['statusname']
           }
           ]

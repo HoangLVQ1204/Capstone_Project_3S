@@ -9,21 +9,11 @@ module.exports = function (app) {
     var db = app.get('models');
 
     var getTask = function(req,res,next) {
-        var shipperid = 'hoang';
-        var taskdate = '2015-02-09';
+        var shipperid = 'huykool';
+        var taskdate = '2015-02-15';
         var Task = db.task;
         var Order = db.order;
         var OrderStatus = db.orderstatus;
-        //get all task of shipper
-        Order.hasMany(Task, {
-            foreignKey: 'orderid',
-            constraints: false
-        });
-        //get status name of order
-        Order.belongsTo(OrderStatus, {
-            foreignKey: 'statusid',
-            constraints: false
-        });
 
         return Order.getAllTaskOfShipper(Task, OrderStatus, shipperid, taskdate)
             .then(function (tasks) {
@@ -31,10 +21,16 @@ module.exports = function (app) {
                 if (_.isEmpty(tasks) == false) {
                     var listTasks=[];
                     _.each(tasks, function(task){
-                        listTasks.push({'orderid': task.dataValues.orderid, 'ordertypeid': task.dataValues.ordertypeid,
-                            'statusid': task.dataValues.statusid, 'statusname':  task['orderstatus'].dataValues.statusname, 'tasktype': task['tasks'][0].dataValues.tasktype,
-                            'pickupaddress': task.dataValues.pickupaddress, 'deliveryaddress': task.dataValues.deliveryaddress,
-                            'pickupdate': task.dataValues.pickupdate, 'deliverydate': task.dataValues.deliverydate
+                        listTasks.push({
+                            'orderid': task.dataValues.orderid,
+                            'ordertypeid': task.dataValues.ordertypeid,
+                            'statusid': task.dataValues.statusid,
+                            'statusname':  task['orderstatus'].dataValues.statusname,
+                            'tasktype': task['tasks'][0].dataValues.tasktype,
+                            'pickupaddress': task.dataValues.pickupaddress,
+                            'deliveryaddress': task.dataValues.deliveryaddress,
+                            'pickupdate': task.dataValues.pickupdate,
+                            'deliverydate': task.dataValues.deliverydate
                         });
                     });
                     //Group by order type
