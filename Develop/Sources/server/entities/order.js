@@ -51,6 +51,14 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       primaryKey: true
     },
+    ispending: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
+    },
+    isdraff: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
+    },
     fee: {
       type: DataTypes.BIGINT,
       allowNull: true
