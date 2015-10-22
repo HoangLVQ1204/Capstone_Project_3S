@@ -3,9 +3,7 @@
  */
 
 function adminStoreListController($scope,$state, $http, $filter) {
-
     $scope.storeList = [];
-
     $scope.searchOptions = [
         {
             option: 'All',
@@ -23,12 +21,17 @@ function adminStoreListController($scope,$state, $http, $filter) {
         }];
 
     $scope.selected =$scope.searchOptions[0];
-
+    $scope.dateRange = null;
     $http.get("http://localhost:3000/api/store/getLedger").success(function(response){
         $scope.storeList = response;
-
-        console.log(response);
+        $scope.storeList.map(function(store){
+            store.paydate = "October 13, 2015 11:13:00";
+            return store;
+        });
+        //console.log(response);
     })
+
+
     $scope.displayedCollection = [].concat($scope.storeList);
 
     $scope.$watch('$viewContentLoaded', function (event) {
@@ -43,10 +46,20 @@ function adminStoreListController($scope,$state, $http, $filter) {
         //        null
         //    ]
         //});
-
+       // console.log( $( "#daterange").val());
     });
 
+    $(document).ready(function() {
+            $('.form_datetime')
+            //Listen for the change even on the input
+            .change(dateChanged)
+            .on('dp.change', dateChanged)
+            .on('changeDate', dateChanged);
+    });
 
+    function dateChanged() {
+        alert(1);
+    }
 
 
 
