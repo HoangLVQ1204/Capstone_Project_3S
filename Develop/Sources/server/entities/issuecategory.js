@@ -1,14 +1,19 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('issuecategory', { 
+  var issuecategory = sequelize.define('issuecategory', {
     categoryid: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      primaryKey: true
     },
     categoryname: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: true
     }
+  }, {
+    freezeTableName: true,
+    timestamps: false
   });
+  return issuecategory
 };

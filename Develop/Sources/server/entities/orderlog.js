@@ -1,70 +1,89 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('order', { 
+  var orderlog = sequelize.define('orderlog', {
+    logid: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      primaryKey: true
+    },
     orderid: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
+      primaryKey: true
     },
     storeid: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: true
+    },
+    taskid: {
+      type: DataTypes.STRING,
+      allowNull: true
     },
     ordertypeid: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: true
     },
     pickupaddress: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: true
     },
     deliveryaddress: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: true
     },
     pickupdate: {
       type: DataTypes.DATE,
-      allowNull: true,
+      allowNull: true
     },
     deliverydate: {
       type: DataTypes.DATE,
-      allowNull: true,
+      allowNull: true
     },
     recipientphone: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: true
     },
     recipientname: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: true
     },
     ledgerid: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: true
     },
     statusid: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    ispending: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true,
+      allowNull: true
     },
     fee: {
       type: DataTypes.BIGINT,
-      allowNull: true,
+      allowNull: true
     },
     cod: {
       type: DataTypes.BIGINT,
-      allowNull: true,
+      allowNull: true
     },
     pickupaddresscoordination: {
       type: DataTypes.TEXT,
-      allowNull: true,
+      allowNull: true
     },
     deliveryaddresscoordination: {
       type: DataTypes.TEXT,
+      allowNull: true
+    },
+    uptimestamp: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    updater: {
+      type: DataTypes.STRING,
       allowNull: true,
+      primaryKey: true
     }
+  }, {
+    freezeTableName: true,
+    timestamps: false
   });
+  return orderlog;
 };

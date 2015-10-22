@@ -8,14 +8,19 @@
         <ion-pane>
           <ion-content >
             <ion-list>
-              <ion-item class="item-icon-right" ng-repeat="order in pickupTasks" type="item-text-wrap" href="#/app/detail/{{order.id}}">
+              <ion-item class="item-icon-right" ng-repeat="order in pickupTasks" type="item-text-wrap" href="#/app/detail/{{order.orderid}}">
                 <div class="titleContent" style="min-height: 80px;">
                   <div>
                     <img src="img/storeprofile.png"/>
                   </div>
                   <div>
                     <h2>{{order.orderid}}</h2>
-                    <p class="statusWt label">{{order.statusname}}</p>
+                    <!--waiting-->
+                    <p ng-show="{{order.statusid == 1}}" class="statusWt label">{{order.statusname}}</p>
+                    <!--Picking & Bring to stock-->
+                    <p ng-show="{{order.statusid == 2 || order.statusid == 3}}" class="statusWt label">{{order.statusname}}</p>
+                    <!--Pending-->
+                    <p ng-show="{{order.statusid == 6}}" class="statusPd label">{{order.statusname}}</p>
                     <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
                     <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
                   </div>
@@ -30,14 +35,20 @@
         <ion-pane>
           <ion-content >
             <ion-list>
-              <ion-item class="item-icon-right" ng-repeat="order in shipTasks" type="item-text-wrap" href="#/app/detail/{{order.id}}">
-                <div class="titleContent">
+              <ion-item class="item-icon-right" ng-repeat="order in shipTasks" type="item-text-wrap" href="#/app/detail/{{order.orderid}}">
+                <div class="titleContent" style="min-height: 80px;">
                   <div>
-                    <p>{{order.orderstatus.statusname}}</p>
+                    <img src="img/storeprofile.png"/>
                   </div>
                   <div>
                     <h2>{{order.orderid}}</h2>
-                    <p><i class="ion-ios-flag"></i> {{order.pickupaddress}}</p>
+                    <!--Delivering-->
+                    <p ng-show="{{order.statusid == 5}}" class="statusDn label">{{order.statusname}}</p>
+                    <!--Returning to stock-->
+                    <p ng-show="{{order.statusid == 8}}" class="statusDn label">{{order.statusname}}</p>
+                    <!--Pending-->
+                    <p ng-show="{{order.statusid == 6}}" class="statusPd label">{{order.statusname}}</p>
+                    <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
                     <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
                   </div>
                 </div>
@@ -51,14 +62,24 @@
         <ion-pane>
           <ion-content>
             <ion-list>
-              <ion-item class="item-icon-right" ng-repeat="order in expressTasks" type="item-text-wrap" href="#/app/detail/{{order.id}}">
+              <ion-item class="item-icon-right" ng-repeat="order in expressTasks" type="item-text-wrap" href="#/app/detail/{{order.orderid}}">
                <div class="titleContent">
                  <div>
-                   <p>{{order.orderstatus.statusname}}</p>
+                   <img src="img/storeprofile.png"/>
                  </div>
                  <div>
                    <h2>{{order.orderid}}</h2>
-                   <p><i class="ion-ios-flag"></i> {{order.pickupaddress}}</p>
+                   <!--Picking -->
+                   <p ng-show="{{order.statusid == 2 || order.statusid == 3}}" class="statusWt label">{{order.statusname}}</p>
+                   <!--Delivering-->
+                   <p ng-show="{{order.statusid == 5}}" class="statusDn label">{{order.statusname}}</p>
+                   <!--Pending-->
+                   <p ng-show="{{order.statusid == 6}}" class="statusPd label">{{order.statusname}}</p>
+                   <!--Returning to stock-->
+                   <p ng-show="{{order.statusid == 8}}" class="statusDn label">{{order.statusname}}</p>
+
+
+                   <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
                    <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
                  </div>
                </div>

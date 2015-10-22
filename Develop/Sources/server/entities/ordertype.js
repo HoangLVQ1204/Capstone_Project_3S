@@ -1,14 +1,19 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('confirmationcodetype', { 
+  var ordertype =  sequelize.define('ordertype', {
     typeid: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      primaryKey: true
     },
-    codetype: {
+    typename: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: true
     }
+  }, {
+    freezeTableName: true,
+    timestamps: false
   });
+  return ordertype;
 };

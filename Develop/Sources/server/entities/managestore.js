@@ -2,14 +2,16 @@
 
 module.exports = function(sequelize, DataTypes) {
   var managestore = sequelize.define('managestore', {
-    managerid: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    storeid: {
-      type: DataTypes.STRING,
-      allowNull: false
-    }
+      managerid: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          primaryKey: true
+      },
+      storeid: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          primaryKey: true
+      }
   }, {
         freezeTableName: true,
         timestamps: false,

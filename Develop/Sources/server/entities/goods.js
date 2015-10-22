@@ -1,38 +1,45 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('goods', { 
+  var goods = sequelize.define('goods', {
     goodsid: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      primaryKey: true
     },
     orderid: {
       type: DataTypes.STRING,
       allowNull: true,
+      primaryKey: true
     },
     stockid: {
       type: DataTypes.INTEGER,
       allowNull: true,
+      primaryKey: true
     },
     weight: {
-      type: 'DOUBLE PRECISION',
-      allowNull: true,
+      type: DataTypes.DOUBLE,
+      allowNull: true
     },
     lengthsize: {
-      type: 'DOUBLE PRECISION',
-      allowNull: true,
+      type: DataTypes.DOUBLE,
+      allowNull: true
     },
     widthsize: {
-      type: 'DOUBLE PRECISION',
-      allowNull: true,
+      type: DataTypes.DOUBLE,
+      allowNull: true
     },
     heightsize: {
-      type: 'DOUBLE PRECISION',
-      allowNull: true,
+      type: DataTypes.DOUBLE,
+      allowNull: true
     },
     description: {
       type: DataTypes.TEXT,
-      allowNull: true,
+      allowNull: true
     }
+  }, {
+    freezeTableName: true,
+    timestamps: false
   });
+  return goods;
 };
