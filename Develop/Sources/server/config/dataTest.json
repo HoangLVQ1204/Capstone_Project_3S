@@ -1,0 +1,111 @@
+/**
+ * Created by hoanglvq on 10/23/15.
+ */
+
+{
+    "all": {
+        "shipper": [
+            {
+                "order" : ["order1"]
+
+            },
+            {
+                "order" : ["order3","order2"]
+            },
+            {
+                "order" : ["order4"]
+            }
+        ],
+        "store": [
+            {
+                "order" : ["order1","order2"]
+            },
+            {
+                "order" : ["order3","order4"]
+            }
+        ],
+        "custormer": [
+            {
+                "order" : ["order1","order3"]
+            },
+            {
+                "order" : ["order2"]
+            },
+            {
+                "order" : ["order4"]
+            }
+        ]
+    },
+
+    "shipper" : {
+        "shipper": [
+            {
+                "order" : ["order1","order2","order3"]
+            }
+        ],
+        "store": [
+            {
+                "order": ["order1","order2"]
+            },
+            {
+                "order": ["order3"]
+            }
+        ],
+        "custormer": [
+            {
+                "order": ["order1"]
+            },
+            {
+                "order": ["order2","order3"]
+            }
+        ]
+    },
+
+    "store" : {
+        "shipper": [
+            {
+                "order": ["order1"]
+            },
+            {
+                "order": ["order2","order3"]
+            },
+            {
+                "order": ["order4"]
+            }
+        ],
+        "store":[
+            {
+                "order": ["order1","order2","order3","order4"]
+            }
+        ],
+        "custormer":[
+            {
+                "order": ["order1"]
+            },
+            {
+                "order": ["order2","order3"]
+            },
+            {
+                "order": ["order4"]
+            }
+        ]
+    },
+
+    "detail": {
+        "shipper": [
+            {
+                "order": ["order1"]
+            }
+        ],
+        "store": [
+            {
+                "order": ["order1"]}
+            }
+        ],
+        "custormer":[
+            {
+                "order": ["order1"]
+            }
+        ]
+    }
+}
