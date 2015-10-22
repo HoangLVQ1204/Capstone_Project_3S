@@ -5,11 +5,13 @@
 /* Script */
 angular.module('app', [
     'ui.router',
-    'angular-jwt'
-]).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider){
+    'angular-jwt',
+    'nemLogging',
+    'uiGmapgoogle-maps'
+]).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider,uiGmapGoogleMapApiProvider){
 
     // Set up Routes
-    $urlRouterProvider.otherwise('/store/dashboard');
+    $urlRouterProvider.otherwise('/store/map');
 
     $stateProvider
         .state('login',{
@@ -21,11 +23,19 @@ angular.module('app', [
             url: '/admin',
             template: '<admin></admin>'
         })
+        .state('admin.map',{
+            url: '/map',
+            template: '<map></map>'
+        })
 
         .state('store',{
             abstract: true,
             url: '/store',
             template: '<store></store>'
+        })
+        .state('store.map',{
+            url: '/map',
+            template: '<map></map>'
         })
         .state('store.dashboard',{
             url: '/dashboard',
@@ -41,6 +51,12 @@ angular.module('app', [
     };
 
     $httpProvider.interceptors.push('jwtInterceptor');
+
+    uiGmapGoogleMapApiProvider.configure({
+        key: 'AIzaSyAFwZM1zlceJr8rMvXxHwS06S3ljhXnlDI',
+        v  : '3.20',
+        libraries: 'geometry,visualization,drawing,places'
+    })
 
 }).run(function($rootScope){
     $rootScope.$on('$stateChangeSuccess', function(e, toState){
