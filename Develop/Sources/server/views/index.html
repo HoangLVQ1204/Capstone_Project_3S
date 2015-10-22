@@ -3,7 +3,7 @@
 <head lang="en">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-    <title>3S - Shipper</title>
+    <title>Karry Well</title>
 
     <!-- Favicons -->
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/ico/apple-touch-icon-144-precomposed.png">
@@ -19,16 +19,13 @@
     <link type="text/css" rel="stylesheet" href="/assets/css/bootstrap/bootstrap.min.css" />
     <link type="text/css" rel="stylesheet" href="/assets/css/bootstrap/bootstrap-themes.css" />
     <link type="text/css" rel="stylesheet" href="/assets/css/style.css" />
+    <link type="text/css" rel="stylesheet" href="/assets/css/karrywell.css" />
+    <link type="text/css" rel="stylesheet" href="/assets/css/store.css" />
 
-    <!-- Styleswitch if  you don't chang theme , you can delete -->
-    <!--<link type="text/css" rel="alternate stylesheet" media="screen" title="style1" href="/assets/css/styleTheme1.css" />-->
-    <!--<link type="text/css" rel="alternate stylesheet" media="screen" title="style2" href="/assets/css/styleTheme2.css" />-->
-    <!--<link type="text/css" rel="alternate stylesheet" media="screen" title="style3" href="/assets/css/styleTheme3.css" />-->
-    <link type="text/css" rel="alternate stylesheet" media="screen" title="style4" href="/assets/css/styleTheme4.css" />
 
 </head>
 
-<body>
+<body ng-class="styleBody">
 
 <div ui-view id="wrapper"></div>
 
@@ -73,10 +70,16 @@
 <script src="/libs/angular/angular.min.js"></script>
 <script src="/libs/angular-ui-router/release/angular-ui-router.min.js"></script>
 <script src="/libs/angular-material-icons/angular-material-icons.min.js"></script>
+<script src="/libs/angular-jwt/dist/angular-jwt.min.js"></script>
 <script src="/libs/angular-smart-table/dist/smart-table.min.js"></script>
 
-
 <script src="/app.js"></script>
+<!--<script src="/service/dataFactory.js"></script>-->
+
+<script src="/components/common/auth.service.js"></script>
+
+<script src="/components/login/login.controller.js"></script>
+<script src="/components/login/login.directive.js"></script>
 
 <script src="/components/admin/admin.controller.js"></script>
 <script src="/components/admin/admin.directive.js"></script>

@@ -3,17 +3,40 @@
   <ion-nav-back-button>
   </ion-nav-back-button>
     <ion-tabs class="tabs-icon-top tabs-striped tabs-color-balanced">
-      <ion-tab title="Pickup" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart">
+
+        <ion-tab title="Pickup" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart" badge="badgeCountPick" badge-style="badge-assertive">
         <ion-pane>
           <ion-content >
             <ion-list>
-              <ion-item class="item-icon-right" ng-show="{{order.ordertypeid == 1}}" ng-repeat="order in orders" type="item-text-wrap" href="#/app/detail/{{order.id}}">
-                <div class="titleContent">
+              <ion-item class="item-icon-right" ng-repeat="order in pickupTasks" type="item-text-wrap" href="#/app/detail/{{order.orderid}}">
+                <div class="titleContent" style="min-height: 80px;">
                   <div>
-                    <p>{{order.statusid}}</p>
+                    <img src="img/storeprofile.png"/>
                   </div>
                   <div>
-                    <h2>{{order.code}}</h2>
+                    <h2>{{order.orderid}}</h2>
+                    <p class="statusWt label">{{order.statusname}}</p>
+                    <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
+                    <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
+                  </div>
+                </div>
+                <i class="icon ion-chevron-right icon-accessory"></i>
+              </ion-item>
+            </ion-list>
+          </ion-content>
+        </ion-pane>
+      </ion-tab>
+      <ion-tab title="Ship" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart"  badge="badgeCountShip" badge-style="badge-assertive">
+        <ion-pane>
+          <ion-content >
+            <ion-list>
+              <ion-item class="item-icon-right" ng-repeat="order in shipTasks" type="item-text-wrap" href="#/app/detail/{{order.orderid}}">
+                <div class="titleContent">
+                  <div>
+                    <p>{{order.orderstatus.statusname}}</p>
+                  </div>
+                  <div>
+                    <h2>{{order.orderid}}</h2>
                     <p><i class="ion-ios-flag"></i> {{order.pickupaddress}}</p>
                     <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
                   </div>
@@ -24,38 +47,17 @@
           </ion-content>
         </ion-pane>
       </ion-tab>
-      <ion-tab title="Ship" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart">
-        <ion-pane>
-          <ion-content >
-            <ion-list>
-              <ion-item class="item-icon-right" ng-show="{{order.ordertypeid == 2}}" ng-repeat="order in orders" type="item-text-wrap" href="#/app/detail/{{order.id}}">
-                <div class="titleContent">
-                  <div>
-                    <p>{{order.statusid}}</p>
-                  </div>
-                  <div>
-                    <h2>{{order.code}}</h2>
-                    <p><i class="ion-ios-flag"></i> {{order.pickupaddress}}</p>
-                    <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
-                  </div>
-                </div>
-                <i class="icon ion-chevron-right icon-accessory"></i>
-              </ion-item>
-            </ion-list>
-          </ion-content>
-        </ion-pane>
-      </ion-tab>
-      <ion-tab title="HotShip" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart">
+      <ion-tab title="Express" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart"  badge="badgeCountExpress" badge-style="badge-assertive">
         <ion-pane>
           <ion-content>
             <ion-list>
-              <ion-item class="item-icon-right" ng-show="{{order.ordertypeid == 3}}" ng-repeat="order in orders" type="item-text-wrap" href="#/app/detail/{{order.id}}">
+              <ion-item class="item-icon-right" ng-repeat="order in expressTasks" type="item-text-wrap" href="#/app/detail/{{order.orderid}}">
                <div class="titleContent">
                  <div>
-                   <p>{{order.statusid}}</p>
+                   <p>{{order.orderstatus.statusname}}</p>
                  </div>
                  <div>
-                   <h2>{{order.code}}</h2>
+                   <h2>{{order.orderid}}</h2>
                    <p><i class="ion-ios-flag"></i> {{order.pickupaddress}}</p>
                    <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
                  </div>

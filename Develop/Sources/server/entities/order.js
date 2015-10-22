@@ -12,11 +12,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       primaryKey: true
     },
-    taskid: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      primaryKey: true
-    },
     ordertypeid: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -56,6 +51,14 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       primaryKey: true
     },
+    ispending: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
+    },
+    isdraff: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
+    },
     fee: {
       type: DataTypes.BIGINT,
       allowNull: true
@@ -74,7 +77,76 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     freezeTableName: true,
-    timestamps: false
+    timestamps: false,
+    classMethods: {
+      associate: function(db) {
+        order.belongsTo(db.orderstatus, {
+          foreignKey: 'statusid',
+          constraints: false
+        });
+      },
+      getAllTaskOfShipper: function(taskOrder, orderStatusModel, shipperid, taskdate) {
+        return order.findAll({
+          attributes: ['orderid', 'ordertypeid', 'pickupaddress', 'deliveryaddress', 'pickupdate', 'deliverydate', 'statusid'],
+          include: [{
+            model: taskOrder,
+            attributes: ['tasktype', 'taskdate'],
+            where: {
+              shipperid: shipperid,
+              taskdate: taskdate
+            }
+          },{
+            model: orderStatusModel,
+            attributes: ['statusname']
+          }
+          ]
+        });
+      },
+	  
+      getOrderDetailById: function (orderStatusModel, goodsModel, orderid) {
+        return order.findOne({
+          attributes:{ exclude: ['ledgerid','statusid']},
+          where: {
+            //orderid: orderid
+          },
+          include: [{
+            model: orderStatusModel,
+            attributes: [['statusname','status']]
+          }, {
+            model: goodsModel
+          }]
+        });
+	  },
+	  
+      getAllOrders: function (oderstatusModel, store_id) {
+        return order.findAll({
+          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid'],
+          include: [
+            {'model': oderstatusModel}
+          ]
+        });
+      },
+
+      getOneOrder: function (order_id) {
+        return order.findOne({
+          where: {
+            'orderid': order_id
+          }
+        })
+      },
+
+      putOrder: function (order) {
+        return order.save();
+      },
+
+      postOneOrder: function(newOrder){
+        return order.build(newOrder).save();
+      },
+
+      putOrder: function (currentOrder) {
+        return currentOrder.save();
+      }
+    }
   });
   return order;
 };

@@ -6,24 +6,45 @@ logger.log('Seeding the Database');
 var users = [
 	{
 		username: "hoang",
-		password: "pass1",
-		userrole: "1",
-		userstatus: "3",
-		token: "token1"
+		password: "$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq",
+		userrole: "3",
+		userstatus: "1",
+		workingstatusid: "1"
 	},
 	{
 		username: "huy",
-		password: "pass2",
-		userrole: "2",
+		password: "$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq",
+		userrole: "1",
 		userstatus: "1",
-		token: "token2"
+		workingstatusid: "1"
 	},
 	{
 		username: "quyen",
-		password: "pass3",
-		userrole: "3",
-		userstatus: "2",
-		token: "token3"
+		password: "$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq",
+		userrole: "1",
+		userstatus: "1",
+		workingstatusid: "1"
+	},
+	{
+		username: "khanh",
+		password: "$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq",
+		userrole: "2",
+		userstatus: "1",
+		workingstatusid: "1"
+	},
+	{
+		username: "nhung",
+		password: "$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq",
+		userrole: "2",
+		userstatus: "1",
+		workingstatusid: "1"
+	},
+	{
+		username: "khoang",
+		password: "$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq",
+		userrole: "2",
+		userstatus: "1",
+		workingstatusid: "1"
 	}
 ];
 
@@ -121,7 +142,7 @@ module.exports = function(app) {
 
 	var cleanDB = function() {
 		logger.log('... cleaning the DB');
-		var cleanPromises = [db.users]
+		var cleanPromises = [db.user]
 			.map(function(model) {				
 				return model.destroy({
 					where: {}
@@ -133,7 +154,7 @@ module.exports = function(app) {
 
 	var createUsers = function(data) {			
 		var promises = users.map(function(user) {
-			return createInstance(db.users, user);
+			return createInstance(db.user, user);
 		});
 
 		return Promise.all(promises)

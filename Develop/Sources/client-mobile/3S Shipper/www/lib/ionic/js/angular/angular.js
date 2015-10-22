@@ -4053,18 +4053,18 @@ function annotate(fn, strictDi, name) {
  *    }));
  *
  *    it('tracks events', inject(function(eventTracker) {
- *      expect(eventTracker.event('login')).toEqual(1);
- *      expect(eventTracker.event('login')).toEqual(2);
+ *      expect(eventTracker.event('user')).toEqual(1);
+ *      expect(eventTracker.event('user')).toEqual(2);
  *    }));
  *
  *    it('saves to the tracking url', inject(function(eventTracker, $http) {
  *      postSpy = spyOn($http, 'post');
- *      eventTracker.event('login');
+ *      eventTracker.event('user');
  *      eventTracker.save();
  *      expect(postSpy).toHaveBeenCalled();
  *      expect(postSpy.mostRecentCall.args[0]).not.toEqual('/track');
  *      expect(postSpy.mostRecentCall.args[0]).toEqual('/custom-track');
- *      expect(postSpy.mostRecentCall.args[1]).toEqual({ 'login': 1 });
+ *      expect(postSpy.mostRecentCall.args[1]).toEqual({ 'user': 1 });
  *    }));
  *  });
  * ```
@@ -14430,7 +14430,7 @@ function $ParseProvider() {
  *
  * - $q is integrated with the {@link ng.$rootScope.Scope} Scope model observation
  *   mechanism in angular, which means faster propagation of resolution or rejection into your
- *   entities and avoiding unnecessary browser repaints, which would result in flickering UI.
+ *   entities-draft and avoiding unnecessary browser repaints, which would result in flickering UI.
  * - Q has many more features than $q, but that comes at a cost of bytes. $q is tiny, but contains
  *   all the important functionality needed for common async tasks.
  *
@@ -21288,7 +21288,7 @@ var inputType = {
    * @param {string} ngModel Assignable angular expression to data-bind to.
    * @param {string} value The value to which the `ngModel` expression should be set when selected.
    *    Note that `value` only supports `string` values, i.e. the scope model needs to be a string,
-   *    too. Use `ngValue` if you need complex entities (`number`, `object`, ...).
+   *    too. Use `ngValue` if you need complex entities-draft (`number`, `object`, ...).
    * @param {string=} name Property name of the form under which the control is published.
    * @param {string=} ngChange Angular expression to be executed when input changes due to user
    *    interaction with the input element.
@@ -22027,7 +22027,7 @@ var CONSTANT_VALUE_REGEXP = /^(true|false|\d+)$/;
  * Likewise, `ngValue` can be used to generate `<option>` elements for
  * the {@link select `select`} element. In that case however, only strings are supported
  * for the `value `attribute, so the resulting `ngModel` will always be a string.
- * Support for `select` entities with non-string values is available via `ngOptions`.
+ * Support for `select` entities-draft with non-string values is available via `ngOptions`.
  *
  * @element input
  * @param {string=} ngValue angular expression, whose value will be bound to the `value` attribute
@@ -25235,7 +25235,7 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
  *
  * ## Animation Hooks
  *
- * Animations within entities are triggered when any of the associated CSS classes are added and removed
+ * Animations within entities-draft are triggered when any of the associated CSS classes are added and removed
  * on the input element which is attached to the model. These classes are: `.ng-pristine`, `.ng-dirty`,
  * `.ng-invalid` and `.ng-valid` as well as any other validations that are performed on the model itself.
  * The animations that are triggered within ngModel are similar to how they work in ngClass and
@@ -25293,7 +25293,7 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
  * Sometimes it's helpful to bind `ngModel` to a getter/setter function.  A getter/setter is a
  * function that returns a representation of the model when called with zero arguments, and sets
  * the internal state of a model when called with an argument. It's sometimes useful to use this
- * for entities that have an internal representation that's different from what the model exposes
+ * for entities-draft that have an internal representation that's different from what the model exposes
  * to the view.
  *
  * <div class="alert alert-success">

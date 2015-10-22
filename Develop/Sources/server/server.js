@@ -24,12 +24,17 @@ app.use(methodOverride());
 app.use(cors());
 
 
-
 // setup routes
 require('./routes')(app);
 
 // setup global error handler
 app.use(function (err, req, res, next) {
+    console.log(err.name);
+    if (err.name === 'UnauthorizedError') {
+        logger.error('UnauthorizedError');
+        res.status(401).send('Invalid token');
+        return;
+    }
     logger.error(err.stack);
     res.status(500).send('Oops');
 })

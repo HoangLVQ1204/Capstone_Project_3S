@@ -5,8 +5,9 @@
 /* Script */
 angular.module('app', [
     'ui.router',
-    'smart-table'
-]).config(function($stateProvider,$urlRouterProvider){
+    'angular-jwt',
+	'smart-table'
+]).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider){
 
     // Set up Routes
     //$urlRouterProvider.otherwise('/store');
@@ -17,8 +18,12 @@ angular.module('app', [
     }]);
 
     $stateProvider
+        .state('login',{
+            url: '/auth/login',
+            template: '<login></login>'
+        })
         .state('admin',{
-           // abstract: true,
+            //abstract: true,
             url: '/admin',
             template: '<admin></admin>'
         })
@@ -40,15 +45,19 @@ angular.module('app', [
             template: '<store-order></store-order>'
         })
 
-        //.state('store.report',{
-        //    url: '/store/report',
-        //    template: '<store-report></store-report>'
-        //})
-        //.state('store.feeback',{
-        //    url: '/store/feeback',
-        //    template: '<store-feedback></store-feedback>'
-        //})
+    jwtInterceptorProvider.tokenGetter = function(){
+        return localStorage.getItem('EHID');
+    };
 
+    $httpProvider.interceptors.push('jwtInterceptor');
+
+}).run(function($rootScope){
+    $rootScope.$on('$stateChangeSuccess', function(e, toState){
+        if (toState.name == "login")
+            $rootScope.styleBody = "full-lg";
+        else
+            $rootScope.styleBody = "leftMenu nav-collapse";
+    })
 })
 
 

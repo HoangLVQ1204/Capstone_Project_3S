@@ -19,6 +19,8 @@ module.exports = function(app) {
     };
 
     var get = function(req,res,next) {
+        var user = req.user;
+        console.log(user);
         return db.user.getAllUsers()
             .then(function(users) {
                 res.status(200).json(users);
@@ -91,37 +93,3 @@ module.exports = function(app) {
     }
 }
 
-
-/*
-{
-  "GET /users": {
-    "desc": "returns all users",
-    "response": "200 application/json",
-    "data": [{}, {}, {}]
-  },
-
-  "GET /users/:id": {
-    "desc": "returns one user respresented by its id",
-    "response": "200 application/json",
-    "data": {}
-  },
-
-  "POST /users": {
-    "desc": "create and returns a new user uisng the posted object as the user",
-    "response": "201 application/json",
-    "data": {}
-  },
-
-  "PUT /users/:id": {
-    "desc": "updates and returns the matching user with the posted update object",
-    "response": "200 application/json",
-    "data": {}
-  },
-
-  "DELETE /users/:id": {
-    "desc": "deletes and returns the matching user",
-    "response": "200 application/json",
-    "data": {}
-  }
-}
-*/

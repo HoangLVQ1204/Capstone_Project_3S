@@ -28,11 +28,11 @@ globber.getGlobbedFiles('./entities/**/!(index.js)').forEach(function(routePath)
 
 
 
-Object.keys(db).forEach(function(modelName) {
-    if ("associate" in db[modelName]) {
-        db[modelName].associate(db);
-    }
-});
+//Object.keys(db).forEach(function(modelName) {
+//    if ("associate" in db[modelName]) {
+//        db[modelName].associate(db);
+//    }
+//});
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
