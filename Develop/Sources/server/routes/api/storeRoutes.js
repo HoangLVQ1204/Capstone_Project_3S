@@ -17,7 +17,13 @@ module.exports = function(app){
     	.delete(controller.del);
 
 	app.route('/api/store/getBalance/:storeid')
-		.get(controller.getBalance)
+		.get(controller.getBalance);
+
+	app.route('/api/store/getTotalFee/:storeid')
+		.get(controller.getTotalFee);
+
+	app.route('/api/store/getTotalCoD/:storeid')
+		.get(controller.getTotalCoD)
 
 
 

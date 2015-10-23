@@ -27,7 +27,7 @@
                     //var inputAfter = ng.element(inputs[1]);
                     var query = {};
                     scope.$watch('searchWatchModel', function (val) {
-                        //console.log(val);
+                        //console.log(ctrl);
                         //console.log($('#daterange').daterangepicker());
                         ctrl.search(val, attr.stPredicate);
                     });
@@ -40,7 +40,7 @@
                             query.after = new Date(res[0]);
                             query.before = new Date(res[1]);
                         }
-                        console.log(attr.stCustomDate);
+                        //console.log(attr.stCustomDate);
                         ctrl.search(query, attr.stCustomDate);
                     });
 
@@ -54,13 +54,15 @@
                     });
                 }
             };
-        }]).directive('daterange', function () {
+        }])
+        .directive('daterange', function () {
             return {
                 link: function (scope, element) {
                     element.daterangepicker();
                 }
             }
-        }).filter('customFilter', ['$filter', function ($filter) {
+        })
+        .filter('customFilter', ['$filter', function ($filter) {
             var filterFilter = $filter('filter');
             var standardComparator = function standardComparator(obj, text) {
                 text = ('' + text).toLowerCase();

@@ -145,6 +145,24 @@ module.exports = function(sequelize, DataTypes) {
 
       putOrder: function (currentOrder) {
         return currentOrder.save();
+      },
+
+      getTotalShipFeeOfStore: function(storeid){
+        return order.sum('fee',{
+          where: {
+            'storeid': storeid,
+            'ledgerid': null,
+          }
+        })
+      },
+
+      getTotalShipCoDOfStore: function(storeid){
+        return order.sum('cod',{
+          where: {
+            'storeid': storeid,
+            'ledgerid': {$ne: null}
+          }
+        })
       }
     }
   });

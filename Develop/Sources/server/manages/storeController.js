@@ -94,25 +94,25 @@ module.exports = function(app) {
             })
     };
 
-    var getLedger = function(req, res, next){
-        return db.store.getAllStores()
-            .map(function(store) {
-               console.log(store.storeid);
-               (db.generalledger.getBalance(store.storeid).then(function(ledger) {
-                   if (ledger)
-                   {
-                       store.payment = ledger.payment;
-                       res.status(200).json(store);
-                   }
-
-                }));
-
+    var getTotalFee = function(req, res, next){
+        return db.order.getTotalShipFeeOfStore(req.store.storeid)
+            .then(function(total) {
+                res.status(200).json(total);
             }, function(err) {
                 next(err);
             })
     };
 
-    return {
+    var getTotalCoD = function(req, res, next){
+        return db.order.getTotalShipCoDOfStore(req.store.storeid)
+            .then(function(total) {
+                res.status(200).json(total);
+            }, function(err) {
+                next(err);
+            })
+    };
+
+       return {
         get: get,
         getOne: getOne,
         post: post,
@@ -121,7 +121,8 @@ module.exports = function(app) {
         params: params,
         getBalance: getBalance,
         getAllLedger: getAllLedger,
-        getLedger: getLedger
+        getTotalFee: getTotalFee,
+        getTotalCoD: getTotalCoD
     }
 }
 

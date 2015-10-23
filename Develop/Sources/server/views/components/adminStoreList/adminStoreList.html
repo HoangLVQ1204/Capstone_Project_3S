@@ -10,18 +10,13 @@
         <!-- //breadcrumb-->
 
         <div id="content">
-
             <div class="row">
-
                 <div class="col-lg-12">
-
                     <section class="panel">
                         <header class="panel-heading">
                             <h2><strong>Store's </strong>List </h2>
                             <label class="color">All Store in 3S</label>
                         </header>
-
-
 
                         <div class="panel-body">
                             <form>
@@ -81,18 +76,19 @@
                                         <td class="center"> {{x.paydate|date:"dd/MM/yyyy"}}</td>
                                         <td>
                                         <span class="tooltip-area">
-                                        <a href="javascript:void(0)" class="btn btn-default btn-sm" title="Edit"><i class="fa fa-edit (alias)"></i></a>
-                                        <a href="javascript:void(0)"  class="btn btn-default btn-sm" title="Send Message"><i class="fa fa-envelope"></i></a>
-                                        <a href="javascript:void(0)"  class="btn btn-default btn-sm" title="Block"><i class="fa fa-ban"></i></a>
-                                        <a href="javascript:void(0)"  class="btn btn-default btn-sm" title="Export"><i class="glyphicon glyphicon-export"></i></i></a>
+                                        <a class="btn btn-default btn-sm" title="Edit"><i class="fa fa-edit (alias)"></i></a>
+                                        <a class="btn btn-default btn-sm" title="Send Message"><i class="fa fa-envelope"></i></a>
+                                        <a class="btn btn-default btn-sm" title="Block"><i class="fa fa-ban"></i></a>
+                                        <a class="btn btn-default btn-sm" title="Export"><i class="glyphicon glyphicon-export"></i></i></a>
+                                        <a class="btn btn-default btn-sm md-effect" ng-click="showConfirm($event, x.storeid)" data-effect="md-flipVer" title="Confirm Payment"><i class="fa fa-check-square-o"></i></i></a>
                                         </span>
                                         </td>
                                     </tr>
                                     </tbody>
                                     <tfoot>
                                     <tr>
-                                        <td colspan="5" class="text-right">
-                                            <div st-pagination="" st-items-by-page="5"></div>
+                                        <td colspan="6" class="text-right">
+                                            <div st-pagination="" st-items-by-page="10"></div>
                                         </td>
                                     </tr>
                                     </tfoot>
@@ -111,5 +107,70 @@
 
     </div>
 
+    <!--////////////////////////////////////////////////////////////////////////-->
+    <!--//////////     MODAL EFFECT DEMO    //////////-->
+    <!--//////////////////////////////////////////////////////////////////////-->
+    <!--&ndash;&gt;-->
+    <div id="md-effect" class="modal fade" tabindex="-1" data-width="600">
+        <div class="modal-header bg-inverse bd-inverse-darken">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+            <h4 class="modal-title">Confirm payment</h4>
+        </div>
+        <!-- //modal-header-->
+        <div class="modal-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th width="40%" class="text-left">Service</th>
+                    <th>Amount</th>
+                    <th width="20%" >Pay</th>
+                    <th class="text-right"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="text-center">1</td>
+                    <td>Delivery</td>
+                    <td class="text-center">{{totalFee - payFee}}VND</td>
+                    <td >
+                        <!--<div class="col-lg-16">-->
+                            <!--<div class="input-icon input-group-sm">-->
+                                <!--<i class="fa fa-search ico"></i>-->
+                                <input type="search" class="form-control input-group-sm text-right" ng-model="payFee">
+                            <!--</div>-->
+                        <!--</div>-->
+                    </td>
+                    <td  class="text-right">
+                    <span class="tooltip-area">
+                    <a href="#" class="btn btn-danger" title="Confirm"> <i class="fa fa-check-circle"></i> </a>
+                    </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center">2</td>
+                    <td>Cash on Delivery</td>
+                    <td class="text-center">{{totalCoD - payCoD}}VND</td>
+                    <td >
+                        <!--<div class="col-lg-16">-->
+                        <!--<div class="input-icon input-group-sm">-->
+                        <!--<i class="fa fa-search ico"></i>-->
+                        <input type="search" class="form-control input-group-sm text-right" ng-model="payCoD">
+                        <!--</div>-->
+                        <!--</div>-->
+                    </td>
+                    <td  class="text-right">
+                    <span class="tooltip-area">
+                    <a href="#" class="btn btn-danger" title="Confirm"> <i class="fa fa-check-circle"></i> </a>
+                    </span>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <!-- //modal-body-->
+    </div>
+    <!-- //modal-->
 
 </div>
