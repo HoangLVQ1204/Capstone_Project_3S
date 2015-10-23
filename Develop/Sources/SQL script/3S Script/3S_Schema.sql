@@ -87,9 +87,7 @@ addressCoordination text
 CREATE TABLE OrderStatus
 (
 statusID int PRIMARY KEY,
-statusName varchar(20),
-nextAction varchar(50),
-requiredCode boolean
+statusName varchar(20)
 );
 
 CREATE TABLE OrderType
@@ -117,6 +115,7 @@ ledgerID int REFERENCES GeneralLedger(ledgerID),
 statusID  int REFERENCES OrderStatus(statusID),
 isPending boolean,
 isDraff boolean,
+isCancel boolean,
 fee BIGINT,
 CoD BIGINT,
 pickUpAddressCoordination text,

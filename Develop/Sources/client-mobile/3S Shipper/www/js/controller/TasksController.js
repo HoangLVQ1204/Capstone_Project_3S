@@ -11,6 +11,13 @@ app.controller('TasksCtrl', ['$scope', 'dataService', 'mySharedService', functio
     getDataFromServer();
   }
 
+
+  /*
+   * By QuyenNV - 23/10/2015
+   *
+   * This function is call API
+   *
+   * */
   function getDataFromServer() {
     var urlBase = 'http://localhost:3000/api/tasks';
     dataFactory.getDataServer(urlBase)
@@ -22,6 +29,13 @@ app.controller('TasksCtrl', ['$scope', 'dataService', 'mySharedService', functio
         console.log('Unable to load customer data: ' + error);
       });
   }
+
+  /*
+   * By QuyenNV - 23/10/2015
+   *
+   * This function is format data respon from from server
+   * @param: rs
+   * */
   function formatData(rs) {
     if (undefined !== rs['Pickup'] && rs['Pickup'].length) {
       $scope.pickupTasks = rs['Pickup'];

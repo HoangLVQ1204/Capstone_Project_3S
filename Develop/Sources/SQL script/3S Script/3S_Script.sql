@@ -50,24 +50,23 @@ insert into stock values ('1', 'Cau Giay Stock', '34 Xuan Thuy - Cau Giay - Ha N
 insert into stock values ('2', 'Hoan Kiem Stock', 'Hoan Kiem - Ha Noi', 'khoangkiti', '12323,-2323');
 
 -- orderstatus
--- Trang thai tao don hang ban dau la Waiting: 1
--- Den Store lay hang, va mang hang ve kho: 2
--- Store cancel don hang thi cung mang hang ve kho : 2
--- Hang luu trong kho: 3
--- Giao hang: 4
--- Shipper gap issue thi pending don hang: 5
--- Neu store huy don hang: 6
--- K/H khong nhan hang thi se return ve store or stock: 7
--- Done: 8
-insert into orderstatus values ('1', 'Waiting', 'Start', 'false');
-insert into orderstatus values ('2', 'Picking up', 'Check code pick up', 'true');
-insert into orderstatus values ('3', 'Bring to stock', 'Check code in stock', 'true');
-insert into orderstatus values ('4', 'In stock', 'Start deliver', 'false');
-insert into orderstatus values ('5', 'Delivering', 'Check code with customer', 'true');
-insert into orderstatus values ('6', 'Pending', NULL, 'false');
-insert into orderstatus values ('7', 'Canceled', NULL, 'false');
-insert into orderstatus values ('8', 'Returning to stock', 'Check code return', 'true');
-insert into orderstatus values ('9', 'Done', NULL, 'false');
+-- 1: Trang thai tao don hang ban dau.
+-- 2: Đến store lấy hàng
+-- 3: Mang hàng về kho
+-- 4: Hang luu trong kho
+-- 5: Giao hang
+-- Status Pending vs Cancel ở trong bảng order(isPending, isCancel)
+-- 6: Hệ thống xác nhận issue và quyết đinh mang hàng về kho
+-- 7: Hệ thống xác nhận issue và quyết đinh mang hàng về cửa hàng
+-- 8: Done
+insert into orderstatus values ('1', 'Waiting');
+insert into orderstatus values ('2', 'Picking up');
+insert into orderstatus values ('3', 'Bring to stock');
+insert into orderstatus values ('4', 'In stock');
+insert into orderstatus values ('5', 'Delivering');
+insert into orderstatus values ('6', 'Returning to stock');
+insert into orderstatus values ('7', 'Returning to store');
+insert into orderstatus values ('8', 'Done');
 
 -- ordertype
 
@@ -76,9 +75,9 @@ insert into ordertype  values ('2', 'express');
 
 
 -- order
-insert into "order" values ('ord1', 'str1', '1', 'Tu Liem - Ha Noi', 'Cau Giay - Ha Noi', '2015-3-19', '2015-3-21', '01687555261', 'Nguyen Van Quyen', '1', '1', 'false', 'false', '20000', '0', '23232,32323', '2323,23232');
-insert into "order" values ('ord2', 'str2', '2', 'Ho Tung Mau - Ha Noi', 'Hoan Kiem - Ha Noi', '2015-5-23', '2015-5-25', '0988627075', 'Nguyen Van Long', '2', '2', 'false', 'false', '0', '2000000', '2323,-23233', '2323,-23233');
-insert into "order" values ('ord3', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '5', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord1', 'str1', '1', 'Tu Liem - Ha Noi', 'Cau Giay - Ha Noi', '2015-3-19', '2015-3-21', '01687555261', 'Nguyen Van Quyen', '1', '1', 'false', 'false','false', '20000', '0', '23232,32323', '2323,23232');
+insert into "order" values ('ord2', 'str2', '2', 'Ho Tung Mau - Ha Noi', 'Hoan Kiem - Ha Noi', '2015-5-23', '2015-5-25', '0988627075', 'Nguyen Van Long', '2', '2', 'false', 'false', 'false', '0', '2000000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord3', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '5', 'false', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
 
 -- task
 insert into task values ('1','ord1', 'huykool', 'khoangkiti', '1','2015-2-9');

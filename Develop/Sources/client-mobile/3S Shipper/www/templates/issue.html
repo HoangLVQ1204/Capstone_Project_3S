@@ -1,23 +1,6 @@
 <ion-view view-title="Issue">
   <ion-content>
-      <!--<label class="item item-select bcBottom" >-->
-          <!--<div class="input-label">-->
-            <!--Type of Issue-->
-          <!--</div>-->
-        <!--<select>-->
-          <!--<option selected>This is a bue of bule. This is blue</option>-->
-          <!--<option >This is a green</option>-->
-          <!--<option>This is a red</option>-->
-        <!--</select>-->
-      <!--</label>-->
-      <!--<label class="item bcBottom">-->
-        <!--<div class="input-label">-->
-          <!--Issue-->
-        <!--</div>-->
-        <!--<textarea name="issueContent" placeholder="Write here..."></textarea>-->
-      <!--</label>-->
-
-      <!--NEW-->
+      <!--Fancy directive-->
       <div class="item item-divider">Type
       </div>
       <fancy-select
@@ -36,7 +19,7 @@
         allow-empty='false'
         value="val.multiple"
         text="orders_text"
-        items="countries"
+        items="orders"
         multi-select="true"
         >
       </fancy-select>
@@ -81,7 +64,25 @@
             ng-checked="item.checked"
             ng-model="item.checked"
             class="item item-text-wrap item-checkbox-right">
-            {{item.text}}
+            <div >
+              <div>
+                <h2 style=" float: left">{{item.text}}</h2>
+
+                <!--Picking up-->
+                <p ng-show="{{item.statusId == 2}}" class="statusDn label" style=" float: left; margin-left: 10px">{{item.statusName}}</p>
+                <!--Bring to stock-->
+                <p ng-show="{{item.statusId == 3}}" class="statusDn label" style=" float: left; margin-left: 10px">{{item.statusName}}</p>
+                <!--Delivering-->
+                <p ng-show="{{item.statusId == 5}}" class="statusDn label" style=" float: left; margin-left: 10px">{{item.statusName}}</p>
+                <!--Returning to stock-->
+                <div style="clear: both"></div>
+                <p ng-show="{{item.statusId == 6}}" class="statusDn label">{{item.statusName}}</p>
+
+                <p style="display: inline-block"><i class="ion-ios-location"></i> {{item.pickupAdd}}</p>
+                <p style="display: inline-block"><i class="ion-ios-flag"></i> {{item.deliveryAdd}}</p>
+              </div>
+            </div>
+
           </ion-checkbox >
 
           <!-- Single select -->
@@ -90,7 +91,6 @@
             ng-if="!multiSelect"
             class="item item-text-wrap"
             ng-click='validateSingle(item)'>
-            <!--{{item.categoryID}}-->
             {{item.categoryName}}
           </label>
         </div>
