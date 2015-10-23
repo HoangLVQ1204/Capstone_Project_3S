@@ -24,7 +24,7 @@ angular.module('app')
 // Map Demo [ will remove later ]
 angular.module('app')
 .config(function($stateProvider,$urlRouterProvider) {
-    $urlRouterProvider.otherwise('/mapdemo');
+    //$urlRouterProvider.otherwise('/mapdemo');
 
     $stateProvider
         .state('mapdemo',{

@@ -12,7 +12,7 @@ angular.module('app', [
 
     // Set up Routes
     // $urlRouterProvider.otherwise('/store/map');
-	$urlRouterProvider.otherwise('/mapdemo');
+	$urlRouterProvider.otherwise('/admin');
 
     $stateProvider
         .state('login',{
