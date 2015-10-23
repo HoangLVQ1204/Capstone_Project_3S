@@ -68,8 +68,11 @@ amount BIGINT,
 balance BIGINT,
 payDate timestamp,
 note text,
-payFrom int
---1 la cua hang tra cho he thong , 2 la nguoc lai va 3 la he thong tong ket don hang sau 1 tuan--
+-- payFrom1 la cua hang tra cho he thong , 2 la nguoc lai va 3 la he thong tong ket don hang sau 1 tuan--
+payFrom int,
+--totalDelivery: != NULL, khi cuối tuần thực hiện thanh toán thì mới update
+totalDelivery BIGINT,
+totalCOD BIGINT
 );
 
 CREATE TABLE Stock
@@ -87,7 +90,6 @@ statusID int PRIMARY KEY,
 statusName varchar(20),
 nextAction varchar(50),
 requiredCode boolean
---Status cua don hang: gathering, delivering,....--
 );
 
 CREATE TABLE OrderType
@@ -140,7 +142,8 @@ weight float,
 lengthSize float,
 widthSize float,
 heightSize float,
-description text
+description text,
+amount int
 );
 
 CREATE TABLE ConfirmationCodeType

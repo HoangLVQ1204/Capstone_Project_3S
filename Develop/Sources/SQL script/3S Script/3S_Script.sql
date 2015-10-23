@@ -41,8 +41,8 @@ insert into managestore values ('nhungkaka', 'str2');
 
 -- generalledger
 
-insert into generalledger values ('1', 'hoang', 'str1', '300000', '10000', '2015-3-16', 'sample note', '1');
-insert into generalledger values ('2', 'khoangkiti', 'str2', '400000', '20000', '2015-6-10', 'sample note', '2');
+insert into generalledger values ('1', 'hoang', 'str1', '300000', '10000', '2015-3-16', 'sample note', '1', '0');
+insert into generalledger values ('2', 'khoangkiti', 'str2', '400000', '20000', '2015-6-10', 'sample note', '2', '0');
 
 -- stock
 
@@ -87,8 +87,8 @@ insert into task values ('3','ord3', 'huykool', 'hoang', '2', '2015-2-15');
 
 -- goods
 
-insert into goods values ('1', 'ord1', '1', '32.00', '20', '50', '35', 'Very height');
-insert into goods values ('2', 'ord2', '2', '34.00', '34', '34', '50', 'Very width');
+insert into goods values ('1', 'ord1', '1', '32.00', '20', '50', '35', 'Very height', '2');
+insert into goods values ('2', 'ord2', '2', '34.00', '34', '34', '50', 'Very width', '1');
 
 -- confirmationcodetype
 insert into confirmationcodetype values ('1', 'Gathering');
