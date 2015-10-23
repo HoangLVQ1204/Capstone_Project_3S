@@ -167,18 +167,18 @@ categoryID int PRIMARY KEY,
 categoryName varchar(50)
 );
 
-CREATE TABLE IssuePriority
+/*CREATE TABLE IssuePriority
 (
 priorityID int PRIMARY KEY,
 priority varchar(20)
-);
+);*/
 
 CREATE TABLE Issue
 (
 issueID int PRIMARY KEY,
 category int REFERENCES IssueCategory(categoryID),
-priority int REFERENCES IssuePriority(priorityID),
-issueName text
+--priority int REFERENCES IssuePriority(priorityID),
+content text
 );
 
 CREATE TABLE OrderIssue

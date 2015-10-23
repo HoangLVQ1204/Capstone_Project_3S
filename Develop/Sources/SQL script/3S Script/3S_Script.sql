@@ -113,16 +113,16 @@ insert into issuecategory  values ('2', 'Phuong Tien');
 insert into issuecategory  values ('3', 'Thoi Tiet');
 
 -- issuepriority
-insert into issuepriority values ('1', 'High');
-insert into issuepriority values ('2', 'Medium');
-insert into issuepriority values ('3', 'Low');
+--insert into issuepriority values ('1', 'High');
+--insert into issuepriority values ('2', 'Medium');
+--insert into issuepriority values ('3', 'Low');
 
 -- issue
-insert into issue   values ('1', '1', '2', 'Toi co viec ban');
-insert into issue   values ('2', '1', '3', 'Hom nay co bao');
-insert into issue   values ('3', '2', '2', 'Xe toi bi thung nop');
-insert into issue   values ('4', '2', '3', 'Dien thoai toi het pin');
-insert into issue   values ('5', '3', '1', 'Hom nay co bao');
+insert into issue   values ('1', '1', 'Toi co viec ban');
+insert into issue   values ('2', '1', 'Hom nay co bao');
+insert into issue   values ('3', '2', 'Xe toi bi thung nop');
+insert into issue   values ('4', '2', 'Dien thoai toi het pin');
+insert into issue   values ('5', '3', 'Hom nay co bao');
 
 -- orderissue
 insert into orderissue values ('1', 'ord1', '2015-12-4', 'this is description 1');
