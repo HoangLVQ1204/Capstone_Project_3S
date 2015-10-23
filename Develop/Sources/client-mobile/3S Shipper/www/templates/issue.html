@@ -25,7 +25,7 @@
         allow-empty='false'
         value="val.single"
         text="types_text"
-        items="countries"
+        items="issueCategories"
         >
       </fancy-select>
 
@@ -44,7 +44,8 @@
     <!--Issue content-->
     <div class="item item-divider">Issue
     </div>
-    <textarea style="width: 100%; height: 220px; padding: 15px" name="issueContent" placeholder="Write here..."></textarea>
+    <textarea style="width: 100%; height: 220px; padding: 15px" ng-model="issueContent" placeholder="Write here...">
+    </textarea>
     <button class="button button-block btCommon">
       Send
     </button>
@@ -89,7 +90,8 @@
             ng-if="!multiSelect"
             class="item item-text-wrap"
             ng-click='validateSingle(item)'>
-            {{item.text}}
+            <!--{{item.categoryID}}-->
+            {{item.categoryName}}
           </label>
         </div>
       </ion-content>

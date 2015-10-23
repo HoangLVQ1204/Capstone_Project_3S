@@ -36,6 +36,14 @@ module.exports = function(sequelize, DataTypes) {
     payfrom: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    totaldelivery: {
+      type: DataTypes.BIGINT,
+      allowNull: true
+    },
+    totalcod: {
+      type: DataTypes.BIGINT,
+      allowNull: true
     }
   }, {
     freezeTableName: true,

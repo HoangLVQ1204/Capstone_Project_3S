@@ -1,20 +1,9 @@
 /**
  * Created by Kaka Hoang Huy on 9/30/2015.
  */
-app.controller('IssueCtrl',['$scope', 'dataService', function ($scope, dataFactory) {
+app.controller('IssueCtrl',['$scope', 'dataService', 'mySharedService', function ($scope, dataFactory, mySharedService) {
 
-  //getDataFromServer();
-  //function getDataFromServer() {
-  //  var urlBase = 'http://localhost:3000/api/getIssueCategory';
-  //  dataFactory.getDataServer(urlBase)
-  //    .success(function (rs) {
-  //      console.log(rs);
-  //    })
-  //    .error(function (error) {
-  //      console.log('Unable to load customer data: ' + error);
-  //    })
-  //}
-
+  //Fill data to List
   $scope.issueCategories = [
     {categoryID: 1, categoryName: 'Accident or Personal working' },
     {categoryID: 2, categoryName: 'Goods is broken' }
@@ -29,13 +18,73 @@ app.controller('IssueCtrl',['$scope', 'dataService', function ($scope, dataFacto
   $scope.types_text = 'Choose Type of Issue';
   $scope.orders_text = 'Order get an Issue';
   $scope.val =  {single: null, multiple: null};
+
+  if (undefined !== mySharedService.message && mySharedService.message !== '') {
+
+    //console.log('rs', mySharedService.message);
+    formatData(mySharedService.message);
+
+  } else {
+    console.log('save message sharing');
+    getDataFromServer();
+  }
+
+/*
+ * By QuyenNV - 23/10/2015
+ *
+ * This function is call API
+ *
+ * */
+  function getDataFromServer() {
+    var urlBase = 'http://localhost:3000/api/tasks';
+    dataFactory.getDataServer(urlBase)
+      .success(function (rs) {
+        mySharedService.prepForBroadcast(rs);
+        formatData(rs);
+      })
+      .error(function (error) {
+        console.log('Unable to load customer data: ' + error);
+      });
+  }
+
+/*
+ * By QuyenNV - 23/10/2015
+ *
+ * This function is format data respon from from server
+ * @param: rs
+ * */
+  function formatData(rs) {
+    if (undefined !== rs['Pickup'] && rs['Pickup'].length) {
+      $scope.pickupTasks = rs['Pickup'];
+      $scope.badgeCountPick = rs['Pickup'].length;
+    } else {
+      $scope.pickupTasks = [];
+      $scope.badgeCountPick = 0;
+    }
+    if (undefined !== rs['Ship'] && rs['Ship'].length) {
+      $scope.shipTasks = rs['Ship'];
+      $scope.badgeCountShip = rs['Ship'].length;
+    } else {
+      $scope.shipTasks = [];
+      $scope.badgeCountShip = 0;
+    }
+    if (undefined !== rs['Express'] && rs['Express'].length) {
+      $scope.expressTasks = rs['Express'];
+      $scope.badgeCountExpress = rs['Express'].length;
+    } else {
+      $scope.expressTasks = [];
+      $scope.badgeCountExpress = 0;
+    }
+  }
+
 }]);
 
-
-/**
- * Created by quyennv
- * create fancy Select directive
- */
+/*
+ * By QuyenNV - 23/10/2015
+ *
+ * Create fancy select directive
+ *
+ * */
 app.directive('fancySelect',[
   '$ionicModal',
   function($ionicModal) {
@@ -99,8 +148,13 @@ app.directive('fancySelect',[
           // Select first value if not nullable
           if (typeof scope.value == 'undefined' || scope.value == '' || scope.value == null ) {
             if (scope.allowEmpty == false) {
-              scope.value = scope.items[0].id;
-              scope.text = scope.items[0].text;
+              if (scope.multiSelect == true) {
+                scope.value = scope.items[0].id;
+                scope.text = scope.items[0].text;
+              } else {
+                scope.value = scope.items[0].categoryID;
+                scope.text = scope.items[0].categoryName;
+              }
 
               // Check for multi select
               scope.items[0].checked = true;
@@ -138,10 +192,10 @@ app.directive('fancySelect',[
         scope.validateSingle = function (item) {
 
           // Set selected text
-          scope.text = item.text;
+          scope.text = item.categoryName;
 
           // Set selected value
-          scope.value = item.id;
+          scope.value = item.categoryID;
 
           // Hide items
           scope.hideItems();
