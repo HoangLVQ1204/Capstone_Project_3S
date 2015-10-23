@@ -6,8 +6,18 @@
     "all": {
         "shipper": [
             {
-                "order" : ["order1"]
+                "order" : ["order1"],
+                /*
+                "markerID"
+                "geoText"
+                "distance"
+                "duration", // client
 
+                "latitude"
+                "longitude"
+                "shipperID"
+                "status"    // server   
+                */                
             },
             {
                 "order" : ["order3","order2"]
@@ -27,6 +37,9 @@
         "custormer": [
             {
                 "order" : ["order1","order3"]
+                /*
+                "geoText"                
+                */
             },
             {
                 "order" : ["order2"]
@@ -34,7 +47,9 @@
             {
                 "order" : ["order4"]
             }
-        ]
+        ],              
+        "orders": {            
+        }                
     },
 
     "shipper" : {
@@ -58,7 +73,10 @@
             {
                 "order": ["order2","order3"]
             }
-        ]
+        ],
+        "order": {
+
+        }
     },
 
     "store" : {
@@ -88,10 +106,12 @@
             {
                 "order": ["order4"]
             }
-        ]
+        ],
+        "order": {
+        }
     },
 
-    "detail": {
+    "orderdetail": {
         "shipper": [
             {
                 "order": ["order1"]
@@ -106,6 +126,8 @@
             {
                 "order": ["order1"]
             }
-        ]
+        ],
+        "order": {            
+        }
     }
 }

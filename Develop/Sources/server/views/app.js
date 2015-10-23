@@ -11,7 +11,8 @@ angular.module('app', [
 ]).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider,uiGmapGoogleMapApiProvider){
 
     // Set up Routes
-    $urlRouterProvider.otherwise('/store/map');
+    // $urlRouterProvider.otherwise('/store/map');
+	$urlRouterProvider.otherwise('/mapdemo');
 
     $stateProvider
         .state('login',{
