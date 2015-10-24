@@ -27,7 +27,7 @@
     <!--Issue content-->
     <div class="item item-divider">Issue
     </div>
-    <textarea style="width: 100%; height: 220px; padding: 15px" ng-model="issueContent" placeholder="Write here...">
+    <textarea style="width: 100%; height: 220px; padding: 15px" ng-model="content" placeholder="Write here...">
     </textarea>
     <button class="button button-block btCommon">
       Send
@@ -64,9 +64,9 @@
             ng-checked="item.checked"
             ng-model="item.checked"
             class="item item-text-wrap item-checkbox-right">
-            <div >
+            <div>
               <div>
-                <h2 style=" float: left">{{item.text}}</h2>
+                <p style=" float: left; font-size: 1.4em; font-weight: bold">{{item.text}}</p>
 
                 <!--Picking up-->
                 <p ng-show="{{item.statusId == 2}}" class="statusDn label" style=" float: left; margin-left: 10px">{{item.statusName}}</p>
@@ -76,9 +76,9 @@
                 <p ng-show="{{item.statusId == 5}}" class="statusDn label" style=" float: left; margin-left: 10px">{{item.statusName}}</p>
                 <!--Returning to stock-->
                 <div style="clear: both"></div>
-                <p ng-show="{{item.statusId == 6}}" class="statusDn label">{{item.statusName}}</p>
+                <p ng-show="{{item.statusId == 6}}" class="statusDn label" style=" float: left; margin-left: 10px">{{item.statusName}}</p>
 
-                <p style="display: inline-block"><i class="ion-ios-location"></i> {{item.pickupAdd}}</p>
+                <p style="display: inline-block"><i class="ion-ios-location"></i> {{item.pickupAdd}}&nbsp;&nbsp;&nbsp;</p>
                 <p style="display: inline-block"><i class="ion-ios-flag"></i> {{item.deliveryAdd}}</p>
               </div>
             </div>

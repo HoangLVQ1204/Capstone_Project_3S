@@ -88,16 +88,11 @@ app.controller('IssueCtrl',['$scope', 'dataService', 'mySharedService', function
     {categoryID: 1, categoryName: 'Accident or Personal working' },
     {categoryID: 2, categoryName: 'Goods is broken' }
   ];
-  //Order: $scope.orders
-  //$scope.countries = [
-  //  {id: 1, text: 'USA', checked: false},
-  //  {id: 2, text: 'France', checked: false},
-  //  {id : 3, text: 'Japan3', checked: false}
-  //];
-
   $scope.types_text = 'Choose Type of Issue';
   $scope.orders_text = 'Order get an Issue';
   $scope.val =  {single: null, multiple: null};
+
+  $scope.haihai = "tete";
 
 }]);
 
