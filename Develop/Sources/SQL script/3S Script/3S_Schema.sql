@@ -48,7 +48,7 @@ address varchar(100),
 addressCoordination text,
 phoneNumber varchar(11),
 email varchar(50),
-registerDated timestamp
+registeredDate timestamp
 );
 
 CREATE TABLE ManageStore
@@ -68,8 +68,11 @@ amount BIGINT,
 balance BIGINT,
 payDate timestamp,
 note text,
-payFrom int
---1 la cua hang tra cho he thong , 2 la nguoc lai va 3 la he thong tong ket don hang sau 1 tuan--
+-- payFrom1 la cua hang tra cho he thong , 2 la nguoc lai va 3 la he thong tong ket don hang sau 1 tuan--
+payFrom int,
+--totalDelivery: != NULL, khi cuối tuần thực hiện thanh toán thì mới update
+totalDelivery BIGINT,
+totalCOD BIGINT
 );
 
 CREATE TABLE Stock
@@ -84,9 +87,7 @@ addressCoordination text
 CREATE TABLE OrderStatus
 (
 statusID int PRIMARY KEY,
-statusName varchar(20),
-nextAction varchar(20)
---Status cua don hang: gathering, delivering,....--
+statusName varchar(20)
 );
 
 CREATE TABLE OrderType
@@ -114,6 +115,7 @@ ledgerID int REFERENCES GeneralLedger(ledgerID),
 statusID  int REFERENCES OrderStatus(statusID),
 isPending boolean,
 isDraff boolean,
+isCancel boolean,
 fee BIGINT,
 CoD BIGINT,
 pickUpAddressCoordination text,
@@ -139,7 +141,8 @@ weight float,
 lengthSize float,
 widthSize float,
 heightSize float,
-description text
+description text,
+amount int
 );
 
 CREATE TABLE ConfirmationCodeType
@@ -164,18 +167,18 @@ categoryID int PRIMARY KEY,
 categoryName varchar(50)
 );
 
-CREATE TABLE IssuePriority
+/*CREATE TABLE IssuePriority
 (
 priorityID int PRIMARY KEY,
 priority varchar(20)
-);
+);*/
 
 CREATE TABLE Issue
 (
 issueID int PRIMARY KEY,
 category int REFERENCES IssueCategory(categoryID),
-priority int REFERENCES IssuePriority(priorityID),
-issueName text
+--priority int REFERENCES IssuePriority(priorityID),
+content text
 );
 
 CREATE TABLE OrderIssue

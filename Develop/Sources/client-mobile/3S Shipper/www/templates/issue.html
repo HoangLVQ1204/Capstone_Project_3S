@@ -1,25 +1,99 @@
 <ion-view view-title="Issue">
   <ion-content>
-    <div>
-      <label class="item item-select bcBottom" >
-          <div class="input-label">
-            Type of Issue
-          </div>
-        <select>
-          <option selected>This is a bue of bule. This is blue</option>
-          <option >This is a green</option>
-          <option>This is a red</option>
-        </select>
-      </label>
-      <label class="item bcBottom">
-        <div class="input-label">
-          Issue
-        </div>
-        <textarea name="issueContent" placeholder="Write here..."></textarea>
-      </label>
-      <button class="button button-block button-assertive">
-        Send
-      </button>
+      <!--Fancy directive-->
+      <div class="item item-divider">Type
+      </div>
+      <fancy-select
+        header-text="Type"
+        allow-empty='false'
+        value="val.single"
+        text="types_text"
+        items="issueCategories"
+        >
+      </fancy-select>
+
+    <div class="item item-divider">Order
     </div>
+      <fancy-select
+        header-text="Order"
+        allow-empty='false'
+        value="val.multiple"
+        text="orders_text"
+        items="orders"
+        multi-select="true"
+        >
+      </fancy-select>
+
+    <!--Issue content-->
+    <div class="item item-divider">Issue
+    </div>
+    <textarea style="width: 100%; height: 220px; padding: 15px" ng-model="issueContent" placeholder="Write here...">
+    </textarea>
+    <button class="button button-block btCommon">
+      Send
+    </button>
   </ion-content>
 </ion-view>
+
+  <script id="fancy-select.html" type="text/ng-template">
+    <ion-list>
+      <ion-item class="item-text-wrap item-icon-right" ng-click="showItems($event)">
+        {{text}}
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </ion-item>
+    </ion-list>
+  </script>
+
+  <script id="fancy-select-items.html" type="text/ng-template">
+    <ion-view class="fancy-select-items modal">
+      <ion-header-bar class="bar-positive">
+
+        <button ng-click="hideItems()" class="button button-positive button-icon ion-close"></button>
+
+        <h1 class="title">{{headerText}}</h1>
+
+        <button ng-click="validate()" class="button button-positive button-icon ion-checkmark"></button>
+
+      </ion-header-bar>
+      <ion-content>
+        <div class="list">
+          <!-- Multi select -->
+          <ion-checkbox
+            ng-repeat="item in items"
+            ng-if="multiSelect"
+            ng-checked="item.checked"
+            ng-model="item.checked"
+            class="item item-text-wrap item-checkbox-right">
+            <div >
+              <div>
+                <h2 style=" float: left">{{item.text}}</h2>
+
+                <!--Picking up-->
+                <p ng-show="{{item.statusId == 2}}" class="statusDn label" style=" float: left; margin-left: 10px">{{item.statusName}}</p>
+                <!--Bring to stock-->
+                <p ng-show="{{item.statusId == 3}}" class="statusDn label" style=" float: left; margin-left: 10px">{{item.statusName}}</p>
+                <!--Delivering-->
+                <p ng-show="{{item.statusId == 5}}" class="statusDn label" style=" float: left; margin-left: 10px">{{item.statusName}}</p>
+                <!--Returning to stock-->
+                <div style="clear: both"></div>
+                <p ng-show="{{item.statusId == 6}}" class="statusDn label">{{item.statusName}}</p>
+
+                <p style="display: inline-block"><i class="ion-ios-location"></i> {{item.pickupAdd}}</p>
+                <p style="display: inline-block"><i class="ion-ios-flag"></i> {{item.deliveryAdd}}</p>
+              </div>
+            </div>
+
+          </ion-checkbox >
+
+          <!-- Single select -->
+          <label
+            ng-repeat="item in items"
+            ng-if="!multiSelect"
+            class="item item-text-wrap"
+            ng-click='validateSingle(item)'>
+            {{item.categoryName}}
+          </label>
+        </div>
+      </ion-content>
+    </ion-view>
+  </script>

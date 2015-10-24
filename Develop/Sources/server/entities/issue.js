@@ -12,11 +12,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       primaryKey: true
     },
-    priority: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      primaryKey: true
-    },
     issuename: {
       type: DataTypes.TEXT,
       allowNull: true

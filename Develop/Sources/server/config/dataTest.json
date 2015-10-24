@@ -1,0 +1,133 @@
+/**
+ * Created by hoanglvq on 10/23/15.
+ */
+
+{
+    "all": {
+        "shipper": [
+            {
+                "order" : ["order1"],
+                /*
+                "markerID"
+                "geoText"
+                "distance"
+                "duration", // client
+
+                "latitude"
+                "longitude"
+                "shipperID"
+                "status"    // server   
+                */                
+            },
+            {
+                "order" : ["order3","order2"]
+            },
+            {
+                "order" : ["order4"]
+            }
+        ],
+        "store": [
+            {
+                "order" : ["order1","order2"]
+            },
+            {
+                "order" : ["order3","order4"]
+            }
+        ],
+        "custormer": [
+            {
+                "order" : ["order1","order3"]
+                /*
+                "geoText"                
+                */
+            },
+            {
+                "order" : ["order2"]
+            },
+            {
+                "order" : ["order4"]
+            }
+        ],              
+        "orders": {            
+        }                
+    },
+
+    "shipper" : {
+        "shipper": [
+            {
+                "order" : ["order1","order2","order3"]
+            }
+        ],
+        "store": [
+            {
+                "order": ["order1","order2"]
+            },
+            {
+                "order": ["order3"]
+            }
+        ],
+        "custormer": [
+            {
+                "order": ["order1"]
+            },
+            {
+                "order": ["order2","order3"]
+            }
+        ],
+        "order": {
+
+        }
+    },
+
+    "store" : {
+        "shipper": [
+            {
+                "order": ["order1"]
+            },
+            {
+                "order": ["order2","order3"]
+            },
+            {
+                "order": ["order4"]
+            }
+        ],
+        "store":[
+            {
+                "order": ["order1","order2","order3","order4"]
+            }
+        ],
+        "custormer":[
+            {
+                "order": ["order1"]
+            },
+            {
+                "order": ["order2","order3"]
+            },
+            {
+                "order": ["order4"]
+            }
+        ],
+        "order": {
+        }
+    },
+
+    "orderdetail": {
+        "shipper": [
+            {
+                "order": ["order1"]
+            }
+        ],
+        "store": [
+            {
+                "order": ["order1"]}
+            }
+        ],
+        "custormer":[
+            {
+                "order": ["order1"]
+            }
+        ],
+        "order": {            
+        }
+    }
+}

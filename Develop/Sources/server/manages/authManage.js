@@ -89,6 +89,12 @@ module.exports  = function(app){
                             res.status(401).send('Wrong password');
                         }else{
 
+                            //db.managestore.getAllData(db)
+                            //    .then(function(data){
+                            //        console.log("DATA HERE: ");
+                            //        console.log(data);
+                            //    })
+
                             if(user.userrole == 2 ){
                                  db.managestore.getStoresOfUser(user.username)
                                     .then(function(listStore){

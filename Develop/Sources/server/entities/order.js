@@ -59,6 +59,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.BOOLEAN,
       allowNull: true
     },
+    iscancel: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
+    },
     fee: {
       type: DataTypes.BIGINT,
       allowNull: true
