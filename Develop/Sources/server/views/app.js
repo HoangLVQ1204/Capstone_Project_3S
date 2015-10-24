@@ -5,7 +5,8 @@
 /* Script */
 angular.module('app', [
     'ui.router',
-    'angular-jwt'
+    'angular-jwt',
+    'smart-table'
 ]).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider){
 
     // Set up Routes
