@@ -7,7 +7,7 @@ module.exports = function (app) {
     var db = app.get('models');
 
     var params = function (req, res, next, order_id) {
-        return db.order.getOneOrder(order_id)
+        return db.order.getOneOrderDetail(order_id)
             .then(function (order) {
                 if (order) {
                     req.ss = order;

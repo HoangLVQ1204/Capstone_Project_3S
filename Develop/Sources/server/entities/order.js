@@ -88,6 +88,11 @@ module.exports = function(sequelize, DataTypes) {
           foreignKey: 'orderid',
           constraints: false
         });
+        order.hasMany(db.goods,{
+          foreignKey:'orderid',
+          constraints: false
+        })
+
       },
       getAllTaskOfShipper: function(task, orderstatus, shipperid, taskdate) {
         return order.findAll({
@@ -121,7 +126,7 @@ module.exports = function(sequelize, DataTypes) {
           }]
         });
 	  },
-	  
+	  //KhanhKC
       getAllOrders: function (oderstatusModel, store_id) {
         return order.findAll({
           attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid'],
@@ -130,16 +135,6 @@ module.exports = function(sequelize, DataTypes) {
           ]
         });
       },
-
-      getOneOrder: function (order_id) {
-        return order.findOne({
-          where: {
-            'orderid': order_id
-          }
-        })
-      },
-
-
       postOneOrder: function(newOrder){
         return order.build(newOrder).save();
       },
