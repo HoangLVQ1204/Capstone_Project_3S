@@ -1,37 +1,25 @@
 <ion-view view-title="Issue">
   <ion-content>
+    <form name="issueFrm" ng-submit="submitData(issue)" novalidate>
       <!--Fancy directive-->
-      <div class="item item-divider">Type
+      <div class="item item-divider">Type</div>
+      <div class="item item-select" fancy-select ng-model="issue.category" items="issueCategories" item-label="categoryName">
+        {{issue.category.categoryName || 'Order get an issue'}}
+        <!--<p>Test1: {{issue.test1}}</p>-->
       </div>
-      <fancy-select
-        header-text="Type"
-        allow-empty='false'
-        value="val.single"
-        text="types_text"
-        items="issueCategories"
-        >
-      </fancy-select>
+      <div class="item item-divider">Order</div>
+      <div class="item item-select" fancy-select ng-model="issue.issuedOrder" multi-select="true" items="selectable" item-label="text">
+        {{parseMulti(issue.issuedOrder) || 'Order get an issue'}}
+        <!--<p>Test2: {{issue.issuedOrder}}</p>-->
+      </div>
 
-    <div class="item item-divider">Order
-    </div>
-      <fancy-select
-        header-text="Order"
-        allow-empty='false'
-        value="val.multiple"
-        text="orders_text"
-        items="orders"
-        multi-select="true"
-        >
-      </fancy-select>
-
-    <!--Issue content-->
-    <div class="item item-divider">Issue
-    </div>
-    <textarea style="width: 100%; height: 220px; padding: 15px" ng-model="content" placeholder="Write here...">
-    </textarea>
-    <button class="button button-block btCommon">
-      Send
-    </button>
+      <!--Issue content-->
+      <div class="item item-divider">Issue
+      </div>
+      <textarea style="width: 100%; height: 220px; padding: 15px" ng-model="issue.content">
+      </textarea>
+      <button class="button button-block btCommon" type="submit">Send</button>
+    </form>
   </ion-content>
 </ion-view>
 

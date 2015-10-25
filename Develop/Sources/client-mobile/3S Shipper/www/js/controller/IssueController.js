@@ -1,7 +1,7 @@
 /**
  * Created by Kaka Hoang Huy on 9/30/2015.
  */
-app.controller('IssueCtrl',['$scope', 'dataService', 'mySharedService', function ($scope, dataFactory, mySharedService) {
+app.controller('IssueCtrl',['$scope','$ionicPopup' , 'dataService', 'mySharedService', function ($scope, $ionicPopup, dataFactory, mySharedService) {
 
   if (undefined !== mySharedService.message && mySharedService.message !== '') {
 
@@ -61,7 +61,7 @@ app.controller('IssueCtrl',['$scope', 'dataService', 'mySharedService', function
           'statusName': item.statusname,
           'pickupAdd': item.pickupaddress,
           'deliveryAdd': item.deliveryaddress,
-          'checked': true
+          'checked': false
         });
       });
     }
@@ -85,14 +85,66 @@ app.controller('IssueCtrl',['$scope', 'dataService', 'mySharedService', function
 
   //Fill to "Type" dropdown list
   $scope.issueCategories = [
-    {categoryID: 1, categoryName: 'Accident or Personal working' },
-    {categoryID: 2, categoryName: 'Goods is broken' }
+    {categoryID: "1", categoryName: 'Accident or Personal working' },
+    {categoryID: "2", categoryName: 'Goods is broken' }
   ];
   $scope.types_text = 'Choose Type of Issue';
   $scope.orders_text = 'Order get an Issue';
   $scope.val =  {single: null, multiple: null};
 
-  $scope.haihai = "tete";
+
+  //test new fancy box
+  $scope.selectable = [{"val":"1","text":"Peterman"},{"val":"2","text":"Sessa"},{"val":"3","text":"Cox"}];
+
+  $scope.parseMulti = function(items){
+    if(items){
+      return items.map(function(item){ return item.text; }).join(', ');
+    }
+  };
+
+
+  /*
+   * By QuyenNV - 24/10/2015
+   *
+   * This function submit
+   * @param:
+   * */
+  $scope.submitData = function (issue) {
+    //Validation
+    //if (undefined !== rs['Express'] && rs['Express'].length) {
+    //if (undefined === $scope.val.single || $scope.val.single == null) {
+    //    //$ionicPopup.alert({
+    //    //  title: 'Information',
+    //    //  content: 'Type is not empty !'
+    //    //}).then(function(res) {
+    //    //  console.log('Type Alert Box');
+    //    //});
+    //} else if (undefined === $scope.val.multiple || $scope.val.multiple == null) {
+    //  $ionicPopup.alert({
+    //    title: 'Information',
+    //    content: 'Order not empty !'
+    //  }).then(function(res) {
+    //    console.log('Order Alert Box');
+    //  });
+    //} else if (undefined === issue || issue === '') {
+    //  $ionicPopup.alert({
+    //    title: 'Information',
+    //    content: 'Content is not Empty !'
+    //  }).then(function(res) {
+    //    console.log('Type Alert Box');
+    //  });
+    //} else {
+      //post an API
+      var urlCreateBase = 'http://localhost:3000/api/issue';
+      dataFactory.postDataServer(urlCreateBase, issue)
+        .success(function (rs) {
+          console.log('1');
+        })
+        .error(function (error) {
+          console.log('Unable to load customer data: ' + error);
+        });
+    //}
+  }
 
 }]);
 

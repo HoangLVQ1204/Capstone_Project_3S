@@ -5,20 +5,27 @@ module.exports = function(sequelize, DataTypes) {
     issueid: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     category: {
       type: DataTypes.INTEGER,
       allowNull: true,
       primaryKey: true
     },
-    issuename: {
+    content: {
       type: DataTypes.TEXT,
       allowNull: true
     }
   }, {
     freezeTableName: true,
-    timestamps: false
+    timestamps: false,
+    classMethods: {
+      createNewIssue: function(newIssue){
+        //return issue.build(newIssue).save();
+        return issue.build({category: newIssue.category, content: newIssue.content}).save();
+      }
+    }
   });
   return issue;
 };
