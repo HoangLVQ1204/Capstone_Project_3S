@@ -75,9 +75,27 @@ insert into ordertype  values ('2', 'express');
 
 
 -- order
-insert into "order" values ('ord1', 'str1', '1', 'Tu Liem - Ha Noi', 'Cau Giay - Ha Noi', '2015-3-19', '2015-3-21', '01687555261', 'Nguyen Van Quyen', '1', '1', 'false', 'false','false', '20000', '0', '23232,32323', '2323,23232');
-insert into "order" values ('ord2', 'str2', '2', 'Ho Tung Mau - Ha Noi', 'Hoan Kiem - Ha Noi', '2015-5-23', '2015-5-25', '0988627075', 'Nguyen Van Long', '2', '2', 'false', 'false', 'false', '0', '2000000', '2323,-23233', '2323,-23233');
-insert into "order" values ('ord3', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '5', 'false', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord1', 'str1', '1', 'Tu Liem - Ha Noi', 'Cau Giay - Ha Noi', '2015-3-19', '2015-3-21', '01687555261', 'Nguyen Van Quyen', '1', '8', 'false', 'false','false', '20000', '0', '23232,32323', '2323,23232');
+insert into "order" values ('ord2', 'str2', '2', 'Ho Tung Mau - Ha Noi', 'Hoan Kiem - Ha Noi', '2015-5-23', '2015-5-25', '0988627075', 'Nguyen Van Long', '1', '8', 'false', 'false', 'false', '0', '2000000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord3', 'str3', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '1', '8', 'false', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord4', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '1', '8', 'false', 'true', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord5', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '1', '8', 'false', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord6', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '1', '8', 'false', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord7', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '1', '2', 'false', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord8', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '1', 'true', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord9', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '1', 'true', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord10', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '1', 'false', 'true', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord11', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '1', 'false', 'true', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord12', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '1', 'false', 'true', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord13', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '1', 'false', 'true', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord14', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '3', 'true', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord15', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '4', 'false', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord16', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '5', 'false', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord17', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '5', 'true', 'false', 'true', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord18', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '6', 'false', 'false', 'true', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord19', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '7', 'false', 'false', 'true', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord20', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '7', 'false', 'false', 'true', '10000', '400000', '2323,-23233', '2323,-23233');
+
 
 -- task
 insert into task values ('1','ord1', 'huykool', 'khoangkiti', '1','2015-2-9');
@@ -86,8 +104,26 @@ insert into task values ('3','ord3', 'huykool', 'hoang', '2', '2015-2-15');
 
 -- goods
 
-insert into goods values ('1', 'ord1', '1', '32.00', '20', '50', '35', 'Very height', '2');
-insert into goods values ('2', 'ord2', '2', '34.00', '34', '34', '50', 'Very width', '1');
+insert into goods values ('1', 'ord1',null, '32.00', '20', '50', '35', 'Very height', '2');
+insert into goods values ('2', 'ord2', null, '34.00', '34', '34', '50', 'Very width', '1');
+insert into goods values ('3', 'ord3', null, '34.00', '34', '34', '50', 'Very width', '3');
+insert into goods values ('4', 'ord4', null, '34.00', '34', '34', '50', 'Very width', '1');
+insert into goods values ('5', 'ord5', null, '34.00', '34', '34', '50', 'Very width', '4');
+insert into goods values ('6', 'ord6', null, '34.00', '34', '34', '50', 'Very width', '1');
+insert into goods values ('7', 'ord7', '2', '34.00', '34', '34', '50', 'Very width', '2');
+insert into goods values ('8', 'ord8', '2', '34.00', '34', '34', '50', 'Very width', '3');
+insert into goods values ('9', 'ord9', '2', '34.00', '34', '34', '50', 'Very width', '1');
+insert into goods values ('10', 'ord10', '2', '34.00', '34', '34', '50', 'Very width', '4');
+insert into goods values ('11', 'ord11', '2', '34.00', '34', '34', '50', 'Very width', '3');
+insert into goods values ('12', 'ord12', '2', '34.00', '34', '34', '50', 'Very width', '2');
+insert into goods values ('13', 'ord13', '2', '34.00', '34', '34', '50', 'Very width', '1');
+insert into goods values ('14', 'ord14', '2', '34.00', '34', '34', '50', 'Very width', '3');
+insert into goods values ('15', 'ord15', '2', '34.00', '34', '34', '50', 'Very width', '2');
+insert into goods values ('16', 'ord16', '2', '34.00', '34', '34', '50', 'Very width', '4');
+insert into goods values ('17', 'ord17', '2', '34.00', '34', '34', '50', 'Very width', '1');
+insert into goods values ('18', 'ord18', '2', '34.00', '34', '34', '50', 'Very width', '4');
+insert into goods values ('19', 'ord19', '2', '34.00', '34', '34', '50', 'Very width', '2');
+insert into goods values ('20', 'ord20', '2', '34.00', '34', '34', '50', 'Very width', '3');
 
 -- confirmationcodetype
 insert into confirmationcodetype values ('1', 'Gathering');
@@ -106,6 +142,78 @@ insert into confirmationcode values ('6', '998022', '2', 'ord2');
 insert into confirmationcode values ('7', '090909', '3', 'ord2');
 insert into confirmationcode values ('8', '080872', '4', 'ord2');
 
+insert into confirmationcode values( '9', '123459', '1', 'ord3');
+insert into confirmationcode values( '10', '123460', '2', 'ord3');
+insert into confirmationcode values( '11', '123461', '3', 'ord3');
+insert into confirmationcode values( '12', '123462', '4', 'ord3');
+insert into confirmationcode values( '13', '123463', '1', 'ord4');
+insert into confirmationcode values( '14', '123464', '2', 'ord4');
+insert into confirmationcode values( '15', '123465', '3', 'ord4');
+insert into confirmationcode values( '16', '123466', '4', 'ord4');
+insert into confirmationcode values( '17', '123467', '1', 'ord5');
+insert into confirmationcode values( '18', '123468', '2', 'ord5');
+insert into confirmationcode values( '19', '123469', '3', 'ord5');
+insert into confirmationcode values( '20', '123470', '4', 'ord5');
+insert into confirmationcode values( '21', '123471', '1', 'ord6');
+insert into confirmationcode values( '22', '123472', '2', 'ord6');
+insert into confirmationcode values( '23', '123473', '3', 'ord6');
+insert into confirmationcode values( '24', '123474', '4', 'ord6');
+insert into confirmationcode values( '25', '123475', '1', 'ord7');
+insert into confirmationcode values( '26', '123476', '2', 'ord7');
+insert into confirmationcode values( '27', '123477', '3', 'ord7');
+insert into confirmationcode values( '28', '123478', '4', 'ord7');
+insert into confirmationcode values( '29', '123479', '1', 'ord8');
+insert into confirmationcode values( '30', '123480', '2', 'ord8');
+insert into confirmationcode values( '31', '123481', '3', 'ord8');
+insert into confirmationcode values( '32', '123482', '4', 'ord8');
+insert into confirmationcode values( '33', '123483', '1', 'ord9');
+insert into confirmationcode values( '34', '123484', '2', 'ord9');
+insert into confirmationcode values( '35', '123485', '3', 'ord9');
+insert into confirmationcode values( '36', '123486', '4', 'ord9');
+insert into confirmationcode values( '37', '123487', '1', 'ord10');
+insert into confirmationcode values( '38', '123488', '2', 'ord10');
+insert into confirmationcode values( '39', '123489', '3', 'ord10');
+insert into confirmationcode values( '40', '123490', '4', 'ord10');
+insert into confirmationcode values( '41', '123491', '1', 'ord11');
+insert into confirmationcode values( '42', '123492', '2', 'ord11');
+insert into confirmationcode values( '43', '123493', '3', 'ord11');
+insert into confirmationcode values( '44', '123494', '4', 'ord11');
+insert into confirmationcode values( '45', '123495', '1', 'ord12');
+insert into confirmationcode values( '46', '123496', '2', 'ord12');
+insert into confirmationcode values( '47', '123497', '3', 'ord12');
+insert into confirmationcode values( '48', '123498', '4', 'ord12');
+insert into confirmationcode values( '49', '123499', '1', 'ord13');
+insert into confirmationcode values( '50', '123500', '2', 'ord13');
+insert into confirmationcode values( '51', '123501', '3', 'ord13');
+insert into confirmationcode values( '52', '123502', '4', 'ord13');
+insert into confirmationcode values( '53', '123503', '1', 'ord14');
+insert into confirmationcode values( '54', '123504', '2', 'ord14');
+insert into confirmationcode values( '55', '123505', '3', 'ord14');
+insert into confirmationcode values( '56', '123506', '4', 'ord14');
+insert into confirmationcode values( '57', '123507', '1', 'ord15');
+insert into confirmationcode values( '58', '123508', '2', 'ord15');
+insert into confirmationcode values( '59', '123509', '3', 'ord15');
+insert into confirmationcode values( '60', '123510', '4', 'ord15');
+insert into confirmationcode values( '61', '123511', '1', 'ord16');
+insert into confirmationcode values( '62', '123512', '2', 'ord16');
+insert into confirmationcode values( '63', '123513', '3', 'ord16');
+insert into confirmationcode values( '64', '123514', '4', 'ord16');
+insert into confirmationcode values( '65', '123515', '1', 'ord17');
+insert into confirmationcode values( '66', '123516', '2', 'ord17');
+insert into confirmationcode values( '67', '123517', '3', 'ord17');
+insert into confirmationcode values( '68', '123518', '4', 'ord17');
+insert into confirmationcode values( '69', '123519', '1', 'ord18');
+insert into confirmationcode values( '70', '123520', '2', 'ord18');
+insert into confirmationcode values( '71', '123521', '3', 'ord18');
+insert into confirmationcode values( '72', '123522', '4', 'ord18');
+insert into confirmationcode values( '73', '123523', '1', 'ord19');
+insert into confirmationcode values( '74', '123524', '2', 'ord19');
+insert into confirmationcode values( '75', '123525', '3', 'ord19');
+insert into confirmationcode values( '76', '123526', '4', 'ord19');
+insert into confirmationcode values( '77', '123527', '1', 'ord20');
+insert into confirmationcode values( '78', '123528', '2', 'ord20');
+insert into confirmationcode values( '79', '123529', '3', 'ord20');
+insert into confirmationcode values( '80', '123530', '4', 'ord20');
 
 -- issuecategory
 insert into issuecategory  values ('1', 'Ca Nhan');

@@ -44,7 +44,18 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     freezeTableName: true,
-    timestamps: false
+    timestamps: false,
+    classMethods: {
+      associate: function(db) {
+      },
+      postOneGood: function(newGood){
+        return goods.build(newGood).save();
+      },
+
+      putOrder: function (currentOrder) {
+        return currentOrder.save();
+      }
+    }
   });
   return goods;
 };
