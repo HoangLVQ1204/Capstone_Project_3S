@@ -1,34 +1,41 @@
 <div>
+
     <ol class="breadcrumb">
         <li><a href="#">Home</a></li>
         <li><a href="#">Dashboard</a></li>
     </ol>
+
+    <div class="breadcrumb">
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <h4>....................Place for maps..........................</h4>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+    </div>
     <!-- //breadcrumb-->
     <div id="content">
         <div class="column">
-            <div class="panel">
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <h4>....................Place for maps..........................</h4>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-            </div>
+
             <div class="row">
                 <div class="col-md-8">
                     <div class="storePanel">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a data-toggle="tab" href="#sectionA">Draft</a></li>
-                            <li><a data-toggle="tab" href="#sectionB">In process</a></li>
+                            <li class="active"><a data-toggle="tab" href="#sectionB">In process</a></li>
                             <li><a data-toggle="tab" href="#sectionC">Done</a></li>
+                            <li><a data-toggle="tab" href="#sectionA">Draft</a></li>
                             <li><a data-toggle="tab" href="#sectionD">Issue</a></li>
+
                         </ul>
                         <div class="tab-content">
+                            <!--/////////////////////////////////////////////////////////////////
+                            ////////////............. DRAFF ORDER..........///////////////////
+                            //////////////////////////////////////////////////////////////////-->
                             <div id="sectionA" class="tab-pane fade in active">
                                 <section class="panel">
                                     <header class="panel-heading">
@@ -39,8 +46,8 @@
                                             <table class="table table-striped table-hover table-bordered"
                                                    st-set-filter="customFilter" st-custom-date="deliverydate"
                                                    st-predicate="{{selected.value}}" stdate="dateRange"
-                                                   search-watch-model="search" st-table="displayedCollection"
-                                                   st-safe-src="ordersWaiting">
+                                                   search-watch-model="search" st-table="displayedCollectionDraff"
+                                                   st-safe-src="ordersDraff">
 
                                                 <div class="row">
 
@@ -80,38 +87,45 @@
                                                 <thead>
                                                 <tr>
                                                     <th st-sort="orderid" st-skip-natural="true"
-                                                        class="text-center sortable">OrderID</th>
+                                                        class="text-center sortable">OrderID
+                                                    </th>
                                                     <th st-sort="deliverydate" st-skip-natural="true"
-                                                        class="text-center sortable">Delivery Address </th>
+                                                        class="text-center sortable">Delivery Address
+                                                    </th>
                                                     <th st-sort="recipientname" st-skip-natural="true"
-                                                        class="text-center sortable">Customer </th>
+                                                        class="text-center sortable">Customer
+                                                    </th>
                                                     <th st-sort="recipientphone" st-skip-natural="true"
-                                                        class="text-center sortable">Customer Phone</th>
-                                                    <th st-sort="statusname" st-skip-natural="true"
-                                                        class="text-center sortable">Status </th>
-                                                    <th class="text-center">Option </th>
+                                                        class="text-center sortable">Customer Phone
+                                                    </th>
+                                                    <!--<th st-sort="statusname" st-skip-natural="true"-->
+                                                        <!--class="text-center sortable">Status-->
+                                                    <!--</th>-->
+                                                    <th class="text-center">Option</th>
 
                                                 </tr>
                                                 </thead>
                                                 <tbody align="center">
 
-                                                <tr class="odd gradeX" ng-repeat="x in displayedCollection">
+                                                <tr class="odd gradeX" ng-repeat="x in displayedCollectionDraff">
                                                     <td>{{x.orderid}}</td>
                                                     <td>{{x.deliveryaddress}}</td>
                                                     <td>{{x.recipientname}}</td>
                                                     <td> {{x.recipientphone}}</td>
-                                                    <td> {{x.statusname}}</td>
-                                                    <td>
-                                                        <span class="tooltip-area">
-                                                        <a href="javascript:void(0)" class="btn btn-default btn-sm" title="Submit"><i class="fa fa-cloud-upload"></i></a>
-                                                        <a href="javascript:void(0)"  class="btn btn-default btn-sm" title="Delete"><i class="fa fa-trash-o"></i></a>
-                                                        </span>
+                                                    <!--<td> {{x.statusname}}</td>-->
+                                                    <td width="16%">
+                                                        <span class=" tooltip-area">
+                                                    <a href="javascript:void(0)" class="btn btn-default btn-sm"
+                                                       title="Submit"><i class="fa fa-cloud-upload"></i></a>
+                                                    <a href="javascript:void(0)" class="btn btn-default btn-sm"
+                                                       title="Delete"><i class="fa fa-trash-o"></i></a>
+                                                    </span>
                                                     </td>
                                                 </tr>
                                                 </tbody>
                                                 <tfoot>
                                                 <tr>
-                                                    <td colspan="5" class="text-right">
+                                                    <td colspan="6" class="text-right">
                                                         <div st-pagination="" st-items-by-page="5"></div>
                                                     </td>
                                                 </tr>
@@ -122,6 +136,11 @@
                                     </div>
                                 </section>
                             </div>
+
+
+                            <!--/////////////////////////////////////////////////////////////////
+                            ////////////............. INPROCESS ORDER..........///////////////////
+                            //////////////////////////////////////////////////////////////////-->
                             <div id="sectionB" class="tab-pane fade">
                                 <section class="panel">
                                     <header class="panel-heading">
@@ -132,8 +151,8 @@
                                             <table class="table table-striped table-hover table-bordered"
                                                    st-set-filter="customFilter" st-custom-date="deliverydate"
                                                    st-predicate="{{selected.value}}" stdate="dateRange"
-                                                   search-watch-model="search" st-table="displayedCollection"
-                                                   st-safe-src="ordersWaiting">
+                                                   search-watch-model="search" st-table="displayedCollectionInprocess"
+                                                   st-safe-src="orderInprocess">
 
                                                 <div class="row">
 
@@ -173,38 +192,45 @@
                                                 <thead>
                                                 <tr>
                                                     <th st-sort="orderid" st-skip-natural="true"
-                                                        class="text-center sortable">OrderID</th>
+                                                        class="text-center sortable">OrderID
+                                                    </th>
                                                     <th st-sort="deliverydate" st-skip-natural="true"
-                                                        class="text-center sortable">Delivery Address </th>
+                                                        class="text-center sortable">Delivery Address
+                                                    </th>
                                                     <th st-sort="recipientname" st-skip-natural="true"
-                                                        class="text-center sortable">Customer </th>
+                                                        class="text-center sortable">Customer
+                                                    </th>
                                                     <th st-sort="recipientphone" st-skip-natural="true"
-                                                        class="text-center sortable">Customer Phone</th>
+                                                        class="text-center sortable">Customer Phone
+                                                    </th>
                                                     <th st-sort="statusname" st-skip-natural="true"
-                                                        class="text-center sortable">Status </th>
-                                                    <th class="text-center">Option </th>
+                                                        class="text-center sortable">Status
+                                                    </th>
+                                                    <th class="text-center">Option</th>
 
                                                 </tr>
                                                 </thead>
                                                 <tbody align="center">
 
-                                                <tr class="odd gradeX" ng-repeat="x in displayedCollection">
+                                                <tr class="odd gradeX" ng-repeat="x in displayedCollectionInprocess">
                                                     <td>{{x.orderid}}</td>
                                                     <td>{{x.deliveryaddress}}</td>
                                                     <td>{{x.recipientname}}</td>
                                                     <td> {{x.recipientphone}}</td>
                                                     <td> {{x.statusname}}</td>
-                                                    <td>
-                                                        <span class="tooltip-area">
-                                                        <a href="javascript:void(0)" class="btn btn-default btn-sm" title="Edit"><i class="fa fa-cloud-upload (alias)"></i></a>
-                                                        <a href="javascript:void(0)"  class="btn btn-default btn-sm" title="Cancel"><i class="fa fa-times"></i></a>
-                                                        </span>
+                                                    <td width="16%">
+                                                        <span class=" tooltip-area">
+                                                    <a href="javascript:void(0)" class="btn btn-default btn-sm"
+                                                       title="Edit"><i class="fa fa-edit (alias)"></i></a>
+                                                    <a href="javascript:void(0)" class="btn btn-default btn-sm"
+                                                       title="Cancel"><i class="fa fa-times"></i></a>
+                                                    </span>
                                                     </td>
                                                 </tr>
                                                 </tbody>
                                                 <tfoot>
                                                 <tr>
-                                                    <td colspan="5" class="text-right">
+                                                    <td colspan="6" class="text-right">
                                                         <div st-pagination="" st-items-by-page="5"></div>
                                                     </td>
                                                 </tr>
@@ -215,6 +241,11 @@
                                     </div>
                                 </section>
                             </div>
+
+
+                            <!--/////////////////////////////////////////////////////////////////
+                            ////////////............. DONE ORDER..........///////////////////
+                            //////////////////////////////////////////////////////////////////-->
                             <div id="sectionC" class="tab-pane fade">
                                 <section class="panel">
                                     <header class="panel-heading">
@@ -225,8 +256,8 @@
                                             <table class="table table-striped table-hover table-bordered"
                                                    st-set-filter="customFilter" st-custom-date="deliverydate"
                                                    st-predicate="{{selected.value}}" stdate="dateRange"
-                                                   search-watch-model="search" st-table="displayedCollection"
-                                                   st-safe-src="ordersWaiting">
+                                                   search-watch-model="search" st-table="displayedCollectionDone"
+                                                   st-safe-src="orderDone">
 
                                                 <div class="row">
 
@@ -249,7 +280,6 @@
                                                                    placeholder="Search" ng-model="search">
                                                         </div>
 
-
                                                     </div>
 
                                                     <div class="col-sm-4 pull-right">
@@ -266,33 +296,38 @@
                                                 <thead>
                                                 <tr>
                                                     <th st-sort="orderid" st-skip-natural="true"
-                                                        class="text-center sortable">OrderID</th>
+                                                        class="text-center sortable">OrderID
+                                                    </th>
                                                     <th st-sort="deliverydate" st-skip-natural="true"
-                                                        class="text-center sortable">Delivery Address </th>
+                                                        class="text-center sortable">Delivery Address
+                                                    </th>
                                                     <th st-sort="recipientname" st-skip-natural="true"
-                                                        class="text-center sortable">Customer </th>
+                                                        class="text-center sortable">Customer
+                                                    </th>
                                                     <th st-sort="recipientphone" st-skip-natural="true"
-                                                        class="text-center sortable">Customer Phone</th>
+                                                        class="text-center sortable">Customer Phone
+                                                    </th>
                                                     <th st-sort="statusname" st-skip-natural="true"
-                                                        class="text-center sortable">Status </th>
-                                                    <th class="text-center">Option </th>
+                                                        class="text-center sortable">Status
+                                                    </th>
+                                                    <!--<th class="text-center">Option </th>-->
 
                                                 </tr>
                                                 </thead>
                                                 <tbody align="center">
 
-                                                <tr class="odd gradeX" ng-repeat="x in displayedCollection">
+                                                <tr class="odd gradeX" ng-repeat="x in displayedCollectionDone">
                                                     <td>{{x.orderid}}</td>
                                                     <td>{{x.deliveryaddress}}</td>
                                                     <td>{{x.recipientname}}</td>
                                                     <td> {{x.recipientphone}}</td>
                                                     <td> {{x.statusname}}</td>
-                                                    <td>
-                                                        <span class="tooltip-area">
-                                                        <a href="javascript:void(0)" class="btn btn-default btn-sm" title="Edit"><i class="fa fa-edit (alias)"></i></a>
-                                                        <a href="javascript:void(0)"  class="btn btn-default btn-sm" title="Cancel"><i class="fa fa-times"></i></a>
-                                                        </span>
-                                                    </td>
+                                                    <!-- <td  width="16%>
+                                                     <span class="tooltip-area">
+                                                     <a href="javascript:void(0)" class="btn btn-default btn-sm" title="Submit"><i class="fa fa-cloud-upload"></i></a>
+                                                     <a href="javascript:void(0)"  class="btn btn-default btn-sm" title="Delete"><i class="fa fa-trash-o"></i></a>
+                                                     </span>
+                                                     </td> -->
                                                 </tr>
                                                 </tbody>
                                                 <tfoot>
@@ -308,6 +343,11 @@
                                     </div>
                                 </section>
                             </div>
+
+
+                            <!--/////////////////////////////////////////////////////////////////
+                            ////////////............. ISSUE ORDER..........///////////////////
+                            //////////////////////////////////////////////////////////////////-->
                             <div id="sectionD" class="tab-pane fade">
                                 <section class="panel">
                                     <header class="panel-heading">
@@ -318,8 +358,8 @@
                                             <table class="table table-striped table-hover table-bordered"
                                                    st-set-filter="customFilter" st-custom-date="deliverydate"
                                                    st-predicate="{{selected.value}}" stdate="dateRange"
-                                                   search-watch-model="search" st-table="displayedCollection"
-                                                   st-safe-src="ordersWaiting">
+                                                   search-watch-model="search" st-table="displayedCollectionIssue"
+                                                   st-safe-src="orderIssue">
 
                                                 <div class="row">
 
@@ -359,22 +399,27 @@
                                                 <thead>
                                                 <tr>
                                                     <th st-sort="orderid" st-skip-natural="true"
-                                                        class="text-center sortable">OrderID</th>
+                                                        class="text-center sortable">OrderID
+                                                    </th>
                                                     <th st-sort="deliverydate" st-skip-natural="true"
-                                                        class="text-center sortable">Delivery Address </th>
+                                                        class="text-center sortable">Delivery Address
+                                                    </th>
                                                     <th st-sort="recipientname" st-skip-natural="true"
-                                                        class="text-center sortable">Customer </th>
+                                                        class="text-center sortable">Customer
+                                                    </th>
                                                     <th st-sort="recipientphone" st-skip-natural="true"
-                                                        class="text-center sortable">Customer Phone</th>
+                                                        class="text-center sortable">Customer Phone
+                                                    </th>
                                                     <th st-sort="statusname" st-skip-natural="true"
-                                                        class="text-center sortable">Status </th>
-                                                    <th class="text-center">Option </th>
+                                                        class="text-center sortable">Status
+                                                    </th>
+                                                    <th width="16%" class="text-center">Option</th>
 
                                                 </tr>
                                                 </thead>
                                                 <tbody align="center">
 
-                                                <tr class="odd gradeX" ng-repeat="x in displayedCollection">
+                                                <tr class="odd gradeX" ng-repeat="x in displayedCollectionIssue">
                                                     <td>{{x.orderid}}</td>
                                                     <td>{{x.deliveryaddress}}</td>
                                                     <td>{{x.recipientname}}</td>
@@ -382,15 +427,17 @@
                                                     <td> {{x.statusname}}</td>
                                                     <td>
                                                         <span class="tooltip-area">
-                                                        <a href="javascript:void(0)" class="btn btn-default btn-sm" title="Edit"><i class="fa fa-edit (alias)"></i></a>
-                                                        <a href="javascript:void(0)"  class="btn btn-default btn-sm" title="Cancel"><i class="fa fa-times"></i></a>
+                                                        <a href="javascript:void(0)" class="btn btn-default btn-sm" title="Edit"><i
+                                                                class="fa fa-edit (alias)"></i></a>
+                                                        <a href="javascript:void(0)" class="btn btn-default btn-sm" title="Cancel"><i
+                                                                class="fa fa-times"></i></a>
                                                         </span>
                                                     </td>
                                                 </tr>
                                                 </tbody>
                                                 <tfoot>
                                                 <tr>
-                                                    <td colspan="5" class="text-right">
+                                                    <td colspan="6" class="text-right">
                                                         <div st-pagination="" st-items-by-page="5"></div>
                                                     </td>
                                                 </tr>
@@ -413,7 +460,7 @@
                                 <section>
                                     <h5><strong>TOTAL</strong> ORDERS </h5>
 
-                                    <h2>8590</h2>
+                                    <h2>{{totalOrder}}</h2>
 
                                     <div class="progress progress-xs progress-white progress-over-tile">
                                         <div class="progress-bar  progress-bar-white" aria-valuetransitiongoal="1"

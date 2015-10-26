@@ -3,8 +3,7 @@
  */
 
 function storeDashboardController($scope,$state,dataService, $http){
-    //$scope.map= true;
-    $scope.tableColumn =['OrderID','Delivery Address', 'Customer','Customer Name','Status']
+    $scope.tableColumn =['OrderID','Delivery Address', 'Customer','Customer Name','Status'];
 
     $scope.searchOptions = [
         {
@@ -31,22 +30,26 @@ function storeDashboardController($scope,$state,dataService, $http){
             value: 'statusname'
         }
     ];
-    $scope.ordersWaiting =[];
     $scope.selected =$scope.searchOptions[0];
     $scope.dateRange = null;
     getDataFromServer();
     //postDataToServer();
 
-
-   // $scope.displayedCollection = [].concat($scope.ordersWaiting);
-
     function getDataFromServer() {
         var urlBase = 'http://localhost:3000/orders';
         dataService.getDataServer(urlBase)
             .success(function (rs) {
-                $scope.ordersWaiting = rs['Waiting'];
-                $scope.orderCarring = rs['Carrying'];
-                $scope.displayedCollection = [].concat($scope.ordersWaiting);
+                $scope.totalOrder = rs['Draff'].length + rs['Done'].length + rs['Issue'].length + rs['Inprocess'].length ;
+                $scope.orderToday;
+
+                $scope.ordersDraff = rs['Draff'];
+                $scope.orderIssue = rs['Issue'];
+                $scope.orderInprocess= rs['Inprocess'];
+                $scope.orderDone= rs['Done'];
+                $scope.displayedCollectionDraff = [].concat($scope.ordersDraff);
+                $scope.displayedCollectionIssue = [].concat($scope.orderIssue);
+                $scope.displayedCollectionInprocess = [].concat($scope.orderInprocess);
+                $scope.displayedCollectionDone = [].concat($scope.orderDone);
 
             })
             .error(function (error) {
