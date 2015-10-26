@@ -148,6 +148,13 @@ module.exports = function(sequelize, DataTypes) {
 
       putOrder: function (currentOrder) {
         return currentOrder.save();
+      },
+
+      changeIsPendingOrder: function(orderid) {
+        order.update(
+            { ispending: 'true' },
+            { where: { orderid: 'orderid' }} /* where criteria */
+        )
       }
     }
   });

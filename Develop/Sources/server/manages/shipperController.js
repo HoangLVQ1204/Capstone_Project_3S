@@ -151,12 +151,45 @@ module.exports = function (app) {
         return res.status(200).json(req.detail);
     };
 
+    var createIssue = function (req, res, next) {
+        //instance new Issue
+        var newIssue = {};
+        newIssue.category = req.body.category.categoryID;
+        newIssue.content = req.body.content;
+        db.issue.createNewIssue(newIssue)
+            .then(function(issue) {
+                //Instance new list Order get an issued
+                var listOrders = [];
+                _.each(req.body.issuedOrder, function(order){
+                    listOrders.push(order.val);
+                });
+                db.order.changeIsPendingOrder(listOrders)
+                    .then(function(){
+                        res.sendStatus(200);
+                    }, function(err) {
+                        next(err);
+                    });
+            }, function(err) {
+                next(err);
+            });
+
+
+        //var newOrder = req.body;
+        //return db.order.postOneOrder(newOrder)
+        //    .then(function (order) {
+        //        res.status(201).json(order);
+        //    }, function(err){
+        //        next(err);
+        //    });
+    };
+
     return {
         getTask: getTask,
         getHistory: getHistory,
         getDetail: getDetail,
         paramOrderId: paramOrderId,
-        getStatusList: getStatusList
+        getStatusList: getStatusList,
+        createIssue: createIssue
     }
 
 }
