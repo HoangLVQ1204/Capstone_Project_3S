@@ -39,10 +39,15 @@ angular.module('app')
             return token.userrole;
         }
 
+        var getCurrentInfoUser = function(){
+            return jwtHelper.decodeToken(localStorage.getItem('EHID'));
+        }
+
         return {
             signIn : signIn,
             isLogged: isLogged,
-            isRightRole: isRightRole
+            isRightRole: isRightRole,
+            getCurrentInfoUser: getCurrentInfoUser
         };
     });
 

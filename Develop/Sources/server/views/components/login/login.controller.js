@@ -24,6 +24,11 @@ function loginController($scope,$rootScope,$state,authService,config,socketServi
                     $state.go('store');
                 }
 
+                if(authService.isRightRole(config.role.shipper)){
+                    socketService.setNameSpace('/shipper');
+                    $state.go('store');
+                }
+
             })
             .catch(function(error){
                 showError({

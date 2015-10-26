@@ -124,11 +124,26 @@ angular.module('app', [
         if(authService.isRightRole(config.role.admin)){
             socketService.setNameSpace('/admin');
 
+
         }
 
         if(authService.isRightRole(config.role.store)){
             socketService.setNameSpace('/store');
 
+
+        }
+
+        if(authService.isRightRole(config.role.shipper)){
+            socketService.setNameSpace('/shipper');
+            navigator.geolocation.getCurrentPosition(function (position) {
+                console.log(position.coords);
+            }, function(){
+                console.log("error");
+            });
+            socketService.emit('shipper:send:location',authService.getCurrentInfoUser());
+            socketService.on('hello',function(data){
+                console.log(data);
+            })
         }
     }
 
