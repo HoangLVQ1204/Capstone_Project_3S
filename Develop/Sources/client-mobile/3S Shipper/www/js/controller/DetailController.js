@@ -177,13 +177,14 @@ app.directive('map', function () {
       dataFactory.putDataServer(urlBase, data)
         .then(function (rs) {
           $scope.modal.hide();
-          //$ionicPopup.alert({
-          //  title: "Successfully!",
-          //  content: "You're order has been moved to next step! Continue your work! :D"
-          //}).then(function (rs) {
-          //  //Reload
-          //  getDetailFromServer();
-          //});
+          $ionicPopup.alert({
+            title: "Successfully!",
+            content: "You're order has been moved to next step! Continue your work! :D"
+          }).then(function (rs) {
+            //Reload
+            getDetailFromServer();
+          });
+          /*
           var myPopup = $ionicPopup.show({
             template: '<input type="password" ng-model="data.wifi">',
             title: 'Enter Wi-Fi Password',
@@ -210,7 +211,7 @@ app.directive('map', function () {
           });
           $timeout(function() {
             myPopup.close(); //close the popup after 3 seconds for some reason
-          }, 3000);
+          }, 3000);*/
         },
         function (err) {
           $scope.modal.hide();
@@ -230,7 +231,7 @@ app.directive('map', function () {
     });
 
     $scope.openPopover = function($event) {
-      $scope.popover.show($event);
+      //$scope.popover.show($event);
     };
     //// END POPOVER
     $scope.nextStepConfirm = function step(confirmationCode) {
