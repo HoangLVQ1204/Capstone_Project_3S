@@ -99,7 +99,7 @@ app.config(function ($stateProvider, $urlRouterProvider) {
 
       .state('app.tasks', {
         url: '/tasks',
-        //abstract: true,
+        cache: false,
         views: {
           'menuContent': {
             templateUrl: 'templates/tasks.html',

@@ -88,7 +88,7 @@ function fancySelectDirective($rootScope, $parse, $timeout, genericModalService)
           }, true);
         }
 
-        genericModalService.show(templateUrl, modalScope, 'slide-in-right');
+        genericModalService.show(templateUrl, modalScope);
       }
 
       ngModelCtrl.$render = function() {
@@ -104,7 +104,7 @@ function fancySelectTemplate ($templateCache) {
   $templateCache.put('template/fancy-select/fancy-select.html',
     '<ion-modal-view class="fancy-select-modal">' +
     '	<ion-header-bar align-title="center" class="bar-positive">' +
-    '		<button class="button button-clear button-icon ion-arrow-left-c" ng-click="closeModal()"></button>' +
+    '		<button class="button button-clear button-icon ion-close" ng-click="closeModal()"></button>' +
     '		<h1 class="title">{{headerText}}</h1>' +
     '		<button class="button button-clear button-icon ion-checkmark-round" ng-if="!closeOnSelection" ng-click="select(); closeModal();"></button>' +
     '	</ion-header-bar>' +

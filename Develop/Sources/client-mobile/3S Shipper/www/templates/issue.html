@@ -4,13 +4,11 @@
       <!--Fancy directive-->
       <div class="item item-divider">Type</div>
       <div class="item item-select" fancy-select ng-model="issue.category" items="issueCategories" item-label="categoryName">
-        {{issue.category.categoryName || 'Order get an issue'}}
-        <!--<p>Test1: {{issue.test1}}</p>-->
+        {{issue.category.categoryName || 'Type of Issue'}}
       </div>
       <div class="item item-divider">Order</div>
       <div class="item item-select" fancy-select ng-model="issue.issuedOrder" multi-select="true" items="selectable" item-label="text">
-        {{parseMulti(issue.issuedOrder) || 'Order get an issue'}}
-        <!--<p>Test2: {{issue.issuedOrder}}</p>-->
+        {{parseMulti(issue.issuedOrder) || 'Order get an Issue'}}
       </div>
 
       <!--Issue content-->

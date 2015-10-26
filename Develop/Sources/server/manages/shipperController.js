@@ -152,35 +152,23 @@ module.exports = function (app) {
     };
 
     var createIssue = function (req, res, next) {
-        //instance new Issue
+        //Instance new Issue
         var newIssue = {};
         newIssue.category = req.body.category.categoryID;
         newIssue.content = req.body.content;
         db.issue.createNewIssue(newIssue)
             .then(function(issue) {
+            }).then(function(){
                 //Instance new list Order get an issued
                 var listOrders = [];
                 _.each(req.body.issuedOrder, function(order){
                     listOrders.push(order.val);
                 });
-                db.order.changeIsPendingOrder(listOrders)
-                    .then(function(){
-                        res.sendStatus(200);
-                    }, function(err) {
-                        next(err);
-                    });
+                db.order.changeIsPendingOrder(listOrders);
+                res.sendStatus(200);
             }, function(err) {
                 next(err);
             });
-
-
-        //var newOrder = req.body;
-        //return db.order.postOneOrder(newOrder)
-        //    .then(function (order) {
-        //        res.status(201).json(order);
-        //    }, function(err){
-        //        next(err);
-        //    });
     };
 
     return {

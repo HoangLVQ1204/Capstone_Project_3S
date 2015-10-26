@@ -4,17 +4,14 @@
 app.controller('TasksCtrl', ['$scope', 'dataService', 'mySharedService', function($scope, dataFactory, mySharedService) {
 
   if (undefined !== mySharedService.message && mySharedService.message !== '') {
-    //console.log('rs', mySharedService.message);
     formatData(mySharedService.message);
   } else {
     console.log('save message sharing');
     getDataFromServer();
   }
 
-
   /*
    * By QuyenNV - 23/10/2015
-   *
    * This function is call API
    *
    * */
@@ -32,7 +29,6 @@ app.controller('TasksCtrl', ['$scope', 'dataService', 'mySharedService', functio
 
   /*
    * By QuyenNV - 23/10/2015
-   *
    * This function is format data respon from from server
    * @param: rs
    * */
