@@ -7,7 +7,8 @@ angular.module('app', [
     'ui.router',
     'angular-jwt',
     'nemLogging',
-    'uiGmapgoogle-maps'
+    'uiGmapgoogle-maps',
+    'smart-table'
 ]).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider,uiGmapGoogleMapApiProvider){
 
     // Set up Routes
