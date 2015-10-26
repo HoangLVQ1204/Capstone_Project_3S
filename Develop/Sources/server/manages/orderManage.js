@@ -7,7 +7,7 @@ module.exports = function (app) {
     var db = app.get('models');
 
     var params = function (req, res, next, order_id) {
-        return db.order.getOneOrder(order_id)
+        return db.order.getOneOrderDetail(order_id)
             .then(function (order) {
                 if (order) {
                     req.ss = order;
@@ -25,26 +25,36 @@ module.exports = function (app) {
         var orderStatus = db.orderstatus;
         var order = db.order;
         var storeid = 'str1';
-        return order.getAllOrders(orderStatus, storeid)
+        return order.storeGetAllOrders(orderStatus, storeid)
             .then(function (orders) {
+                //console.log(orders);
                 var listOrders = [];
                 _.each(orders, function(order){
                     listOrders.push({
                         'orderid': order.dataValues.orderid,
-                        'statusname': order.orderstatus.dataValues.statusname,
+                        'statusname': order['orderstatus'].dataValues.statusname,
                         'deliveryaddress': order.dataValues.deliveryaddress,
                         'recipientname' : order.dataValues.recipientname,
-                        'recipientphone' : order.dataValues.recipientphone
+                        'recipientphone' : order.dataValues.recipientphone,
+                        'isdraff': order.dataValues.isdraff,
+                        'iscancel':order.dataValues.iscancel,
+                        'ispending': order.dataValues.ispending
                     })
                 });
                 var group = {};
-                group['Waiting'] = group['Waiting'] || [];
-                group['Carrying'] = group['Carrying'] || [];
+                group['Draff'] = group['Draff'] || [];
+                group['Issue'] = group['Issue'] || [];
+                group['Done'] = group['Done'] || [];
+                group['Inprocess'] = group['Inprocess'] || [];
                 _.each(listOrders, function(item) {
-                    if(_.isEqual(item['statusname'], 'Waiting')) {
-                        group['Waiting'].push(item);
-                    } else if(_.isEqual(item['statusname'], 'Carrying')) {
-                        group['Carrying'].push(item);
+                    if(item['isdraff']) {
+                        group['Draff'].push(item);
+                    } else if(item['iscancel']) {
+                        group['Issue'].push(item);
+                    }else if(_.isEqual(item['statusname'],'Done')){
+                        group['Done'].push(item);
+                    } else{
+                        group['Inprocess'].push(item);
                     }
                 });
 

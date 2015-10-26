@@ -59,6 +59,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.BOOLEAN,
       allowNull: true
     },
+    iscancel: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
+    },
     fee: {
       type: DataTypes.BIGINT,
       allowNull: true
@@ -88,6 +92,11 @@ module.exports = function(sequelize, DataTypes) {
           foreignKey: 'orderid',
           constraints: false
         });
+        order.hasMany(db.goods,{
+          foreignKey:'orderid',
+          constraints: false
+        })
+
       },
       getAllTaskOfShipper: function(task, orderstatus, shipperid, taskdate) {
         return order.findAll({
@@ -121,31 +130,31 @@ module.exports = function(sequelize, DataTypes) {
           }]
         });
 	  },
-	  
-      getAllOrders: function (oderstatusModel, store_id) {
+	  //KhanhKC
+      storeGetAllOrders: function (oderstatusModel, store_id) {
         return order.findAll({
-          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid'],
+          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','iscancel','ispending'],
           include: [
-            {'model': oderstatusModel}
+            {'model': oderstatusModel,
+              attributes: ['statusname']
+            }
+
           ]
         });
       },
-
-      getOneOrder: function (order_id) {
-        return order.findOne({
-          where: {
-            'orderid': order_id
-          }
-        })
-      },
-
-
       postOneOrder: function(newOrder){
         return order.build(newOrder).save();
       },
 
       putOrder: function (currentOrder) {
         return currentOrder.save();
+      },
+
+      changeIsPendingOrder: function(orderid) {
+        order.update(
+            { ispending: 'true' },
+            { where: { orderid: 'orderid' }} /* where criteria */
+        )
       }
     }
   });

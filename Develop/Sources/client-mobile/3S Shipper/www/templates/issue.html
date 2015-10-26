@@ -1,53 +1,25 @@
 <ion-view view-title="Issue">
   <ion-content>
-      <!--<label class="item item-select bcBottom" >-->
-          <!--<div class="input-label">-->
-            <!--Type of Issue-->
-          <!--</div>-->
-        <!--<select>-->
-          <!--<option selected>This is a bue of bule. This is blue</option>-->
-          <!--<option >This is a green</option>-->
-          <!--<option>This is a red</option>-->
-        <!--</select>-->
-      <!--</label>-->
-      <!--<label class="item bcBottom">-->
-        <!--<div class="input-label">-->
-          <!--Issue-->
-        <!--</div>-->
-        <!--<textarea name="issueContent" placeholder="Write here..."></textarea>-->
-      <!--</label>-->
-
-      <!--NEW-->
-      <div class="item item-divider">Type
+    <form name="issueFrm" ng-submit="submitData(issue)" novalidate>
+      <!--Fancy directive-->
+      <div class="item item-divider">Type</div>
+      <div class="item item-select" fancy-select ng-model="issue.category" items="issueCategories" item-label="categoryName">
+        {{issue.category.categoryName || 'Order get an issue'}}
+        <!--<p>Test1: {{issue.test1}}</p>-->
       </div>
-      <fancy-select
-        header-text="Type"
-        allow-empty='false'
-        value="val.single"
-        text="types_text"
-        items="countries"
-        >
-      </fancy-select>
+      <div class="item item-divider">Order</div>
+      <div class="item item-select" fancy-select ng-model="issue.issuedOrder" multi-select="true" items="selectable" item-label="text">
+        {{parseMulti(issue.issuedOrder) || 'Order get an issue'}}
+        <!--<p>Test2: {{issue.issuedOrder}}</p>-->
+      </div>
 
-    <div class="item item-divider">Order
-    </div>
-      <fancy-select
-        header-text="Order"
-        allow-empty='false'
-        value="val.multiple"
-        text="orders_text"
-        items="countries"
-        multi-select="true"
-        >
-      </fancy-select>
-
-    <!--Issue content-->
-    <div class="item item-divider">Issue
-    </div>
-    <textarea style="width: 100%; height: 220px; padding: 15px" name="issueContent" placeholder="Write here..."></textarea>
-    <button class="button button-block btCommon">
-      Send
-    </button>
+      <!--Issue content-->
+      <div class="item item-divider">Issue
+      </div>
+      <textarea style="width: 100%; height: 220px; padding: 15px" ng-model="issue.content">
+      </textarea>
+      <button class="button button-block btCommon" type="submit">Send</button>
+    </form>
   </ion-content>
 </ion-view>
 
@@ -80,7 +52,25 @@
             ng-checked="item.checked"
             ng-model="item.checked"
             class="item item-text-wrap item-checkbox-right">
-            {{item.text}}
+            <div>
+              <div>
+                <p style=" float: left; font-size: 1.4em; font-weight: bold">{{item.text}}</p>
+
+                <!--Picking up-->
+                <p ng-show="{{item.statusId == 2}}" class="statusDn label" style=" float: left; margin-left: 10px">{{item.statusName}}</p>
+                <!--Bring to stock-->
+                <p ng-show="{{item.statusId == 3}}" class="statusDn label" style=" float: left; margin-left: 10px">{{item.statusName}}</p>
+                <!--Delivering-->
+                <p ng-show="{{item.statusId == 5}}" class="statusDn label" style=" float: left; margin-left: 10px">{{item.statusName}}</p>
+                <!--Returning to stock-->
+                <div style="clear: both"></div>
+                <p ng-show="{{item.statusId == 6}}" class="statusDn label" style=" float: left; margin-left: 10px">{{item.statusName}}</p>
+
+                <p style="display: inline-block"><i class="ion-ios-location"></i> {{item.pickupAdd}}&nbsp;&nbsp;&nbsp;</p>
+                <p style="display: inline-block"><i class="ion-ios-flag"></i> {{item.deliveryAdd}}</p>
+              </div>
+            </div>
+
           </ion-checkbox >
 
           <!-- Single select -->
@@ -89,7 +79,7 @@
             ng-if="!multiSelect"
             class="item item-text-wrap"
             ng-click='validateSingle(item)'>
-            {{item.text}}
+            {{item.categoryName}}
           </label>
         </div>
       </ion-content>

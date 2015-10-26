@@ -5,3 +5,13 @@ body.leftMenu .mm-menu:not(.mm-right).mm-hassearch .mm-panel {
 .angular-google-map-container {
      height: 500px;
 }
+.sortable {
+     cursor: pointer;
+}
+
+.st-sort-ascent:after {
+     content: '\25B2';
+}
+.st-sort-descent:after {
+     content: '\25BC';
+}

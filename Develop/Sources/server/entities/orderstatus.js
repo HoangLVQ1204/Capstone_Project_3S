@@ -6,14 +6,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
-    },
-    statusname: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    nextaction: {
-      type: DataTypes.STRING,
-      allowNull: true
     }
   }, {
     freezeTableName: true,

@@ -1,159 +1,151 @@
 /**
  * Created by Kaka Hoang Huy on 9/30/2015.
  */
-app.controller('IssueCtrl',['$scope', 'dataService', function ($scope, dataFactory) {
+app.controller('IssueCtrl',['$scope','$ionicPopup' , 'dataService', 'mySharedService', function ($scope, $ionicPopup, dataFactory, mySharedService) {
 
-  //getDataFromServer();
-  //function getDataFromServer() {
-  //  var urlBase = 'http://localhost:3000/api/getIssueCategory';
-  //  dataFactory.getDataServer(urlBase)
-  //    .success(function (rs) {
-  //      console.log(rs);
-  //    })
-  //    .error(function (error) {
-  //      console.log('Unable to load customer data: ' + error);
-  //    })
-  //}
+  if (undefined !== mySharedService.message && mySharedService.message !== '') {
 
+    formatData(mySharedService.message);
+    //var rs = mySharedService.message;
+
+  } else {
+    console.log('save message sharing');
+    getDataFromServer();
+  }
+
+/*
+ * By QuyenNV - 23/10/2015
+ *
+ * This function is call API
+ *
+ * */
+  function getDataFromServer() {
+    var urlBase = 'http://localhost:3000/api/tasks';
+    dataFactory.getDataServer(urlBase)
+      .success(function (rs) {
+        mySharedService.prepForBroadcast(rs);
+        formatData(rs);
+      })
+      .error(function (error) {
+        console.log('Unable to load customer data: ' + error);
+      });
+  }
+
+/*
+ * By QuyenNV - 23/10/2015
+ *
+ * This function is format data respon from from server
+ * @param: rs
+ * */
+  function formatData(rs) {
+    var listOrders = [];
+    if (undefined !== rs['Pickup'] && rs['Pickup'].length) {
+      rs['Pickup'].forEach(function(item) {
+        listOrders.push({
+          'id': item.orderid,
+          'text': item.orderid,
+          'statusId': item.statusid,
+          'statusName': item.statusname,
+          'pickupAdd': item.pickupaddress,
+          'deliveryAdd': item.deliveryaddress,
+          'checked': true
+        });
+      });
+    }
+    if (undefined !== rs['Ship'] && rs['Ship'].length) {
+      rs['Ship'].forEach(function(item) {
+        listOrders.push({
+          'id': item.orderid,
+          'text': item.orderid,
+          'statusId': item.statusid,
+          'statusName': item.statusname,
+          'pickupAdd': item.pickupaddress,
+          'deliveryAdd': item.deliveryaddress,
+          'checked': false
+        });
+      });
+    }
+
+    if (undefined !== rs['Express'] && rs['Express'].length) {
+      rs['Express'].forEach(function(item) {
+        listOrders.push({
+          'id': item.orderid,
+          'text': item.orderid,
+          'statusId': item.statusid,
+          'statusName': item.statusname,
+          'pickupAdd': item.pickupaddress,
+          'deliveryAdd': item.deliveryaddress,
+          'checked': true
+        });
+      });
+    }
+    //Fill to "Order" dropdown list
+    $scope.orders = listOrders;
+  }
+
+  //Fill to "Type" dropdown list
   $scope.issueCategories = [
-    {categoryID: 1, categoryName: 'Accident or Personal working' },
-    {categoryID: 2, categoryName: 'Goods is broken' }
+    {categoryID: "1", categoryName: 'Accident or Personal working' },
+    {categoryID: "2", categoryName: 'Goods is broken' }
   ];
-
-  $scope.countries = [
-    {id: 1, text: 'USA', checked: false, icon: null},
-    {id: 2, text: 'France', checked: false, icon: null},
-    {id : 3, text: 'Japan3', checked: true, icon: null}
-  ];
-
   $scope.types_text = 'Choose Type of Issue';
   $scope.orders_text = 'Order get an Issue';
   $scope.val =  {single: null, multiple: null};
-}]);
 
 
-/**
- * Created by quyennv
- * create fancy Select directive
- */
-app.directive('fancySelect',[
-  '$ionicModal',
-  function($ionicModal) {
-    return {
-      /* Only use as <fancy-select> tag */
-      restrict : 'E',
+  //test new fancy box
+  $scope.selectable = [{"val":"1","text":"Peterman"},{"val":"2","text":"Sessa"},{"val":"3","text":"Cox"}];
 
-      /* Our template */
-      templateUrl: 'fancy-select.html',
+  $scope.parseMulti = function(items){
+    if(items){
+      return items.map(function(item){ return item.text; }).join(', ');
+    }
+  };
 
-      /* Attributes to set */
-      scope: {
-        'items'        : '=', /* Items list is mandatory */
-        'text'         : '=', /* Displayed text is mandatory */
-        'value'        : '=', /* Selected value binding is mandatory */
-        'callback'     : '&'
-      },
 
-      link: function (scope, element, attrs) {
-
-        /* Default values */
-        scope.multiSelect   = attrs.multiSelect === 'true' ? true : false;
-        scope.allowEmpty    = attrs.allowEmpty === 'false' ? false : true;
-
-        /* Header used in ion-header-bar */
-        scope.headerText    = attrs.headerText || '';
-
-        /* Text displayed on label */
-        // scope.text          = attrs.text || '';
-        scope.defaultText   = scope.text || '';
-
-        $ionicModal.fromTemplateUrl(
-          'fancy-select-items.html',
-          {'scope': scope}
-        ).then(function(modal) {
-            scope.modal = modal;
-          });
-
-        /* Validate selection from header bar */
-        scope.validate = function (event) {
-          // Construct selected values and selected text
-          if (scope.multiSelect == true) {
-
-            // Clear values
-            scope.value = '';
-            scope.text = '';
-
-            // Loop on items
-            scope.items.forEach(function(item){
-              if (item.checked) {
-                scope.value = scope.value + item.id+';';
-                scope.text = scope.text + item.text+', ';
-              }
-            });
-
-            // Remove trailing comma
-            scope.value = scope.value.substr(0,scope.value.length - 1);
-            scope.text = scope.text.substr(0,scope.text.length - 2);
-          }
-
-          // Select first value if not nullable
-          if (typeof scope.value == 'undefined' || scope.value == '' || scope.value == null ) {
-            if (scope.allowEmpty == false) {
-              scope.value = scope.items[0].id;
-              scope.text = scope.items[0].text;
-
-              // Check for multi select
-              scope.items[0].checked = true;
-            } else {
-              scope.text = scope.defaultText;
-            }
-          }
-
-          // Hide modal
-          scope.hideItems();
-
-          // Execute callback function
-          if (typeof scope.callback == 'function') {
-            scope.callback (scope.value);
-          }
-        }
-
-        /* Show list */
-        scope.showItems = function (event) {
-          event.preventDefault();
-          scope.modal.show();
-        }
-
-        /* Hide list */
-        scope.hideItems = function () {
-          scope.modal.hide();
-        }
-
-        /* Destroy modal */
-        scope.$on('$destroy', function() {
-          scope.modal.remove();
+  /*
+   * By QuyenNV - 24/10/2015
+   *
+   * This function submit
+   * @param:
+   * */
+  $scope.submitData = function (issue) {
+    //Validation
+    //if (undefined !== rs['Express'] && rs['Express'].length) {
+    //if (undefined === $scope.val.single || $scope.val.single == null) {
+    //    //$ionicPopup.alert({
+    //    //  title: 'Information',
+    //    //  content: 'Type is not empty !'
+    //    //}).then(function(res) {
+    //    //  console.log('Type Alert Box');
+    //    //});
+    //} else if (undefined === $scope.val.multiple || $scope.val.multiple == null) {
+    //  $ionicPopup.alert({
+    //    title: 'Information',
+    //    content: 'Order not empty !'
+    //  }).then(function(res) {
+    //    console.log('Order Alert Box');
+    //  });
+    //} else if (undefined === issue || issue === '') {
+    //  $ionicPopup.alert({
+    //    title: 'Information',
+    //    content: 'Content is not Empty !'
+    //  }).then(function(res) {
+    //    console.log('Type Alert Box');
+    //  });
+    //} else {
+      //post an API
+      var urlCreateBase = 'http://localhost:3000/api/issue';
+      dataFactory.postDataServer(urlCreateBase, issue)
+        .success(function (rs) {
+          console.log('1');
+        })
+        .error(function (error) {
+          console.log('Unable to load customer data: ' + error);
         });
-
-        /* Validate single with data */
-        scope.validateSingle = function (item) {
-
-          // Set selected text
-          scope.text = item.text;
-
-          // Set selected value
-          scope.value = item.id;
-
-          // Hide items
-          scope.hideItems();
-
-          // Execute callback function
-          if (typeof scope.callback == 'function') {
-            scope.callback (scope.value);
-          }
-        }
-      }
-    };
+    //}
   }
-]);
+
+}]);
 
 
