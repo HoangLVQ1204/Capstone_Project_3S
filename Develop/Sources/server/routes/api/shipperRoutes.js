@@ -21,6 +21,9 @@ module.exports = function (app) {
     app.param('orderid', shipperCtrl.paramOrderId);
 
     app.route('/api/statuslist')
-        .get(shipperCtrl.getStatusList);
+        .get(shipperCtrl.getExpressStatusList);
+
+    app.route('/api/nextstep')
+        .put(shipperCtrl.nextStep);
 
 }
