@@ -225,11 +225,11 @@ type varchar(5)
 
 
 
-/*DROP TABLE BannedHistoryLog;
+/*
+DROP TABLE BannedHistoryLog;
 DROP TABLE OrderLog;
 DROP TABLE OrderIssue;
 DROP TABLE Issue;
-DROP TABLE IssuePriority;
 DROP TABLE IssueCategory;
 DROP TABLE ConfirmationCode;
 DROP TABLE ConfirmationCodeType;
@@ -245,7 +245,8 @@ DROP TABLE Store;
 DROP TABLE Profile;
 DROP TABLE "user";
 DROP TABLE WorkingStatus;
-DROP TABLE Role;*/
+DROP TABLE Role;
+*/
 
 
 
