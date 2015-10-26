@@ -3,7 +3,6 @@
   <ion-nav-back-button>
   </ion-nav-back-button>
     <ion-tabs class="tabs-icon-top tabs-striped tabs-color-balanced">
-
         <ion-tab title="Pickup" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart" badge="badgeCountPick" badge-style="badge-assertive">
         <ion-pane>
           <ion-content >
@@ -77,8 +76,6 @@
                    <p ng-show="{{order.statusid == 6}}" class="statusPd label">{{order.statusname}}</p>
                    <!--Returning to stock-->
                    <p ng-show="{{order.statusid == 8}}" class="statusDn label">{{order.statusname}}</p>
-
-
                    <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
                    <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
                  </div>

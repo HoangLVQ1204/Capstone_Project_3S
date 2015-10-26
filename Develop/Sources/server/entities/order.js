@@ -96,6 +96,7 @@ module.exports = function(sequelize, DataTypes) {
       getAllTaskOfShipper: function(task, orderstatus, shipperid, taskdate) {
         return order.findAll({
           attributes: ['orderid', 'ordertypeid', 'pickupaddress', 'deliveryaddress', 'pickupdate', 'deliverydate', 'statusid'],
+          where: {'ispending': false},
           include: [{
             model: task,
             attributes: ['tasktype', 'taskdate'],
@@ -159,11 +160,13 @@ module.exports = function(sequelize, DataTypes) {
         return currentOrder.save();
       },
 
-      changeIsPendingOrder: function(orderid) {
-        order.update(
-            { ispending: 'true' },
-            { where: { orderid: 'orderid' }} /* where criteria */
-        )
+      changeIsPendingOrder: function(listOrders) {
+        listOrders.forEach(function(item) {
+          order.update(
+              { ispending: 'true' },
+              { where: { orderid: item }}
+          )
+        });
       }
     }
   });

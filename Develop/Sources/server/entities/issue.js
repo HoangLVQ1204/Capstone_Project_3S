@@ -22,7 +22,6 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     classMethods: {
       createNewIssue: function(newIssue){
-        //return issue.build(newIssue).save();
         return issue.build({category: newIssue.category, content: newIssue.content}).save();
       }
     }
