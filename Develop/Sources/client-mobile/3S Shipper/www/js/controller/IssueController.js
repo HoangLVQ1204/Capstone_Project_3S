@@ -70,7 +70,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup' , 'dataService', 'mySharedSer
 
   //Fill to "Type" dropdown list
   $scope.issueCategories = [
-    {categoryID: "1", categoryName: 'Accident or Personal working' },
+    {categoryID: "1", categoryName: 'Accident' },
     {categoryID: "2", categoryName: 'Goods is broken' }
   ];
   //Item lable display
