@@ -30,6 +30,10 @@ module.exports = function(sequelize, DataTypes) {
         email: {
             type: DataTypes.STRING,
             allowNull: true
+        },
+        registerdated: {
+            type: DataTypes.DATE,
+            allowNull: true
         }
     }, {
         freezeTableName: true,

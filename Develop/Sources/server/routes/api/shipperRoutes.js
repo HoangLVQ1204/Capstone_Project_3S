@@ -6,7 +6,10 @@ module.exports = function (app) {
 
     var shipperCtrl = require('./../../manages/shipperController')(app);
 
+
     app.get('/api/tasks', shipperCtrl.getTask);
+
+    app.post('/api/issue', shipperCtrl.createIssue);
 
     app.route('/api/history')
         .get(shipperCtrl.getHistory);

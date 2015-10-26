@@ -15,7 +15,8 @@ module.exports = function(sequelize, DataTypes) {
     },
     userrole: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      primaryKey: true
     },
     userstatus: {
       type: DataTypes.INTEGER,
@@ -23,7 +24,8 @@ module.exports = function(sequelize, DataTypes) {
     },
     workingstatusid: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      primaryKey: true
     }
   }, {
     freezeTableName: true,

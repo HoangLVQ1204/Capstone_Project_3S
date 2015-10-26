@@ -7,16 +7,17 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
-    paymentid: {
-      type: DataTypes.INTEGER,
+    adminid: {
+      type: DataTypes.STRING,
       allowNull: true,
       primaryKey: true
     },
-    debitamount: {
-      type: DataTypes.BIGINT,
-      allowNull: true
+    storeid: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      primaryKey: true
     },
-    creditamount: {
+    amount: {
       type: DataTypes.BIGINT,
       allowNull: true
     },
@@ -24,17 +25,24 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.BIGINT,
       allowNull: true
     },
-    date: {
+    paydate: {
       type: DataTypes.DATE,
       allowNull: true
     },
-    storeid: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      primaryKey: true
-    },
     note: {
       type: DataTypes.TEXT,
+      allowNull: true
+    },
+    payfrom: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    totaldelivery: {
+      type: DataTypes.BIGINT,
+      allowNull: true
+    },
+    totalcod: {
+      type: DataTypes.BIGINT,
       allowNull: true
     }
   }, {

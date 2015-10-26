@@ -63,6 +63,8 @@ module.exports  = function(app){
         }
     }
 
+
+
     /*
      * By HoangLVQ - 22/10/2015
      *
@@ -88,6 +90,12 @@ module.exports  = function(app){
                         if(!user.authenticate(passWord)){
                             res.status(401).send('Wrong password');
                         }else{
+
+                            //db.managestore.getAllData(db)
+                            //    .then(function(data){
+                            //        console.log("DATA HERE: ");
+                            //        console.log(data);
+                            //    })
 
                             if(user.userrole == 2 ){
                                  db.managestore.getStoresOfUser(user.username)

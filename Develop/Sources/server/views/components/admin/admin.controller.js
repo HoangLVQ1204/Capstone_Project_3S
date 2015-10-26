@@ -2,7 +2,7 @@
  * Created by hoanglvq on 9/22/15.
  */
 
-function adminController($scope,$state,$http){
+function adminController($scope,$state,$http,$q){
     $scope.getUser = function(){
         console.log("get Users");
         return $http({
@@ -32,6 +32,6 @@ function adminController($scope,$state,$http){
     });
 }
 
-adminController.$inject = ['$scope','$state','$http'];
+adminController.$inject = ['$scope','$state','$http','$q'];
 angular.module('app').controller('adminController',adminController);
 

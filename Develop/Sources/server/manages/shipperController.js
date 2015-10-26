@@ -10,33 +10,23 @@ module.exports = function (app) {
     var db = app.get('models');
 
     var getTask = function (req, res, next) {
-        var shipperid = 'hoang';
-        var taskdate = '2015-02-09';
+        var shipperid = 'huykool';
+        var taskdate = '2015-02-15';
         var Task = db.task;
         var Order = db.order;
         var OrderStatus = db.orderstatus;
-        //get all task of shipper
-        Order.hasMany(Task, {
-            foreignKey: 'orderid',
-            constraints: false
-        });
-        //get status name of order
-        Order.belongsTo(OrderStatus, {
-            foreignKey: 'statusid',
-            constraints: false
-        });
 
         return Order.getAllTaskOfShipper(Task, OrderStatus, shipperid, taskdate)
             .then(function (tasks) {
                 var group = {};
                 if (_.isEmpty(tasks) == false) {
-                    var listTasks = [];
-                    _.each(tasks, function (task) {
+                    var listTasks=[];
+                    _.each(tasks, function(task){
                         listTasks.push({
                             'orderid': task.dataValues.orderid,
                             'ordertypeid': task.dataValues.ordertypeid,
                             'statusid': task.dataValues.statusid,
-                            'statusname': task['orderstatus'].dataValues.statusname,
+                            'statusname':  task['orderstatus'].dataValues.statusname,
                             'tasktype': task['tasks'][0].dataValues.tasktype,
                             'pickupaddress': task.dataValues.pickupaddress,
                             'deliveryaddress': task.dataValues.deliveryaddress,
@@ -229,6 +219,38 @@ module.exports = function (app) {
         return res.status(200).json('Test');
     };
 
+    var createIssue = function (req, res, next) {
+        //instance new Issue
+        var newIssue = {};
+        newIssue.category = req.body.category.categoryID;
+        newIssue.content = req.body.content;
+        db.issue.createNewIssue(newIssue)
+            .then(function(issue) {
+                //Instance new list Order get an issued
+                var listOrders = [];
+                _.each(req.body.issuedOrder, function(order){
+                    listOrders.push(order.val);
+                });
+                db.order.changeIsPendingOrder(listOrders)
+                    .then(function(){
+                        res.sendStatus(200);
+                    }, function(err) {
+                        next(err);
+                    });
+            }, function(err) {
+                next(err);
+            });
+
+
+        //var newOrder = req.body;
+        //return db.order.postOneOrder(newOrder)
+        //    .then(function (order) {
+        //        res.status(201).json(order);
+        //    }, function(err){
+        //        next(err);
+        //    });
+    };
+
     return {
         getTask: getTask,
         getHistory: getHistory,
@@ -236,7 +258,8 @@ module.exports = function (app) {
         paramOrderId: paramOrderId,
         getExpressStatusList: getExpressStatusList,
         nextStep: nextStep,
-        nextStepCode: nextStepCode
+        nextStepCode: nextStepCode,
+        createIssue: createIssue
     }
 
 }

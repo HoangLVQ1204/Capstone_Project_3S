@@ -45,6 +45,17 @@ module.exports = function(sequelize, DataTypes) {
     },
     statusid: {
       type: DataTypes.INTEGER,
+    },
+    ispending: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
+    },
+    isdraff: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
+    },
+    iscancel: {
+      type: DataTypes.BOOLEAN,
       allowNull: true
     },
     fee: {
@@ -72,19 +83,28 @@ module.exports = function(sequelize, DataTypes) {
           foreignKey: 'statusid',
           constraints: false
         });
+        order.hasMany(db.task, {
+          foreignKey: 'orderid',
+          constraints: false
+        });
+        order.hasMany(db.goods,{
+          foreignKey:'orderid',
+          constraints: false
+        })
+
       },
-      getAllTaskOfShipper: function(taskOrder, orderStatusModel, shipperid, taskdate) {
+      getAllTaskOfShipper: function(task, orderstatus, shipperid, taskdate) {
         return order.findAll({
           attributes: ['orderid', 'ordertypeid', 'pickupaddress', 'deliveryaddress', 'pickupdate', 'deliverydate', 'statusid'],
           include: [{
-            model: taskOrder,
+            model: task,
             attributes: ['tasktype', 'taskdate'],
             where: {
               shipperid: shipperid,
               taskdate: taskdate
             }
           },{
-            model: orderStatusModel,
+            model: orderstatus,
             attributes: ['statusname']
           }
           ]
@@ -106,12 +126,15 @@ module.exports = function(sequelize, DataTypes) {
           }]
         });
 	  },
-	  
-      getAllOrders: function (oderstatusModel, store_id) {
+	  //KhanhKC
+      storeGetAllOrders: function (oderstatusModel, store_id) {
         return order.findAll({
-          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid'],
+          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','iscancel','ispending'],
           include: [
-            {'model': oderstatusModel}
+            {'model': oderstatusModel,
+              attributes: ['statusname']
+            }
+
           ]
         });
       },
@@ -124,12 +147,23 @@ module.exports = function(sequelize, DataTypes) {
         })
       },
 
+      putOrder: function (order) {
+        return order.save();
+      },
+
       postOneOrder: function(newOrder){
         return order.build(newOrder).save();
       },
 
       putOrder: function (currentOrder) {
         return currentOrder.save();
+      },
+
+      changeIsPendingOrder: function(orderid) {
+        order.update(
+            { ispending: 'true' },
+            { where: { orderid: 'orderid' }} /* where criteria */
+        )
       }
     }
   });
