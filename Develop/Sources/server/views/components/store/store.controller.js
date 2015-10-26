@@ -7,6 +7,7 @@ function storeController($scope,$state){
     $scope.$watch('$viewContentLoaded', function(event) {
 
 
+
             $('nav#menu-ver').mmenu({
                 searchfield   :  true,
                 slidingSubmenus	: false

@@ -2,7 +2,7 @@
  * Created by hoanglvq on 10/19/15.
  */
 
-function loginController($scope,$rootScope,$state,authService){
+function loginController($scope,$rootScope,$state,authService,config,socketService){
 
     var showError = function(error){
         $scope.showUserError = true;
@@ -13,7 +13,17 @@ function loginController($scope,$rootScope,$state,authService){
         console.log("submit");
         authService.signIn($scope.user)
             .then(function(){
-                $state.go('store.dashboard');
+
+                if(authService.isRightRole(config.role.admin)){
+                    socketService.setNameSpace('/admin');
+                    $state.go('admin');
+                }
+
+                if(authService.isRightRole(config.role.store)){
+                    socketService.setNameSpace('/store');
+                    $state.go('store');
+                }
+
             })
             .catch(function(error){
                 showError({
@@ -85,6 +95,6 @@ function loginController($scope,$rootScope,$state,authService){
     });
 }
 
-loginController.$inject = ['$scope','$rootScope','$state','authService'];
+loginController.$inject = ['$scope','$rootScope','$state','authService','config','socketService'];
 angular.module('app').controller('loginController',loginController);
 
