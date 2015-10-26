@@ -28,55 +28,38 @@ module.exports = function(server){
 
     store.on('connection',function(socket){
         console.log("have connection in Store");
-        store.emit("init",{mss:"hello Store"});
-        socket.on('find:shipper', function (data) {
-
+        socket.on("store:register:location",function(data){
+            console.log(data);
+            if(data)
+                socket.emit("store:register:location",true);
+            else
+                socket.emit("store:register:location",false);
         })
+
 
     })
 
     admin.on('connection',function(socket){
         console.log("have connection in Admin");
-        console.log(Object.keys(admin.connected));
-        admin.emit("init",{mss:"hello Admin"});
+        socket.on("admin:register:location",function(data){
+            console.log(data);
+            if(data)
+                socket.emit("admin:register:location",true);
+            else
+                socket.emit("admin:register:location",false);
+        })
     })
 
 
 
     shipper.on('connection',function(socket){
-
-        console.log(Object.keys(shipper.connected));
-        console.log("IO: "+Object.keys(io.sockets.connected));
-
-        io.sockets.connected[socket.id].emit("hello","Hello Admin!");
-
         console.log("have connection in Shipper");
-        socket.on('shipper:send:location',function(info){
-            console.log("xxx");
-            console.log(info);
-
-            //var isNewShipper = false;
-            //if(!listShipper.hasOwnProperty(info.shipperID)){
-            //    isNewShipper = true;
-            //}
-            //socketConnection[info.shipperID] = socket;
-            //listShipper[info.shipperID] = {
-            //    shipperID: info.shipperID,
-            //    lat: info.lat,
-            //    lng: info.lng,
-            //    status: info.status // 0: free, 1: busy
-            //};
-            //socket.broadcast.emit('shipper:send:location:admin',{
-            //    shipperID: info.shipperID,
-            //    lat: info.lat,
-            //    lng: info.lng,
-            //    status: info.status,
-            //    isNew: isNewShipper
-            //});
-            //Object.keys()
-
-
-
+        socket.on("shipper:register:location",function(data){
+            console.log(data);
+            if(data)
+                socket.emit("shipper:register:location",true);
+            else
+                socket.emit("shipper:register:location",false);
         })
     })
 }

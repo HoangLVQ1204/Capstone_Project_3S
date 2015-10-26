@@ -1,20 +1,20 @@
 /**
- * Created by hoanglvq on 10/25/15.
+ * Created by hoanglvq on 10/26/15.
  */
 angular.module('app')
-    .factory('socketStore',['socketService','authService',function(socketService,authService){
+    .factory('socketShipper',['socketService','authService',function(socketService,authService){
 
         var EPSILON = 1e-8;
 
         var currentLocation = null;
         return {
-            registerSocket: function(){
-                socketService.setNameSpace('/store');
+            registerSocket: function(nsp){
+                socketService.setNameSpace('/shipper');
                 var currentUser = authService.getCurrentInfoUser();
 
-                var dataStore = {
-                    storeID: currentUser.stores[0],
-                    ownStore: currentUser.username
+                var dataShipper = {
+                    username: currentUser.username,
+                    status: currentUser.workingstatusid
                 };
                 navigator.geolocation.watchPosition(function(position){
                     if (currentLocation
@@ -25,11 +25,11 @@ angular.module('app')
                     }
                     console.log('different location');
                     currentLocation = position.coords;
-                    dataStore.latitude = position.coords.latitude;
-                    dataStore.longitude = position.coords.longitude;
+                    dataShipper.latitude = position.coords.latitude;
+                    dataShipper.longitude = position.coords.longitude;
 
-                    socketService.emit("store:register:location",dataStore);
-                    socketService.on("store:register:location",function(rs){
+                    socketService.emit("shipper:register:location",dataShipper);
+                    socketService.on("shipper:register:location",function(rs){
                         if(!rs) alert("Can't get your current location! Please check your connection");
                     })
 

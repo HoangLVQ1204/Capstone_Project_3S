@@ -69,7 +69,7 @@ angular.module('app', [
         libraries: 'geometry,visualization,drawing,places'
     })
 
-}).run(function($rootScope,$state,authService,config,socketService){
+}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper){
 
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
 
@@ -82,7 +82,7 @@ angular.module('app', [
             }
 
             if(!authService.isRightRole(toState.access)){
-                alert("This is page is denied");
+                console.log('This page is denied');
                 //TODO: Chuyển về trang warning
             }
 
@@ -122,28 +122,15 @@ angular.module('app', [
 
     if(authService.isLogged()){
         if(authService.isRightRole(config.role.admin)){
-            socketService.setNameSpace('/admin');
-
-
+            socketAdmin.registerSocket();
         }
 
         if(authService.isRightRole(config.role.store)){
-            socketService.setNameSpace('/store');
-
-
+            socketStore.registerSocket();
         }
 
         if(authService.isRightRole(config.role.shipper)){
-            socketService.setNameSpace('/shipper');
-            navigator.geolocation.getCurrentPosition(function (position) {
-                console.log(position.coords);
-            }, function(){
-                console.log("error");
-            });
-            socketService.emit('shipper:send:location',authService.getCurrentInfoUser());
-            socketService.on('hello',function(data){
-                console.log(data);
-            })
+            socketShipper.registerSocket();
         }
     }
 

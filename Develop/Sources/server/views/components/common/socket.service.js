@@ -17,7 +17,6 @@ angular.module('app')
                 })
             },
             emit: function (eventName,data,callback){
-                console.log("xxx");
                 socket.emit(eventName,data,function(){
                     var args = arguments;
                     $rootScope.$apply(function(){

@@ -2,7 +2,7 @@
  * Created by hoanglvq on 10/19/15.
  */
 
-function loginController($scope,$rootScope,$state,authService,config,socketService){
+function loginController($scope,$rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper){
 
     var showError = function(error){
         $scope.showUserError = true;
@@ -15,17 +15,17 @@ function loginController($scope,$rootScope,$state,authService,config,socketServi
             .then(function(){
 
                 if(authService.isRightRole(config.role.admin)){
-                    socketService.setNameSpace('/admin');
+                    socketAdmin.registerSocket();
                     $state.go('admin');
                 }
 
                 if(authService.isRightRole(config.role.store)){
-                    socketService.setNameSpace('/store');
+                    socketStore.registerSocket();
                     $state.go('store');
                 }
 
                 if(authService.isRightRole(config.role.shipper)){
-                    socketService.setNameSpace('/shipper');
+                    socketShipper.registerSocket();
                     $state.go('store');
                 }
 
@@ -100,6 +100,6 @@ function loginController($scope,$rootScope,$state,authService,config,socketServi
     });
 }
 
-loginController.$inject = ['$scope','$rootScope','$state','authService','config','socketService'];
+loginController.$inject = ['$scope','$rootScope','$state','authService','config','socketStore','socketAdmin','socketShipper'];
 angular.module('app').controller('loginController',loginController);
 
