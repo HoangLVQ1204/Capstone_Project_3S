@@ -6,9 +6,10 @@ angular.module('app')
 
         var EPSILON = 1e-8;
 
+
         var currentLocation = null;
         return {
-            registerSocket: function(){
+            registerSocket: function(nsp){                            
                 var currentUser = authService.getCurrentInfoUser();
 
                 var dataShipper = {
@@ -28,10 +29,10 @@ angular.module('app')
                     dataShipper.longitude = position.coords.longitude;
 
                     socketService.emit("shipper:register:location",dataShipper);
+
                     socketService.on("shipper:register:location",function(rs){
                         if(!rs) alert("Can't get your current location! Please check your connection");
-                    })
-
+                    })                    
                 },function(){
                     alert("Can't get your current location! Please check your connection");
                 });
