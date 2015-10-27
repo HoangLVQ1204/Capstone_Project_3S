@@ -25,56 +25,34 @@ module.exports = function(server){
 
         console.log("have connection in Server");
 
-        socket.on("store:register:location",function(data){
-            socket.join('store', function() {
-                console.log('one joined room Store');
-            })
-            console.log('Store', Object.keys(io.to('store').connected));
-
+        socket.on("store:register:location",function(data){                    
             console.log(data);
             if(data)
                 socket.emit("store:register:location",true);
             else
                 socket.emit("store:register:location",false);
 
-            socket.on('disconnect', function() {
-                console.log('Store', socket.id, 'disconnect');
-            })
+            require('./socketStore')(socket, io);
         })
 
         socket.on("admin:register:location",function(data){
-            socket.join('admin', function() {
-                console.log('one joined room Admin');
-            })
-            console.log('Admin', Object.keys(io.to('admin').connected));
-
             console.log(data);
             if(data)
                 socket.emit("admin:register:location",true);
             else
                 socket.emit("admin:register:location",false);
 
-            socket.on('disconnect', function() {
-                console.log('Admin', socket.id, 'disconnect');
-            })
+            require('./socketAdmin')(socket, io);                
         })
 
         socket.on("shipper:register:location",function(data){
-            socket.join('shipper', function() {
-                console.log('one joined room Shipper');
-            })
-            console.log('Admin', Object.keys(io.to('admin').connected));
-
-            console.log(data);
-            io.to('admin').emit('shipper:hello', socket.id);
+            console.log(data);            
             if(data)
                 socket.emit("shipper:register:location",true);
             else
                 socket.emit("shipper:register:location",false);      
 
-            socket.on('disconnect', function() {
-                console.log('Shipper', socket.id, 'disconnect');
-            })      
+            require('./socketShipper')(socket, io);
         })
 
 
