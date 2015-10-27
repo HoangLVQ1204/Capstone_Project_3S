@@ -5,3 +5,9 @@
 var config = {
   hostServer: 'http://localhost:3000/'
 };
+
+var roles = {
+  shipper: 1,
+  store: 2,
+  admin: 3
+};
