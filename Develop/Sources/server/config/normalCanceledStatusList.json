@@ -1,0 +1,50 @@
+[
+  {
+    "statusid": 1,
+    "statusname": "Waiting",
+    "nextAction": "Start",
+    "requiredcode": false
+  },
+  {
+    "statusid": 2,
+    "statusname": "Picking up",
+    "nextAction": "Check code pick up",
+    "requiredcode": true
+  },
+  {
+    "statusid": 3,
+    "statusname": "Bring to stock",
+    "nextAction": "Check-in stock",
+    "requiredcode": true
+  },
+  {
+    "statusid": 4,
+    "statusname": "In stock",
+    "nextAction": "Start deliver",
+    "requiredcode": false
+  },
+  {
+    "statusid": 5,
+    "statusname": "Delivering",
+    "nextAction": "Check code deliver",
+    "requiredcode": true
+  },
+  {
+    "statusid": 6,
+    "statusname": "Returning to stock",
+    "nextAction": "Check code return stock",
+    "requiredcode": true
+  },
+  {
+    "statusid": 7,
+    "statusname": "Returning to store",
+    "nextAction": "Check code return store",
+    "requiredcode": true
+  },
+  {
+    "statusid": 8,
+    "statusname": "Done",
+    "nextAction": null,
+    "requiredcode": false
+  }
+]

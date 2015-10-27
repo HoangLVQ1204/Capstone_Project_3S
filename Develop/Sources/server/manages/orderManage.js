@@ -24,6 +24,11 @@ module.exports = function (app) {
     var getAllOrder = function (req, res, next) {
         var orderStatus = db.orderstatus;
         var order = db.order;
+        order.belongsTo(orderStatus, {
+            foreignKey: {
+                name: 'statusid'
+            }
+        });
         var storeid = 'str1';
         return order.storeGetAllOrders(orderStatus, storeid)
             .then(function (orders) {

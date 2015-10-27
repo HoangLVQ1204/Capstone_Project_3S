@@ -4,13 +4,13 @@
 
 function ModalService($rootScope, $q, $ionicModal){
 
-  function show(templateUrl, scope, animation){
+  function show(templateUrl, scope){
     var deferred = $q.defer();
     var modalScope = typeof scope !== 'undefined' ? scope : $rootScope.$new();
 
     $ionicModal.fromTemplateUrl(templateUrl, {
-      scope: modalScope,
-      animation: animation || 'slide-in-up'
+      scope: modalScope
+      //animation: animation || 'slide-in-up'
     }).then(function(modal) {
       modalScope.modal = modal;
 
