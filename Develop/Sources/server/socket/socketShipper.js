@@ -8,6 +8,7 @@ module.exports = function(socket, io) {
     })    
     
     socket.on('disconnect', function() {
-        console.log('Shipper', socket.id, 'disconnect');
+        console.log('Shipper', socket.id, 'disconnect');        
+        delete io.listShipper[socket.id];        
     })      
 }

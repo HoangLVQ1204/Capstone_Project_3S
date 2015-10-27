@@ -5,11 +5,12 @@ module.exports = function(socket, io) {
 	socket.join('store', function() {
         console.log(socket.id, 'joined room Store');
         console.log('Store Room', io.nsps['/'].adapter.rooms.store);
-    })  
+    }); 
 
     socket.on('disconnect', function() {
         console.log('Store', socket.id, 'disconnect');
-    })
+        delete io.listStore[socket.id];
+    });
 
     socket.on('store:find:shipper', function(data) {
         var filter = {
@@ -23,5 +24,5 @@ module.exports = function(socket, io) {
             filter: filter,
             storeID: io.listStore[socket.id].storeID
         });
-    })
+    });
 }

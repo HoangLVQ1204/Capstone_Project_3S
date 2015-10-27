@@ -18,10 +18,12 @@ var icons = {
 };
 
 function initShipper(geocoder, maps, shipperMarker) {
+    shipperMarker.order = [];
     shipperMarker.icon = icons.shipperIcon;
 }
 
 function initStore(geocoder, maps, storeMarker) {
+    storeMarker.order = [];
     storeMarker.icon = icons.storeIcon;    
     geocoder.geocode({
         'location': {
@@ -104,8 +106,11 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
                 avoidTolls: false
             }, function(response, status) {             
                 if (status == maps.DistanceMatrixStatus.OK) {
-                    var results = response.rows[0].elements.map(function(element) {
-                        return element.distance;
+                    var results = response.rows[0].elements.map(function(element, index) {
+                        return {
+                            distance: element.distance,
+                            id: index
+                        }
                     });                    
                     d.resolve(results);
                 } else {
@@ -119,15 +124,18 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     });    
 
 
+    /*
+        Shipper Markers
+    */
     api.getShipperMarkers = function(mode) {      
         // use $http instead          
-        shipperMarkers = sampleData[mode].shipper;
+        // shipperMarkers = sampleData[mode].shipper;        
         return shipperMarkers;
     }
 
     api.addShipper = function(shipper) {        
         this.googlemap.then(function(util) {            
-            initShipper(util.geocoder, util.maps, shipper);            
+            initShipper(util.geocoder, util.maps, shipper);                        
             shipperMarkers.push(shipper);
         });                
     }
@@ -139,9 +147,14 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     }
 
 
+
+
+    /*
+        Store Markers
+    */
     api.getStoreMarkers = function(mode) {      
         // use $http instead      
-        storeMarkers = sampleData[mode].store;
+        // storeMarkers = sampleData[mode].store;        
         return storeMarkers;
     }
 
@@ -158,9 +171,15 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         });
     }
 
+
+
+
+    /*
+        Customer Markers
+    */
     api.getCustomerMarkers = function(mode) {      
         // use $http instead      
-        customerMarkers = sampleData[mode].customer;
+        // customerMarkers = sampleData[mode].customer;        
         return customerMarkers;
     }    
 
@@ -197,7 +216,7 @@ var sampleData = {
                 "latitude": 21.028784,
                 "longitude": 105.826088,
                 "shipperID": "shipper_1",
-                "status": "status 111"                
+                "status": "status 111"                                    
                 /*
                 "markerID"
                 "geoText"
@@ -208,6 +227,7 @@ var sampleData = {
                 "longitude"
                 "shipperID"
                 "status"    // server   
+                "socketID"
                 */                
             },
             {
@@ -230,13 +250,13 @@ var sampleData = {
                 "order" : ["order1","order2"],
                 "latitude": 21.025869,
                 "longitude": 105.826310,
-                "storeID": "store_1"
+                "storeID": "store_1"                
             },
             {
                 "order" : ["order3","order4"],
                 "latitude": 21.026700,
                 "longitude": 105.823510,
-                "storeID": "store_2"  
+                "storeID": "store_2"                
             }
         ],
         "customer": [
