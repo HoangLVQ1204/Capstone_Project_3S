@@ -37,16 +37,6 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         controller: 'SignInCtrl'
       })
 
-      //.state('app.orderlist', {
-      //  url: '/orderlist',
-      //  views: {
-      //    'menuContent': {
-      //      templateUrl: 'templates/orderlist.html',
-      //      controller: 'OrdersCtrl'
-      //    }
-      //  }
-      //})
-
       .state('app.history', {
         url: '/history',
         views: {
@@ -104,6 +94,17 @@ app.config(function ($stateProvider, $urlRouterProvider) {
           'menuContent': {
             templateUrl: 'templates/tasks.html',
             controller: 'TasksCtrl'
+          }
+        }
+      })
+
+      .state('app.bestway', {
+        url: '/bestway/:tabParam',
+        cache: false,
+        views: {
+          'menuContent': {
+            templateUrl: 'templates/bestway.html',
+            controller: 'BestWayCtrl'
           }
         }
       })
