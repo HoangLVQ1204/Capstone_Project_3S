@@ -5,12 +5,13 @@
 
 
 module.exports = function(server){
-
-    var listShipper = {};
+    
     var socketConnection = {};    
 
     var io = require('socket.io')(server);
 
+    io.listStore = {};    
+    io.listShipper = {};
 
     var distanceFrom = function(currentPosition,listShipper,distanceRadius){
 
@@ -26,12 +27,9 @@ module.exports = function(server){
         console.log("have connection in Server");
 
         socket.on("store:register:location",function(data){                    
-            console.log(data);
-            if(data)
-                socket.emit("store:register:location",true);
-            else
-                socket.emit("store:register:location",false);
-
+            console.log(data);            
+            io.listStore[socket.id] = data;
+            socket.emit("store:register:location",true);                        
             require('./socketStore')(socket, io);
         })
 
@@ -46,12 +44,9 @@ module.exports = function(server){
         })
 
         socket.on("shipper:register:location",function(data){
-            console.log(data);            
-            if(data)
-                socket.emit("shipper:register:location",true);
-            else
-                socket.emit("shipper:register:location",false);      
-
+            console.log(data);                        
+            io.listShipper[socket.id] = data;
+            socket.emit("shipper:register:location",true);            
             require('./socketShipper')(socket, io);
         })
 

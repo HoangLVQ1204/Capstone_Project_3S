@@ -8,7 +8,7 @@ angular.module('app')
 
 
         var currentLocation = null;
-        return {
+        return {            
             registerSocket: function(nsp){                            
                 var currentUser = authService.getCurrentInfoUser();
 
