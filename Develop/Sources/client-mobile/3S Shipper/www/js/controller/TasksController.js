@@ -25,7 +25,7 @@ app.controller('TasksCtrl', ['$scope', 'dataService', 'mySharedService', functio
    *
    * */
   function getDataFromServer() {
-    var urlBase = 'http://localhost:3000/api/tasks';
+    var urlBase = config.hostServer + "api/tasks";
     dataFactory.getDataServer(urlBase)
       .success(function (rs) {
         mySharedService.prepForBroadcast(rs);
