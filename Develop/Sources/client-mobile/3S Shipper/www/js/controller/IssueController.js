@@ -88,7 +88,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup' , 'dataService', 'mySharedSer
    * */
   $scope.submitData = function (issue) {
     //Validation
-      if ( typeof issue === "undefined" || issue.category === null) {
+      if ( typeof issue === "undefined" || issue.category === null || typeof issue.category === "undefined") {
         $ionicPopup.alert({
           title: 'Information',
           content: 'Please choose Type !'
