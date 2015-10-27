@@ -3,12 +3,21 @@
  */
 app.controller('TasksCtrl', ['$scope', 'dataService', 'mySharedService', function($scope, dataFactory, mySharedService) {
 
+  //Share data between controller
   if (undefined !== mySharedService.message && mySharedService.message !== '') {
     formatData(mySharedService.message);
   } else {
     console.log('save message sharing');
     getDataFromServer();
   }
+
+  //Select tab
+  $scope.tabSelected = function(tab) {
+    $scope.tabParam = tab;
+    if (typeof $scope.tabParam === "undefined" || $scope.tabParam === "") {
+      $scope.tabParam = "all";
+    }
+  };
 
   /*
    * By QuyenNV - 23/10/2015

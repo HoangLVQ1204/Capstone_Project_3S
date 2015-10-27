@@ -1,0 +1,25 @@
+<ion-view view-title="BestWay">
+  <ion-content padding="true" class="has-header">
+    <div id="map" lat="21.012529248181444" lng="105.52563034439083" zoom="8" map></div>
+    <div class="list">
+      <button class="button button-block btCommon"><i class="ion-android-locate"></i>&nbsp;&nbsp;Refresh</button>
+      <label class="item item-input item-select">
+        <div class="input-label">Type of Order</div>
+        <select>
+          <option ng-if="selectPickupOpt" selected>Pickup</option>
+          <option ng-if="!selectPickupOpt">Pickup</option>
+          <option ng-if="selectShipOpt" selected>Ship</option>
+          <option ng-if="!selectShipOpt">Ship</option>
+          <option ng-if="selectExpressOpt" selected>Express</option>
+          <option ng-if="!selectExpressOpt">Express</option>
+          <option ng-if="selectAllOpt" selected>All</option>
+          <option ng-if="!selectAllOpt">All</option>
+        </select>
+      </label>
+      <div class="item item-divider" style="font-weight: bold">List nearly Order</div>
+      <div class="item">ord7, Thuy Khue - Ha Noi, Hoan Kiem - Ha Noi</div>
+      <div class="item">ord6, DH Công NGhiệp - Hà Nội, Cầu Giấy - Hà Nội</div>
+      <div class="item">ord5, DH Thủy Lợi - Tây Sơn - Hà Nội, Cầu Giấy - Hà Nội</div>
+    </div>
+  </ion-content>
+</ion-view>

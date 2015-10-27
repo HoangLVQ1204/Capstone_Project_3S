@@ -99,10 +99,16 @@ angular.module('app', [
                 }
 
                 if(authService.isRightRole(config.role.store)){
-                    consolel.log("store");
+                    console.log("store");
                     $state.go('store');
                     event.preventDefault();
                 }
+
+                // if(authService.isRightRole(config.role.shipper)){
+                //     console.log("shipper");
+                //     $state.go('store');
+                //     event.preventDefault();
+                // }
 
             }
         }
@@ -122,7 +128,7 @@ angular.module('app', [
 
     if(authService.isLogged()){
         if(authService.isRightRole(config.role.admin)){
-            socketAdmin.registerSocket();
+            socketAdmin.registerSocket();            
         }
 
         if(authService.isRightRole(config.role.store)){
