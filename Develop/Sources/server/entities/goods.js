@@ -36,10 +36,26 @@ module.exports = function(sequelize, DataTypes) {
     description: {
       type: DataTypes.TEXT,
       allowNull: true
+    },
+    amount: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true
     }
   }, {
     freezeTableName: true,
-    timestamps: false
+    timestamps: false,
+    classMethods: {
+      associate: function(db) {
+      },
+      postOneGood: function(newGood){
+        return goods.build(newGood).save();
+      },
+
+      putOrder: function (currentOrder) {
+        return currentOrder.save();
+      }
+    }
   });
   return goods;
 };

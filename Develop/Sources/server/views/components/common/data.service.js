@@ -2,7 +2,7 @@
  * Created by Kaka Hoang Huy on 10/18/2015.
  */
 
-app.factory('dataService', ['$http', function ($http) {
+angular.module('app').factory('dataService', ['$http', function ($http) {
 
   var dataFactory = {};
 

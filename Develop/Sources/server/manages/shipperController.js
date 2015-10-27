@@ -3,27 +3,18 @@
  */
 
 var _ = require('lodash');
+var configConstant = require('../config/configConstant');
 
 module.exports = function (app) {
 
     var db = app.get('models');
 
-    var getTask = function(req,res,next) {
-        var shipperid = 'hoang';
-        var taskdate = '2015-02-09';
+    var getTask = function (req, res, next) {
+        var shipperid = 'huykool';
+        var taskdate = '2015-02-15';
         var Task = db.task;
         var Order = db.order;
         var OrderStatus = db.orderstatus;
-        //get all task of shipper
-        Order.hasMany(Task, {
-            foreignKey: 'orderid',
-            constraints: false
-        });
-        //get status name of order
-        Order.belongsTo(OrderStatus, {
-            foreignKey: 'statusid',
-            constraints: false
-        });
 
         return Order.getAllTaskOfShipper(Task, OrderStatus, shipperid, taskdate)
             .then(function (tasks) {
@@ -31,19 +22,25 @@ module.exports = function (app) {
                 if (_.isEmpty(tasks) == false) {
                     var listTasks=[];
                     _.each(tasks, function(task){
-                        listTasks.push({'orderid': task.dataValues.orderid, 'ordertypeid': task.dataValues.ordertypeid,
-                            'statusid': task.dataValues.statusid, 'statusname':  task['orderstatus'].dataValues.statusname, 'tasktype': task['tasks'][0].dataValues.tasktype,
-                            'pickupaddress': task.dataValues.pickupaddress, 'deliveryaddress': task.dataValues.deliveryaddress,
-                            'pickupdate': task.dataValues.pickupdate, 'deliverydate': task.dataValues.deliverydate
+                        listTasks.push({
+                            'orderid': task.dataValues.orderid,
+                            'ordertypeid': task.dataValues.ordertypeid,
+                            'statusid': task.dataValues.statusid,
+                            'statusname':  task['orderstatus'].dataValues.statusname,
+                            'tasktype': task['tasks'][0].dataValues.tasktype,
+                            'pickupaddress': task.dataValues.pickupaddress,
+                            'deliveryaddress': task.dataValues.deliveryaddress,
+                            'pickupdate': task.dataValues.pickupdate,
+                            'deliverydate': task.dataValues.deliverydate
                         });
                     });
                     //Group by order type
                     group['Pickup'] = group['Pickup'] || [];
                     group['Ship'] = group['Ship'] || [];
                     group['Express'] = group['Express'] || [];
-                    _.each(listTasks, function(item){
-                        if(_.isEqual(item['ordertypeid'], 1)) {
-                            if(_.isEqual(item['tasktype'], 1)) {
+                    _.each(listTasks, function (item) {
+                        if (_.isEqual(item['ordertypeid'], 1)) {
+                            if (_.isEqual(item['tasktype'], 1)) {
                                 group['Pickup'].push(item);
                             } else {
                                 group['Ship'].push(item);
@@ -111,6 +108,7 @@ module.exports = function (app) {
                     rs = rs.toJSON();
                     var detail = {
                         code: rs.orderid,
+                        statusid: rs.statusid,
                         storeid: rs.storeid,
                         ordertypeid: rs.ordertypeid,
                         pickupaddress: rs.pickupaddress,
@@ -123,15 +121,14 @@ module.exports = function (app) {
                         cod: rs.cod,
                         pickupaddresscoordination: rs.pickupaddresscoordination.split(','),
                         deliveryaddresscoordination: rs.deliveryaddresscoordination.split(','),
-                        status: rs.orderstatus.status,
-                        //stockid: 1,
+                        status: rs.orderstatus.status, // No need to get status name
+                        //stockid: 1, // Need to get stock info (join with stock)
                         weight: rs.goods[0].weight,
                         lengthsize: rs.goods[0].lengthsize,
                         widthsize: rs.goods[0].widthsize,
                         heightsize: rs.goods[0].heightsize,
                         description: rs.goods[0].description
                     };
-                    console.log(rs);
                     req.detail = detail;
                     next();
                 } else {
@@ -149,10 +146,97 @@ module.exports = function (app) {
         return res.status(200).json(req.detail);
     };
 
-    var getStatusList = function (req, res, next) {
+    var getExpressStatusList = function (req, res, next) {
         var OrderStatus = db.orderstatus;
-        OrderStatus.getListStatus();
-        return res.status(200).json(req.detail);
+        var rs = configConstant.expressStatusList;
+        return res.status(200).json(rs);
+    };
+
+    var nextStep = function (req, res, next) {
+        var Order = db.order;
+        var data = _.cloneDeep(req.body);
+        if (data) {
+            var key = data.code;
+            Order.findOne({where: {orderid: key}}).then(function (orderObj) {
+                if (orderObj) {
+                    var nextStatus = 0;
+                    var isRequireCode = false;
+                    // Need to check is canceled
+                    // Need to check is canceled
+                    // Need to check is canceled
+                    // Need to check is canceled
+                    // Need to check is canceled
+                    var statusList = (orderObj.ordertypeid == configConstant.orderType.EXPRESS_TYPE) ? configConstant.expressStatusList : configConstant.normalStatusList;
+                    for (var i = 0; i < statusList.length; i++) {
+                        st = statusList[i];
+                        if (orderObj.statusid < st.statusid) {
+                            nextStatus = st.statusid;
+                            break;
+                        } else {
+                            nextStatus = st.statusid;
+                            isRequireCode = st.requiredcode;
+                        }
+                    }
+                    if (isRequireCode) {
+                        db.confirmationcode.findOne({
+                            where: {
+                                orderid: key,
+                                codecontent: data.confirmcode,
+                                typeid: orderObj.statusid
+                            }
+                        }).then(function (codeObj) {
+                            if(codeObj){
+                                orderObj.update({
+                                    statusid: nextStatus
+                                }).then(function (rs) {
+                                    return res.status(200).json("Update successfully!");
+                                }, function (er) {
+                                    return res.status(400).json("Update failed!");
+                                });
+                            }else{
+                                return res.status(400).json("Wrong Code!");
+                            }
+                        }, function(err){
+                            return res.status(400).json("Wrong Code!");
+                        });
+                    }else{
+                        orderObj.update({
+                            statusid: nextStatus
+                        }).then(function (rs) {
+                            return res.status(200).json("Update successfully!");
+                        }, function (er) {
+                            return res.status(400).json("Update failed!");
+                        });
+                    }
+                }
+            }, function () {
+                return res.status(400).json("Can't find this order!");
+            });
+        }
+    };
+
+    var nextStepCode = function (req, res, next) {
+        return res.status(200).json('Test');
+    };
+
+    var createIssue = function (req, res, next) {
+        //Instance new Issue
+        var newIssue = {};
+        newIssue.category = req.body.category.categoryID;
+        newIssue.content = req.body.content;
+        db.issue.createNewIssue(newIssue)
+            .then(function(issue) {
+            }).then(function(){
+                //Instance new list Order get an issued
+                var listOrders = [];
+                _.each(req.body.issuedOrder, function(order){
+                    listOrders.push(order.val);
+                });
+                db.order.changeIsPendingOrder(listOrders);
+                res.sendStatus(200);
+            }, function(err) {
+                next(err);
+            });
     };
 
     return {
@@ -160,7 +244,10 @@ module.exports = function (app) {
         getHistory: getHistory,
         getDetail: getDetail,
         paramOrderId: paramOrderId,
-        getStatusList: getStatusList
+        getExpressStatusList: getExpressStatusList,
+        nextStep: nextStep,
+        nextStepCode: nextStepCode,
+        createIssue: createIssue
     }
 
 }

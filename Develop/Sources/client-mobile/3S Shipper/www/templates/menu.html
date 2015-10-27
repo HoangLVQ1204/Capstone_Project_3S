@@ -6,6 +6,9 @@
       <ion-nav-buttons side="left">
         <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
       </ion-nav-buttons>
+      <ion-nav-buttons side="right">
+        <button class="button button-icon icon ion-compose" ui-sref="app.issue"></button>
+      </ion-nav-buttons>
     </ion-nav-bar>
     <ion-nav-view name="menuContent"></ion-nav-view>
   </ion-side-menu-content>
@@ -21,7 +24,7 @@
           <i class="ion-arrow-swap"></i>
           In Working Order
         </ion-item>
-        <ion-item menu-close nav-clear ui-sref="app.tasks">
+        <ion-item menu-close nav-clear ui-sref="app.tasks" ui-sref-opts="{reload: true}">
           <i class="ion-android-bookmark"></i>
           Tasks
         </ion-item>

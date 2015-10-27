@@ -37,15 +37,15 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         controller: 'SignInCtrl'
       })
 
-      .state('app.orderlist', {
-        url: '/orderlist',
-        views: {
-          'menuContent': {
-            templateUrl: 'templates/orderlist.html',
-            controller: 'OrdersCtrl'
-          }
-        }
-      })
+      //.state('app.orderlist', {
+      //  url: '/orderlist',
+      //  views: {
+      //    'menuContent': {
+      //      templateUrl: 'templates/orderlist.html',
+      //      controller: 'OrdersCtrl'
+      //    }
+      //  }
+      //})
 
       .state('app.history', {
         url: '/history',
@@ -99,7 +99,7 @@ app.config(function ($stateProvider, $urlRouterProvider) {
 
       .state('app.tasks', {
         url: '/tasks',
-        //abstract: true,
+        cache: false,
         views: {
           'menuContent': {
             templateUrl: 'templates/tasks.html',

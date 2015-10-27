@@ -9,13 +9,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     storeid: {
       type: DataTypes.STRING,
-      allowNull: true,
-      primaryKey: true
+      allowNull: true
     },
     ordertypeid: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      primaryKey: true
+      allowNull: true
     },
     pickupaddress: {
       type: DataTypes.STRING,
@@ -43,19 +41,20 @@ module.exports = function(sequelize, DataTypes) {
     },
     ledgerid: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      primaryKey: true
+      allowNull: true
     },
     statusid: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      primaryKey: true
     },
     ispending: {
       type: DataTypes.BOOLEAN,
       allowNull: true
     },
     isdraff: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
+    },
+    iscancel: {
       type: DataTypes.BOOLEAN,
       allowNull: true
     },
@@ -84,19 +83,29 @@ module.exports = function(sequelize, DataTypes) {
           foreignKey: 'statusid',
           constraints: false
         });
+        order.hasMany(db.task, {
+          foreignKey: 'orderid',
+          constraints: false
+        });
+        order.hasMany(db.goods,{
+          foreignKey:'orderid',
+          constraints: false
+        })
+
       },
-      getAllTaskOfShipper: function(taskOrder, orderStatusModel, shipperid, taskdate) {
+      getAllTaskOfShipper: function(task, orderstatus, shipperid, taskdate) {
         return order.findAll({
           attributes: ['orderid', 'ordertypeid', 'pickupaddress', 'deliveryaddress', 'pickupdate', 'deliverydate', 'statusid'],
+          where: {'ispending': false},
           include: [{
-            model: taskOrder,
+            model: task,
             attributes: ['tasktype', 'taskdate'],
             where: {
               shipperid: shipperid,
               taskdate: taskdate
             }
           },{
-            model: orderStatusModel,
+            model: orderstatus,
             attributes: ['statusname']
           }
           ]
@@ -105,24 +114,28 @@ module.exports = function(sequelize, DataTypes) {
 	  
       getOrderDetailById: function (orderStatusModel, goodsModel, orderid) {
         return order.findOne({
-          attributes:{ exclude: ['ledgerid','statusid']},
+          attributes:{ exclude: ['ledgerid']},
           where: {
-            //orderid: orderid
+            orderid: orderid
           },
           include: [{
             model: orderStatusModel,
             attributes: [['statusname','status']]
           }, {
-            model: goodsModel
+            model: goodsModel,
+            limit: 1
           }]
         });
 	  },
-	  
-      getAllOrders: function (oderstatusModel, store_id) {
+	  //KhanhKC
+      storeGetAllOrders: function (oderstatusModel, store_id) {
         return order.findAll({
-          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid'],
+          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','iscancel','ispending'],
           include: [
-            {'model': oderstatusModel}
+            {'model': oderstatusModel,
+              attributes: ['statusname']
+            }
+
           ]
         });
       },
@@ -145,6 +158,16 @@ module.exports = function(sequelize, DataTypes) {
 
       putOrder: function (currentOrder) {
         return currentOrder.save();
+      },
+
+      
+      changeIsPendingOrder: function(listOrders) {
+        listOrders.forEach(function(item) {
+          order.update(
+              { ispending: 'true' },
+              { where: { orderid: item }}
+          )
+        });
       },
 
       getTotalShipFeeOfStore: function(storeid, paydate){
@@ -181,7 +204,7 @@ module.exports = function(sequelize, DataTypes) {
             'statusid': { $between: [6, 9]}
           }
         })
-      },
+      }
 
     }
   });

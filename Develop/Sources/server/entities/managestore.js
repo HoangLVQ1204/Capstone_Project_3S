@@ -19,17 +19,26 @@ module.exports = function(sequelize, DataTypes) {
 
         },
         classMethods: {
-          associate: function(db){
-
-          },
-          getStoresOfUser: function(username){
-            return managestore.findAll({
-              attributes: ['storeid'],
-              where: {
-                managerid: username
-              }
-            })
-          }
+            associate: function(db){
+                managestore.belongsTo(db.user,{
+                    foreignKey: 'managerid'
+                });
+            },
+            getStoresOfUser: function(username){
+                return managestore.findAll({
+                  attributes: ['storeid'],
+                  where: {
+                    managerid: username
+                  }
+                })
+            },
+            getAllData: function(db){
+                return managestore.findAll({
+                    include: [{
+                        model: db.user
+                    }]
+                })
+            }
         }
       }
 

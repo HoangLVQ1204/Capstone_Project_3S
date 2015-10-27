@@ -10,10 +10,28 @@ module.exports = function(sequelize, DataTypes) {
     statusname: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    nextAction: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
+
   }, {
     freezeTableName: true,
-    timestamps: false
+    timestamps: false,
+    classMethods: {
+      associate: function (db) {
+        orderstatus.hasMany(db.order, {
+          foreignKey: 'statusid',
+          constraints: false
+        });
+      },
+      getAllStatus: function(){
+        return orderstatus.findAll({
+
+        })
+      }
+    }
   });
   return orderstatus;
 };

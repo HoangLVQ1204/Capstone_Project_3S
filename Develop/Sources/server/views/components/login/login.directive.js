@@ -7,8 +7,8 @@ angular.module('app')
             controller: 'loginController',
             templateUrl: '/components/login/login.html',
             controllerAs: 'login',
-            scope: {},
             replace: true,
-            restrict: 'E'
+            restrict: 'E',
+            scope: {}
         }
     })
