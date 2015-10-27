@@ -8,7 +8,7 @@ function socketAdmin(socketService,authService,mapService){
     var EPSILON = 1e-8;            
 
     var currentLocation = null;    
-    
+    var api = {};
     /*
         add handlers
     */
@@ -32,12 +32,17 @@ function socketAdmin(socketService,authService,mapService){
                 distances = distances.sort(function(e1, e2) {
                     return e1.distance.value - e2.distance.value;
                 });
-                distances = distances.splice(0, data.filter.limit);
-                distances = distances.map(function(e) {
-                    return shippers[e.id].socketID;
+                distances = distances.slice(0, data.filter.limit);
+                var result = distances.map(function(e) {
+                    return {
+                        distance: e.distance.text,
+                        socketID: shippers[e.id].socketID
+                    }
+                });                
+                socketService.emit('admin:filter:shipper', {
+                    storeSocket: store.socketID,
+                    shippers: result
                 });
-                console.log('dist', distances);
-                socketService.emit('admin:filter:shipper', distances);
             });
         });
     });        
@@ -49,9 +54,15 @@ function socketAdmin(socketService,authService,mapService){
     socketService.on('admin:add:store', function(store) {        
         mapService.addStore(store);
     }); 
-    
 
-    var api = {};
+    socketService.on('admin:update:order', function(data) {
+        console.log('update order', data);
+        data.customer.order = [data.orderID];
+        // strict order
+        mapService.addOrder(data.orderID, data.shipperID, data.storeID);
+        mapService.addCustomer(data.customer);
+    });
+    
 
     api.registerSocket = function(){                        
         var currentUser = authService.getCurrentInfoUser();            

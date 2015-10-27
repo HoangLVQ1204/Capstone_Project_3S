@@ -42,6 +42,7 @@ function initStore(geocoder, maps, storeMarker) {
     }); 
 }
 
+// add customerID into orders
 function initCustomer(geocoder, maps, customerMarker, orders) {    
     customerMarker.customerID = customerMarker.order[0];
     customerMarker.order.forEach(function(order) {        
@@ -118,7 +119,7 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
                 }
             }); 
             return d.promise;
-        };        
+        };                
         
         return util;                
     });    
@@ -133,15 +134,31 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         return shipperMarkers;
     }
 
-    api.addShipper = function(shipper) {        
+    api.containShipper = function(shipper) {
+        var find = _.find(shipperMarkers, function(shipperMarker) {
+            return shipper.shipperID == shipperMarker.storeID;
+        });
+        if (find) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    api.addShipper = function(shipper) {    
+        if (this.containShipper(shipper)) return;
+        var d = $q.defer();    
         this.googlemap.then(function(util) {            
             initShipper(util.geocoder, util.maps, shipper);                        
             shipperMarkers.push(shipper);
-        });                
+            d.resolve();
+        });             
+        return d.promise;   
     }
 
     api.getOneShipper = function(shipperID) {
-        return _.find(storeMarkers, function(shipper) {
+        console.log('getOneShipper', shipperID, shipperMarkers);
+        return _.find(shipperMarkers, function(shipper) {
             return shipper.shipperID == shipperID;
         });
     }
@@ -156,20 +173,36 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         // use $http instead      
         // storeMarkers = sampleData[mode].store;        
         return storeMarkers;
-    }
+    };
+
+    api.containStore = function(store) {
+        var find = _.find(storeMarkers, function(storeMarker) {
+            return store.storeID == storeMarker.storeID;
+        });
+        if (find) {
+            return true;
+        } else {
+            return false;
+        }
+    };
 
     api.addStore = function(store) {        
+        if (this.containStore(store)) return;
+        var d = $q.defer();
         this.googlemap.then(function(util) {            
             initStore(util.geocoder, util.maps, store);            
             storeMarkers.push(store);
+            d.resolve();
         });        
-    }
+        return d.promise;
+    };
 
     api.getOneStore = function(storeID) {
+        console.log('getOneStore', storeID, storeMarkers);
         return _.find(storeMarkers, function(store) {
             return store.storeID == storeID;
         });
-    }
+    };
 
 
 
@@ -181,7 +214,7 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         // use $http instead      
         // customerMarkers = sampleData[mode].customer;        
         return customerMarkers;
-    }    
+    }        
 
     api.addCustomer = function(customer) {        
         this.googlemap.then(function(util) {            
@@ -190,11 +223,29 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         });        
     }
 
+
+
+    /*
+        Orders
+    */
     api.getOrders = function(mode) {      
         // use $http instead      
         orders = sampleData[mode].orders;
         return orders;
     }        
+
+    api.addOrder = function(orderID, shipperID, storeID) {
+        orders[orderID] = {
+            shipperID: shipperID,
+            storeID: storeID            
+        };
+
+        var store = api.getOneStore(storeID);
+        store.order.push(orderID);
+        var shipper = api.getOneShipper(shipperID);
+        shipper.order.push(orderID);   
+    }        
+
 
     return api;
 }

@@ -214,6 +214,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
         // Events for markers        
         $scope.shipperEvents = {
             mouseover: function(gMarker, eventName, model, mouseEvent) {                                 
+                console.log('mouseover', model.order);
                 var content = '<div>' + 
                         '<h5>' + model.shipperID + '</h5>' +
                         '<ul>';
@@ -237,6 +238,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
         };    
         $scope.storeEvents = {
             mouseover: function(gMarker, eventName, model, mouseEvent) {                                 
+                console.log('mouseover', model.order);
                 var content = '<div>' + 
                         '<strong>' + model.geoText + '</strong>' +
                         '<ul>';

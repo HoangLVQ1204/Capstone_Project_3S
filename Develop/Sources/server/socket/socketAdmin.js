@@ -13,6 +13,11 @@ module.exports = function(socket, io) {
     });
 
     socket.on('admin:filter:shipper', function(data) {
-    	console.log(data);    	
+    	data.shippers.forEach(function(shipper) {    		
+    		io.sockets.connected[shipper.socketID].emit('shipper:choose:express', {
+    			distance: shipper.distance,
+    			storeSocket: data.storeSocket
+    		});
+    	});  	
     });
 }

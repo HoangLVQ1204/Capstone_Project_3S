@@ -20,9 +20,30 @@ module.exports = function(socket, io) {
             status: 0,
             limit: 2
         };        
-        io.in('admin').emit('admin:filter:shipper', {
+        io.to('admin').emit('admin:filter:shipper', {
             filter: filter,
             storeID: io.listStore[socket.id].storeID
+        });
+    });
+
+    socket.on('store:choose:shipper', function(data) {
+        var orderID = data.orderID;        
+        socket.join(data.shipper.socketID, function() {
+            console.log('store', socket.id, 'join room of shipper', data.shipper.socketID);
+        });
+
+        io.to('admin').emit('admin:update:order', {
+            orderID: orderID,
+            shipperID: data.shipper.shipperID,
+            storeID: io.listStore[socket.id].storeID,
+            customer: data.customer
+        });
+
+        io.sockets.connected[data.shipper.socketID].emit('shipper:update:order', {
+            orderID: orderID,
+            shipperID: data.shipper.shipperID,
+            store: io.listStore[socket.id],
+            customer: data.customer
         });
     });
 }
