@@ -35,6 +35,9 @@ angular.module('app')
                 },function(){
                     alert("Can't get your current location! Please check your connection");
                 });
+            },
+            findShipper: function() {                
+                socketService.emit('store:find:shipper', null);
             }
         }
     }]);

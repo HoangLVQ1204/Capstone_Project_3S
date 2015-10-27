@@ -5,12 +5,13 @@
 
 
 module.exports = function(server){
-
-    var listShipper = {};
+    
     var socketConnection = {};    
 
     var io = require('socket.io')(server);
 
+    io.listStore = {};    
+    io.listShipper = {};
 
     var distanceFrom = function(currentPosition,listShipper,distanceRadius){
 
@@ -25,56 +26,28 @@ module.exports = function(server){
 
         console.log("have connection in Server");
 
-        socket.on("store:register:location",function(data){
-            socket.join('store', function() {
-                console.log('one joined room Store');
-            })
-            console.log('Store', Object.keys(io.to('store').connected));
-
-            console.log(data);
-            if(data)
-                socket.emit("store:register:location",true);
-            else
-                socket.emit("store:register:location",false);
-
-            socket.on('disconnect', function() {
-                console.log('Store', socket.id, 'disconnect');
-            })
+        socket.on("store:register:location",function(data){                    
+            console.log(data);            
+            io.listStore[socket.id] = data;
+            socket.emit("store:register:location",true);                        
+            require('./socketStore')(socket, io);
         })
 
         socket.on("admin:register:location",function(data){
-            socket.join('admin', function() {
-                console.log('one joined room Admin');
-            })
-            console.log('Admin', Object.keys(io.to('admin').connected));
-
             console.log(data);
             if(data)
                 socket.emit("admin:register:location",true);
             else
                 socket.emit("admin:register:location",false);
 
-            socket.on('disconnect', function() {
-                console.log('Admin', socket.id, 'disconnect');
-            })
+            require('./socketAdmin')(socket, io);                
         })
 
         socket.on("shipper:register:location",function(data){
-            socket.join('shipper', function() {
-                console.log('one joined room Shipper');
-            })
-            console.log('Admin', Object.keys(io.to('admin').connected));
-
-            console.log(data);
-            io.to('admin').emit('shipper:hello', socket.id);
-            if(data)
-                socket.emit("shipper:register:location",true);
-            else
-                socket.emit("shipper:register:location",false);      
-
-            socket.on('disconnect', function() {
-                console.log('Shipper', socket.id, 'disconnect');
-            })      
+            console.log(data);                        
+            io.listShipper[socket.id] = data;
+            socket.emit("shipper:register:location",true);            
+            require('./socketShipper')(socket, io);
         })
 
 
