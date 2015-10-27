@@ -30,23 +30,27 @@ module.exports = function(server){
             console.log(data);            
             io.listStore[socket.id] = data;
             socket.emit("store:register:location",true);                        
+
+            data.socketID = socket.id;
+            io.to('admin').emit("admin:add:store", data);
+            
             require('./socketStore')(socket, io);
         })
 
         socket.on("admin:register:location",function(data){
-            console.log(data);
-            if(data)
-                socket.emit("admin:register:location",true);
-            else
-                socket.emit("admin:register:location",false);
-
-            require('./socketAdmin')(socket, io);                
+            console.log(data);                        
+            socket.emit("admin:register:location",true);                                
+            require('./socketAdmin')(socket, io);
         })
 
         socket.on("shipper:register:location",function(data){
             console.log(data);                        
             io.listShipper[socket.id] = data;
-            socket.emit("shipper:register:location",true);            
+            socket.emit("shipper:register:location",true);
+
+            data.socketID = socket.id;
+            io.to('admin').emit("admin:add:shipper", data);
+
             require('./socketShipper')(socket, io);
         })
 

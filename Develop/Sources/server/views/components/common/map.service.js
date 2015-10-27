@@ -18,10 +18,12 @@ var icons = {
 };
 
 function initShipper(geocoder, maps, shipperMarker) {
+    shipperMarker.order = [];
     shipperMarker.icon = icons.shipperIcon;
 }
 
 function initStore(geocoder, maps, storeMarker) {
+    storeMarker.order = [];
     storeMarker.icon = icons.storeIcon;    
     geocoder.geocode({
         'location': {
@@ -40,6 +42,7 @@ function initStore(geocoder, maps, storeMarker) {
     }); 
 }
 
+// add customerID into orders
 function initCustomer(geocoder, maps, customerMarker, orders) {    
     customerMarker.customerID = customerMarker.order[0];
     customerMarker.order.forEach(function(order) {        
@@ -104,8 +107,11 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
                 avoidTolls: false
             }, function(response, status) {             
                 if (status == maps.DistanceMatrixStatus.OK) {
-                    var results = response.rows[0].elements.map(function(element) {
-                        return element.distance;
+                    var results = response.rows[0].elements.map(function(element, index) {
+                        return {
+                            distance: element.distance,
+                            id: index
+                        }
                     });                    
                     d.resolve(results);
                 } else {
@@ -113,56 +119,102 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
                 }
             }); 
             return d.promise;
-        };        
+        };                
         
         return util;                
     });    
 
 
+    /*
+        Shipper Markers
+    */
     api.getShipperMarkers = function(mode) {      
         // use $http instead          
-        shipperMarkers = sampleData[mode].shipper;
+        // shipperMarkers = sampleData[mode].shipper;        
         return shipperMarkers;
     }
 
-    api.addShipper = function(shipper) {        
+    api.containShipper = function(shipper) {
+        var find = _.find(shipperMarkers, function(shipperMarker) {
+            return shipper.shipperID == shipperMarker.storeID;
+        });
+        if (find) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    api.addShipper = function(shipper) {    
+        if (this.containShipper(shipper)) return;
+        var d = $q.defer();    
         this.googlemap.then(function(util) {            
-            initShipper(util.geocoder, util.maps, shipper);            
+            initShipper(util.geocoder, util.maps, shipper);                        
             shipperMarkers.push(shipper);
-        });                
+            d.resolve();
+        });             
+        return d.promise;   
     }
 
     api.getOneShipper = function(shipperID) {
-        return _.find(storeMarkers, function(shipper) {
+        console.log('getOneShipper', shipperID, shipperMarkers);
+        return _.find(shipperMarkers, function(shipper) {
             return shipper.shipperID == shipperID;
         });
     }
 
 
+
+
+    /*
+        Store Markers
+    */
     api.getStoreMarkers = function(mode) {      
         // use $http instead      
-        storeMarkers = sampleData[mode].store;
+        // storeMarkers = sampleData[mode].store;        
         return storeMarkers;
-    }
+    };
+
+    api.containStore = function(store) {
+        var find = _.find(storeMarkers, function(storeMarker) {
+            return store.storeID == storeMarker.storeID;
+        });
+        if (find) {
+            return true;
+        } else {
+            return false;
+        }
+    };
 
     api.addStore = function(store) {        
+        if (this.containStore(store)) return;
+        var d = $q.defer();
         this.googlemap.then(function(util) {            
             initStore(util.geocoder, util.maps, store);            
             storeMarkers.push(store);
+            d.resolve();
         });        
-    }
+        return d.promise;
+    };
 
     api.getOneStore = function(storeID) {
+        console.log('getOneStore', storeID, storeMarkers);
         return _.find(storeMarkers, function(store) {
             return store.storeID == storeID;
         });
-    }
+    };
 
+
+
+
+    /*
+        Customer Markers
+    */
     api.getCustomerMarkers = function(mode) {      
         // use $http instead      
-        customerMarkers = sampleData[mode].customer;
+        // customerMarkers = sampleData[mode].customer;        
         return customerMarkers;
-    }    
+    }        
 
     api.addCustomer = function(customer) {        
         this.googlemap.then(function(util) {            
@@ -171,11 +223,29 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         });        
     }
 
+
+
+    /*
+        Orders
+    */
     api.getOrders = function(mode) {      
         // use $http instead      
         orders = sampleData[mode].orders;
         return orders;
     }        
+
+    api.addOrder = function(orderID, shipperID, storeID) {
+        orders[orderID] = {
+            shipperID: shipperID,
+            storeID: storeID            
+        };
+
+        var store = api.getOneStore(storeID);
+        store.order.push(orderID);
+        var shipper = api.getOneShipper(shipperID);
+        shipper.order.push(orderID);   
+    }        
+
 
     return api;
 }
@@ -197,7 +267,7 @@ var sampleData = {
                 "latitude": 21.028784,
                 "longitude": 105.826088,
                 "shipperID": "shipper_1",
-                "status": "status 111"                
+                "status": "status 111"                                    
                 /*
                 "markerID"
                 "geoText"
@@ -208,6 +278,7 @@ var sampleData = {
                 "longitude"
                 "shipperID"
                 "status"    // server   
+                "socketID"
                 */                
             },
             {
@@ -230,13 +301,13 @@ var sampleData = {
                 "order" : ["order1","order2"],
                 "latitude": 21.025869,
                 "longitude": 105.826310,
-                "storeID": "store_1"
+                "storeID": "store_1"                
             },
             {
                 "order" : ["order3","order4"],
                 "latitude": 21.026700,
                 "longitude": 105.823510,
-                "storeID": "store_2"  
+                "storeID": "store_2"                
             }
         ],
         "customer": [
