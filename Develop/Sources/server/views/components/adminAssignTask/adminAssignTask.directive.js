@@ -3,11 +3,11 @@
  */
 (function (ng) {
     angular.module('app')
-        .directive('adminStoreList', function () {
+        .directive('adminAssignTask', function () {
             return {
-                controller: 'adminStoreListController',
-                templateUrl: '/components/adminStoreList/adminStoreList.html',
-                controllerAs: 'adminStoreListController',
+                controller: 'adminAssignTaskController',
+                templateUrl: '/components/adminAssignTask/adminAssignTask.html',
+                controllerAs: 'adminAssignTaskController',
                 scope: {},
                 replace: true,
                 restrict: 'E'

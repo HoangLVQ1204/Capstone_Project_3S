@@ -47,6 +47,15 @@ module.exports = function(sequelize, DataTypes) {
       getAllUsers: function() {
         return user.findAll({});
       },
+
+      getAllUsersHasRole: function(role) {
+        return user.findAll({
+          where: {
+            'role': role
+          }
+        });
+      },
+
       findUserByUsername:  function(username){
         return user.findOne({
           where: {

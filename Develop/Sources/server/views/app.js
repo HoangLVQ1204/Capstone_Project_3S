@@ -31,6 +31,10 @@ angular.module('app', [
             url: '/storeList',
             template: '<admin-store-list></admin-store-list>'
         })
+        .state('admin.assignTask',{
+            url: '/assignTask',
+            template: '<admin-assign-task></admin-assign-task>'
+        })
         .state('store',{
             //abstract:true,
             url: '/store',

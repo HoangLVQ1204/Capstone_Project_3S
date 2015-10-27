@@ -21,8 +21,6 @@ module.exports = function(app) {
     }; 
 
     var get = function(req, res, next) {
-
-
         return db.store.getAllStores()
         .then(function(store) {
                 res.status(200).json(store);
@@ -30,7 +28,6 @@ module.exports = function(app) {
             next(err);
         })
     };
-
 
     var getOne = function(req, res, next) {
         res.status(200).json(req.store.toJSON());
@@ -52,7 +49,7 @@ module.exports = function(app) {
         var update = req.body;
         //console.log(req.user.username, req.body);
 
-        _merge(store, update);
+        _.merge(store, update);
 
         return db.store.putStore(store)
             .then(function(saved) {
@@ -75,18 +72,18 @@ module.exports = function(app) {
             })
     };
 
-    var getBalance = function(req, res, next){
-        return db.generalledger.getBalance(req.store.storeid)
+    var getLatestLedgerOfStore = function(req, res, next){
+        return db.generalledger.getLatestLedgerOfStore(req.store.storeid)
             .then(function(ledger) {
-                console.log(ledger.paydate);
-                res.status(200).json(ledger.toJSON());
+                //console.log(ledger.paydate);
+                res.status(200).json(ledger);
             }, function(err) {
                 next(err);
             })
     };
 
     var getAllLedger = function(req, res, next){
-        return db.store.getAllStoreLedger(db.generalledger)
+        return db.store.getStoreLatestTotal(db.generalledger)
             .then(function(store) {
                 res.status(200).json(store);
             }, function(err) {
@@ -95,16 +92,85 @@ module.exports = function(app) {
     };
 
     var getTotalFee = function(req, res, next){
-        return db.order.getTotalShipFeeOfStore(req.store.storeid)
-            .then(function(total) {
-                res.status(200).json(total);
-            }, function(err) {
-                next(err);
+        var storeList, paydate;
+        var promises = [];
+        return db.store.getAllStores()
+            .then(function(store) {
+                storeList = store;
+            })
+            .then(function () {
+               db.generalledger.getLatestAutoAccountDate()
+                    .then(function(total) {
+                        paydate = total.paydate;
+                        //console.log(1);
+                    }, function(err) {
+                        next(err);
+                    })
+            .then(function () {
+                var fee = [];
+                //console.log(paydate);
+                //console.log(2);
+                        storeList.map(function(item){
+                            promises.push(db.order.getTotalShipFeeOfStore(item.storeid, paydate).then(function (total) {
+                                var newFee = new Object();
+                                if (isNaN(total))  newFee.totalFee = 0;
+                                else newFee.totalFee  = total;
+                                fee.push(newFee);
+                                //console.log(total);
+                    }))
+                })
+                Promise.all(promises).then(function() {
+                    // _.merge(fee, storeList);
+                    res.status(200).json(fee);
+                }, function (err) {
+                    //console.log(1);
+                    res.status(400).json(err);
+                })
+            })
             })
     };
 
     var getTotalCoD = function(req, res, next){
-        return db.order.getTotalShipCoDOfStore(req.store.storeid)
+        var storeList, paydate;
+
+        return db.store.getAllStores()
+            .then(function(store) {
+                storeList = store;
+            })
+            .then(function () {
+                db.generalledger.getLatestAutoAccountDate()
+                    .then(function(total) {
+                        paydate = total.paydate;
+                        //console.log(1);
+                    }, function(err) {
+                        next(err);
+                    })
+                    .then(function () {
+                        var promises = [];
+                        var cod = [];
+                        storeList.map(function(item){
+                            promises.push(db.order.getTotalShipCoDOfStore(item.storeid,paydate).then(function (total) {
+                                var newFee = new Object();
+                                if (isNaN(total))  newFee.totalCoD = 0;
+                                else newFee.totalCoD  = total;
+                                cod.push(newFee);
+                                //console.log(total);
+                            }))
+                        })
+                        Promise.all(promises).then(function() {
+                            // _.merge(fee, storeList);
+                            res.status(200).json(cod);
+                        }, function (err) {
+                            //console.log(1);
+                            res.status(400).json(err);
+                        })
+                    })
+            })
+    };
+
+    var getLatestAutoAccountDate = function(req, res, next){
+        var store = req.store;
+        return db.generalledger.getLatestAutoAccountDate()
             .then(function(total) {
                 res.status(200).json(total);
             }, function(err) {
@@ -112,17 +178,51 @@ module.exports = function(app) {
             })
     };
 
+    var updateLedgerForOrder = function(req, res, next){
+        var store = req.store;
+        var ledger;
+        // newUser.Token = newUser.storeid;
+        return db.generalledger.getLatestAutoAccountWithStoreID(store.storeid)
+            .then(function(total) {
+                ledger = total;
+            }, function(err) {
+                next(err);
+            }).then(function () {
+                db.order.updateLedgerForOrder(store.storeid, ledger.paydate, ledger.ledgerid)
+                    .then(function(ledger) {
+                        res.status(201).json(ledger);
+                    }, function(err) {
+                        next(err);
+                    });
+            })
+
+    };
+
+    var postNewLedger = function(req, res, next){
+        var newLedger = req.body;
+        // newUser.Token = newUser.storeid;
+        return db.generalledger.postNewLedger(newLedger)
+            .then(function(ledger) {
+                res.status(201).json(ledger);
+            }, function(err) {
+                next(err);
+            });
+    };
+
        return {
-        get: get,
-        getOne: getOne,
-        post: post,
-        put: put,
-        del: del,
-        params: params,
-        getBalance: getBalance,
-        getAllLedger: getAllLedger,
-        getTotalFee: getTotalFee,
-        getTotalCoD: getTotalCoD
+            get: get,
+            getOne: getOne,
+            post: post,
+            put: put,
+            del: del,
+            params: params,
+            getLatestLedgerOfStore: getLatestLedgerOfStore,
+            getAllLedger: getAllLedger,
+            getTotalFee: getTotalFee,
+            getTotalCoD: getTotalCoD,
+            getLatestAutoAccountDate: getLatestAutoAccountDate,
+            postNewLedger: postNewLedger,
+            updateLedgerForOrder: updateLedgerForOrder
     }
 }
 

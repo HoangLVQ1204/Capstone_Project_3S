@@ -31,7 +31,7 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: true
         },
-        registerdated: {
+        registereddate: {
             type: DataTypes.DATE,
             allowNull: true
         }
@@ -71,11 +71,22 @@ module.exports = function(sequelize, DataTypes) {
               include: [{
                 model: generalledger,
                 where: {
-
+                    $and: [{'totaldelivery': null}, {'totalcod': null}]
                 }, limit: 1, order: 'payDate DESC'
               }]
             });
-      }
+      },
+
+        getStoreLatestTotal: function(generalledger){
+            return store.findAll({
+                include: [{
+                    model: generalledger,
+                    where: {
+                        $and: [{'totaldelivery': {$ne: null}}, {'totalcod': {$ne: null}}]
+                    }, limit: 1, order: 'payDate DESC'
+                }]
+            });
+        }
           //,
 
       //getStoreLedger: function(generalledger, storeid){

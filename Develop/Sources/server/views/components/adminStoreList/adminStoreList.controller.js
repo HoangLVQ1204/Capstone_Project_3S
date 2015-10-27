@@ -24,48 +24,150 @@ function adminStoreListController($scope,$state, $http, $filter) {
     $scope.dateRange = null;
 
 
-
-    $http.get("http://localhost:3000/api/store/getLedger").success(function(response){
+    $http.get("http://localhost:3000/api/store/getAllLedger").success(function(response){
         $scope.storeList = response;
-        $scope.storeList.map(function(store){
-            store.paydate = "October 13, 2015 11:13:00";
-            return store;
-        });
-        //console.log(response);
+        //console.log(1);
+       //console.log(response);
+    }).then(function () {
+        $http.get("http://localhost:3000/api/store/getTotalCoD").success(function(response){
+            $scope.currentCoD= response;
+            //console.log(2);
+        })
+    }).then(function () {
+        $http.get("http://localhost:3000/api/store/getTotalFee").success(function(response){
+            $scope.currentFee = response;
+            //console.log(response);
+            var i=0;
+            $scope.storeList.map(function (store) {
+                store.currentCoD =  $scope.currentCoD[i].totalCoD;
+                store.currentFee =  $scope.currentFee[i].totalFee;
+                store.generalledgers[0].balance =  parseInt(store.generalledgers[0].balance);
+               //console.log(store.currentCoD);
+                i++;
+                return store;
+            })
+        })
+
     })
+
     $scope.displayedCollection = [].concat($scope.storeList);
 
     //----------------------------------
     //FUNCTION SHOW CONFIRM PAYMENT MODAL
     //-----------------------------------
-    $scope.showConfirm = function (event, storeid){
+    $scope.showConfirm = function (event, store){
         //alert(1);
         $scope.payFee = 0;
         $scope.payCoD = 0;
+        $scope.selectedStore = store;
         event.preventDefault();
-        $scope.getTotalFee(storeid);
-        $scope.getTotalCoD(storeid);
-        //console.log($scope.totalFee);
-        var data=$(this).data();
-        $("#md-effect").attr('class','modal fade').addClass(data.effect).modal('show')
+        //$scope.getLatestLedgerOfStore(storeid);
+        //console.log( $scope.selectedStore.totalcod);
+        //var data=$(this).data();
+        var data = new Object();
+        data.effect="md-flipVer";
+        $("#md-effect-confirm").attr('class','modal fade').addClass(data.effect).modal('show');
+        $("#inputValue").val(0);
+        $scope.isValid = $('#inputValue').parsley( 'validate' );
+
+        console.log($('#inputValue'));
     };
+
+    $scope.blockConfirm = function (event, store){
+        //alert(1);
+        $scope.selectedStore = store;
+        event.preventDefault();
+        //$scope.getLatestLedgerOfStore(storeid);
+        //console.log( $scope.selectedStore.totalcod);
+        //var data=$(this).data();
+        var data = new Object();
+        data.effect="md-slideRight";
+        $("#md-effect-block").attr('class','modal fade').addClass(data.effect).modal('show');
+    };
+
+    $scope.blockStore = function (store){
+        //alert(1);
+        //$scope.getLatestLedgerOfStore(storeid);
+        //console.log( $scope.selectedStore.totalcod);
+        //var data=$(this).data();
+    };
+
+
+    $scope.postLedger = function (store){
+        //alert(1);
+        //$scope.payFee = 0;
+        if (!$scope.isValid) return;
+
+        var ledger = new Object();
+        ledger.storeid = store.storeid;
+        ledger.adminid = 'hoang';
+        ledger.amount = $scope.payFee;
+        ledger.paydate = Date(Date.now());
+        if (ledger.amount >= 0)
+        {
+            ledger.payfrom = 1;
+            ledger.totaldelivery = store.generalledgers[0].totaldelivery - ledger.amount;
+            ledger.totalcod = store.generalledgers[0].totalcod;
+
+        }
+         else
+        {
+            ledger.payfrom = 2;
+            ledger.totaldelivery = store.generalledgers[0].totaldelivery;
+            ledger.totalcod = store.generalledgers[0].totalcod - ledger.amount;
+        }
+        ledger.balance = ledger.totaldelivery - ledger.totalcod;
+        //console.log(ledger);
+        if (ledger.balance == 0){
+            $http.put("http://localhost:3000/api/store/updateLedgerForOrder/" + ledger.storeid).success(function(response){
+                //console.log(1);
+                //console.log(response);
+            })
+        }
+
+        $http.post("http://localhost:3000/api/store/postNewLedger", ledger).success(function(response){
+            //$scope.currentCoD= response;
+            var data = new Object();
+            data.verticalEdge='right';
+            data.horizontalEdge='bottom';
+            data.theme="theme-inverse";
+
+            //data.sticky="true";
+            $.notific8($("#sms").val(), data);
+            $("#md-effect-confirm").attr('class','modal fade').addClass(data.effect).modal('hide');
+        })
+
+    };
+
+
 
     //----------------------------------
     //FUNCTION GET TOTAL COD OF A STORE
     //-----------------------------------
-    $scope.getTotalCoD = function (storeid){
-        $http.get("http://localhost:3000/api/store/getTotalCoD/" + storeid).success(function(response){
-            $scope.totalCoD = response;
+    $scope.getLatestLedgerOfStore = function (storeid){
+        $http.get("http://localhost:3000/api/store/getLatestLedgerOfStore/" + storeid).success(function(response){
+            $scope.ledger = response;
              //console.log(response);
+        })
+    }
+
+    //----------------------------------
+    //FUNCTION GET TOTAL COD OF A STORE
+    //-----------------------------------
+    this.getTotalCoD = function (){
+        ////console.log(11);
+        $http.get("http://localhost:3000/api/store/getTotalCoD").success(function(response){
+            $scope.currentFee= response;
+            //console.log(response);
         })
     }
 
     //----------------------------------
     //FUNCTION GET TOTAL FEE OF A STORE
     //-----------------------------------
-    $scope.getTotalFee = function (storeid){
-        $http.get("http://localhost:3000/api/store/getTotalFee/" + storeid).success(function(response){
-            $scope.totalFee = response;
+    this.getTotalFee = function (){
+        $http.get("http://localhost:3000/api/store/getTotalFee").success(function(response){
+            $scope.currentCoD = response;
             //console.log(response);
         })
     }
@@ -79,7 +181,11 @@ function adminStoreListController($scope,$state, $http, $filter) {
 
     });
 
+    $scope.checkOK = function(event){
+        //console.log(1);
+        $scope.isValid = $('#inputValue').parsley( 'validate' );
 
+    };
 
 }
 

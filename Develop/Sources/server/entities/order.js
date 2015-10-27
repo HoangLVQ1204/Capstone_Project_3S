@@ -147,23 +147,42 @@ module.exports = function(sequelize, DataTypes) {
         return currentOrder.save();
       },
 
-      getTotalShipFeeOfStore: function(storeid){
+      getTotalShipFeeOfStore: function(storeid, paydate){
+       // console.log(paydate)
         return order.sum('fee',{
           where: {
             'storeid': storeid,
             'ledgerid': null,
+            'deliverydate': {gte: paydate},
+            'statusid': { $between: [6, 9]}
           }
         })
       },
 
-      getTotalShipCoDOfStore: function(storeid){
+      getTotalShipCoDOfStore: function(storeid, paydate){
         return order.sum('cod',{
           where: {
             'storeid': storeid,
-            'ledgerid': {$ne: null}
+            'ledgerid':  null,
+            'deliverydate': {gte: paydate},
+            'statusid': { $between: [6, 9]}
           }
         })
-      }
+      },
+
+      updateLedgerForOrder: function(storeid, paydate, ledgerid){
+        return order.update(
+            {'ledgerid': ledgerid},
+            {
+          where: {
+            'storeid': storeid,
+            'ledgerid':  null,
+            'deliverydate': {lt: paydate},
+            'statusid': { $between: [6, 9]}
+          }
+        })
+      },
+
     }
   });
   return order;
