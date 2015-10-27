@@ -11,13 +11,7 @@ module.exports = function(server){
 
     var io = require('socket.io')(server);
 
-
-    var store   = io.of('/store');
-    var admin   = io.of('/admin');
-    var shipper = io.of('/shipper');
-
     var distanceFrom = function(currentPosition,listShipper,distanceRadius){
-
 
     }
 
@@ -26,8 +20,10 @@ module.exports = function(server){
 
     }
 
-    store.on('connection',function(socket){
-        console.log("have connection in Store");
+    io.on('connection',function(socket){
+
+        console.log("have connection in Server");
+
         socket.on("store:register:location",function(data){
             console.log(data);
             if(data)
@@ -36,11 +32,6 @@ module.exports = function(server){
                 socket.emit("store:register:location",false);
         })
 
-
-    })
-
-    admin.on('connection',function(socket){
-        console.log("have connection in Admin");
         socket.on("admin:register:location",function(data){
             console.log(data);
             if(data)
@@ -48,12 +39,7 @@ module.exports = function(server){
             else
                 socket.emit("admin:register:location",false);
         })
-    })
 
-
-
-    shipper.on('connection',function(socket){
-        console.log("have connection in Shipper");
         socket.on("shipper:register:location",function(data){
             console.log(data);
             if(data)
@@ -61,5 +47,8 @@ module.exports = function(server){
             else
                 socket.emit("shipper:register:location",false);
         })
+
+
     })
+
 }

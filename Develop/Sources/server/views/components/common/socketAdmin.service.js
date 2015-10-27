@@ -8,8 +8,8 @@ angular.module('app')
 
         var currentLocation = null;
         return {
-            registerSocket: function(nsp){
-                socketService.setNameSpace('/admin');
+            registerSocket: function(){
+
                 var currentUser = authService.getCurrentInfoUser();
 
                 var dataAdmin = {

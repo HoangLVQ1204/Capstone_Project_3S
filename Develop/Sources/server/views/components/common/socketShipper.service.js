@@ -8,8 +8,7 @@ angular.module('app')
 
         var currentLocation = null;
         return {
-            registerSocket: function(nsp){
-                socketService.setNameSpace('/shipper');
+            registerSocket: function(){
                 var currentUser = authService.getCurrentInfoUser();
 
                 var dataShipper = {
