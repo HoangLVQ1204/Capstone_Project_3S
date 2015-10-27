@@ -4,12 +4,11 @@
 angular.module('app')
     .factory('socketAdmin',['socketService','authService',function(socketService,authService){
 
-        var EPSILON = 1e-8;
+        var EPSILON = 1e-8;            
 
         var currentLocation = null;
         return {
-            registerSocket: function(nsp){
-                socketService.setNameSpace('/admin');
+            registerSocket: function(nsp){                        
                 var currentUser = authService.getCurrentInfoUser();
 
                 var dataAdmin = {
@@ -30,8 +29,7 @@ angular.module('app')
                     socketService.emit("admin:register:location",dataAdmin);
                     socketService.on("admin:register:location",function(rs){
                         if(!rs) alert("Can't get your current location! Please check your connection");
-                    })
-
+                    })                    
                 },function(){
                     alert("Can't get your current location! Please check your connection");
                 });

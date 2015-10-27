@@ -9,7 +9,6 @@ angular.module('app')
         var currentLocation = null;
         return {
             registerSocket: function(){
-                socketService.setNameSpace('/store');
                 var currentUser = authService.getCurrentInfoUser();
 
                 var dataStore = {
