@@ -204,6 +204,14 @@ module.exports = function(sequelize, DataTypes) {
             'statusid': { $between: [6, 9]}
           }
         })
+      },
+
+      getAllOrderToAssignTask: function(){
+        return order.findAll({
+          where: {
+            'statusid': {$or: [1,2,5,6]}
+          }
+        })
       }
 
     }

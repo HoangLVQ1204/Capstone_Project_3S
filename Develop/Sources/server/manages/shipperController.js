@@ -239,6 +239,15 @@ module.exports = function (app) {
             });
     };
 
+    var getAllShipper = function(req, res, next) {
+        return db.user.getAllUsersHasRole(1, db.profile)
+            .then(function(shipper) {
+                res.status(200).json(shipper);
+            }, function(err) {
+                next(err);
+            })
+    };
+
     return {
         getTask: getTask,
         getHistory: getHistory,
@@ -247,7 +256,9 @@ module.exports = function (app) {
         getExpressStatusList: getExpressStatusList,
         nextStep: nextStep,
         nextStepCode: nextStepCode,
-        createIssue: createIssue
+        createIssue: createIssue,
+        getAllShipper: getAllShipper
+
     }
 
 }

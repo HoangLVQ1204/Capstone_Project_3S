@@ -9,6 +9,8 @@ module.exports = function (app) {
 
     app.get('/api/tasks', shipperCtrl.getTask);
 
+    app.get('/api/getAllShipper', shipperCtrl.getAllShipper);
+
     app.post('/api/issue', shipperCtrl.createIssue);
 
     app.route('/api/history')

@@ -92,7 +92,7 @@ angular.module('app', [
 
             if(!authService.isRightRole(toState.access)){
                 console.log('This page is denied');
-                //TODO: Chuyển về trang warning
+                //TODO: Chuyển v�? trang warning
             }
 
 

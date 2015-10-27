@@ -44,14 +44,25 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     classMethods: {
+      associate: function(db) {
+        user.belongsTo(db.profile, {
+          foreignKey: 'username',
+          constraints: false
+        });
+
+      },
+
       getAllUsers: function() {
         return user.findAll({});
       },
 
-      getAllUsersHasRole: function(role) {
+      getAllUsersHasRole: function(role, profile) {
         return user.findAll({
+          include:[{
+              model: profile
+          }],
           where: {
-            'role': role
+            'userrole': role
           }
         });
       },
