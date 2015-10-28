@@ -1,10 +1,7 @@
-
-
-
 module.exports = function(socket, io) {
 	socket.join('store', function() {
-        console.log(socket.id, 'joined room Store');
-        console.log('Store Room', io.nsps['/'].adapter.rooms.store);
+        console.log(socket.id, ': joined room Store');
+        console.log('Store Room: ', io.nsps['/'].adapter.rooms.store);
     })  
 
     socket.on('disconnect', function() {

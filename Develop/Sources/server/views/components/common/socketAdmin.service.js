@@ -12,14 +12,13 @@ function socketAdmin(socketService,authService,mapService){
     var addHandlers = function() {
         socketService.on('admin:filter:shipper', function(data) {  
             mapService.googlemap.then(function(util) {                
-                var store = mapService.getOneStore(data.storeID);                
-
+                var store = mapService.getOneStore(data.storeID);
                 var shippers = mapService.getShipperMarkers('all');                    
                 util.getDistanceFromOneToMany([store], shippers)
                 .then(function(distances) {
                     distances.forEach(function(distance, index) {
-                        // console.log(distance.value, mapService.getShipperMarkers('all')[index]);
                         if (distance.value < data.filter.radius) {
+                            console.log("RESULT DATA");
                             console.log(distance.value, shippers[index].status);
                         }
                     });                    
@@ -55,12 +54,6 @@ function socketAdmin(socketService,authService,mapService){
             },function(){
                 alert("Can't get your current location! Please check your connection");
             });
-        },
-
-        abc: function() {
-            socketService.on('admin:filter:shipper', function(filter) {
-                console.log(filter);
-            })                
         }
     }
 }

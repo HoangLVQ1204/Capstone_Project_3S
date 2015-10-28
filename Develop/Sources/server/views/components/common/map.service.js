@@ -118,7 +118,6 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         return util;                
     });    
 
-
     api.getShipperMarkers = function(mode) {      
         // use $http instead          
         shipperMarkers = sampleData[mode].shipper;
@@ -137,7 +136,6 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
             return shipper.shipperID == shipperID;
         });
     }
-
 
     api.getStoreMarkers = function(mode) {      
         // use $http instead      

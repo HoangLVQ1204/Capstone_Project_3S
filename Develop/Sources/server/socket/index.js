@@ -13,15 +13,6 @@ module.exports = function(server){
     io.listStore = {};    
     io.listShipper = {};
 
-    var distanceFrom = function(currentPosition,listShipper,distanceRadius){
-
-    }
-
-    var findShipper = function(socket, data){
-        var listShipperNearest = {};        
-    }
-
-
     io.on('connection',function(socket){
 
         console.log("have connection in Server");
@@ -35,11 +26,8 @@ module.exports = function(server){
 
         socket.on("admin:register:location",function(data){
             console.log(data);
-            if(data)
-                socket.emit("admin:register:location",true);
-            else
-                socket.emit("admin:register:location",false);
 
+            socket.emit("admin:register:location",true);
             require('./socketAdmin')(socket, io);                
         })
 
@@ -49,7 +37,6 @@ module.exports = function(server){
             socket.emit("shipper:register:location",true);            
             require('./socketShipper')(socket, io);
         })
-
 
     })
 

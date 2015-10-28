@@ -6,7 +6,6 @@ angular.module('app')
 
         var EPSILON = 1e-8;
 
-
         var currentLocation = null;
         return {            
             registerSocket: function(nsp){                            
