@@ -133,15 +133,27 @@ module.exports = function(sequelize, DataTypes) {
 	  //KhanhKC
       storeGetAllOrders: function (oderstatusModel, store_id) {
         return order.findAll({
-          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','iscancel','ispending'],
+          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','iscancel','ispending','cod','fee','donedate','createdate'],
           include: [
             {'model': oderstatusModel,
               attributes: ['statusname']
             }
-
           ]
         });
       },
+
+      storeGetOneOrder: function (oderstatusModel, order_id) {
+        return order.findOne({
+          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','iscancel','ispending','cod','fee','donedate','createdate'],
+          where: {orderid:order_id},
+          include: [
+            {'model': oderstatusModel,
+              attributes: ['statusname']
+            }
+          ]
+        });
+      },
+
       postOneOrder: function(newOrder){
         return order.build(newOrder).save();
       },
@@ -155,6 +167,24 @@ module.exports = function(sequelize, DataTypes) {
             { ispending: 'true' },
             { where: { orderid: 'orderid' }} /* where criteria */
         )
+      },
+
+      submitDraffOrder: function(orderid) {
+        order.update(
+            {
+              isdraff: 'false',
+              statusid: 1
+            },
+            { where: { orderid: orderid }} /* where criteria */
+        )
+      },
+
+      deleteDraffOrder: function (orderid) {
+        order.destroy({
+          where: {
+            orderid: orderid
+          }
+        });
       }
     }
   });
