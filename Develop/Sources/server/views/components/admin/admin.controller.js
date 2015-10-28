@@ -14,6 +14,7 @@ function adminController($scope,$state,$http,$q){
             console.log(error);
         });
     }
+
     $scope.$watch('$viewContentLoaded', function(event) {
 
         $('nav#menu-ver').mmenu({

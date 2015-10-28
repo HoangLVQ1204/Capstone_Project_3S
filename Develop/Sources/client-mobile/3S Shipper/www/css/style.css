@@ -10,17 +10,13 @@ i {
 .statusWt {
   background-color: #777777;
 }
-/*done status*/
+/*done status: Done, Picking, Bring to stock and Delivering*/
 .statusDn {
   background-color: #5cb85c
 }
-/*pending status*/
+/*pending status: Returning to stock, store*/
 .statusPd {
   background-color: #f0ad4e
-}
-/*cancel status*/
-.statusCan {
-  background-color: #d9534f;
 }
 .label {
   display: inline;
@@ -103,6 +99,62 @@ i {
   width: 100%;
   margin-top: 12px;
 }
+
+div.fixed {
+  position: fixed;
+  bottom: 60px;
+  right: 5px;
+  /*width: 300px;*/
+  /*border: 3px solid #8AC007;*/
+}
+/*button find best way*/
+.btn-cus {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+.btn-primary-cus {
+  color: #fff;
+  background-color: #428bca;
+  border-color: #357ebd;
+}
+.btn-primary-cus:hover {
+  color: #fff;
+  background-color: #3276b1;
+  border-color: #285e8e;
+}
+.btn-circle-cus {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 5px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 30px;
+}
+.btn-circle-cus.btn-xl-cus {
+  width: 50px;
+  height: 50px;
+  padding: 10px 16px;
+  font-size: 24px;
+  line-height: 1.33;
+  border-radius: 50px;
+}
+
 /* ---END StyleSheet of Task & History---*/
 
 /*---START StyleSheet of Profile---*/

@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.manages' is found in manages.js
-var app = angular.module('starter', ['ionic', 'ngCordova','uiGmapgoogle-maps']);
+var app = angular.module('starter', ['ionic', 'ngCordova','uiGmapgoogle-maps','angular-jwt']);
 
   app.run(function ($ionicPlatform) {
     $ionicPlatform.ready(function () {
@@ -19,10 +19,9 @@ var app = angular.module('starter', ['ionic', 'ngCordova','uiGmapgoogle-maps']);
         StatusBar.styleDefault();
       }
     });
-  });
 
 
-app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvider) {
+app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvider, jwtInterceptorProvider, $httpProvider) {
   uiGmapGoogleMapApiProvider.configure({
     key: 'AIzaSyA_tcRSfGJdCCDLvGXGPZqdOMQC9bniNoo',
     v: '3.17',
@@ -30,8 +29,7 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
     language: 'en',
     sensor: 'false',
   });
-
-  $stateProvider
+    $stateProvider
 
       .state('app', {
         url: '/app',
@@ -44,16 +42,6 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
         templateUrl: 'templates/sign-in.html',
         controller: 'SignInCtrl'
       })
-
-      //.state('app.orderlist', {
-      //  url: '/orderlist',
-      //  views: {
-      //    'menuContent': {
-      //      templateUrl: 'templates/orderlist.html',
-      //      controller: 'OrdersCtrl'
-      //    }
-      //  }
-      //})
 
       .state('app.history', {
         url: '/history',
@@ -132,7 +120,25 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
           }
         }
       })
+
+      .state('app.bestway', {
+        url: '/bestway/:tabParam',
+        cache: false,
+        views: {
+          'menuContent': {
+            templateUrl: 'templates/bestway.html',
+            controller: 'BestWayCtrl'
+          }
+        }
+      })
     ;
+
+    //Send token for each request
+    jwtInterceptorProvider.tokenGetter = function(){
+      return localStorage.getItem('EHID');
+    };
+
+    $httpProvider.interceptors.push('jwtInterceptor');
 
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/sign-in');

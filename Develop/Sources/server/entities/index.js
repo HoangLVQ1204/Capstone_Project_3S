@@ -13,7 +13,9 @@ var config      = require('../config/config');
 var globber     = require('../util/globber');
 
 
-var sequelize = new Sequelize(config.db.url);
+var sequelize = new Sequelize(config.db.url, {
+	logging: false
+});
 
 var db = {};
 

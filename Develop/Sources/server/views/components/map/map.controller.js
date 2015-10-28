@@ -6,54 +6,55 @@
  */
 
 
-/*
-    Helper functions
-*/
-function initShipperMarker($scope, geocoder, maps, shipperMarker) {
-    shipperMarker.icon = $scope.shipperIcon;
-}
+// /*
+//     Helper functions
+// */
+// function initShipperMarker($scope, geocoder, maps, shipperMarker) {
+//     shipperMarker.icon = $scope.shipperIcon;
+// }
 
-function initStoreMarker($scope, geocoder, maps, storeMarker) {
-    storeMarker.icon = $scope.storeIcon;
-    geocoder.geocode({
-            'location': {
-                lat: storeMarker.latitude,
-                lng: storeMarker.longitude
-            }
-        }, function(results, status) {
-            var geoText = 'Not Available';
-            if (status === maps.GeocoderStatus.OK) {
-                if (results[0]) {
-                    geoText = results[0].formatted_address;
+// function initStoreMarker($scope, geocoder, maps, storeMarker) {
+//     storeMarker.icon = $scope.storeIcon;
+//     geocoder.geocode({
+//             'location': {
+//                 lat: storeMarker.latitude,
+//                 lng: storeMarker.longitude
+//             }
+//         }, function(results, status) {
+//             var geoText = 'Not Available';
+//             if (status === maps.GeocoderStatus.OK) {
+//                 if (results[0]) {
+//                     geoText = results[0].formatted_address;
 
-                }
-            }               
-            storeMarker.geoText = geoText;                                   
-        }); 
-}
+//                 }
+//             }               
+//             storeMarker.geoText = geoText;                                   
+//         }); 
+// }
 
-function initCustomerMarker($scope, geocoder, maps, customerMarker) {    
-    customerMarker.customerID = customerMarker.order[0];
-    customerMarker.order.forEach(function(order) {        
-        $scope.orders[order].customerID = customerMarker.customerID;
-    });
+// function initCustomerMarker($scope, geocoder, maps, customerMarker) {    
+//     customerMarker.customerID = customerMarker.order[0];
+//     customerMarker.order.forEach(function(order) {        
+//         $scope.orders[order].customerID = customerMarker.customerID;
+//     });
 
-    customerMarker.icon = $scope.customerIcon;
-    geocoder.geocode({
-        address: customerMarker.geoText
-    }, function(results, status) {
-        if (status === maps.GeocoderStatus.OK) {
-            customerMarker.latitude = results[0].geometry.location.lat();
-            customerMarker.longitude = results[0].geometry.location.lng();
-        } else {
-            alert('Geocode was not successful for the following reason: ' + status);
-        }
-    });
-}
+//     customerMarker.icon = $scope.customerIcon;
+//     geocoder.geocode({
+//         address: customerMarker.geoText
+//     }, function(results, status) {
+//         if (status === maps.GeocoderStatus.OK) {
+//             customerMarker.latitude = results[0].geometry.location.lat();
+//             customerMarker.longitude = results[0].geometry.location.lng();
+//         } else {
+//             alert('Geocode was not successful for the following reason: ' + status);
+//         }
+//     });
+// }
 
 var arrows = [];
-function drawArrow(fromMarker, toMarker, symbol, color, maps, myMap) {    
-    console.log(fromMarker, toMarker);
+
+function drawArrow(fromMarker, toMarker, symbol, color, maps, myMap) {
+    //console.log(fromMarker, toMarker);
     arrows.push(new maps.Polyline({
         path: [fromMarker, toMarker],        
         strokeColor: color,
@@ -64,6 +65,7 @@ function drawArrow(fromMarker, toMarker, symbol, color, maps, myMap) {
         map: myMap
     }));    
 }
+
 function resetArrows() {
     arrows.forEach(function(arrow) {
         arrow.setMap(null);
@@ -109,8 +111,7 @@ function displayRelationship(model, object_1, object_2, $scope) {
 }
 
 // RUN ORDER: controller => link function   
-function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady){        
-
+function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){     
     $scope.shipperMarkers = $scope.shipperMarkers || [];
     $scope.storeMarkers = $scope.storeMarkers || [];
     $scope.customerMarkers = $scope.customerMarkers || [];
@@ -215,6 +216,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady){
         // Events for markers        
         $scope.shipperEvents = {
             mouseover: function(gMarker, eventName, model, mouseEvent) {                                 
+                console.log('mouseover', model.order);
                 var content = '<div>' + 
                         '<h5>' + model.shipperID + '</h5>' +
                         '<ul>';
@@ -238,6 +240,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady){
         };    
         $scope.storeEvents = {
             mouseover: function(gMarker, eventName, model, mouseEvent) {                                 
+                console.log('mouseover', model.order);
                 var content = '<div>' + 
                         '<strong>' + model.geoText + '</strong>' +
                         '<ul>';
@@ -280,63 +283,48 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady){
                 resetArrows();
             }
         };    
-        
-
-        //$scope.markersClone = _.cloneDeep($scope.markers);
-        //$scope.fromMarker   = "";
-        //$scope.toMarker     = "";
-        //
-        //$scope.removeMarker = function(index, marker){
-        //    $scope.markersClone.splice(index,1);
-        //}
-
 
         // Test real-time
 
-        setTimeout(function() {
-            console.log('time out');
-            var newOrder = "order1";
-            var shipperID = "shipper_1";
-            var storeID = "store_3";
-            var newStore = {
-                "order": [newOrder],
-                "latitude": 21.031526,
-                "longitude": 105.813359,
-                "storeID": storeID
-            };
-            var geoText = "306 Kim Mã,Ba Đình,Hà Nội,Việt Nam";
-            var newCustomer = {
-                "order": [newOrder],
-                "geoText": geoText
-            };
-            initStoreMarker($scope, geocoder, maps, newStore);
-            $scope.orders[newOrder] = {
-                "shipperID": shipperID,
-                "storeID": storeID
-            };
-            initCustomerMarker($scope, geocoder, maps, newCustomer);
-
-            // Add all new information
-            $scope.shipperMarkers[0].order.push(newOrder);
-            $scope.storeMarkers.push(newStore);
-            $scope.customerMarkers.push(newCustomer);
-            $scope.$apply();
-        }, 5000);
-
-
+        // setTimeout(function() {
+        //     console.log('time out');
+        //     var newOrder = "order1";
+        //     var shipperID = "shipper_1";
+        //     var storeID = "store_3";
+        //     var newStore = {
+        //         "order": [newOrder],
+        //         "latitude": 21.031526,
+        //         "longitude": 105.813359,
+        //         "storeID": storeID
+        //     };
+        //     var geoText = "306 Kim Mã,Ba Đình,Hà Nội,Việt Nam";
+        //     var newCustomer = {
+        //         "order": [newOrder],
+        //         "geoText": geoText
+        //     };
+        //     initStoreMarker($scope, geocoder, maps, newStore);
+        //     $scope.orders[newOrder] = {
+        //         "shipperID": shipperID,
+        //         "storeID": storeID
+        //     };
+        //     initCustomerMarker($scope, geocoder, maps, newCustomer);
+        //     // Add all new information
+        //     $scope.shipperMarkers[0].order.push(newOrder);
+        //     $scope.storeMarkers.push(newStore);
+        //     $scope.customerMarkers.push(newCustomer);
+        //     $scope.$apply();
+        // }, 5000);
 
         // Filling control for all angular-google-map directives
         uiGmapIsReady.promise().then(function(instances) {
             var myMap = instances[0].map;                                
 
-            
             $scope.openInfo = function(gMarker, content) {
                 infoWindow.setContent(content);                    
                 infoWindow.open(myMap, gMarker);
             };
 
             $scope.drawTwoArrows = function(start, dest_1, dest_2) {
-                console.log('draw 22222');
                 var end = {
                     lat: dest_1.latitude,
                     lng: dest_1.longitude
@@ -358,7 +346,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady){
     //});
 }
 
-mapController.$inject = ['$scope','uiGmapGoogleMapApi','uiGmapIsReady'];
+mapController.$inject = ['$scope','uiGmapGoogleMapApi','uiGmapIsReady','mapService'];
 angular.module('app').controller('mapController',mapController);
 
 

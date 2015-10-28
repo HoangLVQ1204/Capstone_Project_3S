@@ -11,5 +11,9 @@
     {
       "url": "/xyz",
       "role": [1,2]
+    },
+    {
+      "url": "/api/tasks",
+      "role": [1,3]
     }
 ]

@@ -5,61 +5,99 @@
 
 
 module.exports = function(server){
-
-    var listShipper = {};
-    var socketConnection = {};
+    
+    var socketConnection = {};    
 
     var io = require('socket.io')(server);
 
-
-    var store   = io.of('/store');
-    var admin   = io.of('/admin');
-    var shipper = io.of('/shipper');
+    io.listStore = {};    
+    io.listShipper = {};
 
     var distanceFrom = function(currentPosition,listShipper,distanceRadius){
-
 
     }
 
     var findShipper = function(socket, data){
-        var listShipperNearest = {};
-
+        var listShipperNearest = {};        
     }
 
-    store.on('connection',function(socket){
-        console.log("have connection in Store");
-        socket.on("store:register:location",function(data){
-            console.log(data);
-            if(data)
-                socket.emit("store:register:location",true);
-            else
-                socket.emit("store:register:location",false);
+
+    io.on('connection',function(socket){
+
+        console.log("have connection in Server");
+
+        socket.on("store:register:location",function(data){                    
+            console.log(data);            
+            io.listStore[socket.id] = data;
+            socket.emit("store:register:location",true);                        
+
+            data.socketID = socket.id;
+            io.to('admin').emit("admin:add:store", data);
+            
+            require('./socketStore')(socket, io);
         })
 
-
-    })
-
-    admin.on('connection',function(socket){
-        console.log("have connection in Admin");
         socket.on("admin:register:location",function(data){
-            console.log(data);
-            if(data)
-                socket.emit("admin:register:location",true);
-            else
-                socket.emit("admin:register:location",false);
+            console.log(data);                        
+            socket.emit("admin:register:location",true);                                
+            require('./socketAdmin')(socket, io);
         })
-    })
 
-
-
-    shipper.on('connection',function(socket){
-        console.log("have connection in Shipper");
         socket.on("shipper:register:location",function(data){
-            console.log(data);
-            if(data)
-                socket.emit("shipper:register:location",true);
-            else
-                socket.emit("shipper:register:location",false);
+            console.log(data);                        
+            io.listShipper[socket.id] = data;
+            socket.emit("shipper:register:location",true);
+
+            data.socketID = socket.id;
+            io.to('admin').emit("admin:add:shipper", data);
+
+            require('./socketShipper')(socket, io);
         })
+
+
     })
+
 }
+
+
+
+/*
+
+hoang: admin
+khanhkute: store
+nhungkaka: store
+huykool: shipper
+quyensheep: shipper
+
+*/
+
+
+/* Oh, my dear
+
+
+// sending to sender-client only
+socket.emit('message', "this is a test");
+
+// sending to all clients, include sender
+io.emit('message', "this is a test");
+
+// sending to all clients except sender
+socket.broadcast.emit('message', "this is a test");
+
+// sending to all clients in 'game' room(channel) except sender
+socket.broadcast.to('game').emit('message', 'nice game');
+
+// sending to all clients in 'game' room(channel), include sender
+io.in('game').emit('message', 'cool game');
+
+// sending to sender client, only if they are in 'game' room(channel)
+socket.to('game').emit('message', 'enjoy the game');
+
+// sending to all clients in namespace 'myNamespace', include sender
+io.of('myNamespace').emit('message', 'gg');
+
+// sending to individual socketid
+socket.broadcast.to(socketid).emit('message', 'for your eyes only');
+
+
+*/

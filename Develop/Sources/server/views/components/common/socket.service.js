@@ -3,11 +3,8 @@
  */
 angular.module('app')
     .factory('socketService',function($rootScope){
-        var socket;
+        var socket = io();
         return {
-            setNameSpace: function(nsp){
-                socket = io(nsp);
-            },
             on: function (eventName, callback){
                 socket.on(eventName,function(){
                     var args = arguments;
