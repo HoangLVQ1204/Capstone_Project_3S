@@ -18,18 +18,9 @@ function storeOrderController($scope, $state, dataService) {
         isdraff: '',
         fee: '',
         cod: ''
-    }
-
-    $scope.good={
-        orderid: '',
-        stockid: '',
-        weight: '',
-        lengthsize: '',
-        widthsize: '',
-        heightsize: '',
-        description: ''
-    }
-    ;
+    };
+    $scope.good={stt:1};
+    $scope.goods =[];
 
     $scope.$watch('$viewContentLoaded', function (event) {
         caplet();
@@ -98,14 +89,6 @@ function storeOrderController($scope, $state, dataService) {
         //....Disable textbox when click on checkbox....///
         ///////////////////////////////////////////////////
         function handleStatusChanged() {
-            $('#disElementCb').on('change', function () {
-                if ($('#disElementCb').is(':checked')) {
-                    $('#elementsToDis :input').attr('disabled', true);
-                } else {
-                    $('#elementsToDis :input').removeAttr('disabled');
-                }
-            });
-
             $('#enElementCb').on('change', function () {
                 if (!$('#enElementCb').is(':checked')) {
                     $('#elementsToEn :input').attr('disabled', true);
@@ -117,30 +100,29 @@ function storeOrderController($scope, $state, dataService) {
 
 
     });
-    getDataFromServer();
-    //postDataToServer();
+    //getDataFromServer();
 
-    function getDataFromServer() {
+
+    $scope.addGood = function(){
+       if($scope.good.goodname != ''){
+           $scope.goods.push($scope.good);
+           $scope.good = {};
+           $scope.good.stt = $scope.goods.length +1;
+        }
+    };
+    $scope.deleteGood = function(goodID){
+        $scope.goods.splice(goodID,1);
+    };
+
+
+    $scope.postDraff = function(){
         var urlBase = 'http://localhost:3000/orders';
-        dataService.getDataServer(urlBase)
-            .success(function (rs) {
-                $scope.ordersWaiting = rs['Waiting'];
-                $scope.orderCarring = rs['Carrying'];
-            })
-            .error(function (error) {
-                console.log('Unable to load customer data: ' + error);
-            });
+        $scope.order = {
+
+        };
+
+        dataService.postDataServer(urlBase,$scope.order)
     }
-
-
-    //function postDataToServer(){
-    //    var urlBase = 'http://localhost:3000/orders';
-    //    $scope.order = {
-    //
-    //    };
-    //
-    //    dataService.postDataServer(urlBase,$scope.order)
-    //}
 }
 
 

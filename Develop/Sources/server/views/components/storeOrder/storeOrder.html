@@ -26,12 +26,13 @@
                     </div>
                     <div class="tab-content">
                         <div class="tab-pane fade" id="step1" parsley-validate parsley-bind>
-                            <h3>Delivery information</h3><br>
+                            <h3>Delivery information</h3><hr>
 
                             <div class="form-group row">
                                 <div class="col-md-6">
                                     <label class="control-label">Full name</label>
-                                    <input type="text" name="fullname"  ng-model="order.recipientname" class="form-control"
+                                    <input type="text" name="fullname" ng-model="order.recipientname"
+                                           class="form-control"
                                            parsley-rangelength="[5,15]"
                                            placeholder="Your customer name">
                                 </div>
@@ -39,21 +40,23 @@
                                     <label class="control-label">Phone</label>
                                     <input ng-model="order.recipientphone" type="text" class="form-control"
                                            parsley-type="phone"
-                                           placeholder="(XXX) XXXX XXX">
+                                            placeholder="(XXX) XXXX XXX">
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="control-label">Address</label>
-                                    <textarea ng-model="order.deliveryaddress" class="form-control" parsley-trigger="keyup" rows="1"
+                                    <textarea ng-model="order.deliveryaddress" class="form-control"
+                                              parsley-trigger="keyup" rows="1"
                                               placeholder="Enter customer address"></textarea>
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-4">
-                                    <label class="control-label">District</label>
+                                    <label class="control-label">City</label>
                                     <select class="selectpicker form-control">
-                                        <option value="">Selcect your district</option>
+                                        <option value="">Selcect your city</option>
                                         <option value="Australia">Hai Ba Trung</option>
+                                        <option value="China">Cau Giay</option>
                                         <option value="China">Cau Giay</option>
                                     </select>
                                 </div>
@@ -91,81 +94,84 @@
                             </footer>
                         </div>
                         <div class="tab-pane fade" id="step2" parsley-validate parsley-bind>
-                            <h3>Order information</h3><br>
-
-                            <div class="form-group row">
-                                <div class="col-md-6">
-                                    <label class="control-label">Goods</label>
-                                    <input type="text" class="form-control"
-                                           parsley-rangelength="[5,15]"
-                                           placeholder="Good name">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="control-label">Amount</label>
-                                    <input type="text" class="form-control " parsley-min="0" placeholder="0">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="control-label">Weight</label>
-                                    <input type="text" class="form-control"
-                                           parsley-min="0"
-                                           placeholder="Gram">
-                                </div>
+                            <h3>Order information</h3> <hr>
+                            <div>
+                                <section >
+                                    <!--<header class="panel-heading">-->
+                                        <!--<h2><strong>Table</strong> hover </h2>-->
+                                        <!--<label class="color">Bootstrap Class<em><strong> table-hover</strong></em></label>-->
+                                    <!--</header>-->
+                                    <div>
+                                        <table class="table table-hover table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Name</th>
+                                                <th>Amount</th>
+                                                <th>Weight</th>
+                                                <th>Length</th>
+                                                <th>Width</th>
+                                                <th>Height</th>
+                                                <th>Description</th>
+                                                <th>Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody align="center">
+                                            <tr ng-repeat="x in goods">
+                                                <td>{{$index+1}}</td>
+                                                <td>{{x.goodname}}</td>
+                                                <td>{{x.amount}}</td>
+                                                <td>{{x.weight}}</td>
+                                                <td>{{x.lengthsize}}</td>
+                                                <td>{{x.widthsize}}</td>
+                                                <td>{{x.heightsize}}</td>
+                                                <td>{{x.description}}</td>
+                                                <td width="17%"><span class=" tooltip-area">
+                                                    <a href="javascript:void(0)" class="btn btn-default btn-sm"
+                                                       title="Edit"><i class="fa fa-edit (alias)"></i></a>
+                                                    <a ng-click="deleteGood($index)" href="javascript:void(0)" class="btn btn-default btn-sm"
+                                                       title="Delete"><i class="fa fa-times"></i></a>
+                                                    </span></td>
+                                            </tr>
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td colspan="9" class="text-left">
+                                                    <div  class="col-md-12 btn-group btn-group-xs color">
+                                                        <button type="button" class=" btn btn-block btn-default" data-toggle="modal" data-target="#md-header-color"><i class="fa fa-plus"></i></button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </section>
                             </div>
-                            <div class="form-group row">
-                                <div class="col-md-2">
-                                    <label class="control-label">Length</label>
-                                    <input type="text" class="form-control"
-                                           parsley-min="0"
-                                           placeholder="mm">
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="control-label">Width</label>
-                                    <input type="text" class="form-control"
-                                           parsley-min="0"
-                                           placeholder="mm">
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="control-label">High</label>
-                                    <input type="text" class="form-control"
-                                           parsley-min="0"
-                                           placeholder="mm">
-                                </div>
-                            </div>
-
                             <div class="form-group row">
                                 <div class="col-md-6">
                                     <div data-color="red">
-                                        <input id="disElementCb" type="checkbox" name="express"
-                                               onchange="toggleStatus()">
+                                        <input id="disElementCb" type="checkbox" name="express" onchange="toggleStatus()">
                                         <label>Express</label>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="form-group row">
                                 <div class="col-md-6">
                                     <div data-color="red">
-                                        <input id="enElementCb" type="checkbox" name="cod" onchange="toggleStatus()">
+                                        <input id="enElementCb"  type="checkbox" name="cod" onchange="toggleStatus()">
                                         <label> Cash on delivery </label>
                                     </div>
                                 </div>
-
                             </div>
                             <div class="form-group row">
-                                <div class="col-md-6" id="elementsToDis">
-                                    <label class="control-label">Date</label>
-                                    <input type="text" class="form-control"
-                                           parsley-rangelength="[5,15]"
-                                           placeholder="Unit: Vietnam dong">
-                                </div>
                                 <div class="col-md-6" id="elementsToEn">
                                     <label class="control-label">Amount</label>
                                     <input type="text" class="form-control"
                                            parsley-rangelength="[5,15]"
-                                           placeholder="Unit: Vietnam dong">
+                                           placeholder="Unit: Vietnam dong" disabled>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label">Good description</label>
-                                <input type="text" class="form-control" parsley-min="0" placeholder="mm">
-                            </div>
+
                             <hr>
                             <footer class="row">
                                 <div class="col-sm-5">
@@ -183,12 +189,12 @@
                             </footer>
                         </div>
                         <div class="tab-pane fade" id="step3" parsley-validate parsley-bind>
-                            <h3>Pickup information</h3><br>
+                            <h3>Pickup information</h3><hr>
 
                             <div class="form-group row">
                                 <div class="col-md-6">
                                     <label class="control-label">Store</label>
-                                    <select  class="selectpicker form-control">
+                                    <select class="selectpicker form-control">
                                         <option value="kfc1">KFC1</option>
                                         <option value="kfc2">KFC2</option>
                                         <option value="kfc3">KFC3</option>
@@ -203,7 +209,8 @@
                             </div>
                             <div class="form-group">
                                 <label class="control-label">Address</label>
-                                    <textarea ng-model="order.deliveryaddress" class="form-control" parsley-trigger="keyup" rows="1"
+                                    <textarea ng-model="order.deliveryaddress" class="form-control"
+                                              parsley-trigger="keyup" rows="1"
                                               placeholder="Enter customer address"></textarea>
                             </div>
                             <hr>
@@ -213,7 +220,7 @@
                                         <button type="button" class="btn btn-inverse previous"><i
                                                 class="fa fa-angle-left"></i> Previous
                                         </button>
-                                        <button type="submit" class="btn btn-theme next">Submit </button>
+                                        <button type="submit" class="btn btn-theme next">Submit</button>
                                         <button type="button" class="btn btn-theme-inverse submit">Draff<i
                                                 class="fa fa-angle-right"></i>
                                         </button>
@@ -227,7 +234,6 @@
 
                         <div class="tab-pane fade" id="step4">
                             <h3 class="center">Thank You for order</h3><br>
-                            <pre>{{order.recipientphone}}</pre>
                         </div>
 
                     </div>
@@ -236,6 +242,75 @@
 
             </div>
             <!-- //content > row > col-lg-12 -->
+            <!--
+                            ////////////////////////////////////////////////////////////////////////////
+                            //////////     MODAL HEADER  COLOR    //////////
+                            /////////////////////////////////////////////////////////////////////////
+                            -->
+            <div id="md-header-color" class="modal fade" data-header-color="#736086">
+                <div class="modal-header bg-inverse bd-inverse-darken">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
+                            class="fa fa-times"></i></button>
+                    <h4 class="modal-title">Add a good to order</h4>
+                </div>
+                <!-- //modal-header-->
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label class="control-label">Goods</label>
+                            <input type="text" class="form-control"
+                                   parsley-rangelength="[5,15]"
+                                   placeholder="Good name" ng-model="good.goodname">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control-label">Amount</label>
+                            <input type="text" class="form-control " parsley-min="0" placeholder="0" ng-model="good.amount">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <label class="control-label">Weight</label>
+                            <input type="text" class="form-control"
+                                   parsley-min="0"
+                                   placeholder="Gram" ng-model="good.weight">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control-label">Length</label>
+                            <input type="text" class="form-control"
+                                   parsley-min="0"
+                                   placeholder="mm" ng-model="good.lengthsize">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control-label">Width</label>
+                            <input type="text" class="form-control"
+                                   parsley-min="0"
+                                   placeholder="mm" ng-model="good.widthsize">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control-label">High</label>
+                            <input type="text" class="form-control"
+                                   parsley-min="0"
+                                   placeholder="mm" ng-model="good.heightsize">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Good description</label>
+                        <input type="text" class="form-control" parsley-min="0" placeholder="" ng-model="good.description">
+                    </div>
+                </div>
+                <!-- //modal-body-->
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-inverse">Close</button>
+                    <button type="submit" ng-click="addGood()" class="btn btn-theme" >Add</button>
+                </div>
+                                   <!-- //modal-footer-->
+            </div>
+            <!-- //modal-->
+
+
+            <!--/////////////////////////////////////
+               //////     Addition Information  ////
+               ////////////////////////////////////-->
             <div class="column col-lg-5">
                 <div class=""><br><br><br>
 
@@ -274,6 +349,10 @@
                         </div>
                     </div>
                 </div>
+                <!--///Addition Information //////-->
+
+                <!-- DISPLAY DRAFF ORDER-->
+                <!--
                 <div class="">
                     <div class="panel">
                         <div class="panel-heading"><h3><strong>Draff</strong> Order </h3></div>
@@ -288,6 +367,7 @@
                         </div>
                     </div>
                 </div>
+                -->
 
 
             </div>
