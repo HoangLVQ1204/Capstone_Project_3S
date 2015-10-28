@@ -90,8 +90,11 @@ module.exports = function(sequelize, DataTypes) {
         order.hasMany(db.goods,{
           foreignKey:'orderid',
           constraints: false
-        })
-
+        });
+        order.hasOne(db.store,{
+          foreignKey:'storeid',
+          constraints: false
+        });
       },
       getAllTaskOfShipper: function(task, orderstatus, shipperid, taskdate) {
         return order.findAll({
