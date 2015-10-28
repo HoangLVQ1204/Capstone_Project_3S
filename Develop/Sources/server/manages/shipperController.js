@@ -58,7 +58,7 @@ module.exports = function (app) {
 
     var getHistory = function (req, res, next) {
         //var shipperid = req.userid;
-        var shipperid = 'hoang';
+        var shipperid = 'huykool';
         var History = db.task;
         var Order = db.order;
         var OrderStatus = db.orderstatus;
@@ -94,14 +94,14 @@ module.exports = function (app) {
         var Order = db.order;
         var OrderStatus = db.orderstatus;
         var Goods = db.goods;
-        Order.belongsTo(OrderStatus, {
-            foreignKey: 'statusid',
-            constraints: false
-        });
-        Order.hasMany(Goods, {
-            foreignKey: 'orderid',
-            constraints: false
-        });
+        //Order.belongsTo(OrderStatus, {
+        //    foreignKey: 'statusid',
+        //    constraints: false
+        //});
+        //Order.hasMany(Goods, {
+        //    foreignKey: 'orderid',
+        //    constraints: false
+        //});
         Order.getOrderDetailById(OrderStatus, Goods, orderid)
             .then(function (rs) {
                 if (rs) {
@@ -140,9 +140,6 @@ module.exports = function (app) {
     };
 
     var getDetail = function (req, res, next) {
-        var Order = db.order;
-        var OrderStatus = db.orderstatus;
-        var Goods = db.goods;
         return res.status(200).json(req.detail);
     };
 
