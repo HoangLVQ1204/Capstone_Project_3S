@@ -1,58 +1,72 @@
 <ion-view view-title="Order Detail">
   <ion-content padding="true" class="has-header">
     <div id="map" lat="21.012529248181444" lng="105.52563034439083" zoom="8" map></div>
-    <a><i class="ion-android-locate" style=""></i></a>
-    <ol class="progtrckr" data-progtrckr-steps="5">
-      <li class="progtrckr-done"></li>
-      <li class="progtrckr-done"></li>
-      <li class="progtrckr-done"></li>
-      <li class="progtrckr-done"></li>
-      <li class="progtrckr-todo"></li>
-    </ol>
-    <!--<button ng-controller="DetailCtrl" class="button button-full button-assertive" ng-click="saveDetails()">Save-->
-    <!--</button>-->
+    <!--<a><i class="ion-android-locate" style=""></i></a>-->
+    <button fab="" fab-center="" fab-top="" secondary="" class="disable-hover icon-only">
+      <icon compass="" is-active="false" role="img" class="ion-ios-compass-outline" aria-label="compass outline">A</icon>
+    </button>
+    <div class="checkout-wrap">
+      <ul class="checkout-bar">
+        <!--<li class="visited first"></li>-->
+        <a ng-repeat="status in statuslist" href="#" ng-click="openPopover($event)">
+        <li ng-class="{visited: status.statusid < order.statusid, active: status.statusid==order.statusid, next: status.statusid > order.statusid}"></li>
+        </a>
+      </ul>
+    </div>
+    <div>
+      <p>{{errorlogs}}</p>
+    </div>
     <div class="list card">
       <div class="item item-divider">Detail Information</div>
       <div class="item item-body">
         <div class="item item-input">
-          <!--<i class="icon ion-person-stalker"></i>-->
           <span class="input-label">Order code:</span>
+
           <p class="">{{order.code}}</p>
         </div>
         <label class="item item-input">
           <span class="input-label">Status:</span>
+
           <p class="">{{order.status}}</p>
         </label>
         <label class="item item-input">
           <span class="input-label">Recipient:</span>
+
           <p class="">{{order.recipientname}}<br/>{{order.recipientphone}}</p>
         </label>
         <label class="item item-input">
           <span class="input-label">Pick-up Address</span>
+
           <p class="">{{order.pickupaddress}}</p>
         </label>
         <label class="item item-input">
           <span class="input-label">Pick-up date:</span>
+
           <p class="">{{order.pickupdate | date : 'dd-MM-yyyy'}}</p>
         </label>
         <label class="item item-input">
           <span class="input-label">Delivery Address:</span>
+
           <p class="">{{order.deliveryaddress}}</p>
         </label>
         <label class="item item-input">
           <span class="input-label">Delivery Date:</span>
+
           <p class="">{{order.deliverydate | date : 'dd-MM-yyyy'}}</p>
         </label>
         <label class="item item-input">
           <span class="input-label">COD:</span>
+
           <p class="">{{order.cod | number}} VND</p>
         </label>
         <label class="item item-input">
           <span class="input-label">Fee:</span>
+
           <p class="">{{order.fee | number}} VND</p>
         </label>
         <label class="item item-input">
           <span class="input-label">Goods Information:</span>
+
           <p class="">
             Weight: {{order.weight}} (g)<br/>
             Size: {{order.lengthsize}} x {{order.widthsize}} x {{order.heightsize}} (cm)
@@ -60,11 +74,52 @@
         </label>
       </div>
     </div>
-    <!--<div class="bar bar-footer">-->
-      <button ng-controller="DetailCtrl" ng-repeat="status in statuslist" ng-show="{{1 == 1}}" class="button button-full button-assertive" ng-click="saveDetails()">{{status}}
-      </button>
-
-    <!--</div>-->
-    <!--<button class="button button-positive button-block  icon-left ion-android-arrow-back">Back to list</button>-->
+    <button ng-repeat="status in statuslist"
+            ng-if="status.statusid == order.statusid && status.nextAction" class="button button-full button-positive"
+            ng-click="openModal(order.statusid, status.nextAction)">{{status.nextAction}}
+    </button>
   </ion-content>
+  <script id="confirm-modal.html" type="text/ng-template">
+    <ion-modal-view>
+      <ion-header-bar>
+        <h1 class="title">Confirm to next step</h1>
+      </ion-header-bar>
+      <ion-content>
+        <div class="list card">
+          <div>Do you want to {{action}}?</div>
+          <div class="button-bar">
+            <a class="button button-full button-positive" ng-click="nextStep(order.statusid)">Yes</a>
+            <a class="button button-full button-assertive" ng-click="closeModal()">No</a>
+          </div>
+        </div>
+      </ion-content>
+    </ion-modal-view>
+  </script>
+  <script id="confirm-code-modal.html" type="text/ng-template">
+    <ion-modal-view>
+      <ion-header-bar>
+        <h1 class="title">Enter code to next step</h1>
+      </ion-header-bar>
+      <ion-content>
+        <div>
+          <p>Please enter secret code to {{action}}!</p>
+          <label class="item item-input">
+            <span class="input-label">Code:</span>
+            <input type="text" ng-model="confirmcode"/>
+          </label>
+        </div>
+        <div class="button-bar">
+          <a class="button button-full button-positive" ng-click="nextStepConfirm(confirmcode)">Yes</a>
+          <a class="button button-full button-assertive" ng-click="closeModal()">No</a>
+        </div>
+      </ion-content>
+    </ion-modal-view>
+  </script>
+  <script id="status-popover.html" type="text/ng-template">
+    <ion-popover-view>
+      <ion-content>
+        {{currentStatus}}
+      </ion-content>
+    </ion-popover-view>
+  </script>
 </ion-view>

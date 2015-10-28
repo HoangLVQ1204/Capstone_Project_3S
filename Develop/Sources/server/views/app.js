@@ -7,12 +7,19 @@ angular.module('app', [
     'ui.router',
     'angular-jwt',
     'nemLogging',
-    'uiGmapgoogle-maps',
-    'smart-table'
-]).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider,uiGmapGoogleMapApiProvider){
+    'uiGmapgoogle-maps'
+]).constant("config",{
+
+    role: {
+        shipper: 1,
+        store: 2,
+        admin: 3
+    }
+
+}).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider,uiGmapGoogleMapApiProvider,config){
 
     // Set up Routes
-    $urlRouterProvider.otherwise('/store/dashboard');
+	$urlRouterProvider.otherwise('/admin');
 
     $stateProvider
         .state('login',{
@@ -22,30 +29,33 @@ angular.module('app', [
         .state('admin',{
             //abstract: true,
             url: '/admin',
-            template: '<admin></admin>'
+            template: '<admin></admin>',
+            access: config.role.admin
+
         })
         .state('admin.map',{
             url: '/map',
-            template: '<map></map>'
+            template: '<map></map>',
+            access: config.role.admin
         })
-
         .state('store',{
-            abstract: true,
+            //abstract: true,
             url: '/store',
-            template: '<store></store>'
+            template: '<store></store>',
+            access: config.role.store
         })
-        .state('store.map',{
-            url: '/map',
-            template: '<map></map>'
-        })
-        .state('store.dashboard',{
-            url: '/dashboard',
-            template: '<store-dashboard></store-dashboard>'
-        })
-        .state('store.order',{
-            url: '/order',
-            template: '<store-order></store-order>'
-        })
+        //.state('store.map',{
+        //    url: '/map',
+        //    template: '<map></map>'
+        //})
+        //.state('store.dashboard',{
+        //    url: '/dashboard',
+        //    template: '<store-dashboard></store-dashboard>'
+        //})
+        //.state('store.order',{
+        //    url: '/order',
+        //    template: '<store-order></store-order>'
+        //})
 
     jwtInterceptorProvider.tokenGetter = function(){
         return localStorage.getItem('EHID');
@@ -59,13 +69,77 @@ angular.module('app', [
         libraries: 'geometry,visualization,drawing,places'
     })
 
-}).run(function($rootScope){
+}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper){
+
+    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+
+        if(toState.access){
+
+            if(!authService.isLogged()){
+                $state.go("login");
+                event.preventDefault();
+                return;
+            }
+
+            if(!authService.isRightRole(toState.access)){
+                console.log('This page is denied');
+                //TODO: Chuyển về trang warning
+            }
+
+
+        }
+
+        if(toState.name == 'login'){
+            if(authService.isLogged()){
+
+                if(authService.isRightRole(config.role.admin)){
+                    console.log("admin");
+                    $state.go('admin');
+                    event.preventDefault();
+                }
+
+                if(authService.isRightRole(config.role.store)){
+                    console.log("store");
+                    $state.go('store');
+                    event.preventDefault();
+                }
+
+                // if(authService.isRightRole(config.role.shipper)){
+                //     console.log("shipper");
+                //     $state.go('store');
+                //     event.preventDefault();
+                // }
+
+            }
+        }
+
+    });
+
     $rootScope.$on('$stateChangeSuccess', function(e, toState){
-        if (toState.name == "login")
+
+        if (toState.name == "login"){
             $rootScope.styleBody = "full-lg";
-        else
+        }
+        else{
             $rootScope.styleBody = "leftMenu nav-collapse";
+        }
+
     })
+
+    if(authService.isLogged()){
+        if(authService.isRightRole(config.role.admin)){
+            socketAdmin.registerSocket();            
+        }
+
+        if(authService.isRightRole(config.role.store)){
+            socketStore.registerSocket();
+        }
+
+        if(authService.isRightRole(config.role.shipper)){
+            socketShipper.registerSocket();
+        }
+    }
+
 })
 
 

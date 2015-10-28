@@ -9,13 +9,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     storeid: {
       type: DataTypes.STRING,
-      allowNull: true,
-      primaryKey: true
+      allowNull: true
     },
     ordertypeid: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      primaryKey: true
+      allowNull: true
     },
     pickupaddress: {
       type: DataTypes.STRING,
@@ -43,13 +41,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     ledgerid: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      primaryKey: true
+      allowNull: true
     },
     statusid: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      primaryKey: true
     },
     ispending: {
       type: DataTypes.BOOLEAN,
@@ -101,6 +97,7 @@ module.exports = function(sequelize, DataTypes) {
       getAllTaskOfShipper: function(task, orderstatus, shipperid, taskdate) {
         return order.findAll({
           attributes: ['orderid', 'ordertypeid', 'pickupaddress', 'deliveryaddress', 'pickupdate', 'deliverydate', 'statusid'],
+          where: {'ispending': false},
           include: [{
             model: task,
             attributes: ['tasktype', 'taskdate'],
@@ -118,15 +115,16 @@ module.exports = function(sequelize, DataTypes) {
 	  
       getOrderDetailById: function (orderStatusModel, goodsModel, orderid) {
         return order.findOne({
-          attributes:{ exclude: ['ledgerid','statusid']},
+          attributes:{ exclude: ['ledgerid']},
           where: {
-            //orderid: orderid
+            orderid: orderid
           },
           include: [{
             model: orderStatusModel,
             attributes: [['statusname','status']]
           }, {
-            model: goodsModel
+            model: goodsModel,
+            limit: 1
           }]
         });
 	  },
@@ -152,6 +150,18 @@ module.exports = function(sequelize, DataTypes) {
             }
           ]
         });
+      },
+
+      getOneOrder: function (order_id) {
+        return order.findOne({
+          where: {
+            'orderid': order_id
+          }
+        })
+      },
+
+      putOrder: function (order) {
+        return order.save();
       },
 
       postOneOrder: function(newOrder){

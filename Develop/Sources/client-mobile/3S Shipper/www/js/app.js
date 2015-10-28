@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.manages' is found in manages.js
-var app = angular.module('starter', ['ionic', 'ngCordova']);
+var app = angular.module('starter', ['ionic', 'ngCordova', 'angular-jwt']);
 
   app.run(function ($ionicPlatform) {
     $ionicPlatform.ready(function () {
@@ -22,7 +22,7 @@ var app = angular.module('starter', ['ionic', 'ngCordova']);
   })
 
 
-app.config(function ($stateProvider, $urlRouterProvider) {
+app.config(function ($stateProvider, $urlRouterProvider, jwtInterceptorProvider, $httpProvider) {
     $stateProvider
 
       .state('app', {
@@ -35,16 +35,6 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         url: '/sign-in',
         templateUrl: 'templates/sign-in.html',
         controller: 'SignInCtrl'
-      })
-
-      .state('app.orderlist', {
-        url: '/orderlist',
-        views: {
-          'menuContent': {
-            templateUrl: 'templates/orderlist.html',
-            controller: 'OrdersCtrl'
-          }
-        }
       })
 
       .state('app.history', {
@@ -99,7 +89,7 @@ app.config(function ($stateProvider, $urlRouterProvider) {
 
       .state('app.tasks', {
         url: '/tasks',
-        //abstract: true,
+        cache: false,
         views: {
           'menuContent': {
             templateUrl: 'templates/tasks.html',
@@ -107,7 +97,26 @@ app.config(function ($stateProvider, $urlRouterProvider) {
           }
         }
       })
+
+      .state('app.bestway', {
+        url: '/bestway/:tabParam',
+        cache: false,
+        views: {
+          'menuContent': {
+            templateUrl: 'templates/bestway.html',
+            controller: 'BestWayCtrl'
+          }
+        }
+      })
     ;
+
+    //Send token for each request
+    jwtInterceptorProvider.tokenGetter = function(){
+      return localStorage.getItem('EHID');
+    };
+
+    $httpProvider.interceptors.push('jwtInterceptor');
+
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/sign-in');
   });

@@ -2,9 +2,13 @@
  * Created by hoanglvq on 9/22/15.
  */
 
-function storeController($scope,$state){
+function storeController($scope,$state,socketStore){
+    $scope.findShipper = function() {        
+        socketStore.findShipper();
+    }
 
     $scope.$watch('$viewContentLoaded', function(event) {
+
 
 
             $('nav#menu-ver').mmenu({
@@ -27,6 +31,6 @@ function storeController($scope,$state){
 
 }
 
-storeController.$inject = ['$scope','$state'];
+storeController.$inject = ['$scope','$state','socketStore'];
 angular.module('app').controller('storeController',storeController);
 

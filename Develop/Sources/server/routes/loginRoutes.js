@@ -7,4 +7,5 @@ module.exports = function(app){
     var authManage = require('../manages/authManage')(app);
 
     app.post('/auth/signin',authManage.verifyUser(),authManage.signIn());
+
 }

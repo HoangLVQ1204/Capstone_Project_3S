@@ -177,7 +177,7 @@ priority varchar(20)
 
 CREATE TABLE Issue
 (
-issueID int PRIMARY KEY,
+issueID SERIAL PRIMARY KEY,
 category int REFERENCES IssueCategory(categoryID),
 --priority int REFERENCES IssuePriority(priorityID),
 content text

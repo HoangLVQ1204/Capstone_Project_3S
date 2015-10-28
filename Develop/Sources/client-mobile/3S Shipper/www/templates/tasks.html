@@ -3,12 +3,11 @@
   <ion-nav-back-button>
   </ion-nav-back-button>
     <ion-tabs class="tabs-icon-top tabs-striped tabs-color-balanced">
-
-        <ion-tab title="Pickup" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart" badge="badgeCountPick" badge-style="badge-assertive">
+        <ion-tab title="Pickup" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart" badge="badgeCountPick" badge-style="badge-assertive" on-select="tabSelected('pickup')">
         <ion-pane>
           <ion-content >
             <ion-list>
-              <ion-item class="item-icon-right" ng-repeat="order in pickupTasks" type="item-text-wrap" href="#/app/detail/{{order.orderid}}">
+              <ion-item class="item-icon-right" ng-repeat="order in pickupTasks | orderBy: 'pickupdate'" type="item-text-wrap" href="#/app/detail/{{order.orderid}}">
                 <div class="titleContent" style="min-height: 80px;">
                   <div>
                     <img src="img/storeprofile.png"/>
@@ -18,8 +17,8 @@
                     <!--waiting-->
                     <p ng-show="{{order.statusid == 1}}" class="statusWt label">{{order.statusname}}</p>
                     <!--Picking & Bring to stock-->
-                    <p ng-show="{{order.statusid == 2 || order.statusid == 3}}" class="statusWt label">{{order.statusname}}</p>
-                    <!--Pending-->
+                    <p ng-show="{{order.statusid == 2 || order.statusid == 3}}" class="statusDn label">{{order.statusname}}</p>
+                    <!--Pending order, returning to stock-->
                     <p ng-show="{{order.statusid == 6}}" class="statusPd label">{{order.statusname}}</p>
                     <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
                     <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
@@ -31,11 +30,11 @@
           </ion-content>
         </ion-pane>
       </ion-tab>
-      <ion-tab title="Ship" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart"  badge="badgeCountShip" badge-style="badge-assertive">
+      <ion-tab title="Ship" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart"  badge="badgeCountShip" badge-style="badge-assertive" on-select="tabSelected('ship')">
         <ion-pane>
           <ion-content >
             <ion-list>
-              <ion-item class="item-icon-right" ng-repeat="order in shipTasks" type="item-text-wrap" href="#/app/detail/{{order.orderid}}">
+              <ion-item class="item-icon-right" ng-repeat="order in shipTasks | orderBy: 'deliverydate'" type="item-text-wrap" href="#/app/detail/{{order.orderid}}">
                 <div class="titleContent" style="min-height: 80px;">
                   <div>
                     <img src="img/storeprofile.png"/>
@@ -45,9 +44,9 @@
                     <!--Delivering-->
                     <p ng-show="{{order.statusid == 5}}" class="statusDn label">{{order.statusname}}</p>
                     <!--Returning to stock-->
-                    <p ng-show="{{order.statusid == 8}}" class="statusDn label">{{order.statusname}}</p>
-                    <!--Pending-->
                     <p ng-show="{{order.statusid == 6}}" class="statusPd label">{{order.statusname}}</p>
+                    <!--Returning to store-->
+                    <p ng-show="{{order.statusid == 7}}" class="statusPd label">{{order.statusname}}</p>
                     <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
                     <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
                   </div>
@@ -58,7 +57,7 @@
           </ion-content>
         </ion-pane>
       </ion-tab>
-      <ion-tab title="Express" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart"  badge="badgeCountExpress" badge-style="badge-assertive">
+      <ion-tab title="Express" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart"  badge="badgeCountExpress" badge-style="badge-assertive" on-select="tabSelected('express')">
         <ion-pane>
           <ion-content>
             <ion-list>
@@ -69,16 +68,18 @@
                  </div>
                  <div>
                    <h2>{{order.orderid}}</h2>
+                   <!--waiting-->
+                   <p ng-show="{{order.statusid == 1}}" class="statusWt label">{{order.statusname}}</p>
                    <!--Picking -->
                    <p ng-show="{{order.statusid == 2 || order.statusid == 3}}" class="statusWt label">{{order.statusname}}</p>
                    <!--Delivering-->
                    <p ng-show="{{order.statusid == 5}}" class="statusDn label">{{order.statusname}}</p>
-                   <!--Pending-->
-                   <p ng-show="{{order.statusid == 6}}" class="statusPd label">{{order.statusname}}</p>
                    <!--Returning to stock-->
+                   <p ng-show="{{order.statusid == 6}}" class="statusPd label">{{order.statusname}}</p>
+                   <!--Returning to store-->
+                   <p ng-show="{{order.statusid == 7}}" class="statusPd label">{{order.statusname}}</p>
+                   <!--Done-->
                    <p ng-show="{{order.statusid == 8}}" class="statusDn label">{{order.statusname}}</p>
-
-
                    <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
                    <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
                  </div>
@@ -89,5 +90,8 @@
           </ion-content>
         </ion-pane>
       </ion-tab>
+      <div class="fixed">
+        <a type="button" href="#/app/bestway/{{tabParam}}" class="btn-cus btn-primary-cus btn-circle-cus btn-xl-cus"><i class="ion-ios-paperplane" style="font-size: 26px"></i></a>
+      </div>
     </ion-tabs>
 </ion-view>

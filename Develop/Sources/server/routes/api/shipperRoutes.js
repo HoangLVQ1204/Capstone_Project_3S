@@ -5,9 +5,10 @@
 module.exports = function (app) {
 
     var shipperCtrl = require('./../../manages/shipperController')(app);
+    var authManage = require('./../../manages/authManage')(app);
+    var checkAll = [authManage.checkToken(),authManage.checkRole()];
 
-
-    app.get('/api/tasks', shipperCtrl.getTask);
+    app.get('/api/tasks', checkAll, shipperCtrl.getTask);
 
     app.post('/api/issue', shipperCtrl.createIssue);
 
@@ -21,6 +22,9 @@ module.exports = function (app) {
     app.param('orderid', shipperCtrl.paramOrderId);
 
     app.route('/api/statuslist')
-        .get(shipperCtrl.getStatusList);
+        .get(shipperCtrl.getExpressStatusList);
+
+    app.route('/api/nextstep')
+        .put(shipperCtrl.nextStep);
 
 }

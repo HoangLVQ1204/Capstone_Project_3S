@@ -3,7 +3,7 @@
  */
 
 angular.module('app')
-    .factory('authService',function($http,$q){
+    .factory('authService',function($http,$q,jwtHelper){
         var tag = 'EHID';
 
         var saveToken = function(token){
@@ -11,18 +11,44 @@ angular.module('app')
         }
 
         var signIn = function(data){
+            console.log(data);
             return $http({
                 data,
                 url: 'http://localhost:3000/auth/signin',
                 method: 'POST'
             }).then(function(data){
-                console.log("Token Return: "+data.data.token);
                 saveToken(data.data.token);
             });
         }
 
+        var isLogged = function(){
+            if(window.localStorage.getItem(tag)){
+                return true;
+            }else{
+                return false;
+            }
+        }
+
+        var isRightRole = function(role){
+            var token = jwtHelper.decodeToken(localStorage.getItem('EHID'));
+            return role == token.userrole;
+        }
+
+        var currentRole = function(){
+            var token = jwtHelper.decodeToken(localStorage.getItem('EHID'));
+            return token.userrole;
+        }
+
+        var getCurrentInfoUser = function(){
+            var currentUser = jwtHelper.decodeToken(localStorage.getItem('EHID'));
+            return currentUser;
+        }
+
         return {
-            signIn : signIn
+            signIn : signIn,
+            isLogged: isLogged,
+            isRightRole: isRightRole,
+            getCurrentInfoUser: getCurrentInfoUser
         };
     });
 

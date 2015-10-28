@@ -8,7 +8,10 @@ var config         = require('./config/config');
 var models         = require('./entities');
 var cors           = require('cors'); // Allow Cross-Origin Resource Sharing (to call API)
 
+
+
 var app = express();
+var server = require('http').Server(app);
 
 
 // setup middleware
@@ -23,6 +26,9 @@ app.use(cors());
 
 // setup routes
 require('./routes')(app);
+
+// setup socket
+require('./socket')(server);
 
 // seed the database
 if (config.seed) {
@@ -44,7 +50,7 @@ app.use(function (err, req, res, next) {
 
 // setup database, start server after syncing database
 app.get('models').sequelize.sync().then(function () {
-    app.listen(config.port, function () {
+    server.listen(config.port, function () {
         logger.log('Listening on http://localhost:' + config.port);
     });
 });

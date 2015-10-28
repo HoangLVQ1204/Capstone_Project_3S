@@ -41,8 +41,11 @@ insert into managestore values ('nhungkaka', 'str2');
 
 -- generalledger
 
-insert into generalledger values ('1', 'hoang', 'str1', '300000', '10000', '2015-3-16', 'sample note', '1', '0');
-insert into generalledger values ('2', 'khoangkiti', 'str2', '400000', '20000', '2015-6-10', 'sample note', '2', '0');
+insert into generalledger values ('1', 'khoangkiti', 'str1', null, '20000', '2015-10-24 00:00:00', 'Weekly total', null, '20000','0');
+insert into generalledger values ('2', 'khoangkiti', 'str2', null, '-30000', '2015-10-24 00:00:00', 'Weekly total', null, '30000','60000');
+insert into generalledger values ('3', 'khoangkiti', 'str3', null, '130000', '2015-10-24 00:00:00', 'Weekly total', null, '150000','20000');
+insert into generalledger values ('4', 'hoang', 'str1', '10000', '10000', '2015-10-25 00:00:00', 'Pay to system', '1', '10000','0');
+insert into generalledger values ('5', 'khoangkiti', 'str1', '10000', '0', '2015-10-26 00:00:00', 'Pay to system', '1', '0','0');
 
 -- stock
 
@@ -226,11 +229,11 @@ insert into issuecategory  values ('3', 'Thoi Tiet');
 --insert into issuepriority values ('3', 'Low');
 
 -- issue
-insert into issue   values ('1', '1', 'Toi co viec ban');
-insert into issue   values ('2', '1', 'Hom nay co bao');
-insert into issue   values ('3', '2', 'Xe toi bi thung nop');
-insert into issue   values ('4', '2', 'Dien thoai toi het pin');
-insert into issue   values ('5', '3', 'Hom nay co bao');
+insert into issue (category,content)   values ('1', 'Toi co viec ban');
+insert into issue (category,content)   values ('1', 'Hom nay co bao');
+insert into issue (category,content)   values ('2', 'Xe toi bi thung nop');
+insert into issue (category,content)   values ('2', 'Dien thoai toi het pin');
+insert into issue (category,content)   values ('3', 'Hom nay co bao');
 
 -- orderissue
 insert into orderissue values ('1', 'ord1', '2015-12-4', 'this is description 1');

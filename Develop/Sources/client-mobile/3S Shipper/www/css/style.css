@@ -10,17 +10,13 @@ i {
 .statusWt {
   background-color: #777777;
 }
-/*done status*/
+/*done status: Done, Picking, Bring to stock and Delivering*/
 .statusDn {
   background-color: #5cb85c
 }
-/*pending status*/
+/*pending status: Returning to stock, store*/
 .statusPd {
   background-color: #f0ad4e
-}
-/*cancel status*/
-.statusCan {
-  background-color: #d9534f;
 }
 .label {
   display: inline;
@@ -103,6 +99,62 @@ i {
   width: 100%;
   margin-top: 12px;
 }
+
+div.fixed {
+  position: fixed;
+  bottom: 60px;
+  right: 5px;
+  /*width: 300px;*/
+  /*border: 3px solid #8AC007;*/
+}
+/*button find best way*/
+.btn-cus {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+.btn-primary-cus {
+  color: #fff;
+  background-color: #428bca;
+  border-color: #357ebd;
+}
+.btn-primary-cus:hover {
+  color: #fff;
+  background-color: #3276b1;
+  border-color: #285e8e;
+}
+.btn-circle-cus {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 5px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 30px;
+}
+.btn-circle-cus.btn-xl-cus {
+  width: 50px;
+  height: 50px;
+  padding: 10px 16px;
+  font-size: 24px;
+  line-height: 1.33;
+  border-radius: 50px;
+}
+
 /* ---END StyleSheet of Task & History---*/
 
 /*---START StyleSheet of Profile---*/
@@ -151,90 +203,149 @@ i {
   box-shadow: 0 0 5px black;
 }
 
-ol.progtrckr {
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
-}
-
-ol.progtrckr li {
-  display: inline-block;
-  text-align: center;
-  line-height: 3em;
-}
-
-ol.progtrckr[data-progtrckr-steps="2"] li {
-  width: 49%;
-}
-
-ol.progtrckr[data-progtrckr-steps="3"] li {
-  width: 33%;
-}
-
-ol.progtrckr[data-progtrckr-steps="4"] li {
-  width: 24%;
-}
-
-ol.progtrckr[data-progtrckr-steps="5"] li {
-  width: 19%;
-}
-
-ol.progtrckr[data-progtrckr-steps="6"] li {
-  width: 16%;
-}
-
-ol.progtrckr[data-progtrckr-steps="7"] li {
-  width: 14%;
-}
-
-ol.progtrckr[data-progtrckr-steps="8"] li {
-  width: 12%;
-}
-
-ol.progtrckr[data-progtrckr-steps="9"] li {
-  width: 11%;
-}
-
-ol.progtrckr li.progtrckr-done {
-  color: black;
-  border-bottom: 4px solid yellowgreen;
-}
-
-ol.progtrckr li.progtrckr-todo {
-  color: silver;
-  border-bottom: 4px solid silver;
-}
-
-ol.progtrckr li:after {
-  content: "\00a0\00a0";
-}
-
-ol.progtrckr li:before {
+.checkout-wrap {
+  color: #444;
+  margin: 2% 0 5% 0;
   position: relative;
-  bottom: -2.5em;
-  float: left;
-  left: 50%;
-  line-height: 1em;
 }
 
-ol.progtrckr li.progtrckr-done:before {
-  content: "\2713";
-  color: white;
-  background-color: yellowgreen;
-  height: 1.2em;
-  width: 1.2em;
-  line-height: 1.2em;
-  border: none;
-  border-radius: 1.2em;
+ul.checkout-bar {
+  margin: 0 20px;
+}
+ul.checkout-bar li {
+  color: #ccc;
+  display: block;
+  font-size: 13px;
+  padding: 14px 20px 14px 80px;
+  position: relative;
+}
+ul.checkout-bar li:before {
+  background: #ddd;
+  border: 2px solid #FFF;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 16px;
+  left: 20px;
+  line-height: 37px;
+  height: 35px;
+  position: absolute;
+  text-align: center;
+  text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+  top: 4px;
+  width: 35px;
+  z-index: 999;
+}
+ul.checkout-bar li.active {
+  color: #8bc53f;
+  font-weight: bold;
+}
+ul.checkout-bar li.active:before {
+  background: #8bc53f;
+  z-index: 99999;
+}
+ul.checkout-bar li.visited {
+  background: #ECECEC;
+  color: #57aed1;
+  z-index: 99999;
+}
+ul.checkout-bar li.visited:before {
+  background: #57aed1;
+  z-index: 99999;
+}
+ul.checkout-bar li:nth-child(1):before {
+  content: "";
+}
+ul.checkout-bar li:nth-child(2):before {
+  content: "";
+}
+ul.checkout-bar li:nth-child(3):before {
+  content: "";
+}
+ul.checkout-bar li:nth-child(4):before {
+  content: "";
+}
+ul.checkout-bar li:nth-child(5):before {
+  content: "";
+}
+ul.checkout-bar li:nth-child(6):before {
+  content: "";
+}
+ul.checkout-bar li:nth-child(7):before {
+  content: "";
+}
+ul.checkout-bar li:nth-child(8):before {
+  content: "1";
+}
+ul.checkout-bar a {
+  color: #57aed1;
+  font-size: 13px;
 }
 
-ol.progtrckr li.progtrckr-todo:before {
-  content: "\039F";
-  color: silver;
-  background-color: white;
-  font-size: 1.5em;
-  bottom: -1.6em;
+@media all and (min-width: 300px) {
+  .checkout-bar li.active:after {
+    background-color: #8bc53f;
+    content: "";
+    height: 15px;
+    width: 100%;
+    left: 50%;
+    position: absolute;
+    top: -50px;
+    z-index: 0;
+  }
+
+  .checkout-wrap {
+    margin: 2% 0 9% 0;
+  }
+
+  ul.checkout-bar {
+    background-color: #EcEcEc;
+    border-radius: 15px;
+    height: 15px;
+    margin: 0 auto;
+    padding: 0;
+    position: absolute;
+    width: 100%;
+  }
+  ul.checkout-bar:before {
+    background-color: #57aed1;
+    border-radius: 15px;
+    content: " ";
+    height: 15px;
+    left: 0;
+    position: absolute;
+    width: 10%;
+  }
+  ul.checkout-bar li {
+    display: inline-block;
+    margin: 50px 0 0;
+    padding: 0;
+    text-align: center;
+    width: 22%;
+  }
+  ul.checkout-bar li:before {
+    height: 30px;
+    left: 40%;
+    line-height: 45px;
+    position: absolute;
+    top: -60px;
+    width: 30px;
+    z-index: 99;
+  }
+  ul.checkout-bar li.visited {
+    background: none;
+  }
+  ul.checkout-bar li.visited:after {
+    background-color: #57aed1;
+    content: "";
+    height: 15px;
+    left: 50%;
+    position: absolute;
+    top: -50px;
+    width: 100%;
+    z-index: 99;
+  }
 }
+
 
 /*--END StyleSheet For Order's Detail--*/
 
@@ -265,4 +376,5 @@ fancy-select .list {
   margin-right: 10px;
   width: 30px;
   text-align: center; }
+
 /*END fancy-select*/

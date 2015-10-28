@@ -3,23 +3,29 @@
  */
 app.controller('TasksCtrl', ['$scope', 'dataService', 'mySharedService', function($scope, dataFactory, mySharedService) {
 
+  //Share data between controller
   if (undefined !== mySharedService.message && mySharedService.message !== '') {
-    //console.log('rs', mySharedService.message);
     formatData(mySharedService.message);
   } else {
     console.log('save message sharing');
     getDataFromServer();
   }
 
+  //Select tab
+  $scope.tabSelected = function(tab) {
+    $scope.tabParam = tab;
+    if (typeof $scope.tabParam === "undefined" || $scope.tabParam === "") {
+      $scope.tabParam = "all";
+    }
+  };
 
   /*
    * By QuyenNV - 23/10/2015
-   *
    * This function is call API
    *
    * */
   function getDataFromServer() {
-    var urlBase = 'http://localhost:3000/api/tasks';
+    var urlBase = config.hostServer + "api/tasks";
     dataFactory.getDataServer(urlBase)
       .success(function (rs) {
         mySharedService.prepForBroadcast(rs);
@@ -32,7 +38,6 @@ app.controller('TasksCtrl', ['$scope', 'dataService', 'mySharedService', functio
 
   /*
    * By QuyenNV - 23/10/2015
-   *
    * This function is format data respon from from server
    * @param: rs
    * */

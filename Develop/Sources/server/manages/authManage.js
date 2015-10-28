@@ -25,9 +25,7 @@ module.exports  = function(app){
      * */
     var checkToken = function(){
       return function(req,res,next){
-
           expressJwt(req,res,next);
-
       }
     };
 
@@ -44,6 +42,7 @@ module.exports  = function(app){
         return function(req,res,next){
 
             var currentRoute        = req.route.path;
+            console.log('ccc', currentRoute);
             var currentRole         = req.user.userrole;
             var currentAccessRoles  = [];
             config.pathAccessRole.forEach(function(item){
@@ -62,6 +61,8 @@ module.exports  = function(app){
             }
         }
     }
+
+
 
     /*
      * By HoangLVQ - 22/10/2015
