@@ -40,7 +40,8 @@ angular.module('app')
         }
 
         var getCurrentInfoUser = function(){
-            return jwtHelper.decodeToken(localStorage.getItem('EHID'));
+            var currentUser = jwtHelper.decodeToken(localStorage.getItem('EHID'));
+            return currentUser;
         }
 
         return {

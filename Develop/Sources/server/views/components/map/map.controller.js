@@ -6,50 +6,50 @@
  */
 
 
-/*
-    Helper functions
-*/
-function initShipperMarker($scope, geocoder, maps, shipperMarker) {
-    shipperMarker.icon = $scope.shipperIcon;
-}
+// /*
+//     Helper functions
+// */
+// function initShipperMarker($scope, geocoder, maps, shipperMarker) {
+//     shipperMarker.icon = $scope.shipperIcon;
+// }
 
-function initStoreMarker($scope, geocoder, maps, storeMarker) {
-    storeMarker.icon = $scope.storeIcon;
-    geocoder.geocode({
-            'location': {
-                lat: storeMarker.latitude,
-                lng: storeMarker.longitude
-            }
-        }, function(results, status) {
-            var geoText = 'Not Available';
-            if (status === maps.GeocoderStatus.OK) {
-                if (results[0]) {
-                    geoText = results[0].formatted_address;
+// function initStoreMarker($scope, geocoder, maps, storeMarker) {
+//     storeMarker.icon = $scope.storeIcon;
+//     geocoder.geocode({
+//             'location': {
+//                 lat: storeMarker.latitude,
+//                 lng: storeMarker.longitude
+//             }
+//         }, function(results, status) {
+//             var geoText = 'Not Available';
+//             if (status === maps.GeocoderStatus.OK) {
+//                 if (results[0]) {
+//                     geoText = results[0].formatted_address;
 
-                }
-            }               
-            storeMarker.geoText = geoText;                                   
-        }); 
-}
+//                 }
+//             }               
+//             storeMarker.geoText = geoText;                                   
+//         }); 
+// }
 
-function initCustomerMarker($scope, geocoder, maps, customerMarker) {    
-    customerMarker.customerID = customerMarker.order[0];
-    customerMarker.order.forEach(function(order) {        
-        $scope.orders[order].customerID = customerMarker.customerID;
-    });
+// function initCustomerMarker($scope, geocoder, maps, customerMarker) {    
+//     customerMarker.customerID = customerMarker.order[0];
+//     customerMarker.order.forEach(function(order) {        
+//         $scope.orders[order].customerID = customerMarker.customerID;
+//     });
 
-    customerMarker.icon = $scope.customerIcon;
-    geocoder.geocode({
-        address: customerMarker.geoText
-    }, function(results, status) {
-        if (status === maps.GeocoderStatus.OK) {
-            customerMarker.latitude = results[0].geometry.location.lat();
-            customerMarker.longitude = results[0].geometry.location.lng();
-        } else {
-            alert('Geocode was not successful for the following reason: ' + status);
-        }
-    });
-}
+//     customerMarker.icon = $scope.customerIcon;
+//     geocoder.geocode({
+//         address: customerMarker.geoText
+//     }, function(results, status) {
+//         if (status === maps.GeocoderStatus.OK) {
+//             customerMarker.latitude = results[0].geometry.location.lat();
+//             customerMarker.longitude = results[0].geometry.location.lng();
+//         } else {
+//             alert('Geocode was not successful for the following reason: ' + status);
+//         }
+//     });
+// }
 
 var arrows = [];
 
@@ -216,6 +216,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
         // Events for markers        
         $scope.shipperEvents = {
             mouseover: function(gMarker, eventName, model, mouseEvent) {                                 
+                console.log('mouseover', model.order);
                 var content = '<div>' + 
                         '<h5>' + model.shipperID + '</h5>' +
                         '<ul>';
@@ -239,6 +240,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
         };    
         $scope.storeEvents = {
             mouseover: function(gMarker, eventName, model, mouseEvent) {                                 
+                console.log('mouseover', model.order);
                 var content = '<div>' + 
                         '<strong>' + model.geoText + '</strong>' +
                         '<ul>';
