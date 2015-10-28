@@ -6,7 +6,7 @@
 // 'starter.manages' is found in manages.js
 var app = angular.module('starter', ['ionic', 'ngCordova', 'angular-jwt']);
 
-  app.run(function ($ionicPlatform) {
+  app.run(['$ionicPlatform', 'authService', '$rootScope', '$location', function ($ionicPlatform, authService, $rootScope, $location) {
     $ionicPlatform.ready(function () {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
@@ -19,7 +19,17 @@ var app = angular.module('starter', ['ionic', 'ngCordova', 'angular-jwt']);
         StatusBar.styleDefault();
       }
     });
-  })
+
+    //Check Is firt time sign in
+    if (authService.isLogged === true) {
+      $location.path('/app/tasks');
+      $rootScope.$apply();
+    } else {
+      $location.path('/sign-in');
+      $rootScope.$apply();
+    }
+
+  }])
 
 
 app.config(function ($stateProvider, $urlRouterProvider, jwtInterceptorProvider, $httpProvider) {
