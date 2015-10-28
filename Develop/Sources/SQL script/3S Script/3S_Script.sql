@@ -75,26 +75,26 @@ insert into ordertype  values ('2', 'express');
 
 
 -- order
-insert into "order" values ('ord1', 'str1', '1', 'Tu Liem - Ha Noi', 'Cau Giay - Ha Noi', '2015-3-19', '2015-3-21', '01687555261', 'Nguyen Van Quyen', '1', '8', 'false', 'false','false', '20000', '0', '23232,32323', '2323,23232');
-insert into "order" values ('ord2', 'str2', '2', 'Ho Tung Mau - Ha Noi', 'Hoan Kiem - Ha Noi', '2015-5-23', '2015-5-25', '0988627075', 'Nguyen Van Long', '1', '8', 'false', 'false', 'false', '0', '2000000', '2323,-23233', '2323,-23233');
-insert into "order" values ('ord3', 'str3', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '1', '8', 'false', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
-insert into "order" values ('ord4', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '1', '8', 'false', 'true', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
-insert into "order" values ('ord5', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '1', '8', 'false', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
-insert into "order" values ('ord6', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '1', '8', 'false', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
-insert into "order" values ('ord7', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '1', '2', 'false', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
-insert into "order" values ('ord8', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '1', 'true', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
-insert into "order" values ('ord9', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '1', 'true', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
-insert into "order" values ('ord10', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '1', 'false', 'true', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
-insert into "order" values ('ord11', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '1', 'false', 'true', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
-insert into "order" values ('ord12', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '1', 'false', 'true', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
-insert into "order" values ('ord13', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '1', 'false', 'true', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
-insert into "order" values ('ord14', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '3', 'true', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
-insert into "order" values ('ord15', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '4', 'false', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
-insert into "order" values ('ord16', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '5', 'false', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
-insert into "order" values ('ord17', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '5', 'true', 'false', 'true', '10000', '400000', '2323,-23233', '2323,-23233');
-insert into "order" values ('ord18', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '6', 'false', 'false', 'true', '10000', '400000', '2323,-23233', '2323,-23233');
-insert into "order" values ('ord19', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '7', 'false', 'false', 'true', '10000', '400000', '2323,-23233', '2323,-23233');
-insert into "order" values ('ord20', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2', '0988627975', 'Nguyen Van Binh', '2', '7', 'false', 'false', 'true', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord1', 'str1', '1', 'Tu Liem - Ha Noi', 'Cau Giay - Ha Noi', '2015-3-19', '2015-3-21','2015-10-5','2015-10-6', '01687555261', 'Nguyen Van Quyen', '1', '8', 'false', 'false','false', '20000', '0', '23232,32323', '2323,23232');
+insert into "order" values ('ord2', 'str2', '2', 'Ho Tung Mau - Ha Noi', 'Hoan Kiem - Ha Noi', '2015-5-23', '2015-5-25','2015-10-5','2015-10-5', '0988627075', 'Nguyen Van Long', '1', '8', 'false', 'false', 'false', '0', '2000000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord3', 'str3', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2','2015-10-5','2015-10-5', '0988627975', 'Nguyen Van Binh', '1', '8', 'false', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord4', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2','2015-10-5','2015-10-5', '0988627975', 'Nguyen Van Binh', '1', '8', 'false', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord5', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2','2015-10-5','2015-10-5', '0988627975', 'Nguyen Van Binh', '1', '8', 'false', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord6', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2','2015-10-5','2015-10-5', '0988627975', 'Nguyen Van Binh', '1', '8', 'false', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord7', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2','2015-10-5',null, '0988627975', 'Nguyen Van Binh', '1', '2', 'false', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord8', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2','2015-10-5',null, '0988627975', 'Nguyen Van Binh', '2', '1', 'true', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord9', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2','2015-10-5',null, '0988627975', 'Nguyen Van Binh', '2', '1', 'true', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord10', 'str2', '1', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2',null,null, '0988627975', 'Nguyen Van Binh', '2',null, 'false', 'true', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord11', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2',null,null, '0988627975', 'Nguyen Van Binh', '2',null, 'false', 'true', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord12', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2',null,null, '0988627975', 'Nguyen Van Binh', '2',null, 'false', 'true', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord13', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2',null,null, '0988627975', 'Nguyen Van Binh', '2', null, 'false', 'true', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord14', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2','2015-10-5',null, '0988627975', 'Nguyen Van Binh', '2', '3', 'true', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord15', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2','2015-10-5',null, '0988627975', 'Nguyen Van Binh', '2', '4', 'false', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord16', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2','2015-10-5',null, '0988627975', 'Nguyen Van Binh', '2', '5', 'false', 'false', 'false', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord17', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2','2015-10-5',null, '0988627975', 'Nguyen Van Binh', '2', '5', 'true', 'false', 'true', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord18', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2','2015-10-5',null, '0988627975', 'Nguyen Van Binh', '2', '6', 'false', 'false', 'true', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord19', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2','2015-10-5',null, '0988627975', 'Nguyen Van Binh', '2', '7', 'false', 'false', 'true', '10000', '400000', '2323,-23233', '2323,-23233');
+insert into "order" values ('ord20', 'str2', '2', 'Thuy Khue - Ha Noi', 'Hoang Hoa Tham - Ha Noi', '2015-1-1', '2015-1-2','2015-10-5',null, '0988627975', 'Nguyen Van Binh', '2', '7', 'false', 'false', 'true', '10000', '400000', '2323,-23233', '2323,-23233');
 
 
 -- task
@@ -110,20 +110,20 @@ insert into goods values ('3', 'ord3', null, '34.00', '34', '34', '50', 'Very wi
 insert into goods values ('4', 'ord4', null, '34.00', '34', '34', '50', 'Very width', '1');
 insert into goods values ('5', 'ord5', null, '34.00', '34', '34', '50', 'Very width', '4');
 insert into goods values ('6', 'ord6', null, '34.00', '34', '34', '50', 'Very width', '1');
-insert into goods values ('7', 'ord7', '2', '34.00', '34', '34', '50', 'Very width', '2');
-insert into goods values ('8', 'ord8', '2', '34.00', '34', '34', '50', 'Very width', '3');
-insert into goods values ('9', 'ord9', '2', '34.00', '34', '34', '50', 'Very width', '1');
-insert into goods values ('10', 'ord10', '2', '34.00', '34', '34', '50', 'Very width', '4');
-insert into goods values ('11', 'ord11', '2', '34.00', '34', '34', '50', 'Very width', '3');
-insert into goods values ('12', 'ord12', '2', '34.00', '34', '34', '50', 'Very width', '2');
-insert into goods values ('13', 'ord13', '2', '34.00', '34', '34', '50', 'Very width', '1');
-insert into goods values ('14', 'ord14', '2', '34.00', '34', '34', '50', 'Very width', '3');
+insert into goods values ('7', 'ord7', null, '34.00', '34', '34', '50', 'Very width', '2');
+insert into goods values ('8', 'ord8', null, '34.00', '34', '34', '50', 'Very width', '3');
+insert into goods values ('9', 'ord9', null, '34.00', '34', '34', '50', 'Very width', '1');
+insert into goods values ('10', 'ord10', null, '34.00', '34', '34', '50', 'Very width', '4');
+insert into goods values ('11', 'ord11', null, '34.00', '34', '34', '50', 'Very width', '3');
+insert into goods values ('12', 'ord12', null, '34.00', '34', '34', '50', 'Very width', '2');
+insert into goods values ('13', 'ord13', null, '34.00', '34', '34', '50', 'Very width', '1');
+insert into goods values ('14', 'ord14', null, '34.00', '34', '34', '50', 'Very width', '3');
 insert into goods values ('15', 'ord15', '2', '34.00', '34', '34', '50', 'Very width', '2');
-insert into goods values ('16', 'ord16', '2', '34.00', '34', '34', '50', 'Very width', '4');
-insert into goods values ('17', 'ord17', '2', '34.00', '34', '34', '50', 'Very width', '1');
-insert into goods values ('18', 'ord18', '2', '34.00', '34', '34', '50', 'Very width', '4');
-insert into goods values ('19', 'ord19', '2', '34.00', '34', '34', '50', 'Very width', '2');
-insert into goods values ('20', 'ord20', '2', '34.00', '34', '34', '50', 'Very width', '3');
+insert into goods values ('16', 'ord16', null, '34.00', '34', '34', '50', 'Very width', '4');
+insert into goods values ('17', 'ord17', null, '34.00', '34', '34', '50', 'Very width', '1');
+insert into goods values ('18', 'ord18', null, '34.00', '34', '34', '50', 'Very width', '4');
+insert into goods values ('19', 'ord19', null, '34.00', '34', '34', '50', 'Very width', '2');
+insert into goods values ('20', 'ord20', null, '34.00', '34', '34', '50', 'Very width', '3');
 
 -- confirmationcodetype
 insert into confirmationcodetype values ('1', 'Gathering');
