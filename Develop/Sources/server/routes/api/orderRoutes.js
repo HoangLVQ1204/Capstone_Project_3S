@@ -14,4 +14,9 @@ module.exports = function (app) {
     app.route('/orders/:order_id')
         .get(controller.getOne)
         .put(controller.put)
+        .delete(controller.deleteOrder)
+
+    app.route('/orders/putdraff')
+        .post(controller.putDraff)
+
 }
