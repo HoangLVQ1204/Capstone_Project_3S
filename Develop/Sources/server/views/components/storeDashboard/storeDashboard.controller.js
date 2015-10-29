@@ -106,8 +106,11 @@ function storeDashboardController($scope,$state,dataService, $http){
     };
 
     $scope.$watch('$viewContentLoaded', function(event) {
+
         caplet();
+
     });
+
 
 }
 

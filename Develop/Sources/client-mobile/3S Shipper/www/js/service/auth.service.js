@@ -19,27 +19,27 @@ app.factory('authService',function($http,$q,jwtHelper){
       });
     }
 
-    //var isLogged = function(){
-    //  if(window.localStorage.getItem(tag)){
-    //    return true;
-    //  }else{
-    //    return false;
-    //  }
-    //}
+    var isLogged = function(){
+      if(window.localStorage.getItem(tag) || window.localStorage.getItem(tag) !== "undefined"){
+        return true;
+      }else{
+        return false;
+      }
+    }
 
     var isRightRole = function(role){
       var token = jwtHelper.decodeToken(localStorage.getItem('EHID'));
       return role == token.userrole;
     }
 
-    //var currentRole = function(){
-    //  var token = jwtHelper.decodeToken(localStorage.getItem('EHID'));
-    //  return token.userrole;
-    //}
+    var signOut = function(){
+      window.localStorage.removeItem(tag);
+    }
 
     return {
       signIn : signIn,
-      //isLogged: isLogged,
-      isRightRole: isRightRole
+      isLogged: isLogged,
+      isRightRole: isRightRole,
+      signOut: signOut
     };
   });

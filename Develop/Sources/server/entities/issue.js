@@ -13,7 +13,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       primaryKey: true
     },
-    content: {
+    reason: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    description: {
       type: DataTypes.TEXT,
       allowNull: true
     }

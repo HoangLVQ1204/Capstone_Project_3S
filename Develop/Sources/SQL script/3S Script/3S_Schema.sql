@@ -1,6 +1,4 @@
-﻿
-
-CREATE TABLE Role
+﻿CREATE TABLE Role
 (
 roleID int PRIMARY KEY,
 roleName varchar(20)
@@ -124,6 +122,19 @@ pickUpAddressCoordination text,
 deliveryAddressCoordination text
 );
 
+
+CREATE TABLE TaskStatus
+(
+statusID int PRIMARY KEY,
+statusName varchar(20)
+);
+
+CREATE TABLE TaskType
+(
+typeID int PRIMARY KEY,
+typeName varchar(20)
+);
+
 CREATE TABLE Task
 (
 taskID int PRIMARY KEY,
@@ -180,7 +191,8 @@ CREATE TABLE Issue
 issueID SERIAL PRIMARY KEY,
 category int REFERENCES IssueCategory(categoryID),
 --priority int REFERENCES IssuePriority(priorityID),
-content text
+reason text,
+description text
 );
 
 CREATE TABLE OrderIssue
@@ -188,7 +200,6 @@ CREATE TABLE OrderIssue
 issueID int REFERENCES Issue(issueID),
 orderID varchar(8) REFERENCES "order"(orderID),
 date date,
-description text,
 PRIMARY KEY(issueID, orderID)
 );
 
@@ -237,6 +248,8 @@ DROP TABLE ConfirmationCode;
 DROP TABLE ConfirmationCodeType;
 DROP TABLE Goods;
 DROP TABLE Task;
+DROP TABLE TaskStatus;
+DROP TABLE TaskType;
 DROP TABLE "order";
 DROP TABLE OrderType;
 DROP TABLE OrderStatus;
@@ -249,6 +262,3 @@ DROP TABLE "user";
 DROP TABLE WorkingStatus;
 DROP TABLE Role;
 */
-
-
-

@@ -30,9 +30,11 @@ angular.module('app')
         .state('mapdemo',{
             url: '/mapdemo',
             template: '<map style="margin-top: 10px" shipper-markers="shippers" store-markers="stores" customer-markers="customers" orders="orders"></map>',
-            controller: function($scope,mapService) {      
+            controller: function($scope,mapService) {
+
                 // mode in ["all", "shipper", "store", "orderdetail"]          
-                var mode = "all";                        
+                var mode = "all";
+
                 $scope.shippers = mapService.getShipperMarkers(mode);
                 $scope.stores = mapService.getStoreMarkers(mode);
                 $scope.customers = mapService.getCustomerMarkers(mode);

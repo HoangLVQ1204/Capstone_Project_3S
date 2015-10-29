@@ -15,10 +15,6 @@ module.exports = function(sequelize, DataTypes) {
     date: {
       type: DataTypes.DATE,
       allowNull: true
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: true
     }
   }, {
     freezeTableName: true,

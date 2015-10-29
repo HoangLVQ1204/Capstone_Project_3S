@@ -52,8 +52,9 @@
 // }
 
 var arrows = [];
-function drawArrow(fromMarker, toMarker, symbol, color, maps, myMap) {    
-    console.log(fromMarker, toMarker);
+
+function drawArrow(fromMarker, toMarker, symbol, color, maps, myMap) {
+    //console.log(fromMarker, toMarker);
     arrows.push(new maps.Polyline({
         path: [fromMarker, toMarker],        
         strokeColor: color,
@@ -64,6 +65,7 @@ function drawArrow(fromMarker, toMarker, symbol, color, maps, myMap) {
         map: myMap
     }));    
 }
+
 function resetArrows() {
     arrows.forEach(function(arrow) {
         arrow.setMap(null);
@@ -281,16 +283,6 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
                 resetArrows();
             }
         };    
-        
-
-        //$scope.markersClone = _.cloneDeep($scope.markers);
-        //$scope.fromMarker   = "";
-        //$scope.toMarker     = "";
-        //
-        //$scope.removeMarker = function(index, marker){
-        //    $scope.markersClone.splice(index,1);
-        //}
-
 
         // Test real-time
 
@@ -316,7 +308,6 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
         //         "storeID": storeID
         //     };
         //     initCustomerMarker($scope, geocoder, maps, newCustomer);
-
         //     // Add all new information
         //     $scope.shipperMarkers[0].order.push(newOrder);
         //     $scope.storeMarkers.push(newStore);
@@ -324,20 +315,16 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
         //     $scope.$apply();
         // }, 5000);
 
-
-
         // Filling control for all angular-google-map directives
         uiGmapIsReady.promise().then(function(instances) {
             var myMap = instances[0].map;                                
 
-            
             $scope.openInfo = function(gMarker, content) {
                 infoWindow.setContent(content);                    
                 infoWindow.open(myMap, gMarker);
             };
 
             $scope.drawTwoArrows = function(start, dest_1, dest_2) {
-                console.log('draw 22222');
                 var end = {
                     lat: dest_1.latitude,
                     lng: dest_1.longitude
