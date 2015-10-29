@@ -31,6 +31,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: true
     },
+    createdate: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    donedate: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
     recipientphone: {
       type: DataTypes.STRING,
       allowNull: true
