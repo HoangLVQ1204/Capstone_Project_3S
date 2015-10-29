@@ -141,7 +141,8 @@ taskID int PRIMARY KEY,
 orderID varchar(8) REFERENCES "order"(orderID),
 shipperID varchar(20) REFERENCES "user"(username),
 adminID varchar(20) REFERENCES "user"(username),
-tasktype int NOT NULL,
+taskstatus int REFERENCES TaskStatus(statusID),
+tasktype int REFERENCES TaskType(typeID),
 taskDate date
 );
 
@@ -189,7 +190,7 @@ priority varchar(20)
 CREATE TABLE Issue
 (
 issueID SERIAL PRIMARY KEY,
-category int REFERENCES IssueCategory(categoryID),
+categoryID int REFERENCES IssueCategory(categoryID),
 --priority int REFERENCES IssuePriority(priorityID),
 reason text,
 description text
