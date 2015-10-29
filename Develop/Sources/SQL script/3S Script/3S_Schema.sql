@@ -1,6 +1,4 @@
-﻿
-
-CREATE TABLE Role
+﻿CREATE TABLE Role
 (
 roleID int PRIMARY KEY,
 roleName varchar(20)
@@ -109,6 +107,8 @@ pickUpAddress varchar(100),
 deliveryAddress varchar(100),
 pickUpDate date,
 deliveryDate date,
+createDate date,
+doneDate date,
 recipientPhone varchar(11),
 recipientName varchar(50),
 ledgerID int REFERENCES GeneralLedger(ledgerID),
@@ -117,9 +117,22 @@ isPending boolean,
 isDraff boolean,
 isCancel boolean,
 fee BIGINT,
-CoD BIGINT,
+Cod BIGINT,
 pickUpAddressCoordination text,
 deliveryAddressCoordination text
+);
+
+
+CREATE TABLE TaskStatus
+(
+statusID int PRIMARY KEY,
+statusName varchar(20)
+);
+
+CREATE TABLE TaskType
+(
+typeID int PRIMARY KEY,
+typeName varchar(20)
 );
 
 CREATE TABLE Task
@@ -235,6 +248,8 @@ DROP TABLE ConfirmationCode;
 DROP TABLE ConfirmationCodeType;
 DROP TABLE Goods;
 DROP TABLE Task;
+DROP TABLE TaskStatus;
+DROP TABLE TaskType;
 DROP TABLE "order";
 DROP TABLE OrderType;
 DROP TABLE OrderStatus;
@@ -247,6 +262,3 @@ DROP TABLE "user";
 DROP TABLE WorkingStatus;
 DROP TABLE Role;
 */
-
-
-
