@@ -73,14 +73,7 @@ function socketAdmin(socketService,authService,mapService){
         navigator.geolocation.getCurrentPosition(function(position){
             var dataAdmin = {
                 username: currentUser.username
-            };
-            // if (currentLocation
-            //     && Math.abs(currentLocation.latitude - position.coords.latitude) <= EPSILON
-            //     && Math.abs(currentLocation.longitude - position.coords.longitude) <= EPSILON) {
-            //     console.log('the same location');
-            //     return;
-            // }
-            // console.log('different location');
+            };            
             currentLocation = position.coords;
             dataAdmin.latitude = position.coords.latitude;
             dataAdmin.longitude = position.coords.longitude;

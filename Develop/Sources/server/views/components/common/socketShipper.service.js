@@ -93,10 +93,18 @@ function socketShipper($q,socketService,authService,mapService) {
 
     api.registerSocket = function(){                            
         api.getCurrentUser()
-        .then(function(user) {
+        .then(function(user) {            
             mapService.addShipper(user)
-            .then(function() {
-                socketService.emit("shipper:register:location",user);
+            .then(function() {                
+                socketService.sendPacket(
+                {
+                    clientID: user.shipperID
+                },
+                'server',
+                {
+                    shipper: user
+                },                
+                'shipper:register:location');
             });            
         },function(err){
             alert(err);
