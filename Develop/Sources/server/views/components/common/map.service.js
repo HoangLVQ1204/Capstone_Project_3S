@@ -163,6 +163,11 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         });
     }
 
+    api.updateShipper = function(data) {
+        var shipper = this.getOneShipper(data.shipperID);
+        shipper = _.merge(shipper, data);
+    }
+
 
 
 
@@ -197,12 +202,11 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         return d.promise;
     };
 
-    api.getOneStore = function(storeID) {
-        console.log('getOneStore', storeID, storeMarkers);
+    api.getOneStore = function(storeID) {        
         return _.find(storeMarkers, function(store) {
             return store.storeID == storeID;
         });
-    };
+    };    
 
 
 

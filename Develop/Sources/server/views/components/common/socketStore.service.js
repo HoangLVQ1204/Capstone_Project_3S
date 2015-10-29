@@ -20,6 +20,10 @@ function socketStore($q,socketService,authService,mapService){
         api.selectShipper(shipper, {});
     });
 
+    socketService.on('store:update:location', function(data) {
+        mapService.updateShipper(data); 
+    });
+
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();
         

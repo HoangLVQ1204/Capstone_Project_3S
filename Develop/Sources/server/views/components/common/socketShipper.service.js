@@ -7,7 +7,7 @@ function socketShipper($q,socketService,authService,mapService) {
     
     var EPSILON = 1e-8;
 
-    var currentLocation = null;
+    var currentLocation = null;    
     var api = {};
 
     /*
@@ -43,14 +43,7 @@ function socketShipper($q,socketService,authService,mapService) {
         var currentUser = authService.getCurrentInfoUser();
         
         d = $q.defer();
-        navigator.geolocation.getCurrentPosition(function(position){
-            // if (currentLocation
-            //     && Math.abs(currentLocation.latitude - position.coords.latitude) <= EPSILON
-            //     && Math.abs(currentLocation.longitude - position.coords.longitude) <= EPSILON) {
-            //     console.log('the same location');
-            //     return;
-            // }
-            // console.log('different location');
+        navigator.geolocation.getCurrentPosition(function(position){            
             var dataShipper = {
                 shipperID: currentUser.username,
                 status: currentUser.workingstatusid
@@ -67,6 +60,37 @@ function socketShipper($q,socketService,authService,mapService) {
         return d.promise;        
     };
 
+    api.watchCurrentPosition = function() {
+        var geo_success = function(position) {       
+            if (currentLocation
+                && Math.abs(currentLocation.latitude - position.coords.latitude) <= EPSILON
+                && Math.abs(currentLocation.longitude - position.coords.longitude) <= EPSILON) {
+                console.log('the same location');
+                return;
+            }
+            console.log('different location');
+            socketService.emit('shipper:update:location', position.coords);
+        };
+
+        var geo_failure = function(err) {
+            console.log('geo_failure', err);
+        };
+
+        var geo_options = {
+            enableHighAccuracy: true, 
+            maximumAge        : Infinity, 
+            timeout           : Infinity
+        };
+
+        if (navigator.geolocation) {
+            return navigator.geolocation.watchPosition(geo_success, geo_failure, geo_options);
+        }
+    };
+
+    api.stopWatchCurrentPosition = function(watchID) {
+        navigator.geolocation.clearWatch(watchID);
+    };
+
     api.registerSocket = function(){                            
         api.getCurrentUser()
         .then(function(user) {
@@ -78,7 +102,6 @@ function socketShipper($q,socketService,authService,mapService) {
             alert(err);
         });            
     };
-
 
     return api; 
 }
