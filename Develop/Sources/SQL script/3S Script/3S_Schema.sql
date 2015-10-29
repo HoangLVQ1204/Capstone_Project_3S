@@ -191,7 +191,8 @@ CREATE TABLE Issue
 issueID SERIAL PRIMARY KEY,
 category int REFERENCES IssueCategory(categoryID),
 --priority int REFERENCES IssuePriority(priorityID),
-content text
+reason text,
+description text
 );
 
 CREATE TABLE OrderIssue
@@ -199,7 +200,6 @@ CREATE TABLE OrderIssue
 issueID int REFERENCES Issue(issueID),
 orderID varchar(8) REFERENCES "order"(orderID),
 date date,
-description text,
 PRIMARY KEY(issueID, orderID)
 );
 

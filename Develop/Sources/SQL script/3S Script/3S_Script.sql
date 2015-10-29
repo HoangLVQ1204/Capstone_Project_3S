@@ -230,27 +230,26 @@ insert into confirmationcode values( '79', '123529', '3', 'ord20');
 insert into confirmationcode values( '80', '123530', '4', 'ord20');
 
 -- issuecategory
-insert into issuecategory  values ('1', 'Ca Nhan');
-insert into issuecategory  values ('2', 'Phuong Tien');
-insert into issuecategory  values ('3', 'Thoi Tiet');
+insert into issuecategory  values ('1', 'Pending');
+insert into issuecategory  values ('2', 'Cancel');
 
 -- issuepriority
 --insert into issuepriority values ('1', 'High');
 --insert into issuepriority values ('2', 'Medium');
 --insert into issuepriority values ('3', 'Low');
 
--- issue
-insert into issue (category,content)   values ('1', 'Toi co viec ban');
-insert into issue (category,content)   values ('1', 'Hom nay co bao');
-insert into issue (category,content)   values ('2', 'Xe toi bi thung nop');
-insert into issue (category,content)   values ('2', 'Dien thoai toi het pin');
-insert into issue (category,content)   values ('3', 'Hom nay co bao');
+-- issue:id, issuecategory, reason, description
+insert into issue (category,reason,description)   values ('1', 'Traffic jam', 'Tắc đường quá, em chưa đi tiếp được');
+insert into issue (category,reason, description)   values ('1', 'Vehicle', 'Em bị hỏng xe, đang vá xăm');
+insert into issue (category,reason, description)   values ('1', 'Accident', 'Em vừa bị tai nạn nhẹ, xin phép giao chậm');
+insert into issue (category,reason, description)   values ('2', 'Goods is broken', 'Các đơn hàng này bị hỏng rồi, Admin xem giúp em');
+insert into issue (category,reason, description)   values ('2', 'Cannot contact with customer', 'Không thể giao hàng cho khách hàng');
 
 -- orderissue
-insert into orderissue values ('1', 'ord1', '2015-12-4', 'this is description 1');
-insert into orderissue values ('2', 'ord1', '2015-12-4', 'this is description 2');
-insert into orderissue values ('3', 'ord2', '2015-4-19', 'this is description 3');
-insert into orderissue values ('4', 'ord2', '2015-4-19', 'this is description 4');
+insert into orderissue values ('1', 'ord1', '2015-12-4');
+insert into orderissue values ('2', 'ord1', '2015-12-4');
+insert into orderissue values ('3', 'ord2', '2015-4-19');
+insert into orderissue values ('4', 'ord2', '2015-4-19');
 
 -- orderlog
 insert into orderlog  values ('1', 'ord1', 'str1', '1', '1', 'Tu Liem - Ha Noi', 'Cau Giay - Ha Noi', '2015-3-19', '2015-3-21', '01687555261', 'Nguyen Van Quyen', '1', '1', '20000', '0', '23232,32323', '2323,23232', '2015-9-8', 'khoangkiti');
