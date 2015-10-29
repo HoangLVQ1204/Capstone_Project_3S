@@ -1,0 +1,183 @@
+<div>
+
+    <div class="nav-collapse" style="margin-left: 0px;">
+
+        <ol class="breadcrumb">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Library</a></li>
+            <li class="active">Data</li>
+        </ol>
+        <!-- //breadcrumb-->
+
+        <div id="content">
+            <div class="row">
+                <div class="col-lg-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            <h2><strong>Store's </strong>List </h2>
+                            <label class="color">All Store in 3S</label>
+                        </header>
+
+                        <div class="panel-body">
+                            <textarea class="form-control" id="sms"  rows="5" style="display:none">
+																	 <i class="fa fa-check-circle"></i> Update successfully<br>
+																	Your confirmation was updated in system.
+																</textarea>
+                            <form>
+                                <table class="table table-striped table-hover table-bordered" st-set-filter="customFilter" st-custom-date="registereddate" st-predicate="{{selected.value}}" stdate="dateRange" search-watch-model="search" st-table="displayedCollection" st-safe-src="storeList">
+
+                                    <div class="row" >
+
+                                        <div class="col-sm-4 form-group pull-left">
+
+                                            <div class="input-icon">
+                                                <i class="fa fa-calendar ico"></i>
+                                                <input type="text" daterange class="form-control" name="daterange" id="daterange" ng-model="dateRange"/>
+                                            </div>
+
+
+                                        </div><!-- //form-group-->
+                                        <div class="col-sm-4 pull-right">
+                                            <div class="input-icon"> <i class="fa fa-search ico"></i>
+                                            <input type="search" class="form-control" placeholder="Search" ng-model="search">
+                                            </div>
+
+
+                                        </div>
+
+                                        <div class="col-sm-2 pull-right">
+                                            <!--<select  class="selectpicker form-control show-menu-arrow" ng-repeat="option in searchOptions">-->
+                                            <!--&lt;!&ndash;<option data-icon="fa fa-user" id="predicate" ng-model="selectedPredicate" ng-options="option in predicates"></option>&ndash;&gt;-->
+                                            <!--<option ng-repeat="options in searchOptions" value="{{options.option}}">{{options.option}}</option>-->
+                                            <!--</select>-->
+                                            <select
+                                                    class="form-control"
+                                                    ng-options="options.option for options in searchOptions" ng-model="selected">
+
+                                            </select>
+
+                                        </div>
+
+                                    </div>
+                                    <thead>
+                                    <tr>
+                                        <th st-sort="storeid" st-skip-natural="true" class="text-center sortable">StoreID</th>
+                                        <th st-sort="name" st-skip-natural="true" class="text-center sortable">Store's name</th>
+                                        <th st-sort="address" st-skip-natural="true" class="text-center sortable">Address</th>
+                                        <th st-sort="payment" st-skip-natural="true" class="text-center sortable">Last Balance</th>
+                                        <th st-sort="payment" st-skip-natural="true" class="text-center sortable">Current Balance</th>
+                                        <th st-sort="registereddate" st-skip-natural="true" class="text-center sortable">Registered Date</th>
+                                        <th class="text-center">Options</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody align="center" >
+
+                                    <tr class="odd gradeX" ng-repeat= "x in displayedCollection">
+                                        <td>{{x.storeid}}</td>
+                                        <td>{{x.name}}</td>
+                                        <td>{{x.address}}</td>
+                                        <td class="center"> {{x.generalledgers[0].balance}}</td>
+                                        <td class="center"> {{x.currentFee - x.currentCoD + x.generalledgers[0].balance}}</td>
+                                        <td class="center"> {{x.registereddate|date:"MM/dd/yyyy"}}</td>
+                                        <td>
+                                        <span class="tooltip-area">
+                                        <a class="btn btn-default btn-sm" title="Edit"><i class="fa fa-edit (alias)"></i></a>
+                                        <a class="btn btn-default btn-sm" title="Send Message"><i class="fa fa-envelope"></i></a>
+                                        <a class="btn btn-default btn-sm md-effect" title="Block" ng-click="blockConfirm($event, x)"><i class="fa fa-ban"></i></a>
+                                        <a class="btn btn-default btn-sm" title="Export"><i class="glyphicon glyphicon-export"></i></i></a>
+                                        <a class="btn btn-default btn-sm md-effect" ng-click="showConfirm($event, x)" data-effect="md-flipVer" title="Confirm Payment"><i class="fa fa-check-square-o"></i></i></a>
+                                        </span>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="7" class="text-right">
+                                            <div st-pagination="" st-items-by-page="10"></div>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </form>
+                        </div>
+                    </section>
+                </div>
+
+            </div>
+            <!-- //content > row-->
+
+        </div>
+        <!-- //content-->
+
+
+    </div>
+
+    <!--////////////////////////////////////////////////////////////////////////-->
+    <!--//////////     MODAL EFFECT DEMO    //////////-->
+    <!--//////////////////////////////////////////////////////////////////////-->
+    <!--&ndash;&gt;-->
+    <div id="md-effect-confirm" class="modal fade" tabindex="-1" data-width="750">
+        <div class="modal-header bg-inverse bd-inverse-darken">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+            <h4 class="modal-title">Confirm payment</h4>
+        </div>
+        <!-- //modal-header-->
+        <div class="modal-body">
+            <form name="myForm" data-parsley-validate>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+
+                    <th width="20%" class="text-left">Store</th>
+                    <th width="15%" class="text-right">Delivery(VND)</th>
+                    <th width="15%" class="text-right">CoD(VND)</th>
+                    <th width="15%" class="text-right">Total(VND)</th>
+                    <th width="35%">Pay</th>
+                    <th class="text-right"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{selectedStore.name}}</td>
+                    <td class="text-right">{{selectedStore.generalledgers[0].totaldelivery }}</td>
+                    <td class="text-right">{{selectedStore.generalledgers[0].totalcod}}</td>
+                    <td class="text-right">{{selectedStore.generalledgers[0].totaldelivery - selectedStore.generalledgers[0].totalcod - payFee}}VND</td>
+
+                    <td class="text-right">
+                        <!--<div class="col-lg-16">-->
+                            <!--<div class="input-icon input-group-sm">-->
+                                <!--<i class="fa fa-search ico"></i>-->
+
+                                <input type="search" id="inputValue" ng-change="checkOK($event)" parsley-type="digits" required class="form-control input-group-sm text-right" ng-model="payFee">
+                            <!--</div>-->
+                        <!--</div>-->
+                    </td>
+                    <td  class="text-right">
+                    <span class="tooltip-area">
+                    <a class="btn btn-danger" title="Confirm" ng-click="postLedger(selectedStore)"> <i class="fa fa-check-circle"></i> </a>
+                    </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            </form>
+        </div>
+        <!-- //modal-body-->
+    </div>
+    <!-- //modal-->
+    <div id="md-effect-block" class="modal fade" tabindex="-1" data-width="400">
+        <div class="modal-header bg-inverse bd-inverse-darken">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+            <h4 class="modal-title">Confirm Block</h4>
+        </div>
+        <!-- //modal-header-->
+        <div class="modal-body align-xs-center">
+            <form name="myForm">
+                <h5><strong>Are you sure to block {{selectedStore.name}}???</strong></h5><br>
+                <button type="button" class="btn btn-success btn-transparent" ng-click="blockStore(selectedStore)"><i class="fa fa-check-circle"></i> Yes</button>
+                <button type="button" class="btn btn-danger btn-transparent" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i> No</button>
+            </form>
+        </div>
+        <!-- //modal-body-->
+    </div>
+</div>

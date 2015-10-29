@@ -10,4 +10,8 @@ module.exports = function(app){
 
 	app.get('/users',checkAll,controller.get);
 
+    app.route('/api/users/:user_id')
+    	.get(controller.getOne)
+    	.put(controller.put)
+    	.delete(controller.del);
 }

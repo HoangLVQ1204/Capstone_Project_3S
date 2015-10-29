@@ -22,7 +22,7 @@ var db = {};
 
 globber.getGlobbedFiles('./entities/**/!(index.js)').forEach(function(routePath) {
 
-    console.log('get route:', path.resolve(routePath));
+   // console.log('get route:', path.resolve(routePath));
 
     var model = sequelize.import(path.resolve(routePath));
     db[model.name] = model;

@@ -163,6 +163,7 @@ module.exports = function(sequelize, DataTypes) {
         return currentOrder.save();
       },
 
+      
       changeIsPendingOrder: function(listOrders) {
         listOrders.forEach(function(item) {
           order.update(
@@ -170,7 +171,56 @@ module.exports = function(sequelize, DataTypes) {
               { where: { orderid: item }}
           )
         });
+      },
+
+      getTotalShipFeeOfStore: function(storeid, paydate){
+       // console.log(paydate)
+        return order.sum('fee',{
+          where: {
+            'storeid': storeid,
+            'ledgerid': null,
+            'deliverydate': {gte: paydate},
+            'statusid': { $between: [6, 8]}
+          }
+        })
+      },
+
+      getTotalShipCoDOfStore: function(storeid, paydate){
+        return order.sum('cod',{
+          where: {
+            'storeid': storeid,
+            'ledgerid':  null,
+            'deliverydate': {gte: paydate},
+            'statusid': { $between: [6, 8]}
+          }
+        })
+      },
+
+      updateLedgerForOrder: function(storeid, paydate, ledgerid){
+        return order.update(
+            {'ledgerid': ledgerid},
+            {
+          where: {
+            'storeid': storeid,
+            'ledgerid':  null,
+            'deliverydate': {lt: paydate},
+            'statusid': { $between: [6, 9]}
+          }
+        })
+      },
+
+      getAllOrderToAssignTask: function(orderstatus){
+        return order.findAll({
+          where: {
+            'statusid': {$or: [1,2,5,6]}
+          },
+          include: [{
+            model: orderstatus,
+            attributes: ['statusname']
+          }]
+        })
       }
+
     }
   });
   return order;
