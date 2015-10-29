@@ -7,6 +7,19 @@ function storeController($scope,$state,socketStore){
         socketStore.findShipper();
     }
 
+    //document.getElementById("btnDemo").onclick = function() {alert("Hello")};
+    //$state.go('app.login');
+    
+//    authService.userIsLoggedIn(function(role){
+//        if(role.isAdmin){
+//            
+//        }
+//        else if(role.isStore){
+//            $scope.menu = menuStore;
+//            //$state.go('app.store');
+//        }
+//    });
+
     $scope.$watch('$viewContentLoaded', function(event) {
 
 
@@ -25,10 +38,7 @@ function storeController($scope,$state,socketStore){
             });
 
         caplet();
-
     });
-
-
 }
 
 storeController.$inject = ['$scope','$state','socketStore'];

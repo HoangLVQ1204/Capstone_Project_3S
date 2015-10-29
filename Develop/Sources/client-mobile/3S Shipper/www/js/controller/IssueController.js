@@ -108,7 +108,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup' , 'dataService', 'mySharedSer
         });
       } else {
         //post an API
-        var urlCreateBase = 'http://localhost:3000/api/issue';
+        var urlCreateBase = config.hostServer + 'api/issue';
         dataFactory.postDataServer(urlCreateBase, issue)
           .success(function (rs) {
             $ionicPopup.alert({

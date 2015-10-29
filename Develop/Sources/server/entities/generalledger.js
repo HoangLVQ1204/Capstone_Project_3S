@@ -5,7 +5,8 @@ module.exports = function(sequelize, DataTypes) {
     ledgerid: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     adminid: {
       type: DataTypes.STRING,
@@ -47,7 +48,49 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     freezeTableName: true,
-    timestamps: false
-  });
+    timestamps: false,
+    classMethods: {
+
+      getLatestLedgerOfStore: function(storeid){
+        return generalledger.findOne({
+          where:{
+            'storeid':storeid,
+          }, limit: 1, order: 'payDate DESC'
+        });
+      },
+
+      getLatestAutoAccountDate: function(){
+        return generalledger.findOne({
+          where:{
+            $and: [{'amount':  null}, {'payfrom': null}]
+          }, limit: 1, order: 'payDate DESC'
+        });
+      },
+
+      getLatestAutoAccountWithStoreID: function(storeid){
+        return generalledger.findOne({
+          where:{
+            'storeid': storeid,
+            $and: [{'amount':  null}, {'payfrom': null}]
+          }, limit: 1, order: 'payDate DESC'
+        });
+      },
+
+      //post new ledger to database
+      postNewLedger: function(newLedger){
+        return generalledger.build({
+              'storeid': newLedger.storeid,
+              'adminid': newLedger.adminid,
+              'amount': newLedger.amount,
+              'balance': newLedger.balance,
+              'paydate': newLedger.paydate,
+              'payfrom': newLedger.payfrom,
+              'totaldelivery': newLedger.totaldelivery,
+              'totalcod': newLedger.totalcod,
+              'note': newLedger.note
+        }).save();
+      }
+  }
+});
   return generalledger;
 };
