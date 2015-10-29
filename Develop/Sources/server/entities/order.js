@@ -177,7 +177,7 @@ module.exports = function(sequelize, DataTypes) {
             'storeid': storeid,
             'ledgerid': null,
             'deliverydate': {gte: paydate},
-            'statusid': { $between: [6, 9]}
+            'statusid': { $between: [6, 8]}
           }
         })
       },
@@ -188,7 +188,7 @@ module.exports = function(sequelize, DataTypes) {
             'storeid': storeid,
             'ledgerid':  null,
             'deliverydate': {gte: paydate},
-            'statusid': { $between: [6, 9]}
+            'statusid': { $between: [6, 8]}
           }
         })
       },
@@ -206,11 +206,15 @@ module.exports = function(sequelize, DataTypes) {
         })
       },
 
-      getAllOrderToAssignTask: function(){
+      getAllOrderToAssignTask: function(orderstatus){
         return order.findAll({
           where: {
             'statusid': {$or: [1,2,5,6]}
-          }
+          },
+          include: [{
+            model: orderstatus,
+            attributes: ['statusname']
+          }]
         })
       }
 

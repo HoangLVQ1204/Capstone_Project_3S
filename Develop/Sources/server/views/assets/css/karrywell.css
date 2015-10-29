@@ -15,3 +15,7 @@ body.leftMenu .mm-menu:not(.mm-right).mm-hassearch .mm-panel {
 .st-sort-descent:after {
      content: '\25BC';
 }
+.st-selected {
+     background-color: #62707d !important;
+     color: white !important;
+}

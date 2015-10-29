@@ -50,6 +50,13 @@ module.exports = function(sequelize, DataTypes) {
           constraints: false
         });
 
+        user.hasMany(db.task,
+            {as:'admin', foreignKey: 'adminid'}
+        );
+        user.hasMany(db.task,
+            {as: 'shipper',foreignKey: 'shipperid'}
+        );
+
       },
 
       getAllUsers: function() {
@@ -85,6 +92,25 @@ module.exports = function(sequelize, DataTypes) {
 
       putUser: function(currentUser) {
         return currentUser.save();
+      },
+
+      getAllShipperWithTask: function(task, profile, order, orderstatus) {
+        return user.findAll({
+          include:[{
+            model: task,
+            as:'shipper',
+            include: [
+              {
+              model: order,
+                include: [{model: orderstatus,  attributes: ['statusname']}]
+              }
+            ]
+          }],
+          where: {
+            'userrole': 1
+            //'username': 'task.shipperid'
+          }
+        });
       },
 
       authenticate: function(plainTextPassword) {

@@ -20,7 +20,7 @@ angular.module('app', [
 }).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider,uiGmapGoogleMapApiProvider,config){
 
     // Set up Routes
-	$urlRouterProvider.otherwise('/admin');
+	//$urlRouterProvider.otherwise('/admin');
 
     $stateProvider
         .state('login',{
@@ -31,21 +31,23 @@ angular.module('app', [
             //abstract: true,
             url: '/admin',
             template: '<admin></admin>',
-            access: config.role.admin
+            //access: config.role.admin
 
         })
         .state('admin.map',{
             url: '/map',
             template: '<map></map>',
-            access: config.role.admin
+            //access: config.role.admin
         })
         .state('admin.storeList',{
             url: '/storeList',
-            template: '<admin-store-list></admin-store-list>'
+            template: '<admin-store-list></admin-store-list>',
+            //access: config.role.admin
         })
         .state('admin.assignTask',{
             url: '/assignTask',
-            template: '<admin-assign-task></admin-assign-task>'
+            template: '<admin-assign-task></admin-assign-task>',
+            //access: config.role.admin
         })
         .state('store',{
             //abstract: true,
@@ -92,7 +94,7 @@ angular.module('app', [
 
             if(!authService.isRightRole(toState.access)){
                 console.log('This page is denied');
-                //TODO: Chuyển v�? trang warning
+                //TODO: Chuyển v�? trang warning
             }
 
 

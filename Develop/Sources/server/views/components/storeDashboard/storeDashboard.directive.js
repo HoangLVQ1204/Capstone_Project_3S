@@ -11,6 +11,7 @@ angular.module('app')
             restrict: 'E'
         }
     })
+
 })(angular);
 
 
