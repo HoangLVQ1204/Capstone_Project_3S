@@ -14,20 +14,19 @@ module.exports = function (app) {
         var taskdate = '2015-02-15';
         var Task = db.task;
         var Order = db.order;
-        var OrderStatus = db.orderstatus;
 
-        return Order.getAllTaskOfShipper(Task, OrderStatus, shipperid, taskdate)
+        return Order.getAllTaskOfShipper(Task, shipperid, taskdate)
             .then(function (tasks) {
                 var group = {};
                 if (_.isEmpty(tasks) == false) {
                     var listTasks = [];
-                    _.each(tasks, function (task) {
                         listTasks.push({
                             'orderid': task.dataValues.orderid,
                             'ordertypeid': task.dataValues.ordertypeid,
                             'statusid': task.dataValues.statusid,
                             'statusname': task['orderstatus'].dataValues.statusname,
                             'tasktype': task['tasks'][0].dataValues.tasktype,
+                            'taskstatus': task['tasks'][0].dataValues.taskstatus,
                             'pickupaddress': task.dataValues.pickupaddress,
                             'deliveryaddress': task.dataValues.deliveryaddress,
                             'pickupdate': task.dataValues.pickupdate,
@@ -38,15 +37,16 @@ module.exports = function (app) {
                     group['Pickup'] = group['Pickup'] || [];
                     group['Ship'] = group['Ship'] || [];
                     group['Express'] = group['Express'] || [];
+                    group['Return'] = group['Return'] || [];
                     _.each(listTasks, function (item) {
-                        if (_.isEqual(item['ordertypeid'], 1)) {
-                            if (_.isEqual(item['tasktype'], 1)) {
-                                group['Pickup'].push(item);
-                            } else {
-                                group['Ship'].push(item);
-                            }
-                        } else {
+                        if (_.isEqual(item['tasktype'], 1)) {
+                            group['Pickup'].push(item);
+                        } else if (_.isEqual(item['tasktype'], 2)) {
+                            group['Ship'].push(item);
+                        } else if (_.isEqual(item['tasktype'], 3)) {
                             group['Express'].push(item);
+                        } else {
+                            group['Return'].push(item);
                         }
                     });
                 }
@@ -218,12 +218,16 @@ module.exports = function (app) {
 
     var createIssue = function (req, res, next) {
         //Instance new Issue
+
         var newIssue = {};
-        newIssue.category = req.body.category.categoryID;
-        newIssue.content = req.body.content;
+        newIssue.categoryID = req.body.category.categoryID;
+        newIssue.reason = req.body.reason.reasonName;
+        newIssue.description = req.body.description;
+        console.log('quyen', newIssue);
         db.issue.createNewIssue(newIssue)
-            .then(function (issue) {
-            }).then(function () {
+            .then(function(issue) {
+            }).then(function(){
+                console.log('issue', issue);
                 //Instance new list Order get an issued
                 var listOrders = [];
                 _.each(req.body.issuedOrder, function (order) {
@@ -312,6 +316,43 @@ module.exports = function (app) {
         return res.status(200).json(req.dataMap);
     };
 
+    var getAllShipper = function(req, res, next) {
+        return db.user.getAllUsersHasRole(1, db.profile)
+            .then(function(shipper) {
+                res.status(200).json(shipper);
+            }, function(err) {
+                next(err);
+            })
+    };
+
+    var  getAllOrderToAssignTask = function (req, res, next) {
+        var orderList=[];
+        return db.order.getAllOrderToAssignTask(db.orderstatus)
+            .then(function(shipper) {
+                shipper.map(function(item){
+                    var order = new Object();
+                    order.order = item;
+                    orderList.push(order);
+                })
+                res.status(200).json(orderList);
+            }, function(err) {
+                next(err);
+            })
+
+    }
+
+    var getAllShipperWithTask = function (req, res, next) {
+        var shipperList;
+        return db.user.getAllShipperWithTask(db.task, db.profile, db.order, db.orderstatus, db.tasktype, db.taskstatus)
+            .then(function(shipper) {
+                res.status(200).json(shipper);
+            }, function(err) {
+                next(err);
+            })
+    }
+
+
+
     return {
         getTask: getTask,
         getHistory: getHistory,
@@ -323,6 +364,10 @@ module.exports = function (app) {
         createIssue: createIssue,
         paramMapdata: paramMapdata,
         getMapData: getMapdata
+        getAllShipper: getAllShipper,
+        getAllOrderToAssignTask: getAllOrderToAssignTask,
+        getAllShipperWithTask: getAllShipperWithTask,
+
     }
 
 }

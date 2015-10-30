@@ -55,12 +55,15 @@ function socketAdmin(socketService,authService,mapService){
         mapService.addStore(store);
     }); 
 
-    socketService.on('admin:update:order', function(data) {
-        console.log('update order', data);
+    socketService.on('admin:update:order', function(data) {        
         data.customer.order = [data.orderID];
         // strict order
         mapService.addOrder(data.orderID, data.shipperID, data.storeID);
         mapService.addCustomer(data.customer);
+    });
+
+    socketService.on('admin:update:shipper', function(data) {
+        mapService.updateShipper(data);
     });
     
 
@@ -70,19 +73,13 @@ function socketAdmin(socketService,authService,mapService){
         navigator.geolocation.getCurrentPosition(function(position){
             var dataAdmin = {
                 username: currentUser.username
-            };
-            // if (currentLocation
-            //     && Math.abs(currentLocation.latitude - position.coords.latitude) <= EPSILON
-            //     && Math.abs(currentLocation.longitude - position.coords.longitude) <= EPSILON) {
-            //     console.log('the same location');
-            //     return;
-            // }
-            // console.log('different location');
+            };            
             currentLocation = position.coords;
             dataAdmin.latitude = position.coords.latitude;
             dataAdmin.longitude = position.coords.longitude;
 
-            socketService.emit("admin:register:location",dataAdmin);            
+            // socketService.emit("admin:register:location",dataAdmin);            
+            socketService.sendPacket('admin', 'server', { admin: dataAdmin }, 'admin:register:location');
         },function(){
             alert("Can't get your current location! Please check your connection");
         });

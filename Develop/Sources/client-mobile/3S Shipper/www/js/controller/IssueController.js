@@ -70,9 +70,18 @@ app.controller('IssueCtrl',['$scope','$ionicPopup' , 'dataService', 'mySharedSer
 
   //Fill to "Type" dropdown list
   $scope.issueCategories = [
-    {categoryID: "1", categoryName: 'Accident' },
-    {categoryID: "2", categoryName: 'Goods is broken' }
+    {categoryID: '1', categoryName: 'Pending' },
+    {categoryID: '2', categoryName: 'Cancel' }
   ];
+
+  $scope.issueReasons = [
+    {categoryID: '1', reasonName: 'Traffic jam' },
+    {categoryID: '1', reasonName: 'Vehicle' },
+    {categoryID: '1', reasonName: 'Accident' },
+    {categoryID: '2', reasonName: 'Goods is broken' },
+    {categoryID: '2', reasonName: 'Cannot contact with customer' }
+  ];
+
   //Item lable display
   $scope.parseMulti = function(items){
     if(items){
@@ -88,10 +97,17 @@ app.controller('IssueCtrl',['$scope','$ionicPopup' , 'dataService', 'mySharedSer
    * */
   $scope.submitData = function (issue) {
     //Validation
+    console.log('aa', issue);
       if ( typeof issue === "undefined" || issue.category === null || typeof issue.category === "undefined") {
         $ionicPopup.alert({
           title: 'Information',
           content: 'Please choose Type !'
+        }).then(function(res) {
+        });
+      } else if (issue.reason === null || typeof issue.reason === "undefined") {
+        $ionicPopup.alert({
+          title: 'Information',
+          content: 'Please choose Reason !'
         }).then(function(res) {
         });
       } else if (typeof issue.issuedOrder === "undefined" || issue.issuedOrder.length == 0) {
@@ -100,7 +116,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup' , 'dataService', 'mySharedSer
           content: 'Please choose Order !'
         }).then(function(res) {
         });
-      } else if (typeof issue.content === "undefined" || issue.content === "") {
+      } else if (typeof issue.description === "undefined" || issue.description === "") {
         $ionicPopup.alert({
           title: 'Information',
           content: 'Please write Content !'
@@ -108,7 +124,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup' , 'dataService', 'mySharedSer
         });
       } else {
         //post an API
-        var urlCreateBase = 'http://localhost:3000/api/issue';
+        var urlCreateBase = config.hostServer + 'api/issue';
         dataFactory.postDataServer(urlCreateBase, issue)
           .success(function (rs) {
             $ionicPopup.alert({

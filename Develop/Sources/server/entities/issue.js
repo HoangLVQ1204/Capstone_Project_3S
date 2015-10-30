@@ -8,12 +8,16 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
-    category: {
+    categoryid: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
       primaryKey: true
     },
-    content: {
+    reason: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    description: {
       type: DataTypes.TEXT,
       allowNull: true
     }
@@ -22,7 +26,7 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     classMethods: {
       createNewIssue: function(newIssue){
-        return issue.build({category: newIssue.category, content: newIssue.content}).save();
+        return issue.build({categoryid: newIssue.categoryID, reason: newIssue.reason, description: newIssue.description}).save();
       }
     }
   });

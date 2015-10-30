@@ -44,18 +44,100 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     classMethods: {
+      associate: function(db) {
+        user.belongsTo(db.profile, {
+          foreignKey: 'username',
+          constraints: false
+        });
+
+        user.hasMany(db.task,
+            {as:'admin', foreignKey: 'adminid'}
+        );
+        user.hasMany(db.task,
+            {as: 'shipper',foreignKey: 'shipperid'}
+        );
+
+      },
+
       getAllUsers: function() {
         return user.findAll({});
       },
+
+      getAllUsersHasRole: function(role, profile) {
+        return user.findAll({
+          include:[{
+              model: profile
+          }],
+          where: {
+            'userrole': role
+          }
+        });
+      },
+
       findUserByUsername:  function(username){
         return user.findOne({
           where: {
             username: username
           }
-        })
-      }
+        });
+      },
+
+      postOneUser: function(newUser){
+        return user.build(newUser).save();
+      },
+
+      deleteUser: function (users) {
+        return users.destroy()
+      },
+
+      putUser: function(currentUser) {
+        return currentUser.save();
+      },
+
+      getAllShipperWithTask: function(task, profile, order, orderstatus, tasktype, taskstatus) {
+        return user.findAll({
+          include:[{
+            model: task,
+            as:'shipper',
+            include: [
+              {
+              model: order,
+                include: [{model: orderstatus,  attributes: ['statusname']}]
+              },
+              {
+                model: tasktype,
+                attributes: ['typename']
+              },
+              {
+                model: taskstatus,
+                attributes: ['statusname']
+              }
+            ]
+          },{model: profile}],
+          where: {
+            'userrole': 1
+            //'username': 'task.shipperid'
+          }
+        });
+      },
+
+      authenticate: function(plainTextPassword) {
+        if (!plainTextPassword) {
+        } else {
+      //getUser: function(user){
+      //  return users.findOne({
+      //    attributes: ['username','userrole','userstatus'],
+      //    where:{
+      //      'username': user.username,
+      //
+      //    }
+      //  })
+      //}
     }
-  });
+  }
+  }
+
+  })
   return user;
 };
 

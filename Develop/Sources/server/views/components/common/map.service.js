@@ -17,13 +17,11 @@ var icons = {
         'chst=d_map_pin_letter&chld=x|3366FF',
 };
 
-function initShipper(geocoder, maps, shipperMarker) {
-    shipperMarker.order = [];
+function initShipper(geocoder, maps, shipperMarker) {    
     shipperMarker.icon = icons.shipperIcon;
 }
 
-function initStore(geocoder, maps, storeMarker) {
-    storeMarker.order = [];
+function initStore(geocoder, maps, storeMarker) {    
     storeMarker.icon = icons.storeIcon;    
     geocoder.geocode({
         'location': {
@@ -64,6 +62,7 @@ function initCustomer(geocoder, maps, customerMarker, orders) {
 
 
 function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){        
+
     var shipperMarkers = [];
     var storeMarkers = [];
     var customerMarkers = [];
@@ -71,7 +70,8 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
 
     var api = {};
     api.googlemap = uiGmapGoogleMapApi.then(function(maps){         
-        var geocoder = new maps.Geocoder;           
+
+        var geocoder = new maps.Geocoder;
         var distanceService = new maps.DistanceMatrixService;                   
         var directionsService = new maps.DirectionsService;
         
@@ -131,7 +131,8 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     api.getShipperMarkers = function(mode) {      
         // use $http instead          
         // shipperMarkers = sampleData[mode].shipper;        
-        return shipperMarkers;
+        // return shipperMarkers;
+        return sampleData[mode].shipper;
     }
 
     api.containShipper = function(shipper) {
@@ -163,6 +164,11 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         });
     }
 
+    api.updateShipper = function(data) {
+        var shipper = this.getOneShipper(data.shipperID);
+        shipper = _.merge(shipper, data);
+    }
+
 
 
 
@@ -172,7 +178,8 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     api.getStoreMarkers = function(mode) {      
         // use $http instead      
         // storeMarkers = sampleData[mode].store;        
-        return storeMarkers;
+        // return storeMarkers;
+        return sampleData[mode].store;
     };
 
     api.containStore = function(store) {
@@ -197,12 +204,11 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         return d.promise;
     };
 
-    api.getOneStore = function(storeID) {
-        console.log('getOneStore', storeID, storeMarkers);
+    api.getOneStore = function(storeID) {        
         return _.find(storeMarkers, function(store) {
             return store.storeID == storeID;
         });
-    };
+    };    
 
 
 
@@ -213,7 +219,8 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     api.getCustomerMarkers = function(mode) {      
         // use $http instead      
         // customerMarkers = sampleData[mode].customer;        
-        return customerMarkers;
+        // return customerMarkers;
+        return sampleData[mode].customer;
     }        
 
     api.addCustomer = function(customer) {        
@@ -267,19 +274,7 @@ var sampleData = {
                 "latitude": 21.028784,
                 "longitude": 105.826088,
                 "shipperID": "shipper_1",
-                "status": "status 111"                                    
-                /*
-                "markerID"
-                "geoText"
-                "distance"
-                "duration", // client
-
-                "latitude"
-                "longitude"
-                "shipperID"
-                "status"    // server   
-                "socketID"
-                */                
+                "status": "status 111"                                                    
             },
             {
                 "order" : ["order3","order2"],
@@ -314,10 +309,6 @@ var sampleData = {
             {
                 "order" : ["order1","order3"],                
                 "geoText": "Cát Linh,Ba Đình,Hà Nội,Việt Nam"
-
-                /*
-                "geoText"                
-                */
             },
             {
                 "order" : ["order2"],

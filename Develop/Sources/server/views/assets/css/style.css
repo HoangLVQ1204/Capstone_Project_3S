@@ -9442,3 +9442,14 @@ div.col4 {
 div.col5 {
   background: #1B1E24;
 }
+
+.sortable {
+  cursor: pointer;
+}
+
+.st-sort-ascent:after {
+  content: '\25B2';
+}
+.st-sort-descent:after {
+  content: '\25BC';
+}

@@ -11,20 +11,22 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/assets/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="/assets/ico/apple-touch-icon-57-precomposed.png">
     <link rel="shortcut icon" href="/assets/ico/favicon.ico">
-    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/1/daterangepicker-bs3.css" />
+
+
     <!-- CSS Stylesheet-->
     <link type="text/css" rel="stylesheet" href="/assets/css/bootstrap/bootstrap.min.css" />
     <link type="text/css" rel="stylesheet" href="/assets/css/bootstrap/bootstrap-themes.css" />
     <link type="text/css" rel="stylesheet" href="/assets/css/style.css" />
     <link type="text/css" rel="stylesheet" href="/assets/css/karrywell.css" />
     <link type="text/css" rel="stylesheet" href="/assets/css/store.css" />
-
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 
 </head>
 
 <body ng-class="styleBody">
 
 <div ui-view id="wrapper"></div>
+
 
 
 <!-- Jquery Library -->
@@ -38,25 +40,34 @@
 <script src="/assets/plugins/mmenu/jquery.mmenu.js"></script>
 <script src="/assets/js/styleswitch.js"></script>
 
+
+
+
+
 <!-- Library 10+ Form plugins-->
 <script src="/assets/plugins/form/form.js"></script>
+<script src="/assets/js/moment.min.js"></script>
 <!-- Datetime plugins -->
 <script src="/assets/plugins/datetime/datetime.js"></script>
 <!-- Library Chart-->
-<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/2.9.0/moment.min.js"></script>
-<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/1/daterangepicker.js"></script>
+<!-- Include Date Range Picker -->
+
 <script src="/assets/plugins/chart/chart.js"></script>
 <!-- Library  5+ plugins for bootstrap -->
 <script src="/assets/plugins/pluginsForBS/pluginsForBS.js"></script>
 <!-- Library 10+ miscellaneous plugins -->
 <script src="/assets/plugins/miscellaneous/miscellaneous.js"></script>
 <!-- Library Themes Customize-->
+
 <script src="/assets/js/caplet.custom.js"></script>
+
 
 <!-- Karry plugins -->
 <script src="/assets/js/lodash.min.js"></script>
 <!--<script src="/libs/socket.io-client/lib/socket.js"></script>-->
 <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+
+
 
 <!--<script src="/libs/jquery/dist/jquery.min.js"></script>-->
 <script src="/libs/angular/angular.min.js"></script>
@@ -86,6 +97,12 @@
 
 <script src="/components/map/map.controller.js"></script>
 <script src="/components/map/map.directive.js"></script>
+
+<script src="/components/adminStoreList/adminStoreList.controller.js"></script>
+<script src="/components/adminStoreList/adminStoreList.directive.js"></script>
+
+<script src="/components/adminAssignTask/adminAssignTask.controller.js"></script>
+<script src="/components/adminAssignTask/adminAssignTask.directive.js"></script>
 
 <script src="/components/store/store.controller.js"></script>
 <script src="/components/store/store.directive.js"></script>

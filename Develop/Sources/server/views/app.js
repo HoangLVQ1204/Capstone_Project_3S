@@ -7,8 +7,9 @@ angular.module('app', [
     'ui.router',
     'angular-jwt',
     'nemLogging',
-    'uiGmapgoogle-maps'
-]).constant("config",{
+    'uiGmapgoogle-maps',
+	'smart-table'
+]).constant("config",{		
 
     role: {
         shipper: 1,
@@ -18,8 +19,8 @@ angular.module('app', [
 
 }).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider,uiGmapGoogleMapApiProvider,config){
 
-    // Set up Routes
-	$urlRouterProvider.otherwise('/admin');
+     //Set up Routes
+	$urlRouterProvider.otherwise('/admin/map');
 
     $stateProvider
         .state('login',{
@@ -35,7 +36,30 @@ angular.module('app', [
         })
         .state('admin.map',{
             url: '/map',
-            template: '<map></map>',
+            template: '<map style="margin-top: 10px" shipper-markers="shippers" store-markers="stores" customer-markers="customers" orders="orders"></map>',
+            access: config.role.admin,
+            controller: function($scope, $rootScope, mapService) {
+                setTimeout(function() {                    
+                    $rootScope.$apply(function() {
+                        var mode = "all";
+                        console.log(mode);
+
+                        $scope.shippers = mapService.getShipperMarkers(mode);
+                        $scope.stores = mapService.getStoreMarkers(mode);
+                        $scope.customers = mapService.getCustomerMarkers(mode);
+                        $scope.orders = mapService.getOrders(mode);
+                    });                    
+                }, 5000);
+            }
+        })
+        .state('admin.storeList',{
+            url: '/storeList',
+            template: '<admin-store-list></admin-store-list>',
+            access: config.role.admin
+        })
+        .state('admin.assignTask',{
+            url: '/assignTask',
+            template: '<admin-assign-task></admin-assign-task>',
             access: config.role.admin
         })
         .state('store',{
@@ -83,7 +107,7 @@ angular.module('app', [
 
             if(!authService.isRightRole(toState.access)){
                 console.log('This page is denied');
-                //TODO: Chuyển về trang warning
+                //TODO: Chuyển v�? trang warning
             }
 
 

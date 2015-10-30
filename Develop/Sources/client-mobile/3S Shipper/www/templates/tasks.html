@@ -14,12 +14,10 @@
                   </div>
                   <div>
                     <h2>{{order.orderid}}</h2>
-                    <!--waiting-->
-                    <p ng-show="{{order.statusid == 1}}" class="statusWt label">{{order.statusname}}</p>
-                    <!--Picking & Bring to stock-->
-                    <p ng-show="{{order.statusid == 2 || order.statusid == 3}}" class="statusDn label">{{order.statusname}}</p>
-                    <!--Pending order, returning to stock-->
-                    <p ng-show="{{order.statusid == 6}}" class="statusPd label">{{order.statusname}}</p>
+                    <!--Inactive-->
+                    <p ng-show="{{order.taskstatus == 1}}" class="statusPd label">Inactive</p>
+                    <!--Actived-->
+                    <p ng-show="{{order.taskstatus == 2}}" class="statusDn label">Actived</p>
                     <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
                     <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
                   </div>
@@ -41,12 +39,10 @@
                   </div>
                   <div>
                     <h2>{{order.orderid}}</h2>
-                    <!--Delivering-->
-                    <p ng-show="{{order.statusid == 5}}" class="statusDn label">{{order.statusname}}</p>
-                    <!--Returning to stock-->
-                    <p ng-show="{{order.statusid == 6}}" class="statusPd label">{{order.statusname}}</p>
-                    <!--Returning to store-->
-                    <p ng-show="{{order.statusid == 7}}" class="statusPd label">{{order.statusname}}</p>
+                    <!--Inactive-->
+                    <p ng-show="{{order.taskstatus == 1}}" class="statusPd label">Inactive</p>
+                    <!--Actived-->
+                    <p ng-show="{{order.taskstatus == 2}}" class="statusDn label">Actived</p>
                     <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
                     <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
                   </div>
@@ -62,28 +58,45 @@
           <ion-content>
             <ion-list>
               <ion-item class="item-icon-right" ng-repeat="order in expressTasks" type="item-text-wrap" href="#/app/detail/{{order.orderid}}">
-               <div class="titleContent">
+               <div class="titleContent" style="min-height: 80px;">
                  <div>
                    <img src="img/storeprofile.png"/>
                  </div>
                  <div>
                    <h2>{{order.orderid}}</h2>
-                   <!--waiting-->
-                   <p ng-show="{{order.statusid == 1}}" class="statusWt label">{{order.statusname}}</p>
-                   <!--Picking -->
-                   <p ng-show="{{order.statusid == 2 || order.statusid == 3}}" class="statusWt label">{{order.statusname}}</p>
-                   <!--Delivering-->
-                   <p ng-show="{{order.statusid == 5}}" class="statusDn label">{{order.statusname}}</p>
-                   <!--Returning to stock-->
-                   <p ng-show="{{order.statusid == 6}}" class="statusPd label">{{order.statusname}}</p>
-                   <!--Returning to store-->
-                   <p ng-show="{{order.statusid == 7}}" class="statusPd label">{{order.statusname}}</p>
-                   <!--Done-->
-                   <p ng-show="{{order.statusid == 8}}" class="statusDn label">{{order.statusname}}</p>
+                   <!--Inactive-->
+                   <p ng-show="{{order.taskstatus == 1}}" class="statusPd label">Inactive</p>
+                   <!--Actived-->
+                   <p ng-show="{{order.taskstatus == 2}}" class="statusDn label">Actived</p>
                    <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
                    <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
                  </div>
                </div>
+                <i class="icon ion-chevron-right icon-accessory"></i>
+              </ion-item>
+            </ion-list>
+          </ion-content>
+        </ion-pane>
+      </ion-tab>
+      <ion-tab title="Return" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart"  badge="badgeCountReturn" badge-style="badge-assertive" on-select="tabSelected('express')">
+        <ion-pane>
+          <ion-content>
+            <ion-list>
+              <ion-item class="item-icon-right" ng-repeat="order in returnTasks" type="item-text-wrap" href="#/app/detail/{{order.orderid}}">
+                <div class="titleContent" style="min-height: 80px;">
+                  <div>
+                    <img src="img/storeprofile.png"/>
+                  </div>
+                  <div>
+                    <h2>{{order.orderid}}</h2>
+                    <!--Inactive-->
+                    <p ng-show="{{order.taskstatus == 1}}" class="statusPd label">Inactive</p>
+                    <!--Actived-->
+                    <p ng-show="{{order.taskstatus == 2}}" class="statusDn label">Actived</p>
+                    <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
+                    <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
+                  </div>
+                </div>
                 <i class="icon ion-chevron-right icon-accessory"></i>
               </ion-item>
             </ion-list>

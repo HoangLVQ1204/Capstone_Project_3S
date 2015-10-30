@@ -20,44 +20,38 @@ function socketStore($q,socketService,authService,mapService){
         api.selectShipper(shipper, {});
     });
 
+    socketService.on('store:update:location', function(data) {
+        mapService.updateShipper(data); 
+    });
+
     api.getCurrentUser = function() {
-        var currentUser = authService.getCurrentInfoUser();
-        
-        var d = $q.defer();
+        var currentUser = authService.getCurrentInfoUser();        
+        // TODO: Change later
+        currentUser.latitude = 21.028784;
+        currentUser.longitude = 105.826088;
 
-        navigator.geolocation.getCurrentPosition(function(position){
-            // if (currentLocation
-            //     && Math.abs(currentLocation.latitude - position.coords.latitude) <= EPSILON
-            //     && Math.abs(currentLocation.longitude - position.coords.longitude) <= EPSILON) {
-            //     console.log('the same location');
-            //     return;
-            // }
-            // console.log('different location');
-            var dataStore = {
-                storeID: currentUser.stores[0],
-                ownStore: currentUser.username            
-            };
-            currentLocation = position.coords;
-            dataStore.latitude = position.coords.latitude;
-            dataStore.longitude = position.coords.longitude;
-
-            d.resolve(dataStore);
-        },function(){
-            d.reject("Can't get your current location! Please check your connection");            
-        });
-        return d.promise;
+        var dataStore = {
+            storeID: currentUser.stores[0],
+            latitude: currentUser.latitude,
+            longitude: currentUser.longitude              
+        };
+        return dataStore;
     };
 
     api.registerSocket = function(){
-        api.getCurrentUser()
-        .then(function(user) {
-            mapService.addStore(user)
-            .then(function() {
-                socketService.emit("store:register:location",user);
-            });            
-        },function(){
-            alert("Can't get your current location! Please check your connection");
-        });            
+        var user = api.getCurrentUser();
+        mapService.addStore(user)
+        .then(function() {                
+            socketService.sendPacket(
+            { 
+                clientID: user.storeID 
+            },
+            'server',
+            {
+                store: user
+            },
+            'store:register:location');
+        });
     };
     
     api.findShipper = function() {                
