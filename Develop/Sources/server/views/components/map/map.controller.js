@@ -111,7 +111,8 @@ function displayRelationship(model, object_1, object_2, $scope) {
 }
 
 // RUN ORDER: controller => link function   
-function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){     
+function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
+
     $scope.shipperMarkers = $scope.shipperMarkers || [];
     $scope.storeMarkers = $scope.storeMarkers || [];
     $scope.customerMarkers = $scope.customerMarkers || [];
@@ -120,8 +121,8 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
     $scope.circleRadius = $scope.circleRadius || 1000000000;
 
     var initCenter = {
-        latitude: 21.029544,
-        longitude: 105.827340
+        latitude: 21.013419,
+        longitude: 105.526180
     }
 
     $scope.center = $scope.center || initCenter;

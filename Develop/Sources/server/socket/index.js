@@ -27,7 +27,8 @@ module.exports = function(server){
         console.log("have connection in Server");
 
         socket.on("store:register:location",function(data){                    
-            console.log(data);            
+            //console.log(data);
+
             io.listStore[socket.id] = data;
             socket.emit("store:register:location",true);                        
 
@@ -38,13 +39,13 @@ module.exports = function(server){
         })
 
         socket.on("admin:register:location",function(data){
-            console.log(data);                        
+            //console.log(data);
             socket.emit("admin:register:location",true);                                
             require('./socketAdmin')(socket, io);
         })
 
         socket.on("shipper:register:location",function(data){
-            console.log(data);                        
+            //console.log(data);
             io.listShipper[socket.id] = data;
             socket.emit("shipper:register:location",true);
 
@@ -53,7 +54,6 @@ module.exports = function(server){
 
             require('./socketShipper')(socket, io);
         })
-
 
     })
 

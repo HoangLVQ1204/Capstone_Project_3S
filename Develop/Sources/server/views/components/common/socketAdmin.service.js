@@ -9,6 +9,7 @@ function socketAdmin(socketService,authService,mapService){
 
     var currentLocation = null;    
     var api = {};
+
     /*
         add handlers
     */
@@ -71,17 +72,9 @@ function socketAdmin(socketService,authService,mapService){
             var dataAdmin = {
                 username: currentUser.username
             };
-            // if (currentLocation
-            //     && Math.abs(currentLocation.latitude - position.coords.latitude) <= EPSILON
-            //     && Math.abs(currentLocation.longitude - position.coords.longitude) <= EPSILON) {
-            //     console.log('the same location');
-            //     return;
-            // }
-            // console.log('different location');
             currentLocation = position.coords;
             dataAdmin.latitude = position.coords.latitude;
             dataAdmin.longitude = position.coords.longitude;
-
             socketService.emit("admin:register:location",dataAdmin);            
         },function(){
             alert("Can't get your current location! Please check your connection");

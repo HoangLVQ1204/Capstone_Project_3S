@@ -64,6 +64,7 @@ function initCustomer(geocoder, maps, customerMarker, orders) {
 
 
 function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){        
+
     var shipperMarkers = [];
     var storeMarkers = [];
     var customerMarkers = [];
@@ -71,7 +72,8 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
 
     var api = {};
     api.googlemap = uiGmapGoogleMapApi.then(function(maps){         
-        var geocoder = new maps.Geocoder;           
+
+        var geocoder = new maps.Geocoder;
         var distanceService = new maps.DistanceMatrixService;                   
         var directionsService = new maps.DirectionsService;
         

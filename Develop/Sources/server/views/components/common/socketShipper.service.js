@@ -79,7 +79,6 @@ function socketShipper($q,socketService,authService,mapService) {
         });            
     };
 
-
     return api; 
 }
 

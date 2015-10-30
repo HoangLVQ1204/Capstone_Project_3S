@@ -33,9 +33,24 @@ angular.module('app', [
             access: config.role.admin
 
         })
+        //.state('admin.map',{
+        //    url: '/map',
+        //    template: '<map></map>',
+        //    access: config.role.admin
+        //})
         .state('admin.map',{
             url: '/map',
-            template: '<map></map>',
+            template: '<map style="margin-top: 10px" shipper-markers="shippers" store-markers="stores" customer-markers="customers" orders="orders"></map>',
+            controller: function($scope,mapService) {
+
+                // mode in ["all", "shipper", "store", "orderdetail"]
+                var mode = "all";
+
+                $scope.shippers = mapService.getShipperMarkers(mode);
+                $scope.stores = mapService.getStoreMarkers(mode);
+                $scope.customers = mapService.getCustomerMarkers(mode);
+                $scope.orders = mapService.getOrders(mode);
+            },
             access: config.role.admin
         })
         .state('store',{
@@ -46,7 +61,18 @@ angular.module('app', [
         })
         //.state('store.map',{
         //    url: '/map',
-        //    template: '<map></map>'
+        //    template: '<map style="margin-top: 10px" shipper-markers="shippers" store-markers="stores" customer-markers="customers" orders="orders"></map>',
+        //    controller: function($scope,mapService) {
+        //
+        //        // mode in ["all", "shipper", "store", "orderdetail"]
+        //        var mode = "store";
+        //
+        //        $scope.shippers = mapService.getShipperMarkers(mode);
+        //        $scope.stores = mapService.getStoreMarkers(mode);
+        //        $scope.customers = mapService.getCustomerMarkers(mode);
+        //        $scope.orders = mapService.getOrders(mode);
+        //    },
+        //    access: config.role.store
         //})
         //.state('store.dashboard',{
         //    url: '/dashboard',
