@@ -141,8 +141,8 @@ taskID int PRIMARY KEY,
 orderID varchar(8) REFERENCES "order"(orderID),
 shipperID varchar(20) REFERENCES "user"(username),
 adminID varchar(20) REFERENCES "user"(username),
-taskstatus int REFERENCES TaskStatus(statusID),
-tasktype int REFERENCES TaskType(typeID),
+statusID int REFERENCES TaskStatus(statusID),
+typeID int REFERENCES TaskType(typeID),
 taskDate date
 );
 
