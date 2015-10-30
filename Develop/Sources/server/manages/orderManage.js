@@ -8,7 +8,9 @@ module.exports = function (app) {
 
     var params = function (req, res, next, order_id) {
         var OrderStatus = db.orderstatus;
-        return db.order.storeGetOneOrder(OrderStatus,order_id)
+        var goods = db.goods;
+        var confirmCode = db.confirmationcode;
+        return db.order.storeGetOneOrder(OrderStatus,goods,confirmCode,order_id)
             .then(function (order) {
                 if (order) {
                     req.orderRs = order;
@@ -26,11 +28,6 @@ module.exports = function (app) {
     var getAllOrder = function (req, res, next) {
         var orderStatus = db.orderstatus;
         var order = db.order;
-        order.belongsTo(orderStatus, {
-            foreignKey: {
-                name: 'statusid'
-            }
-        });
         var storeid = 'str1';
         return order.storeGetAllOrders(orderStatus, storeid)
             .then(function (orders) {
@@ -128,8 +125,37 @@ module.exports = function (app) {
             })
     };
     var getOne = function (req, res, next) {
+        //var listOrders = [];
+        //var statusname = '';
+        //var deliveryaddress = '';
+        //var recipientname = '';
+        //var recipientphone = '';
+        //var donedate = '';
+        //var createdate = '';
+        //var cod = 0;
+        //var fee = 0;
+        //console.log(req.orderRs['orderid']);
+        //var order = {
+        //    orderid : req.orderRs['orderid'],
+        //    deliveryaddress : req.orderRs['deliveryaddress'],
+        //    recipientname : req.orderRs['recipientname'],
+        //    recipientphone : req.orderRs['recipientphone'],
+        //    statusid : req.orderRs['statusid'],
+        //    isdraff : req.orderRs['isdraff'],
+        //    iscancel : req.orderRs['iscancel'],
+        //    ispending : req.orderRs['ispending'],
+        //    cod : req.orderRs['cod'],
+        //    fee : req.orderRs['fee'],
+        //    donedate : req.orderRs['donedate'],
+        //    createdate : req.orderRs['createdate'],
+        //    statusname : req.orderRs['orderstatus'].statusname
+        //};
+        //
+        //var rs =  req.orderRs['goods'];
+        //_.each(rs, function(item) {
+        //    console.log(item.dataValues.goodsid);
+        //});
         res.status(200).json(req.orderRs);
-
     };
 
     var post = function (req, res, next) {
@@ -170,28 +196,31 @@ module.exports = function (app) {
         req.orderRs = req.orderRs.toJSON();
         db.goods.deleteGood(req.orderRs.orderid);
         db.confirmationcode.deleteConfirmCode(req.orderRs.orderid);
-            //.then(function(abc) {
-            //    res.status(200);
-            //}, function(err) {
-            //    next(err);
-            //});
+        //.then(function(abc) {
+        //    res.status(200);
+        //}, function(err) {
+        //    next(err);
+        //});
         db.order.deleteDraffOrder(req.orderRs.orderid);
-            //.then(function() {
-            //    res.status(200);
-            //}, function(err) {
-            //    next(err);
-            //});
+        //.then(function() {
+        //    res.status(200);
+        //}, function(err) {
+        //    next(err);
+        //});
     };
 
     var putDraff = function(req, res, next){
-        console.log(req.body.orderid);
-        db.order.submitDraffOrder(req.body.orderid)
-            .then(function(){
-                res.sendStatus(200);
-            }, function(err) {
-                next(err);
-            });
-    }
+        db.order.submitDraffOrder(req.body.orderid);
+        //.then(function(){
+        //    res.sendStatus(200);
+        //}, function(err) {
+        //    next(err);
+        //});
+    };
+
+    var cancelOrder = function (req, res, next) {
+        db.order.cancelOrder(req.body.orderid, req.body.statusid);
+    };
 
 
     return {
@@ -202,5 +231,6 @@ module.exports = function (app) {
         put : put,
         deleteOrder : deleteOrder,
         putDraff : putDraff,
+        cancelOrder: cancelOrder,
     }
 }

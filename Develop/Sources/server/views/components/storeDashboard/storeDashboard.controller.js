@@ -84,33 +84,49 @@ function storeDashboardController($scope,$state,dataService, $http){
                 console.log('Unable to load customer data: ' + error);
             });
     }
-
-    $scope.deleteDraffOrder = function (orderID) {
-        var urlBase = 'http://localhost:3000/orders/'+ orderID;
+    $scope.Order = {};
+    $scope.statusid = '7';
+    $scope.setOrder = function(order){
+        $scope.Order = order;
+    };
+    $scope.deleteDraffOrder = function () {
+        var urlBase = 'http://localhost:3000/orders/'+ $scope.Order.orderid;
         dataService.deleteDataServer(urlBase);
+        var index =  $scope.displayedCollectionDraff.indexOf( $scope.Order);
+        if (index !== -1) {
+            $scope.displayedCollectionDraff.splice(index, 1);
+        }
 
-    }
-    //
-    //for(var i = 0; i < $scope.listDraff.length; i++){
-    //    if ($scope.listDraff[i].orderid == orderID ){
-    //        dataService.putDataServer(urlBase,$scope.listDraff[i]);
-    //    }
-    //}
-    $scope.submitDraff = function (orderID) {
+    };
+
+    $scope.submitDraff = function (order) {
         var urlBase = 'http://localhost:3000/orders/putdraff';
         for(var i = 0; i < $scope.listDraff.length; i++){
-            if ($scope.listDraff[i].orderid == orderID ){
+            if ($scope.listDraff[i].orderid == order.orderid){
                 dataService.postDataServer(urlBase,$scope.listDraff[i]);
+                var index =  $scope.displayedCollectionDraff.indexOf(order);
+                if (index !== -1) {
+                    $scope.displayedCollectionDraff.splice(index, 1);
+                }
             }
         }
     };
 
+    $scope.cancerOrder = function(){
+        var urlBase = 'http://localhost:3000/orders/cancel';
+        var cancelOrderInfo = {orderid:$scope.Order.orderid, statusid : $scope.statusid};
+        console.log(cancelOrderInfo);
+        dataService.postDataServer(urlBase,cancelOrderInfo);
+        var index =  $scope.displayedCollectionInprocess.indexOf( $scope.Order);
+        if (index !== -1) {
+            $scope.displayedCollectionInprocess.splice(index, 1);
+        }
+    };
+
+
     $scope.$watch('$viewContentLoaded', function(event) {
-
         caplet();
-
     });
-
 
 }
 

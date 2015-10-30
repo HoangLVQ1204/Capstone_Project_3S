@@ -5,7 +5,6 @@ var path           = require('path');
 var express        = require('express');
 var logger         = require('./util/logger');
 var config         = require('./config/config');
-
 var models         = require('./entities');
 var cors           = require('cors'); // Allow Cross-Origin Resource Sharing (to call API)
 
@@ -13,7 +12,6 @@ var cors           = require('cors'); // Allow Cross-Origin Resource Sharing (to
 
 var app = express();
 var server = require('http').Server(app);
-
 
 
 // setup middleware
@@ -26,11 +24,17 @@ app.use(bodyParser.json());
 app.use(methodOverride());
 app.use(cors());
 
-
 // setup routes
 require('./routes')(app);
 
+// setup socket
+require('./socket')(server);
 
+// seed the database
+if (config.seed) {
+    console.log("xxx");
+    require('./util/seedDB')(app);
+}
 
 // setup global error handler
 app.use(function (err, req, res, next) {

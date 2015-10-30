@@ -59,14 +59,16 @@ angular.module('app', [
         //    url: '/map',
         //    template: '<map></map>'
         //})
-        //.state('store.dashboard',{
-        //    url: '/dashboard',
-        //    template: '<store-dashboard></store-dashboard>'
-        //})
-        //.state('store.order',{
-        //    url: '/order',
-        //    template: '<store-order></store-order>'
-        //})
+        .state('store.dashboard',{
+            url: '/dashboard',
+            template: '<store-dashboard></store-dashboard>',
+            access: config.role.store
+        })
+        .state('store.order',{
+            url: '/order',
+            template: '<store-order></store-order>',
+            access: config.role.store
+        })
 
     jwtInterceptorProvider.tokenGetter = function(){
         return localStorage.getItem('EHID');

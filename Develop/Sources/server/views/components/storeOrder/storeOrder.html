@@ -10,7 +10,7 @@
 
         <div class="row">
 
-            <div class="col-lg-7">
+            <div class="col-lg-8">
                 <h1><strong>Create</strong> Order</h1>
                 <br>
 
@@ -40,7 +40,7 @@
                                     <label class="control-label">Phone</label>
                                     <input ng-model="order.recipientphone" type="text" class="form-control"
                                            parsley-type="phone"
-                                            placeholder="(XXX) XXXX XXX">
+                                           placeholder="(XXX) XXXX XXX">
                                 </div>
                             </div>
 
@@ -96,16 +96,14 @@
                         <div class="tab-pane fade" id="step2" parsley-validate parsley-bind>
                             <h3>Order information</h3> <hr>
                             <div>
-                                <section >
-                                    <!--<header class="panel-heading">-->
-                                        <!--<h2><strong>Table</strong> hover </h2>-->
-                                        <!--<label class="color">Bootstrap Class<em><strong> table-hover</strong></em></label>-->
-                                    <!--</header>-->
+                                <section class = "panel">
+                                    <label  class="fullWidth color">List goods</em></label>
                                     <div>
                                         <table class="table table-hover table-bordered">
                                             <thead>
                                             <tr>
                                                 <th>#</th>
+                                                <th>ID</th>
                                                 <th>Name</th>
                                                 <th>Amount</th>
                                                 <th>Weight</th>
@@ -119,6 +117,7 @@
                                             <tbody align="center">
                                             <tr ng-repeat="x in goods">
                                                 <td>{{$index+1}}</td>
+                                                <td>{{x.goodID}}</td>
                                                 <td>{{x.goodname}}</td>
                                                 <td>{{x.amount}}</td>
                                                 <td>{{x.weight}}</td>
@@ -126,8 +125,8 @@
                                                 <td>{{x.widthsize}}</td>
                                                 <td>{{x.heightsize}}</td>
                                                 <td>{{x.description}}</td>
-                                                <td width="17%"><span class=" tooltip-area">
-                                                    <a href="javascript:void(0)" class="btn btn-default btn-sm"
+                                                <td width="15%"><span class=" tooltip-area">
+                                                    <a ng-click="setGood(x)" href="javascript:void(0)" class="btn btn-default btn-sm" data-toggle="modal" data-target="#md-edit-good"
                                                        title="Edit"><i class="fa fa-edit (alias)"></i></a>
                                                     <a ng-click="deleteGood($index)" href="javascript:void(0)" class="btn btn-default btn-sm"
                                                        title="Delete"><i class="fa fa-times"></i></a>
@@ -136,9 +135,9 @@
                                             </tbody>
                                             <tfoot>
                                             <tr>
-                                                <td colspan="9" class="text-left">
-                                                    <div  class="col-md-12 btn-group btn-group-xs color">
-                                                        <button type="button" class=" btn btn-block btn-default" data-toggle="modal" data-target="#md-header-color"><i class="fa fa-plus"></i></button>
+                                                <td colspan="10" class="text-left">
+                                                    <div  class="col-sm-12 col-lg-12 btn-group btn-group-xs color">
+                                                        <button type="button" class=" btn btn-block color" data-toggle="modal" data-target="#md-header-color"><i class="fa fa-plus"></i></button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -147,11 +146,18 @@
                                     </div>
                                 </section>
                             </div>
+                            <label  class="fullWidth color">Delivery type</strong></em></label>
                             <div class="form-group row">
                                 <div class="col-md-6">
                                     <div data-color="red">
-                                        <input id="disElementCb" type="checkbox" name="express" onchange="toggleStatus()">
+                                        <input ng-model="order.ordertypeid" type="radio" name="somethign" value="2" />
                                         <label>Express</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div data-color="red">
+                                        <input ng-model="order.ordertypeid" type="radio" name="somethign" value="1" />
+                                        <label>Normal</label>
                                     </div>
                                 </div>
                             </div>
@@ -159,14 +165,14 @@
                                 <div class="col-md-6">
                                     <div data-color="red">
                                         <input id="enElementCb"  type="checkbox" name="cod" onchange="toggleStatus()">
-                                        <label> Cash on delivery </label>
+                                        <label> Cash on delivery (COD) </label>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-6" id="elementsToEn">
-                                    <label class="control-label">Amount</label>
-                                    <input type="text" class="form-control"
+                                    <label class="control-label">Amount of COD</label>
+                                    <input ng-model="order.cod" type="text" class="form-control"
                                            parsley-rangelength="[5,15]"
                                            placeholder="Unit: Vietnam dong" disabled>
                                 </div>
@@ -194,22 +200,22 @@
                             <div class="form-group row">
                                 <div class="col-md-6">
                                     <label class="control-label">Store</label>
-                                    <select class="selectpicker form-control">
-                                        <option value="kfc1">KFC1</option>
-                                        <option value="kfc2">KFC2</option>
-                                        <option value="kfc3">KFC3</option>
+                                    <select ng-model="storeid" class="selectpicker form-control">
+                                        <option value="str1">KFC1</option>
+                                        <option value="str2">KFC2</option>
+                                        <option value="str3">KFC3</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="control-label">Phone</label>
-                                    <input type="text" ng-model="order.recipientphone" class="form-control"
+                                    <input type="text" ng-model="order.pickupaddress" class="form-control"
                                            parsley-rangelength="[5,15]"
                                            placeholder="Your store phone munber">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label">Address</label>
-                                    <textarea ng-model="order.deliveryaddress" class="form-control"
+                                    <textarea ng-model="order.pickupaddress" class="form-control"
                                               parsley-trigger="keyup" rows="1"
                                               placeholder="Enter customer address"></textarea>
                             </div>
@@ -241,12 +247,12 @@
 
 
             </div>
-            <!-- //content > row > col-lg-12 -->
+
             <!--
-                            ////////////////////////////////////////////////////////////////////////////
-                            //////////     MODAL HEADER  COLOR    //////////
-                            /////////////////////////////////////////////////////////////////////////
-                            -->
+            ////////////////////////////////////////////////////////////////////////////
+            //////////     MODAL ADD GOODS   //////////
+            /////////////////////////////////////////////////////////////////////////
+            -->
             <div id="md-header-color" class="modal fade" data-header-color="#736086">
                 <div class="modal-header bg-inverse bd-inverse-darken">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
@@ -303,48 +309,105 @@
                     <button type="button" data-dismiss="modal" class="btn btn-inverse">Close</button>
                     <button type="submit" ng-click="addGood()" class="btn btn-theme" >Add</button>
                 </div>
-                                   <!-- //modal-footer-->
+                <!-- //modal-footer-->
             </div>
             <!-- //modal-->
-
+            <!--
+           ////////////////////////////////////////////////////////////////////////////
+           //////////     MODAL EDIT GOODS   //////////
+           /////////////////////////////////////////////////////////////////////////
+                       -->
+            <div id="md-edit-good" class="modal fade" data-header-color="#736086">
+                <div class="modal-header bg-inverse bd-inverse-darken">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
+                            class="fa fa-times"></i></button>
+                    <h4 class="modal-title">Edit good: {{good.goodID}}</h4>
+                </div>
+                <!-- //modal-header-->
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label class="control-label">Goods</label>
+                            <input type="text" class="form-control"
+                                   parsley-rangelength="[5,15]"
+                                   placeholder="Good name" ng-model="good.goodname">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control-label">Amount</label>
+                            <input type="text" class="form-control " parsley-min="0" placeholder="0" ng-model="good.amount">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <label class="control-label">Weight</label>
+                            <input type="text" class="form-control"
+                                   parsley-min="0"
+                                   placeholder="Gram" ng-model="good.weight">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control-label">Length</label>
+                            <input type="text" class="form-control"
+                                   parsley-min="0"
+                                   placeholder="mm" ng-model="good.lengthsize">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control-label">Width</label>
+                            <input type="text" class="form-control"
+                                   parsley-min="0"
+                                   placeholder="mm" ng-model="good.widthsize">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control-label">High</label>
+                            <input type="text" class="form-control"
+                                   parsley-min="0"
+                                   placeholder="mm" ng-model="good.heightsize">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Good description</label>
+                        <input type="text" class="form-control" parsley-min="0" placeholder="" ng-model="good.description">
+                    </div>
+                </div>
+                <!-- //modal-body-->
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-inverse">Close</button>
+                    <button type="submit" ng-click="editGood()" data-dismiss="modal" class="btn btn-theme" >Save</button>
+                </div>
+                <!-- //modal-footer-->
+            </div>
+            <!-- //modal-->
 
             <!--/////////////////////////////////////
                //////     Addition Information  ////
                ////////////////////////////////////-->
-            <div class="column col-lg-5">
+            <div class="column col-lg-4">
                 <div class=""><br><br><br>
 
                     <div class="panel">
                         <div class="panel-heading"><h3><strong>Additional</strong> Information </h3></div>
                         <div class="panel-body">
                             <div class="form-group">
-                                <div class="col-md-8 align-lg-right">
-                                    <label class="control-label"><h4>Code for shiper</h4></label>
-                                </div>
-                                <label class="control-label col-md-4">3@D1</label>
+                                <label class="control-label col-md-7 align-lg-left">Code for shiper</label>
+                                <label  class="control-label col-md-5">3@D1</label>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-8 align-lg-right">
-                                    <label class="control-label"><h4>Code for customer</h4></label>
-                                </div>
-                                <label class="control-label col-md-4">D4$2</label>
+                                <label class="control-label col-md-7 align-lg-left">Code for customer</label>
+                                <label class="control-label col-md-5">D4$2</label>
                             </div>
+                            <label></label>
                             <div>
-                                <label>
-                                    <hr>
-                                </label>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-8 align-lg-right">Cash on delivery:</label>
-                                <label class="control-label col-md-4">0d</label>
+                                <label class="control-label col-md-7 align-lg-left">Cash on delivery:</label>
+                                <label  class="control-label col-md-5">{{order.cod}}VND</label>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-8 align-lg-right">Ship fee:</label>
-                                <label class="control-label col-md-4">0d</label>
+                                <label class="control-label col-md-7 align-lg-left">Ship fee:</label>
+                                <label class="control-label col-md-5">0VND</label>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-8 align-lg-right">Total:</label>
-                                <label class="control-label col-md-4">0d</label>
+                                <label class="control-label col-md-7 align-lg-left">Total:</label>
+                                <label class="control-label col-md-5">0VND</label>
                             </div>
                         </div>
                     </div>

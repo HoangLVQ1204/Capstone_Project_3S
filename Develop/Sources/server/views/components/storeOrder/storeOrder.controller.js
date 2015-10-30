@@ -1,11 +1,15 @@
 /**
- * Created by hoanglvq on 9/22/15.
+ * Created by khanhkc on 9/22/15.
  */
 
 function storeOrderController($scope, $state, dataService) {
+
+    var Date = new Date().getDate();
+    console.log(Date);
+
     $scope.order={
         storeid: '',
-        ordertypeid: '',
+        ordertypeid: "2",
         pickupaddress: '',
         deliveryaddress: '',
         pickupdate: '',
@@ -17,9 +21,9 @@ function storeOrderController($scope, $state, dataService) {
         ispending: 'false',
         isdraff: '',
         fee: '',
-        cod: ''
+        cod: 0
     };
-    $scope.good={stt:1};
+    $scope.good={goodID:0};
     $scope.goods =[];
 
     $scope.$watch('$viewContentLoaded', function (event) {
@@ -102,13 +106,17 @@ function storeOrderController($scope, $state, dataService) {
     });
     //getDataFromServer();
 
+    $scope.setGood = function(good){
+        $scope.good = good;
+    };
 
+    $scope.editGood = function(){
+        $scope.good = {goodID:$scope.good.goodID};
+    }
     $scope.addGood = function(){
-       if($scope.good.goodname != ''){
-           $scope.goods.push($scope.good);
-           $scope.good = {};
-           $scope.good.stt = $scope.goods.length +1;
-        }
+        $scope.goods.push($scope.good);
+        $scope.good.goodID++;
+        $scope.good = {goodID:$scope.good.goodID};
     };
     $scope.deleteGood = function(goodID){
         $scope.goods.splice(goodID,1);

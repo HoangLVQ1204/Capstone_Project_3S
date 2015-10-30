@@ -28,7 +28,7 @@
                         <ul class="nav nav-tabs">
                             <li class="active"><a data-toggle="tab" href="#sectionA">In process</a></li>
                             <li><a data-toggle="tab" href="#sectionB">Done</a></li>
-                            <li><a data-toggle="tab" href="#sectionC">Draft</a></li>
+                            <li ><a data-toggle="tab" href="#sectionC">Draft</a></li>
                             <li><a data-toggle="tab" href="#sectionD">Issue</a></li>
 
                         </ul>
@@ -115,9 +115,9 @@
                                                     <td> {{x.statusname}}</td>
                                                     <td width="16%">
                                                         <span class=" tooltip-area">
-                                                    <a href="javascript:void(0)" class="btn btn-default btn-sm"
+                                                    <a class="btn btn-default btn-sm"
                                                        title="Edit"><i class="fa fa-edit (alias)"></i></a>
-                                                    <a href="javascript:void(0)" class="btn btn-default btn-sm"
+                                                    <a ng-click="setOrder(x)" data-toggle="modal" data-target="#md-cancel-order" class="btn btn-default btn-sm"
                                                        title="Cancel"><i class="fa fa-times"></i></a>
                                                     </span>
                                                     </td>
@@ -136,6 +136,50 @@
                                     </div>
                                 </section>
                             </div>
+
+                            <!--
+                            ////////////////////////////////////////////////
+                            //////////     MODAL CANCER ORDER  //////////
+                            ///////////////////////////////////////////////////
+                            -->
+                            <div id="md-cancel-order" class="modal fade" data-header-color="#736086">
+                                <div class="modal-header bg-inverse bd-inverse-darken">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
+                                            class="fa fa-times"></i></button>
+                                    <h4 class="modal-title">Cancel Order</h4>
+                                </div>
+                                <!-- //modal-header-->
+                                <div class="modal-body">
+                                    <div class="form-group column">
+                                        <div >
+                                            <label><h4>What should we do with your goods?</h4></label>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-6">
+                                                <div data-color="red">
+                                                    <input ng-model="statusid" type="radio" name="somethign" value="7" />
+                                                    <label>Return to store</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div data-color="red">
+                                                    <input ng-model="statusid" type="radio" name="somethign" value="6" />
+                                                    <label>Return to stock</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- //modal-body-->
+                                <div class="modal-footer">
+                                    <button type="button" data-dismiss="modal" class="btn btn-inverse">Close</button>
+                                    <button type="submit"  ng-click="cancerOrder()" class="btn btn-theme" data-dismiss="modal" >Submit</button>
+                                </div>
+                                <!-- //modal-footer-->
+                            </div>
+                            <!-- //modal-->
+
+                            <!--Inprocess Order-->
 
                             <!--/////////////////////////////////////////////////////////////////
                            ////////////............. DONE ORDER..........///////////////////
@@ -202,7 +246,7 @@
                                                         class="text-center sortable">Customer Phone
                                                     </th>
                                                     <!--<th st-sort="statusname" st-skip-natural="true"-->
-                                                        <!--class="text-center sortable">Status-->
+                                                    <!--class="text-center sortable">Status-->
                                                     <!--</th>-->
                                                     <!--<th class="text-center">Option </th>-->
 
@@ -238,10 +282,12 @@
                                 </section>
                             </div>
 
+                            <!--Done order tab-->
+
                             <!--/////////////////////////////////////////////////////////////////
                             ////////////............. DRAFF ORDER..........///////////////////
                             //////////////////////////////////////////////////////////////////-->
-                            <div id="sectionC" class="tab-pane fade">
+                            <div id="sectionC" class="tab-pane fade ">
                                 <section class="panel">
                                     <header class="panel-heading">
                                         <h3><strong>Draft</strong> Order </h3>
@@ -257,12 +303,12 @@
                                                 <div class="row">
 
                                                     <!--<div class="col-md-4 form-group pull-left">-->
-                                                        <!--<div class=" input-icon">-->
-                                                            <!--<i class="fa fa-calendar ico"></i>-->
-                                                            <!--<input type="text" daterange class="form-control"-->
-                                                                   <!--name="daterange" id="daterange"-->
-                                                                   <!--ng-model="dateRange"/>-->
-                                                        <!--</div>-->
+                                                    <!--<div class=" input-icon">-->
+                                                    <!--<i class="fa fa-calendar ico"></i>-->
+                                                    <!--<input type="text" daterange class="form-control"-->
+                                                    <!--name="daterange" id="daterange"-->
+                                                    <!--ng-model="dateRange"/>-->
+                                                    <!--</div>-->
                                                     <!--</div>-->
 
                                                     <div class="col-md-4  form-group pull-right">
@@ -301,7 +347,7 @@
                                                         class="text-center sortable">Customer Phone
                                                     </th>
                                                     <!--<th st-sort="statusname" st-skip-natural="true"-->
-                                                        <!--class="text-center sortable">Status-->
+                                                    <!--class="text-center sortable">Status-->
                                                     <!--</th>-->
                                                     <th class="text-center">Option</th>
 
@@ -317,9 +363,9 @@
                                                     <!--<td> {{x.statusname}}</td>-->
                                                     <td width="16%">
                                                         <span class=" tooltip-area">
-                                                    <a ng-click="submitDraff(x.orderid)" href="javascript:void(0)" class="btn btn-default btn-sm"
+                                                    <a ng-click="submitDraff(x)" href="javascript:void(0)" class="btn btn-default btn-sm"
                                                        title="Submit"><i class="fa fa-cloud-upload"></i></a>
-                                                    <a ng-click="deleteDraffOrder(x.orderid)" href="javascript:void(0)" class="btn btn-default btn-sm"
+                                                    <a ng-click="setOrder(x)" href="javascript:void(0)" data-toggle="modal" data-target="#md-delete-order" class="btn btn-default btn-sm"
                                                        title="Delete"><i class="fa fa-trash-o"></i></a>
                                                     </span>
                                                     </td>
@@ -338,6 +384,37 @@
                                     </div>
                                 </section>
                             </div>
+
+                            <!--
+                            ////////////////////////////////////////////////
+                            //////////     MODAL DELETE DRAFF ORDER  //////////
+                            ///////////////////////////////////////////////////
+                            -->
+                            <div id="md-delete-order" class="modal fade" data-header-color="#736086">
+                                <div class="modal-header bg-inverse bd-inverse-darken">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
+                                            class="fa fa-times"></i></button>
+                                    <h4 class="modal-title">DELETE DRAFF ORDER</h4>
+                                </div>
+                                <!-- //modal-header-->
+                                <div class="modal-body">
+                                    <div class="form-group column">
+                                        <div >
+                                            <label><h4>Do you want to delete draff order {{OrderID}} ?</h4></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- //modal-body-->
+                                <div class="modal-footer">
+                                    <button type="button" data-dismiss="modal" class="btn btn-inverse">NO</button>
+                                    <button type="submit" data-dismiss="modal" ng-click="deleteDraffOrder()" class="btn btn-theme" data-dismiss="modal" >YES</button>
+                                </div>
+                                <!-- //modal-footer-->
+                            </div>
+                            <!-- //modal-->
+
+
+                            <!--Draff Order-->
 
 
                             <!--/////////////////////////////////////////////////////////////////
@@ -360,12 +437,12 @@
 
                                                     <!--Gio han ngay tim kiem-->
                                                     <!--<div class="col-md-4 form-group pull-left">-->
-                                                        <!--<div class=" input-icon">-->
-                                                            <!--<i class="fa fa-calendar ico"></i>-->
-                                                            <!--<input type="text" daterange class="form-control"-->
-                                                                   <!--name="daterange" id="daterange4"-->
-                                                                   <!--ng-model="dateRange"/>-->
-                                                        <!--</div>-->
+                                                    <!--<div class=" input-icon">-->
+                                                    <!--<i class="fa fa-calendar ico"></i>-->
+                                                    <!--<input type="text" daterange class="form-control"-->
+                                                    <!--name="daterange" id="daterange4"-->
+                                                    <!--ng-model="dateRange"/>-->
+                                                    <!--</div>-->
                                                     <!--</div>-->
 
 
