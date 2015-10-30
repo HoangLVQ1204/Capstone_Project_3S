@@ -126,9 +126,9 @@
                                                 <td>{{x.heightsize}}</td>
                                                 <td>{{x.description}}</td>
                                                 <td width="15%"><span class=" tooltip-area">
-                                                    <a ng-click="setGood(x)" href="javascript:void(0)" class="btn btn-default btn-sm" data-toggle="modal" data-target="#md-edit-good"
+                                                    <a ng-click="setGood(x)"  class="btn btn-default btn-sm" data-toggle="modal" data-target="#md-edit-good"
                                                        title="Edit"><i class="fa fa-edit (alias)"></i></a>
-                                                    <a ng-click="deleteGood($index)" href="javascript:void(0)" class="btn btn-default btn-sm"
+                                                    <a ng-click="deleteGood($index)" class="btn btn-default btn-sm"
                                                        title="Delete"><i class="fa fa-times"></i></a>
                                                     </span></td>
                                             </tr>
@@ -137,7 +137,7 @@
                                             <tr>
                                                 <td colspan="10" class="text-left">
                                                     <div  class="col-sm-12 col-lg-12 btn-group btn-group-xs color">
-                                                        <button type="button" class=" btn btn-block color" data-toggle="modal" data-target="#md-header-color"><i class="fa fa-plus"></i></button>
+                                                        <button type="button" class=" btn btn-block buttonAdd " data-toggle="modal" data-target="#md-header-color"><i class="fa fa-plus"></i></button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -162,22 +162,15 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <div class="col-md-6">
-                                    <div data-color="red">
-                                        <input id="enElementCb"  type="checkbox" name="cod" onchange="toggleStatus()">
-                                        <label> Cash on delivery (COD) </label>
-                                    </div>
+                                <div class="col-md-12" >
+                                    <label class="fullWidth color">Cash on delivery</label>
                                 </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-6" id="elementsToEn">
-                                    <label class="control-label">Amount of COD</label>
+                                <div class="col-md-6">
                                     <input ng-model="order.cod" type="text" class="form-control"
                                            parsley-rangelength="[5,15]"
-                                           placeholder="Unit: Vietnam dong" disabled>
+                                           placeholder="Unit: Vietnam dong">
                                 </div>
                             </div>
-
                             <hr>
                             <footer class="row">
                                 <div class="col-sm-5">
@@ -306,8 +299,8 @@
                 </div>
                 <!-- //modal-body-->
                 <div class="modal-footer">
-                    <button type="button" data-dismiss="modal" class="btn btn-inverse">Close</button>
                     <button type="submit" ng-click="addGood()" class="btn btn-theme" >Add</button>
+                    <button type="button" data-dismiss="modal" class="btn btn-inverse">Close</button>
                 </div>
                 <!-- //modal-footer-->
             </div>
@@ -399,15 +392,15 @@
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-7 align-lg-left">Cash on delivery:</label>
-                                <label  class="control-label col-md-5">{{order.cod}}VND</label>
+                                <label  class="control-label col-md-5">{{order.cod|number}} VND</label>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-7 align-lg-left">Ship fee:</label>
-                                <label class="control-label col-md-5">0VND</label>
+                                <label class="control-label col-md-5">0 VND</label>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-7 align-lg-left">Total:</label>
-                                <label class="control-label col-md-5">0VND</label>
+                                <label class="control-label col-md-5">0 VND</label>
                             </div>
                         </div>
                     </div>

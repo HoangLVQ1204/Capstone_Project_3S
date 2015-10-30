@@ -20,7 +20,7 @@ angular.module('app', [
 }).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider,uiGmapGoogleMapApiProvider,config){
 
      //Set up Routes
-	$urlRouterProvider.otherwise('/admin/map');
+	$urlRouterProvider.otherwise('/auth/login');
 
     $stateProvider
         .state('login',{
@@ -107,13 +107,13 @@ angular.module('app', [
 
                 if(authService.isRightRole(config.role.admin)){
                     console.log("admin");
-                    $state.go('admin');
+                    //$state.go('admin');
                     event.preventDefault();
                 }
 
                 if(authService.isRightRole(config.role.store)){
                     console.log("store");
-                    $state.go('store');
+                    //$state.go('store');
                     event.preventDefault();
                 }
 

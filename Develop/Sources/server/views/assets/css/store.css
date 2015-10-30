@@ -14,3 +14,12 @@
     z-index: 2;
     margin-bottom: 20px;
 }
+
+.fullWidth{
+    width: 100%;
+}
+
+.buttonAdd{
+    background: #F9F8F5;
+    color: #898989;
+}

@@ -31,6 +31,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: true
     },
+    createdate: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    donedate: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
     recipientphone: {
       type: DataTypes.STRING,
       allowNull: true
@@ -205,11 +213,12 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
 
-      cancelOrder: function(orderid,statusID) {
+      cancelOrder: function(orderid) {
         order.update(
             {
               iscancel: 'true',
-              statusid: statusID
+              statusid: 'Canceling',
+              fee:5000
             },
             { where: { orderid: orderid }} /* where criteria */
         )

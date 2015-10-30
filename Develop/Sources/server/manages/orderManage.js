@@ -81,7 +81,7 @@ module.exports = function (app) {
                 _.each(listOrders, function(item) {
                     if(item['isdraff']) {
                         group['Draff'].push(item);
-                    } else if(item['iscancel']) {
+                    } else if(item['ispending']) {
                         group['Issue'].push(item);
                     }else if(_.isEqual(item['statusname'],'Done')){
                         group['Done'].push(item);
@@ -219,7 +219,8 @@ module.exports = function (app) {
     };
 
     var cancelOrder = function (req, res, next) {
-        db.order.cancelOrder(req.body.orderid, req.body.statusid);
+        db.order.cancelOrder( req.orderRs.orderid);
+        console.log( req.orderRs);
     };
 
 

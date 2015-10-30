@@ -21,7 +21,6 @@
     <!-- //breadcrumb-->
     <div id="content">
         <div class="column">
-
             <div class="row">
                 <div class="col-md-8">
                     <div class="storePanel">
@@ -45,8 +44,8 @@
                                         <form>
                                             <table class="table table-striped table-hover table-bordered"
                                                    st-set-filter="customFilter" st-custom-date="createdate"
-                                                   st-predicate="{{selected.value}}" stdate="dateRange"
-                                                   search-watch-model="search" st-table="displayedCollectionInprocess"
+                                                   st-predicate="{{selectedInprocess.value}}" stdate="dateRangeInprocess"
+                                                   search-watch-model="searchInprocess" st-table="displayedCollectionInprocess"
                                                    st-safe-src="orderInprocess">
 
                                                 <div class="row">
@@ -56,8 +55,8 @@
                                                         <div class=" input-icon">
                                                             <i class="fa fa-calendar ico"></i>
                                                             <input type="text" daterange class="form-control"
-                                                                   name="daterange" id="daterange2"
-                                                                   ng-model="dateRange"  placeholder="Create Date"/>
+                                                                   name="daterange" id="dateRangeInprocess"
+                                                                   ng-model="dateRangeInprocess"  placeholder="Create Date"/>
                                                         </div>
 
 
@@ -67,7 +66,7 @@
                                                         <div class="input-icon"><i class="fa fa-search ico"></i>
 
                                                             <input type="search" class="form-control"
-                                                                   placeholder="Search" ng-model="search">
+                                                                   placeholder="Search" ng-model="searchInprocess">
                                                         </div>
 
 
@@ -76,8 +75,8 @@
                                                     <div class="col-md-4 pull-right">
                                                         <select
                                                                 class="form-control"
-                                                                ng-options="options.option for options in searchOptions"
-                                                                ng-model="selected">
+                                                                ng-options="options.option for options in searchOptionsInProcess"
+                                                                ng-model="selectedInprocess">
 
                                                         </select>
 
@@ -151,32 +150,26 @@
                                 <!-- //modal-header-->
                                 <div class="modal-body">
                                     <div class="form-group column">
-                                        <div >
-                                            <label><h4>What should we do with your goods?</h4></label>
-                                        </div>
-                                        <div class="form-group row">
-                                            <div class="col-md-6">
-                                                <div data-color="red">
-                                                    <input ng-model="statusid" type="radio" name="somethign" value="7" />
-                                                    <label>Return to store</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div data-color="red">
-                                                    <input ng-model="statusid" type="radio" name="somethign" value="6" />
-                                                    <label>Return to stock</label>
-                                                </div>
-                                            </div>
+                                        <div align="center" >
+                                            <label class="text-center"><h4>If you cancel this order you have to pay <strong>{{cancelFee}} </strong>VND</h4></label>
+                                            <label class="text-center"><h4>Do you want to cancel?</h4></label>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- //modal-body-->
                                 <div class="modal-footer">
-                                    <button type="button" data-dismiss="modal" class="btn btn-inverse">Close</button>
-                                    <button type="submit"  ng-click="cancerOrder()" class="btn btn-theme" data-dismiss="modal" >Submit</button>
+                                    <button type="submit"  ng-click="cancerOrder()"  data-theme="success"  data-horizontal="top" class="btn btn-theme notifiCancel"  data-dismiss="modal" >Yes</button> <!-- data-sticky="true" (Ghim notify)-->
+                                    <button type="button" data-dismiss="modal" class="btn btn-inverse">No</button>
                                 </div>
-                                <!-- //modal-footer-->
+                                <!--///////////////////////////////////////////////////////
+                                /////////////////////   SUCCESS ALERT   /////////////////
+                                ///////////////////////////////////////////////////////////
+                                -->
+                                <textarea class="form-control" id="smsCancel"  rows="5" style="display:none">
+                                    Order <strong>{{Order.orderid}}</strong> is cancelling!
+                                </textarea>
                             </div>
+
                             <!-- //modal-->
 
                             <!--Inprocess Order-->
@@ -193,8 +186,8 @@
                                         <form>
                                             <table class="table table-striped table-hover table-bordered"
                                                    st-set-filter="customFilter" st-custom-date="donedate"
-                                                   st-predicate="{{selected.value}}" stdate="dateRange"
-                                                   search-watch-model="search" st-table="displayedCollectionDone"
+                                                   st-predicate="{{selectedDone.value}}" stdate="dateRangeDone"
+                                                   search-watch-model="searchDone" st-table="displayedCollectionDone"
                                                    st-safe-src="orderDone">
 
                                                 <div class="row">
@@ -204,8 +197,8 @@
                                                         <div class=" input-icon">
                                                             <i class="fa fa-calendar ico"></i>
                                                             <input type="text" daterange class="form-control"
-                                                                   name="daterange" id="daterange3"
-                                                                   ng-model="dateRange" placeholder="Done Date"/>
+                                                                   name="daterange" id="dateRangeDone"
+                                                                   ng-model="dateRangeDone" placeholder="Done Date"/>
                                                         </div>
 
 
@@ -215,7 +208,7 @@
                                                         <div class="input-icon"><i class="fa fa-search ico"></i>
 
                                                             <input type="search" class="form-control"
-                                                                   placeholder="Search" ng-model="search">
+                                                                   placeholder="Search" ng-model="searchDone">
                                                         </div>
 
                                                     </div>
@@ -223,8 +216,8 @@
                                                     <div class="col-sm-4 pull-right">
                                                         <select
                                                                 class="form-control"
-                                                                ng-options="options.option for options in searchOptions"
-                                                                ng-model="selected">
+                                                                ng-options="options.option for options in searchOptionsDone"
+                                                                ng-model="selectedDone">
 
                                                         </select>
 
@@ -235,6 +228,8 @@
                                                 <tr>
                                                     <th st-sort="orderid" st-skip-natural="true"
                                                         class="text-center sortable">OrderID
+                                                    </th> <th st-sort="donedate" st-skip-natural="true"
+                                                        class="text-center sortable">Done Date
                                                     </th>
                                                     <th st-sort="deliveryaddress" st-skip-natural="true"
                                                         class="text-center sortable">Delivery Address
@@ -256,6 +251,7 @@
 
                                                 <tr class="odd gradeX" ng-repeat="x in displayedCollectionDone">
                                                     <td>{{x.orderid}}</td>
+                                                    <td>{{x.donedate}}</td>
                                                     <td>{{x.deliveryaddress}}</td>
                                                     <td>{{x.recipientname}}</td>
                                                     <td> {{x.recipientphone}}</td>
@@ -270,7 +266,7 @@
                                                 </tbody>
                                                 <tfoot>
                                                 <tr>
-                                                    <td colspan="4" class="text-right">
+                                                    <td colspan="5" class="text-right">
                                                         <div st-pagination="" st-items-by-page="5"></div>
                                                     </td>
                                                 </tr>
@@ -296,8 +292,8 @@
                                         <form>
                                             <table class="table table-striped table-hover table-bordered"
                                                    st-set-filter="customFilter" st-custom-date="deliverydate"
-                                                   st-predicate="{{selected.value}}" stdate="dateRange"
-                                                   search-watch-model="search" st-table="displayedCollectionDraff"
+                                                   st-predicate="{{selectedDraff.value}}" stdate="dateRangeDraff"
+                                                   search-watch-model="searchDraff" st-table="displayedCollectionDraff"
                                                    st-safe-src="ordersDraff">
 
                                                 <div class="row">
@@ -315,7 +311,7 @@
                                                         <div class="input-icon"><i class="fa fa-search ico"></i>
 
                                                             <input type="search" class="form-control"
-                                                                   placeholder="Search" ng-model="search">
+                                                                   placeholder="Search" ng-model="searchDraff">
                                                         </div>
 
 
@@ -325,7 +321,7 @@
                                                         <select
                                                                 class="form-control"
                                                                 ng-options="options.option for options in searchOptionsDraff"
-                                                                ng-model="selected2">
+                                                                ng-model="selectedDraff">
 
                                                         </select>
 
@@ -363,8 +359,7 @@
                                                     <!--<td> {{x.statusname}}</td>-->
                                                     <td width="16%">
                                                         <span class=" tooltip-area">
-                                                    <a ng-click="submitDraff(x)" href="javascript:void(0)" class="btn btn-default btn-sm"
-                                                       title="Submit"><i class="fa fa-cloud-upload"></i></a>
+                                                    <a class="btn btn-default btn-sm" title="Edit"><i class="fa fa-edit (alias)"></i></a>
                                                     <a ng-click="setOrder(x)" href="javascript:void(0)" data-toggle="modal" data-target="#md-delete-order" class="btn btn-default btn-sm"
                                                        title="Delete"><i class="fa fa-trash-o"></i></a>
                                                     </span>
@@ -400,18 +395,24 @@
                                 <div class="modal-body">
                                     <div class="form-group column">
                                         <div >
-                                            <label><h4>Do you want to delete draff order {{OrderID}} ?</h4></label>
+                                            <label><h4>Do you want to delete draff order {{Order.orderid}} ?</h4></label>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- //modal-body-->
                                 <div class="modal-footer">
-                                    <button type="button" data-dismiss="modal" class="btn btn-inverse">NO</button>
-                                    <button type="submit" data-dismiss="modal" ng-click="deleteDraffOrder()" class="btn btn-theme" data-dismiss="modal" >YES</button>
+                                    <button type="submit" class="btn btn-theme notifiDelete" data-dismiss="modal" ng-click="deleteDraffOrder()"  data-theme="success" data-vertical="right" data-horizontal="top" >Yes</button>
+                                    <button type="button" data-dismiss="modal" class="btn btn-inverse">No</button>
                                 </div>
                                 <!-- //modal-footer-->
                             </div>
-                            <!-- //modal-->
+                            <!--///////////////////////////////////////////////////////
+                               /////////////////////   SUCCESS DELETE ALERT   /////////////////
+                               ///////////////////////////////////////////////////////////
+                               -->
+                                <textarea class="form-control" id="smsDelete"  rows="5" style="display:none">
+                                    Order <strong>{{Order.orderid}}</strong> has been deleted successfully!
+                                </textarea>
 
 
                             <!--Draff Order-->
@@ -429,8 +430,8 @@
                                         <form>
                                             <table class="table table-striped table-hover table-bordered"
                                                    st-set-filter="customFilter" st-custom-date="deliverydate"
-                                                   st-predicate="{{selected.value}}" stdate="dateRange"
-                                                   search-watch-model="search" st-table="displayedCollectionIssue"
+                                                   st-predicate="{{selectedIssue.value}}" stdate="dateRangeIssue"
+                                                   search-watch-model="searchIssue" st-table="displayedCollectionIssue"
                                                    st-safe-src="orderIssue">
 
                                                 <div class="row">
@@ -450,7 +451,7 @@
                                                         <div class="input-icon"><i class="fa fa-search ico"></i>
 
                                                             <input type="search" class="form-control"
-                                                                   placeholder="Search" ng-model="search">
+                                                                   placeholder="Search" ng-model="searchIssue">
                                                         </div>
 
 
@@ -459,8 +460,8 @@
                                                     <div class="col-sm-4 pull-right">
                                                         <select
                                                                 class="form-control"
-                                                                ng-options="options.option for options in searchOptions"
-                                                                ng-model="selected">
+                                                                ng-options="options.option for options in searchOptionsIssue"
+                                                                ng-model="selectedIssue">
 
                                                         </select>
 
@@ -533,13 +534,13 @@
                                 <section>
                                     <h5><strong>TOTAL</strong> ORDERS </h5>
 
-                                    <h2>{{totalOrder}}</h2>
+                                    <h2>{{totalOrder|number}}</h2>
 
                                     <div class="progress progress-xs progress-white progress-over-tile">
                                         <div class="progress-bar  progress-bar-white" aria-valuetransitiongoal="1"
                                              aria-valuemax="1"></div>
                                     </div>
-                                    <h5><strong>TODAY </strong><label class="progress-label label-white"><h4>{{orderToday}}</h4>
+                                    <h5><strong>TODAY </strong><label class="progress-label label-white"><h4>{{orderToday|number}}</h4>
                                     </label></h5>
                                 </section>
                                 <div class="hold-icon"><i class="fa fa-archive"></i></div>
@@ -552,13 +553,13 @@
                                 <section>
                                     <h5><strong>TOTAL</strong> CASH ON DELIVERY </h5>
 
-                                    <h2>{{totalCod}}</h2>
+                                    <h2>{{totalCod|number}}</h2>
 
                                     <div class="progress progress-xs progress-white progress-over-tile">
                                         <div class="progress-bar  progress-bar-white" aria-valuetransitiongoal="1"
                                              aria-valuemax="1"></div>
                                     </div>
-                                    <h5><strong>TODAY </strong><label class="progress-label label-white"><h4>{{todayCod}}</h4>
+                                    <h5><strong>TODAY </strong><label class="progress-label label-white"><h4>{{todayCod|number}}</h4>
                                     </label></h5>
                                 </section>
                                 <div class="hold-icon"><i class="fa fa-money"></i></div>
@@ -571,13 +572,13 @@
                                 <section>
                                     <h5><strong>TOTAL</strong> SHIP FEE </h5>
 
-                                    <h2>{{totalFee}}</h2>
+                                    <h2>{{totalFee|number}}</h2>
 
                                     <div class="progress progress-xs progress-white progress-over-tile">
                                         <div class="progress-bar  progress-bar-white" aria-valuetransitiongoal="1"
                                              aria-valuemax="1"></div>
                                     </div>
-                                    <h5><strong>TODAY </strong><label class="progress-label label-white"><h4>{{todayFee}}</h4>
+                                    <h5><strong>TODAY </strong><label class="progress-label label-white"><h4>{{todayFee | number}}</h4>
                                     </label></h5>
                                 </section>
                                 <div class="hold-icon"><i class="fa fa-money"></i></div>
@@ -589,3 +590,5 @@
         </div>
     </div>
 </div>
+
+

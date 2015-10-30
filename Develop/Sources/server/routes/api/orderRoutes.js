@@ -20,6 +20,6 @@ module.exports = function (app) {
         .post(controller.putDraff);
 
     app.route('/orders/cancel')
-        .post(controller.cancelOrder);
+        .put(controller.cancelOrder);
 
 }

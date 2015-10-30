@@ -4,8 +4,7 @@
 
 function storeOrderController($scope, $state, dataService) {
 
-    var Date = new Date().getDate();
-    console.log(Date);
+
 
     $scope.order={
         storeid: '',
@@ -21,7 +20,7 @@ function storeOrderController($scope, $state, dataService) {
         ispending: 'false',
         isdraff: '',
         fee: '',
-        cod: 0
+        cod:''
     };
     $scope.good={goodID:0};
     $scope.goods =[];
