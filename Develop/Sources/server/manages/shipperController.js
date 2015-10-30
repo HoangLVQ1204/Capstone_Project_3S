@@ -216,12 +216,16 @@ module.exports = function (app) {
 
     var createIssue = function (req, res, next) {
         //Instance new Issue
+
         var newIssue = {};
-        newIssue.category = req.body.category.categoryID;
-        newIssue.content = req.body.content;
+        newIssue.categoryID = req.body.category.categoryID;
+        newIssue.reason = req.body.reason.reasonName;
+        newIssue.description = req.body.description;
+        console.log('quyen', newIssue);
         db.issue.createNewIssue(newIssue)
             .then(function(issue) {
             }).then(function(){
+                console.log('issue', issue);
                 //Instance new list Order get an issued
                 var listOrders = [];
                 _.each(req.body.issuedOrder, function(order){
