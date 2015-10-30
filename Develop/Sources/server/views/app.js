@@ -7,8 +7,9 @@ angular.module('app', [
     'ui.router',
     'angular-jwt',
     'nemLogging',
-    'uiGmapgoogle-maps'
-]).constant("config",{
+    'uiGmapgoogle-maps',
+	'smart-table'
+]).constant("config",{		
 
     role: {
         shipper: 1,
@@ -19,7 +20,7 @@ angular.module('app', [
 }).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider,uiGmapGoogleMapApiProvider,config){
 
     // Set up Routes
-	$urlRouterProvider.otherwise('/admin');
+	//$urlRouterProvider.otherwise('/admin');
 
     $stateProvider
         .state('login',{
@@ -30,28 +31,23 @@ angular.module('app', [
             //abstract: true,
             url: '/admin',
             template: '<admin></admin>',
-            access: config.role.admin
+            //access: config.role.admin
 
         })
-        //.state('admin.map',{
-        //    url: '/map',
-        //    template: '<map></map>',
-        //    access: config.role.admin
-        //})
         .state('admin.map',{
             url: '/map',
-            template: '<map style="margin-top: 10px" shipper-markers="shippers" store-markers="stores" customer-markers="customers" orders="orders"></map>',
-            controller: function($scope,mapService) {
-
-                // mode in ["all", "shipper", "store", "orderdetail"]
-                var mode = "all";
-
-                $scope.shippers = mapService.getShipperMarkers(mode);
-                $scope.stores = mapService.getStoreMarkers(mode);
-                $scope.customers = mapService.getCustomerMarkers(mode);
-                $scope.orders = mapService.getOrders(mode);
-            },
-            access: config.role.admin
+            template: '<map></map>',
+            //access: config.role.admin
+        })
+        .state('admin.storeList',{
+            url: '/storeList',
+            template: '<admin-store-list></admin-store-list>',
+            //access: config.role.admin
+        })
+        .state('admin.assignTask',{
+            url: '/assignTask',
+            template: '<admin-assign-task></admin-assign-task>',
+            //access: config.role.admin
         })
         .state('store',{
             //abstract: true,
@@ -61,18 +57,7 @@ angular.module('app', [
         })
         //.state('store.map',{
         //    url: '/map',
-        //    template: '<map style="margin-top: 10px" shipper-markers="shippers" store-markers="stores" customer-markers="customers" orders="orders"></map>',
-        //    controller: function($scope,mapService) {
-        //
-        //        // mode in ["all", "shipper", "store", "orderdetail"]
-        //        var mode = "store";
-        //
-        //        $scope.shippers = mapService.getShipperMarkers(mode);
-        //        $scope.stores = mapService.getStoreMarkers(mode);
-        //        $scope.customers = mapService.getCustomerMarkers(mode);
-        //        $scope.orders = mapService.getOrders(mode);
-        //    },
-        //    access: config.role.store
+        //    template: '<map></map>'
         //})
         //.state('store.dashboard',{
         //    url: '/dashboard',
@@ -109,7 +94,7 @@ angular.module('app', [
 
             if(!authService.isRightRole(toState.access)){
                 console.log('This page is denied');
-                //TODO: Chuyển về trang warning
+                //TODO: Chuyển v�? trang warning
             }
 
 

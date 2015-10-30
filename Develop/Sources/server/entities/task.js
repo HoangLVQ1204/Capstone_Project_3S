@@ -9,22 +9,28 @@ module.exports = function (sequelize, DataTypes) {
         },
         orderid: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: false,
             primaryKey: true
         },
         shipperid: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: false,
             primaryKey: true
         },
         adminid: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: false,
+            primaryKey: true
+        },
+        taskstatus: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
             primaryKey: true
         },
         tasktype: {
             type: DataTypes.INTEGER,
-            allowNull: false
+            allowNull: false,
+            primaryKey: true
         },
         taskdate: {
             type: DataTypes.DATE,
@@ -34,6 +40,12 @@ module.exports = function (sequelize, DataTypes) {
         freezeTableName: true,
         timestamps: false,
         classMethods: {
+            associate: function(db) {
+                task.belongsTo(db.order, {
+                    foreignKey: 'orderid',
+                    constraints: false
+                });
+            },
             getAllHistoryOfShipper: function (shipperid, modelOrder, modelOrderStatus) {
                 return task.findAll({
                     attributes: [['taskid', 'id'],['taskdate','date']],

@@ -20,10 +20,6 @@
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item menu-close ui-sref="app.orderlist">
-          <i class="ion-arrow-swap"></i>
-          In Working Order
-        </ion-item>
         <ion-item menu-close nav-clear ui-sref="app.tasks" ui-sref-opts="{reload: true}">
           <i class="ion-android-bookmark"></i>
           Tasks
@@ -44,9 +40,9 @@
           <i class="ion-person"></i>
           Profile
         </ion-item>
-        <ion-item menu-close>
+        <ion-item menu-close ng-controller="SignInCtrl" ng-click="logOut()">
           <i class="ion-log-out"></i>
-          Đăng xuất
+          Logout
         </ion-item>
       </ion-list>
     </ion-content>

@@ -31,6 +31,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: true
     },
+    createdate: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    donedate: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
     recipientphone: {
       type: DataTypes.STRING,
       allowNull: true
@@ -90,23 +98,24 @@ module.exports = function(sequelize, DataTypes) {
         order.hasMany(db.goods,{
           foreignKey:'orderid',
           constraints: false
-        })
-
+        });
+        order.hasOne(db.store,{
+          foreignKey:'storeid',
+          constraints: false
+        });
       },
-      getAllTaskOfShipper: function(task, orderstatus, shipperid, taskdate) {
+      getAllTaskOfShipper: function(task, shipperid, taskdate) {
         return order.findAll({
           attributes: ['orderid', 'ordertypeid', 'pickupaddress', 'deliveryaddress', 'pickupdate', 'deliverydate', 'statusid'],
           where: {'ispending': false},
           include: [{
             model: task,
-            attributes: ['tasktype', 'taskdate'],
+            attributes: ['tasktype', 'taskstatus', 'taskdate'],
             where: {
               shipperid: shipperid,
-              taskdate: taskdate
+              taskdate: taskdate,
+              taskstatus: [1, 2]
             }
-          },{
-            model: orderstatus,
-            attributes: ['statusname']
           }
           ]
         });
@@ -160,6 +169,7 @@ module.exports = function(sequelize, DataTypes) {
         return currentOrder.save();
       },
 
+      
       changeIsPendingOrder: function(listOrders) {
         listOrders.forEach(function(item) {
           order.update(
@@ -167,7 +177,56 @@ module.exports = function(sequelize, DataTypes) {
               { where: { orderid: item }}
           )
         });
+      },
+
+      getTotalShipFeeOfStore: function(storeid, paydate){
+       // console.log(paydate)
+        return order.sum('fee',{
+          where: {
+            'storeid': storeid,
+            'ledgerid': null,
+            'deliverydate': {gte: paydate},
+            'statusid': { $between: [6, 8]}
+          }
+        })
+      },
+
+      getTotalShipCoDOfStore: function(storeid, paydate){
+        return order.sum('cod',{
+          where: {
+            'storeid': storeid,
+            'ledgerid':  null,
+            'deliverydate': {gte: paydate},
+            'statusid': { $between: [6, 8]}
+          }
+        })
+      },
+
+      updateLedgerForOrder: function(storeid, paydate, ledgerid){
+        return order.update(
+            {'ledgerid': ledgerid},
+            {
+          where: {
+            'storeid': storeid,
+            'ledgerid':  null,
+            'deliverydate': {lt: paydate},
+            'statusid': { $between: [6, 9]}
+          }
+        })
+      },
+
+      getAllOrderToAssignTask: function(orderstatus){
+        return order.findAll({
+          where: {
+            'statusid': {$or: [1,2,5,6]}
+          },
+          include: [{
+            model: orderstatus,
+            attributes: ['statusname']
+          }]
+        })
       }
+
     }
   });
   return order;

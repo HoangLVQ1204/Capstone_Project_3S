@@ -201,17 +201,17 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
 
         
         // Initilize some attribute for markers
-        $scope.shipperMarkers.forEach(function(shipperMarker) {            
-            initShipperMarker($scope, geocoder, maps, shipperMarker);
-        });        
+        // $scope.shipperMarkers.forEach(function(shipperMarker) {                        
+        //     initShipperMarker($scope, geocoder, maps, shipperMarker);
+        // });        
 
-        $scope.storeMarkers.forEach(function(storeMarker) {
-            initStoreMarker($scope, geocoder, maps, storeMarker);
-        });
+        // $scope.storeMarkers.forEach(function(storeMarker) {
+        //     initStoreMarker($scope, geocoder, maps, storeMarker);
+        // });
 
-        $scope.customerMarkers.forEach(function(customerMarker) {            
-            initCustomerMarker($scope, geocoder, maps, customerMarker);
-        });   
+        // $scope.customerMarkers.forEach(function(customerMarker) {            
+        //     initCustomerMarker($scope, geocoder, maps, customerMarker);
+        // });   
 
 
         // Events for markers        
