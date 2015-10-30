@@ -19,3 +19,8 @@ body.leftMenu .mm-menu:not(.mm-right).mm-hassearch .mm-panel {
      background-color: #62707d !important;
      color: white !important;
 }
+
+.fail-task {
+     /*background-color: #62707d !important;*/
+     color: red !important;
+}

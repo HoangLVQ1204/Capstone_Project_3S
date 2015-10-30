@@ -5,7 +5,8 @@ module.exports = function (sequelize, DataTypes) {
         taskid: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            primaryKey: true
+            primaryKey: true,
+            autoIncrement: true
         },
         orderid: {
             type: DataTypes.STRING,
@@ -78,6 +79,32 @@ module.exports = function (sequelize, DataTypes) {
                         }
                     ]
                 });
+            },
+
+            assignTaskForShipper: function(shipper){
+                //console.log(shipper);
+                return task.findOrCreate({
+                    where: {
+                        orderid: shipper.orderid,
+                        statusid: shipper.statusid,
+                        typeid: shipper.typeid
+                    },
+                    defaults: {
+                        adminid: shipper.adminid,
+                        shipperid: shipper.shipperid,
+                        taskdate: shipper.taskdate
+                    }
+                }).spread(function(tasks, created){
+                    if (!created && shipper.shipperid!=tasks.shipperid)
+                    task.update(
+                        {
+                            'shipperid': shipper.shipperid
+                        },
+                        { where: {
+                            'taskid': tasks.taskid
+                        }}
+                    )
+                })
             }
         }
     });

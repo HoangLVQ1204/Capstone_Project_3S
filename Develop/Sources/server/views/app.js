@@ -20,7 +20,7 @@ angular.module('app', [
 }).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider,uiGmapGoogleMapApiProvider,config){
 
      //Set up Routes
-	$urlRouterProvider.otherwise('/admin/map');
+	$urlRouterProvider.otherwise('/auth/login');
 
     $stateProvider
         .state('login',{
@@ -47,6 +47,10 @@ angular.module('app', [
         .state('admin.assignTask',{
             url: '/assignTask',
             template: '<admin-assign-task></admin-assign-task>',
+            access: config.role.admin
+        }).state('admin.transactionHistory',{
+            url: '/transactionHistory',
+            template: '<admin-transaction-history></admin-transaction-history>',
             access: config.role.admin
         })
         .state('store',{
@@ -105,13 +109,13 @@ angular.module('app', [
 
                 if(authService.isRightRole(config.role.admin)){
                     console.log("admin");
-                    $state.go('admin');
+                    //$state.go('admin');
                     event.preventDefault();
                 }
 
                 if(authService.isRightRole(config.role.store)){
                     console.log("store");
-                    $state.go('store');
+                    //$state.go('store');
                     event.preventDefault();
                 }
 

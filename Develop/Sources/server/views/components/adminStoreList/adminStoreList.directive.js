@@ -66,7 +66,8 @@
                         linkedCalendars: false,
                         autoUpdateInput: false,
                         locale: {
-                            cancelLabel: 'Clear',
+                            format: "DD/MM/YYYY"
+
                         }
                     });
 
@@ -77,14 +78,6 @@
                             scope.dateRange = element.val();
                         });
                         //console.log($scope.dateRange)
-                    });
-
-                    element.on('cancel.daterangepicker', function(ev, picker) {
-                        element.val('');
-                       // $scope.dateRange = $('#daterange').val();
-                        scope.$apply(function(){
-                            scope.dateRange = element.val();
-                        });
                     });
                 }
             }

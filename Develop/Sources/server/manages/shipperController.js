@@ -245,19 +245,28 @@ module.exports = function (app) {
 
     var  getAllOrderToAssignTask = function (req, res, next) {
         var orderList=[];
-        return db.order.getAllOrderToAssignTask(db.orderstatus)
+        var promise=[];
+        return db.order.getAllOrderToAssignTask(db.orderstatus, db.task)
             .then(function(shipper) {
-                shipper.map(function(item){
+                shipper.map(function(item) {
                     var order = new Object();
                     order.order = item;
-                    orderList.push(order);
+                    if (item.tasks.length == 0) {
+                        orderList.push(order);
+
+                    }
+                    else {
+                        if (item.statusid == 4 && item.tasks.length==1) {
+                            orderList.push(order);
+                        }
+                    }
                 })
                 res.status(200).json(orderList);
             }, function(err) {
                 next(err);
             })
 
-    }
+    };
 
     var getAllShipperWithTask = function (req, res, next) {
         var shipperList;
@@ -267,7 +276,25 @@ module.exports = function (app) {
             }, function(err) {
                 next(err);
             })
+    };
+
+    var updateTaskForShipper = function (req, res, next) {
+        var shipperList = req.body;
+
+        return shipperList.map(function (shipper) {
+            shipper.tasks.map(function (task) {
+                db.task.assignTaskForShipper(task)
+                    .then(function(newTask) {
+                         res.status(201).json(newTask);
+                        //console.log(newTask.taskid)
+                    }, function(err) {
+                        next(err);
+                    })
+            })
+
+        })
     }
+
 
 
 
@@ -283,6 +310,7 @@ module.exports = function (app) {
         getAllShipper: getAllShipper,
         getAllOrderToAssignTask: getAllOrderToAssignTask,
         getAllShipperWithTask: getAllShipperWithTask,
+        updateTaskForShipper: updateTaskForShipper
 
     }
 

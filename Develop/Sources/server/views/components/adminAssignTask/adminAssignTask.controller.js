@@ -3,10 +3,10 @@
  */
 function adminAssignTaskController($scope,$state, $http, $filter) {
 
-    $scope.shipperList = [];
+    $scope.tasksList = [];
     $scope.orderList = [];
     $scope.taskList = [];
-    $scope.dateChoose = false
+    $scope.pickedShipper = null;
     $scope.displayedTaskCollection = [].concat($scope.taskList);
     $scope.searchShipperOptions = [
         {
@@ -40,11 +40,12 @@ function adminAssignTaskController($scope,$state, $http, $filter) {
     $scope.selectedShipper =$scope.searchShipperOptions[0];
     $scope.selectedOrder =$scope.searchOrderOptions[0];
     $scope.dateRange = null;
+    $scope.dateNow = new Date();
 
 
     $http.get("http://localhost:3000/api/shipper/getAllShipperWithTask").success(function(response){
-        $scope.shipperList = response;
-        $scope.displayedShipperCollection = [].concat($scope.shipperList);
+        $scope.tasksList = response;
+        $scope.displayedShipperCollection = [].concat($scope.tasksList);
         //console.log(1);
         //console.log(response);
     })
@@ -56,37 +57,71 @@ function adminAssignTaskController($scope,$state, $http, $filter) {
 
 
     $scope.assignTask = function () {
-        console.log($scope.xxx);
+        $http.post("http://localhost:3000/api/shipper/updateTaskForShipper", $scope.tasksList).then(function success(response){
+            var data = new Object();
+            data.verticalEdge='right';
+            data.horizontalEdge='bottom';
+            data.theme="theme-inverse";
+
+            //data.sticky="true";
+            $.notific8($("#sms-success").val(), data);
+        }, function (error) {
+            var data = new Object();
+            data.verticalEdge='right';
+            data.horizontalEdge='bottom';
+            data.theme="danger";
+            //data.sticky="true";
+            $.notific8($("#sms-fail").val(), data);
+
+        })
     }
 
     $scope.pickOrder = function (order) {
+        if ($scope.pickedShipper == null) return;
         var index = $scope.orderList.indexOf(order);
         if (index !== -1) {
             $scope.orderList.splice(index, 1);
-            $scope.taskList.push(order);
-            $scope.taskList.sort(compare);
+            if (order.taskid == null){
+                order['shipperid'] = $scope.pickedShipper.username;
+                order['orderid'] = order.order.orderid;
+                order['adminid'] = 'hoang';
+                order['statusid'] = 1;
+                order['typeid'] = 1;
+                order['taskdate'] = new Date();
+            }
+            else {
+                order['shipperid'] = $scope.pickedShipper.username;
+            }
+            $scope.taskList.unshift(order);
+            //$scope.taskList.sort(compare);
         }
     }
 
-    function compare(a,b) {
-        if (a.orderid < b.orderid)
-            return -1;
-        if (a.orderid > b.orderid)
-            return 1;
-        return 0;
-    }
 
-    $scope.pickTask = function (order) {
-        var index = $scope.taskList.indexOf(order);
+    $scope.pickTask = function (task) {
+        var index = $scope.taskList.indexOf(task);
+        console.log(task);
         if (index !== -1) {
+            //$('#' + order.orderid).parent().addClass('fail-task');
             $scope.taskList.splice(index, 1);
-            $scope.orderList.push(order);
-            $scope.orderList.sort(compare);
+                task['shipperid'] = null;
+            $scope.orderList.unshift(task);
+
+            //$scope.orderList.sort(compare);+
+
         }
     }
 
     $scope.pickShipper = function (shipper) {
-        $scope.taskList = shipper.shipper;
+        //console.log(shipper);
+        if (shipper.isSelected) {
+            $scope.taskList = shipper.tasks;
+            $scope.pickedShipper = shipper;
+        }
+        else {
+            $scope.taskList=[];
+            $scope.pickedShipper = null;
+        }
         //console.log(shipper);
         //console.log(shipper);
     }
