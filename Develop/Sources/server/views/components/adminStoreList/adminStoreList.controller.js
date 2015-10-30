@@ -21,7 +21,7 @@ function adminStoreListController($scope,$state, $http, $filter) {
             value: 'payment'
         }];
     $scope.selected =$scope.searchOptions[0];
-    $scope.dateRange = null;
+    $scope.dateRange = '';
 
 
     $http.get("http://localhost:3000/api/store/getAllLedger").success(function(response){
@@ -186,6 +186,13 @@ function adminStoreListController($scope,$state, $http, $filter) {
         $scope.isValid = $('#inputValue').parsley( 'validate' );
 
     };
+
+    //$('#daterange').find().on('click.daterangepicker', function(ev, picker) {
+    //    alert(1);
+    //});
+
+
+
 
 }
 

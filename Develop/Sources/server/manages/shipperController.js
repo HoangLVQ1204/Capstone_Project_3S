@@ -246,9 +246,15 @@ module.exports = function (app) {
     };
 
     var  getAllOrderToAssignTask = function (req, res, next) {
+        var orderList=[];
         return db.order.getAllOrderToAssignTask(db.orderstatus)
             .then(function(shipper) {
-                res.status(200).json(shipper);
+                shipper.map(function(item){
+                    var order = new Object();
+                    order.order = item;
+                    orderList.push(order);
+                })
+                res.status(200).json(orderList);
             }, function(err) {
                 next(err);
             })
@@ -265,21 +271,6 @@ module.exports = function (app) {
             })
     }
 
-    var getOrderOfList = function (req, res, next) {
-        var orderidList = req.body;
-        var orderList = [];
-        console.log(req.body);
-        return orderidList.map(function(orderid) {
-            db.user.getAllShipperWithTask(orderid)
-                .then(function (order) {
-                    orderList.push(order);
-                }, function (err) {
-                    next(err);
-                })
-        }).then(function () {
-            res.status(200).json(orderList);
-        })
-    }
 
 
     return {
@@ -294,7 +285,6 @@ module.exports = function (app) {
         getAllShipper: getAllShipper,
         getAllOrderToAssignTask: getAllOrderToAssignTask,
         getAllShipperWithTask: getAllShipperWithTask,
-        getOrderOfList: getOrderOfList
 
     }
 

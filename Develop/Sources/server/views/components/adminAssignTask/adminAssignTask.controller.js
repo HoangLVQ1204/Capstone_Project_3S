@@ -6,6 +6,7 @@ function adminAssignTaskController($scope,$state, $http, $filter) {
     $scope.shipperList = [];
     $scope.orderList = [];
     $scope.taskList = [];
+    $scope.dateChoose = false
     $scope.displayedTaskCollection = [].concat($scope.taskList);
     $scope.searchShipperOptions = [
         {
@@ -86,7 +87,7 @@ function adminAssignTaskController($scope,$state, $http, $filter) {
 
     $scope.pickShipper = function (shipper) {
         $scope.taskList = shipper.shipper;
-        console.log(shipper);
+        //console.log(shipper);
         //console.log(shipper);
     }
     //----------------------------------
@@ -97,6 +98,7 @@ function adminAssignTaskController($scope,$state, $http, $filter) {
         caplet();
 
     });
+
 
 
 

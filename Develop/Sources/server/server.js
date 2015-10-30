@@ -30,8 +30,6 @@ app.use(cors());
 // setup routes
 require('./routes')(app);
 
-
-
 // setup global error handler
 app.use(function (err, req, res, next) {
     console.log(err.name);

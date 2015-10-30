@@ -105,7 +105,7 @@ module.exports = function(sequelize, DataTypes) {
                 include: [{model: orderstatus,  attributes: ['statusname']}]
               }
             ]
-          }],
+          },{model: profile}],
           where: {
             'userrole': 1
             //'username': 'task.shipperid'

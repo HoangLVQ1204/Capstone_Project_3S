@@ -28,14 +28,18 @@
 
                                     <div class="row" >
 
-                                        <div class="col-sm-4 form-group pull-left">
-
-                                            <div class="input-icon">
+                                        <div id='aaa' class="col-sm-4 form-group pull-left">
+                                            <div class="input-group input-icon">
                                                 <i class="fa fa-calendar ico"></i>
-                                                <input type="text" daterange class="form-control" name="daterange" id="daterange" ng-model="dateRange"/>
+                                                <input type="text"  class="form-control" daterange id="daterange" name="daterange" ng-model="dateRange"/>
+                                                <span class="input-group-btn">
+                                                    <div class="btn-group">
+                                                        <button type="button" class="btn btn-default">
+                                                            <i class="fa fa-times" ng-click="dateRange=''"></i>
+                                                        </button>
+                                                    </div><!-- //btn-group-->
+                                                </span>
                                             </div>
-
-
                                         </div><!-- //form-group-->
                                         <div class="col-sm-4 pull-right">
                                             <div class="input-icon"> <i class="fa fa-search ico"></i>
@@ -78,7 +82,7 @@
                                         <td>{{x.address}}</td>
                                         <td class="center"> {{x.generalledgers[0].balance}}</td>
                                         <td class="center"> {{x.currentFee - x.currentCoD + x.generalledgers[0].balance}}</td>
-                                        <td class="center"> {{x.registereddate|date:"MM/dd/yyyy"}}</td>
+                                        <td class="center"> {{x.registereddate|date:"dd/MM/yyyy"}}</td>
                                         <td>
                                         <span class="tooltip-area">
                                         <a class="btn btn-default btn-sm" title="Edit"><i class="fa fa-edit (alias)"></i></a>

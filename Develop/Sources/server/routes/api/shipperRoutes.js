@@ -14,8 +14,6 @@ module.exports = function (app) {
 
     app.get('/api/shipper/getAllShipperWithTask', shipperCtrl.getAllShipperWithTask);
 
-    app.get('/api/shipper/getOrderOfList', shipperCtrl.getOrderOfList);
-
     app.get('/api/shipper/getAllOrderToAssignTask', shipperCtrl.getAllOrderToAssignTask);
 
     app.post('/api/issue', shipperCtrl.createIssue);

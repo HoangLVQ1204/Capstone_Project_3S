@@ -574,7 +574,7 @@
 		});
 		
 		//////////     DATE TIME RANG      //////////
-		$('#daterange').daterangepicker();
+		//$('#daterange').daterangepicker();
 		$('#reportrange').daterangepicker({
 				startDate: moment().subtract('days', 29),
 				endDate: moment(),
