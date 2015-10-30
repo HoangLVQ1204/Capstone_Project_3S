@@ -34,4 +34,9 @@ module.exports = function (app) {
     app.route('/api/nextstep')
         .put(shipperCtrl.nextStep);
 
+    app.route('/api/mapdata/:order')
+        .get(shipperCtrl.getMapData);
+
+    app.param('order', shipperCtrl.paramMapdata);
+
 }
