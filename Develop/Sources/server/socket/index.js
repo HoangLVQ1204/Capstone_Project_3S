@@ -74,8 +74,8 @@ module.exports = function(server){
     };
 
     /*
-        sender: clientID
-        receiver = 'admin' || 'shipper' || 'store' || {room: ...} || {clientID: ...} || Arrays of these types
+        sender: { clientID: ... }
+        receiver = 'admin' || 'shipper' || 'store' || {room: ...} || {clientID: ...} || Arrays of these types [ 'admin', { room: ...} ]
         msg = Object
     */
     io.forward = function(sender, receiver, msg, eventName, callback) {
