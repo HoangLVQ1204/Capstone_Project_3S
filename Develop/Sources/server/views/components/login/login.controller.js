@@ -24,7 +24,7 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
 
                 if(authService.isRightRole(config.role.admin)){
                     socketAdmin.registerSocket();
-                    $state.go('admin');
+                    $state.go('admin.dashboard');
                 }
 
                 if(authService.isRightRole(config.role.store)){
