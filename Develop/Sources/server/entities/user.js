@@ -94,7 +94,7 @@ module.exports = function(sequelize, DataTypes) {
         return currentUser.save();
       },
 
-      getAllShipperWithTask: function(task, profile, order, orderstatus) {
+      getAllShipperWithTask: function(task, profile, order, orderstatus, tasktype, taskstatus) {
         return user.findAll({
           include:[{
             model: task,
@@ -103,6 +103,14 @@ module.exports = function(sequelize, DataTypes) {
               {
               model: order,
                 include: [{model: orderstatus,  attributes: ['statusname']}]
+              },
+              {
+                model: tasktype,
+                attributes: ['typename']
+              },
+              {
+                model: taskstatus,
+                attributes: ['statusname']
               }
             ]
           },{model: profile}],

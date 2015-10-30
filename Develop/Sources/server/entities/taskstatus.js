@@ -11,6 +11,9 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     }
+  }, {
+    freezeTableName: true,
+    timestamps: false
   });
   return taskstatus;
 };
