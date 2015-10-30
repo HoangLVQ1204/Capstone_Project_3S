@@ -1,9 +1,6 @@
 <ion-view view-title="Order Detail">
   <ion-content padding="true" class="has-header">
-    <div id="map_canvas"><map style="margin-top: 10px" shipper-markers="shippers" store-markers="stores" customer-markers="customers" orders="orders"></map></div>
-    <button fab="" fab-center="" fab-top="" secondary="" class="disable-hover icon-only">
-      <icon compass="" is-active="false" role="img" class="ion-ios-compass-outline" aria-label="compass outline">A</icon>
-    </button>
+    <div id="map_canvas"><map shipper-markers="shippers" store-markers="stores" customer-markers="customers" orders="orders"></map></div>
     <div class="checkout-wrap">
       <ul class="checkout-bar">
         <!--<li class="visited first"></li>-->
@@ -121,4 +118,15 @@
       </ion-content>
     </ion-popover-view>
   </script>
+  <!--<div id="map2">-->
+    <!--<ui-gmap-google-map center="center" zoom="12" control="" pan="true" dragging="true">-->
+
+      <!--<ui-gmap-markers models="shippers" coords="'self'" control="" icon="'icon'" idKey="'shipperID'"></ui-gmap-markers>-->
+
+      <!--<ui-gmap-markers models="stores" coords="'self'" control="" icon="'icon'" idKey="'storeID'"></ui-gmap-markers>-->
+
+      <!--<ui-gmap-markers models="customers" coords="'self'" control="" icon="'icon'" idKey="'customerID'"></ui-gmap-markers>-->
+
+    <!--</ui-gmap-google-map>-->
+  <!--</div>-->
 </ion-view>

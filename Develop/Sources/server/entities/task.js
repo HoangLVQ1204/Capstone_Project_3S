@@ -34,6 +34,12 @@ module.exports = function (sequelize, DataTypes) {
         freezeTableName: true,
         timestamps: false,
         classMethods: {
+            associate: function(db) {
+                task.belongsTo(db.order, {
+                    foreignKey: 'orderid',
+                    constraints: false
+                });
+            },
             getAllHistoryOfShipper: function (shipperid, modelOrder, modelOrderStatus) {
                 return task.findAll({
                     attributes: [['taskid', 'id'],['taskdate','date']],
@@ -56,6 +62,32 @@ module.exports = function (sequelize, DataTypes) {
                         }
                     ]
                 });
+            },
+            getMapdataById: function (orderModel, shipperID, order){
+                if(order=="all") {
+                    return task.findAll({
+                        attributes: ['orderid', ['shipperid', 'shipperID']],
+                        where: {
+                            shipperid: shipperID
+                        },
+                        include: {
+                            model: orderModel,
+                            attributes: [['storeid', 'storeID'], ['pickupaddresscoordination', 'storePos'], ['deliveryaddress', 'customerPos']]
+                        }
+                    });
+                }else{
+                    return task.findAll({
+                        attributes: ['orderid', ['shipperid', 'shipperID']],
+                        where: {
+                            shipperid: shipperID,
+                            orderid: order
+                        },
+                        include: {
+                            model: orderModel,
+                            attributes: [['storeid', 'storeID'], ['pickupaddresscoordination', 'storePos'], ['deliveryaddress', 'customerPos']]
+                        }
+                    });
+                }
             }
         }
     });

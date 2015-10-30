@@ -35,10 +35,14 @@ angular.module('app')
                 // mode in ["all", "shipper", "store", "orderdetail"]          
                 var mode = "all";
 
-                $scope.shippers = mapService.getShipperMarkers(mode);
-                $scope.stores = mapService.getStoreMarkers(mode);
-                $scope.customers = mapService.getCustomerMarkers(mode);
-                $scope.orders = mapService.getOrders(mode);                                
+                //$scope.shippers = mapService.getShipperMarkers(mode);
+                //$scope.stores = mapService.getStoreMarkers(mode);
+                //$scope.customers = mapService.getCustomerMarkers(mode);
+                //$scope.orders = mapService.getOrders(mode);
+                $scope.shippers = sampleData[mode].shipper;
+                $scope.stores = sampleData[mode].store;
+                $scope.customers = sampleData[mode].customer;
+                $scope.orders = sampleData[mode].orders;
             }
         })
 });

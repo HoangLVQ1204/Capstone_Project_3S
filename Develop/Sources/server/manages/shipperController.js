@@ -20,13 +20,13 @@ module.exports = function (app) {
             .then(function (tasks) {
                 var group = {};
                 if (_.isEmpty(tasks) == false) {
-                    var listTasks=[];
-                    _.each(tasks, function(task){
+                    var listTasks = [];
+                    _.each(tasks, function (task) {
                         listTasks.push({
                             'orderid': task.dataValues.orderid,
                             'ordertypeid': task.dataValues.ordertypeid,
                             'statusid': task.dataValues.statusid,
-                            'statusname':  task['orderstatus'].dataValues.statusname,
+                            'statusname': task['orderstatus'].dataValues.statusname,
                             'tasktype': task['tasks'][0].dataValues.tasktype,
                             'pickupaddress': task.dataValues.pickupaddress,
                             'deliveryaddress': task.dataValues.deliveryaddress,
@@ -182,7 +182,7 @@ module.exports = function (app) {
                                 typeid: orderObj.statusid
                             }
                         }).then(function (codeObj) {
-                            if(codeObj){
+                            if (codeObj) {
                                 orderObj.update({
                                     statusid: nextStatus
                                 }).then(function (rs) {
@@ -190,13 +190,13 @@ module.exports = function (app) {
                                 }, function (er) {
                                     return res.status(400).json("Update failed!");
                                 });
-                            }else{
+                            } else {
                                 return res.status(400).json("Wrong Code!");
                             }
-                        }, function(err){
+                        }, function (err) {
                             return res.status(400).json("Wrong Code!");
                         });
-                    }else{
+                    } else {
                         orderObj.update({
                             statusid: nextStatus
                         }).then(function (rs) {
@@ -222,18 +222,94 @@ module.exports = function (app) {
         newIssue.category = req.body.category.categoryID;
         newIssue.content = req.body.content;
         db.issue.createNewIssue(newIssue)
-            .then(function(issue) {
-            }).then(function(){
+            .then(function (issue) {
+            }).then(function () {
                 //Instance new list Order get an issued
                 var listOrders = [];
-                _.each(req.body.issuedOrder, function(order){
+                _.each(req.body.issuedOrder, function (order) {
                     listOrders.push(order.val);
                 });
                 db.order.changeIsPendingOrder(listOrders);
                 res.sendStatus(200);
-            }, function(err) {
+            }, function (err) {
                 next(err);
             });
+    };
+
+    var indexInStoreList = function(storeID, listStore){
+        return -1;
+    };
+
+    var indexInCustomerList = function(geoText, listCustomer){
+        return -1;
+    };
+
+    var paramMapdata = function (req, res, next, order) {
+        var shipperID = 'huykool'; // = req.userid
+        var orderModel = db.order;
+        db.task.getMapdataById(orderModel, shipperID, order).then(function (dataMap) {
+            if (dataMap){
+                var shipperList = [{
+                    "order": [],
+                    "shipperID": shipperID
+                }];
+                var storeList = [];
+                var customerList = [];
+                var orderList = {};
+                dataMap.map(function(item){
+                    item = item.toJSON();
+                    // fill data for shippers
+                    shipperList[0].order.push(item.orderid);
+                    // fill data for stores
+                    var posStore = indexInStoreList(item.order.storeID, orderList);
+                    if(posStore<0){
+                        var storePos = item.order.storePos.split(',');
+                        storePos = (storePos.length == 2)? storePos : ['',''];
+                        storeList.push({
+                            "order": [item.orderid],
+                            "latitude": parseFloat(storePos[0]) ? parseFloat(storePos[0]) : 0,
+                            "longitude": parseFloat(storePos[1]) ? parseFloat(storePos[1]) : 0,
+                            "storeID": item.order.storeID
+                        });
+                    }else{
+                        storeList[posStore].order.push(item.orderid);
+                    }
+                    // fill data for customers
+                    var postCustomer = indexInCustomerList(item.order.customerPos,customerList);
+                    if(postCustomer<0){
+                        customerList.push({
+                            "order":[item.orderid],
+                            "geoText": item.order.customerPos
+                        });
+                    }else{
+                        customerList[postCustomer].order.push(item.orderid);
+                    }
+                    // fill data for orders
+                    var key = item.orderid;
+                    var orderObj = {
+                        "shipperID": item.shipperID,
+                        "storeID": item.order.storeID
+                    };
+                    orderList[key] = orderObj;
+                });
+
+                req.dataMap = {
+                    "shipper": shipperList,
+                    "store": storeList,
+                    "customer": customerList,
+                    "order": orderList
+                };
+                next();
+            }else{
+                next(new Error("No data"));
+            }
+        }, function (err) {
+            next(err);
+        });
+    };
+
+    var getMapdata = function (req, res, next){
+        return res.status(200).json(req.dataMap);
     };
 
     return {
@@ -244,7 +320,9 @@ module.exports = function (app) {
         getExpressStatusList: getExpressStatusList,
         nextStep: nextStep,
         nextStepCode: nextStepCode,
-        createIssue: createIssue
+        createIssue: createIssue,
+        paramMapdata: paramMapdata,
+        getMapData: getMapdata
     }
 
 }

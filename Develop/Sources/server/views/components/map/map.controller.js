@@ -286,34 +286,34 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
 
         // Test real-time
 
-        // setTimeout(function() {
-        //     console.log('time out');
-        //     var newOrder = "order1";
-        //     var shipperID = "shipper_1";
-        //     var storeID = "store_3";
-        //     var newStore = {
-        //         "order": [newOrder],
-        //         "latitude": 21.031526,
-        //         "longitude": 105.813359,
-        //         "storeID": storeID
-        //     };
-        //     var geoText = "306 Kim Mã,Ba Đình,Hà Nội,Việt Nam";
-        //     var newCustomer = {
-        //         "order": [newOrder],
-        //         "geoText": geoText
-        //     };
-        //     initStoreMarker($scope, geocoder, maps, newStore);
-        //     $scope.orders[newOrder] = {
-        //         "shipperID": shipperID,
-        //         "storeID": storeID
-        //     };
-        //     initCustomerMarker($scope, geocoder, maps, newCustomer);
-        //     // Add all new information
-        //     $scope.shipperMarkers[0].order.push(newOrder);
-        //     $scope.storeMarkers.push(newStore);
-        //     $scope.customerMarkers.push(newCustomer);
-        //     $scope.$apply();
-        // }, 5000);
+         setTimeout(function() {
+             console.log('time out');
+             var newOrder = "order1";
+             var shipperID = "shipper_1";
+             var storeID = "store_3";
+             var newStore = {
+                 "order": [newOrder],
+                 "latitude": 21.031526,
+                 "longitude": 105.813359,
+                 "storeID": storeID
+             };
+             var geoText = "306 Kim Mã,Ba Đình,Hà Nội,Việt Nam";
+             var newCustomer = {
+                 "order": [newOrder],
+                 "geoText": geoText
+             };
+             initStoreMarker($scope, geocoder, maps, newStore);
+             $scope.orders[newOrder] = {
+                 "shipperID": shipperID,
+                 "storeID": storeID
+             };
+             initCustomerMarker($scope, geocoder, maps, newCustomer);
+             // Add all new information
+             $scope.shipperMarkers[0].order.push(newOrder);
+             $scope.storeMarkers.push(newStore);
+             $scope.customerMarkers.push(newCustomer);
+             $scope.$apply();
+         }, 5000);
 
         // Filling control for all angular-google-map directives
         uiGmapIsReady.promise().then(function(instances) {
