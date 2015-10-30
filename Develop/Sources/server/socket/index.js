@@ -58,7 +58,7 @@ module.exports = function(server){
         if (receiver.clientID) {    // clientID is shipperID || storeID
             return io.sockets.connected[receiver.clientID];
         }        
-    }
+    };
 
     /*
         receiver = {clientID: ...}
