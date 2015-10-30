@@ -110,11 +110,11 @@ module.exports = function(sequelize, DataTypes) {
           where: {'ispending': false},
           include: [{
             model: task,
-            attributes: ['tasktype', 'taskstatus', 'taskdate'],
+            attributes: ['typeid', 'statusid', 'taskdate'],
             where: {
               shipperid: shipperid,
               taskdate: taskdate,
-              taskstatus: [1, 2]
+              statusid: [1, 2]
             }
           }
           ]
@@ -170,13 +170,13 @@ module.exports = function(sequelize, DataTypes) {
       },
 
       
-      changeIsPendingOrder: function(listOrders) {
-        listOrders.forEach(function(item) {
+      changeIsPendingOrder: function(orderID) {
+        //listOrders.forEach(function(item) {
           order.update(
               { ispending: 'true' },
-              { where: { orderid: item }}
+              { where: { orderid: orderID }}
           )
-        });
+        //});
       },
 
       getTotalShipFeeOfStore: function(storeid, paydate){
