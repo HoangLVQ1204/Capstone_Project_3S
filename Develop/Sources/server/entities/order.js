@@ -112,11 +112,11 @@ module.exports = function(sequelize, DataTypes) {
           where: {'ispending': false},
           include: [{
             model: task,
-            attributes: ['tasktype', 'taskstatus', 'taskdate'],
+            attributes: ['typeid', 'statusid', 'taskdate'],
             where: {
               shipperid: shipperid,
               taskdate: taskdate,
-              taskstatus: [1, 2]
+              statusid: [1, 2]
             }
           }
           ]
@@ -187,14 +187,12 @@ module.exports = function(sequelize, DataTypes) {
       putOrder: function (currentOrder) {
         return currentOrder.save();
       },
-
-      changeIsPendingOrder: function(orderid) {
-        order.update(
-            { ispending: 'true' },
-            { where: { orderid: 'orderid' }} /* where criteria */
-        )
+      changeIsPendingOrder: function(orderID) {
+          order.update(
+              { ispending: 'true' },
+              { where: { orderid: orderID }}
+          )
       },
-
       submitDraffOrder: function(orderid) {
         order.update(
             {

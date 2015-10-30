@@ -7,9 +7,20 @@
         {{issue.category.categoryName || 'Type of Issue'}}
       </div>
       <div class="item item-divider">Reason</div>
-      <div class="item item-select" fancy-select ng-model="issue.reason" items="issueReasons" item-label="reasonName">
+      <!--No select Category-->
+      <div ng-show = "issue.category.categoryID == null" class="item item-select" fancy-select ng-model="issue.reason" items="listReasons" item-label="reasonName">
         {{issue.reason.reasonName || 'Reason of Issue'}}
       </div>
+      <!--Select pending-->
+      <div  ng-show = "issue.category.categoryID == 1" class="item item-select" fancy-select ng-model="issue.reason" items="pendingReasons" item-label="reasonName">
+        {{issue.reason.reasonName || 'Reason of Issue'}}
+      </div>
+      <!--Select Cancel-->
+      <div ng-show = "issue.category.categoryID == 2" class="item item-select" fancy-select ng-model="issue.reason" items="cancelReasons" item-label="reasonName">
+        {{issue.reason.reasonName || 'Reason of Issue'}}
+      </div>
+
+
       <div class="item item-divider">Order</div>
       <div class="item item-select" fancy-select ng-model="issue.issuedOrder" multi-select="true" items="selectable" item-label="text">
         {{parseMulti(issue.issuedOrder) || 'Order get an Issue'}}

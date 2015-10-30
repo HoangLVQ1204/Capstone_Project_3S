@@ -20,17 +20,16 @@ module.exports = function (app) {
                 var group = {};
                 if (_.isEmpty(tasks) == false) {
                     var listTasks = [];
-                    listTasks.push({
-                        'orderid': task.dataValues.orderid,
-                        'ordertypeid': task.dataValues.ordertypeid,
-                        'statusid': task.dataValues.statusid,
-                        'statusname': task['orderstatus'].dataValues.statusname,
-                        'tasktype': task['tasks'][0].dataValues.tasktype,
-                        'taskstatus': task['tasks'][0].dataValues.taskstatus,
-                        'pickupaddress': task.dataValues.pickupaddress,
-                        'deliveryaddress': task.dataValues.deliveryaddress,
-                        'pickupdate': task.dataValues.pickupdate,
-                        'deliverydate': task.dataValues.deliverydate
+                    _.each(tasks, function(task){
+                        listTasks.push({
+                            'orderid': task.dataValues.orderid,
+                            'typeid': task['tasks'][0].dataValues.typeid,
+                            'statusid': task['tasks'][0].dataValues.statusid,
+                            'pickupaddress': task.dataValues.pickupaddress,
+                            'deliveryaddress': task.dataValues.deliveryaddress,
+                            'pickupdate': task.dataValues.pickupdate,
+                            'deliverydate': task.dataValues.deliverydate
+                        });
                     });
                     //Group by order type
                     group['Pickup'] = group['Pickup'] || [];
@@ -38,11 +37,11 @@ module.exports = function (app) {
                     group['Express'] = group['Express'] || [];
                     group['Return'] = group['Return'] || [];
                     _.each(listTasks, function (item) {
-                        if (_.isEqual(item['tasktype'], 1)) {
+                        if (_.isEqual(item['typeid'], 1)) {
                             group['Pickup'].push(item);
-                        } else if (_.isEqual(item['tasktype'], 2)) {
+                        } else if (_.isEqual(item['typeid'], 2)) {
                             group['Ship'].push(item);
-                        } else if (_.isEqual(item['tasktype'], 3)) {
+                        } else if (_.isEqual(item['typeid'], 3)) {
                             group['Express'].push(item);
                         } else {
                             group['Return'].push(item);
@@ -217,22 +216,27 @@ module.exports = function (app) {
 
     var createIssue = function (req, res, next) {
         //Instance new Issue
-
         var newIssue = {};
         newIssue.categoryID = req.body.category.categoryID;
         newIssue.reason = req.body.reason.reasonName;
         newIssue.description = req.body.description;
-        console.log('quyen', newIssue);
         db.issue.createNewIssue(newIssue)
             .then(function(issue) {
-            }).then(function(){
-                console.log('issue', issue);
                 //Instance new list Order get an issued
                 var listOrders = [];
                 _.each(req.body.issuedOrder, function (order) {
                     listOrders.push(order.val);
                 });
-                db.order.changeIsPendingOrder(listOrders);
+                //Insert into orderissue
+                var newOrderIssue = {};
+                newOrderIssue.issueid = issue.issueid;
+                newOrderIssue.date = new Date();
+                _.each(listOrders, function(orderID) {
+                    newOrderIssue.orderid = orderID;
+                    db.orderissue.createOrderIssue(newOrderIssue);
+                    //Change isPending
+                    db.order.changeIsPendingOrder(orderID);
+                })
                 res.sendStatus(200);
             }, function (err) {
                 next(err);
