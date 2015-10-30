@@ -10,7 +10,15 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
     };
 
     $scope.submit = function(){
-        console.log("submit");
+
+            event.preventDefault();
+            var main=$("#main");
+            //scroll to top
+            main.animate({
+                scrollTop: 0
+            }, 500);
+            main.addClass("slideDown");
+
         authService.signIn($scope.user)
             .then(function(){
 
@@ -31,15 +39,20 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
 
             })
             .catch(function(error){
-                showError({
-                   message: 'Username or Password is invalid'
-                });
+                main.removeClass("slideDown");
+                //setTimeout(function () {
+                //    main.removeClass("slideDown")
+                //}, !error ? 500:3000);
+
+                $.notific8('Check Username or Password again !! ',{ life:5000,horizontalEdge:"bottom", theme:"danger" ,heading:" ERROR :); "});
+                return false;
             })
     };
 
 
 
     $(function() {
+
         //Login animation to center
         function toCenter(){
             var mainH=$("#main").outerHeight();
@@ -63,10 +76,12 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
         throbber.appendTo(document.getElementById('canvas_loading'));
         throbber.start();
 
+
+
         //Set note alert
-        setTimeout(function () {
-            $.notific8('Hi Guest , you can use Username : <strong>demo</strong> and Password: <strong>demo</strong> to  access account.',{ sticky:true, horizontalEdge:"top", theme:"inverse" ,heading:"LOGIN DEMO"})
-        }, 1000);
+        //setTimeout(function () {
+        //    $.notific8('Hi Guest , you can use Username : <strong>demo</strong> and Password: <strong>demo</strong> to  access account.',{ sticky:true, horizontalEdge:"top", theme:"inverse" ,heading:"LOGIN DEMO"})
+        //}, 1000);
 
 
         //$("#form-signin").submit(function(event){
@@ -77,22 +92,22 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
         //        scrollTop: 0
         //    }, 500);
         //    main.addClass("slideDown");
-        //
-        //    // send username and password to php check login
-        //    $.ajax({
-        //        url: "data/checklogin.php", data: $(this).serialize(), type: "POST", dataType: 'json',
-        //        success: function (e) {
-        //            setTimeout(function () { main.removeClass("slideDown") }, !e.status ? 500:3000);
-        //            if (!e.status) {
-        //                $.notific8('Check Username or Password again !! ',{ life:5000,horizontalEdge:"bottom", theme:"danger" ,heading:" ERROR :); "});
-        //                return false;
-        //            }
-        //            setTimeout(function () { $("#loading-top span").text("Yes, account is access...") }, 500);
-        //            setTimeout(function () { $("#loading-top span").text("Redirect to account page...")  }, 1500);
-        //            setTimeout( "window.location.href='dashboard.html'", 3100 );
-        //        }
-        //    });
-        //
+
+            // send username and password to php check login
+            //$.ajax({
+            //    url: "data/checklogin.php", data: $(this).serialize(), type: "POST", dataType: 'json',
+            //    success: function (e) {
+            //        setTimeout(function () { main.removeClass("slideDown") }, !e.status ? 500:3000);
+            //        if (!e.status) {
+            //            $.notific8('Check Username or Password again !! ',{ life:5000,horizontalEdge:"bottom", theme:"danger" ,heading:" ERROR :); "});
+            //            return false;
+            //        }
+            //        setTimeout(function () { $("#loading-top span").text("Yes, account is access...") }, 500);
+            //        setTimeout(function () { $("#loading-top span").text("Redirect to account page...")  }, 1500);
+            //        setTimeout( "window.location.href='dashboard.html'", 3100 );
+            //    }
+            //});
+
         //});
     });
     $scope.$watch('$viewContentLoaded', function(event) {

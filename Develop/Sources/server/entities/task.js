@@ -80,6 +80,31 @@ module.exports = function (sequelize, DataTypes) {
                     ]
                 });
             },
+            getMapdataById: function (orderModel, shipperID, order){
+                if(order=="all") {
+                    return task.findAll({
+                        attributes: ['orderid', ['shipperid', 'shipperID']],
+                        where: {
+                            shipperid: shipperID
+                        },
+                        include: {
+                            model: orderModel,
+                            attributes: [['storeid', 'storeID'], ['pickupaddresscoordination', 'storePos'], ['deliveryaddress', 'customerPos']]
+                        }
+                    });
+                }else{
+                    return task.findAll({
+                        attributes: ['orderid', ['shipperid', 'shipperID']],
+                        where: {
+                            shipperid: shipperID,
+                            orderid: order
+                        },
+                        include: {
+                            model: orderModel,
+                            attributes: [['storeid', 'storeID'], ['pickupaddresscoordination', 'storePos'], ['deliveryaddress', 'customerPos']]
+                        }
+                    });
+                },
 
             assignTaskForShipper: function(shipper){
                 //console.log(shipper);
