@@ -98,20 +98,18 @@ module.exports = function(sequelize, DataTypes) {
         });
 
       },
-      getAllTaskOfShipper: function(task, orderstatus, shipperid, taskdate) {
+      getAllTaskOfShipper: function(task, shipperid, taskdate) {
         return order.findAll({
           attributes: ['orderid', 'ordertypeid', 'pickupaddress', 'deliveryaddress', 'pickupdate', 'deliverydate', 'statusid'],
           where: {'ispending': false},
           include: [{
             model: task,
-            attributes: ['tasktype', 'taskdate'],
+            attributes: ['tasktype', 'taskstatus', 'taskdate'],
             where: {
               shipperid: shipperid,
-              taskdate: taskdate
+              taskdate: taskdate,
+              taskstatus: [1, 2]
             }
-          },{
-            model: orderstatus,
-            attributes: ['statusname']
           }
           ]
         });

@@ -135,7 +135,7 @@
                                         <tbody align="center" >
 
                                         <tr class="odd gradeX" ng-repeat= "x in displayedTaskCollection">
-                                            <td class="text-left">{{x.orderid}}</td>
+                                            <td class="text-left">{{x.order.orderid}}</td>
                                             <td cs-select-checkbox="x"  select-action="pickTask(x)" select-mode="multiple">{{x.order.orderstatus.statusname}}</td>
                                             <td>{{x.order.ispending}}</td>
                                         </tr>
@@ -200,11 +200,11 @@
                                         <tbody align="center" >
 
                                         <tr class="odd gradeX" ng-repeat= "x in displayedOrderCollection" >
-                                            <td>{{x.orderid}}</td>
-                                            <td>{{x.deliveryaddress}}</td>
-                                            <td cs-select-checkbox="x"  select-action="pickOrder(x)" select-mode="multiple" shipper-row="$parent.isPicked">{{x.pickupaddress}}</td>
-                                            <td>{{x.orderstatus.statusname}}</td>
-                                            <td>{{x.ispending}}</td>
+                                            <td>{{x.order.orderid}}</td>
+                                            <td>{{x.order.deliveryaddress}}</td>
+                                            <td cs-select-checkbox="x"  select-action="pickOrder(x)" select-mode="multiple" shipper-row="$parent.isPicked">{{x.order.pickupaddress}}</td>
+                                            <td>{{x.order.orderstatus.statusname}}</td>
+                                            <td>{{x.order.ispending}}</td>
                                         </tr>
                                         </tbody>
                                         <tfoot>
@@ -218,12 +218,13 @@
                                 </form>
                             </div>
 
-                            <div class="pull-right">
+                            <div class="pull-left">
                                 <div class=" col-lg-6">
                                     <button type="submit" class="btn btn-theme" ng-click="assignTask()">Assign</button>
                                 </div>
                             </div>
                         </div>
+
                     </section>
                 </div>
 

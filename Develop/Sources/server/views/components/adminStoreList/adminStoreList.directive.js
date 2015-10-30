@@ -40,8 +40,8 @@
                             query.after = new Date(res[0]);
                             query.before = new Date(res[1]);
                         }
-                        //console.log(attr.stCustomDate);
-                        ctrl.search(query, attr.stCustomDate);
+                             ctrl.search(query, attr.stCustomDate);
+                        console.log(1);
                     });
 
                     attr.$observe('stPredicate', function (newValue, oldValue) {
@@ -58,7 +58,34 @@
         .directive('daterange', function () {
             return {
                 link: function (scope, element) {
-                    element.daterangepicker();
+                    //var enddate = new Date(Date.now());
+                    //var startdate = new Date(enddate);
+                    //startdate.setYear(startdate.getFullYear()-3);
+
+                    element.daterangepicker({
+                        linkedCalendars: false,
+                        autoUpdateInput: false,
+                        locale: {
+                            cancelLabel: 'Clear',
+                        }
+                    });
+
+                    element.on('apply.daterangepicker', function(ev, picker) {
+                        element.val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+                        //$scope.dateRange = $('#daterange').val();
+                        scope.$apply(function(){
+                            scope.dateRange = element.val();
+                        });
+                        //console.log($scope.dateRange)
+                    });
+
+                    element.on('cancel.daterangepicker', function(ev, picker) {
+                        element.val('');
+                       // $scope.dateRange = $('#daterange').val();
+                        scope.$apply(function(){
+                            scope.dateRange = element.val();
+                        });
+                    });
                 }
             }
         })
