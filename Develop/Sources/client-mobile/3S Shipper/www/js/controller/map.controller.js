@@ -1,3 +1,6 @@
+/**
+ * Created by Kaka Hoang Huy on 10/27/2015.
+ */
 
 function initShipperMarker($scope, geocoder, maps, shipperMarker) {
   shipperMarker.icon = $scope.shipperIcon;
@@ -100,11 +103,13 @@ function displayRelationship(model, object_1, object_2, $scope) {
 
 // RUN ORDER: controller => link function
 function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady){
+  console.log("directive map load");
   $scope.shipperMarkers = $scope.shipperMarkers || [];
   $scope.storeMarkers = $scope.storeMarkers || [];
   $scope.customerMarkers = $scope.customerMarkers || [];
   $scope.orders = $scope.orders || {};
   $scope.circleRadius = $scope.circleRadius || 1000000000;
+  console.log($scope.orders);
   var initCenter = {
     latitude: 21.029544,
     longitude: 105.827340
@@ -125,7 +130,6 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady){
      + Địa điểm đến
 
      */
-    console.log("API");
     $scope.shipperIcon = 'http://maps.google.com/mapfiles/kml/shapes/motorcycling.png';
     $scope.storeIcon = 'http://maps.google.com/mapfiles/kml/shapes/homegardenbusiness.png';
     $scope.customerIcon = 'http://maps.google.com/mapfiles/kml/shapes/man.png';
@@ -283,8 +287,8 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady){
 
     //setTimeout(function() {
     //  console.log('time out');
-    //  var newOrder = "order1";
-    //  var shipperID = "shipper_1";
+    //  var newOrder = "order2";
+    //  var shipperID = "shipper_2";
     //  var storeID = "store_3";
     //  var newStore = {
     //    "order": [newOrder],
@@ -310,6 +314,13 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady){
     //  $scope.customerMarkers.push(newCustomer);
     //  $scope.$apply();
     //}, 5000);
+
+    //var t = 0;
+    //setInterval(function(){
+    //  console.log(t++);
+    //    $scope.shipperMarkers[0].latitude = $scope.shipperMarkers[0].latitude - 0.00001*t;
+    //    $scope.shipperMarkers[0].longitude = $scope.shipperMarkers[0].longitude - 0.00001*t;
+    //},2000);
 
 
 

@@ -23,6 +23,11 @@ angular.module('app')
                     })
                 })
             },
+            /*
+                sender: { clientID: ... }
+                receiver = 'admin' || 'shipper' || 'store' || {room: ...} || {clientID: ...} || Arrays of these types
+                
+            */
             sendPacket: function(sender, receiver, msg, eventName, callback) {
                 var data = {
                     sender: sender,
