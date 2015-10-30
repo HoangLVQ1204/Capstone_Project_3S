@@ -20,18 +20,17 @@ module.exports = function (app) {
                 var group = {};
                 if (_.isEmpty(tasks) == false) {
                     var listTasks = [];
-                        listTasks.push({
-                            'orderid': task.dataValues.orderid,
-                            'ordertypeid': task.dataValues.ordertypeid,
-                            'statusid': task.dataValues.statusid,
-                            'statusname': task['orderstatus'].dataValues.statusname,
-                            'tasktype': task['tasks'][0].dataValues.tasktype,
-                            'taskstatus': task['tasks'][0].dataValues.taskstatus,
-                            'pickupaddress': task.dataValues.pickupaddress,
-                            'deliveryaddress': task.dataValues.deliveryaddress,
-                            'pickupdate': task.dataValues.pickupdate,
-                            'deliverydate': task.dataValues.deliverydate
-                        });
+                    listTasks.push({
+                        'orderid': task.dataValues.orderid,
+                        'ordertypeid': task.dataValues.ordertypeid,
+                        'statusid': task.dataValues.statusid,
+                        'statusname': task['orderstatus'].dataValues.statusname,
+                        'tasktype': task['tasks'][0].dataValues.tasktype,
+                        'taskstatus': task['tasks'][0].dataValues.taskstatus,
+                        'pickupaddress': task.dataValues.pickupaddress,
+                        'deliveryaddress': task.dataValues.deliveryaddress,
+                        'pickupdate': task.dataValues.pickupdate,
+                        'deliverydate': task.dataValues.deliverydate
                     });
                     //Group by order type
                     group['Pickup'] = group['Pickup'] || [];
@@ -363,7 +362,7 @@ module.exports = function (app) {
         nextStepCode: nextStepCode,
         createIssue: createIssue,
         paramMapdata: paramMapdata,
-        getMapData: getMapdata
+        getMapData: getMapdata,
         getAllShipper: getAllShipper,
         getAllOrderToAssignTask: getAllOrderToAssignTask,
         getAllShipperWithTask: getAllShipperWithTask,
