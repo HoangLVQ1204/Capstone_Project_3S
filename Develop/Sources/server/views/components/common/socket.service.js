@@ -22,6 +22,14 @@ angular.module('app')
                         }
                     })
                 })
+            },
+            sendPacket: function(sender, receiver, msg, eventName, callback) {
+                var data = {
+                    sender: sender,
+                    receiver: receiver,
+                    msg: msg
+                };
+                this.emit(eventName, data, callback);
             }
         }
     })

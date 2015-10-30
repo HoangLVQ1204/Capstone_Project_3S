@@ -63,5 +63,13 @@ app.controller('TasksCtrl', ['$scope', 'dataService', 'mySharedService', functio
       $scope.expressTasks = [];
       $scope.badgeCountExpress = 0;
     }
+    if (undefined !== rs['Return'] && rs['Return'].length) {
+      $scope.returnTasks = rs['Return'];
+      $scope.badgeCountReturn = rs['Return'].length;
+    } else {
+      $scope.returnTasks = [];
+      $scope.badgeCountReturn = 0;
+    }
+
   }
 }]);

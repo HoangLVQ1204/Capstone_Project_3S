@@ -1,6 +1,4 @@
-﻿
-
-CREATE TABLE Role
+﻿CREATE TABLE Role
 (
 roleID int PRIMARY KEY,
 roleName varchar(20)
@@ -109,6 +107,8 @@ pickUpAddress varchar(100),
 deliveryAddress varchar(100),
 pickUpDate date,
 deliveryDate date,
+createDate date,
+doneDate date,
 recipientPhone varchar(11),
 recipientName varchar(50),
 ledgerID int REFERENCES GeneralLedger(ledgerID),
@@ -117,9 +117,22 @@ isPending boolean,
 isDraff boolean,
 isCancel boolean,
 fee BIGINT,
-CoD BIGINT,
+Cod BIGINT,
 pickUpAddressCoordination text,
 deliveryAddressCoordination text
+);
+
+
+CREATE TABLE TaskStatus
+(
+statusID int PRIMARY KEY,
+statusName varchar(20)
+);
+
+CREATE TABLE TaskType
+(
+typeID int PRIMARY KEY,
+typeName varchar(20)
 );
 
 CREATE TABLE Task
@@ -128,7 +141,8 @@ taskID int PRIMARY KEY,
 orderID varchar(8) REFERENCES "order"(orderID),
 shipperID varchar(20) REFERENCES "user"(username),
 adminID varchar(20) REFERENCES "user"(username),
-tasktype int NOT NULL,
+taskstatus int REFERENCES TaskStatus(statusID),
+tasktype int REFERENCES TaskType(typeID),
 taskDate date
 );
 
@@ -176,9 +190,10 @@ priority varchar(20)
 CREATE TABLE Issue
 (
 issueID SERIAL PRIMARY KEY,
-category int REFERENCES IssueCategory(categoryID),
+categoryID int REFERENCES IssueCategory(categoryID),
 --priority int REFERENCES IssuePriority(priorityID),
-content text
+reason text,
+description text
 );
 
 CREATE TABLE OrderIssue
@@ -186,7 +201,6 @@ CREATE TABLE OrderIssue
 issueID int REFERENCES Issue(issueID),
 orderID varchar(8) REFERENCES "order"(orderID),
 date date,
-description text,
 PRIMARY KEY(issueID, orderID)
 );
 
@@ -235,6 +249,8 @@ DROP TABLE ConfirmationCode;
 DROP TABLE ConfirmationCodeType;
 DROP TABLE Goods;
 DROP TABLE Task;
+DROP TABLE TaskStatus;
+DROP TABLE TaskType;
 DROP TABLE "order";
 DROP TABLE OrderType;
 DROP TABLE OrderStatus;
@@ -247,6 +263,3 @@ DROP TABLE "user";
 DROP TABLE WorkingStatus;
 DROP TABLE Role;
 */
-
-
-

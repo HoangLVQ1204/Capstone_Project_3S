@@ -8,12 +8,16 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
-    category: {
+    categoryid: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
       primaryKey: true
     },
-    content: {
+    reason: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    description: {
       type: DataTypes.TEXT,
       allowNull: true
     }

@@ -12,7 +12,7 @@ app.factory('authService',function($http,$q,jwtHelper){
     var signIn = function(data){
       return $http({
         data: data,
-        url: 'http://localhost:3000/auth/signin',
+        url: config.hostServer + 'auth/signin',
         method: 'POST'
       }).then(function(data){
         saveToken(data.data.token);

@@ -20,26 +20,22 @@ function socketStore($q,socketService,authService,mapService){
         api.selectShipper(shipper, {});
     });
 
+    socketService.on('store:update:location', function(data) {
+        mapService.updateShipper(data); 
+    });
+
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();
         
         var d = $q.defer();
 
-        navigator.geolocation.getCurrentPosition(function(position){
-            // if (currentLocation
-            //     && Math.abs(currentLocation.latitude - position.coords.latitude) <= EPSILON
-            //     && Math.abs(currentLocation.longitude - position.coords.longitude) <= EPSILON) {
-            //     console.log('the same location');
-            //     return;
-            // }
-            // console.log('different location');
+        navigator.geolocation.getCurrentPosition(function(position){            
             var dataStore = {
-                storeID: currentUser.stores[0],
-                ownStore: currentUser.username            
+                storeID: currentUser.stores[0]                
             };
             currentLocation = position.coords;
-            dataStore.latitude = position.coords.latitude;
-            dataStore.longitude = position.coords.longitude;
+            dataStore.latitude = currentLocation.latitude;
+            dataStore.longitude = currentLocation.longitude;
 
             d.resolve(dataStore);
         },function(){
@@ -50,13 +46,21 @@ function socketStore($q,socketService,authService,mapService){
 
     api.registerSocket = function(){
         api.getCurrentUser()
-        .then(function(user) {
+        .then(function(user) {            
             mapService.addStore(user)
-            .then(function() {
-                socketService.emit("store:register:location",user);
+            .then(function() {                
+                socketService.sendPacket(
+                { 
+                    clientID: user.storeID 
+                },
+                'server',
+                {
+                    store: user
+                },
+                'store:register:location');
             });            
-        },function(){
-            alert("Can't get your current location! Please check your connection");
+        },function(err){
+            alert(err);
         });            
     };
     

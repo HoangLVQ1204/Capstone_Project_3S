@@ -8,7 +8,8 @@ module.exports = function (app) {
     var authManage = require('./../../manages/authManage')(app);
     var checkAll = [authManage.checkToken(),authManage.checkRole()];
 
-    app.get('/api/tasks', checkAll, shipperCtrl.getTask);
+    //app.get('/api/tasks', checkAll, shipperCtrl.getTask);
+    app.get('/api/tasks', shipperCtrl.getTask);
 
     app.get('/api/shipper/getAllShipper', shipperCtrl.getAllShipper);
 
