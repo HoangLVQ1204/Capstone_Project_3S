@@ -47,7 +47,7 @@ function socketStore($q,socketService,authService,mapService){
     api.registerSocket = function(){
         api.getCurrentUser()
         .then(function(user) {            
-            mapService.addStore(user);
+            mapService.addStore(user)
             .then(function() {                
                 socketService.sendPacket(
                 { 
