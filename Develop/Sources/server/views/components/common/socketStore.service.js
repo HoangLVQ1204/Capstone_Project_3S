@@ -25,43 +25,33 @@ function socketStore($q,socketService,authService,mapService){
     });
 
     api.getCurrentUser = function() {
-        var currentUser = authService.getCurrentInfoUser();
-        
-        var d = $q.defer();
+        var currentUser = authService.getCurrentInfoUser();        
+        // TODO: Change later
+        currentUser.latitude = 21.028784;
+        currentUser.longitude = 105.826088;
 
-        navigator.geolocation.getCurrentPosition(function(position){            
-            var dataStore = {
-                storeID: currentUser.stores[0]                
-            };
-            currentLocation = position.coords;
-            dataStore.latitude = currentLocation.latitude;
-            dataStore.longitude = currentLocation.longitude;
-
-            d.resolve(dataStore);
-        },function(){
-            d.reject("Can't get your current location! Please check your connection");            
-        });
-        return d.promise;
+        var dataStore = {
+            storeID: currentUser.stores[0],
+            latitude: currentUser.latitude,
+            longitude: currentUser.longitude              
+        };
+        return dataStore;
     };
 
     api.registerSocket = function(){
-        api.getCurrentUser()
-        .then(function(user) {            
-            mapService.addStore(user)
-            .then(function() {                
-                socketService.sendPacket(
-                { 
-                    clientID: user.storeID 
-                },
-                'server',
-                {
-                    store: user
-                },
-                'store:register:location');
-            });            
-        },function(err){
-            alert(err);
-        });            
+        var user = api.getCurrentUser();
+        mapService.addStore(user)
+        .then(function() {                
+            socketService.sendPacket(
+            { 
+                clientID: user.storeID 
+            },
+            'server',
+            {
+                store: user
+            },
+            'store:register:location');
+        });
     };
     
     api.findShipper = function() {                

@@ -36,8 +36,29 @@ angular.module('app', [
         })
         .state('admin.map',{
             url: '/map',
-            template: '<map></map>',
+            views: {
+                'mapGoogle': {
+                    template: '<map style="margin-top: 10px" shipper-markers="shippers" store-markers="stores" customer-markers="customers" orders="orders"></map>',
+                    controller: function($scope, $rootScope, mapService) {
+                        setTimeout(function() {
+                            $rootScope.$apply(function() {
+                                var mode = "all";
+                                console.log(mode);
+
+                                $scope.shippers = mapService.getShipperMarkers(mode);
+                                $scope.stores = mapService.getStoreMarkers(mode);
+                                $scope.customers = mapService.getCustomerMarkers(mode);
+                                $scope.orders = mapService.getOrders(mode);
+                            });
+                        }, 10000);
+                    }
+                },
+                'dataShow': {
+                    templateUrl: '<h1>HoangLVQ dasdsadas</h1>'
+                }
+            },
             access: config.role.admin
+
         })
         .state('admin.storeList',{
             url: '/storeList',
