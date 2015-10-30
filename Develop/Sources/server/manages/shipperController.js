@@ -265,7 +265,7 @@ module.exports = function (app) {
 
     var getAllShipperWithTask = function (req, res, next) {
         var shipperList;
-        return db.user.getAllShipperWithTask(db.task, db.profile, db.order, db.orderstatus)
+        return db.user.getAllShipperWithTask(db.task, db.profile, db.order, db.orderstatus, db.tasktype, db.taskstatus)
             .then(function(shipper) {
                 res.status(200).json(shipper);
             }, function(err) {

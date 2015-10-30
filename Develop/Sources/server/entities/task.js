@@ -22,12 +22,12 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: false,
             primaryKey: true
         },
-        taskstatus: {
+        statusid: {
             type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true
         },
-        tasktype: {
+        typeid: {
             type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true
@@ -43,6 +43,16 @@ module.exports = function (sequelize, DataTypes) {
             associate: function(db) {
                 task.belongsTo(db.order, {
                     foreignKey: 'orderid',
+                    constraints: false
+                });
+
+                task.belongsTo(db.tasktype, {
+                    foreignKey: 'typeid',
+                    constraints: false
+                });
+
+                task.belongsTo(db.taskstatus, {
+                    foreignKey: 'statusid',
                     constraints: false
                 });
             },

@@ -78,7 +78,8 @@ function socketAdmin(socketService,authService,mapService){
             dataAdmin.latitude = position.coords.latitude;
             dataAdmin.longitude = position.coords.longitude;
 
-            socketService.emit("admin:register:location",dataAdmin);            
+            // socketService.emit("admin:register:location",dataAdmin);            
+            socketService.sendPacket('admin', 'server', { admin: dataAdmin }, 'admin:register:location');
         },function(){
             alert("Can't get your current location! Please check your connection");
         });
