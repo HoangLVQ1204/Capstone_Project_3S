@@ -52,6 +52,14 @@ module.exports = function(sequelize, DataTypes) {
         return goods.build(newGood).save();
       },
 
+      deleteGood: function (orderid) {
+        goods.destroy({
+          where: {
+            orderid: orderid
+          }
+        });
+      },
+
       putOrder: function (currentOrder) {
         return currentOrder.save();
       }
