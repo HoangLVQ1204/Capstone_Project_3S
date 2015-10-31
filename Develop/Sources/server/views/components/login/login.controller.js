@@ -24,12 +24,12 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
 
                 if(authService.isRightRole(config.role.admin)){
                     socketAdmin.registerSocket();
-                    $state.go('admin.dashboard');
+                    $state.go('admin.assignTask');
                 }
 
                 if(authService.isRightRole(config.role.store)){
                     socketStore.registerSocket();
-                    $state.go('store');
+                    $state.go('store.dashboard');
                 }
 
                 if(authService.isRightRole(config.role.shipper)){

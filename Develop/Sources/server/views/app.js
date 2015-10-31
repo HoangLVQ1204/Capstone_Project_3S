@@ -28,7 +28,6 @@ angular.module('app', [
             url: '/auth/login',
             template: '<login></login>'
         })
-
         .state('error',{
             url: '/error',
             template: '<error-page></error-page>'
@@ -40,22 +39,6 @@ angular.module('app', [
             template: '<admin></admin>',
             access: config.role.admin
         })
-
-                                $scope.shippers = mapService.getShipperMarkers(mode);
-                                $scope.stores = mapService.getStoreMarkers(mode);
-                                $scope.customers = mapService.getCustomerMarkers(mode);
-                                $scope.orders = mapService.getOrders(mode);
-                            });
-                        }, 10000);
-                    }
-                },
-                'dataShow': {
-                    template: '<h1>HoangLVQ dasdsadas</h1>'
-                }
-            },
-            access: config.role.admin
-
-        })
         .state('admin.storeList',{
             url: '/storeList',
             template: '<admin-store-list></admin-store-list>',
@@ -65,15 +48,18 @@ angular.module('app', [
             url: '/assignTask',
             template: '<admin-assign-task></admin-assign-task>',
             access: config.role.admin
-        }).state('admin.transactionHistory',{
+        })
+        .state('admin.transactionHistory',{
             url: '/transactionHistory',
             template: '<admin-transaction-history></admin-transaction-history>',
             access: config.role.admin
-        }).state('admin.taskList',{
+        })
+        .state('admin.taskList',{
             url: '/taskList',
             template: '<admin-task-list></admin-task-list>',
             access: config.role.admin
         })
+
         .state('store',{
             //abstract: true,
             url: '/store',
