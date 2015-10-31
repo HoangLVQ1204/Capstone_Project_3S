@@ -143,9 +143,26 @@ module.exports = function (app) {
     };
 
     var getExpressStatusList = function (req, res, next) {
-        var OrderStatus = db.orderstatus;
         var rs = configConstant.expressStatusList;
         return res.status(200).json(rs);
+
+        //// START TEST % DUPLICATE
+        //var list = [];
+        //var sample = 1*500;
+        //var len = 10*1000;
+        //for(var i = 0;  i < sample; i++){
+        //    var d = Math.random();
+        //    list.push(parseInt(d*len));
+        //}
+        //list.sort();
+        //var count = 0;
+        //for(var i = 0;  i < list.length - 1; i++){
+        //    if(list[i]==list[i+1]) count++;
+        //}
+        //rs = "SH" + parseFloat(count*100/sample);
+        //return res.status(200).json(100*count/sample+" % duplicate");
+        //// END TEST % DUPLICATE
+
     };
 
     var nextStep = function (req, res, next) {
