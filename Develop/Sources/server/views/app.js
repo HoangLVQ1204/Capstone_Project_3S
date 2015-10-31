@@ -41,49 +41,21 @@ angular.module('app', [
             access: config.role.admin
         })
 
-        //.state('admin.map',{
-        //    url: '/map',
-        //    views: {
-        //        'mapGoogle': {
-        //            template: '<map style="margin-top: 10px" shipper-markers="shippers" store-markers="stores" customer-markers="customers" orders="orders"></map>',
-        //            controller: function($scope, $rootScope, mapService) {
-        //                setTimeout(function() {
-        //                    $rootScope.$apply(function() {
-        //                        var mode = "all";
-        //                        console.log(mode);
-        //
-        //                        $scope.shippers = mapService.getShipperMarkers(mode);
-        //                        $scope.stores = mapService.getStoreMarkers(mode);
-        //                        $scope.customers = mapService.getCustomerMarkers(mode);
-        //                        $scope.orders = mapService.getOrders(mode);
-        //                    });
-        //                }, 10000);
-        //            }
-        //        },
-        //        'dataShow': {
-        //            templateUrl: '<h1>HoangLVQ dasdsadas</h1>'
-        //        }
-        //    },
-        //    access: config.role.admin
-        //})
-        //.state('admin.map',{
-        //    url: '/map',
-        //    template: '<map style="margin-top: 10px" shipper-markers="shippers" store-markers="stores" customer-markers="customers" orders="orders"></map>',
-        //    controller: function($scope, $rootScope, mapService) {
-        //        setTimeout(function() {
-        //            $rootScope.$apply(function() {
-        //                var mode = "all";
-        //                console.log(mode);
-        //
-        //                $scope.shippers = mapService.getShipperMarkers(mode);
-        //                $scope.stores = mapService.getStoreMarkers(mode);
-        //                $scope.customers = mapService.getCustomerMarkers(mode);
-        //                $scope.orders = mapService.getOrders(mode);
-        //            });
-        //        }, 10000);
-        //    },
-        //    access: config.role.admin
-        //})
+                                $scope.shippers = mapService.getShipperMarkers(mode);
+                                $scope.stores = mapService.getStoreMarkers(mode);
+                                $scope.customers = mapService.getCustomerMarkers(mode);
+                                $scope.orders = mapService.getOrders(mode);
+                            });
+                        }, 10000);
+                    }
+                },
+                'dataShow': {
+                    template: '<h1>HoangLVQ dasdsadas</h1>'
+                }
+            },
+            access: config.role.admin
+
+        })
         .state('admin.storeList',{
             url: '/storeList',
             template: '<admin-store-list></admin-store-list>',
@@ -92,6 +64,10 @@ angular.module('app', [
         .state('admin.assignTask',{
             url: '/assignTask',
             template: '<admin-assign-task></admin-assign-task>',
+            access: config.role.admin
+        }).state('admin.transactionHistory',{
+            url: '/transactionHistory',
+            template: '<admin-transaction-history></admin-transaction-history>',
             access: config.role.admin
         })
         .state('store',{
@@ -116,10 +92,11 @@ angular.module('app', [
             },
             access: config.role.store
         })
-        //.state('store.order',{
-        //    url: '/order',
-        //    template: '<store-order></store-order>'
-        //})
+        .state('store.order',{
+            url: '/order',
+            template: '<store-order></store-order>',
+            access: config.role.store
+        })
 
     jwtInterceptorProvider.tokenGetter = function(){
         return localStorage.getItem('EHID');

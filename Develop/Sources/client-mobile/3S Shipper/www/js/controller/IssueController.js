@@ -73,11 +73,19 @@ app.controller('IssueCtrl',['$scope','$ionicPopup' , 'dataService', 'mySharedSer
     {categoryID: '1', categoryName: 'Pending' },
     {categoryID: '2', categoryName: 'Cancel' }
   ];
-
-  $scope.issueReasons = [
+$scope.listReasons = [
+  {categoryID: '1', reasonName: 'Traffic jam' },
+  {categoryID: '1', reasonName: 'Vehicle' },
+  {categoryID: '1', reasonName: 'Accident' },
+  {categoryID: '2', reasonName: 'Goods is broken' },
+  {categoryID: '2', reasonName: 'Cannot contact with customer' }
+];
+  $scope.pendingReasons = [
     {categoryID: '1', reasonName: 'Traffic jam' },
     {categoryID: '1', reasonName: 'Vehicle' },
-    {categoryID: '1', reasonName: 'Accident' },
+    {categoryID: '1', reasonName: 'Accident' }
+  ];
+  $scope.cancelReasons = [
     {categoryID: '2', reasonName: 'Goods is broken' },
     {categoryID: '2', reasonName: 'Cannot contact with customer' }
   ];
@@ -97,7 +105,6 @@ app.controller('IssueCtrl',['$scope','$ionicPopup' , 'dataService', 'mySharedSer
    * */
   $scope.submitData = function (issue) {
     //Validation
-    console.log('aa', issue);
       if ( typeof issue === "undefined" || issue.category === null || typeof issue.category === "undefined") {
         $ionicPopup.alert({
           title: 'Information',
@@ -131,7 +138,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup' , 'dataService', 'mySharedSer
               title: 'Success',
               content: 'Your Issue is sent to Admin'
             }).then(function(res) {
-              //Reset Values
+              //Del order in issuedOrder array
               var delIndex;
               issue.issuedOrder.forEach(function(item) {
                 $scope.selectable.forEach(function(i) {
@@ -143,8 +150,10 @@ app.controller('IssueCtrl',['$scope','$ionicPopup' , 'dataService', 'mySharedSer
                   }
                 });
               });
-              issue.content = '';
+              //reset values
+              issue.description = '';
               issue.category = null;
+              issue.reason = null;
               issue.issuedOrder = [];
 
               //call API

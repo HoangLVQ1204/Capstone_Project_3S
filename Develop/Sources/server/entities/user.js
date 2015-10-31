@@ -51,10 +51,10 @@ module.exports = function(sequelize, DataTypes) {
         });
 
         user.hasMany(db.task,
-            {as:'admin', foreignKey: 'adminid'}
+            {as:'assigner', foreignKey: 'adminid'}
         );
         user.hasMany(db.task,
-            {as: 'shipper',foreignKey: 'shipperid'}
+            {as: 'tasks',foreignKey: 'shipperid'}
         );
 
       },
@@ -98,7 +98,7 @@ module.exports = function(sequelize, DataTypes) {
         return user.findAll({
           include:[{
             model: task,
-            as:'shipper',
+            as:'tasks',
             include: [
               {
               model: order,
@@ -110,7 +110,10 @@ module.exports = function(sequelize, DataTypes) {
               },
               {
                 model: taskstatus,
-                attributes: ['statusname']
+                attributes: ['statusname'],
+                where:{
+                  statusid: [1,4]
+                }
               }
             ]
           },{model: profile}],
