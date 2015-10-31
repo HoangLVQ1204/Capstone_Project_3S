@@ -106,7 +106,14 @@ angular.module('app', [
         //})
         .state('store.dashboard',{
             url: '/dashboard',
-            template: '<store-dashboard></store-dashboard>',
+            templateUrl: '/components/storeDashboard/layout.html',
+            controller: function($scope, $rootScope, mapService){
+                var mode = "all";
+                $scope.shippers = mapService.getShipperMarkers(mode);
+                $scope.stores = mapService.getStoreMarkers(mode);
+                $scope.customers = mapService.getCustomerMarkers(mode);
+                $scope.orders = mapService.getOrders(mode);
+            },
             access: config.role.store
         })
         //.state('store.order',{
@@ -143,31 +150,16 @@ angular.module('app', [
                 event.preventDefault();
                 return;
             }
-
-
         }
 
         if(toState.name == 'login'){
             if(authService.isLogged()){
-
                 if(authService.isRightRole(config.role.admin)){
-                    console.log("admin");
-                    $state.go('admin');
                     event.preventDefault();
                 }
-
                 if(authService.isRightRole(config.role.store)){
-                    console.log("store");
-                    $state.go('store');
                     event.preventDefault();
                 }
-
-                // if(authService.isRightRole(config.role.shipper)){
-                //     console.log("shipper");
-                //     $state.go('store');
-                //     event.preventDefault();
-                // }
-
             }
         }
 
