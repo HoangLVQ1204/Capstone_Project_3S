@@ -2,9 +2,9 @@
  * Created by hoanglvq on 10/30/15.
  */
 angular.module('app')
-    .directive('errorPage', function() {
+    .directive('error', function() {
         return {
-            templateUrl: '/components/404/404.html',
+            templateUrl: '/components/404/error.html',
             scope: {},
             replace: true,
             restrict: 'E'

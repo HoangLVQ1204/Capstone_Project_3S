@@ -21,22 +21,15 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
 
         authService.signIn($scope.user)
             .then(function(){
-
                 if(authService.isRightRole(config.role.admin)){
                     socketAdmin.registerSocket();
-                    $state.go('admin.assignTask');
+                    $state.go('admin.dashboard');
                 }
 
                 if(authService.isRightRole(config.role.store)){
                     socketStore.registerSocket();
                     $state.go('store.dashboard');
                 }
-
-                if(authService.isRightRole(config.role.shipper)){
-                    socketShipper.registerSocket();
-                    $state.go('store');
-                }
-
             })
             .catch(function(error){
                 main.removeClass("slideDown");
