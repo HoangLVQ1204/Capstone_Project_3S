@@ -76,7 +76,7 @@
                             //scope.pickOrder.push(row);
                             //element.find('input').attr('checked', true);
                         } else {
-                            element.parent().removeClass('st-selected');
+                           // element.parent().removeClass('st-selected');
                             //element.find('input').attr('checked', false);
                             //var index = array.indexOf(row);
                             //if (index > -1) {
@@ -84,11 +84,6 @@
                             //}
 
                         }
-                    });
-
-                    scope.$watch('shipperRow', function (newValue, oldValue) {
-                        //console.log(newValue);
-                        //element.parent().addClass('st-selected');
                     });
 
 

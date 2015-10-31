@@ -54,7 +54,7 @@ angular.module('app', [
                     }
                 },
                 'dataShow': {
-                    templateUrl: '<h1>HoangLVQ dasdsadas</h1>'
+                    template: '<h1>HoangLVQ dasdsadas</h1>'
                 }
             },
             access: config.role.admin
@@ -68,6 +68,10 @@ angular.module('app', [
         .state('admin.assignTask',{
             url: '/assignTask',
             template: '<admin-assign-task></admin-assign-task>',
+            access: config.role.admin
+        }).state('admin.transactionHistory',{
+            url: '/transactionHistory',
+            template: '<admin-transaction-history></admin-transaction-history>',
             access: config.role.admin
         })
         .state('store',{
