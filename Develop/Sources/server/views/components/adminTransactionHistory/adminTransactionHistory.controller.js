@@ -2,7 +2,7 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminTransactionHistoryController($scope,$state, $http, $filter) {
+function adminTransactionHistoryController($scope,$state, $http, $location) {
 
     $scope.ledgerList = [];
     $scope.autoList = [];
@@ -85,14 +85,11 @@ function adminTransactionHistoryController($scope,$state, $http, $filter) {
 
     });
 
-    $scope.checkOK = function(event){
-        //console.log(1);
-        $scope.isValid = $('#inputValue').parsley( 'validate' );
-
+    $scope.go = function ( path ) {
+        $location.path( path );
     };
-
 
 }
 
-adminTransactionHistoryController.$inject = ['$scope','$state', '$http', '$filter'];
+adminTransactionHistoryController.$inject = ['$scope','$state', '$http', '$location'];
 angular.module('app').controller('adminTransactionHistoryController',adminTransactionHistoryController);

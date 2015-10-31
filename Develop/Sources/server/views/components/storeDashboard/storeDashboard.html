@@ -1,24 +1,5 @@
+
 <div>
-
-    <ol class="breadcrumb">
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Dashboard</a></li>
-    </ol>
-
-    <div class="breadcrumb">
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <h4>....................Place for maps..........................</h4>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-    </div>
-    <!-- //breadcrumb-->
     <div id="content">
         <div class="column">
             <div class="row">
@@ -27,7 +8,7 @@
                         <ul class="nav nav-tabs">
                             <li class="active"><a data-toggle="tab" href="#sectionA">In process</a></li>
                             <li><a data-toggle="tab" href="#sectionB">Done</a></li>
-                            <li ><a data-toggle="tab" href="#sectionC">Draft</a></li>
+                            <li><a data-toggle="tab" href="#sectionC">Draft</a></li>
                             <li><a data-toggle="tab" href="#sectionD">Issue</a></li>
 
                         </ul>
@@ -44,8 +25,10 @@
                                         <form>
                                             <table class="table table-striped table-hover table-bordered"
                                                    st-set-filter="customFilter" st-custom-date="createdate"
-                                                   st-predicate="{{selectedInprocess.value}}" stdate="dateRangeInprocess"
-                                                   search-watch-model="searchInprocess" st-table="displayedCollectionInprocess"
+                                                   st-predicate="{{selectedInprocess.value}}"
+                                                   stdate="dateRangeInprocess"
+                                                   search-watch-model="searchInprocess"
+                                                   st-table="displayedCollectionInprocess"
                                                    st-safe-src="orderInprocess">
 
                                                 <div class="row">
@@ -56,7 +39,8 @@
                                                             <i class="fa fa-calendar ico"></i>
                                                             <input type="text" daterange class="form-control"
                                                                    name="daterange" id="dateRangeInprocess"
-                                                                   ng-model="dateRangeInprocess"  placeholder="Create Date"/>
+                                                                   ng-model="dateRangeInprocess"
+                                                                   placeholder="Create Date"/>
                                                         </div>
 
 
@@ -116,7 +100,8 @@
                                                         <span class=" tooltip-area">
                                                     <a class="btn btn-default btn-sm"
                                                        title="Edit"><i class="fa fa-edit (alias)"></i></a>
-                                                    <a ng-click="setOrder(x)" data-toggle="modal" data-target="#md-cancel-order" class="btn btn-default btn-sm"
+                                                    <a ng-click="setOrder(x)" data-toggle="modal"
+                                                       data-target="#md-cancel-order" class="btn btn-default btn-sm"
                                                        title="Cancel"><i class="fa fa-times"></i></a>
                                                     </span>
                                                     </td>
@@ -150,22 +135,27 @@
                                 <!-- //modal-header-->
                                 <div class="modal-body">
                                     <div class="form-group column">
-                                        <div align="center" >
-                                            <label class="text-center"><h4>If you cancel this order you have to pay <strong>{{cancelFee}} </strong>VND</h4></label>
+                                        <div align="center">
+                                            <label class="text-center"><h4>If you cancel this order you have to pay
+                                                <strong>{{cancelFee}} </strong>VND</h4></label>
                                             <label class="text-center"><h4>Do you want to cancel?</h4></label>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- //modal-body-->
                                 <div class="modal-footer">
-                                    <button type="submit"  ng-click="cancerOrder()"  data-theme="success"  data-horizontal="top" class="btn btn-theme notifiCancel"  data-dismiss="modal" >Yes</button> <!-- data-sticky="true" (Ghim notify)-->
+                                    <button type="submit" ng-click="cancerOrder()" data-theme="success"
+                                            data-horizontal="top" class="btn btn-theme notifiCancel"
+                                            data-dismiss="modal">Yes
+                                    </button>
+                                    <!-- data-sticky="true" (Ghim notify)-->
                                     <button type="button" data-dismiss="modal" class="btn btn-inverse">No</button>
                                 </div>
                                 <!--///////////////////////////////////////////////////////
                                 /////////////////////   SUCCESS ALERT   /////////////////
                                 ///////////////////////////////////////////////////////////
                                 -->
-                                <textarea class="form-control" id="smsCancel"  rows="5" style="display:none">
+                                <textarea class="form-control" id="smsCancel" rows="5" style="display:none">
                                     Order <strong>{{Order.orderid}}</strong> is cancelling!
                                 </textarea>
                             </div>
@@ -228,7 +218,8 @@
                                                 <tr>
                                                     <th st-sort="orderid" st-skip-natural="true"
                                                         class="text-center sortable">OrderID
-                                                    </th> <th st-sort="donedate" st-skip-natural="true"
+                                                    </th>
+                                                    <th st-sort="donedate" st-skip-natural="true"
                                                         class="text-center sortable">Done Date
                                                     </th>
                                                     <th st-sort="deliveryaddress" st-skip-natural="true"
@@ -359,8 +350,10 @@
                                                     <!--<td> {{x.statusname}}</td>-->
                                                     <td width="16%">
                                                         <span class=" tooltip-area">
-                                                    <a class="btn btn-default btn-sm" title="Edit"><i class="fa fa-edit (alias)"></i></a>
-                                                    <a ng-click="setOrder(x)" href="" data-toggle="modal" data-target="#md-delete-order" class="btn btn-default btn-sm"
+                                                    <a class="btn btn-default btn-sm" title="Edit"><i
+                                                            class="fa fa-edit (alias)"></i></a>
+                                                    <a ng-click="setOrder(x)" href="" data-toggle="modal"
+                                                       data-target="#md-delete-order" class="btn btn-default btn-sm"
                                                        title="Delete"><i class="fa fa-trash-o"></i></a>
                                                     </span>
                                                     </td>
@@ -394,14 +387,17 @@
                                 <!-- //modal-header-->
                                 <div class="modal-body">
                                     <div class="form-group column">
-                                        <div >
-                                            <label><h4>Do you want to delete draff order {{Order.orderid}} ?</h4></label>
+                                        <div>
+                                            <label><h4>Do you want to delete draff order {{Order.orderid}} ?</h4>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- //modal-body-->
                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-theme" data-dismiss="modal" ng-click="deleteDraffOrder()">Yes</button>
+                                    <button type="submit" class="btn btn-theme" data-dismiss="modal"
+                                            ng-click="deleteDraffOrder()">Yes
+                                    </button>
                                     <button type="button" data-dismiss="modal" class="btn btn-inverse">No</button>
                                 </div>
                                 <!-- //modal-footer-->
@@ -410,7 +406,7 @@
                                /////////////////////   SUCCESS DELETE ALERT   /////////////////
                                ///////////////////////////////////////////////////////////
                                -->
-                                <textarea   class="form-control success" id="smsDeleted"  rows="5" style="display:none">
+                                <textarea class="form-control success" id="smsDeleted" rows="5" style="display:none">
                                     Order <strong>{{Order.orderid}}</strong> has been deleted successfully!
                                 </textarea>
 
@@ -418,7 +414,7 @@
                                /////////////////////   FAIL DELETE ALERT   /////////////////
                                ///////////////////////////////////////////////////////////
                                -->
-                                <textarea   class="form-control theme" id="smsDeleteFail"  rows="5" style="display:none">
+                                <textarea class="form-control theme" id="smsDeleteFail" rows="5" style="display:none">
                                     Order <strong>{{Order.orderid}}</strong> can not delete successfully!
                                 </textarea>
 
@@ -548,7 +544,8 @@
                                         <div class="progress-bar  progress-bar-white" aria-valuetransitiongoal="1"
                                              aria-valuemax="1"></div>
                                     </div>
-                                    <h5><strong>TODAY </strong><label class="progress-label label-white"><h4>{{orderToday|number}}</h4>
+                                    <h5><strong>TODAY </strong><label class="progress-label label-white"><h4>
+                                        {{orderToday|number}}</h4>
                                     </label></h5>
                                 </section>
                                 <div class="hold-icon"><i class="fa fa-archive"></i></div>
@@ -567,7 +564,8 @@
                                         <div class="progress-bar  progress-bar-white" aria-valuetransitiongoal="1"
                                              aria-valuemax="1"></div>
                                     </div>
-                                    <h5><strong>TODAY </strong><label class="progress-label label-white"><h4>{{todayCod|number}}</h4>
+                                    <h5><strong>TODAY </strong><label class="progress-label label-white"><h4>
+                                        {{todayCod|number}}</h4>
                                     </label></h5>
                                 </section>
                                 <div class="hold-icon"><i class="fa fa-money"></i></div>
@@ -586,7 +584,8 @@
                                         <div class="progress-bar  progress-bar-white" aria-valuetransitiongoal="1"
                                              aria-valuemax="1"></div>
                                     </div>
-                                    <h5><strong>TODAY </strong><label class="progress-label label-white"><h4>{{todayFee | number}}</h4>
+                                    <h5><strong>TODAY </strong><label class="progress-label label-white"><h4>{{todayFee
+                                        | number}}</h4>
                                     </label></h5>
                                 </section>
                                 <div class="hold-icon"><i class="fa fa-money"></i></div>
