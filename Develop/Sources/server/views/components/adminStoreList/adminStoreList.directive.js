@@ -41,7 +41,7 @@
                             query.before = new Date(res[1]);
                         }
                              ctrl.search(query, attr.stCustomDate);
-                        console.log(1);
+                       // console.log(1);
                     });
 
                     attr.$observe('stPredicate', function (newValue, oldValue) {
