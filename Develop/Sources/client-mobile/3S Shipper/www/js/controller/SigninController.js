@@ -11,7 +11,7 @@ app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService',
   $scope.user = {};
   $scope.submitFrm = function() {
     $ionicLoading.show({
-      duration: 500,
+      //duration: 500,
       noBackdrop: false,
       template: '<ion-spinner icon="android" class="custom-icon"/>'
     });
@@ -21,6 +21,7 @@ app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService',
           //TODO
           //socketShipper.registerSocket();
           $state.go('app.tasks');
+          $ionicLoading.hide();
         }
       })
       .catch(function(error){

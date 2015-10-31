@@ -7,10 +7,13 @@ module.exports = function (app) {
     var db = app.get('models');
 
     var params = function (req, res, next, order_id) {
-        return db.order.getOneOrderDetail(order_id)
+        var OrderStatus = db.orderstatus;
+        var goods = db.goods;
+        var confirmCode = db.confirmationcode;
+        return db.order.storeGetOneOrder(OrderStatus,goods,confirmCode,order_id)
             .then(function (order) {
                 if (order) {
-                    req.ss = order;
+                    req.orderRs = order;
                     next();
                 } else {
                     next(new Error('No order with id'));
@@ -19,34 +22,58 @@ module.exports = function (app) {
             }, function (err) {
                 next(err);
             });
+
     };
 
     var getAllOrder = function (req, res, next) {
         var orderStatus = db.orderstatus;
         var order = db.order;
-        order.belongsTo(orderStatus, {
-            foreignKey: {
-                name: 'statusid'
-            }
-        });
         var storeid = 'str1';
         return order.storeGetAllOrders(orderStatus, storeid)
             .then(function (orders) {
-                //console.log(orders);
                 var listOrders = [];
+                var statusname = '';
+                var createDate = '';
+                var doneDate ='';
                 _.each(orders, function(order){
+                    if(order['orderstatus'] == null){
+                        statusname = '';
+                    } else {
+                        statusname = order['orderstatus'].dataValues.statusname;
+                    }
+                    if(order.dataValues.createdate == null){
+                        createDate = '';
+                    }else {
+                        createDate = order.dataValues.createdate;
+                    }
+                    if(order.dataValues.donedate == null){
+                        doneDate = '';
+                    }else {
+                        doneDate = order.dataValues.donedate;
+                    }
                     listOrders.push({
                         'orderid': order.dataValues.orderid,
-                        'statusname': order['orderstatus'].dataValues.statusname,
+                        'statusname': statusname,
                         'deliveryaddress': order.dataValues.deliveryaddress,
                         'recipientname' : order.dataValues.recipientname,
                         'recipientphone' : order.dataValues.recipientphone,
                         'isdraff': order.dataValues.isdraff,
                         'iscancel':order.dataValues.iscancel,
-                        'ispending': order.dataValues.ispending
+                        'ispending': order.dataValues.ispending,
+                        'cod': order.dataValues.cod,
+                        'fee' : order.dataValues.fee,
+                        'createdate' : createDate,
+                        'donedate' : doneDate,
+
                     })
                 });
+                var totalCod =0;
+                var totalFee = 0;
+                var todayOrder =0;
+                var todayCod = 0;
+                var todayFee = 0;
                 var group = {};
+                group['Total'] = group['Total'] || [];
                 group['Draff'] = group['Draff'] || [];
                 group['Issue'] = group['Issue'] || [];
                 group['Done'] = group['Done'] || [];
@@ -54,15 +81,43 @@ module.exports = function (app) {
                 _.each(listOrders, function(item) {
                     if(item['isdraff']) {
                         group['Draff'].push(item);
-                    } else if(item['iscancel']) {
+                    } else if(item['ispending']) {
                         group['Issue'].push(item);
                     }else if(_.isEqual(item['statusname'],'Done')){
                         group['Done'].push(item);
                     } else{
                         group['Inprocess'].push(item);
                     }
+                    if(!_.isEqual(item['createdate'],'')){
+                        var date = new Date(item['createdate']);
+                        date.setHours(0,0,0,0);
+                        var today = new Date();
+                        today.setHours(0,0,0,0);
+                        if(date.valueOf() === today.valueOf())
+                            todayOrder ++;
+                    }
+
+                    if(!_.isEqual(item['donedate'],'')){
+                        var date = new Date(item['donedate']);
+                        date.setHours(0,0,0,0);
+                        var today = new Date();
+                        today.setHours(0,0,0,0);
+                        if(date.valueOf() === today.valueOf()){
+                            todayCod = todayCod + parseInt(item.cod);
+                            todayFee = todayFee + parseInt(item.fee);
+                        }
+
+                    }
+
+                    totalCod = totalCod + parseInt(item.cod);
+                    totalFee = totalFee + parseInt(item.fee);
                 });
 
+                group['Total'].push(totalCod);
+                group['Total'].push(totalFee);
+                group['Total'].push(todayOrder);
+                group['Total'].push(todayCod);
+                group['Total'].push(todayFee);
 
                 res.status(200).json(group);
             }, function (err) {
@@ -70,8 +125,37 @@ module.exports = function (app) {
             })
     };
     var getOne = function (req, res, next) {
-        res.status(200).json(req.ss);
-
+        //var listOrders = [];
+        //var statusname = '';
+        //var deliveryaddress = '';
+        //var recipientname = '';
+        //var recipientphone = '';
+        //var donedate = '';
+        //var createdate = '';
+        //var cod = 0;
+        //var fee = 0;
+        //console.log(req.orderRs['orderid']);
+        //var order = {
+        //    orderid : req.orderRs['orderid'],
+        //    deliveryaddress : req.orderRs['deliveryaddress'],
+        //    recipientname : req.orderRs['recipientname'],
+        //    recipientphone : req.orderRs['recipientphone'],
+        //    statusid : req.orderRs['statusid'],
+        //    isdraff : req.orderRs['isdraff'],
+        //    iscancel : req.orderRs['iscancel'],
+        //    ispending : req.orderRs['ispending'],
+        //    cod : req.orderRs['cod'],
+        //    fee : req.orderRs['fee'],
+        //    donedate : req.orderRs['donedate'],
+        //    createdate : req.orderRs['createdate'],
+        //    statusname : req.orderRs['orderstatus'].statusname
+        //};
+        //
+        //var rs =  req.orderRs['goods'];
+        //_.each(rs, function(item) {
+        //    console.log(item.dataValues.goodsid);
+        //});
+        res.status(200).json(req.orderRs);
     };
 
     var post = function (req, res, next) {
@@ -82,12 +166,13 @@ module.exports = function (app) {
             }, function(err){
                 next(err);
             })
-            ;    };
+    };
 
     var put = function (req, res, next) {
-        var order = req.order;
+        var order = {};
         var update = req.body;
 
+        order.orderid = update.orderid;
         order.storeid = update.storeid;
         order.ordertypeid = update.ordertypeid;
         order.pickupaddress = update.pickupaddress;
@@ -105,7 +190,38 @@ module.exports = function (app) {
                     next( new Error('Cannot save user'));
                 }
             })
-    }
+    };
+
+    var deleteOrder = function (req, res, next) {
+        req.orderRs = req.orderRs.toJSON();
+        db.goods.deleteGood(req.orderRs.orderid);
+        db.confirmationcode.deleteConfirmCode(req.orderRs.orderid);
+        //.then(function(abc) {
+        //    res.status(200);
+        //}, function(err) {
+        //    next(err);
+        //});
+        db.order.deleteDraffOrder(req.orderRs.orderid);
+        //.then(function() {
+        //    res.status(200);
+        //}, function(err) {
+        //    next(err);
+        //});
+    };
+
+    var putDraff = function(req, res, next){
+        db.order.submitDraffOrder(req.body.orderid);
+        //.then(function(){
+        //    res.sendStatus(200);
+        //}, function(err) {
+        //    next(err);
+        //});
+    };
+
+    var cancelOrder = function (req, res, next) {
+        db.order.cancelOrder( req.orderRs.orderid);
+        console.log( req.orderRs);
+    };
 
 
     return {
@@ -113,6 +229,9 @@ module.exports = function (app) {
         getOne: getOne,
         postOne: post,
         params: params,
-        put : put
+        put : put,
+        deleteOrder : deleteOrder,
+        putDraff : putDraff,
+        cancelOrder: cancelOrder,
     }
 }

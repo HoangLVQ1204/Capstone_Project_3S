@@ -20,7 +20,7 @@ angular.module('app', [
 }).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider,uiGmapGoogleMapApiProvider,config){
 
      //Set up Routes
-	$urlRouterProvider.otherwise('/admin/map');
+	$urlRouterProvider.otherwise('/auth/login');
 
     $stateProvider
         .state('login',{
@@ -69,6 +69,10 @@ angular.module('app', [
             url: '/assignTask',
             template: '<admin-assign-task></admin-assign-task>',
             access: config.role.admin
+        }).state('admin.transactionHistory',{
+            url: '/transactionHistory',
+            template: '<admin-transaction-history></admin-transaction-history>',
+            access: config.role.admin
         })
         .state('store',{
             //abstract: true,
@@ -80,14 +84,16 @@ angular.module('app', [
         //    url: '/map',
         //    template: '<map></map>'
         //})
-        //.state('store.dashboard',{
-        //    url: '/dashboard',
-        //    template: '<store-dashboard></store-dashboard>'
-        //})
-        //.state('store.order',{
-        //    url: '/order',
-        //    template: '<store-order></store-order>'
-        //})
+        .state('store.dashboard',{
+            url: '/dashboard',
+            template: '<store-dashboard></store-dashboard>',
+            access: config.role.store
+        })
+        .state('store.order',{
+            url: '/order',
+            template: '<store-order></store-order>',
+            access: config.role.store
+        })
 
     jwtInterceptorProvider.tokenGetter = function(){
         return localStorage.getItem('EHID');
@@ -126,13 +132,13 @@ angular.module('app', [
 
                 if(authService.isRightRole(config.role.admin)){
                     console.log("admin");
-                    $state.go('admin');
+                    //$state.go('admin');
                     event.preventDefault();
                 }
 
                 if(authService.isRightRole(config.role.store)){
                     console.log("store");
-                    $state.go('store');
+                    //$state.go('store');
                     event.preventDefault();
                 }
 

@@ -1,11 +1,14 @@
 /**
- * Created by hoanglvq on 9/22/15.
+ * Created by khanhkc on 9/22/15.
  */
 
 function storeOrderController($scope, $state, dataService) {
+
+
+
     $scope.order={
         storeid: '',
-        ordertypeid: '',
+        ordertypeid: "2",
         pickupaddress: '',
         deliveryaddress: '',
         pickupdate: '',
@@ -17,19 +20,10 @@ function storeOrderController($scope, $state, dataService) {
         ispending: 'false',
         isdraff: '',
         fee: '',
-        cod: ''
-    }
-
-    $scope.good={
-        orderid: '',
-        stockid: '',
-        weight: '',
-        lengthsize: '',
-        widthsize: '',
-        heightsize: '',
-        description: ''
-    }
-    ;
+        cod:''
+    };
+    $scope.good={goodID:0};
+    $scope.goods =[];
 
     $scope.$watch('$viewContentLoaded', function (event) {
         caplet();
@@ -98,14 +92,6 @@ function storeOrderController($scope, $state, dataService) {
         //....Disable textbox when click on checkbox....///
         ///////////////////////////////////////////////////
         function handleStatusChanged() {
-            $('#disElementCb').on('change', function () {
-                if ($('#disElementCb').is(':checked')) {
-                    $('#elementsToDis :input').attr('disabled', true);
-                } else {
-                    $('#elementsToDis :input').removeAttr('disabled');
-                }
-            });
-
             $('#enElementCb').on('change', function () {
                 if (!$('#enElementCb').is(':checked')) {
                     $('#elementsToEn :input').attr('disabled', true);
@@ -117,30 +103,33 @@ function storeOrderController($scope, $state, dataService) {
 
 
     });
-    getDataFromServer();
-    //postDataToServer();
+    //getDataFromServer();
 
-    function getDataFromServer() {
-        var urlBase = 'http://localhost:3000/orders';
-        dataService.getDataServer(urlBase)
-            .success(function (rs) {
-                $scope.ordersWaiting = rs['Waiting'];
-                $scope.orderCarring = rs['Carrying'];
-            })
-            .error(function (error) {
-                console.log('Unable to load customer data: ' + error);
-            });
+    $scope.setGood = function(good){
+        $scope.good = good;
+    };
+
+    $scope.editGood = function(){
+        $scope.good = {goodID:$scope.good.goodID};
     }
+    $scope.addGood = function(){
+        $scope.goods.push($scope.good);
+        $scope.good.goodID++;
+        $scope.good = {goodID:$scope.good.goodID};
+    };
+    $scope.deleteGood = function(goodID){
+        $scope.goods.splice(goodID,1);
+    };
 
 
-    //function postDataToServer(){
-    //    var urlBase = 'http://localhost:3000/orders';
-    //    $scope.order = {
-    //
-    //    };
-    //
-    //    dataService.postDataServer(urlBase,$scope.order)
-    //}
+    $scope.postDraff = function(){
+        var urlBase = 'http://localhost:3000/orders';
+        $scope.order = {
+
+        };
+
+        dataService.postDataServer(urlBase,$scope.order)
+    }
 }
 
 

@@ -24,20 +24,20 @@ module.exports  = function(app){
      *
      * */
     var checkToken = function(){
-      return function(req,res,next){
-          expressJwt(req,res,next);
-      }
+        return function(req,res,next){
+            expressJwt(req,res,next);
+        }
     };
 
     /*
-    * By HoangLVQ - 22/10/2015
-    *
-    * This function is used to check role of current login user
-    * (1) : shipper
-    * (2) : store
-    * (3) : admin
-    *
-    * */
+     * By HoangLVQ - 22/10/2015
+     *
+     * This function is used to check role of current login user
+     * (1) : shipper
+     * (2) : store
+     * (3) : admin
+     *
+     * */
     var checkRole = function(){
         return function(req,res,next){
 
@@ -97,17 +97,17 @@ module.exports  = function(app){
                             //    })
 
                             if(user.userrole == 2 ){
-                                 db.managestore.getStoresOfUser(user.username)
+                                db.managestore.getStoresOfUser(user.username)
                                     .then(function(listStore){
-                                         var stores = listStore.map(function(data){
-                                             console.log(data.toJSON().storeid);
-                                             return data.toJSON().storeid;
-                                         });
-                                         user.stores = stores;
-                                         req.user = user;
-                                         next();
+                                        var stores = listStore.map(function(data){
+                                            console.log(data.toJSON().storeid);
+                                            return data.toJSON().storeid;
+                                        });
+                                        user.stores = stores;
+                                        req.user = user;
+                                        next();
                                     },function(err){
-                                       next(err);
+                                        next(err);
                                     });
                             }else{
                                 req.user = user;
@@ -117,7 +117,7 @@ module.exports  = function(app){
                         }
                     }
                 },function(err){
-                   next(err);
+                    next(err);
                 });
         }
     }

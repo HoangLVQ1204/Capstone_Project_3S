@@ -53,6 +53,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     statusid: {
       type: DataTypes.INTEGER,
+      allowNull: true,
     },
     ispending: {
       type: DataTypes.BOOLEAN,
@@ -99,10 +100,11 @@ module.exports = function(sequelize, DataTypes) {
           foreignKey:'orderid',
           constraints: false
         });
-        order.hasOne(db.store,{
-          foreignKey:'storeid',
+        order.hasMany(db.confirmationcode,{
+          foreignKey:'orderid',
           constraints: false
         });
+
       },
       getAllTaskOfShipper: function(task, shipperid, taskdate) {
         return order.findAll({
@@ -110,17 +112,17 @@ module.exports = function(sequelize, DataTypes) {
           where: {'ispending': false},
           include: [{
             model: task,
-            attributes: ['tasktype', 'taskstatus', 'taskdate'],
+            attributes: ['typeid', 'statusid', 'taskdate'],
             where: {
               shipperid: shipperid,
               taskdate: taskdate,
-              taskstatus: [1, 2]
+              statusid: [1, 2]
             }
           }
           ]
         });
       },
-	  
+
       getOrderDetailById: function (orderStatusModel, goodsModel, orderid) {
         return order.findOne({
           attributes:{ exclude: ['ledgerid']},
@@ -135,16 +137,33 @@ module.exports = function(sequelize, DataTypes) {
             limit: 1
           }]
         });
-	  },
-	  //KhanhKC
+      },
+      //KhanhKC
       storeGetAllOrders: function (oderstatusModel, store_id) {
         return order.findAll({
-          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','iscancel','ispending'],
+          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','iscancel','ispending','cod','fee','donedate','createdate'],
           include: [
             {'model': oderstatusModel,
               attributes: ['statusname']
             }
+          ]
+        });
+      },
 
+      storeGetOneOrder: function (oderstatusModel, goodsModel,confirmationCodeModel, order_id) {
+        return order.findOne({
+          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','iscancel','ispending','cod','fee','donedate','createdate'],
+          where: {orderid:order_id},
+          include: [
+            {'model': oderstatusModel,
+              attributes: ['statusname']
+            },
+            {
+              'model': goodsModel
+            },
+            {
+              'model':confirmationCodeModel
+            }
           ]
         });
       },
@@ -168,16 +187,21 @@ module.exports = function(sequelize, DataTypes) {
       putOrder: function (currentOrder) {
         return currentOrder.save();
       },
-
-      
-      changeIsPendingOrder: function(listOrders) {
-        listOrders.forEach(function(item) {
+      changeIsPendingOrder: function(orderID) {
           order.update(
               { ispending: 'true' },
-              { where: { orderid: item }}
+              { where: { orderid: orderID }}
           )
-        });
       },
+      submitDraffOrder: function(orderid) {
+        order.update(
+            {
+              isdraff: 'false',
+              statusid: 1
+            },
+            { where: { orderid: orderid }} /* where criteria */
+        )
+		},
 
       getTotalShipFeeOfStore: function(storeid, paydate){
        // console.log(paydate)
@@ -186,23 +210,40 @@ module.exports = function(sequelize, DataTypes) {
             'storeid': storeid,
             'ledgerid': null,
             'deliverydate': {gte: paydate},
-            'statusid': { $between: [6, 8]}
+            'statusid':  [6, 8]
           }
         })
       },
 
-      getTotalShipCoDOfStore: function(storeid, paydate){
+      
+      deleteDraffOrder: function (orderid) {
+        order.destroy({
+            orderid: orderid
+        });
+		},
+
+		getTotalShipCoDOfStore: function(storeid, paydate){
         return order.sum('cod',{
           where: {
             'storeid': storeid,
             'ledgerid':  null,
             'deliverydate': {gte: paydate},
-            'statusid': { $between: [6, 8]}
+            'statusid':  [6, 8]
           }
         })
-      },
-
-      updateLedgerForOrder: function(storeid, paydate, ledgerid){
+      },	
+     
+      cancelOrder: function(orderid) {
+        order.update(
+              iscancel: 'true',
+              statusid: 'Canceling',
+              fee:5000
+            },
+            { where: { orderid: orderid }} /* where criteria */
+        )
+	},
+	
+	 updateLedgerForOrder: function(storeid, paydate, ledgerid){
         return order.update(
             {'ledgerid': ledgerid},
             {
@@ -210,7 +251,7 @@ module.exports = function(sequelize, DataTypes) {
             'storeid': storeid,
             'ledgerid':  null,
             'deliverydate': {lt: paydate},
-            'statusid': { $between: [6, 9]}
+            'statusid': [6, 8]
           }
         })
       },
@@ -224,6 +265,24 @@ module.exports = function(sequelize, DataTypes) {
             model: orderstatus,
             attributes: ['statusname']
           }]
+        })
+      }
+
+
+      getAllOrderToAssignTask: function(orderstatus, task){
+        return order.findAll({
+          where: {
+            'statusid': {$or: [1,4]},
+            'ispending': false
+          },
+          include: [{
+            model: orderstatus,
+            attributes: ['statusname']
+          },
+            {
+              model: task,
+              required: false
+            }]
         })
       }
 

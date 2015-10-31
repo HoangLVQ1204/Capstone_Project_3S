@@ -20,17 +20,16 @@ module.exports = function (app) {
                 var group = {};
                 if (_.isEmpty(tasks) == false) {
                     var listTasks = [];
-                    listTasks.push({
-                        'orderid': task.dataValues.orderid,
-                        'ordertypeid': task.dataValues.ordertypeid,
-                        'statusid': task.dataValues.statusid,
-                        'statusname': task['orderstatus'].dataValues.statusname,
-                        'tasktype': task['tasks'][0].dataValues.tasktype,
-                        'taskstatus': task['tasks'][0].dataValues.taskstatus,
-                        'pickupaddress': task.dataValues.pickupaddress,
-                        'deliveryaddress': task.dataValues.deliveryaddress,
-                        'pickupdate': task.dataValues.pickupdate,
-                        'deliverydate': task.dataValues.deliverydate
+                    _.each(tasks, function(task){
+                        listTasks.push({
+                            'orderid': task.dataValues.orderid,
+                            'typeid': task['tasks'][0].dataValues.typeid,
+                            'statusid': task['tasks'][0].dataValues.statusid,
+                            'pickupaddress': task.dataValues.pickupaddress,
+                            'deliveryaddress': task.dataValues.deliveryaddress,
+                            'pickupdate': task.dataValues.pickupdate,
+                            'deliverydate': task.dataValues.deliverydate
+                        });
                     });
                     //Group by order type
                     group['Pickup'] = group['Pickup'] || [];
@@ -38,11 +37,11 @@ module.exports = function (app) {
                     group['Express'] = group['Express'] || [];
                     group['Return'] = group['Return'] || [];
                     _.each(listTasks, function (item) {
-                        if (_.isEqual(item['tasktype'], 1)) {
+                        if (_.isEqual(item['typeid'], 1)) {
                             group['Pickup'].push(item);
-                        } else if (_.isEqual(item['tasktype'], 2)) {
+                        } else if (_.isEqual(item['typeid'], 2)) {
                             group['Ship'].push(item);
-                        } else if (_.isEqual(item['tasktype'], 3)) {
+                        } else if (_.isEqual(item['typeid'], 3)) {
                             group['Express'].push(item);
                         } else {
                             group['Return'].push(item);
@@ -234,22 +233,27 @@ module.exports = function (app) {
 
     var createIssue = function (req, res, next) {
         //Instance new Issue
-
         var newIssue = {};
         newIssue.categoryID = req.body.category.categoryID;
         newIssue.reason = req.body.reason.reasonName;
         newIssue.description = req.body.description;
-        console.log('quyen', newIssue);
         db.issue.createNewIssue(newIssue)
             .then(function(issue) {
-            }).then(function(){
-                console.log('issue', issue);
                 //Instance new list Order get an issued
                 var listOrders = [];
                 _.each(req.body.issuedOrder, function (order) {
                     listOrders.push(order.val);
                 });
-                db.order.changeIsPendingOrder(listOrders);
+                //Insert into orderissue
+                var newOrderIssue = {};
+                newOrderIssue.issueid = issue.issueid;
+                newOrderIssue.date = new Date();
+                _.each(listOrders, function(orderID) {
+                    newOrderIssue.orderid = orderID;
+                    db.orderissue.createOrderIssue(newOrderIssue);
+                    //Change isPending
+                    db.order.changeIsPendingOrder(orderID);
+                })
                 res.sendStatus(200);
             }, function (err) {
                 next(err);
@@ -343,19 +347,28 @@ module.exports = function (app) {
 
     var  getAllOrderToAssignTask = function (req, res, next) {
         var orderList=[];
-        return db.order.getAllOrderToAssignTask(db.orderstatus)
+        var promise=[];
+        return db.order.getAllOrderToAssignTask(db.orderstatus, db.task)
             .then(function(shipper) {
-                shipper.map(function(item){
+                shipper.map(function(item) {
                     var order = new Object();
                     order.order = item;
-                    orderList.push(order);
+                    if (item.tasks.length == 0) {
+                        orderList.push(order);
+
+                    }
+                    else {
+                        if (item.statusid == 4 && item.tasks.length==1) {
+                            orderList.push(order);
+                        }
+                    }
                 })
                 res.status(200).json(orderList);
             }, function(err) {
                 next(err);
             })
 
-    }
+    };
 
     var getAllShipperWithTask = function (req, res, next) {
         var shipperList;
@@ -365,7 +378,25 @@ module.exports = function (app) {
             }, function(err) {
                 next(err);
             })
+    };
+
+    var updateTaskForShipper = function (req, res, next) {
+        var shipperList = req.body;
+
+        return shipperList.map(function (shipper) {
+            shipper.tasks.map(function (task) {
+                db.task.assignTaskForShipper(task)
+                    .then(function(newTask) {
+                         res.status(201).json(newTask);
+                        //console.log(newTask.taskid)
+                    }, function(err) {
+                        next(err);
+                    })
+            })
+
+        })
     }
+
 
 
 
@@ -383,6 +414,7 @@ module.exports = function (app) {
         getAllShipper: getAllShipper,
         getAllOrderToAssignTask: getAllOrderToAssignTask,
         getAllShipperWithTask: getAllShipperWithTask,
+        updateTaskForShipper: updateTaskForShipper
 
     }
 

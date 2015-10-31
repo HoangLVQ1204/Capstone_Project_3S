@@ -15,5 +15,9 @@
     {
       "url": "/api/tasks",
       "role": [1,3]
+    },
+    {
+      "url": "/tore/dashboard",
+      "role": [1,3,3,4]
     }
 ]

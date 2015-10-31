@@ -50,7 +50,21 @@ module.exports = function(sequelize, DataTypes) {
     freezeTableName: true,
     timestamps: false,
     classMethods: {
+      associate: function(db) {
 
+        generalledger.hasMany(db.order, {
+          foreignKey: 'ledgerid',
+          constraints: false
+        });
+        generalledger.belongsTo(db.store,{
+          foreignKey:'storeid',
+          constraints: false
+        });
+        generalledger.belongsTo(db.user,{
+          foreignKey:'adminid',
+          constraints: false
+        });
+      },
       getLatestLedgerOfStore: function(storeid){
         return generalledger.findOne({
           where:{
@@ -89,6 +103,19 @@ module.exports = function(sequelize, DataTypes) {
               'totalcod': newLedger.totalcod,
               'note': newLedger.note
         }).save();
+      },
+
+      getAllLedger: function (store, order) {
+        return generalledger.findAll({
+          include:[{
+            model: store
+            //as: 'store'
+          },
+            {
+              model: order
+             // as: 'order'
+            }]
+        })
       }
   }
 });
