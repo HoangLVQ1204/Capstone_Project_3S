@@ -23,8 +23,7 @@ module.exports  = function(app){
      * This function is used to check token if valid
      *
      * */
-    var checkToken = function(){
-        return true;
+    var checkToken = function(){        
         return function(req,res,next){
             expressJwt(req,res,next);
         }
@@ -99,7 +98,7 @@ module.exports  = function(app){
 
                             if(user.userrole == 2 ){
                                 db.managestore.getStoresOfUser(user.username)
-                                    .then(function(listStore){
+                                    .then(function(listStore){                                        
                                         var stores = listStore.map(function(data){
                                             console.log(data.toJSON().storeid);
                                             return data.toJSON().storeid;
@@ -111,6 +110,7 @@ module.exports  = function(app){
                                         next(err);
                                     });
                             }else{
+                                // console.log('other role', req.user);
                                 req.user = user;
                                 next();
                             }

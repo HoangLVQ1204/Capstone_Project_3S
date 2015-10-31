@@ -47,12 +47,12 @@ function socketAdmin(socketService,authService,mapService){
         });
     });        
 
-    socketService.on('admin:add:shipper', function(shipper) {                
-        mapService.addShipper(shipper);
+    socketService.on('admin:add:shipper', function(data) {        
+        mapService.addShipper(data.msg.shipper);
     });
 
-    socketService.on('admin:add:store', function(store) {        
-        mapService.addStore(store);
+    socketService.on('admin:add:store', function(data) {        
+        mapService.addStore(data.msg.store);
     }); 
 
     socketService.on('admin:update:order', function(data) {        

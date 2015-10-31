@@ -7,7 +7,7 @@ module.exports = function(app){
 	var checkAll = [authManage.checkToken(),authManage.checkRole()];
 
  	app.param('user_id', controller.params);
-
+ 	 	
 	app.get('/users',checkAll,controller.get);
 
     app.route('/api/users/:user_id')

@@ -30,6 +30,11 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
                     socketStore.registerSocket();
                     $state.go('store.dashboard');
                 }
+
+                if(authService.isRightRole(config.role.shipper)){
+                    socketShipper.registerSocket();
+                    $state.go('store.dashboard');
+                }                
             })
             .catch(function(error){
                 main.removeClass("slideDown");

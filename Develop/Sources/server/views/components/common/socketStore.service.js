@@ -40,6 +40,7 @@ function socketStore($q,socketService,authService,mapService){
 
     api.registerSocket = function(){
         var user = api.getCurrentUser();
+        console.log('storeee', user);
         mapService.addStore(user)
         .then(function() {                
             socketService.sendPacket(

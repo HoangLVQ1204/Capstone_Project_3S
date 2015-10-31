@@ -133,8 +133,8 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     api.getShipperMarkers = function(mode) {      
         // use $http instead          
         // shipperMarkers = sampleData[mode].shipper;        
-        // return shipperMarkers;
-        return sampleData[mode].shipper;
+        return shipperMarkers;
+        // return sampleData[mode].shipper;
     }
 
     api.containShipper = function(shipper) {
@@ -180,8 +180,8 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     api.getStoreMarkers = function(mode) {      
         // use $http instead      
         // storeMarkers = sampleData[mode].store;        
-        // return storeMarkers;
-        return sampleData[mode].store;
+        return storeMarkers;
+        // return sampleData[mode].store;
     };
 
     api.containStore = function(store) {
@@ -221,8 +221,8 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     api.getCustomerMarkers = function(mode) {      
         // use $http instead      
         // customerMarkers = sampleData[mode].customer;        
-        // return customerMarkers;
-        return sampleData[mode].customer;
+        return customerMarkers;
+        // return sampleData[mode].customer;
     }        
 
     api.addCustomer = function(customer) {        
@@ -239,7 +239,7 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     */
     api.getOrders = function(mode) {      
         // use $http instead      
-        orders = sampleData[mode].orders;
+        // orders = sampleData[mode].orders;
         return orders;
     }        
 
