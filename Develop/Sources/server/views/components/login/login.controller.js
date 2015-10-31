@@ -11,7 +11,7 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
 
     $scope.submit = function(){
 
-            event.preventDefault();
+            // event.preventDefault();
             var main=$("#main");
             //scroll to top
             main.animate({

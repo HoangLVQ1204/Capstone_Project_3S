@@ -109,7 +109,6 @@ module.exports = function(sequelize, DataTypes) {
           foreignKey:'orderid',
           constraints: false
         });
-
       },
       getAllTaskOfShipper: function(task, shipperid, taskdate) {
         return order.findAll({
@@ -207,7 +206,7 @@ module.exports = function(sequelize, DataTypes) {
             },
             { where: { orderid: orderid }} /* where criteria */
         )
-		},
+		  },
 
       getTotalShipFeeOfStore: function(storeid, paydate){
        // console.log(paydate)
@@ -227,29 +226,28 @@ module.exports = function(sequelize, DataTypes) {
         )
 		},
 
-		getTotalShipCoDOfStore: function(storeid, paydate){
-        return order.sum('cod',{
-          where: {
-            'storeid': storeid,
-            'ledgerid':  null,
-            'deliverydate': {gte: paydate},
-            'statusid':  [6, 8]
-          }
-        })
-      },	
+  		getTotalShipCoDOfStore: function(storeid, paydate){
+          return order.sum('cod',{
+            where: {
+              'storeid': storeid,
+              'ledgerid':  null,
+              'deliverydate': {gte: paydate},
+              'statusid':  [6, 8]
+            }
+          })
+        },	
      
       cancelOrder: function(orderid) {
-        return order.update(
-            {
+        order.update({
               iscancel: 'true',
               statusid: 'Canceling',
               fee:5000
             },
             { where: { orderid: orderid }} /* where criteria */
-        )
-	},
+        );
+	    },
 	
-	 updateLedgerForOrder: function(storeid, paydate, ledgerid){
+	    updateLedgerForOrder: function(storeid, paydate, ledgerid){
         return order.update(
             {'ledgerid': ledgerid},
             {
@@ -262,8 +260,17 @@ module.exports = function(sequelize, DataTypes) {
         })
       },
 
-
-
+      getAllOrderToAssignTask: function(orderstatus){
+        return order.findAll({
+          where: {
+            'statusid': {$or: [1,2,5,6]}
+          },
+          include: [{
+            model: orderstatus,
+            attributes: ['statusname']
+          }]
+        })
+      },
 
       getAllOrderToAssignTask: function(orderstatus, task){
         return order.findAll({

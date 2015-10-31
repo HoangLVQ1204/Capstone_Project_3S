@@ -66,23 +66,32 @@ function socketAdmin(socketService,authService,mapService){
         mapService.updateShipper(data);
     });
     
+    api.getCurrentUser = function() {
+        var currentUser = authService.getCurrentInfoUser();        
+        // TODO: Change later
+        currentUser.latitude = 21.028784;
+        currentUser.longitude = 105.826088;
 
-    api.registerSocket = function(){                        
-        var currentUser = authService.getCurrentInfoUser();            
-        
-        navigator.geolocation.getCurrentPosition(function(position){
-            var dataAdmin = {
-                username: currentUser.username
-            };            
-            currentLocation = position.coords;
-            dataAdmin.latitude = position.coords.latitude;
-            dataAdmin.longitude = position.coords.longitude;
+        var dataAdmin = {
+            adminID: currentUser.username,
+            latitude: currentUser.latitude,
+            longitude: currentUser.longitude              
+        };
+        return dataAdmin;
+    };
 
-            // socketService.emit("admin:register:location",dataAdmin);            
-            socketService.sendPacket('admin', 'server', { admin: dataAdmin }, 'admin:register:location');
-        },function(){
-            alert("Can't get your current location! Please check your connection");
-        });
+    api.registerSocket = function(){
+        var user = api.getCurrentUser();                
+        socketService.sendPacket(
+        { 
+            type: 'admin',
+            clientID: user.adminID 
+        },
+        'server',
+        {
+            admin: user
+        },
+        'admin:register:location');        
     };
 
     return api;
