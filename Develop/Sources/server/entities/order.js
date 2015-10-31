@@ -92,6 +92,11 @@ module.exports = function(sequelize, DataTypes) {
           foreignKey: 'statusid',
           constraints: false
         });
+
+        order.belongsTo(db.store, {
+          foreignKey: 'storeid',
+          constraints: false
+        });
         order.hasMany(db.task, {
           foreignKey: 'orderid',
           constraints: false
@@ -141,6 +146,7 @@ module.exports = function(sequelize, DataTypes) {
       storeGetAllOrders: function (oderstatusModel, store_id) {
         return order.findAll({
           attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','iscancel','ispending','cod','fee','donedate','createdate'],
+          //where: {storeid:store_id },
           include: [
             {'model': oderstatusModel,
               attributes: ['statusname']
@@ -193,7 +199,7 @@ module.exports = function(sequelize, DataTypes) {
           )
       },
       submitDraffOrder: function(orderid) {
-        order.update(
+        return order.update(
             {
               isdraff: 'false',
               statusid: 1
@@ -214,12 +220,11 @@ module.exports = function(sequelize, DataTypes) {
         })
       },
 
-      
       deleteDraffOrder: function (orderid) {
-        order.destroy({
-            orderid: orderid
-        });
-		  },
+        return order.destroy(
+            { where: { orderid: orderid }}
+        )
+		},
 
   		getTotalShipCoDOfStore: function(storeid, paydate){
           return order.sum('cod',{
@@ -266,7 +271,6 @@ module.exports = function(sequelize, DataTypes) {
           }]
         })
       },
-
 
       getAllOrderToAssignTask: function(orderstatus, task){
         return order.findAll({
