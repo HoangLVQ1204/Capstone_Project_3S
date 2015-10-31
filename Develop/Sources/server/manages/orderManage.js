@@ -26,10 +26,11 @@ module.exports = function (app) {
     };
 
     var getAllOrder = function (req, res, next) {
+
+        var storeId = req.user.stores[0];
         var orderStatus = db.orderstatus;
         var order = db.order;
-        var storeid = 'str1';
-        return order.storeGetAllOrders(orderStatus, storeid)
+        return order.storeGetAllOrders(orderStatus, storeId)
             .then(function (orders) {
                 var listOrders = [];
                 var statusname = '';
@@ -108,7 +109,6 @@ module.exports = function (app) {
                         }
 
                     }
-
                     totalCod = totalCod + parseInt(item.cod);
                     totalFee = totalFee + parseInt(item.fee);
                 });
@@ -159,13 +159,13 @@ module.exports = function (app) {
     };
 
     var post = function (req, res, next) {
-        var newOrder = req.body;
+        var newOrder = req.body.order;
         return db.order.postOneOrder(newOrder)
-            .then(function (order) {
-                res.status(201).json(order);
-            }, function(err){
-                next(err);
-            })
+            //.then(function (order) {
+            //    res.status(201).json(order);
+            //}, function(err){
+            //    next(err);
+            //})
     };
 
     var put = function (req, res, next) {
@@ -194,33 +194,36 @@ module.exports = function (app) {
 
     var deleteOrder = function (req, res, next) {
         req.orderRs = req.orderRs.toJSON();
-        db.goods.deleteGood(req.orderRs.orderid);
-        db.confirmationcode.deleteConfirmCode(req.orderRs.orderid);
-        //.then(function(abc) {
-        //    res.status(200);
-        //}, function(err) {
-        //    next(err);
-        //});
-        db.order.deleteDraffOrder(req.orderRs.orderid);
-        //.then(function() {
-        //    res.status(200);
-        //}, function(err) {
-        //    next(err);
-        //});
+        var deleteGoods = db.goods.deleteGood(req.orderRs.orderid);
+        var deleteCode = db.confirmationcode.deleteConfirmCode(req.orderRs.orderid);
+        Promise.all([deleteCode,deleteGoods]).then(function(){
+            db.order.deleteDraffOrder(req.orderRs.orderid)
+                .then(function() {
+                    res.status(200).json("DELETED!");
+                }, function(err) {
+                    next(new Error("Delete draft fail!"));
+                });
+        },function(){
+            next(new Error("Delete draft fail!"));
+        });
     };
 
     var putDraff = function(req, res, next){
-        db.order.submitDraffOrder(req.body.orderid);
-        //.then(function(){
-        //    res.sendStatus(200);
-        //}, function(err) {
-        //    next(err);
-        //});
+        db.order.submitDraffOrder(req.body.orderid)
+        .then(function(){
+            res.sendStatus(200);
+        }, function(err) {
+            next(err);
+        });
     };
 
     var cancelOrder = function (req, res, next) {
         db.order.cancelOrder( req.orderRs.orderid);
-        console.log( req.orderRs);
+            //.then(function(){
+            //    res.sendStatus(200).json();
+            //}, function(err) {
+            //    next(err);
+            //});
     };
 
 

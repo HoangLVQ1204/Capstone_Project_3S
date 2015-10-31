@@ -258,8 +258,8 @@
                                                     <!--<td> {{x.statusname}}</td>-->
                                                     <!-- <td  width="16%>
                                                      <span class="tooltip-area">
-                                                     <a href="javascript:void(0)" class="btn btn-default btn-sm" title="Submit"><i class="fa fa-cloud-upload"></i></a>
-                                                     <a href="javascript:void(0)"  class="btn btn-default btn-sm" title="Delete"><i class="fa fa-trash-o"></i></a>
+                                                     <a href="" class="btn btn-default btn-sm" title="Submit"><i class="fa fa-cloud-upload"></i></a>
+                                                     <a href=""  class="btn btn-default btn-sm" title="Delete"><i class="fa fa-trash-o"></i></a>
                                                      </span>
                                                      </td> -->
                                                 </tr>
@@ -360,7 +360,7 @@
                                                     <td width="16%">
                                                         <span class=" tooltip-area">
                                                     <a class="btn btn-default btn-sm" title="Edit"><i class="fa fa-edit (alias)"></i></a>
-                                                    <a ng-click="setOrder(x)" href="javascript:void(0)" data-toggle="modal" data-target="#md-delete-order" class="btn btn-default btn-sm"
+                                                    <a ng-click="setOrder(x)" href="" data-toggle="modal" data-target="#md-delete-order" class="btn btn-default btn-sm"
                                                        title="Delete"><i class="fa fa-trash-o"></i></a>
                                                     </span>
                                                     </td>
@@ -401,7 +401,7 @@
                                 </div>
                                 <!-- //modal-body-->
                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-theme notifiDelete" data-dismiss="modal" ng-click="deleteDraffOrder()"  data-theme="success" data-vertical="right" data-horizontal="top" >Yes</button>
+                                    <button type="submit" class="btn btn-theme" data-dismiss="modal" ng-click="deleteDraffOrder()">Yes</button>
                                     <button type="button" data-dismiss="modal" class="btn btn-inverse">No</button>
                                 </div>
                                 <!-- //modal-footer-->
@@ -410,8 +410,16 @@
                                /////////////////////   SUCCESS DELETE ALERT   /////////////////
                                ///////////////////////////////////////////////////////////
                                -->
-                                <textarea class="form-control" id="smsDelete"  rows="5" style="display:none">
+                                <textarea   class="form-control success" id="smsDeleted"  rows="5" style="display:none">
                                     Order <strong>{{Order.orderid}}</strong> has been deleted successfully!
+                                </textarea>
+
+                            <!--///////////////////////////////////////////////////////
+                               /////////////////////   FAIL DELETE ALERT   /////////////////
+                               ///////////////////////////////////////////////////////////
+                               -->
+                                <textarea   class="form-control theme" id="smsDeleteFail"  rows="5" style="display:none">
+                                    Order <strong>{{Order.orderid}}</strong> can not delete successfully!
                                 </textarea>
 
 
@@ -500,9 +508,9 @@
                                                     <!--
                                                     <td>
                                                         <span class="tooltip-area">
-                                                        <a href="javascript:void(0)" class="btn btn-default btn-sm" title="Edit"><i
+                                                        <a href="" class="btn btn-default btn-sm" title="Edit"><i
                                                                 class="fa fa-edit (alias)"></i></a>
-                                                        <a href="javascript:void(0)" class="btn btn-default btn-sm" title="Cancel"><i
+                                                        <a href="" class="btn btn-default btn-sm" title="Cancel"><i
                                                                 class="fa fa-times"></i></a>
                                                         </span>
                                                     </td>

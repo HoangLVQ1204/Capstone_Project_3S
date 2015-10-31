@@ -171,11 +171,16 @@ function storeDashboardController($scope,$state,dataService, $http){
     //delete Draff order
     $scope.deleteDraffOrder = function () {
         var urlBase = 'http://localhost:3000/orders/'+ $scope.Order.orderid;
-        dataService.deleteDataServer(urlBase);
-        var index =  $scope.displayedCollectionDraff.indexOf( $scope.Order);
-        if (index !== -1) {
-            $scope.displayedCollectionDraff.splice(index, 1);
-        }
+        dataService.deleteDataServer(urlBase).then(function(ss){
+            var index =  $scope.displayedCollectionDraff.indexOf( $scope.Order);
+            if (index !== -1) {
+                $scope.displayedCollectionDraff.splice(index, 1);
+            }
+            alertDelete.success();
+        },function(err){
+            alertDelete.error();
+        });
+
 
     };
 
@@ -199,23 +204,22 @@ function storeDashboardController($scope,$state,dataService, $http){
         caplet();
     });
 
-    $(function() {
-
-        $(".notifiCancel").on('click',function(){
-            var nclick=$(this), data=nclick.data();
-            data.verticalEdge=data.vertical || 'right';
-            data.horizontalEdge=data.horizontal  || 'top';
-            $.notific8($("#smsCancel").val(), data)	;
-        });
-
-        $(".notifiDelete").on('click',function(){
-            var nclick=$(this), data=nclick.data();
-            data.verticalEdge=data.vertical || 'right';
-            data.horizontalEdge=data.horizontal  || 'top';
-            $.notific8($("#smsDelete").val(), data)	;
-        });
-
-    });
+    var alertDelete = {
+        "success": function () {
+            var data = new Object();
+            data.verticalEdge = 'right';
+            data.horizontalEdge = 'top';
+            data.theme = 'success';
+            $.notific8($("#smsDeleted").val(), data);
+        },
+        "error": function () {
+            var data = new Object();
+            data.verticalEdge = 'right';
+            data.horizontalEdge = 'top';
+            data.theme = 'theme';
+            $.notific8($("#smsDeleteFail").val(), data);
+        }
+    };
 
 }
 
