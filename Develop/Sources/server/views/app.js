@@ -54,7 +54,7 @@ angular.module('app', [
                     }
                 },
                 'dataShow': {
-                    templateUrl: '<h1>HoangLVQ dasdsadas</h1>'
+                    template: '<h1>HoangLVQ dasdsadas</h1>'
                 }
             },
             access: config.role.admin

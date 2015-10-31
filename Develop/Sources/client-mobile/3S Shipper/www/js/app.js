@@ -44,6 +44,9 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
       .state('app', {
         url: '/app',
         abstract: true,
+        controller: function(){
+          console.log(1);
+        },
         templateUrl: 'templates/menu.html'
       })
 
@@ -113,21 +116,32 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
           }
         }
       })
-      .state('app.mapdemo',{
+      .state('app.map.mapdemo',{
         url: '/mapdemo',
         views: {
-          'menuContent': {
-            templateUrl: 'templates/detail.html',
+          'googleMap': {
+            template: '<map shipper-markers="shippers" store-markers="stores" customer-markers="customers" orders="orders"></map>',
             controller: function ($scope) {
               // mode in ["all", "shipper", "store", "orderdetail"]
-              var mode = "all";
-              $scope.shippers = sampleData[mode].shipper;
-              $scope.stores = sampleData[mode].store;
-              $scope.customers = sampleData[mode].customer;
-              $scope.orders = sampleData[mode].orders;
+              console.log("v1");
+              setTimeout(function(){
+                var mode = "all";
+                $scope.shippers = sampleData[mode].shipper;
+                $scope.stores = sampleData[mode].store;
+                $scope.customers = sampleData[mode].customer;
+                $scope.orders = sampleData[mode].orders;
+              }, 1000);
+
 
             }
+          },
+          'menuContent2':{
+            templateUrl: 'templates/detail.html',
+            controller: 'DetailCtrl'
           }
+        },
+        controller: function(){
+          console.log("both");
         }
       })
 
@@ -141,6 +155,16 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
           }
         }
       })
+
+      .state('app.map', {
+        url: '/map',
+        abstract: true,
+        views: {
+          'menuContent': {
+            templateUrl: 'templates/splitMap.html'
+          }
+        }
+      })
     ;
 
     //Send token for each request
@@ -151,5 +175,5 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
     $httpProvider.interceptors.push('jwtInterceptor');
 
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/sign-in');
+    $urlRouterProvider.otherwise('/tasks');
   });
