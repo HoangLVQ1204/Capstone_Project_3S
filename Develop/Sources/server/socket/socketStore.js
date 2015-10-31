@@ -13,8 +13,7 @@ module.exports = function(socket, io) {
     }); 
 
     socket.on('disconnect', function() {
-        console.log('Store', socket.id, 'disconnect');
-        delete io.listStore[socket.id];
+        console.log('Store', socket.id, 'disconnect');        
     });
 
     socket.on('store:find:shipper', function(data) {

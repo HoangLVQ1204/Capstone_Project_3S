@@ -17,16 +17,16 @@ module.exports = function(app) {
             next(err);
         });
     };
-
-    var get = function(req,res,next) {
+    
+    var get = function(req,res,next) {        
         var user = req.user;
         console.log(user);
-        return db.user.getAllUsers()
+        db.user.getAllUsers()
             .then(function(users) {
                 res.status(200).json(users);
             }, function(err) {
                 next(err);
-            })
+            });
     };
 
     //var get = function(req,res,next) {
