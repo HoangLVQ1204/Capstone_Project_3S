@@ -18,10 +18,12 @@ var icons = {
 };
 
 function initShipper(geocoder, maps, shipperMarker) {    
+    shipperMarker.order = [];
     shipperMarker.icon = icons.shipperIcon;
 }
 
 function initStore(geocoder, maps, storeMarker) {    
+    storeMarker.order = [];
     storeMarker.icon = icons.storeIcon;    
     geocoder.geocode({
         'location': {

@@ -11,6 +11,33 @@ module.exports = function(server){
     var io = require('socket.io')(server);
 
     /*
+        io.admins[adminID] = {            
+            socketID,
+            latitude,
+            longitude   
+        }
+    */
+    io.admins = {};
+
+    io.containAdmin = function(adminID) {
+        return !!io.admins[adminID];
+    };
+
+    io.updateAdmin = function(admin, socket) {
+        io.admins[admin.adminID].latitude = admin.latitude;
+        io.admins[admin.adminID].longitude = admin.longitude;
+        io.admins[admin.adminID].socketID = socket.id;
+    };
+
+    io.addAdmin = function(admin, socket) {
+        io.admins[admin.adminID] = {            
+            latitude: admin.latitude,
+            longitude: admin.longitude,
+            socketID: socket.id            
+        };              
+    };
+
+    /*
         io.stores[storeID] = {
             order: [],
             socketID,
@@ -55,13 +82,21 @@ module.exports = function(server){
         if (receiver.room) {
             return io.to(room);
         }
-        if (receiver.clientID) {    // clientID is shipperID || storeID
-            return io.sockets.connected[receiver.clientID];
+        if (receiver.clientID) {    // clientID = shipperID || storeID            
+            var socketID = '';
+            if (receiver.type === 'shipper') {
+                socketID = io.shippers[receiver.clientID].socketID;
+            } else if (receiver.type == 'store') {
+                socketID = io.stores[receiver.clientID].socketID;
+            } else if (receiver.type == 'admin') {
+                socketID = io.admins[receiver.clientID].socketID;
+            }
+            return io.sockets.connected[socketID];
         }        
     };
 
     /*
-        receiver = {clientID: ...}
+        receiver = { type: xxx, clientID: xxx}
         msg = Object
     */
     io.reply = function(receiver, msg, eventName, callback) {
@@ -74,8 +109,8 @@ module.exports = function(server){
     };
 
     /*
-        sender: { clientID: ... }
-        receiver = 'admin' || 'shipper' || 'store' || {room: ...} || {clientID: ...} || Arrays of these types [ 'admin', { room: ...} ]
+        sender: { type: xxx, clientID: xxx }
+        receiver = 'admin' || 'shipper' || 'store' || {room: ...} || { type: xxx, clientID: xxx } || Arrays of these types [ 'admin', { room: ...} ]
         msg = Object
     */
     io.forward = function(sender, receiver, msg, eventName, callback) {
@@ -89,12 +124,12 @@ module.exports = function(server){
         });        
     }
 
-    // var distanceFrom = function(currentPosition,listShipper,distanceRadius){
+    // var distanceFrom = function(currentPosition,shippers,distanceRadius){
 
     // };
 
     // var findShipper = function(socket, data){
-    //     var listShipperNearest = {};        
+    //     var shippersNearest = {};        
     // };
 
     io.getDataForStore = function(storeID) {
@@ -113,17 +148,17 @@ module.exports = function(server){
     };
 
     io.containStore = function(storeID) {
-        return !!io.listStore[storeID];     // bang!! bang!! return true/false :v
+        return !!io.stores[storeID];     // bang!! bang!! return true/false :v
     }; 
 
     io.updateStore = function(store, socket) {
-        io.listStore[store.storeID].latitude = store.latitude;
-        io.listStore[store.storeID].longitude = store.longitude;
-        io.listStore[store.storeID].socketID = socket.id;
+        io.stores[store.storeID].latitude = store.latitude;
+        io.stores[store.storeID].longitude = store.longitude;
+        io.stores[store.storeID].socketID = socket.id;
     };
 
     io.addStore = function(store, socket) {        
-        io.listStore[store.storeID] = {
+        io.stores[store.storeID] = {
             order: [],
             latitude: store.latitude,
             longitude: store.longitude,
@@ -133,7 +168,7 @@ module.exports = function(server){
 
     io.getOneStore = function(storeID) {
         // remove socketID
-        var store = io.listStore[storeID];
+        var store = io.stores[storeID];
         return {
             storeID: storeID,
             order: store.order,
@@ -143,17 +178,17 @@ module.exports = function(server){
     };
 
     io.containShipper = function(shipperID) {
-        return !!io.listShipper[shipperID];
+        return !!io.shippers[shipperID];
     };
 
     io.updateShipper = function(shipper, socket) {
-        io.listShipper[shipper.shipperID].latitude = shipper.latitude;
-        io.listShipper[shipper.shipperID].longitude = shipper.longitude;
-        io.listShipper[shipper.shipperID].socketID = socket.id;
+        io.shippers[shipper.shipperID].latitude = shipper.latitude;
+        io.shippers[shipper.shipperID].longitude = shipper.longitude;
+        io.shippers[shipper.shipperID].socketID = socket.id;
     };
 
     io.addShipper = function(shipper, socket) {
-        io.listShipper[shipper.shipperID] = {
+        io.shippers[shipper.shipperID] = {
             order: [],
             latitude: shipper.latitude,
             longitude: shipper.longitude,
@@ -164,14 +199,27 @@ module.exports = function(server){
 
     io.getOneShipper = function(shipperID) {
         // remove socketID
-        var shipper = io.listShipper[shipperID];
+        var shipper = io.shippers[shipperID];
         return {
             shipperID: shipperID,
             order: shipper.order,
             latitude: shipper.latitude,
             longitude: shipper.longitude
         };
-    }
+    };
+
+    io.getAllShippers = function() {
+        var shipperIDs = Object.keys(io.shippers);
+        var shipperInfos = shipperIDs.map(function(shipperID) {
+            return {
+                shipperID: shipperID,
+                latitude: io.shippers[shipperID].latitude,
+                longitude: io.shippers[shipperID].longitude,
+                status: io.shippers[shipperID].status
+            };
+        });
+        return shipperInfos;
+    };
 
 
     io.on('connection',function(socket){
@@ -195,6 +243,13 @@ module.exports = function(server){
 
         socket.on("admin:register:location",function(data){
             console.log(data);              
+
+            var admin = data.msg.admin;      
+            if (io.containAdmin(admin.adminID))
+                io.updateAdmin(admin, socket);
+            else           
+                io.addAdmin(admin, socket);
+
             io.reply(data.sender, { mapData: io.getDataForAdmin() }, 'admin:register:location');                        
             require('./socketAdmin')(socket, io);
         });

@@ -11,13 +11,12 @@ module.exports = function(socket, io) {
     
     socket.on('disconnect', function() {
         console.log('Shipper', socket.id, 'disconnect');        
-        delete io.listShipper[socket.id];        
+        
     });
     
     socket.on('shipper:choose:express', function(data) {    	
-    	console.log('accept', data.socketID);
-    	data.shipper.socketID = socket.id;
-    	io.sockets.connected[data.socketID].emit('store:find:shipper', data.shipper);
+        console.log('choose express', data);
+    	io.forward(data.sender, data.receiver, data.msg, 'store:find:shipper');
     });
 
     socket.on('shipper:update:location', function(position) {

@@ -1,6 +1,11 @@
 
 
 
+
+
+var gmapUtil = require('./googlemapUtil');
+
+
 module.exports = function(socket, io) {
 	socket.join('store', function() {
         console.log(socket.id, 'joined room Store');
@@ -16,14 +21,28 @@ module.exports = function(socket, io) {
         var filter = {
             // ban kinh (m)
             // trang thai shipper  0: free, 1: busy
-            radius: 1000,
-            status: 0,
+            radius: 100000,
+            status: 1,
             limit: 2
         };        
-        io.to('admin').emit('admin:filter:shipper', {
-            filter: filter,
-            storeID: io.listStore[socket.id].storeID
-        });
+                
+        gmapUtil.getClosestShippers(data.msg.store, io.getAllShippers(), filter)
+        .then(function(results) {
+            // console.log('closest shippers', results);            
+            results.forEach(function(e) {
+                // console.log('forward', data.sender);
+                io.forward(
+                data.sender,
+                {
+                    type: 'shipper',
+                    clientID: e.shipperID
+                },
+                {
+                    distanceText: e.distanceText
+                },                
+                'shipper:choose:express');
+            });
+        });      
     });
 
     socket.on('store:choose:shipper', function(data) {

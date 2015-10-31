@@ -14,14 +14,20 @@ function socketShipper($q,socketService,authService,mapService) {
         add handlers
     */
     socketService.on('shipper:choose:express', function(data) {
-        var answer = confirm('Do you want to accept order from store of ' + data.distance + ' away?');                
+        var answer = confirm('Do you want to accept order from store of ' + data.msg.distanceText + ' away?');                
         if (answer) {
             api.getCurrentUser()
-            .then(function(user) {
-                socketService.emit('shipper:choose:express', {
-                    socketID: data.storeSocket,
+            .then(function(user) {                
+                socketService.sendPacket(
+                {
+                    type: 'shipper',
+                    clientID: user.shipperID
+                },
+                data.sender,
+                {
                     shipper: user
-                });
+                },
+                'shipper:choose:express');
             }, function(err) {
                 alert(err);
             });
@@ -98,6 +104,7 @@ function socketShipper($q,socketService,authService,mapService) {
             .then(function() {                
                 socketService.sendPacket(
                 {
+                    type: 'shipper',
                     clientID: user.shipperID
                 },
                 'server',
