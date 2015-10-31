@@ -92,6 +92,11 @@ module.exports = function(sequelize, DataTypes) {
           foreignKey: 'statusid',
           constraints: false
         });
+
+        order.belongsTo(db.store, {
+          foreignKey: 'storeid',
+          constraints: false
+        });
         order.hasMany(db.task, {
           foreignKey: 'orderid',
           constraints: false
@@ -235,6 +240,7 @@ module.exports = function(sequelize, DataTypes) {
      
       cancelOrder: function(orderid) {
         order.update(
+            {
               iscancel: 'true',
               statusid: 'Canceling',
               fee:5000
@@ -256,17 +262,7 @@ module.exports = function(sequelize, DataTypes) {
         })
       },
 
-      getAllOrderToAssignTask: function(orderstatus){
-        return order.findAll({
-          where: {
-            'statusid': {$or: [1,2,5,6]}
-          },
-          include: [{
-            model: orderstatus,
-            attributes: ['statusname']
-          }]
-        })
-      }
+
 
 
       getAllOrderToAssignTask: function(orderstatus, task){

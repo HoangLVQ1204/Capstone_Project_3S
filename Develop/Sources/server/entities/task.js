@@ -56,6 +56,13 @@ module.exports = function (sequelize, DataTypes) {
                     foreignKey: 'statusid',
                     constraints: false
                 });
+
+                task.belongsTo(db.user,
+                    {as:'assigner', foreignKey: 'adminid'}
+                );
+                task.belongsTo(db.user,
+                    {as: 'shipper',foreignKey: 'shipperid'}
+                );
             },
             getAllHistoryOfShipper: function (shipperid, modelOrder, modelOrderStatus) {
                 return task.findAll({
@@ -104,31 +111,57 @@ module.exports = function (sequelize, DataTypes) {
                             attributes: [['storeid', 'storeID'], ['pickupaddresscoordination', 'storePos'], ['deliveryaddress', 'customerPos']]
                         }
                     });
-                },
+                }},
 
             assignTaskForShipper: function(shipper){
-                //console.log(shipper);
-                return task.findOrCreate({
-                    where: {
-                        orderid: shipper.orderid,
-                        statusid: shipper.statusid,
-                        typeid: shipper.typeid
+        //console.log(shipper);
+        return task.findOrCreate({
+            where: {
+                orderid: shipper.orderid,
+                statusid: shipper.statusid,
+                typeid: shipper.typeid
+            },
+            defaults: {
+                adminid: shipper.adminid,
+                shipperid: shipper.shipperid,
+                taskdate: shipper.taskdate
+            }
+        }).spread(function(tasks, created){
+            if (!created && shipper.shipperid!=tasks.shipperid)
+                task.update(
+                    {
+                        'shipperid': shipper.shipperid
                     },
-                    defaults: {
-                        adminid: shipper.adminid,
-                        shipperid: shipper.shipperid,
-                        taskdate: shipper.taskdate
-                    }
-                }).spread(function(tasks, created){
-                    if (!created && shipper.shipperid!=tasks.shipperid)
-                    task.update(
-                        {
-                            'shipperid': shipper.shipperid
-                        },
-                        { where: {
-                            'taskid': tasks.taskid
-                        }}
-                    )
+                    { where: {
+                        'taskid': tasks.taskid
+                    }}
+                )
+        })
+    },
+
+            getAllTask: function(user, order, orderstatus, taskstatus, tasktype, store, profile){
+                return task.findAll({
+                    include: [{
+                        model: user,
+                        as: 'assigner'
+                    },{
+                        model: user,
+                        as: 'shipper',
+                        include: [{model: profile,  attributes: ['name']}]
+                    },{
+                        model: order,
+                        include: [{
+                            model: orderstatus,  attributes: ['statusname']
+                        },{
+                            model: store,  attributes: ['name']
+                        }]
+                    },{
+                        model: taskstatus,
+                        attributes: ['statusid','statusname']
+                    },{
+                        model: tasktype,
+                        attributes: ['typeid','typename']
+                    }]
                 })
             }
         }

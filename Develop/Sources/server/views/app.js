@@ -73,6 +73,10 @@ angular.module('app', [
             url: '/transactionHistory',
             template: '<admin-transaction-history></admin-transaction-history>',
             access: config.role.admin
+        }).state('admin.taskList',{
+            url: '/taskList',
+            template: '<admin-task-list></admin-task-list>',
+            access: config.role.admin
         })
         .state('store',{
             //abstract: true,
