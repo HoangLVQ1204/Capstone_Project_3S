@@ -3,11 +3,13 @@
  */
 module.exports = function (app) {
     var controller = require('./../../manages/orderManage')(app);
+    var authManage = require('./../../manages/authManage')(app);
+    var checkAll = [authManage.checkToken(),authManage.checkRole()];
 
     app.param('order_id', controller.params);
 
     app.route('/orders')
-        .get(controller.getAllOrder)
+        .get(checkAll,controller.getAllOrder)
         .post(controller.postOne);
 
 

@@ -147,6 +147,7 @@ module.exports = function(sequelize, DataTypes) {
       storeGetAllOrders: function (oderstatusModel, store_id) {
         return order.findAll({
           attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','iscancel','ispending','cod','fee','donedate','createdate'],
+          //where: {storeid:store_id },
           include: [
             {'model': oderstatusModel,
               attributes: ['statusname']
@@ -199,7 +200,7 @@ module.exports = function(sequelize, DataTypes) {
           )
       },
       submitDraffOrder: function(orderid) {
-        order.update(
+        return order.update(
             {
               isdraff: 'false',
               statusid: 1
@@ -220,11 +221,10 @@ module.exports = function(sequelize, DataTypes) {
         })
       },
 
-      
       deleteDraffOrder: function (orderid) {
-        order.destroy({
-            orderid: orderid
-        });
+        return order.destroy(
+            { where: { orderid: orderid }}
+        )
 		},
 
 		getTotalShipCoDOfStore: function(storeid, paydate){
@@ -239,7 +239,7 @@ module.exports = function(sequelize, DataTypes) {
       },	
      
       cancelOrder: function(orderid) {
-        order.update(
+        return order.update(
             {
               iscancel: 'true',
               statusid: 'Canceling',
