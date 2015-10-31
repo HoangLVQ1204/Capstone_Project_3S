@@ -1,6 +1,6 @@
-<ion-view view-title="Order Detail">
-  <ion-content padding="true" class="has-header">
-    <div id="map_canvas"><map shipper-markers="shippers" store-markers="stores" customer-markers="customers" orders="orders"></map></div>
+<!--<ion-view view-title="Order Detail">-->
+  <!--<ion-content padding="true" class="has-header">-->
+    <!--<div id="map_canvas"></div>-->
     <div class="checkout-wrap">
       <ul class="checkout-bar">
         <!--<li class="visited first"></li>-->
@@ -74,7 +74,7 @@
             ng-if="status.statusid == order.statusid && status.nextAction" class="button button-full button-positive"
             ng-click="openModal(order.statusid, status.nextAction)">{{status.nextAction}}
     </button>
-  </ion-content>
+  <!--</ion-content>-->
   <script id="confirm-modal.html" type="text/ng-template">
     <ion-modal-view>
       <ion-header-bar>
@@ -129,4 +129,4 @@
 
     <!--</ui-gmap-google-map>-->
   <!--</div>-->
-</ion-view>
+<!--</ion-view>-->

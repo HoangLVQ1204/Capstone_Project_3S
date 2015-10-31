@@ -10,7 +10,9 @@
         <button class="button button-icon icon ion-compose" ui-sref="app.issue"></button>
       </ion-nav-buttons>
     </ion-nav-bar>
-    <ion-nav-view name="menuContent"></ion-nav-view>
+    <ion-nav-view name="menuContent">
+    </ion-nav-view>
+    <!--<ion-nav-view name="detail"></ion-nav-view>-->
   </ion-side-menu-content>
 
   <ion-side-menu side="left">
@@ -43,6 +45,16 @@
         <ion-item menu-close ng-controller="SignInCtrl" ng-click="logOut()">
           <i class="ion-log-out"></i>
           Logout
+        </ion-item>
+        <ion-item>
+          <i class="ion-android-alert"></i>
+          Change status
+          <label class="toggle pull-right">
+            <input type="checkbox">
+            <div class="track">
+              <div class="handle"></div>
+            </div>
+          </label>
         </ion-item>
       </ion-list>
     </ion-content>
