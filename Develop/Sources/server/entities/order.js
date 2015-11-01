@@ -109,6 +109,10 @@ module.exports = function(sequelize, DataTypes) {
           foreignKey:'orderid',
           constraints: false
         });
+        order.belongsTo(db.ordertype, {
+          foreignKey: 'ordertypeid',
+          constraints: false
+        });
 
       },
       getAllTaskOfShipper: function(task, shipperid, taskdate) {
@@ -144,13 +148,16 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
       //KhanhKC
-      storeGetAllOrders: function (oderstatusModel, store_id) {
+      storeGetAllOrders: function (oderstatusModel,ordertypeModel, store_id) {
         return order.findAll({
-          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','iscancel','ispending','cod','fee','donedate','createdate'],
+          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','iscancel','ispending','cod','fee','donedate','createdate','ledgerid'],
           //where: {storeid:store_id },
           include: [
             {'model': oderstatusModel,
               attributes: ['statusname']
+            },{
+              'model': ordertypeModel,
+              attributes: ['typename']
             }
           ]
         });

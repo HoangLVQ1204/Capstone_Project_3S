@@ -3,13 +3,75 @@
     <div id="content">
         <div class="column">
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-4">
+                    <div class="well bg-info">
+                        <div class="widget-tile">
+                            <section>
+                                <h5><strong>TOTAL</strong> ORDERS </h5>
+
+                                <h2>{{totalOrder|number}}</h2>
+
+                                <div class="progress progress-xs progress-white progress-over-tile">
+                                    <div class="progress-bar  progress-bar-white" aria-valuetransitiongoal="1"
+                                         aria-valuemax="1"></div>
+                                </div>
+                                <h5><strong>TODAY </strong><label class="progress-label label-white"><h4>
+                                    {{orderToday|number}}</h4>
+                                </label></h5>
+                            </section>
+                            <div class="hold-icon"><i class="fa fa-archive"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="well bg-inverse">
+                        <div class="widget-tile">
+                            <section>
+                                <h5><strong>TOTAL</strong> CASH ON DELIVERY </h5>
+
+                                <h2>{{totalCod|number}}</h2>
+
+                                <div class="progress progress-xs progress-white progress-over-tile">
+                                    <div class="progress-bar  progress-bar-white" aria-valuetransitiongoal="1"
+                                         aria-valuemax="1"></div>
+                                </div>
+                                <h5><strong>TODAY </strong><label class="progress-label label-white"><h4>
+                                    {{todayCod|number}}</h4>
+                                </label></h5>
+                            </section>
+                            <div class="hold-icon"><i class="fa fa-money"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="well bg-theme">
+                        <div class="widget-tile">
+                            <section>
+                                <h5><strong>TOTAL</strong> SHIP FEE </h5>
+
+                                <h2>{{totalFee|number}}</h2>
+
+                                <div class="progress progress-xs progress-white progress-over-tile">
+                                    <div class="progress-bar  progress-bar-white" aria-valuetransitiongoal="1"
+                                         aria-valuemax="1"></div>
+                                </div>
+                                <h5><strong>TODAY </strong><label class="progress-label label-white"><h4>{{todayFee
+                                    | number}}</h4>
+                                </label></h5>
+                            </section>
+                            <div class="hold-icon"><i class="fa fa-money"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
                     <div class="storePanel">
                         <ul class="nav nav-tabs">
                             <li class="active"><a data-toggle="tab" href="#sectionA">In process</a></li>
                             <li><a data-toggle="tab" href="#sectionB">Done</a></li>
                             <li><a data-toggle="tab" href="#sectionC">Draft</a></li>
-                            <li><a data-toggle="tab" href="#sectionD">Issue</a></li>
+                            <!--<li><a data-toggle="tab" href="#sectionD">Issue</a></li>-->
 
                         </ul>
                         <div class="tab-content">
@@ -70,16 +132,20 @@
                                                 <thead>
                                                 <tr>
                                                     <th st-sort="orderid" st-skip-natural="true"
-                                                        class="text-center sortable">OrderID
-                                                    </th>
-                                                    <th st-sort="deliveryaddress" st-skip-natural="true"
-                                                        class="text-center sortable">Delivery Address
+                                                        class="text-center sortable">Order ID
                                                     </th>
                                                     <th st-sort="recipientname" st-skip-natural="true"
                                                         class="text-center sortable">Customer
                                                     </th>
                                                     <th st-sort="recipientphone" st-skip-natural="true"
                                                         class="text-center sortable">Customer Phone
+                                                    </th>
+                                                    <th st-sort="deliveryaddress" st-skip-natural="true"
+                                                        class="text-center sortable">Delivery Address
+                                                    </th> <th st-sort="createdate" st-skip-natural="true"
+                                                        class="text-center sortable">Create Date
+                                                    </th> </th> <th st-sort="ordertype" st-skip-natural="true"
+                                                        class="text-center sortable">Type
                                                     </th>
                                                     <th st-sort="statusname" st-skip-natural="true"
                                                         class="text-center sortable">Status
@@ -91,16 +157,18 @@
                                                 <tbody align="center">
 
                                                 <tr class="odd gradeX" ng-repeat="x in displayedCollectionInprocess">
-                                                    <td>{{x.orderid}}</td>
+                                                    <td width="8%">{{x.orderid}}<br ng-if="x.ispending"><label class="color-danger" ng-if="x.ispending">Pending</label></td>
+                                                    <td width="18%">{{x.recipientname}}</td>
+                                                    <td width="13%"> {{x.recipientphone}}</td>
                                                     <td>{{x.deliveryaddress}}</td>
-                                                    <td>{{x.recipientname}}</td>
-                                                    <td> {{x.recipientphone}}</td>
-                                                    <td> {{x.statusname}}</td>
-                                                    <td width="16%">
+                                                    <td width="10%">{{x.createdate | date: 'dd/MM/yyyy'}}</td>
+                                                    <td width="8%">{{x.ordertype}}</td>
+                                                    <td width="9%"> {{x.statusname}}</td>
+                                                    <td width="10%">
                                                         <span class=" tooltip-area">
                                                     <a class="btn btn-default btn-sm"
                                                        title="Edit"><i class="fa fa-edit (alias)"></i></a>
-                                                    <a ng-click="setOrder(x)" data-toggle="modal"
+                                                    <a ng-disabled ="x.statusname == 'Canceling'" ng-click="setOrder(x)" data-toggle="modal"
                                                        data-target="#md-cancel-order" class="btn btn-default btn-sm"
                                                        title="Cancel"><i class="fa fa-times"></i></a>
                                                     </span>
@@ -109,7 +177,7 @@
                                                 </tbody>
                                                 <tfoot>
                                                 <tr>
-                                                    <td colspan="6" class="text-right">
+                                                    <td colspan="8" class="text-right">
                                                         <div st-pagination="" st-items-by-page="5"></div>
                                                     </td>
                                                 </tr>
@@ -139,6 +207,10 @@
                                             <label class="text-center"><h4>If you cancel this order you have to pay
                                                 <strong>{{cancelFee}} </strong>VND</h4></label>
                                             <label class="text-center"><h4>Do you want to cancel?</h4></label>
+                                        </div>
+                                        <br>
+                                        <div align="center">
+                                            <label class="text-center"><h6>You have to pay 10% of delivery fee when you cancel the orders that status are not "Waiting"</h6></label>
                                         </div>
                                     </div>
                                 </div>
@@ -170,7 +242,7 @@
                             <div id="sectionB" class="tab-pane fade">
                                 <section class="panel">
                                     <header class="panel-heading">
-                                        <h3><strong>Done</strong> Order </h3>
+                                        <h3><strong>Completed</strong> Order </h3>
                                     </header>
                                     <div class="panel-body">
                                         <form>
@@ -188,7 +260,7 @@
                                                             <i class="fa fa-calendar ico"></i>
                                                             <input type="text" daterange class="form-control"
                                                                    name="daterange" id="dateRangeDone"
-                                                                   ng-model="dateRangeDone" placeholder="Done Date"/>
+                                                                   ng-model="dateRangeDone" placeholder="Completion date"/>
                                                         </div>
 
 
@@ -217,13 +289,7 @@
                                                 <thead>
                                                 <tr>
                                                     <th st-sort="orderid" st-skip-natural="true"
-                                                        class="text-center sortable">OrderID
-                                                    </th>
-                                                    <th st-sort="donedate" st-skip-natural="true"
-                                                        class="text-center sortable">Done Date
-                                                    </th>
-                                                    <th st-sort="deliveryaddress" st-skip-natural="true"
-                                                        class="text-center sortable">Delivery Address
+                                                        class="text-center sortable">Order ID
                                                     </th>
                                                     <th st-sort="recipientname" st-skip-natural="true"
                                                         class="text-center sortable">Customer
@@ -231,6 +297,13 @@
                                                     <th st-sort="recipientphone" st-skip-natural="true"
                                                         class="text-center sortable">Customer Phone
                                                     </th>
+                                                    <th st-sort="deliveryaddress" st-skip-natural="true"
+                                                        class="text-center sortable">Delivery Address
+                                                    </th>
+                                                    <th st-sort="donedate" st-skip-natural="true"
+                                                        class="text-center sortable">Completion Date
+                                                    </th>
+
                                                     <!--<th st-sort="statusname" st-skip-natural="true"-->
                                                     <!--class="text-center sortable">Status-->
                                                     <!--</th>-->
@@ -242,10 +315,10 @@
 
                                                 <tr class="odd gradeX" ng-repeat="x in displayedCollectionDone">
                                                     <td>{{x.orderid}}</td>
-                                                    <td>{{x.donedate}}</td>
-                                                    <td>{{x.deliveryaddress}}</td>
                                                     <td>{{x.recipientname}}</td>
                                                     <td> {{x.recipientphone}}</td>
+                                                    <td>{{x.deliveryaddress}}</td>
+                                                    <td>{{x.donedate|date:'dd/MM/yyyy'}}</td>
                                                     <!--<td> {{x.statusname}}</td>-->
                                                     <!-- <td  width="16%>
                                                      <span class="tooltip-area">
@@ -282,21 +355,21 @@
                                     <div class="panel-body">
                                         <form>
                                             <table class="table table-striped table-hover table-bordered"
-                                                   st-set-filter="customFilter" st-custom-date="deliverydate"
+                                                   st-set-filter="customFilter" st-custom-date="createdate"
                                                    st-predicate="{{selectedDraff.value}}" stdate="dateRangeDraff"
                                                    search-watch-model="searchDraff" st-table="displayedCollectionDraff"
                                                    st-safe-src="ordersDraff">
 
                                                 <div class="row">
 
-                                                    <!--<div class="col-md-4 form-group pull-left">-->
-                                                    <!--<div class=" input-icon">-->
-                                                    <!--<i class="fa fa-calendar ico"></i>-->
-                                                    <!--<input type="text" daterange class="form-control"-->
-                                                    <!--name="daterange" id="daterange"-->
-                                                    <!--ng-model="dateRange"/>-->
-                                                    <!--</div>-->
-                                                    <!--</div>-->
+                                                    <div class="col-md-4 form-group pull-left">
+                                                    <div class=" input-icon">
+                                                    <i class="fa fa-calendar ico"></i>
+                                                    <input type="text" daterange class="form-control"
+                                                    name="daterange" id="daterangeDraff"
+                                                    ng-model="dateRangeDraff"  placeholder="Create date"/>
+                                                    </div>
+                                                    </div>
 
                                                     <div class="col-md-4  form-group pull-right">
                                                         <div class="input-icon"><i class="fa fa-search ico"></i>
@@ -322,16 +395,18 @@
                                                 <thead>
                                                 <tr>
                                                     <th st-sort="orderid" st-skip-natural="true"
-                                                        class="text-center sortable">OrderID
-                                                    </th>
-                                                    <th st-sort="deliveryaddress" st-skip-natural="true"
-                                                        class="text-center sortable">Delivery Address
+                                                        class="text-center sortable">Order ID
                                                     </th>
                                                     <th st-sort="recipientname" st-skip-natural="true"
                                                         class="text-center sortable">Customer
                                                     </th>
                                                     <th st-sort="recipientphone" st-skip-natural="true"
                                                         class="text-center sortable">Customer Phone
+                                                    </th>
+                                                    <th st-sort="deliveryaddress" st-skip-natural="true"
+                                                        class="text-center sortable">Delivery Address
+                                                    </th> <th st-sort="createdate" st-skip-natural="true"
+                                                        class="text-center sortable">Create Date
                                                     </th>
                                                     <!--<th st-sort="statusname" st-skip-natural="true"-->
                                                     <!--class="text-center sortable">Status-->
@@ -344,9 +419,10 @@
 
                                                 <tr class="odd gradeX" ng-repeat="x in displayedCollectionDraff">
                                                     <td>{{x.orderid}}</td>
-                                                    <td>{{x.deliveryaddress}}</td>
                                                     <td>{{x.recipientname}}</td>
                                                     <td> {{x.recipientphone}}</td>
+                                                    <td>{{x.deliveryaddress}}</td>
+                                                    <td>{{x.createdate|date:'dd/MM/yyyy'}}</td>
                                                     <!--<td> {{x.statusname}}</td>-->
                                                     <td width="16%">
                                                         <span class=" tooltip-area">
@@ -422,176 +498,115 @@
                             <!--Draff Order-->
 
 
-                            <!--/////////////////////////////////////////////////////////////////
-                            ////////////............. ISSUE ORDER..........///////////////////
-                            //////////////////////////////////////////////////////////////////-->
-                            <div id="sectionD" class="tab-pane fade">
-                                <section class="panel">
-                                    <header class="panel-heading">
-                                        <h3><strong>Issue</strong> Order </h3>
-                                    </header>
-                                    <div class="panel-body">
-                                        <form>
-                                            <table class="table table-striped table-hover table-bordered"
-                                                   st-set-filter="customFilter" st-custom-date="deliverydate"
-                                                   st-predicate="{{selectedIssue.value}}" stdate="dateRangeIssue"
-                                                   search-watch-model="searchIssue" st-table="displayedCollectionIssue"
-                                                   st-safe-src="orderIssue">
 
-                                                <div class="row">
+                            <!--&lt;!&ndash;/////////////////////////////////////////////////////////////////-->
+                            <!--////////////............. ISSUE ORDER..........///////////////////-->
+                            <!--//////////////////////////////////////////////////////////////////&ndash;&gt;-->
+                            <!--<div id="sectionD" class="tab-pane fade">-->
+                                <!--<section class="panel">-->
+                                    <!--<header class="panel-heading">-->
+                                        <!--<h3><strong>Issue</strong> Order </h3>-->
+                                    <!--</header>-->
+                                    <!--<div class="panel-body">-->
+                                        <!--<form>-->
+                                            <!--<table class="table table-striped table-hover table-bordered"-->
+                                                   <!--st-set-filter="customFilter" st-custom-date="deliverydate"-->
+                                                   <!--st-predicate="{{selectedIssue.value}}" stdate="dateRangeIssue"-->
+                                                   <!--search-watch-model="searchIssue" st-table="displayedCollectionIssue"-->
+                                                   <!--st-safe-src="orderIssue">-->
 
-                                                    <!--Gio han ngay tim kiem-->
-                                                    <!--<div class="col-md-4 form-group pull-left">-->
-                                                    <!--<div class=" input-icon">-->
-                                                    <!--<i class="fa fa-calendar ico"></i>-->
-                                                    <!--<input type="text" daterange class="form-control"-->
-                                                    <!--name="daterange" id="daterange4"-->
-                                                    <!--ng-model="dateRange"/>-->
+                                                <!--<div class="row">-->
+
+                                                    <!--&lt;!&ndash;Gio han ngay tim kiem&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;<div class="col-md-4 form-group pull-left">&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;<div class=" input-icon">&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;<i class="fa fa-calendar ico"></i>&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;<input type="text" daterange class="form-control"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;name="daterange" id="daterange4"&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;ng-model="dateRange"/>&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+
+                                                    <!--<div class="col-md-4 form-group pull-right">-->
+                                                        <!--<div class="input-icon"><i class="fa fa-search ico"></i>-->
+
+                                                            <!--<input type="search" class="form-control"-->
+                                                                   <!--placeholder="Search" ng-model="searchIssue">-->
+                                                        <!--</div>-->
+
+
                                                     <!--</div>-->
+
+                                                    <!--<div class="col-sm-4 pull-right">-->
+                                                        <!--<select-->
+                                                                <!--class="form-control"-->
+                                                                <!--ng-options="options.option for options in searchOptionsIssue"-->
+                                                                <!--ng-model="selectedIssue">-->
+
+                                                        <!--</select>-->
+
                                                     <!--</div>-->
 
+                                                <!--</div>-->
+                                                <!--<thead>-->
+                                                <!--<tr>-->
+                                                    <!--<th st-sort="orderid" st-skip-natural="true"-->
+                                                        <!--class="text-center sortable">Order ID-->
+                                                    <!--</th>-->
+                                                    <!--<th st-sort="deliveryaddress" st-skip-natural="true"-->
+                                                        <!--class="text-center sortable">Delivery Address-->
+                                                    <!--</th>-->
+                                                    <!--<th st-sort="recipientname" st-skip-natural="true"-->
+                                                        <!--class="text-center sortable">Customer-->
+                                                    <!--</th>-->
+                                                    <!--<th st-sort="recipientphone" st-skip-natural="true"-->
+                                                        <!--class="text-center sortable">Customer Phone-->
+                                                    <!--</th>-->
+                                                    <!--<th st-sort="statusname" st-skip-natural="true"-->
+                                                        <!--class="text-center sortable">Status-->
+                                                    <!--</th>-->
+                                                    <!--&lt;!&ndash;<th width="16%" class="text-center">Option</th>&ndash;&gt;-->
 
-                                                    <div class="col-md-4 form-group pull-right">
-                                                        <div class="input-icon"><i class="fa fa-search ico"></i>
+                                                <!--</tr>-->
+                                                <!--</thead>-->
+                                                <!--<tbody align="center">-->
 
-                                                            <input type="search" class="form-control"
-                                                                   placeholder="Search" ng-model="searchIssue">
-                                                        </div>
+                                                <!--<tr class="odd gradeX" ng-repeat="x in displayedCollectionIssue">-->
+                                                    <!--<td>{{x.orderid}}</td>-->
+                                                    <!--<td>{{x.deliveryaddress}}</td>-->
+                                                    <!--<td>{{x.recipientname}}</td>-->
+                                                    <!--<td> {{x.recipientphone}}</td>-->
+                                                    <!--<td> {{x.statusname}}</td>-->
+                                                    <!--&lt;!&ndash;-->
+                                                    <!--<td>-->
+                                                        <!--<span class="tooltip-area">-->
+                                                        <!--<a href="" class="btn btn-default btn-sm" title="Edit"><i-->
+                                                                <!--class="fa fa-edit (alias)"></i></a>-->
+                                                        <!--<a href="" class="btn btn-default btn-sm" title="Cancel"><i-->
+                                                                <!--class="fa fa-times"></i></a>-->
+                                                        <!--</span>-->
+                                                    <!--</td>-->
+                                                    <!--&ndash;&gt;-->
+                                                <!--</tr>-->
+                                                <!--</tbody>-->
+                                                <!--<tfoot>-->
+                                                <!--<tr>-->
+                                                    <!--<td colspan="5" class="text-right">-->
+                                                        <!--<div st-pagination="" st-items-by-page="5"></div>-->
+                                                    <!--</td>-->
+                                                <!--</tr>-->
+                                                <!--</tfoot>-->
+                                            <!--</table>-->
 
-
-                                                    </div>
-
-                                                    <div class="col-sm-4 pull-right">
-                                                        <select
-                                                                class="form-control"
-                                                                ng-options="options.option for options in searchOptionsIssue"
-                                                                ng-model="selectedIssue">
-
-                                                        </select>
-
-                                                    </div>
-
-                                                </div>
-                                                <thead>
-                                                <tr>
-                                                    <th st-sort="orderid" st-skip-natural="true"
-                                                        class="text-center sortable">OrderID
-                                                    </th>
-                                                    <th st-sort="deliveryaddress" st-skip-natural="true"
-                                                        class="text-center sortable">Delivery Address
-                                                    </th>
-                                                    <th st-sort="recipientname" st-skip-natural="true"
-                                                        class="text-center sortable">Customer
-                                                    </th>
-                                                    <th st-sort="recipientphone" st-skip-natural="true"
-                                                        class="text-center sortable">Customer Phone
-                                                    </th>
-                                                    <th st-sort="statusname" st-skip-natural="true"
-                                                        class="text-center sortable">Status
-                                                    </th>
-                                                    <!--<th width="16%" class="text-center">Option</th>-->
-
-                                                </tr>
-                                                </thead>
-                                                <tbody align="center">
-
-                                                <tr class="odd gradeX" ng-repeat="x in displayedCollectionIssue">
-                                                    <td>{{x.orderid}}</td>
-                                                    <td>{{x.deliveryaddress}}</td>
-                                                    <td>{{x.recipientname}}</td>
-                                                    <td> {{x.recipientphone}}</td>
-                                                    <td> {{x.statusname}}</td>
-                                                    <!--
-                                                    <td>
-                                                        <span class="tooltip-area">
-                                                        <a href="" class="btn btn-default btn-sm" title="Edit"><i
-                                                                class="fa fa-edit (alias)"></i></a>
-                                                        <a href="" class="btn btn-default btn-sm" title="Cancel"><i
-                                                                class="fa fa-times"></i></a>
-                                                        </span>
-                                                    </td>
-                                                    -->
-                                                </tr>
-                                                </tbody>
-                                                <tfoot>
-                                                <tr>
-                                                    <td colspan="5" class="text-right">
-                                                        <div st-pagination="" st-items-by-page="5"></div>
-                                                    </td>
-                                                </tr>
-                                                </tfoot>
-                                            </table>
-
-                                        </form>
-                                    </div>
-                                </section>
-                            </div>
-
+                                        <!--</form>-->
+                                    <!--</div>-->
+                                <!--</section>-->
+                            <!--</div>-->
+                            <!-- -->
                         </div>
                     </div>
 
-                </div>
-                <div class="column col-md-4">
-                    <div class="">
-                        <div class="well bg-info">
-                            <div class="widget-tile">
-                                <section>
-                                    <h5><strong>TOTAL</strong> ORDERS </h5>
-
-                                    <h2>{{totalOrder|number}}</h2>
-
-                                    <div class="progress progress-xs progress-white progress-over-tile">
-                                        <div class="progress-bar  progress-bar-white" aria-valuetransitiongoal="1"
-                                             aria-valuemax="1"></div>
-                                    </div>
-                                    <h5><strong>TODAY </strong><label class="progress-label label-white"><h4>
-                                        {{orderToday|number}}</h4>
-                                    </label></h5>
-                                </section>
-                                <div class="hold-icon"><i class="fa fa-archive"></i></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="">
-                        <div class="well bg-inverse">
-                            <div class="widget-tile">
-                                <section>
-                                    <h5><strong>TOTAL</strong> CASH ON DELIVERY </h5>
-
-                                    <h2>{{totalCod|number}}</h2>
-
-                                    <div class="progress progress-xs progress-white progress-over-tile">
-                                        <div class="progress-bar  progress-bar-white" aria-valuetransitiongoal="1"
-                                             aria-valuemax="1"></div>
-                                    </div>
-                                    <h5><strong>TODAY </strong><label class="progress-label label-white"><h4>
-                                        {{todayCod|number}}</h4>
-                                    </label></h5>
-                                </section>
-                                <div class="hold-icon"><i class="fa fa-money"></i></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="">
-                        <div class="well bg-theme">
-                            <div class="widget-tile">
-                                <section>
-                                    <h5><strong>TOTAL</strong> SHIP FEE </h5>
-
-                                    <h2>{{totalFee|number}}</h2>
-
-                                    <div class="progress progress-xs progress-white progress-over-tile">
-                                        <div class="progress-bar  progress-bar-white" aria-valuetransitiongoal="1"
-                                             aria-valuemax="1"></div>
-                                    </div>
-                                    <h5><strong>TODAY </strong><label class="progress-label label-white"><h4>{{todayFee
-                                        | number}}</h4>
-                                    </label></h5>
-                                </section>
-                                <div class="hold-icon"><i class="fa fa-money"></i></div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
