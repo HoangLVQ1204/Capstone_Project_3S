@@ -40,7 +40,7 @@ app.use(function (err, req, res, next) {
     }
     logger.error(err.stack);
     res.status(500).send('Oops');
-})
+});
 
 // setup database, start server after syncing database
 app.get('models').sequelize.sync().then(function () {
