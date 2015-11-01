@@ -4,129 +4,58 @@
 
 function detailController($scope, $stateParams, dataService, $cordovaGeolocation, $ionicPopup, $ionicModal, $ionicPopover, uiGmapGoogleMapApi, uiGmapIsReady, $rootScope) {
 
-  {
-
-    var dataSamp =
-    {
-      "shipper": [
-        {
-          "order": ["order3"],
-          "latitude": 21.026700,
-          "longitude": 105.823510,
-          "shipperID": "huykool",
-          "status": "status 222"
-        }
-      ],
-      "store": [
-        {
-          "order": ["order3"],
-          "latitude": 21.025869,
-          "longitude": 105.826310,
-          "storeID": "str3"
-        }
-      ],
-      "customer": [
-        {
-          "order": ["order3"],
-          "geoText": "Cát Linh,Ba Đình,Hà Nội,Việt Nam"
-        } ],
-      "order": {
-        "order3": {
-          "shipperID": "huykool",
-          "storeID": "str3"
-        }
-      }
-    };
-    dataSamp = {
-      shipper: [
-        {
-          order: [
-            "ord3"
-          ],
-          latitude: 21.0287,
-          longitude: 105.83851,
-          shipperID: "huykool"
-        }
-      ],
-      store: [
-        {
-          order: [
-            "ord3"
-          ],
-          latitude: 21.0267,
-          longitude: 105.82351,
-          storeID: "str3"
-        }
-      ],
-      customer: [
-        {
-          order: [
-            "ord3"
-          ],
-          geoText: "Cát Linh,Ba Đình,Hà Nội,Việt Nam"
-        }
-      ],
-      order: {
-        ord3: {
-          shipperID: "huykool",
-          storeID: "str3"
-        }
-      }
-    };
-    $scope.shippers = dataSamp.shipper;
-    $scope.stores = dataSamp.store;
-    $scope.customers = dataSamp.customer;
-    $scope.orders = dataSamp.order;
-    console.log("dataLoaded");
-    $scope.$broadcast();
-  };
-  //// START - Initiate modal confirm when shipper go next step
-  $ionicModal.fromTemplateUrl('confirm-code-modal.html', {
-    scope: $scope,
-    animation: 'slide-in-up'
-  }).then(function (modal) {
-    $scope.modalCode = modal;
-  });
-
-  $ionicModal.fromTemplateUrl('confirm-modal.html', {
-    scope: $scope,
-    animation: 'slide-in-up'
-  }).then(function (modal) {
-    $scope.modal = modal;
-  });
-  //// END - Initiate modal confirm when shipper go next step
-
-  //// START - Event of modal confirm
-  $scope.openModal = function (currentStatus, action) {
+  $scope.showConfirm = function (currentStatus, action) {
     $scope.action = action;
     $scope.statuslist.map(function (st) {
         if (st.statusid == currentStatus) {
           if (st.requiredcode) {
-            $scope.modalCode.show();
+            confirmNextCode(action);
           } else {
-            $scope.modal.show();
+            confirmNext(action);
           }
         }
       }
     );
   };
-  $scope.closeModal = function () {
-    $scope.modal.hide();
-    $scope.modalCode.hide();
+
+  var confirmNext = function (action) {
+    var confirmPopup = $ionicPopup.confirm({
+      title: 'Confirm next step',
+      template: 'Are you sure you want to ' + action.toLowerCase() + '?'
+    });
+    confirmPopup.then(function (res) {
+      if (res) {
+        $scope.nextStep();
+      }
+    });
   };
-  //Cleanup the modal when we're done with it!
-  $scope.$on('$destroy', function () {
-    $scope.modal.remove();
-  });
-  // Execute action on hide modal
-  $scope.$on('modal.hidden', function () {
-    // Execute action
-  });
-  // Execute action on remove modal
-  $scope.$on('modal.removed', function () {
-    // Execute action
-  });
-  //// END - Event of modal confirm
+
+  var confirmNextCode = function (action) {
+    $scope.confirm = {};
+    var myPopup = $ionicPopup.show({
+      template: '<input type="text" ng-model="confirm.code">',
+      title: 'Enter confirmation code',
+      subTitle: 'Enter code to ' + action.toLowerCase(),
+      scope: $scope,
+      buttons: [
+        {text: 'Cancel'},
+        {
+          text: '<b>OK</b>',
+          type: 'button-positive',
+          onTap: function (e) {
+            if (!$scope.confirm.code) {
+              e.preventDefault();
+            } else {
+              return $scope.confirm.code;
+            }
+          }
+        }
+      ]
+    });
+    myPopup.then(function (code) {
+      if(code) $scope.nextStepConfirm(code);
+    });
+  };
 
   $scope.userPosition = {
     //lat: "21.012529248181444",
@@ -161,12 +90,12 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
 
   getDetailFromServer();
 
-  getCurrentPos().then(function(position){
-      console.log(position.latitude);
-      console.log(position.longitude);
-      //$scope.shippers[0]["latitude"] = position.latitude;
-      //$scope.shippers[0]["longitude"] = position.longitude;
-      //getMapData();
+  getCurrentPos().then(function (position) {
+    console.log(position.latitude);
+    console.log(position.longitude);
+    //$scope.shippers[0]["latitude"] = position.latitude;
+    //$scope.shippers[0]["longitude"] = position.longitude;
+    //getMapData();
   });
 
   //getMapData();
@@ -224,34 +153,34 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
     var urlBase = config.hostServer + 'api/mapdata/' + $stateParams.orderId;
     //dataService.getDataServer(urlBase).then(function (dataMap) {
     //  dataMap = dataMap.data;
-      //var newOrder = "order2";
-      //var shipperID = "shipper_2";
-      //var storeID = "store_3";
-      //var newStore = {
-      //  "order": [newOrder],
-      //  "latitude": 21.031526,
-      //  "longitude": 105.813359,
-      //  "storeID": storeID
-      //};
-      //var geoText = "306 Kim Mã,Ba Đình,Hà Nội,Việt Nam";
-      //var newCustomer = {
-      //  "order": [newOrder],
-      //  "geoText": geoText
-      //};
-      ////initStoreMarker($scope, geocoder, maps, newStore);
-      //$scope.orders[newOrder] = {
-      //  "shipperID": shipperID,
-      //  "storeID": storeID
-      //};
-      ////initCustomerMarker($scope, geocoder, maps, newCustomer);
-      //
-      //// Add all new information
-      //$scope.shippers[0].order.push(newOrder);
-      //$scope.stores.push(newStore);
-      //$scope.customers.push(newCustomer);
-      ////$scope.$apply();
+    //var newOrder = "order2";
+    //var shipperID = "shipper_2";
+    //var storeID = "store_3";
+    //var newStore = {
+    //  "order": [newOrder],
+    //  "latitude": 21.031526,
+    //  "longitude": 105.813359,
+    //  "storeID": storeID
+    //};
+    //var geoText = "306 Kim Mã,Ba Đình,Hà Nội,Việt Nam";
+    //var newCustomer = {
+    //  "order": [newOrder],
+    //  "geoText": geoText
+    //};
+    ////initStoreMarker($scope, geocoder, maps, newStore);
+    //$scope.orders[newOrder] = {
+    //  "shipperID": shipperID,
+    //  "storeID": storeID
+    //};
+    ////initCustomerMarker($scope, geocoder, maps, newCustomer);
+    //
+    //// Add all new information
+    //$scope.shippers[0].order.push(newOrder);
+    //$scope.stores.push(newStore);
+    //$scope.customers.push(newCustomer);
+    ////$scope.$apply();
 
-      setTimeout(function(){
+    setTimeout(function () {
 
       var dataSamp =
       {
@@ -276,7 +205,7 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
           {
             "order": ["order3"],
             "geoText": "Cát Linh,Ba Đình,Hà Nội,Việt Nam"
-          } ],
+          }],
         "order": {
           "order3": {
             "shipperID": "huykool",
@@ -284,76 +213,67 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
           }
         }
       };
-    dataSamp = {
-      shipper: [
-        {
-          order: [
-            "ord3"
-          ],
-          latitude: 21.0287,
-          longitude: 105.83851,
-          shipperID: "huykool"
+      dataSamp = {
+        shipper: [
+          {
+            order: [
+              "ord3"
+            ],
+            latitude: 21.0287,
+            longitude: 105.83851,
+            shipperID: "huykool"
+          }
+        ],
+        store: [
+          {
+            order: [
+              "ord3"
+            ],
+            latitude: 21.0267,
+            longitude: 105.82351,
+            storeID: "str3"
+          }
+        ],
+        customer: [
+          {
+            order: [
+              "ord3"
+            ],
+            geoText: "Cát Linh,Ba Đình,Hà Nội,Việt Nam"
+          }
+        ],
+        order: {
+          ord3: {
+            shipperID: "huykool",
+            storeID: "str3"
+          }
         }
-      ],
-      store: [
-        {
-          order: [
-            "ord3"
-          ],
-          latitude: 21.0267,
-          longitude: 105.82351,
-          storeID: "str3"
-        }
-      ],
-      customer: [
-        {
-          order: [
-            "ord3"
-          ],
-          geoText: "Cát Linh,Ba Đình,Hà Nội,Việt Nam"
-        }
-      ],
-      order: {
-        ord3: {
-          shipperID: "huykool",
-          storeID: "str3"
-        }
-      }
-    };
+      };
       $scope.shippers = dataSamp.shipper;
       $scope.stores = dataSamp.store;
       $scope.customers = dataSamp.customer;
       $scope.orders = dataSamp.order;
       console.log("dataLoaded");
-        $scope.$broadcast();
-      },10000000);
+      $scope.$broadcast();
+    }, 10000000);
 
-      //$scope.dataMap = dataMap.data;
-      //$scope.shippers = $scope.dataMap.shipper;
-      //$scope.stores = $scope.dataMap.store;
-      //$scope.customers = $scope.dataMap.customer;
-      //$scope.orders = $scope.dataMap.order;
-      //getCurrentPos().then(function (position) {
-      //  $scope.dataMap.shipper[0]["latitude"] = position.coords.latitude;
-      //  $scope.dataMap.shipper[0]["longitude"] = position.coords.longitude;
-      //  console.log("data",$scope.dataMap);
-      //});
+    //$scope.dataMap = dataMap.data;
+    //$scope.shippers = $scope.dataMap.shipper;
+    //$scope.stores = $scope.dataMap.store;
+    //$scope.customers = $scope.dataMap.customer;
+    //$scope.orders = $scope.dataMap.order;
+    //getCurrentPos().then(function (position) {
+    //  $scope.dataMap.shipper[0]["latitude"] = position.coords.latitude;
+    //  $scope.dataMap.shipper[0]["longitude"] = position.coords.longitude;
+    //  console.log("data",$scope.dataMap);
+    //});
     //}, function (err) {
     //  $scope.errorlogs += 'Unable to load order status list data: ' + err;
     //  console.log('Unable to load order status list data: ' + err);
     //})
   }
 
-  $scope.saveDetails = function mapdr() {
-    var lat = $scope.user.latitude;
-    var lgt = $scope.user.longitude;
-    var des = $scope.user.desc;
-    console.log($scope.huy);
-    //GEOLOCATION
-
-  };
-
-  $scope.nextStep = function step(currentStatus) {
+  $scope.nextStep = function step() {
     var urlBase = config.hostServer + 'api/nextstep/';
     var data = {
       code: $scope.order.code,
@@ -361,7 +281,6 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
     };
     dataService.putDataServer(urlBase, data)
       .then(function (rs) {
-        $scope.modal.hide();
         $ionicPopup.alert({
           title: "Successfully!",
           content: "You're order has been moved to next step! Continue your work! :D"
@@ -369,37 +288,8 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
           //Reload
           getDetailFromServer();
         });
-        /*
-         var myPopup = $ionicPopup.show({
-         template: '<input type="password" ng-model="data.wifi">',
-         title: 'Enter Wi-Fi Password',
-         subTitle: 'Please use normal things',
-         scope: $scope,
-         buttons: [
-         { text: 'Cancel' },
-         {
-         text: '<b>Save</b>',
-         type: 'button-positive',
-         onTap: function(e) {
-         if (!$scope.data.wifi) {
-         //don't allow the user to close unless he enters wifi password
-         e.preventDefault();
-         } else {
-         return $scope.data.wifi;
-         }
-         }
-         },
-         ]
-         });
-         myPopup.then(function(res) {
-         console.log('Tapped!', res);
-         });
-         $timeout(function() {
-         myPopup.close(); //close the popup after 3 seconds for some reason
-         }, 3000);*/
       },
       function (err) {
-        $scope.modal.hide();
         $ionicPopup.alert({
           title: "Can not go to next step of order",
           content: "Error: " + err.data
@@ -427,7 +317,6 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
     };
     dataService.putDataServer(urlBase, data)
       .then(function (rs) {
-        $scope.closeModal();
         $ionicPopup.alert({
           title: "Successfully!",
           content: "You're order has been moved to next step! Continue your work! :D"
@@ -437,7 +326,6 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
         });
       },
       function (err) {
-        $scope.closeModal();
         $ionicPopup.alert({
           title: "Can not go to next step of order",
           content: "Error: " + err.data

@@ -17,7 +17,7 @@ function socketStore($q,socketService,authService,mapService){
         console.log('shipper returned', shipper);
 
         // Test selectShipper
-        api.selectShipper(shipper, {});
+        // api.selectShipper(shipper, {});
     });
 
     socketService.on('store:update:location', function(data) {
@@ -40,10 +40,12 @@ function socketStore($q,socketService,authService,mapService){
 
     api.registerSocket = function(){
         var user = api.getCurrentUser();
+        console.log('storeee', user);
         mapService.addStore(user)
         .then(function() {                
             socketService.sendPacket(
             { 
+                type: 'store',
                 clientID: user.storeID 
             },
             'server',
@@ -51,11 +53,23 @@ function socketStore($q,socketService,authService,mapService){
                 store: user
             },
             'store:register:location');
+            api.findShipper();
         });
     };
     
-    api.findShipper = function() {                
-        socketService.emit('store:find:shipper', null);
+    api.findShipper = function() {
+        console.log('find shipper');
+        var user = api.getCurrentUser();
+        socketService.sendPacket(
+        {
+            type: 'store',
+            clientID: user.storeID
+        },
+        'shipper',
+        {
+            store: user
+        },
+        'store:find:shipper');
     };
 
     api.selectShipper = function(shipper, customer) {

@@ -44,9 +44,7 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
       .state('app', {
         url: '/app',
         abstract: true,
-        controller: function(){
-          console.log(1);
-        },
+        controller: 'ChangeStatusCtrl',
         templateUrl: 'templates/menu.html'
       })
 
