@@ -30,6 +30,8 @@ function socketAdmin(socketService,authService,mapService){
 
     socketService.on('admin:update:shipper', function(data) {
         console.log('admin:update:shipper', data);
+        var shipper = data.msg.shipper;
+        mapService.updateShipper(shipper);
     });
     
     api.getCurrentUser = function() {

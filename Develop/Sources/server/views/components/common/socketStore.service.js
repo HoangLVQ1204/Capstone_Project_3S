@@ -23,6 +23,8 @@ function socketStore($q,socketService,authService,mapService){
 
     socketService.on('store:update:shipper', function(data) {
         console.log('store:update:shipper', data);
+        var shipper = data.msg.shipper;
+        mapService.updateShipper(shipper);
     });
 
     api.getCurrentUser = function() {

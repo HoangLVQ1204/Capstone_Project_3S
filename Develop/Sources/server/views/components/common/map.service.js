@@ -17,39 +17,25 @@ var icons = {
         'chst=d_map_pin_letter&chld=x|3366FF',
 };
 
-function initShipper(geocoder, maps, shipperMarker) {    
+function initShipper(shipperMarker) {    
     shipperMarker.order = [];
     shipperMarker.icon = icons.shipperIcon;
 }
 
-function initStore(geocoder, maps, storeMarker, $q) {    
+function initStore(storeMarker, api) {    
     storeMarker.order = [];
     storeMarker.icon = icons.storeIcon;    
 
-    var d = $q.defer();
-    geocoder.geocode({
-        'location': {
-            lat: storeMarker.latitude,
-            lng: storeMarker.longitude
-        }
-    }, function(results, status) {                
-        if (status === maps.GeocoderStatus.OK) {
-            var geoText = 'Not Available';
-            if (results[0]) {
-                geoText = results[0].formatted_address;                
-            }
-            storeMarker.geoText = geoText;
-            d.resolve();
-        } else {
-            d.reject('Geocode was not successful for the following reason: ' + status);
-        }
-    }); 
-
-    return d.promise;
+    return api.googlemap.then(function(util) {
+        return util.getGeoText(storeMarker.latitude, storeMarker.longitude);        
+    })
+    .then(function(geoText) {
+        storeMarker.geoText = geoText;
+    });    
 }
 
 // add customerID into orders
-function initCustomer(geocoder, maps, customerMarker, orders, $q) {    
+function initCustomer(customerMarker, orders, api) {    
     customerMarker.customerID = customerMarker.order[0];
     customerMarker.order.forEach(function(order) {        
         orders[order].customerID = customerMarker.customerID;
@@ -57,20 +43,13 @@ function initCustomer(geocoder, maps, customerMarker, orders, $q) {
 
     customerMarker.icon = icons.customerIcon;
 
-    var d = $q.defer();
-    geocoder.geocode({
-        address: customerMarker.geoText
-    }, function(results, status) {
-        if (status === maps.GeocoderStatus.OK) {
-            customerMarker.latitude = results[0].geometry.location.lat();
-            customerMarker.longitude = results[0].geometry.location.lng();
-            d.resolve();
-        } else {
-            d.reject('Geocode was not successful for the following reason: ' + status);            
-        }
-    });
-
-    return d.promise;
+    return api.googlemap.then(function(util) {
+        return util.getLatLng(customerMarker.geoText);
+    })
+    .then(function(coords) {
+        customerMarker.latitude = coords.latitude;
+        customerMarker.longitude = coords.longitude;
+    });    
 }
 
 
@@ -93,6 +72,48 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
             geocoder: geocoder,
             distanceService: distanceService,
             directionsService: directionsService
+        };
+
+        // get geotext from latitude and longitude
+        util.getGeoText = function(latitude, longitude) {
+            var d = $q.defer();
+            geocoder.geocode({
+                'location': {
+                    lat: latitude,
+                    lng: longitude
+                }
+            }, function(results, status) {                
+                if (status === maps.GeocoderStatus.OK) {
+                    var geoText = 'Not Available';
+                    if (results[0]) {
+                        geoText = results[0].formatted_address;                
+                    }                    
+                    d.resolve(geoText);
+                } else {
+                    d.reject('Geocode was not successful for the following reason: ' + status);
+                }
+            }); 
+
+            return d.promise;
+        };
+
+        // get latitude and longitude from geoText
+        util.getLatLng = function(geoText) {
+            var d = $q.defer();
+            geocoder.geocode({
+                address: geoText
+            }, function(results, status) {
+                if (status === maps.GeocoderStatus.OK) {                    
+                    d.resolve({
+                        latitude: results[0].geometry.location.lat(),
+                        longitude: results[0].geometry.location.lng()
+                    });
+                } else {
+                    d.reject('Geocode was not successful for the following reason: ' + status);            
+                }
+            });
+
+            return d.promise;
         };
 
         util.getDistanceFromOneToMany = function(origin, destinations) {
@@ -267,7 +288,7 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         // orders = sampleData[mode].orders;
         return orders;
     };       
-
+    
     api.addOrder = function(orderID, store, shipper, customer) {
         orders[orderID] = {
             shipperID: shipper.shipperID,
