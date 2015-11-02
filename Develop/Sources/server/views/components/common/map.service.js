@@ -17,13 +17,15 @@ var icons = {
         'chst=d_map_pin_letter&chld=x|3366FF',
 };
 
-function initShipper(shipperMarker, api) {    
-    shipperMarker.order = [];
+function initShipper(shipperMarker, api) {  
+    if (!shipperMarker.order)  
+        shipperMarker.order = [];
     shipperMarker.icon = icons.shipperIcon;
 }
 
 function initStore(storeMarker, api) {    
-    storeMarker.order = [];
+    if (!storeMarker.order)
+        storeMarker.order = [];
     storeMarker.icon = icons.storeIcon;    
 
     return api.googlemap.then(function(util) {
@@ -173,11 +175,7 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         var find = _.find(shipperMarkers, function(shipperMarker) {
             return shipper.shipperID == shipperMarker.storeID;
         });
-        if (find) {
-            return true;
-        } else {
-            return false;
-        }
+        return !!find;
     }
 
     api.addShipper = function(shipper) {    
@@ -194,9 +192,9 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
 
     api.getOneShipper = function(shipperID) {
         console.log('getOneShipper', shipperID, shipperMarkers);
-        return _.find(shipperMarkers, function(shipper) {
+        return _.clone(_.find(shipperMarkers, function(shipper) {
             return shipper.shipperID == shipperID;
-        });
+        }), true);
     }
 
     api.updateShipper = function(data) {
@@ -245,12 +243,38 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     };
 
     api.getOneStore = function(storeID) {        
-        return _.find(storeMarkers, function(store) {
+        return _.clone(_.find(storeMarkers, function(store) {
             return store.storeID == storeID;
-        });
+        }), true);
     };    
 
+    api.setMapData = function(mapData) {
+        shipperMarkers = _.clone(mapData.shipper, true);
+        shipperMarkers.forEach(function(shipperMarker) {
+            initShipper(shipperMarker, api);
+        });
 
+        storeMarkers = _.clone(mapData.store, true);
+        storeMarkers.forEach(function(storeMarker) {
+            initStore(storeMarker, api)
+            .then(function() {
+            });
+        });
+
+        orders = _.clone(mapData.orders, true);
+
+        customerMarkers = _.clone(customerMarkers, true);
+        customerMarkers.forEach(function(customerMarker) {
+            initCustomer(customerMarker)
+            .then(function() {              
+            });
+        });
+
+        console.log('SET shipper', shipperMarkers);
+        console.log('SET store', storeMarkers);
+        console.log('SET orders', orders);
+        console.log('SET customer', customerMarkers);
+    };
 
 
     /*

@@ -50,6 +50,7 @@ module.exports = function(socket, io) {
         io.addOrder(msg.orderID, msg.store.storeID, msg.shipper.shipperID);
         io.updateOrderOfShipper(msg.shipper.shipperID, msg.orderID);
         io.updateOrderOfStore(msg.store.storeID, msg.orderID);
+        io.addCustomer(msg.customer);
 
         io.forward(data.sender, data.receiver, data.msg, 'shipper:add:order');
         io.forward(data.sender, 'admin', data.msg, 'admin:add:order');

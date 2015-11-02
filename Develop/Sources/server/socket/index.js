@@ -3,6 +3,7 @@
  */
 
 
+var _ = require('lodash');
 
 module.exports = function(server){
     
@@ -69,7 +70,7 @@ module.exports = function(server){
     /*
         io.orders[orderID] = {
             shipperID,
-            storeID
+            storeID            
         }
     */
     io.orders = {};
@@ -138,16 +139,119 @@ module.exports = function(server){
     io.getDataForStore = function(storeID) {
         // Returns data for map of storeID
         // Based on io.stores, io.shippers, io.customers, io.orders
+        var result = {};
+        result.shipper = [];
+        result.store = [];
+        result.customer = [];
+        result.orders = {};
+
+        var store = io.getOneStore(storeID);
+        result.store.push(store);
+        store.order.forEach(function(orderID) {            
+            result.orders[orderID] = _.clone(io.orders[orderID], true);
+            var shipper = io.getOneShipper(io.orders[orderID].shipperID);
+            shipper.order = shipper.order.filter(function(e) {
+                var keep = false;
+                for (var k = 0; k < store.order.length; ++k) {
+                    if (e === store.order[k]) {
+                        keep = true;
+                        break;
+                    }
+                }
+                return keep;
+            });
+            result.shipper.push(shipper);
+        });
+
+        for (var i = 0; i < io.customers.length; ++i) {
+            var customer = {
+                order: _.clone(io.customers[i].order, true),
+                geoText: io.customers[i].geoText
+            };
+            customer.order = customer.order.filter(function(e) {
+                var keep = false;
+                for (var k = 0; k < store.order.length; ++k) {
+                    if (e === store.order[k]) {
+                        keep = true;
+                        break;
+                    }
+                }
+                return keep;
+            });
+            result.customer.push(customer);
+        }
+
+        return result;
     };
 
     io.getDataForShipper = function(shipperID) {
         // Returns data for map of shipperID
         // Based on io.stores, io.shippers, io.customers, io.orders
+
+        var result = {};
+        result.shipper = [];
+        result.store = [];
+        result.customer = [];
+        result.orders = {};
+
+        var shipper = io.getOneShipper(shipperID);
+        result.shipper.push(shipper);
+        shipper.order.forEach(function(orderID) {
+            result.orders[orderID] = _.clone(io.orders[orderID], true);
+            var store = io.getOneStore(io.orders[orderID].storeID);
+            store.order = store.order.filter(function(e) {
+                var keep = false;
+                for (var k = 0; k < shipper.order.length; ++k) {
+                    if (e === shipper.order[k]) {
+                        keep = true;
+                        break;
+                    }
+                }
+                return keep;
+            });
+            result.store.push(store);
+        });
+
+        for (var i = 0; i < io.customers.length; ++i) {
+            var customer = {
+                order: _.clone(io.customers[i].order, true),
+                geoText: io.customers[i].geoText
+            };
+            customer.order = customer.order.filter(function(e) {
+                var keep = false;
+                for (var k = 0; k < shipper.order.length; ++k) {
+                    if (e === shipper.order[k]) {
+                        keep = true;
+                        break;
+                    }
+                }
+                return keep;
+            });
+            result.customer.push(customer);
+        }
+
+        return result;
     };
 
     io.getDataForAdmin = function() {
         // Returns all data for map of admin
         // Based on io.stores, io.shippers, io.customers, io.orders
+        var result = {};
+        result.shipper = [];
+        result.store = [];
+        result.customer = [];
+        result.orders = {};
+
+        Object.keys(io.shippers).forEach(function(shipperID) {
+            result.shipper.push(io.getOneShipper(shipperID));
+        });
+        Object.keys(io.stores).forEach(function(storeID) {
+            result.store.push(io.getOneStore(storeID));            
+        });
+        result.customer = _.clone(io.customers, true);
+        result.orders = _.clone(io.orders, true);
+
+        return result;
     };
 
     io.containStore = function(storeID) {
@@ -175,7 +279,7 @@ module.exports = function(server){
 
     io.getOneStore = function(storeID) {
         // remove socketID
-        var store = io.stores[storeID];
+        var store = _.clone(io.stores[storeID], true);
         return {
             storeID: storeID,
             order: store.order,
@@ -212,12 +316,13 @@ module.exports = function(server){
 
     io.getOneShipper = function(shipperID) {
         // remove socketID
-        var shipper = io.shippers[shipperID];
+        var shipper = _.clone(io.shippers[shipperID], true);
         return {
             shipperID: shipperID,
             order: shipper.order,
             latitude: shipper.latitude,
-            longitude: shipper.longitude
+            longitude: shipper.longitude,
+            status: shipper.status
         };
     };
 
@@ -241,6 +346,13 @@ module.exports = function(server){
             shipperID: shipperID,
             storeID: storeID
         };
+    };    
+
+    io.addCustomer = function(customer) {
+        io.customers.push({
+            order: customer.order,
+            geoText: customer.geoText
+        });
     };
 
 
