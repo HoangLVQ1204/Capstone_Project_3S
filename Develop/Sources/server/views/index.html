@@ -23,11 +23,9 @@
 
 </head>
 
-<body ng-class="styleBody">
-
-<div ui-view id="wrapper"></div>
-
+<body ng-class="styleBody" ui-view>
 <!-- Jquery Library -->
+
 <script src='//maps.googleapis.com/maps/api/js?sensor=false'></script>
 <script src="/assets/js/jquery.min.js"></script>
 <script src="/assets/js/jquery.ui.min.js"></script>
@@ -115,6 +113,21 @@
 
 <script src="/components/storeOrder/storeOrder.controller.js"></script>
 <script src="/components/storeOrder/storeOrder.directive.js"></script>
-
+<!--<script>-->
+<!--$(document).ready(function() {-->
+<!--$('nav#menu-ver').mmenu({-->
+<!--searchfield   :  true,-->
+<!--slidingSubmenus	: false-->
+<!--}).on( "closing.mm", function(){-->
+<!--setTimeout(function () { closeSub() }, 200);-->
+<!--function closeSub(){-->
+<!--var nav=$('nav#menu-ver');-->
+<!--nav.find("li").each(function(i) {-->
+<!--$(this).removeClass("mm-opened");-->
+<!--});-->
+<!--}-->
+<!--});-->
+<!--});-->
+<!--</script>-->
 </body>
 </html>
