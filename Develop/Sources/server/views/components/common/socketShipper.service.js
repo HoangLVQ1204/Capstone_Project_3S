@@ -127,11 +127,11 @@ function socketShipper($q,socketService,authService,mapService) {
                 'shipper:register:location');
 
                 // Test watch position
-                var watchID = api.watchCurrentPosition();
-                setTimeout(function() {
-                    console.log('stop watch');
-                    api.stopWatchCurrentPosition(watchID);
-                }, 10000);
+                // var watchID = api.watchCurrentPosition();
+                // setTimeout(function() {
+                //     console.log('stop watch');
+                //     api.stopWatchCurrentPosition(watchID);
+                // }, 10000);
             });                    
         })
         .catch(function(err){

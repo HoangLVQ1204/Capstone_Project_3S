@@ -17,7 +17,7 @@ var icons = {
         'chst=d_map_pin_letter&chld=x|3366FF',
 };
 
-function initShipper(shipperMarker) {    
+function initShipper(shipperMarker, api) {    
     shipperMarker.order = [];
     shipperMarker.icon = icons.shipperIcon;
 }
@@ -68,10 +68,10 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         var directionsService = new maps.DirectionsService;
         
         var util = {
-            maps: maps,
-            geocoder: geocoder,
-            distanceService: distanceService,
-            directionsService: directionsService
+            // maps: maps,
+            // geocoder: geocoder,
+            // distanceService: distanceService,
+            // directionsService: directionsService
         };
 
         // get geotext from latitude and longitude
@@ -182,10 +182,9 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
 
     api.addShipper = function(shipper) {    
         if (this.containShipper(shipper)) return Promise.resolve();
-        return this.googlemap.then(function(util) {            
-            initShipper(util.geocoder, util.maps, shipper);
-            shipperMarkers.push(shipper);
-        });        
+        initShipper(shipper, api);
+        shipperMarkers.push(shipper);
+        return Promise.resolve();
     };
 
     api.updateOrderOfShipper = function(shipperID, orderID) {
@@ -230,10 +229,8 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     };
 
     api.addStore = function(store) {        
-        if (this.containStore(store)) return Promise.resolve();
-        return this.googlemap.then(function(util) {            
-            return initStore(util.geocoder, util.maps, store, $q);
-        })
+        if (this.containStore(store)) return Promise.resolve();        
+        return initStore(store, api)
         .then(function() {
             storeMarkers.push(store);
         })
@@ -266,10 +263,8 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         // return sampleData[mode].customer;
     }        
 
-    api.addCustomer = function(customer) {        
-        return this.googlemap.then(function(util) {            
-            return initCustomer(util.geocoder, util.maps, customer, orders, $q);
-        })
+    api.addCustomer = function(customer) {                
+        return initCustomer(customer, orders, api)
         .then(function() {
             customerMarkers.push(customer);
         })
