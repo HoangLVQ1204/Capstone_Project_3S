@@ -80,7 +80,8 @@ module.exports = function(server){
             return io.to(receiver);
         }
         if (receiver.room) {
-            return io.to(room);
+            console.log('Receiver Room ' + receiver.room, io.nsps['/'].adapter.rooms[receiver.room]);
+            return io.in(receiver.room);
         }
         if (receiver.clientID) {    // clientID = shipperID || storeID            
             var socketID = '';
@@ -104,7 +105,7 @@ module.exports = function(server){
             sender: 'server',
             receiver: receiver,
             msg: msg
-        };
+        };        
         io.receiverSocket(receiver).emit(eventName, reply, callback);
     };
 
@@ -112,15 +113,17 @@ module.exports = function(server){
         sender: { type: xxx, clientID: xxx }
         receiver = 'admin' || 'shipper' || 'store' || {room: ...} || { type: xxx, clientID: xxx } || Arrays of these types [ 'admin', { room: ...} ]
         msg = Object
+        eventName = String || Array of Strings
     */
     io.forward = function(sender, receiver, msg, eventName, callback) {
         var data = {
-            sender: sender,
-            receiver: receiver,
+            sender: sender,            
             msg: msg
-        };        
-        [].concat(receiver).forEach(function(type) {
-            io.receiverSocket(type).emit(eventName, data, callback);
+        };
+        var listEvents = [].concat(eventName);
+        [].concat(receiver).forEach(function(type, index) {     
+            data.receiver = type;
+            io.receiverSocket(type).emit(listEvents[index], data, callback);            
         });        
     }
 
@@ -244,6 +247,7 @@ module.exports = function(server){
     io.addToRoom = function(socket, roomID) {
         socket.join(roomID, function() {
             console.log(socket.id, 'join to room', roomID);
+            console.log('Room ' + roomID, io.nsps['/'].adapter.rooms[roomID]);            
         });
     };
 

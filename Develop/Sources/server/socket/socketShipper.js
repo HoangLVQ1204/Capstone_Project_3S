@@ -3,11 +3,8 @@
 
 var _ = require('lodash');
 
-module.exports = function(socket, io) {
-    socket.join('shipper', function() {
-        console.log(socket.id, ': joined room Shipper');
-        console.log('Shipper Room', io.nsps['/'].adapter.rooms.shipper);
-    });   
+module.exports = function(socket, io) {    
+    io.addToRoom(socket, 'shipper');
     
     // Add shipper:disconnect for shipper to disconnect by himself
     socket.on('disconnect', function() {
@@ -23,16 +20,8 @@ module.exports = function(socket, io) {
     	io.forward(data.sender, data.receiver, data.msg, 'store:find:shipper');
     });
 
-    socket.on('shipper:update:location', function(position) {
-        var shipper = io.listShipper[socket.id];
-        console.log(shipper.shipperID, position);
-        
-        // send to all stores in room expect shipper himself        
-        var data = {
-            shipperID: shipper.shipperID            
-        };
-        data = _.merge(data, position);
-        socket.broadcast.to(socket.id).emit('store:update:shipper', data);
-        io.to('admin').emit('admin:update:shipper', data);
+    socket.on('shipper:update:location', function(data) {
+        console.log('update loc', data);
+        io.forward(data.sender, data.receiver, data.msg, ['admin:update:shipper', 'store:update:shipper']);
     });
 }

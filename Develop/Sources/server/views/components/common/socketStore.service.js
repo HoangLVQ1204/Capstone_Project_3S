@@ -21,8 +21,8 @@ function socketStore($q,socketService,authService,mapService){
         api.selectShipper(shipper, {});
     });
 
-    socketService.on('store:update:location', function(data) {
-        mapService.updateShipper(data); 
+    socketService.on('store:update:shipper', function(data) {
+        console.log('store:update:shipper', data);
     });
 
     api.getCurrentUser = function() {
@@ -41,7 +41,7 @@ function socketStore($q,socketService,authService,mapService){
 
     api.registerSocket = function(){
         var user = api.getCurrentUser();
-        console.log('storeee', user);
+        // console.log('storeee', user);
         mapService.addStore(user)
         .then(function() {                
             socketService.sendPacket(

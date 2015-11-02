@@ -18,7 +18,7 @@ function socketAdmin(socketService,authService,mapService){
 
     socketService.on('admin:add:store', function(data) {        
         mapService.addStore(data.msg.store);
-    }); 
+    });
 
     socketService.on('admin:add:order', function(data) {                
         var msg = data.msg;
@@ -29,7 +29,7 @@ function socketAdmin(socketService,authService,mapService){
     });
 
     socketService.on('admin:update:shipper', function(data) {
-        mapService.updateShipper(data);
+        console.log('admin:update:shipper', data);
     });
     
     api.getCurrentUser = function() {

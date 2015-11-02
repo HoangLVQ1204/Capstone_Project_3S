@@ -66,14 +66,29 @@ function socketShipper($q,socketService,authService,mapService) {
 
     api.watchCurrentPosition = function() {
         var geo_success = function(position) {       
-            if (currentLocation
-                && Math.abs(currentLocation.latitude - position.coords.latitude) <= EPSILON
-                && Math.abs(currentLocation.longitude - position.coords.longitude) <= EPSILON) {
-                console.log('the same location');
-                return;
-            }
+            // if (currentLocation
+            //     && Math.abs(currentLocation.latitude - position.coords.latitude) <= EPSILON
+            //     && Math.abs(currentLocation.longitude - position.coords.longitude) <= EPSILON) {
+            //     console.log('the same location');
+            //     return;
+            // }
             console.log('different location');
-            socketService.emit('shipper:update:location', position.coords);
+            currentLocation = position.coords;            
+            var currentUser = authService.getCurrentInfoUser();
+            socketService.sendPacket(
+            {
+                type: 'shipper',
+                clientID: currentUser.username
+            },
+            ['admin', { room: currentUser.username }],
+            {
+                shipper: {
+                    shipperID: currentUser.username,
+                    latitude: currentLocation.latitude,
+                    longitude: currentLocation.longitude
+                }
+            },
+            'shipper:update:location');
         };
 
         var geo_failure = function(err) {
@@ -110,7 +125,14 @@ function socketShipper($q,socketService,authService,mapService) {
                     shipper: user
                 },                
                 'shipper:register:location');
-            });            
+
+                // Test watch position
+                var watchID = api.watchCurrentPosition();
+                setTimeout(function() {
+                    console.log('stop watch');
+                    api.stopWatchCurrentPosition(watchID);
+                }, 10000);
+            });                    
         })
         .catch(function(err){
             alert(err);
