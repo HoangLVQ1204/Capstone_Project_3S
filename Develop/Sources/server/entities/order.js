@@ -109,6 +109,11 @@ module.exports = function(sequelize, DataTypes) {
           foreignKey:'orderid',
           constraints: false
         });
+        order.belongsTo(db.ordertype, {
+          foreignKey: 'ordertypeid',
+          constraints: false
+        });
+
       },
       getAllTaskOfShipper: function(task, shipperid, taskdate) {
         return order.findAll({
@@ -143,13 +148,16 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
       //KhanhKC
-      storeGetAllOrders: function (oderstatusModel, store_id) {
+      storeGetAllOrders: function (oderstatusModel,ordertypeModel, store_id) {
         return order.findAll({
-          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','ispending','cod','fee','donedate','createdate'],
+          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','iscancel','ispending','cod','fee','donedate','createdate','ledgerid'],
           //where: {storeid:store_id },
           include: [
             {'model': oderstatusModel,
               attributes: ['statusname']
+            },{
+              'model': ordertypeModel,
+              attributes: ['typename']
             }
           ]
         });
@@ -238,16 +246,17 @@ module.exports = function(sequelize, DataTypes) {
         },	
      
       cancelOrder: function(orderid) {
-        order.update({
+        return order.update(
+            {
               iscancel: 'true',
               statusid: 'Canceling',
               fee:5000
             },
             { where: { orderid: orderid }} /* where criteria */
-        );
-	    },
+        )
+	},
 	
-	    updateLedgerForOrder: function(storeid, paydate, ledgerid){
+	 updateLedgerForOrder: function(storeid, paydate, ledgerid){
         return order.update(
             {'ledgerid': ledgerid},
             {

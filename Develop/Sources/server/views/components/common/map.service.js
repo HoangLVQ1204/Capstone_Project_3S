@@ -17,49 +17,41 @@ var icons = {
         'chst=d_map_pin_letter&chld=x|3366FF',
 };
 
-function initShipper(geocoder, maps, shipperMarker) {    
-    shipperMarker.order = [];
+function initShipper(shipperMarker, api) {  
+    if (!shipperMarker.order)  
+        shipperMarker.order = [];
     shipperMarker.icon = icons.shipperIcon;
 }
 
-function initStore(geocoder, maps, storeMarker) {    
-    storeMarker.order = [];
+function initStore(storeMarker, api) {    
+    if (!storeMarker.order)
+        storeMarker.order = [];
     storeMarker.icon = icons.storeIcon;    
-    geocoder.geocode({
-        'location': {
-            lat: storeMarker.latitude,
-            lng: storeMarker.longitude
-        }
-    }, function(results, status) {        
-        var geoText = 'Not Available';
-        if (status === maps.GeocoderStatus.OK) {
-            if (results[0]) {
-                geoText = results[0].formatted_address;
 
-            }
-        }               
-        storeMarker.geoText = geoText;                                   
-    }); 
+    return api.googlemap.then(function(util) {
+        return util.getGeoText(storeMarker.latitude, storeMarker.longitude);        
+    })
+    .then(function(geoText) {
+        storeMarker.geoText = geoText;
+    });    
 }
 
 // add customerID into orders
-function initCustomer(geocoder, maps, customerMarker, orders) {    
+function initCustomer(customerMarker, orders, api) {    
     customerMarker.customerID = customerMarker.order[0];
     customerMarker.order.forEach(function(order) {        
         orders[order].customerID = customerMarker.customerID;
     });
 
     customerMarker.icon = icons.customerIcon;
-    geocoder.geocode({
-        address: customerMarker.geoText
-    }, function(results, status) {
-        if (status === maps.GeocoderStatus.OK) {
-            customerMarker.latitude = results[0].geometry.location.lat();
-            customerMarker.longitude = results[0].geometry.location.lng();
-        } else {
-            alert('Geocode was not successful for the following reason: ' + status);
-        }
-    });
+
+    return api.googlemap.then(function(util) {
+        return util.getLatLng(customerMarker.geoText);
+    })
+    .then(function(coords) {
+        customerMarker.latitude = coords.latitude;
+        customerMarker.longitude = coords.longitude;
+    });    
 }
 
 
@@ -78,10 +70,52 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         var directionsService = new maps.DirectionsService;
         
         var util = {
-            maps: maps,
-            geocoder: geocoder,
-            distanceService: distanceService,
-            directionsService: directionsService
+            // maps: maps,
+            // geocoder: geocoder,
+            // distanceService: distanceService,
+            // directionsService: directionsService
+        };
+
+        // get geotext from latitude and longitude
+        util.getGeoText = function(latitude, longitude) {
+            var d = $q.defer();
+            geocoder.geocode({
+                'location': {
+                    lat: latitude,
+                    lng: longitude
+                }
+            }, function(results, status) {                
+                if (status === maps.GeocoderStatus.OK) {
+                    var geoText = 'Not Available';
+                    if (results[0]) {
+                        geoText = results[0].formatted_address;                
+                    }                    
+                    d.resolve(geoText);
+                } else {
+                    d.reject('Geocode was not successful for the following reason: ' + status);
+                }
+            }); 
+
+            return d.promise;
+        };
+
+        // get latitude and longitude from geoText
+        util.getLatLng = function(geoText) {
+            var d = $q.defer();
+            geocoder.geocode({
+                address: geoText
+            }, function(results, status) {
+                if (status === maps.GeocoderStatus.OK) {                    
+                    d.resolve({
+                        latitude: results[0].geometry.location.lat(),
+                        longitude: results[0].geometry.location.lng()
+                    });
+                } else {
+                    d.reject('Geocode was not successful for the following reason: ' + status);            
+                }
+            });
+
+            return d.promise;
         };
 
         util.getDistanceFromOneToMany = function(origin, destinations) {
@@ -141,29 +175,26 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         var find = _.find(shipperMarkers, function(shipperMarker) {
             return shipper.shipperID == shipperMarker.storeID;
         });
-        if (find) {
-            return true;
-        } else {
-            return false;
-        }
+        return !!find;
     }
 
     api.addShipper = function(shipper) {    
-        if (this.containShipper(shipper)) return;
-        var d = $q.defer();    
-        this.googlemap.then(function(util) {            
-            initShipper(util.geocoder, util.maps, shipper);                        
-            shipperMarkers.push(shipper);
-            d.resolve();
-        });             
-        return d.promise;   
-    }
+        if (this.containShipper(shipper)) return Promise.resolve();
+        initShipper(shipper, api);
+        shipperMarkers.push(shipper);
+        return Promise.resolve();
+    };
+
+    api.updateOrderOfShipper = function(shipperID, orderID) {
+        var shipper = api.getOneShipper(shipperID);
+        shipper.order.push(orderID);
+    };
 
     api.getOneShipper = function(shipperID) {
         console.log('getOneShipper', shipperID, shipperMarkers);
-        return _.find(shipperMarkers, function(shipper) {
+        return _.clone(_.find(shipperMarkers, function(shipper) {
             return shipper.shipperID == shipperID;
-        });
+        }), true);
     }
 
     api.updateShipper = function(data) {
@@ -196,23 +227,54 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     };
 
     api.addStore = function(store) {        
-        if (this.containStore(store)) return;
-        var d = $q.defer();
-        this.googlemap.then(function(util) {            
-            initStore(util.geocoder, util.maps, store);            
+        if (this.containStore(store)) return Promise.resolve();        
+        return initStore(store, api)
+        .then(function() {
             storeMarkers.push(store);
-            d.resolve();
-        });        
-        return d.promise;
+        })
+        .catch(function(err) {
+            alert(err);
+        });
+    };
+
+    api.updateOrderOfStore = function(storeID, orderID) {
+        var store = api.getOneStore(storeID);
+        store.order.push(orderID);
     };
 
     api.getOneStore = function(storeID) {        
-        return _.find(storeMarkers, function(store) {
+        return _.clone(_.find(storeMarkers, function(store) {
             return store.storeID == storeID;
-        });
+        }), true);
     };    
 
+    api.setMapData = function(mapData) {
+        shipperMarkers = _.clone(mapData.shipper, true);
+        shipperMarkers.forEach(function(shipperMarker) {
+            initShipper(shipperMarker, api);
+        });
 
+        storeMarkers = _.clone(mapData.store, true);
+        storeMarkers.forEach(function(storeMarker) {
+            initStore(storeMarker, api)
+            .then(function() {
+            });
+        });
+
+        orders = _.clone(mapData.orders, true);
+
+        customerMarkers = _.clone(customerMarkers, true);
+        customerMarkers.forEach(function(customerMarker) {
+            initCustomer(customerMarker)
+            .then(function() {              
+            });
+        });
+
+        console.log('SET shipper', shipperMarkers);
+        console.log('SET store', storeMarkers);
+        console.log('SET orders', orders);
+        console.log('SET customer', customerMarkers);
+    };
 
 
     /*
@@ -225,10 +287,13 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         // return sampleData[mode].customer;
     }        
 
-    api.addCustomer = function(customer) {        
-        this.googlemap.then(function(util) {            
-            initCustomer(util.geocoder, util.maps, customer, orders);            
+    api.addCustomer = function(customer) {                
+        return initCustomer(customer, orders, api)
+        .then(function() {
             customerMarkers.push(customer);
+        })
+        .catch(function(err) {
+            alert(err);
         });        
     }
 
@@ -241,19 +306,22 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         // use $http instead      
         // orders = sampleData[mode].orders;
         return orders;
-    }        
-
-    api.addOrder = function(orderID, shipperID, storeID) {
+    };       
+    
+    api.addOrder = function(orderID, store, shipper, customer) {
         orders[orderID] = {
-            shipperID: shipperID,
-            storeID: storeID            
+            shipperID: shipper.shipperID,
+            storeID: store.storeID            
         };
-
-        var store = api.getOneStore(storeID);
-        store.order.push(orderID);
-        var shipper = api.getOneShipper(shipperID);
-        shipper.order.push(orderID);   
-    }        
+        return api.addStore(store)
+        .then(function() {
+            return api.addCustomer(customer);
+        })
+        .then(function() {
+            api.updateOrderOfShipper(shipper.shipperID, orderID);
+            api.updateOrderOfStore(store.storeID, orderID);
+        });
+    };   
 
 
     return api;

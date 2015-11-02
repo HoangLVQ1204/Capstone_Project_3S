@@ -3,6 +3,7 @@
  */
 
 
+var _ = require('lodash');
 
 module.exports = function(server){
     
@@ -69,7 +70,7 @@ module.exports = function(server){
     /*
         io.orders[orderID] = {
             shipperID,
-            storeID
+            storeID            
         }
     */
     io.orders = {};
@@ -80,7 +81,8 @@ module.exports = function(server){
             return io.to(receiver);
         }
         if (receiver.room) {
-            return io.to(room);
+            console.log('Receiver Room ' + receiver.room, io.nsps['/'].adapter.rooms[receiver.room]);
+            return io.in(receiver.room);
         }
         if (receiver.clientID) {    // clientID = shipperID || storeID            
             var socketID = '';
@@ -104,7 +106,7 @@ module.exports = function(server){
             sender: 'server',
             receiver: receiver,
             msg: msg
-        };
+        };        
         io.receiverSocket(receiver).emit(eventName, reply, callback);
     };
 
@@ -112,15 +114,17 @@ module.exports = function(server){
         sender: { type: xxx, clientID: xxx }
         receiver = 'admin' || 'shipper' || 'store' || {room: ...} || { type: xxx, clientID: xxx } || Arrays of these types [ 'admin', { room: ...} ]
         msg = Object
+        eventName = String || Array of Strings
     */
     io.forward = function(sender, receiver, msg, eventName, callback) {
         var data = {
-            sender: sender,
-            receiver: receiver,
+            sender: sender,            
             msg: msg
-        };        
-        [].concat(receiver).forEach(function(type) {
-            io.receiverSocket(type).emit(eventName, data, callback);
+        };
+        var listEvents = [].concat(eventName);
+        [].concat(receiver).forEach(function(type, index) {     
+            data.receiver = type;
+            io.receiverSocket(type).emit(listEvents[index], data, callback);            
         });        
     }
 
@@ -135,16 +139,119 @@ module.exports = function(server){
     io.getDataForStore = function(storeID) {
         // Returns data for map of storeID
         // Based on io.stores, io.shippers, io.customers, io.orders
+        var result = {};
+        result.shipper = [];
+        result.store = [];
+        result.customer = [];
+        result.orders = {};
+
+        var store = io.getOneStore(storeID);
+        result.store.push(store);
+        store.order.forEach(function(orderID) {            
+            result.orders[orderID] = _.clone(io.orders[orderID], true);
+            var shipper = io.getOneShipper(io.orders[orderID].shipperID);
+            shipper.order = shipper.order.filter(function(e) {
+                var keep = false;
+                for (var k = 0; k < store.order.length; ++k) {
+                    if (e === store.order[k]) {
+                        keep = true;
+                        break;
+                    }
+                }
+                return keep;
+            });
+            result.shipper.push(shipper);
+        });
+
+        for (var i = 0; i < io.customers.length; ++i) {
+            var customer = {
+                order: _.clone(io.customers[i].order, true),
+                geoText: io.customers[i].geoText
+            };
+            customer.order = customer.order.filter(function(e) {
+                var keep = false;
+                for (var k = 0; k < store.order.length; ++k) {
+                    if (e === store.order[k]) {
+                        keep = true;
+                        break;
+                    }
+                }
+                return keep;
+            });
+            result.customer.push(customer);
+        }
+
+        return result;
     };
 
     io.getDataForShipper = function(shipperID) {
         // Returns data for map of shipperID
         // Based on io.stores, io.shippers, io.customers, io.orders
+
+        var result = {};
+        result.shipper = [];
+        result.store = [];
+        result.customer = [];
+        result.orders = {};
+
+        var shipper = io.getOneShipper(shipperID);
+        result.shipper.push(shipper);
+        shipper.order.forEach(function(orderID) {
+            result.orders[orderID] = _.clone(io.orders[orderID], true);
+            var store = io.getOneStore(io.orders[orderID].storeID);
+            store.order = store.order.filter(function(e) {
+                var keep = false;
+                for (var k = 0; k < shipper.order.length; ++k) {
+                    if (e === shipper.order[k]) {
+                        keep = true;
+                        break;
+                    }
+                }
+                return keep;
+            });
+            result.store.push(store);
+        });
+
+        for (var i = 0; i < io.customers.length; ++i) {
+            var customer = {
+                order: _.clone(io.customers[i].order, true),
+                geoText: io.customers[i].geoText
+            };
+            customer.order = customer.order.filter(function(e) {
+                var keep = false;
+                for (var k = 0; k < shipper.order.length; ++k) {
+                    if (e === shipper.order[k]) {
+                        keep = true;
+                        break;
+                    }
+                }
+                return keep;
+            });
+            result.customer.push(customer);
+        }
+
+        return result;
     };
 
     io.getDataForAdmin = function() {
         // Returns all data for map of admin
         // Based on io.stores, io.shippers, io.customers, io.orders
+        var result = {};
+        result.shipper = [];
+        result.store = [];
+        result.customer = [];
+        result.orders = {};
+
+        Object.keys(io.shippers).forEach(function(shipperID) {
+            result.shipper.push(io.getOneShipper(shipperID));
+        });
+        Object.keys(io.stores).forEach(function(storeID) {
+            result.store.push(io.getOneStore(storeID));            
+        });
+        result.customer = _.clone(io.customers, true);
+        result.orders = _.clone(io.orders, true);
+
+        return result;
     };
 
     io.containStore = function(storeID) {
@@ -155,6 +262,10 @@ module.exports = function(server){
         io.stores[store.storeID].latitude = store.latitude;
         io.stores[store.storeID].longitude = store.longitude;
         io.stores[store.storeID].socketID = socket.id;
+    };
+
+    io.updateOrderOfStore = function(storeID, orderID) {
+        io.stores[storeID].order.push(orderID);
     };
 
     io.addStore = function(store, socket) {        
@@ -168,7 +279,7 @@ module.exports = function(server){
 
     io.getOneStore = function(storeID) {
         // remove socketID
-        var store = io.stores[storeID];
+        var store = _.clone(io.stores[storeID], true);
         return {
             storeID: storeID,
             order: store.order,
@@ -176,6 +287,8 @@ module.exports = function(server){
             longitude: store.longitude
         };
     };
+
+
 
     io.containShipper = function(shipperID) {
         return !!io.shippers[shipperID];
@@ -185,6 +298,10 @@ module.exports = function(server){
         io.shippers[shipper.shipperID].latitude = shipper.latitude;
         io.shippers[shipper.shipperID].longitude = shipper.longitude;
         io.shippers[shipper.shipperID].socketID = socket.id;
+    };
+
+    io.updateOrderOfShipper = function(shipperID, orderID) {
+        io.shippers[shipperID].order.push(orderID);
     };
 
     io.addShipper = function(shipper, socket) {
@@ -199,12 +316,13 @@ module.exports = function(server){
 
     io.getOneShipper = function(shipperID) {
         // remove socketID
-        var shipper = io.shippers[shipperID];
+        var shipper = _.clone(io.shippers[shipperID], true);
         return {
             shipperID: shipperID,
             order: shipper.order,
             latitude: shipper.latitude,
-            longitude: shipper.longitude
+            longitude: shipper.longitude,
+            status: shipper.status
         };
     };
 
@@ -219,6 +337,30 @@ module.exports = function(server){
             };
         });
         return shipperInfos;
+    };
+
+
+
+    io.addOrder = function(orderID, storeID, shipperID) {
+        io.orders[orderID] = {
+            shipperID: shipperID,
+            storeID: storeID
+        };
+    };    
+
+    io.addCustomer = function(customer) {
+        io.customers.push({
+            order: customer.order,
+            geoText: customer.geoText
+        });
+    };
+
+
+    io.addToRoom = function(socket, roomID) {
+        socket.join(roomID, function() {
+            console.log(socket.id, 'join to room', roomID);
+            console.log('Room ' + roomID, io.nsps['/'].adapter.rooms[roomID]);            
+        });
     };
 
 

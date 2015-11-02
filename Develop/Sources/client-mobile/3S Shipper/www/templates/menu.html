@@ -42,19 +42,19 @@
           <i class="ion-person"></i>
           Profile
         </ion-item>
-        <ion-item menu-close ng-controller="SignInCtrl" ng-click="logOut()">
-          <i class="ion-log-out"></i>
-          Logout
-        </ion-item>
         <ion-item>
           <i class="ion-android-alert"></i>
           Change status
-          <label class="toggle pull-right">
-            <input type="checkbox">
+          <label class="toggle item-note">
+            <input type="checkbox" ng-model="status" ng-change="changeStatus(status)"/>
             <div class="track">
               <div class="handle"></div>
             </div>
           </label>
+        </ion-item>
+        <ion-item menu-close ng-controller="SignInCtrl" ng-click="logOut()">
+          <i class="ion-log-out"></i>
+          Logout
         </ion-item>
       </ion-list>
     </ion-content>
