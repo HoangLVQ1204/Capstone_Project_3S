@@ -28,21 +28,19 @@ function socketShipper($q,socketService,authService,mapService) {
                     shipper: user
                 },
                 'shipper:choose:express');
-            }, function(err) {
+            })
+            .catch(function(err) {
                 alert(err);
             });
         }            
     });    
 
-    socketService.on('shipper:update:order', function(data) {
-        console.log('update order', data);
-        data.customer.order = [data.orderID];
-        // strict order
-        mapService.addStore(data.store)
+    socketService.on('shipper:add:order', function(data) {        
+        var msg = data.msg;
+        mapService.addOrder(msg.orderID, msg.store, msg.shipper, msg.customer)
         .then(function() {
-            mapService.addOrder(data.orderID, data.shipperID, data.store.storeID);
-            mapService.addCustomer(data.customer);        
-        });        
+            console.log('shipper add order', data);
+        })
     });
 
     api.getCurrentUser = function() {
@@ -113,9 +111,10 @@ function socketShipper($q,socketService,authService,mapService) {
                 },                
                 'shipper:register:location');
             });            
-        },function(err){
+        })
+        .catch(function(err){
             alert(err);
-        });            
+        });  
     };
 
     return api; 

@@ -13,11 +13,12 @@ function socketStore($q,socketService,authService,mapService){
     /*
         add handlers
     */
-    socketService.on('store:find:shipper', function(shipper) {
+    socketService.on('store:find:shipper', function(data) {
+        var shipper = data.msg.shipper;        
         console.log('shipper returned', shipper);
 
         // Test selectShipper
-        // api.selectShipper(shipper, {});
+        api.selectShipper(shipper, {});
     });
 
     socketService.on('store:update:location', function(data) {
@@ -53,6 +54,8 @@ function socketStore($q,socketService,authService,mapService){
                 store: user
             },
             'store:register:location');
+
+            // Test findShipper
             api.findShipper();
         });
     };
@@ -79,8 +82,7 @@ function socketStore($q,socketService,authService,mapService){
             }
 
             shipper = {
-                ....
-                socketID
+                ....                
             }
         */
         // TODO: update DB to get orderID
@@ -91,19 +93,30 @@ function socketStore($q,socketService,authService,mapService){
         customer.order = [orderID];
 
         mapService.addShipper(shipper)
-        .then(function() {
-            api.getCurrentUser()
-            .then(function(user) {
-                mapService.addOrder(orderID, shipper.shipperID, user.storeID);            
-                mapService.addCustomer(customer);
-            });        
-        });              
-
-        socketService.emit('store:choose:shipper', {
-            shipper: shipper,
-            customer: customer,
-            orderID: orderID
-        });
+        .then(function() {            
+            return api.getCurrentUser();
+        })
+        .then(function(user) {
+            mapService.addOrder(orderID, user, shipper, customer)
+            .then(function() {
+                socketService.sendPacket(
+                {
+                    type: 'store',
+                    clientID: user.storeID
+                },
+                {
+                    type: 'shipper',
+                    clientID: shipper.shipperID
+                },
+                {
+                    orderID: orderID,
+                    shipper: shipper,
+                    store: user,
+                    customer: customer
+                },
+                'store:choose:shipper');
+            });            
+        });        
     };
 
     return api;        

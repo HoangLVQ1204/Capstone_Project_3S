@@ -157,6 +157,10 @@ module.exports = function(server){
         io.stores[store.storeID].socketID = socket.id;
     };
 
+    io.updateOrderOfStore = function(storeID, orderID) {
+        io.stores[storeID].order.push(orderID);
+    };
+
     io.addStore = function(store, socket) {        
         io.stores[store.storeID] = {
             order: [],
@@ -177,6 +181,8 @@ module.exports = function(server){
         };
     };
 
+
+
     io.containShipper = function(shipperID) {
         return !!io.shippers[shipperID];
     };
@@ -185,6 +191,10 @@ module.exports = function(server){
         io.shippers[shipper.shipperID].latitude = shipper.latitude;
         io.shippers[shipper.shipperID].longitude = shipper.longitude;
         io.shippers[shipper.shipperID].socketID = socket.id;
+    };
+
+    io.updateOrderOfShipper = function(shipperID, orderID) {
+        io.shippers[shipperID].order.push(orderID);
     };
 
     io.addShipper = function(shipper, socket) {
@@ -219,6 +229,22 @@ module.exports = function(server){
             };
         });
         return shipperInfos;
+    };
+
+
+
+    io.addOrder = function(orderID, storeID, shipperID) {
+        io.orders[orderID] = {
+            shipperID: shipperID,
+            storeID: storeID
+        };
+    };
+
+
+    io.addToRoom = function(socket, roomID) {
+        socket.join(roomID, function() {
+            console.log(socket.id, 'join to room', roomID);
+        });
     };
 
 

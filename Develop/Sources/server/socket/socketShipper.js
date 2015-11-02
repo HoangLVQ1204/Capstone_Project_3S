@@ -9,13 +9,17 @@ module.exports = function(socket, io) {
         console.log('Shipper Room', io.nsps['/'].adapter.rooms.shipper);
     });   
     
+    // Add shipper:disconnect for shipper to disconnect by himself
     socket.on('disconnect', function() {
         console.log('Shipper', socket.id, 'disconnect');        
         
     });
+
+    socket.on('shipper:disconnect', function() {
+        
+    });
     
-    socket.on('shipper:choose:express', function(data) {    	
-        console.log('choose express', data);
+    socket.on('shipper:choose:express', function(data) {        
     	io.forward(data.sender, data.receiver, data.msg, 'store:find:shipper');
     });
 
