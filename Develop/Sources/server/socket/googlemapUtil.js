@@ -68,7 +68,7 @@ api.getClosestShippers = function(store, shippers, filter) {
 		results = results.sort(function(e1, e2) {
 			return e1.distance.value < e2.distance.value;
 		});
-		console.log('gmaputil', results);
+				
 		// get smallest distances
 		results = results.slice(0, filter.limit);
 
@@ -81,8 +81,9 @@ api.getClosestShippers = function(store, shippers, filter) {
 		});		
 		
 		return results;
-	}, function(err) {
-		console.log('error', err);
+	})
+	.catch(function(err) {
+		console.log('getClosestShippers error', err);
 	});
 };
 

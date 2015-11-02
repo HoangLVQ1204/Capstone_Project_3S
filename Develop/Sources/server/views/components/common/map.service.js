@@ -22,44 +22,55 @@ function initShipper(geocoder, maps, shipperMarker) {
     shipperMarker.icon = icons.shipperIcon;
 }
 
-function initStore(geocoder, maps, storeMarker) {    
+function initStore(geocoder, maps, storeMarker, $q) {    
     storeMarker.order = [];
     storeMarker.icon = icons.storeIcon;    
+
+    var d = $q.defer();
     geocoder.geocode({
         'location': {
             lat: storeMarker.latitude,
             lng: storeMarker.longitude
         }
-    }, function(results, status) {        
-        var geoText = 'Not Available';
+    }, function(results, status) {                
         if (status === maps.GeocoderStatus.OK) {
+            var geoText = 'Not Available';
             if (results[0]) {
-                geoText = results[0].formatted_address;
-
+                geoText = results[0].formatted_address;                
             }
-        }               
-        storeMarker.geoText = geoText;                                   
+            storeMarker.geoText = geoText;
+            d.resolve();
+        } else {
+            d.reject('Geocode was not successful for the following reason: ' + status);
+        }
     }); 
+
+    return d.promise;
 }
 
 // add customerID into orders
-function initCustomer(geocoder, maps, customerMarker, orders) {    
+function initCustomer(geocoder, maps, customerMarker, orders, $q) {    
     customerMarker.customerID = customerMarker.order[0];
     customerMarker.order.forEach(function(order) {        
         orders[order].customerID = customerMarker.customerID;
     });
 
     customerMarker.icon = icons.customerIcon;
+
+    var d = $q.defer();
     geocoder.geocode({
         address: customerMarker.geoText
     }, function(results, status) {
         if (status === maps.GeocoderStatus.OK) {
             customerMarker.latitude = results[0].geometry.location.lat();
             customerMarker.longitude = results[0].geometry.location.lng();
+            d.resolve();
         } else {
-            alert('Geocode was not successful for the following reason: ' + status);
+            d.reject('Geocode was not successful for the following reason: ' + status);            
         }
     });
+
+    return d.promise;
 }
 
 
@@ -149,15 +160,17 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     }
 
     api.addShipper = function(shipper) {    
-        if (this.containShipper(shipper)) return;
-        var d = $q.defer();    
-        this.googlemap.then(function(util) {            
-            initShipper(util.geocoder, util.maps, shipper);                        
+        if (this.containShipper(shipper)) return Promise.resolve();
+        return this.googlemap.then(function(util) {            
+            initShipper(util.geocoder, util.maps, shipper);
             shipperMarkers.push(shipper);
-            d.resolve();
-        });             
-        return d.promise;   
-    }
+        });        
+    };
+
+    api.updateOrderOfShipper = function(shipperID, orderID) {
+        var shipper = api.getOneShipper(shipperID);
+        shipper.order.push(orderID);
+    };
 
     api.getOneShipper = function(shipperID) {
         console.log('getOneShipper', shipperID, shipperMarkers);
@@ -196,14 +209,21 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     };
 
     api.addStore = function(store) {        
-        if (this.containStore(store)) return;
-        var d = $q.defer();
-        this.googlemap.then(function(util) {            
-            initStore(util.geocoder, util.maps, store);            
+        if (this.containStore(store)) return Promise.resolve();
+        return this.googlemap.then(function(util) {            
+            return initStore(util.geocoder, util.maps, store, $q);
+        })
+        .then(function() {
             storeMarkers.push(store);
-            d.resolve();
-        });        
-        return d.promise;
+        })
+        .catch(function(err) {
+            alert(err);
+        });
+    };
+
+    api.updateOrderOfStore = function(storeID, orderID) {
+        var store = api.getOneStore(storeID);
+        store.order.push(orderID);
     };
 
     api.getOneStore = function(storeID) {        
@@ -226,9 +246,14 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     }        
 
     api.addCustomer = function(customer) {        
-        this.googlemap.then(function(util) {            
-            initCustomer(util.geocoder, util.maps, customer, orders);            
+        return this.googlemap.then(function(util) {            
+            return initCustomer(util.geocoder, util.maps, customer, orders, $q);
+        })
+        .then(function() {
             customerMarkers.push(customer);
+        })
+        .catch(function(err) {
+            alert(err);
         });        
     }
 
@@ -241,19 +266,22 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         // use $http instead      
         // orders = sampleData[mode].orders;
         return orders;
-    }        
+    };       
 
-    api.addOrder = function(orderID, shipperID, storeID) {
+    api.addOrder = function(orderID, store, shipper, customer) {
         orders[orderID] = {
-            shipperID: shipperID,
-            storeID: storeID            
+            shipperID: shipper.shipperID,
+            storeID: store.storeID            
         };
-
-        var store = api.getOneStore(storeID);
-        store.order.push(orderID);
-        var shipper = api.getOneShipper(shipperID);
-        shipper.order.push(orderID);   
-    }        
+        return api.addStore(store)
+        .then(function() {
+            return api.addCustomer(customer);
+        })
+        .then(function() {
+            api.updateOrderOfShipper(shipper.shipperID, orderID);
+            api.updateOrderOfStore(store.storeID, orderID);
+        });
+    };   
 
 
     return api;
