@@ -212,7 +212,7 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         // use $http instead      
         // storeMarkers = sampleData[mode].store;        
         return storeMarkers;
-        // return sampleData[mode].store;
+        //return sampleData[mode].store;
     };
 
     api.containStore = function(store) {

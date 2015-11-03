@@ -11,7 +11,7 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
 
     $scope.submit = function(){
 
-            // event.preventDefault();
+            event.preventDefault();
             var main=$("#main");
             //scroll to top
             main.animate({
@@ -33,8 +33,9 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
 
                 if(authService.isRightRole(config.role.shipper)){
                     socketShipper.registerSocket();
-                    $state.go('store.dashboard');
-                }                
+                    console.log("xxx");
+                    $state.go('mapdemo');
+                }
             })
             .catch(function(error){
                 main.removeClass("slideDown");
