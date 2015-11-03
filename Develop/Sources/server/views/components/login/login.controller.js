@@ -23,8 +23,7 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
             .then(function(){
                 if(authService.isRightRole(config.role.admin)){
                     socketAdmin.registerSocket();
-                    $state.go('admin.dashboard');
-                    $state.go('admin.dashboard');
+                    $state.go('mapdemo');
                 }
 
                 if(authService.isRightRole(config.role.store)){
@@ -34,7 +33,8 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
 
                 if(authService.isRightRole(config.role.shipper)){
                     socketShipper.registerSocket();
-                    $state.go('store.dashboard');
+                    console.log("xxx");
+                    $state.go('mapdemo');
                 }
             })
             .catch(function(error){

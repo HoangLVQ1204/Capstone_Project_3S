@@ -27,7 +27,10 @@ angular.module('app', [
 
         .state('home',{
             url: '/home',
-            template: '<h1>Home Page đang trong quá trình xây dựng !!!!</h1>'
+            template: '<h1>Home Page đang trong quá trình xây dựng !!!!</h1>',
+            controller: function(){
+                console.log("Home");
+            }
         })
 
         .state('login',{
@@ -37,7 +40,8 @@ angular.module('app', [
 
         .state('error',{
             url: '/error',
-            template: '<h1>404 Not Found</h1>'
+            //template: '<h1>404 Not Found</h1>'
+            templateUrl: '/components/404/error.html'
         })
 
         .state('admin',{
@@ -78,23 +82,24 @@ angular.module('app', [
         })
 
         .state('store',{
-            //abstract: true,
             url: '/store',
             template: '<store></store>',
-            access: config.role.store
+            controller: function(){
+              console.log("store");
+            }
         })
 
         .state('store.dashboard',{
             url: '/dashboard',
-            templateUrl: '/components/storeDashboard/layout.html',
+            template: '<layout></layout>',
             controller: function($scope, $rootScope, mapService){
                 var mode = "all";
                 $scope.shippers = mapService.getShipperMarkers(mode);
                 $scope.stores = mapService.getStoreMarkers(mode);
                 $scope.customers = mapService.getCustomerMarkers(mode);
                 $scope.orders = mapService.getOrders(mode);
-            },
-            access: config.role.store
+            }
+
         })
         .state('store.order',{
             url: '/order',
@@ -114,18 +119,24 @@ angular.module('app', [
         libraries: 'geometry,visualization,drawing,places'
     })
 
-}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin){
+}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper){
 
     $state.go("home");
-
+    console.log("Run");
     if(authService.isLogged()){
         if(authService.isRightRole(config.role.admin)){
             socketAdmin.registerSocket();
-            $state.go("admin.dashboard");
+            $state.go("mapdemo");
+
         }
 
         if(authService.isRightRole(config.role.store)){
             socketStore.registerSocket();
+            $state.go("store.dashboard");
+        }
+
+        if(authService.isRightRole(config.role.shipper)){
+            socketShipper.registerSocket();
             $state.go("store.dashboard");
         }
     }
@@ -137,13 +148,14 @@ angular.module('app', [
             if(!authService.isLogged()){
                 $state.go("login");
                 event.preventDefault();
-                return;
+
             }
 
             if(!authService.isRightRole(toState.access)){
+                console.log("access");
                 $state.go("error");
                 event.preventDefault();
-                return;
+
             }
 
         }
@@ -164,19 +176,15 @@ angular.module('app', [
 
         }
 
-
-
     });
 
     $rootScope.$on('$stateChangeSuccess', function(e, toState){
 
         if (toState.name == "login" || toState.name == "home" || toState.name == "error"){
             $rootScope.styleBody = "full-lg";
-            console.log("IN LOGIN");
         }
         else{
             $rootScope.styleBody = "leftMenu nav-collapse";
-            console.log("IN ALL");
         }
 
     });
