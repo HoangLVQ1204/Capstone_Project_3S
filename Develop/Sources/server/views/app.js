@@ -77,6 +77,14 @@ angular.module('app', [
             url: '/taskList',
             template: '<admin-task-list></admin-task-list>',
             access: config.role.admin
+        }).state('admin.issueBox',{
+            url: '/issueBox',
+            template: '<admin-issue-box></admin-issue-box>',
+            access: config.role.admin
+        }).state('admin.issueBox.content',{
+            url: '/content',
+            template: '<issue-content></issue-content>',
+            access: config.role.admin
         })
         .state('store',{
             //abstract: true,
