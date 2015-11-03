@@ -47,11 +47,13 @@
 
                     <ul class="mlist"  ng-repeat="issue in issueList| filter: mailSearch">
                         <li>
-                           <a href="#" class="mail-favourite active"><i class=" glyphicon glyphicon-ok"></i></a>
+                            <a class="mail-favourite active"><i class=" glyphicon glyphicon-ok"></i></a>
 
 													<span>
-                                                        <h5><a href="#"><strong>{{issue.issuetype.typename}}</strong></a>
-                                                            <p class="label bg-danger" style="width: 25%; padding: inherit">{{issue.isresolved}}</p>
+                                                        <h5><a ui-sref="admin.issueBox.content({issueid: issue.issueid})">
+                                                            <strong>{{issue.issuetype.typename}}</strong></a>
+                                                            <p ng-show="issue.isresolved" class="label bg-danger" style="width: 35%; padding: inherit">Unresolved</p>
+                                                            <p ng-show="!issue.isresolved" class="label bg-success" style="width: 35%; padding: inherit">Resolved</p>
                                                         </h5>
 
 														<p><strong>{{issue.issuetype.issuecategory.categoryname}}</strong>

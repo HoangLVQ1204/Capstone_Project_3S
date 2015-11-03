@@ -44,14 +44,40 @@ module.exports = function(sequelize, DataTypes) {
         return issue.build({categoryid: newIssue.categoryID, reason: newIssue.reason, description: newIssue.description}).save();
       },
 
-      getAllIssue: function (orderissue, issuetype, issuecategory) {
+      getAllIssue: function (issuetype, issuecategory) {
         return issue.findAll({
           include: [{
-            model: orderissue, attributes: ['orderid']
-          },{
             model: issuetype, attributes: ['categoryid', 'typename'],
             include: {model : issuecategory, attributes: ['categoryname']}
           }]
+        })
+      },
+
+      getIssueDetail: function (orderissue, issuetype, issuecategory, issueid, order, task, orderstatus, taskstatus) {
+        return issue.findOne({
+          include: [{
+            model: orderissue, attributes: ['orderid'],
+            include: {
+              model: order,
+              attributes: ['pickupaddress','deliveryaddress'],
+              include:[{
+                model: task,
+                include: {
+                  model: taskstatus,
+                  attributes: ['statusname']
+                }
+              },{
+                model: orderstatus,
+                attributes: ['statusname']
+              }]
+            }
+          },{
+            model: issuetype, attributes: ['categoryid', 'typename'],
+            include: {model : issuecategory, attributes: ['categoryname']}
+          }],
+          where: {
+            'issueid': issueid
+          }
         })
       }
     }

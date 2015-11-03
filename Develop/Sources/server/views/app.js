@@ -91,7 +91,7 @@ angular.module('app', [
             template: '<admin-issue-box></admin-issue-box>',
             access: config.role.admin
         }).state('admin.issueBox.content',{
-            url: '/content',
+            url: '/content?issueid',
             template: '<issue-content></issue-content>',
             access: config.role.admin
         })
@@ -186,7 +186,7 @@ angular.module('app', [
     if(authService.isLogged()){
         if(authService.isRightRole(config.role.admin)){
             socketAdmin.registerSocket();
-            $state.go("admin.dashboard");
+            //$state.go("admin.dashboard");
         }
 
         if(authService.isRightRole(config.role.store)){
