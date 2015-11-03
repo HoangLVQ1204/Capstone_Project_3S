@@ -23,7 +23,7 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
             .then(function(){
                 if(authService.isRightRole(config.role.admin)){
                     socketAdmin.registerSocket();
-                    $state.go('mapdemo');
+                    $state.go('admin.dashboard');
                 }
 
                 if(authService.isRightRole(config.role.store)){

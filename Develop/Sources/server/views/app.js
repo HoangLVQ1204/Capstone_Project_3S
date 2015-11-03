@@ -28,9 +28,6 @@ angular.module('app', [
         .state('home',{
             url: '/home',
             template: '<h1>Home Page đang trong quá trình xây dựng !!!!</h1>',
-            controller: function(){
-                console.log("Home");
-            }
         })
 
         .state('login',{
@@ -40,12 +37,11 @@ angular.module('app', [
 
         .state('error',{
             url: '/error',
-            //template: '<h1>404 Not Found</h1>'
             templateUrl: '/components/404/error.html'
         })
 
         .state('admin',{
-            //abstract: true,
+            abstract: true,
             url: '/admin',
             template: '<admin></admin>',
             access: config.role.admin
@@ -79,22 +75,24 @@ angular.module('app', [
             url: '/taskList',
             template: '<admin-task-list></admin-task-list>',
             access: config.role.admin
-        }).state('admin.issueBox',{
+        })
+
+        .state('admin.issueBox',{
             url: '/issueBox',
             template: '<admin-issue-box></admin-issue-box>',
             access: config.role.admin
-        }).state('admin.issueBox.content',{
+        })
+
+        .state('admin.issueBox.content',{
             url: '/content',
             template: '<issue-content></issue-content>',
             access: config.role.admin
         })
 
         .state('store',{
+            abstract: true,
             url: '/store',
-            template: '<store></store>',
-            controller: function(){
-              console.log("store");
-            }
+            template: '<store></store>'
         })
 
         .state('store.dashboard',{
@@ -107,8 +105,8 @@ angular.module('app', [
                 $scope.customers = mapService.getCustomerMarkers(mode);
                 $scope.orders = mapService.getOrders(mode);
             }
-
         })
+
         .state('store.order',{
             url: '/order',
             template: '<store-order></store-order>',
@@ -129,24 +127,32 @@ angular.module('app', [
 
 }).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper){
 
-    $state.go("home");
-    console.log("Run");
+
+
     if(authService.isLogged()){
+
         if(authService.isRightRole(config.role.admin)){
             socketAdmin.registerSocket();
-            $state.go("mapdemo");
+            $state.go("admin.dashboard");
 
         }
 
         if(authService.isRightRole(config.role.store)){
             socketStore.registerSocket();
             $state.go("store.dashboard");
+
         }
 
         if(authService.isRightRole(config.role.shipper)){
             socketShipper.registerSocket();
-            $state.go("store.dashboard");
+            $state.go("mapdemo");
+
         }
+
+    }else{
+
+        $state.go("home");
+
     }
 
     $rootScope.$on('$stateChangeStart', function(event, toState, fromState, toParams) {
@@ -172,12 +178,10 @@ angular.module('app', [
 
             if(authService.isLogged()){
                 if(authService.isRightRole(config.role.admin)){
-                    console.log("admin");
                     event.preventDefault();
 
                 }
                 if(authService.isRightRole(config.role.store)){
-                    console.log("store");
                     event.preventDefault();
                 }
             }
@@ -196,7 +200,6 @@ angular.module('app', [
         }
 
     });
-
 })
 
 
