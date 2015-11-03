@@ -4,9 +4,9 @@
 
 function storeOrderController($scope, $state, dataService) {
 
-
-
     $scope.order={
+        codeVsShipper: GenerateRandomCode(6),
+        codeVsCustomer: GenerateRandomCode(6),
         storeid: '',
         ordertypeid: "2",
         pickupaddress: '',
@@ -24,6 +24,7 @@ function storeOrderController($scope, $state, dataService) {
     };
     $scope.good={goodID:0};
     $scope.goods =[];
+
 
     $scope.$watch('$viewContentLoaded', function (event) {
         caplet();
@@ -111,25 +112,35 @@ function storeOrderController($scope, $state, dataService) {
 
     $scope.editGood = function(){
         $scope.good = {goodID:$scope.good.goodID};
-    }
+    };
+
     $scope.addGood = function(){
         $scope.goods.push($scope.good);
         $scope.good.goodID++;
         $scope.good = {goodID:$scope.good.goodID};
     };
+
     $scope.deleteGood = function(goodID){
         $scope.goods.splice(goodID,1);
     };
 
-
     $scope.postDraff = function(){
         var urlBase = 'http://localhost:3000/orders';
-        $scope.order = {
+        var data = {
+        //    order: $scope.order,
+        //    good : $scope.goods,
+        }
+        dataService.postDataServer(urlBase,data);
+    };
 
-        };
-
-        dataService.postDataServer(urlBase,$scope.order)
+    function GenerateRandomCode(length){
+        var code = "";
+        var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        for( var i=0; i < length; i++ )
+            code += chars.charAt(Math.floor(Math.random() * chars.length));
+        return code;
     }
+
 }
 
 

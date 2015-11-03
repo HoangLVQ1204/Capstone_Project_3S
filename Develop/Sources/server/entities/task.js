@@ -111,7 +111,8 @@ module.exports = function (sequelize, DataTypes) {
                             attributes: [['storeid', 'storeID'], ['pickupaddresscoordination', 'storePos'], ['deliveryaddress', 'customerPos']]
                         }
                     });
-                }},
+                }
+            },
 
             assignTaskForShipper: function(shipper){
                 //console.log(shipper);

@@ -234,7 +234,6 @@
     //////////////////////////////////////////////////////////////////////
     -->    
     <div ui-view id="main">
-
     </div>
     <!-- //main-->
 
@@ -245,28 +244,39 @@
     -->
     <nav id="menu-ver">
         <ul>
+
             <li>
-                <span><i class="icon  fa fa-laptop"></i> Dashboard</span>
+                <span></span>
+            </li> <li>
+                <span></span>
+            </li> <li>
+                <span></span>
             </li>
             <li>
-                <span><a href="/#/store/dashboard"><i class="icon  fa fa-laptop"></i> Dashboard</a></span>
+                <button ui-sref="store.order" type="button"  class="btn btn-success btn-block"> Create Order</button>
             </li>
             <li>
-                <span><i class="icon  fa fa-th-list"></i> Order</span>
-                <ul>
-                    <li><a href="/#/store/order"> Add New Order </a></li>
-                    <li><a href="#"> Order List </a></li>
-                </ul>
+                <span><a ui-sref="store.dashboard"><i class="icon  fa fa-laptop"></i> Dashboard</a></span>
             </li>
             <li>
-                <span><i class="icon  fa fa-shopping-cart"></i> Store </span>
-                <ul>
-                    <li><a href="#"> Accept Store </a></li>
-                    <li><a href="#"> Store's List </a></li>
-                    <li><a href="#"> Confirm Payment</a></li>
-                    <li><a href="#"> Transaction history</a></li>
-                </ul>
+                <span><a ui-sref="#"><i class="icon  fa fa-laptop"></i>Payment</a></span>
             </li>
+            <!--<li>-->
+                <!--<span><i class="icon  fa fa-th-list"></i> Order</span>-->
+                <!--<ul>-->
+                    <!--<li><a href="/#/store/order"> Add New Order </a></li>-->
+                    <!--<li><a href="#"> Order List </a></li>-->
+                <!--</ul>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<span><i class="icon  fa fa-shopping-cart"></i> Store </span>-->
+                <!--<ul>-->
+                    <!--<li><a href="#"> Accept Store </a></li>-->
+                    <!--<li><a href="#"> Store's List </a></li>-->
+                    <!--<li><a href="#"> Confirm Payment</a></li>-->
+                    <!--<li><a href="#"> Transaction history</a></li>-->
+                <!--</ul>-->
+            <!--</li>-->
             <li>
                 <span><i class="icon  fa fa-envelope"></i> Feedback </span>
 

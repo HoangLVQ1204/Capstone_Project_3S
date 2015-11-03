@@ -3,7 +3,7 @@ body.leftMenu .mm-menu:not(.mm-right).mm-hassearch .mm-panel {
 }
 
 .angular-google-map-container {
-     height: 500px;
+     height: 300px;
 }
 .sortable {
      cursor: pointer;

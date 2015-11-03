@@ -20,60 +20,69 @@ angular.module('app', [
 }).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider,uiGmapGoogleMapApiProvider,config){
 
      //Set up Routes
-	$urlRouterProvider.otherwise('/auth/login');
+
+    $urlRouterProvider.otherwise('/error');
 
     $stateProvider
+        .state('home',{
+            url: '/home',
+            template: '<h1>Home Page đang trong quá trình xây dựng !!!!</h1>'
+        })
+
         .state('login',{
             url: '/auth/login',
             template: '<login></login>'
         })
+
+
+
+        .state('error',{
+            url: '/error',
+            template: '<error></error>'
+        })
+
         .state('admin',{
-            //abstract: true,
+            abstract: true,
             url: '/admin',
             template: '<admin></admin>',
-            access: config.role.admin
-
-        })
-        .state('admin.map',{
-            url: '/map',
-            views: {
-                'mapGoogle': {
-                    template: '<map style="margin-top: 10px" shipper-markers="shippers" store-markers="stores" customer-markers="customers" orders="orders"></map>',
-                    controller: function($scope, $rootScope, mapService) {
-                        setTimeout(function() {
-                            $rootScope.$apply(function() {
-                                var mode = "all";
-                                console.log(mode);
-
-                                $scope.shippers = mapService.getShipperMarkers(mode);
-                                $scope.stores = mapService.getStoreMarkers(mode);
-                                $scope.customers = mapService.getCustomerMarkers(mode);
-                                $scope.orders = mapService.getOrders(mode);
-                            });
-                        }, 10000);
-                    }
-                },
-                'dataShow': {
-                    template: '<h1>HoangLVQ dasdsadas</h1>'
-                }
+            controller: function(){
+              console.log("admin here");
             },
             access: config.role.admin
-
         })
+
+        .state('admin.yyy',{
+            url: '/yyy',
+            template: 'Dkmmmmmmmmmmmmmmmmmmmmm',
+            access: config.role.admin
+        })
+
+        .state('admin.dashboard',{
+            url: '/dashboard',
+            template: '<h1>Dashboard Page đang trong quá trình xây dựng !!!!</h1>',
+            access: config.role.admin
+        })
+
+
         .state('admin.storeList',{
             url: '/storeList',
             template: '<admin-store-list></admin-store-list>',
             access: config.role.admin
         })
+
         .state('admin.assignTask',{
             url: '/assignTask',
             template: '<admin-assign-task></admin-assign-task>',
             access: config.role.admin
-        }).state('admin.transactionHistory',{
+        })
+
+        .state('admin.transactionHistory',{
             url: '/transactionHistory',
             template: '<admin-transaction-history></admin-transaction-history>',
             access: config.role.admin
-        }).state('admin.taskList',{
+        })
+
+        .state('admin.taskList',{
             url: '/taskList',
             template: '<admin-task-list></admin-task-list>',
             access: config.role.admin
@@ -86,19 +95,24 @@ angular.module('app', [
             template: '<issue-content></issue-content>',
             access: config.role.admin
         })
+
         .state('store',{
             //abstract: true,
             url: '/store',
             template: '<store></store>',
             access: config.role.store
         })
-        //.state('store.map',{
-        //    url: '/map',
-        //    template: '<map></map>'
-        //})
+
         .state('store.dashboard',{
             url: '/dashboard',
-            template: '<store-dashboard></store-dashboard>',
+            templateUrl: '/components/storeDashboard/layout.html',
+            controller: function($scope, $rootScope, mapService){
+                var mode = "all";
+                $scope.shippers = mapService.getShipperMarkers(mode);
+                $scope.stores = mapService.getStoreMarkers(mode);
+                $scope.customers = mapService.getCustomerMarkers(mode);
+                $scope.orders = mapService.getOrders(mode);
+            },
             access: config.role.store
         })
         .state('store.order',{
@@ -121,53 +135,46 @@ angular.module('app', [
 
 }).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper){
 
-    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+    $rootScope.$on('$stateChangeStart', function(event, toState, fromState, toParams) {
 
-        if(toState.access){
+        //if(toState.access){
+        //
+        //    if(!authService.isLogged()){
+        //        $state.go("login");
+        //        event.preventDefault();
+        //        return;
+        //    }
+        //
+        //    if(!authService.isRightRole(toState.access)){
+        //        $state.go("error");
+        //        event.preventDefault();
+        //        return;
+        //    }
+        //
+        //}
 
-            if(!authService.isLogged()){
-                $state.go("login");
-                event.preventDefault();
-                return;
-            }
+        //if(toState.name == 'login'){
+        //    console.log("login");
+        //    if(authService.isLogged()){
+        //        if(authService.isRightRole(config.role.admin)){
+        //            console.log("admin");
+        //            event.preventDefault();
+        //
+        //        }
+        //        if(authService.isRightRole(config.role.store)){
+        //            console.log("store");
+        //            event.preventDefault();
+        //        }
+        //    }
+        //}
 
-            if(!authService.isRightRole(toState.access)){
-                console.log('This page is denied');
-                //TODO: Chuyển v�? trang warning
-            }
 
-
-        }
-
-        if(toState.name == 'login'){
-            if(authService.isLogged()){
-
-                if(authService.isRightRole(config.role.admin)){
-                    console.log("admin");
-                    //$state.go('admin');
-                    event.preventDefault();
-                }
-
-                if(authService.isRightRole(config.role.store)){
-                    console.log("store");
-                    //$state.go('store');
-                    event.preventDefault();
-                }
-
-                // if(authService.isRightRole(config.role.shipper)){
-                //     console.log("shipper");
-                //     $state.go('store');
-                //     event.preventDefault();
-                // }
-
-            }
-        }
 
     });
 
     $rootScope.$on('$stateChangeSuccess', function(e, toState){
 
-        if (toState.name == "login"){
+        if (toState.name == "login" || toState.name == "home"){
             $rootScope.styleBody = "full-lg";
         }
         else{
@@ -178,15 +185,18 @@ angular.module('app', [
 
     if(authService.isLogged()){
         if(authService.isRightRole(config.role.admin)){
-            socketAdmin.registerSocket();            
+            socketAdmin.registerSocket();
+            $state.go("admin.dashboard");
         }
 
         if(authService.isRightRole(config.role.store)){
             socketStore.registerSocket();
+            $state.go("store.dashboard");
         }
 
         if(authService.isRightRole(config.role.shipper)){
             socketShipper.registerSocket();
+            $state.go("admin.dashboard");
         }
     }
 

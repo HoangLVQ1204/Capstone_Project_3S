@@ -26,15 +26,18 @@ module.exports = function (app) {
     };
 
     var getAllOrder = function (req, res, next) {
+
+        var storeId = req.user.stores[0];
         var orderStatus = db.orderstatus;
         var order = db.order;
-        var storeid = 'str1';
-        return order.storeGetAllOrders(orderStatus, storeid)
+        var ordertype = db.ordertype;
+        return order.storeGetAllOrders(orderStatus,ordertype, storeId)
             .then(function (orders) {
                 var listOrders = [];
                 var statusname = '';
                 var createDate = '';
                 var doneDate ='';
+                var ledgerid ='';
                 _.each(orders, function(order){
                     if(order['orderstatus'] == null){
                         statusname = '';
@@ -51,6 +54,11 @@ module.exports = function (app) {
                     }else {
                         doneDate = order.dataValues.donedate;
                     }
+                    if(order.dataValues.ledgerid == null){
+                        ledgerid = '';
+                    }else {
+                        ledgerid = order.dataValues.ledgerid;
+                    }
                     listOrders.push({
                         'orderid': order.dataValues.orderid,
                         'statusname': statusname,
@@ -64,28 +72,31 @@ module.exports = function (app) {
                         'fee' : order.dataValues.fee,
                         'createdate' : createDate,
                         'donedate' : doneDate,
+                        'ordertype': order['ordertype'].dataValues.typename,
+                        'ledgerid': ledgerid
 
                     })
                 });
-                var totalCod =0;
-                var totalFee = 0;
+                var totalNewOrder = 0;
+                var totalNewCod =0;
+                var totalNewFee = 0;
                 var todayOrder =0;
                 var todayCod = 0;
                 var todayFee = 0;
                 var group = {};
                 group['Total'] = group['Total'] || [];
                 group['Draff'] = group['Draff'] || [];
-                group['Issue'] = group['Issue'] || [];
                 group['Done'] = group['Done'] || [];
                 group['Inprocess'] = group['Inprocess'] || [];
                 _.each(listOrders, function(item) {
                     if(item['isdraff']) {
                         group['Draff'].push(item);
-                    } else if(item['ispending']) {
-                        group['Issue'].push(item);
                     }else if(_.isEqual(item['statusname'],'Done')){
                         group['Done'].push(item);
-                    } else{
+                    }else if(item['ispending']) {
+                        group['Inprocess'].push(item);
+                    }
+                    else if(!_.isEqual(item['statusname'],'Canceling')&&!_.isEqual(item['statusname'],'Cancel') ){
                         group['Inprocess'].push(item);
                     }
                     if(!_.isEqual(item['createdate'],'')){
@@ -108,16 +119,20 @@ module.exports = function (app) {
                         }
 
                     }
+                    if(item.ledgerid == ''){
+                        totalNewCod = totalNewCod + parseInt(item.cod);
+                        totalNewFee = totalNewFee + parseInt(item.fee);
+                        totalNewOrder++;
+                    }
 
-                    totalCod = totalCod + parseInt(item.cod);
-                    totalFee = totalFee + parseInt(item.fee);
                 });
 
-                group['Total'].push(totalCod);
-                group['Total'].push(totalFee);
+                group['Total'].push(totalNewCod);
+                group['Total'].push(totalNewFee);
                 group['Total'].push(todayOrder);
                 group['Total'].push(todayCod);
                 group['Total'].push(todayFee);
+                group['Total'].push(totalNewOrder);
 
                 res.status(200).json(group);
             }, function (err) {
@@ -159,13 +174,13 @@ module.exports = function (app) {
     };
 
     var post = function (req, res, next) {
-        var newOrder = req.body;
+        var newOrder = req.body.order;
         return db.order.postOneOrder(newOrder)
-            .then(function (order) {
-                res.status(201).json(order);
-            }, function(err){
-                next(err);
-            })
+            //.then(function (order) {
+            //    res.status(201).json(order);
+            //}, function(err){
+            //    next(err);
+            //})
     };
 
     var put = function (req, res, next) {
@@ -194,33 +209,36 @@ module.exports = function (app) {
 
     var deleteOrder = function (req, res, next) {
         req.orderRs = req.orderRs.toJSON();
-        db.goods.deleteGood(req.orderRs.orderid);
-        db.confirmationcode.deleteConfirmCode(req.orderRs.orderid);
-        //.then(function(abc) {
-        //    res.status(200);
-        //}, function(err) {
-        //    next(err);
-        //});
-        db.order.deleteDraffOrder(req.orderRs.orderid);
-        //.then(function() {
-        //    res.status(200);
-        //}, function(err) {
-        //    next(err);
-        //});
+        var deleteGoods = db.goods.deleteGood(req.orderRs.orderid);
+        var deleteCode = db.confirmationcode.deleteConfirmCode(req.orderRs.orderid);
+        Promise.all([deleteCode,deleteGoods]).then(function(){
+            db.order.deleteDraffOrder(req.orderRs.orderid)
+                .then(function() {
+                    res.status(200).json("DELETED!");
+                }, function(err) {
+                    next(new Error("Delete draft fail!"));
+                });
+        },function(){
+            next(new Error("Delete draft fail!"));
+        });
     };
 
     var putDraff = function(req, res, next){
-        db.order.submitDraffOrder(req.body.orderid);
-        //.then(function(){
-        //    res.sendStatus(200);
-        //}, function(err) {
-        //    next(err);
-        //});
+        db.order.submitDraffOrder(req.body.orderid)
+        .then(function(){
+            res.sendStatus(200);
+        }, function(err) {
+            next(err);
+        });
     };
 
     var cancelOrder = function (req, res, next) {
         db.order.cancelOrder( req.orderRs.orderid);
-        console.log( req.orderRs);
+            //.then(function(){
+            //    res.sendStatus(200).json();
+            //}, function(err) {
+            //    next(err);
+            //});
     };
 
 

@@ -97,7 +97,7 @@
                             <h3>Order information</h3> <hr>
                             <div>
                                 <section class = "panel">
-                                    <label  class="fullWidth color">List goods</em></label>
+                                    <label  class="fullWidth color"><strong>List goods</strong></label>
                                     <div>
                                         <table class="table table-hover table-bordered">
                                             <thead>
@@ -146,16 +146,16 @@
                                     </div>
                                 </section>
                             </div>
-                            <label  class="fullWidth color">Delivery type</strong></em></label>
+                            <label  class="fullWidth color"><strong>Delivery type</strong></label>
                             <div class="form-group row">
                                 <div class="col-md-6">
-                                    <div data-color="red">
-                                        <input ng-model="order.ordertypeid" type="radio" name="somethign" value="2" />
+                                    <div   data-color="red">
+                                        <input  ng-model="order.ordertypeid" type="radio" name="somethign" value="2" />
                                         <label>Express</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div data-color="red">
+                                    <div  data-color="red">
                                         <input ng-model="order.ordertypeid" type="radio" name="somethign" value="1" />
                                         <label>Normal</label>
                                     </div>
@@ -163,7 +163,7 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-12" >
-                                    <label class="fullWidth color">Cash on delivery</label>
+                                    <label class="fullWidth color"><strong>Cash on delivery</strong></label>
                                 </div>
                                 <div class="col-md-6">
                                     <input ng-model="order.cod" type="text" class="form-control"
@@ -220,7 +220,7 @@
                                                 class="fa fa-angle-left"></i> Previous
                                         </button>
                                         <button type="submit" class="btn btn-theme next">Submit</button>
-                                        <button type="button" class="btn btn-theme-inverse submit">Draff<i
+                                        <button type="button" ng-click="postDraff()" class="btn btn-theme-inverse submit">Draff<i
                                                 class="fa fa-angle-right"></i>
                                         </button>
                                     </section>
@@ -381,11 +381,11 @@
                         <div class="panel-body">
                             <div class="form-group">
                                 <label class="control-label col-md-7 align-lg-left">Code for shiper</label>
-                                <label  class="control-label col-md-5">3@D1</label>
+                                <label  class="control-label col-md-5">{{order.codeVsShipper}}</label>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-7 align-lg-left">Code for customer</label>
-                                <label class="control-label col-md-5">D4$2</label>
+                                <label class="control-label col-md-5">{{order.codeVsCustomer}}</label>
                             </div>
                             <label></label>
                             <div>
@@ -406,24 +406,6 @@
                     </div>
                 </div>
                 <!--///Addition Information //////-->
-
-                <!-- DISPLAY DRAFF ORDER-->
-                <!--
-                <div class="">
-                    <div class="panel">
-                        <div class="panel-heading"><h3><strong>Draff</strong> Order </h3></div>
-                        <div class="panel-body">
-                            <form>
-                                <ul ng-repeat="item in orderCarring">
-                                    <li class="list-group-item">{{item.orderid +" | " + item.recipientname + " | "
-                                        +item.recipientphone}}
-                                    </li>
-                                </ul>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                -->
 
 
             </div>

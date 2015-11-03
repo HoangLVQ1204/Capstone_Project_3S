@@ -11,11 +11,8 @@ function storeDashboardController($scope,$state,dataService, $http){
             value: ''
         },
         {
-            option: 'OrderID',
+            option: 'Order ID',
             value: 'orderid'
-        },{
-            option: 'Delivery Address',
-            value: 'deliveryaddress'
         },
         {
             option: 'Cusotmer',
@@ -26,9 +23,22 @@ function storeDashboardController($scope,$state,dataService, $http){
             value: 'recipientphone'
         },
         {
+            option: 'Delivery Address',
+            value: 'deliveryaddress'
+        },
+        {
+            option: 'Create Date',
+            value: 'createdate'
+        },
+        {
+            option: 'Type',
+            value: 'ordertype'
+        },
+        {
             option: 'Status',
             value: 'statusname'
         }
+
     ];
     $scope.searchOptionsDone = [
         {
@@ -36,7 +46,7 @@ function storeDashboardController($scope,$state,dataService, $http){
             value: ''
         },
         {
-            option: 'OrderID',
+            option: 'Order ID',
             value: 'orderid'
         },
         {
@@ -62,7 +72,7 @@ function storeDashboardController($scope,$state,dataService, $http){
             value: ''
         },
         {
-            option: 'OrderID',
+            option: 'Order ID',
             value: 'orderid'
         },{
             option: 'Delivery Address',
@@ -77,37 +87,37 @@ function storeDashboardController($scope,$state,dataService, $http){
             value: 'recipientphone'
         }
     ];
-    $scope.searchOptionsIssue= [
-        {
-            option: 'All',
-            value: ''
-        },
-        {
-            option: 'OrderID',
-            value: 'orderid'
-        },{
-            option: 'Delivery Address',
-            value: 'deliveryaddress'
-        },
-        {
-            option: 'Cusotmer',
-            value: 'recipientname'
-        },
-        {
-            option: 'Customer Phone',
-            value: 'recipientphone'
-        }
-    ];
+    //$scope.searchOptionsIssue= [
+    //    {
+    //        option: 'All',
+    //        value: ''
+    //    },
+    //    {
+    //        option: 'Order ID',
+    //        value: 'orderid'
+    //    },{
+    //        option: 'Delivery Address',
+    //        value: 'deliveryaddress'
+    //    },
+    //    {
+    //        option: 'Cusotmer',
+    //        value: 'recipientname'
+    //    },
+    //    {
+    //        option: 'Customer Phone',
+    //        value: 'recipientphone'
+    //    }
+    //];
 
     //
     $scope.selectedInprocess =$scope.searchOptionsInProcess[0];
     $scope.selectedDone=$scope.searchOptionsDone[0];
     $scope.selectedDraff=$scope.searchOptionsDraff[0];
-    $scope.selectedIssue=$scope.searchOptionsIssue[0];
+    //$scope.selectedIssue=$scope.searchOptionsIssue[0];
     $scope.dateRangeInprocess = null;
     $scope.dateRangeDone = null;
     $scope.dateRangeDraff = null;
-    $scope.dateRangeIssue = null;
+    //$scope.dateRangeIssue = null;
     $scope.listDraff = [];
     getDataFromServer();
 
@@ -115,23 +125,24 @@ function storeDashboardController($scope,$state,dataService, $http){
         var urlBase = 'http://localhost:3000/orders';
         dataService.getDataServer(urlBase)
             .success(function (rs) {
-                $scope.totalOrder =rs['Done'].length + rs['Issue'].length + rs['Inprocess'].length ;
                 $scope.orderToday = rs['Total'][2];
                 $scope.totalCod = rs['Total'][0];
                 $scope.todayCod = rs['Total'][3];
                 $scope.totalFee = rs['Total'][1];
                 $scope.todayFee = rs['Total'][4];
+                $scope.totalOrder = rs['Total'][5];
                 $scope.ordersDraff = rs['Draff'];
-                $scope.orderIssue = rs['Issue'];
+                //$scope.orderIssue = rs['Issue'];
                 $scope.orderInprocess= rs['Inprocess'];
                 $scope.orderDone= rs['Done'];
 
                 $scope.displayedCollectionDraff = [].concat($scope.ordersDraff);
-                $scope.displayedCollectionIssue = [].concat($scope.orderIssue);
+               // $scope.displayedCollectionIssue = [].concat($scope.orderIssue);
                 $scope.displayedCollectionInprocess = [].concat($scope.orderInprocess);
                 $scope.displayedCollectionDone = [].concat($scope.orderDone);
 
                 $scope.listDraff =  $scope.ordersDraff;
+
 
             })
             .error(function (error) {
@@ -149,8 +160,8 @@ function storeDashboardController($scope,$state,dataService, $http){
     //set cancel fee for notification for cancel in process order function
     $scope.setCancelFee = function (order) {
         $scope.cancelFee = 0;
-        if(order.statusname == 'Delivering' || order.statusname == 'In stock' || order.statusname == 'Bring to stock'){
-            $scope.cancelFee = 5000;
+        if(order.statusname != 'Waiting'){
+            $scope.cancelFee = order.fee*10/100;
         }
     };
 
@@ -171,11 +182,16 @@ function storeDashboardController($scope,$state,dataService, $http){
     //delete Draff order
     $scope.deleteDraffOrder = function () {
         var urlBase = 'http://localhost:3000/orders/'+ $scope.Order.orderid;
-        dataService.deleteDataServer(urlBase);
-        var index =  $scope.displayedCollectionDraff.indexOf( $scope.Order);
-        if (index !== -1) {
-            $scope.displayedCollectionDraff.splice(index, 1);
-        }
+        dataService.deleteDataServer(urlBase).then(function(ss){
+            var index =  $scope.displayedCollectionDraff.indexOf( $scope.Order);
+            if (index !== -1) {
+                $scope.displayedCollectionDraff.splice(index, 1);
+            }
+            alertDelete.success();
+        },function(err){
+            alertDelete.error();
+        });
+
 
     };
 
@@ -199,23 +215,22 @@ function storeDashboardController($scope,$state,dataService, $http){
         caplet();
     });
 
-    $(function() {
-
-        $(".notifiCancel").on('click',function(){
-            var nclick=$(this), data=nclick.data();
-            data.verticalEdge=data.vertical || 'right';
-            data.horizontalEdge=data.horizontal  || 'top';
-            $.notific8($("#smsCancel").val(), data)	;
-        });
-
-        $(".notifiDelete").on('click',function(){
-            var nclick=$(this), data=nclick.data();
-            data.verticalEdge=data.vertical || 'right';
-            data.horizontalEdge=data.horizontal  || 'top';
-            $.notific8($("#smsDelete").val(), data)	;
-        });
-
-    });
+    var alertDelete = {
+        "success": function () {
+            var data = new Object();
+            data.verticalEdge = 'right';
+            data.horizontalEdge = 'top';
+            data.theme = 'success';
+            $.notific8($("#smsDeleted").val(), data);
+        },
+        "error": function () {
+            var data = new Object();
+            data.verticalEdge = 'right';
+            data.horizontalEdge = 'top';
+            data.theme = 'theme';
+            $.notific8($("#smsDeleteFail").val(), data);
+        }
+    };
 
 }
 
