@@ -1,14 +1,19 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  var issuecategory = sequelize.define('issuecategory', {
+  var issuetype =  sequelize.define('issuetype', {
+    typeid: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true
+    },
     categoryid: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    categoryname: {
-      type: DataTypes.STRING,
+    typename: {
+      type: DataTypes.TEXT,
       allowNull: true
     }
   }, {
@@ -16,12 +21,12 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     classMethods: {
       associate: function(db) {
-        issuecategory.hasMany(db.issuetype, {
+        issuetype.belongsTo(db.issuecategory, {
           foreignKey: 'categoryid',
           constraints: false
         });
       }
     }
   });
-  return issuecategory
+  return issuetype;
 };

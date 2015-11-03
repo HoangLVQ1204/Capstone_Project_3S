@@ -11,10 +11,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false,
       primaryKey: true
-    },
-    date: {
-      type: DataTypes.DATE,
-      allowNull: true
     }
   }, {
     freezeTableName: true,
