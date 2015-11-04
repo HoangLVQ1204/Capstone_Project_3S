@@ -9,7 +9,7 @@ angular.module('app', [
     'nemLogging',
     'uiGmapgoogle-maps',
 	'smart-table'
-]).constant("config",{		
+]).constant("config",{
 
     role: {
         shipper: 1,
@@ -17,7 +17,7 @@ angular.module('app', [
         admin: 3
     },
 
-    baseUrl: "http://localhost:3000"
+    baseURI: "http://localhost:3000"
 
 }).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider,uiGmapGoogleMapApiProvider,config){
 
@@ -127,7 +127,7 @@ angular.module('app', [
         libraries: 'geometry,visualization,drawing,places'
     })
 
-}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper){
+}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper, config){
 
 
 
@@ -135,7 +135,7 @@ angular.module('app', [
 
         if(authService.isRightRole(config.role.admin)){
             socketAdmin.registerSocket();
-            //$state.go("admin.dashboard");
+            $state.go("admin.dashboard");
         }
 
         if(authService.isRightRole(config.role.store)){
