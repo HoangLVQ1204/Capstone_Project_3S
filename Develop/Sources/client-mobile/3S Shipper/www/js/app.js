@@ -65,7 +65,8 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
       })
 
       .state('app.detail', {
-        url: '/detail/:orderId',
+        url: '/detail/:orderId?isCancel',
+        //"/contacts?myParam1&myParam2"
         views: {
           'menuContent': {
             templateUrl: 'templates/detail.html',
