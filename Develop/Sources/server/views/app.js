@@ -53,7 +53,7 @@ angular.module('app', [
 
         .state('admin.yyy',{
             url: '/yyy',
-            template: 'Dkmmmmmmmmmmmmmmmmmmmmm',
+            template: 'Test',
             access: config.role.admin
         })
 

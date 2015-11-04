@@ -164,7 +164,22 @@ module.exports = function (sequelize, DataTypes) {
                         attributes: ['typeid','typename']
                     }]
                 })
+            },
+
+            countTaskByShipperId: function(shipperid, taskStatusModel){
+                return task.findAll({
+                    attributes: ['statusid', [sequelize.fn('count', sequelize.col('task.statusid')), 'count']],
+                    group: ['task.statusid'],
+                    where:{
+                        shipperid: shipperid
+                    },
+                    //include: {
+                    //    model: taskStatusModel,
+                    //    attributes: ['statusname']
+                    //}
+                })
             }
+
         }
     });
     return task;

@@ -45,8 +45,9 @@
         <ion-item>
           <i class="ion-android-alert"></i>
           Change status
-          <label class="toggle item-note">
-            <input type="checkbox" ng-model="status" ng-change="changeStatus(status)"/>
+          <label class="toggle item-note" ng-click="changeStatus()">
+            <input type="checkbox" ng-model="$parent.status"/>
+            <!--<input type="checkbox" ng-change="changeStatus();"  ng-model="statuss"/>{{statuss}}-->
             <div class="track">
               <div class="handle"></div>
             </div>
@@ -54,7 +55,7 @@
         </ion-item>
         <ion-item menu-close ng-controller="SignInCtrl" ng-click="logOut()">
           <i class="ion-log-out"></i>
-          Logout
+          Logout{{statuss}}
         </ion-item>
       </ion-list>
     </ion-content>

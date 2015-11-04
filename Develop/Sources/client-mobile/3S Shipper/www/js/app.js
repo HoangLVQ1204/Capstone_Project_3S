@@ -29,7 +29,7 @@ var app = angular.module('starter', ['ionic', 'ngCordova','uiGmapgoogle-maps','a
       $rootScope.$apply();
     }
 
-  }])
+  }]);
 
 app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvider, jwtInterceptorProvider, $httpProvider) {
   uiGmapGoogleMapApiProvider.configure({
