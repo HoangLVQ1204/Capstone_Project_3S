@@ -4,6 +4,8 @@
 
 function adminTaskListController($scope,$state, $http, $filter, config) {
 
+
+
     $scope.taskList = [];
     var smsData = {verticalEdge: 'right',
         horizontalEdge: 'bottom'};
