@@ -17,7 +17,7 @@ angular.module('app', [
         admin: 3
     },
 
-    baseURI: "http://localhost:3000"
+    baseURI: "ec2-52-32-233-25.us-west-2.compute.amazonaws.com"
 
 }).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider,uiGmapGoogleMapApiProvider,config){
 
