@@ -176,11 +176,11 @@ module.exports = function (app) {
     var post = function (req, res, next) {
         var newOrder = req.body.order;
         return db.order.postOneOrder(newOrder)
-            //.then(function (order) {
-            //    res.status(201).json(order);
-            //}, function(err){
-            //    next(err);
-            //})
+            .then(function (order) {
+                res.status(201).json("Saved");
+            }, function(err){
+                next(err);
+            })
     };
 
     var put = function (req, res, next) {

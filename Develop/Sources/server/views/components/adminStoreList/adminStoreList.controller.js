@@ -2,12 +2,12 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminStoreListController($scope,$state, $http, $filter) {
+function adminStoreListController($scope,$state, $http, authService, config) {
 
     $scope.storeList = [];
     var smsData = {verticalEdge: 'right',
                 horizontalEdge: 'bottom'};
-
+    var currentUser = authService.getCurrentInfoUser();
     $scope.searchOptions = [
         {
             option: 'All',
@@ -27,17 +27,18 @@ function adminStoreListController($scope,$state, $http, $filter) {
     $scope.dateRange = '';
 
 
-    $http.get("http://localhost:3000/api/store/getAllLedger").success(function(response){
+    $http.get(config.baseURI + "/api/store/getAllLedger").success(function(response){
         $scope.storeList = response;
+
         //console.log(1);
        //console.log(response);
     }).then(function () {
-        $http.get("http://localhost:3000/api/store/getTotalCoD").success(function(response){
+        $http.get(config.baseURI + "/api/store/getTotalCoD").success(function(response){
             $scope.currentCoD= response;
             //console.log(2);
         })
     }).then(function () {
-        $http.get("http://localhost:3000/api/store/getTotalFee").success(function(response){
+        $http.get(config.baseURI + "/api/store/getTotalFee").success(function(response){
             $scope.currentFee = response;
             //console.log(response);
             var i=0;
@@ -103,7 +104,7 @@ function adminStoreListController($scope,$state, $http, $filter) {
 
         var ledger = new Object();
         ledger.storeid = store.storeid;
-        ledger.adminid = 'hoang';
+        ledger.adminid = currentUser.username;
         ledger.amount = parseInt($scope.payFee);
         ledger.paydate = Date(Date.now());
         if (ledger.amount >= 0)
@@ -122,7 +123,7 @@ function adminStoreListController($scope,$state, $http, $filter) {
         ledger.balance = ledger.totaldelivery - ledger.totalcod;
         //console.log(ledger);
         if (ledger.balance == 0){
-            $http.put("http://localhost:3000/api/store/updateLedgerForOrder/" + ledger.storeid).success(function(response){
+            $http.put(config.baseURI +"/api/store/updateLedgerForOrder/" + ledger.storeid).success(function(response){
                 //console.log(1);
                 //console.log(response);
 
@@ -130,7 +131,7 @@ function adminStoreListController($scope,$state, $http, $filter) {
             })
         }
 
-        $http.post("http://localhost:3000/api/store/postNewLedger", ledger).then(function success(response){
+        $http.post(config.baseURI + "/api/store/postNewLedger", ledger).then(function success(response){
             //$scope.currentCoD= response;
             store.generalledgers[0].totalcod = ledger.totalcod;
             store.generalledgers[0].totaldelivery = ledger.totaldelivery;
@@ -154,7 +155,7 @@ function adminStoreListController($scope,$state, $http, $filter) {
     //FUNCTION GET TOTAL COD OF A STORE
     //-----------------------------------
     $scope.getLatestLedgerOfStore = function (storeid){
-        $http.get("http://localhost:3000/api/store/getLatestLedgerOfStore/" + storeid).success(function(response){
+        $http.get(config.baseURI + "/api/store/getLatestLedgerOfStore/" + storeid).success(function(response){
             $scope.ledger = response;
              //console.log(response);
         })
@@ -165,7 +166,7 @@ function adminStoreListController($scope,$state, $http, $filter) {
     //-----------------------------------
     this.getTotalCoD = function (){
         ////console.log(11);
-        $http.get("http://localhost:3000/api/store/getTotalCoD").success(function(response){
+        $http.get(config.baseURI + "/api/store/getTotalCoD").success(function(response){
             $scope.currentFee= response;
             //console.log(response);
         })
@@ -175,7 +176,7 @@ function adminStoreListController($scope,$state, $http, $filter) {
     //FUNCTION GET TOTAL FEE OF A STORE
     //-----------------------------------
     this.getTotalFee = function (){
-        $http.get("http://localhost:3000/api/store/getTotalFee").success(function(response){
+        $http.get(config.baseURI + "/api/store/getTotalFee").success(function(response){
             $scope.currentCoD = response;
             //console.log(response);
         })
@@ -205,5 +206,5 @@ function adminStoreListController($scope,$state, $http, $filter) {
 
 }
 
-adminStoreListController.$inject = ['$scope','$state', '$http', '$filter'];
+adminStoreListController.$inject = ['$scope','$state', '$http', 'authService','config'];
 angular.module('app').controller('adminStoreListController',adminStoreListController);

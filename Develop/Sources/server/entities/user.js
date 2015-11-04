@@ -136,11 +136,20 @@ module.exports = function(sequelize, DataTypes) {
       //    }
       //  })
       //}
-    }
-  }
+        }
+      },
+
+      getShipperStatus: function(shipperid) {
+        return user.findOne({
+          attributes: [['workingstatusid', 'status']],
+          where: {
+            username: shipperid
+          }
+        });
+      },
   }
 
-  })
+  });
   return user;
 };
 

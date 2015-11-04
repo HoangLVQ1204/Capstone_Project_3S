@@ -2,7 +2,7 @@
  * Created by khanhkc on 9/22/15.
  */
 
-function storeOrderController($scope, $state, dataService) {
+function storeOrderController($scope, $state, dataService, config) {
 
     $scope.order={
         codeVsShipper: GenerateRandomCode(6),
@@ -125,7 +125,7 @@ function storeOrderController($scope, $state, dataService) {
     };
 
     $scope.postDraff = function(){
-        var urlBase = 'http://localhost:3000/orders';
+        var urlBase = config.baseURI + '/orders';
         var data = {
         //    order: $scope.order,
         //    good : $scope.goods,
@@ -144,6 +144,6 @@ function storeOrderController($scope, $state, dataService) {
 }
 
 
-storeOrderController.$inject = ['$scope', '$state', 'dataService'];
+storeOrderController.$inject = ['$scope', '$state', 'dataService', 'config'];
 angular.module('app').controller('storeOrderController', storeOrderController);
 

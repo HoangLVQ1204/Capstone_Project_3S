@@ -2,7 +2,7 @@
  * Created by Kaka Hoang Huy on 10/19/2015.
  */
 
-function detailController($scope, $stateParams, dataService, $cordovaGeolocation, $ionicPopup, $ionicModal, $ionicPopover, uiGmapGoogleMapApi, uiGmapIsReady, $rootScope, $ionicLoading) {
+function detailController($scope, $stateParams, dataService, $cordovaGeolocation, $ionicPopup, $ionicPopover, uiGmapGoogleMapApi, uiGmapIsReady, $rootScope, $ionicLoading) {
 
   $scope.isCancel = $stateParams.isCancel;
   //shipper category of issue = cancel
@@ -424,7 +424,7 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
   //setInterval(function(){ alert("Hello"); }, 3000);
 }
 
-detailController.$inject = ['$scope', '$stateParams', 'dataService', '$cordovaGeolocation', '$ionicPopup', '$ionicModal', '$ionicPopover', 'uiGmapGoogleMapApi', 'uiGmapIsReady', '$rootScope', '$ionicLoading'];
+detailController.$inject = ['$scope', '$stateParams', 'dataService', '$cordovaGeolocation', '$ionicPopup', '$ionicPopover', 'uiGmapGoogleMapApi', 'uiGmapIsReady', '$rootScope', '$ionicLoading'];
 app.controller('DetailCtrl', detailController);
 
 var sampleData = {

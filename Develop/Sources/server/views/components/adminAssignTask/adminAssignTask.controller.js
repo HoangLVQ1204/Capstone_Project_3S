@@ -1,12 +1,14 @@
 /**
  * Created by Hoang on 10/18/2015.
  */
-function adminAssignTaskController($scope,$state, $http, $filter) {
+function adminAssignTaskController($scope,$state, $http, authService, config) {
+
 
     $scope.tasksList = [];
     $scope.orderList = [];
     $scope.taskList = [];
     $scope.pickedShipper = null;
+    var currentUser = authService.getCurrentInfoUser();
     $scope.displayedTaskCollection = [].concat($scope.taskList);
     $scope.searchShipperOptions = [
         {
@@ -41,23 +43,26 @@ function adminAssignTaskController($scope,$state, $http, $filter) {
     $scope.selectedOrder =$scope.searchOrderOptions[0];
     $scope.dateRange = null;
     $scope.dateNow = new Date();
+    console.log(config.baseURI);
 
 
-    $http.get("http://localhost:3000/api/shipper/getAllShipperWithTask").success(function(response){
+    //console.log("URL:"+ config.baseURI + "/api/shipper/getAllShipperWithTask");
+
+    $http.get(config.baseURI + "/api/shipper/getAllShipperWithTask").success(function(response){
         $scope.tasksList = response;
         $scope.displayedShipperCollection = [].concat($scope.tasksList);
         //console.log(1);
         //console.log(response);
     })
 
-    $http.get("http://localhost:3000/api/shipper/getAllOrderToAssignTask").success(function(response){
+    $http.get(config.baseURI + "/api/shipper/getAllOrderToAssignTask").success(function(response){
         $scope.orderList = response;
         $scope.displayedOrderCollection = [].concat($scope.orderList);
     })
 
 
     $scope.assignTask = function () {
-        $http.post("http://localhost:3000/api/shipper/updateTaskForShipper", $scope.tasksList).then(function success(response){
+        $http.post(config.baseURI + "/api/shipper/updateTaskForShipper", $scope.tasksList).then(function success(response){
             var data = new Object();
             data.verticalEdge='right';
             data.horizontalEdge='bottom';
@@ -72,7 +77,6 @@ function adminAssignTaskController($scope,$state, $http, $filter) {
             data.theme="danger";
             //data.sticky="true";
             $.notific8($("#sms-fail").val(), data);
-
         })
     }
 
@@ -84,12 +88,14 @@ function adminAssignTaskController($scope,$state, $http, $filter) {
             if (order.taskid == null){
                 order['shipperid'] = $scope.pickedShipper.username;
                 order['orderid'] = order.order.orderid;
-                order['adminid'] = 'hoang';
+                order['adminid'] = currentUser.username;
                 order['statusid'] = 1;
                 order['typeid'] = 1;
                 order['taskdate'] = new Date();
             }
             else {
+                //order['prevshipperid'] = order.shipperid;
+                //console.log(order['prevshipperid']);
                 order['shipperid'] = $scope.pickedShipper.username;
             }
             $scope.taskList.unshift(order);
@@ -100,11 +106,12 @@ function adminAssignTaskController($scope,$state, $http, $filter) {
 
     $scope.pickTask = function (task) {
         var index = $scope.taskList.indexOf(task);
-        console.log(task);
+        //console.log(task);
         if (index !== -1) {
             //$('#' + order.orderid).parent().addClass('fail-task');
             $scope.taskList.splice(index, 1);
-                task['shipperid'] = null;
+            task['prevshipperid'] = task['shipperid'];
+            task['shipperid'] = null;
             $scope.orderList.unshift(task);
 
             //$scope.orderList.sort(compare);+
@@ -139,5 +146,5 @@ function adminAssignTaskController($scope,$state, $http, $filter) {
 
 }
 
-adminAssignTaskController.$inject = ['$scope','$state', '$http', '$filter'];
+adminAssignTaskController.$inject = ['$scope','$state', '$http', 'authService', 'config'];
 angular.module('app').controller('adminAssignTaskController',adminAssignTaskController);

@@ -3,7 +3,7 @@
  */
 
 angular.module('app')
-    .factory('authService',function($http,$q,jwtHelper){
+    .factory('authService',function($http,$q,jwtHelper,config){
         var tag = 'EHID';
 
         var saveToken = function(token){
@@ -11,10 +11,9 @@ angular.module('app')
         }
 
         var signIn = function(data){
-            console.log(data);
             return $http({
                 data,
-                url: 'http://localhost:3000/auth/signin',
+                url: config.baseURI + '/auth/signin',
                 method: 'POST'
             }).then(function(data){
                 saveToken(data.data.token);

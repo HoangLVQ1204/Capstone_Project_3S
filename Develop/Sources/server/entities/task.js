@@ -11,27 +11,22 @@ module.exports = function (sequelize, DataTypes) {
         orderid: {
             type: DataTypes.STRING,
             allowNull: false,
-            primaryKey: true
         },
         shipperid: {
             type: DataTypes.STRING,
-            allowNull: false,
-            primaryKey: true
+            allowNull: true,
         },
         adminid: {
             type: DataTypes.STRING,
             allowNull: false,
-            primaryKey: true
         },
         statusid: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            primaryKey: true
         },
         typeid: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            primaryKey: true
         },
         taskdate: {
             type: DataTypes.DATE,
@@ -114,6 +109,25 @@ module.exports = function (sequelize, DataTypes) {
                 }
             },
 
+            updateStatusOfTask: function (taskid, status) {
+                return task.update({
+                   'statusid': status,
+                },{
+                    where: {
+                        'taskid': taskid
+                    }
+                })
+            },
+            updateShipperOfTask: function (taskid, shipperid) {
+                            return task.update({
+                               'shipperid': shipperid,
+                            },{
+                                where: {
+                                    'taskid': taskid
+                                }
+                            })
+                        },
+
             assignTaskForShipper: function(shipper){
                 //console.log(shipper);
                 return task.findOrCreate({
@@ -128,17 +142,20 @@ module.exports = function (sequelize, DataTypes) {
                         taskdate: shipper.taskdate
                     }
                 }).spread(function(tasks, created){
-                    if (!created && shipper.shipperid!=tasks.shipperid)
-                        task.create(
-                            {
-                                'orderid': shipper.orderid,
-                                'shipperid': shipper.shipperid,
-                                'adminid': shipper.adminid,
-                                'statusid': shipper.statusid,
-                                'typeid': shipper.typeid,
-                                'taskdate': shipper.taskdate
-                            }
-                        )
+                    if (!created && tasks.shipperid != shipper.shipperid)
+                        if (tasks.statusid == 4){
+                            task.create({
+                                    'orderid': shipper.orderid,
+                                    'shipperid': shipper.shipperid,
+                                    'adminid': shipper.adminid,
+                                    'statusid': 1,
+                                    'typeid': shipper.typeid,
+                                    'taskdate': shipper.taskdate
+                                });
+                            task.updateStatusOfTask(tasks.taskid, 5);
+                        }
+                    else  task.updateShipperOfTask(tasks.taskid, shipper.shipperid);
+
                 })
             },
 
@@ -164,9 +181,26 @@ module.exports = function (sequelize, DataTypes) {
                     },{
                         model: tasktype,
                         attributes: ['typeid','typename']
-                    }]
+                    }],
+                    where:{
+                        'shipperid': { $ne: null}
+                    }
                 })
             },
+
+            countTaskByShipperId: function(shipperid, taskStatusModel){
+                return task.findAll({
+                    attributes: ['statusid', [sequelize.fn('count', sequelize.col('task.statusid')), 'count']],
+                    group: ['task.statusid'],
+                    where:{
+                        shipperid: shipperid
+                    },
+                    //include: {
+                    //    model: taskStatusModel,
+                    //    attributes: ['statusname']
+                    //}
+                })
+			},
 
             getAll: function () {
               return task.findAll();
@@ -181,6 +215,7 @@ module.exports = function (sequelize, DataTypes) {
                         }
                     })
             }
+
         }
     });
     return task;

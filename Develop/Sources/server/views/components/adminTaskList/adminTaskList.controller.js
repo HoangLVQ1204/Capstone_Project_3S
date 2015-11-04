@@ -2,7 +2,9 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminTaskListController($scope,$state, $http, $filter) {
+function adminTaskListController($scope,$state, $http, $filter, config) {
+
+
 
     $scope.taskList = [];
     var smsData = {verticalEdge: 'right',
@@ -28,16 +30,16 @@ function adminTaskListController($scope,$state, $http, $filter) {
     $scope.taskStatusOptions =[];
     $scope.taskTypeOptions =[];
 
-    $http.get("http://localhost:3000/api/getAllTaskStatus").success(function(response){
+    $http.get(config.baseURI + "/api/getAllTaskStatus").success(function(response){
         $scope.taskStatusOptions = response;
         $scope.taskStatusOptions.sort(ComparatorStatus);
         //console.log(response);
     }).then(function () {
-        $http.get("http://localhost:3000/api/getTaskList").success(function(response){
+        $http.get(config.baseURI  + "/api/getTaskList").success(function(response){
             $scope.taskList = response;
         })
         .then(function () {
-        $http.get("http://localhost:3000/api/getAllTaskType").success(function(response){
+        $http.get(config.baseURI + "/api/getAllTaskType").success(function(response){
             $scope.taskTypeOptions= response;
             $scope.taskStatusOptions.sort(ComparatorType);
             //console.log(response);
@@ -91,7 +93,7 @@ function adminTaskListController($scope,$state, $http, $filter) {
     //-----------------------------------
     var getAllTaskStatus = function (){
         //alert(1);
-        $http.get("http://localhost:3000/api/getAllTaskStatus").success(function(response){
+        $http.get(config.baseURI + "/api/getAllTaskStatus").success(function(response){
             $scope.taskStatusOptions= response;
             //response.map(function(status){
             //    var options = new Object();
@@ -108,7 +110,7 @@ function adminTaskListController($scope,$state, $http, $filter) {
     //-----------------------------------
     var getAllTaskType = function (){
         ////console.log(11);
-        $http.get("http://localhost:3000/api/getAllTaskType").success(function(response){
+        $http.get(config.baseURI + "/api/getAllTaskType").success(function(response){
             $scope.taskTypeOptions= response;
             //console.log(response);
         })
@@ -119,7 +121,7 @@ function adminTaskListController($scope,$state, $http, $filter) {
     //-----------------------------------
     $scope.saveTaskState = function (){
         ////console.log(11);
-        $http.put("http://localhost:3000/api/updateAllTaskState", $scope.taskList).then(function success(response){
+        $http.put(config.baseURI + "/api/updateAllTaskState", $scope.taskList).then(function success(response){
             smsData.theme="theme-inverse";
             $.notific8($("#sms-success").val(), smsData);
             //console.log(response);
@@ -143,5 +145,5 @@ function adminTaskListController($scope,$state, $http, $filter) {
 
 }
 
-adminTaskListController.$inject = ['$scope','$state', '$http', '$filter'];
+adminTaskListController.$inject = ['$scope','$state', '$http', '$filter', 'config'];
 angular.module('app').controller('adminTaskListController',adminTaskListController);
