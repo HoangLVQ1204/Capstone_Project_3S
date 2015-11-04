@@ -7,7 +7,7 @@ function adminStoreListController($scope,$state, $http, $filter, config) {
     $scope.storeList = [];
     var smsData = {verticalEdge: 'right',
                 horizontalEdge: 'bottom'};
-
+    var currentUser = authService.getCurrentInfoUser();
     $scope.searchOptions = [
         {
             option: 'All',
@@ -103,7 +103,7 @@ function adminStoreListController($scope,$state, $http, $filter, config) {
 
         var ledger = new Object();
         ledger.storeid = store.storeid;
-        ledger.adminid = 'hoang';
+        ledger.adminid = currentUser.username;
         ledger.amount = parseInt($scope.payFee);
         ledger.paydate = Date(Date.now());
         if (ledger.amount >= 0)

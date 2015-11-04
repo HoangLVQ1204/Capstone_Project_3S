@@ -8,6 +8,7 @@ function adminAssignTaskController($scope,$state, $http, $filter, config) {
     $scope.orderList = [];
     $scope.taskList = [];
     $scope.pickedShipper = null;
+    var currentUser = authService.getCurrentInfoUser();
     $scope.displayedTaskCollection = [].concat($scope.taskList);
     $scope.searchShipperOptions = [
         {
@@ -76,7 +77,6 @@ function adminAssignTaskController($scope,$state, $http, $filter, config) {
             data.theme="danger";
             //data.sticky="true";
             $.notific8($("#sms-fail").val(), data);
-
         })
     }
 
@@ -88,12 +88,14 @@ function adminAssignTaskController($scope,$state, $http, $filter, config) {
             if (order.taskid == null){
                 order['shipperid'] = $scope.pickedShipper.username;
                 order['orderid'] = order.order.orderid;
-                order['adminid'] = 'hoang';
+                order['adminid'] = currentUser.username;
                 order['statusid'] = 1;
                 order['typeid'] = 1;
                 order['taskdate'] = new Date();
             }
             else {
+                //order['prevshipperid'] = order.shipperid;
+                //console.log(order['prevshipperid']);
                 order['shipperid'] = $scope.pickedShipper.username;
             }
             $scope.taskList.unshift(order);
@@ -104,11 +106,12 @@ function adminAssignTaskController($scope,$state, $http, $filter, config) {
 
     $scope.pickTask = function (task) {
         var index = $scope.taskList.indexOf(task);
-        console.log(task);
+        //console.log(task);
         if (index !== -1) {
             //$('#' + order.orderid).parent().addClass('fail-task');
             $scope.taskList.splice(index, 1);
-                task['shipperid'] = null;
+            task['prevshipperid'] = task['shipperid'];
+            task['shipperid'] = null;
             $scope.orderList.unshift(task);
 
             //$scope.orderList.sort(compare);+
