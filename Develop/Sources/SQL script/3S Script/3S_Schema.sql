@@ -59,7 +59,7 @@ PRIMARY KEY (managerID, storeID)
 
 CREATE TABLE GeneralLedger
 (
-ledgerID int PRIMARY KEY,
+ledgerID SERIAL PRIMARY KEY,
 adminID varchar(20) REFERENCES "user"(username),
 storeID varchar(8) REFERENCES Store(storeID),
 amount BIGINT,
@@ -137,7 +137,7 @@ typeName varchar(20)
 
 CREATE TABLE Task
 (
-taskID int PRIMARY KEY,
+taskID SERIAL PRIMARY KEY,
 orderID varchar(8) REFERENCES "order"(orderID),
 shipperID varchar(20) REFERENCES "user"(username),
 adminID varchar(20) REFERENCES "user"(username),

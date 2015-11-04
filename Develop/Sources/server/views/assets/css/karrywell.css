@@ -3,7 +3,7 @@ body.leftMenu .mm-menu:not(.mm-right).mm-hassearch .mm-panel {
 }
 
 .angular-google-map-container {
-     height: 500px;
+     height: 300px;
 }
 .sortable {
      cursor: pointer;
@@ -18,4 +18,9 @@ body.leftMenu .mm-menu:not(.mm-right).mm-hassearch .mm-panel {
 .st-selected {
      background-color: #62707d !important;
      color: white !important;
+}
+
+.fail-task {
+     /*background-color: #62707d !important;*/
+     color: red !important;
 }

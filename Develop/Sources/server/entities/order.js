@@ -92,6 +92,11 @@ module.exports = function(sequelize, DataTypes) {
           foreignKey: 'statusid',
           constraints: false
         });
+
+        order.belongsTo(db.store, {
+          foreignKey: 'storeid',
+          constraints: false
+        });
         order.hasMany(db.task, {
           foreignKey: 'orderid',
           constraints: false
@@ -102,6 +107,10 @@ module.exports = function(sequelize, DataTypes) {
         });
         order.hasMany(db.confirmationcode,{
           foreignKey:'orderid',
+          constraints: false
+        });
+        order.belongsTo(db.ordertype, {
+          foreignKey: 'ordertypeid',
           constraints: false
         });
 
@@ -138,12 +147,16 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
       //KhanhKC
-      storeGetAllOrders: function (oderstatusModel, store_id) {
+      storeGetAllOrders: function (oderstatusModel,ordertypeModel, store_id) {
         return order.findAll({
-          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','iscancel','ispending','cod','fee','donedate','createdate'],
+          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','iscancel','ispending','cod','fee','donedate','createdate','ledgerid'],
+          //where: {storeid:store_id },
           include: [
             {'model': oderstatusModel,
               attributes: ['statusname']
+            },{
+              'model': ordertypeModel,
+              attributes: ['typename']
             }
           ]
         });
@@ -195,25 +208,46 @@ module.exports = function(sequelize, DataTypes) {
          );
       },
       submitDraffOrder: function(orderid) {
-        order.update(
+        return order.update(
             {
               isdraff: 'false',
               statusid: 1
             },
             { where: { orderid: orderid }} /* where criteria */
         )
+		  },
+
+      getTotalShipFeeOfStore: function(storeid, paydate){
+       // console.log(paydate)
+        return order.sum('fee',{
+          where: {
+            'storeid': storeid,
+            'ledgerid': null,
+            'deliverydate': {gte: paydate},
+            'statusid':  [6, 8]
+          }
+        })
       },
 
       deleteDraffOrder: function (orderid) {
-        order.destroy({
-          where: {
-            orderid: orderid
-          }
-        });
-      },
+        return order.destroy(
+            { where: { orderid: orderid }}
+        )
+		},
+
+  		getTotalShipCoDOfStore: function(storeid, paydate){
+          return order.sum('cod',{
+            where: {
+              'storeid': storeid,
+              'ledgerid':  null,
+              'deliverydate': {gte: paydate},
+              'statusid':  [6, 8]
+            }
+          })
+        },
 
       cancelOrder: function(orderid) {
-        order.update(
+        return order.update(
             {
               iscancel: 'true',
               statusid: 'Canceling',
@@ -221,7 +255,50 @@ module.exports = function(sequelize, DataTypes) {
             },
             { where: { orderid: orderid }} /* where criteria */
         )
+	},
+
+	 updateLedgerForOrder: function(storeid, paydate, ledgerid){
+        return order.update(
+            {'ledgerid': ledgerid},
+            {
+          where: {
+            'storeid': storeid,
+            'ledgerid':  null,
+            'deliverydate': {lt: paydate},
+            'statusid': [6, 8]
+          }
+        })
       },
+
+      getAllOrderToAssignTask: function(orderstatus){
+        return order.findAll({
+          where: {
+            'statusid': {$or: [1,2,5,6]}
+          },
+          include: [{
+            model: orderstatus,
+            attributes: ['statusname']
+          }]
+        })
+      },
+
+      getAllOrderToAssignTask: function(orderstatus, task){
+        return order.findAll({
+          where: {
+            'statusid': {$or: [1,4]},
+            'ispending': false
+          },
+          include: [{
+            model: orderstatus,
+            attributes: ['statusname']
+          },
+            {
+              model: task,
+              required: false
+            }]
+        })
+      },
+
       getTaskBeIssuePending: function(task, issue, issuetype, orderissue, shipperId) {
         return order.findAll({
           attributes: ['orderid', 'ispending'],
@@ -232,7 +309,7 @@ module.exports = function(sequelize, DataTypes) {
             include: [{
               model: issue,
               attributes: ['typeid', 'isresolved'],
-              //where: {isresolved: false},
+              where: {isresolved: false},
               include: [{
                 model: issuetype,
                 attributes: ['categoryid'],
@@ -246,6 +323,7 @@ module.exports = function(sequelize, DataTypes) {
           }]
         });
       },
+
       getAllTaskCancel: function(task, issue, issuetype, orderissue, shipperid) {
         return order.findAll({
           attributes: ['orderid'],

@@ -15,17 +15,21 @@
                     <section class="panel">
                         <header class="panel-heading">
                             <h2><strong>Assign </strong>Task </h2>
-                            <label class="color">Assign Task for Shipper</label>
+                            <label class="color">Assign Task for Shipper in {{dateNow|date:"dd/MM/yyyy"}}</label>
                         </header>
-                        <textarea class="form-control" id="sms"  rows="5" style="display:none">
-																	 <i class="fa fa-check-circle"></i> Update successfully<br>
-																	Your confirmation was updated in system.
+                        <textarea class="form-control" id="sms-success"  rows="5" style="display:none">
+																	 <i class="fa fa-check-circle"></i> Assign successfully<br>
+																	Tasks was updated for shipper.
+																</textarea>
+                         <textarea class="form-control" id="sms-fail"  rows="5" style="display:none">
+																	 <i class="fa fa-exclamation-triangle"></i> Assign fail<br>
+																	There is an error to update information.....
 																</textarea>
                         <div class="panel-body row">
                             <div class="col-lg-3">
 
                             <form>
-                                <table class="table table-bordered table-hover" st-set-filter="customFilter" st-predicate="{{selectedShipper.value}}" search-watch-model="search" st-table="displayedShipperCollection" st-safe-src="shipperList">
+                                <table class="table table-bordered" st-set-filter="customFilter" st-predicate="{{selectedShipper.value}}" search-watch-model="search" st-table="displayedShipperCollection" st-safe-src="shipperList">
 
                                     <div class="row form-group" >
 
@@ -62,8 +66,8 @@
                                     </div>
                                     <thead>
                                     <tr>
-                                        <th st-sort="shipperid" st-skip-natural="true" class="text-center sortable">ShipperID</th>
-                                        <th st-sort="name" st-skip-natural="true" class="text-center sortable">Shipper's name</th>
+                                        <th st-sort="username" class="text-center sortable">ShipperID</th>
+                                        <th st-sort="profile.name" class="text-center sortable">Shipper's name</th>
 
                                     </tr>
                                     </thead>
@@ -86,7 +90,9 @@
                             </div>
 
                             <div class="col-lg-3">
-
+                                <div class="pull-right">
+                                    <button type="submit" class="btn btn-theme" ng-click="assignTask()">Assign</button>
+                                </div>
                                 <form>
 
                                     <table class="table table-bordered table-hover" st-table="displayedTaskCollection" st-safe-src="taskList">
@@ -95,40 +101,20 @@
 
                                             <div class="col-sm-4 form-group pull-left">
 
-                                            <div class="input-icon">
-                                            <!--<i class="fa fa-calendar ico"></i>-->
-                                            <!--<input type="text" daterange class="form-control" name="daterange" id="daterange" ng-model="dateRange" />-->
-                                            </div>
-
                                             <!--</div>&lt;!&ndash; //form-group&ndash;&gt;-->
-                                            <div class="col-sm-6 pull-right">
-                                                <!--<div class="input-icon"> <i class="fa fa-search ico"></i>-->
-                                                    <!--<input type="search" class="form-control" placeholder="Search" ng-model="search">-->
-                                                </div>
+
 
 
                                             </div>
 
-                                            <div class="col-sm-3 pull-right">
-                                                <!--&lt;!&ndash;<select  class="selectpicker form-control show-menu-arrow" ng-repeat="option in searchOptions">&ndash;&gt;-->
-                                                <!--&lt;!&ndash;&lt;!&ndash;<option data-icon="fa fa-user" id="predicate" ng-model="selectedPredicate" ng-options="option in predicates"></option>&ndash;&gt;&ndash;&gt;-->
-                                                <!--&lt;!&ndash;<option ng-repeat="options in searchOptions" value="{{options.option}}">{{options.option}}</option>&ndash;&gt;-->
-                                                <!--&lt;!&ndash;</select>&ndash;&gt;-->
-                                                <!--<select-->
-                                                        <!--class="form-control"-->
-                                                        <!--ng-options="options.option for options in searchOptions" ng-model="selectedShipper">-->
-
-                                                <!--</select>-->
-
-                                            </div>
 
                                         </div>
 
                                         <thead>
                                         <tr>
-                                            <th st-sort="orderid" st-skip-natural="true" class="text-center sortable">OrderID</th>
-                                            <th st-sort="orderstatus.statusname" st-skip-natural="true" class="text-center sortable">Status</th>
-                                            <th st-sort="ispending">Is pending</th>
+                                            <th st-sort="order.orderid" class="text-center sortable">OrderID</th>
+                                            <th st-sort="order.orderstatus.statusname" class="text-center sortable">Order Status</th>
+                                            <th st-sort="taskstatus.statusname">Task Status</th>
 
                                         </tr>
                                         </thead>
@@ -137,7 +123,7 @@
                                         <tr class="odd gradeX" ng-repeat= "x in displayedTaskCollection">
                                             <td class="text-left">{{x.order.orderid}}</td>
                                             <td cs-select-checkbox="x"  select-action="pickTask(x)" select-mode="multiple">{{x.order.orderstatus.statusname}}</td>
-                                            <td>{{x.order.ispending}}</td>
+                                            <td>{{x.taskstatus.statusname}}</td>
                                         </tr>
                                         </tbody>
                                         <tfoot>
@@ -190,11 +176,11 @@
                                         </div>
                                         <thead>
                                         <tr>
-                                            <th st-sort="orderid" class="text-center sortable">OrderID</th>
-                                            <th st-sort="pickupaddress" class="text-center sortable">PickUp</th>
-                                            <th st-sort="deliveryaddress" class="text-center">Deliver</th>
-                                            <th st-sort="orderstatus.statusname" class="text-center">Status</th>
-                                            <th st-sort="ispending" class="text-center">Is pending</th>
+                                            <th st-sort="order.orderid" class="text-center sortable">OrderID</th>
+                                            <th st-sort="order.pickupaddress" class="text-center sortable">PickUp</th>
+                                            <th st-sort="order.deliveryaddress" class="text-center">Deliver</th>
+                                            <th st-sort="order.orderstatus.statusname" class="text-center">Status</th>
+
                                         </tr>
                                         </thead>
                                         <tbody align="center" >
@@ -202,9 +188,9 @@
                                         <tr class="odd gradeX" ng-repeat= "x in displayedOrderCollection" >
                                             <td>{{x.order.orderid}}</td>
                                             <td>{{x.order.deliveryaddress}}</td>
-                                            <td cs-select-checkbox="x"  select-action="pickOrder(x)" select-mode="multiple" shipper-row="$parent.isPicked">{{x.order.pickupaddress}}</td>
+                                            <td cs-select-checkbox="x" id="{{x.order.orderid}}" select-action="pickOrder(x)" select-mode="multiple" shipper-row="$parent.isPicked">{{x.order.pickupaddress}}</td>
                                             <td>{{x.order.orderstatus.statusname}}</td>
-                                            <td>{{x.order.ispending}}</td>
+
                                         </tr>
                                         </tbody>
                                         <tfoot>
@@ -216,12 +202,6 @@
                                         </tfoot>
                                     </table>
                                 </form>
-                            </div>
-
-                            <div class="pull-left">
-                                <div class=" col-lg-6">
-                                    <button type="submit" class="btn btn-theme" ng-click="assignTask()">Assign</button>
-                                </div>
                             </div>
                         </div>
 
@@ -237,72 +217,5 @@
 
     </div>
 
-    <!--////////////////////////////////////////////////////////////////////////-->
-    <!--//////////     MODAL EFFECT DEMO    //////////-->
-    <!--//////////////////////////////////////////////////////////////////////-->
-    <!--&ndash;&gt;-->
-    <div id="md-effect-confirm" class="modal fade" tabindex="-1" data-width="750">
-        <div class="modal-header bg-inverse bd-inverse-darken">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
-            <h4 class="modal-title">Confirm payment</h4>
-        </div>
-        <!-- //modal-header-->
-        <div class="modal-body">
-            <form name="myForm" data-parsley-validate>
-            <table class="table table-striped">
-                <thead>
-                <tr>
 
-                    <th width="20%" class="text-left">Store</th>
-                    <th width="15%" class="text-right">Delivery(VND)</th>
-                    <th width="15%" class="text-right">CoD(VND)</th>
-                    <th width="15%" class="text-right">Total(VND)</th>
-                    <th width="35%">Pay</th>
-                    <th class="text-right"></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>{{selectedStore.name}}</td>
-                    <td class="text-right">{{selectedStore.generalledgers[0].totaldelivery }}</td>
-                    <td class="text-right">{{selectedStore.generalledgers[0].totalcod}}</td>
-                    <td class="text-right">{{selectedStore.generalledgers[0].totaldelivery - selectedStore.generalledgers[0].totalcod - payFee}}VND</td>
-
-                    <td class="text-right">
-                        <!--<div class="col-lg-16">-->
-                            <!--<div class="input-icon input-group-sm">-->
-                                <!--<i class="fa fa-search ico"></i>-->
-
-                                <input type="search" id="inputValue" ng-change="checkOK($event)" parsley-type="digits" required class="form-control input-group-sm text-right" ng-model="payFee">
-                            <!--</div>-->
-                        <!--</div>-->
-                    </td>
-                    <td  class="text-right">
-                    <span class="tooltip-area">
-                    <a class="btn btn-danger" title="Confirm" ng-click="postLedger(selectedStore)"> <i class="fa fa-check-circle"></i> </a>
-                    </span>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            </form>
-        </div>
-        <!-- //modal-body-->
-    </div>
-    <!-- //modal-->
-    <div id="md-effect-block" class="modal fade" tabindex="-1" data-width="400">
-        <div class="modal-header bg-inverse bd-inverse-darken">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
-            <h4 class="modal-title">Confirm Block</h4>
-        </div>
-        <!-- //modal-header-->
-        <div class="modal-body align-xs-center">
-            <form name="myForm">
-                <h5><strong>Are you sure to block {{selectedStore.name}}???</strong></h5><br>
-                <button type="button" class="btn btn-success btn-transparent" ng-click="blockStore(selectedStore)"><i class="fa fa-check-circle"></i> Yes</button>
-                <button type="button" class="btn btn-danger btn-transparent" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i> No</button>
-            </form>
-        </div>
-        <!-- //modal-body-->
-    </div>
 </div>

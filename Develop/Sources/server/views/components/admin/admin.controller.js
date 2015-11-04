@@ -2,7 +2,7 @@
  * Created by hoanglvq on 9/22/15.
  */
 
-function adminController($scope,$state,$http,$q){
+function adminController($scope,$state,$http,$q,$rootScope){
     $scope.getUser = function(){
         console.log("get Users");
         return $http({
@@ -18,7 +18,7 @@ function adminController($scope,$state,$http,$q){
     $scope.$watch('$viewContentLoaded', function(event) {
 
         $('nav#menu-ver').mmenu({
-            searchfield   :  true,
+            searchfield   :  false,
             slidingSubmenus	: false
         }).on( "closing.mm", function(){
             setTimeout(function () { closeSub() }, 200);
@@ -33,6 +33,6 @@ function adminController($scope,$state,$http,$q){
     });
 }
 
-adminController.$inject = ['$scope','$state','$http','$q'];
+adminController.$inject = ['$scope','$state','$http','$q','$rootScope'];
 angular.module('app').controller('adminController',adminController);
 

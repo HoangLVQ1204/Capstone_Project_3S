@@ -41,7 +41,7 @@
                             query.before = new Date(res[1]);
                         }
                              ctrl.search(query, attr.stCustomDate);
-                        console.log(1);
+                       // console.log(1);
                     });
 
                     attr.$observe('stPredicate', function (newValue, oldValue) {
@@ -66,7 +66,8 @@
                         linkedCalendars: false,
                         autoUpdateInput: false,
                         locale: {
-                            cancelLabel: 'Clear',
+                            format: "DD/MM/YYYY"
+
                         }
                     });
 
@@ -77,14 +78,6 @@
                             scope.dateRange = element.val();
                         });
                         //console.log($scope.dateRange)
-                    });
-
-                    element.on('cancel.daterangepicker', function(ev, picker) {
-                        element.val('');
-                       // $scope.dateRange = $('#daterange').val();
-                        scope.$apply(function(){
-                            scope.dateRange = element.val();
-                        });
                     });
                 }
             }

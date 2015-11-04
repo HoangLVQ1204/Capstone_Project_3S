@@ -41,7 +41,7 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
   //END Alert Dialog
   /*
    * By QuyenNV - 1/11/2015
-   * Get All Task of Shipper be issued(isResolved = false or isPending = true).
+   * Get All Task of Shipper be issued(issue.isResolved = false or order.isPending = true).
    * To check to show 'continue screen'
    * */
   function getAllTaskBeIssued() {

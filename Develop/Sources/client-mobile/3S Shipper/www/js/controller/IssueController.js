@@ -1,14 +1,10 @@
 /**
  * Created by Kaka Hoang Huy on 9/30/2015.
  */
-app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', 'mySharedService', '$ionicLoading', function ($scope, $ionicPopup, dataFactory, mySharedService, $ionicLoading) {
+app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoading', function ($scope, $ionicPopup, dataFactory, $ionicLoading) {
 
-  //if (undefined !== mySharedService.message && mySharedService.message !== '') {
-  //  formatData(mySharedService.message);
-  //} else {
     console.log('get and save message sharing at IssueController');
     getAllTaskOfShipper();
-  //}
 
 /*
  * By QuyenNV - 23/10/2015
@@ -19,7 +15,6 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', 'mySharedServ
     var urlBase = config.hostServer + "api/tasks";
     dataFactory.getDataServer(urlBase)
       .success(function (rs) {
-        //mySharedService.prepForBroadcast(rs);
         formatData(rs);
       })
       .error(function (error) {

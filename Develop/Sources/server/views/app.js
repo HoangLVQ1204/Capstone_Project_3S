@@ -20,71 +20,93 @@ angular.module('app', [
 }).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider,uiGmapGoogleMapApiProvider,config){
 
      //Set up Routes
-	$urlRouterProvider.otherwise('/auth/login');
+
+    $urlRouterProvider.otherwise('/error');
 
     $stateProvider
+
+        .state('home',{
+            url: '/home',
+            template: '<h1>Home Page đang trong quá trình xây dựng !!!!</h1>',
+        })
+
         .state('login',{
             url: '/auth/login',
             template: '<login></login>'
         })
+
+        .state('error',{
+            url: '/error',
+            templateUrl: '/components/404/error.html'
+        })
+
         .state('admin',{
-            //abstract: true,
+            abstract: true,
             url: '/admin',
             template: '<admin></admin>',
             access: config.role.admin
-
         })
-        .state('admin.map',{
-            url: '/map',
-            views: {
-                'mapGoogle': {
-                    template: '<map style="margin-top: 10px" shipper-markers="shippers" store-markers="stores" customer-markers="customers" orders="orders"></map>',
-                    controller: function($scope, $rootScope, mapService) {
-                        setTimeout(function() {
-                            $rootScope.$apply(function() {
-                                var mode = "all";
-                                console.log(mode);
 
-                                $scope.shippers = mapService.getShipperMarkers(mode);
-                                $scope.stores = mapService.getStoreMarkers(mode);
-                                $scope.customers = mapService.getCustomerMarkers(mode);
-                                $scope.orders = mapService.getOrders(mode);
-                            });
-                        }, 10000);
-                    }
-                },
-                'dataShow': {
-                    templateUrl: '<h1>HoangLVQ dasdsadas</h1>'
-                }
-            },
+        .state('admin.dashboard',{
+            url: '/dashboard',
+            template: '<h1>Dashboard Page đang trong quá trình xây dựng !!!!</h1>',
             access: config.role.admin
-
         })
+
         .state('admin.storeList',{
             url: '/storeList',
             template: '<admin-store-list></admin-store-list>',
             access: config.role.admin
         })
+
         .state('admin.assignTask',{
             url: '/assignTask',
             template: '<admin-assign-task></admin-assign-task>',
             access: config.role.admin
         })
-        .state('store',{
-            //abstract: true,
-            url: '/store',
-            template: '<store></store>',
-            access: config.role.store
+
+        .state('admin.transactionHistory',{
+            url: '/transactionHistory',
+            template: '<admin-transaction-history></admin-transaction-history>',
+            access: config.role.admin
         })
-        //.state('store.map',{
-        //    url: '/map',
-        //    template: '<map></map>'
-        //})
+
+        .state('admin.taskList',{
+            url: '/taskList',
+            template: '<admin-task-list></admin-task-list>',
+            access: config.role.admin
+        })
+
+        .state('admin.issueBox',{
+            url: '/issueBox',
+            template: '<admin-issue-box></admin-issue-box>',
+            access: config.role.admin
+        })
+
+        .state('admin.issueBox.content',{
+            url: '/content?issueid',
+            template: '<issue-content></issue-content>',
+            access: config.role.admin
+        })
+
+        .state('store',{
+            abstract: true,
+            url: '/store',
+            template: '<store></store>'
+        })
+
         .state('store.dashboard',{
             url: '/dashboard',
-            template: '<store-dashboard></store-dashboard>',
-            access: config.role.store
+            template: '<layout></layout>'
+            // controller: function($scope, $rootScope, mapService){
+            //     var mode = "all";
+            //     $scope.shippers = mapService.getShipperMarkers(mode);
+            //     $scope.stores = mapService.getStoreMarkers(mode);
+            //     $scope.customers = mapService.getCustomerMarkers(mode);
+            //     $scope.orders = mapService.getOrders(mode);
+            // }
         })
+
         .state('store.order',{
             url: '/order',
             template: '<store-order></store-order>',
@@ -98,82 +120,85 @@ angular.module('app', [
     $httpProvider.interceptors.push('jwtInterceptor');
 
     uiGmapGoogleMapApiProvider.configure({
-        key: 'AIzaSyAFwZM1zlceJr8rMvXxHwS06S3ljhXnlDI',
+        key: 'AIzaSyD6DZIeop4shXgZWtMaTYbBoeC8CdbbRPw',
         v  : '3.20',
         libraries: 'geometry,visualization,drawing,places'
     })
 
 }).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper){
 
-    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+
+
+    if(authService.isLogged()){
+
+        if(authService.isRightRole(config.role.admin)){
+            socketAdmin.registerSocket();
+            $state.go("admin.dashboard");
+        }
+
+        if(authService.isRightRole(config.role.store)){
+            socketStore.registerSocket();
+            $state.go("store.dashboard");
+
+        }
+
+        if(authService.isRightRole(config.role.shipper)){
+            socketShipper.registerSocket();
+            $state.go("mapdemo");
+
+        }
+
+    }else{
+
+        $state.go("home");
+
+    }
+
+    $rootScope.$on('$stateChangeStart', function(event, toState, fromState, toParams) {
 
         if(toState.access){
 
             if(!authService.isLogged()){
                 $state.go("login");
                 event.preventDefault();
-                return;
+
             }
 
             if(!authService.isRightRole(toState.access)){
-                console.log('This page is denied');
-                //TODO: Chuyển v�? trang warning
-            }
+                console.log("access");
+                $state.go("error");
+                event.preventDefault();
 
+            }
 
         }
 
         if(toState.name == 'login'){
+
             if(authService.isLogged()){
-
                 if(authService.isRightRole(config.role.admin)){
-                    console.log("admin");
-                    //$state.go('admin');
                     event.preventDefault();
-                }
 
+                }
                 if(authService.isRightRole(config.role.store)){
-                    console.log("store");
-                    //$state.go('store');
                     event.preventDefault();
                 }
-
-                // if(authService.isRightRole(config.role.shipper)){
-                //     console.log("shipper");
-                //     $state.go('store');
-                //     event.preventDefault();
-                // }
-
             }
+
         }
 
     });
 
     $rootScope.$on('$stateChangeSuccess', function(e, toState){
 
-        if (toState.name == "login"){
+        if (toState.name == "login" || toState.name == "home" || toState.name == "error"){
             $rootScope.styleBody = "full-lg";
         }
         else{
             $rootScope.styleBody = "leftMenu nav-collapse";
         }
 
-    })
-
-    if(authService.isLogged()){
-        if(authService.isRightRole(config.role.admin)){
-            socketAdmin.registerSocket();            
-        }
-
-        if(authService.isRightRole(config.role.store)){
-            socketStore.registerSocket();
-        }
-
-        if(authService.isRightRole(config.role.shipper)){
-            socketShipper.registerSocket();
-        }
-    }
-
+    });
 })
 
 

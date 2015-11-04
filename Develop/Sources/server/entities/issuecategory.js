@@ -13,7 +13,15 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     freezeTableName: true,
-    timestamps: false
+    timestamps: false,
+    classMethods: {
+      associate: function(db) {
+        issuecategory.hasMany(db.issuetype, {
+          foreignKey: 'categoryid',
+          constraints: false
+        });
+      }
+    }
   });
   return issuecategory
 };

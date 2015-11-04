@@ -5,6 +5,9 @@
 function adminStoreListController($scope,$state, $http, $filter) {
 
     $scope.storeList = [];
+    var smsData = {verticalEdge: 'right',
+                horizontalEdge: 'bottom'};
+
     $scope.searchOptions = [
         {
             option: 'All',
@@ -101,7 +104,7 @@ function adminStoreListController($scope,$state, $http, $filter) {
         var ledger = new Object();
         ledger.storeid = store.storeid;
         ledger.adminid = 'hoang';
-        ledger.amount = $scope.payFee;
+        ledger.amount = parseInt($scope.payFee);
         ledger.paydate = Date(Date.now());
         if (ledger.amount >= 0)
         {
@@ -114,7 +117,7 @@ function adminStoreListController($scope,$state, $http, $filter) {
         {
             ledger.payfrom = 2;
             ledger.totaldelivery = store.generalledgers[0].totaldelivery;
-            ledger.totalcod = store.generalledgers[0].totalcod - ledger.amount;
+            ledger.totalcod = parseInt(store.generalledgers[0].totalcod) + ledger.amount;
         }
         ledger.balance = ledger.totaldelivery - ledger.totalcod;
         //console.log(ledger);
@@ -122,19 +125,25 @@ function adminStoreListController($scope,$state, $http, $filter) {
             $http.put("http://localhost:3000/api/store/updateLedgerForOrder/" + ledger.storeid).success(function(response){
                 //console.log(1);
                 //console.log(response);
+
+                //store.generalledgers[0].balance = ledger.balance;
             })
         }
 
-        $http.post("http://localhost:3000/api/store/postNewLedger", ledger).success(function(response){
+        $http.post("http://localhost:3000/api/store/postNewLedger", ledger).then(function success(response){
             //$scope.currentCoD= response;
-            var data = new Object();
-            data.verticalEdge='right';
-            data.horizontalEdge='bottom';
-            data.theme="theme-inverse";
-
+            store.generalledgers[0].totalcod = ledger.totalcod;
+            store.generalledgers[0].totaldelivery = ledger.totaldelivery;
+            store.generalledgers[0].balance = ledger.balance;
+            //console.log(store);
+            smsData.theme="theme-inverse";
+            $.notific8($("#sms-success").val(), smsData);
+            $("#md-effect-confirm").attr('class','modal fade').addClass(smsData.effect).modal('hide');
+        },function (error) {
+            smsData.theme="danger";
             //data.sticky="true";
-            $.notific8($("#sms").val(), data);
-            $("#md-effect-confirm").attr('class','modal fade').addClass(data.effect).modal('hide');
+            $.notific8($("#sms-fail").val(), smsData);
+            console.log(error)
         })
 
     };

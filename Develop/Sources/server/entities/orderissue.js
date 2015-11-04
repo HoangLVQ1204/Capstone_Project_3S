@@ -16,6 +16,14 @@ module.exports = function(sequelize, DataTypes) {
     freezeTableName: true,
     timestamps: false,
     classMethods: {
+      associate: function(db) {
+        orderissue.belongsTo(db.order, {
+          foreignKey: 'orderid',
+          constraints: false
+        });
+
+
+      },
       createOrderIssue: function(newOrderIssue) {
         return orderissue.build(newOrderIssue).save();
       }

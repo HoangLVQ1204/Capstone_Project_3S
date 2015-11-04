@@ -3,7 +3,7 @@
  */
 
 
-function socketShipper($q,socketService,authService,mapService) {
+function socketShipper($rootScope, $q,socketService,authService,mapService) {
     
     var EPSILON = 1e-8;
 
@@ -13,30 +13,43 @@ function socketShipper($q,socketService,authService,mapService) {
     /*
         add handlers
     */
+
+    socketService.on('shipper:register:location', function(data) {        
+        mapService.setMapData(data.msg.mapData)
+        .then(function() {
+            console.log('register', data);            
+        });
+    });
+
     socketService.on('shipper:choose:express', function(data) {
-        var answer = confirm('Do you want to accept order from store of ' + data.distance + ' away?');                
+        var answer = confirm('Do you want to accept order from store of ' + data.msg.distanceText + ' away?');                
         if (answer) {
             api.getCurrentUser()
-            .then(function(user) {
-                socketService.emit('shipper:choose:express', {
-                    socketID: data.storeSocket,
+            .then(function(user) {                
+                socketService.sendPacket(
+                {
+                    type: 'shipper',
+                    clientID: user.shipperID
+                },
+                data.sender,
+                {
                     shipper: user
-                });
-            }, function(err) {
+                },
+                'shipper:choose:express');
+            })
+            .catch(function(err) {
                 alert(err);
             });
         }            
     });    
 
-    socketService.on('shipper:update:order', function(data) {
-        console.log('update order', data);
-        data.customer.order = [data.orderID];
-        // strict order
-        mapService.addStore(data.store)
+    socketService.on('shipper:add:order', function(data) {        
+        var msg = data.msg;
+        mapService.addOrder(msg.orderID, msg.store, msg.shipper, msg.customer)
         .then(function() {
-            mapService.addOrder(data.orderID, data.shipperID, data.store.storeID);
-            mapService.addCustomer(data.customer);        
-        });        
+            console.log('shipper add order', data);
+            // console.log('after add order', mapService.getStoreMarkers(), mapService.getCustomerMarkers(), mapService.getOrders());            
+        });
     });
 
     api.getCurrentUser = function() {
@@ -62,14 +75,29 @@ function socketShipper($q,socketService,authService,mapService) {
 
     api.watchCurrentPosition = function() {
         var geo_success = function(position) {       
-            if (currentLocation
-                && Math.abs(currentLocation.latitude - position.coords.latitude) <= EPSILON
-                && Math.abs(currentLocation.longitude - position.coords.longitude) <= EPSILON) {
-                console.log('the same location');
-                return;
-            }
+            // if (currentLocation
+            //     && Math.abs(currentLocation.latitude - position.coords.latitude) <= EPSILON
+            //     && Math.abs(currentLocation.longitude - position.coords.longitude) <= EPSILON) {
+            //     console.log('the same location');
+            //     return;
+            // }
             console.log('different location');
-            socketService.emit('shipper:update:location', position.coords);
+            currentLocation = position.coords;            
+            var currentUser = authService.getCurrentInfoUser();
+            socketService.sendPacket(
+            {
+                type: 'shipper',
+                clientID: currentUser.username
+            },
+            ['admin', { room: currentUser.username }],
+            {
+                shipper: {
+                    shipperID: currentUser.username,
+                    latitude: currentLocation.latitude,
+                    longitude: currentLocation.longitude
+                }
+            },
+            'shipper:update:location');
         };
 
         var geo_failure = function(err) {
@@ -98,6 +126,7 @@ function socketShipper($q,socketService,authService,mapService) {
             .then(function() {                
                 socketService.sendPacket(
                 {
+                    type: 'shipper',
                     clientID: user.shipperID
                 },
                 'server',
@@ -105,14 +134,22 @@ function socketShipper($q,socketService,authService,mapService) {
                     shipper: user
                 },                
                 'shipper:register:location');
-            });            
-        },function(err){
+
+                // Test watch position
+                // var watchID = api.watchCurrentPosition();
+                // setTimeout(function() {
+                //     console.log('stop watch');
+                //     api.stopWatchCurrentPosition(watchID);
+                // }, 10000);
+            });                    
+        })
+        .catch(function(err){
             alert(err);
-        });            
+        });  
     };
 
     return api; 
 }
 
-socketShipper.$inject = ['$q','socketService','authService','mapService'];
+socketShipper.$inject = ['$rootScope', '$q','socketService','authService','mapService'];
 angular.module('app').factory('socketShipper', socketShipper);
