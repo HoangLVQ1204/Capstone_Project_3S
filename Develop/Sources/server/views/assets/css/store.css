@@ -23,3 +23,18 @@
     background: #F9F8F5;
     color: #898989;
 }
+
+.store-bg-red {
+    background: #F35958;
+    color: white;
+}
+
+.store-bg-green {
+    background: #ADEA2D;
+    color: white;
+}
+
+.store-bg-blue {
+    background: #1DBBD4;
+    color: white;
+}

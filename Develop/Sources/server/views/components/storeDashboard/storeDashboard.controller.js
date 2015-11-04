@@ -2,7 +2,7 @@
  * Created by hoanglvq on 9/22/15.
  */
 
-function storeDashboardController($scope,$state,dataService, $http){
+function storeDashboardController($scope,$state,dataService, $http,config){
 
     //Option for drop down list
     $scope.searchOptionsInProcess = [
@@ -235,7 +235,7 @@ function storeDashboardController($scope,$state,dataService, $http){
 }
 
 
-storeDashboardController.$inject = ['$scope','$state','dataService','$http'];
+storeDashboardController.$inject = ['$scope','$state','dataService','$http','config'];
 
 angular.module('app').controller('storeDashboardController',storeDashboardController);
 
