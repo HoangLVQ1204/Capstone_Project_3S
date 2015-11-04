@@ -70,7 +70,16 @@ module.exports = function(server){
     /*
         io.orders[orderID] = {
             shipperID,
-            storeID            
+            storeID,
+            status: ["Waiting"  // dont' use
+                    "Picking up"
+                    "Bring to stock"
+                    "In stock"
+                    "Delivering"
+                    "Done"
+                    "Canceling"
+                    "Cancel"],
+            isPending
         }
     */
     io.orders = {};
@@ -314,6 +323,18 @@ module.exports = function(server){
         };              
     };
 
+    io.getShipperBySocketID = function(socketID) {
+        var shipperIDs = Object.keys(io.shippers);
+        var shipperID = _.find(shipperIDs, function(e) {
+            return io.shippers[e].socketID === socketID;
+        });
+        return io.getOneShipper(shipperID);
+    };
+
+    io.removeShipper = function(shipperID) {
+        delete io.shippers[shipperID];
+    };
+
     io.getOneShipper = function(shipperID) {
         // remove socketID
         var shipper = _.clone(io.shippers[shipperID], true);
@@ -344,9 +365,28 @@ module.exports = function(server){
     io.addOrder = function(orderID, storeID, shipperID) {
         io.orders[orderID] = {
             shipperID: shipperID,
-            storeID: storeID
+            storeID: storeID,
+            status: 'Picking up',
+            isPending: false
         };
-    };    
+    };
+
+    io.getOrdersOfShipper = function(shipperID) {
+        var orderIDs = Object.keys(io.orders);
+        var filteredOrderIDs = _.clone(orderIDs.filter(function(e) {
+            return io.orders[e].shipperID === shipperID;
+        }), true);
+        return filteredOrderIDs.map(function(e) {
+            return {
+                orderID: e,
+                orderInfo: _.clone(io.orders[e], true)
+            };
+        });
+    };
+
+    io.updateOrder = function(orderID, newOrder) {
+        io.orders[orderID] = _.merge(io.orders[orderID], newOrder);
+    };
 
     io.addCustomer = function(customer) {
         io.customers.push({
