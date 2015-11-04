@@ -189,9 +189,6 @@ module.exports = function(sequelize, DataTypes) {
         })
       },
 
-      putOrder: function (order) {
-        return order.save();
-      },
 
       postOneOrder: function(newOrder){
         return order.build(newOrder).save();
@@ -269,17 +266,7 @@ module.exports = function(sequelize, DataTypes) {
         })
       },
 
-      getAllOrderToAssignTask: function(orderstatus){
-        return order.findAll({
-          where: {
-            'statusid': {$or: [1,2,5,6]}
-          },
-          include: [{
-            model: orderstatus,
-            attributes: ['statusname']
-          }]
-        })
-      },
+
 
       getAllOrderToAssignTask: function(orderstatus, task){
         return order.findAll({

@@ -2,12 +2,12 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminStoreListController($scope,$state, $http, $filter) {
+function adminStoreListController($scope,$state, $http, $filter, authService) {
 
     $scope.storeList = [];
     var smsData = {verticalEdge: 'right',
                 horizontalEdge: 'bottom'};
-
+    var currentUser = authService.getCurrentInfoUser();
     $scope.searchOptions = [
         {
             option: 'All',
@@ -103,7 +103,7 @@ function adminStoreListController($scope,$state, $http, $filter) {
 
         var ledger = new Object();
         ledger.storeid = store.storeid;
-        ledger.adminid = 'hoang';
+        ledger.adminid = currentUser.username;
         ledger.amount = parseInt($scope.payFee);
         ledger.paydate = Date(Date.now());
         if (ledger.amount >= 0)
@@ -205,5 +205,5 @@ function adminStoreListController($scope,$state, $http, $filter) {
 
 }
 
-adminStoreListController.$inject = ['$scope','$state', '$http', '$filter'];
+adminStoreListController.$inject = ['$scope','$state', '$http', '$filter', 'authService'];
 angular.module('app').controller('adminStoreListController',adminStoreListController);
