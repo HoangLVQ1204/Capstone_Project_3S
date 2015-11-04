@@ -27,6 +27,21 @@ function socketStore($q,socketService,authService,mapService){
         mapService.updateShipper(shipper);
     });
 
+    socketService.on('store:delete:shipper', function(data) {
+        console.log('delete shipper', data);
+        var shipper = data.msg.shipper;
+        mapService.deleteShipper(shipper.shipperID);
+    });
+
+    socketService.on('store:update:order', function(data) {
+        console.log('store:update:order', data);
+        var orders = data.msg.orders;
+        orders.forEach(function(e) {
+            mapService.updateOrder(e.orderID, e.orderInfo);
+        });
+        console.log('after update', mapService.getOrders());
+    });
+
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();        
         // TODO: Change later
