@@ -24,4 +24,4 @@ module.exports = function (app) {
     app.route('/orders/cancel')
         .put(controller.cancelOrder);
 
-}
+};

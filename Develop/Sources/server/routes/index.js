@@ -8,6 +8,7 @@ var shipperRoutes = require('./api/shipperRoutes');
 var orderRoutes = require('./api/orderRoutes');
 var ledgerRoutes = require('./api/ledgerRoutes');
 var taskRoutes = require('./api/taskRoutes');
+var issueRoutes = require('./api/issueRoutes');
 
 var storeRoutes = require('./api/storeRoutes');
 module.exports = function (app) {
@@ -18,5 +19,6 @@ module.exports = function (app) {
     storeRoutes(app);
     ledgerRoutes(app);
     taskRoutes(app);
+    issueRoutes(app);
 }
 

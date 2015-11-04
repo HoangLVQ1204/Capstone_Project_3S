@@ -11,15 +11,19 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false,
       primaryKey: true
-    },
-    date: {
-      type: DataTypes.DATE,
-      allowNull: true
     }
   }, {
     freezeTableName: true,
     timestamps: false,
     classMethods: {
+      associate: function(db) {
+        orderissue.belongsTo(db.order, {
+          foreignKey: 'orderid',
+          constraints: false
+        });
+
+
+      },
       createOrderIssue: function(newOrderIssue) {
         return orderissue.build(newOrderIssue).save();
       }

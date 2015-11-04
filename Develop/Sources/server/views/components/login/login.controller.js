@@ -4,6 +4,7 @@
 
 function loginController($scope,$rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper){
 
+
     var showError = function(error){
         $scope.showUserError = true;
         $scope.errorMessage = error.message;
@@ -33,8 +34,9 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
 
                 if(authService.isRightRole(config.role.shipper)){
                     socketShipper.registerSocket();
-                    $state.go('store.dashboard');
-                }                
+                    console.log("xxx");
+                    $state.go('mapdemo');
+                }
             })
             .catch(function(error){
                 main.removeClass("slideDown");

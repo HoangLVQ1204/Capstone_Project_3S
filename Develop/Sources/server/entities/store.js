@@ -86,7 +86,17 @@ module.exports = function(sequelize, DataTypes) {
                     }, limit: 1, order: 'payDate DESC'
                 }]
             });
-        }
+        },
+
+        //KhanhKC
+            getOneStoreName: function(storeid){
+                return store.findOne({
+                    attributes: ['storeid','name'],
+                    where:{
+                        'storeid':storeid,
+                    }
+                });
+            },
           //,
 
       //getStoreLedger: function(generalledger, storeid){

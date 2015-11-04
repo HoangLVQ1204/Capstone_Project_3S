@@ -2,7 +2,23 @@
  * Created by Kaka Hoang Huy on 10/19/2015.
  */
 
-function detailController($scope, $stateParams, dataService, $cordovaGeolocation, $ionicPopup, $ionicPopover, uiGmapGoogleMapApi, uiGmapIsReady, $rootScope) {
+function detailController($scope, $stateParams, dataService, $cordovaGeolocation, $ionicPopup, $ionicPopover, uiGmapGoogleMapApi, uiGmapIsReady, $rootScope, $ionicLoading) {
+
+  $scope.isCancel = $stateParams.isCancel;
+  //shipper category of issue = cancel
+  if ($scope.isCancel == "true") {
+    $scope.isBackdropShowing = false;
+    $scope.show = function(){
+      $ionicLoading.show({
+        templateUrl: 'loading.html',
+        scope: $scope
+      });
+    };
+    $scope.show();
+    $scope.hide = function(){
+      $ionicLoading.hide();
+    }
+  }
 
   $scope.showConfirm = function (currentStatus, action) {
     $scope.action = action;
@@ -408,7 +424,7 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
   //setInterval(function(){ alert("Hello"); }, 3000);
 }
 
-detailController.$inject = ['$scope', '$stateParams', 'dataService', '$cordovaGeolocation', '$ionicPopup', '$ionicPopover', 'uiGmapGoogleMapApi', 'uiGmapIsReady', '$rootScope'];
+detailController.$inject = ['$scope', '$stateParams', 'dataService', '$cordovaGeolocation', '$ionicPopup', '$ionicPopover', 'uiGmapGoogleMapApi', 'uiGmapIsReady', '$rootScope', '$ionicLoading'];
 app.controller('DetailCtrl', detailController);
 
 var sampleData = {

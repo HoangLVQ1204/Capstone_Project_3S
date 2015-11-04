@@ -117,18 +117,17 @@ module.exports = function(sequelize, DataTypes) {
       },
       getAllTaskOfShipper: function(task, shipperid, taskdate) {
         return order.findAll({
-          attributes: ['orderid', 'ordertypeid', 'pickupaddress', 'deliveryaddress', 'pickupdate', 'deliverydate', 'statusid'],
-          where: {'ispending': false},
+          attributes: ['orderid', 'ordertypeid', 'ispending', 'pickupaddress', 'deliveryaddress', 'pickupdate', 'deliverydate', 'statusid'],
+          //where: {'ispending': false},
           include: [{
             model: task,
-            attributes: ['typeid', 'statusid', 'taskdate'],
+            attributes: ['taskid', 'typeid', 'statusid', 'taskdate'],
             where: {
               shipperid: shipperid,
               taskdate: taskdate,
               statusid: [1, 2]
             }
-          }
-          ]
+          }]
         });
       },
 
@@ -189,22 +188,26 @@ module.exports = function(sequelize, DataTypes) {
         })
       },
 
-      putOrder: function (order) {
-        return order.save();
-      },
 
       postOneOrder: function(newOrder){
+        var str = "000000" + parseInt(Math.random()*1000000);
+        var formatStr = str.substr(str.length - 6);
+        var newOrderID = "OD" + formatStr;
+        newOrder.orderid = newOrderID;
+        console.log("ORRDDDDDDDD=========",newOrderID);
         return order.build(newOrder).save();
       },
 
       putOrder: function (currentOrder) {
         return currentOrder.save();
       },
-      changeIsPendingOrder: function(orderID) {
-          order.update(
-              { ispending: 'true' },
-              { where: { orderid: orderID }}
-          )
+      changeIsPendingOrder: function(orderID, isPending) {
+         return order.update(
+             {ispending: isPending},
+             {where: {
+               'orderid': orderID
+             }}
+         );
       },
       submitDraffOrder: function(orderid) {
         return order.update(
@@ -243,8 +246,8 @@ module.exports = function(sequelize, DataTypes) {
               'statusid':  [6, 8]
             }
           })
-        },	
-     
+        },
+
       cancelOrder: function(orderid) {
         return order.update(
             {
@@ -255,7 +258,7 @@ module.exports = function(sequelize, DataTypes) {
             { where: { orderid: orderid }} /* where criteria */
         )
 	},
-	
+
 	 updateLedgerForOrder: function(storeid, paydate, ledgerid){
         return order.update(
             {'ledgerid': ledgerid},
@@ -269,17 +272,7 @@ module.exports = function(sequelize, DataTypes) {
         })
       },
 
-      getAllOrderToAssignTask: function(orderstatus){
-        return order.findAll({
-          where: {
-            'statusid': {$or: [1,2,5,6]}
-          },
-          include: [{
-            model: orderstatus,
-            attributes: ['statusname']
-          }]
-        })
-      },
+
 
       getAllOrderToAssignTask: function(orderstatus, task){
         return order.findAll({
@@ -296,8 +289,60 @@ module.exports = function(sequelize, DataTypes) {
               required: false
             }]
         })
-      }
+      },
 
+      getTaskBeIssuePending: function(task, issue, issuetype, orderissue, shipperId) {
+        return order.findAll({
+          attributes: ['orderid', 'ispending'],
+          where: {'ispending': true},
+          include: [{
+            model: orderissue,
+            attributes: ['issueid'],
+            include: [{
+              model: issue,
+              attributes: ['typeid', 'isresolved'],
+              where: {isresolved: false},
+              include: [{
+                model: issuetype,
+                attributes: ['categoryid'],
+                where: {'categoryid': 1}
+              }]
+            }]
+          },{
+            model: task,
+            attributes: ['taskid', 'shipperid', 'statusid'],
+            where: {'shipperid': shipperId}
+          }]
+        });
+      },
+
+      getAllTaskCancel: function(task, issue, issuetype, orderissue, shipperid) {
+        return order.findAll({
+          attributes: ['orderid'],
+          include: [{
+            model: task,
+            attributes: ['taskid'],
+            where: {
+              shipperid: shipperid,
+              // taskdate: taskdate,
+              statusid: [1, 2]
+            }
+          },{
+            model: orderissue,
+            attributes: ['orderid'],
+            include: {
+              model: issue,
+              attributes: ['issueid'],
+              where: {'isresolved': false},
+              include:{
+                model: issuetype,
+                attributes: ['categoryid'],
+                where: {'categoryid': 2}
+              }
+            }
+          }]
+        });
+      }
     }
   });
   return order;

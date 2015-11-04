@@ -54,7 +54,8 @@ module.exports = function(server){
             socketID,
             latitude,
             longitude,
-            status   
+            status,
+            isConnected
         }
     */ 
     io.shippers = {};
@@ -70,7 +71,16 @@ module.exports = function(server){
     /*
         io.orders[orderID] = {
             shipperID,
-            storeID            
+            storeID,
+            status: ["Waiting"  // dont' use
+                    "Picking up"
+                    "Bring to stock"
+                    "In stock"
+                    "Delivering"
+                    "Done"
+                    "Canceling"
+                    "Cancel"],
+            isPending
         }
     */
     io.orders = {};
@@ -187,6 +197,10 @@ module.exports = function(server){
     io.getDataForShipper = function(shipperID) {
         // Returns data for map of shipperID
         // Based on io.stores, io.shippers, io.customers, io.orders
+        console.log('total data:shippers', io.shippers);    
+        console.log('total data:stores', io.stores);    
+        console.log('total data:customers', io.customers);    
+        console.log('total data:orders', io.orders);    
 
         var result = {};
         result.shipper = [];
@@ -230,6 +244,7 @@ module.exports = function(server){
             result.customer.push(customer);
         }
 
+        console.log('check result', result);
         return result;
     };
 
@@ -306,12 +321,24 @@ module.exports = function(server){
 
     io.addShipper = function(shipper, socket) {
         io.shippers[shipper.shipperID] = {
-            order: [],
+            order: io.getOrderIDsOfShipper(shipper.shipperID),
             latitude: shipper.latitude,
             longitude: shipper.longitude,
             socketID: socket.id,
             status: shipper.status
         };              
+    };
+
+    io.getShipperBySocketID = function(socketID) {
+        var shipperIDs = Object.keys(io.shippers);
+        var shipperID = _.find(shipperIDs, function(e) {
+            return io.shippers[e].socketID === socketID;
+        });
+        return io.getOneShipper(shipperID);
+    };
+
+    io.removeShipper = function(shipperID) {
+        delete io.shippers[shipperID];
     };
 
     io.getOneShipper = function(shipperID) {
@@ -344,13 +371,39 @@ module.exports = function(server){
     io.addOrder = function(orderID, storeID, shipperID) {
         io.orders[orderID] = {
             shipperID: shipperID,
-            storeID: storeID
+            storeID: storeID,
+            status: 'Picking up',
+            isPending: false
         };
-    };    
+    };
+
+    io.getOrdersOfShipper = function(shipperID) {
+        var orderIDs = Object.keys(io.orders);
+        var filteredOrderIDs = _.clone(orderIDs.filter(function(e) {
+            return io.orders[e].shipperID === shipperID;
+        }), true);
+        return filteredOrderIDs.map(function(e) {
+            return {
+                orderID: e,
+                orderInfo: _.clone(io.orders[e], true)
+            };
+        });
+    };
+
+    io.getOrderIDsOfShipper = function(shipperID) {
+        var orderIDs = Object.keys(io.orders);
+        return _.clone(orderIDs.filter(function(e) {
+            return io.orders[e].shipperID === shipperID;
+        }), true);        
+    };
+
+    io.updateOrder = function(orderID, newOrder) {
+        io.orders[orderID] = _.merge(io.orders[orderID], newOrder);
+    };
 
     io.addCustomer = function(customer) {
         io.customers.push({
-            order: customer.order,
+            order: _.clone(customer.order),
             geoText: customer.geoText
         });
     };
