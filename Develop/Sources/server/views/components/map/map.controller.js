@@ -106,7 +106,8 @@ function displayRelationship(model, object_1, object_2, $scope) {
             lng: model.longitude
         };
         //console.log(store, customer);
-        $scope.drawTwoArrows(start, dest_1, dest_2);
+        if (dest_1 && dest_2)
+            $scope.drawTwoArrows(start, dest_1, dest_2);
     });                
 }
 
@@ -117,6 +118,8 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
     $scope.storeMarkers = $scope.storeMarkers || [];
     $scope.customerMarkers = $scope.customerMarkers || [];
     $scope.orders = $scope.orders || {};                
+
+    console.log($scope.shipperMarkers == mapService.getShipperMarkers());
 
     $scope.circleRadius = $scope.circleRadius || 1000000000;
 
@@ -217,7 +220,9 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
         // Events for markers        
         $scope.shipperEvents = {
             mouseover: function(gMarker, eventName, model, mouseEvent) {                                 
-                console.log('mouseover', model.order);
+                console.log('mouseover', model.order);                
+                console.log('mouseover storeMarkers', $scope.storeMarkers);
+                console.log('mouseover customerMarkers', $scope.customerMarkers);
                 var content = '<div>' + 
                         '<h5>' + model.shipperID + '</h5>' +
                         '<ul>';

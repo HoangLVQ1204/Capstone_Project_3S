@@ -32,7 +32,7 @@
 
                                     <div class="row" >
 
-                                        <div id='aaa' class="col-sm-4 form-group pull-left">
+                                        <div class="col-sm-4 form-group pull-left">
                                             <div class="input-group input-icon">
                                                 <i class="fa fa-calendar ico"></i>
                                                 <input type="text"  class="form-control" daterange id="daterange" name="daterange" ng-model="dateRange"/>
@@ -46,18 +46,16 @@
                                             </div>
                                         </div><!-- //form-group-->
 
-                                        <div class="btn-group pull-right">
-                                            <button type="button" class="btn btn-default">
-                                                <i class="fa fa-save"></i>Save
-                                            </button>
-                                        </div>
-
                                         <div class="col-sm-4 pull-right">
-                                            <div class="input-icon"> <i class="fa fa-search ico"></i>
+                                            <div class="input-icon col-sm-9"> <i class="fa fa-search ico"></i>
                                                 <input type="search" class="form-control" placeholder="Search" ng-model="search">
                                             </div>
 
-
+                                            <div class="pull-right">
+                                                <button type="button" class="btn btn-danger" ng-click="saveTaskState()">
+                                                    <i class="fa fa-save"></i>Save
+                                                </button>
+                                            </div>
                                         </div>
 
                                         <div class="col-sm-2 pull-right">
@@ -68,17 +66,12 @@
                                             <select
                                                     class="form-control"
                                                     ng-options="options.option for options in searchOptions" ng-model="selected">
-
                                             </select>
-
                                         </div>
-
-
-
                                     </div>
                                     <thead>
                                     <tr>
-                                        <th st-sort="taskid" class="text-center sortable">TaskID</th>
+                                        <th width="5%" st-sort="taskid" class="text-center sortable">TaskID</th>
                                         <th st-sort="shipperid" class="text-center sortable">Shipper</th>
                                         <th st-sort="orderid" class="text-center sortable">OrderID</th>
                                         <th st-sort="order.storeid" class="text-center sortable">Store</th>
@@ -97,16 +90,18 @@
                                         <td class="center"> {{x.order.storeid}}</td>
                                         <td class="center"> {{x.order.orderstatus.statusname}}</td>
                                         <td class="center">
-                                            <select
-                                                    class="form-control"
-                                                    ng-options="options.statusname for options in taskStatusOptions" ng-model="x.selectedStatus">
-                                            </select>
+                                                <select
+                                                        class="form-control"
+                                                        ng-options="options.statusname for options in taskStatusOptions" ng-model="x.selectedStatus">
+                                                    <option value="China" data-content="<span class='label label-success'>China</span>">China</option>
+                                                </select>
                                         </td>
                                         <td class="center">
-                                            <select
-                                                    class="form-control"
-                                                    ng-options="options.typename for options in taskTypeOptions" ng-model="x.selectedType">
-                                            </select>
+                                                <!--<select-->
+                                                        <!--class="form-control"-->
+                                                        <!--ng-options="options.typename for options in taskTypeOptions" ng-model="x.selectedType">-->
+                                                <!--</select>-->
+                                            {{x.tasktype.typename}}
                                         </td>
                                         <td class="center"> {{x.taskdate|date:"dd/MM/yyyy"}}</td>
                                     </tr>

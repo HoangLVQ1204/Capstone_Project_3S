@@ -8,12 +8,39 @@ module.exports = function(socket, io) {
     
     // Add shipper:disconnect for shipper to disconnect by himself
     socket.on('disconnect', function() {
-        console.log('Shipper', socket.id, 'disconnect');        
-        
+        console.log('Shipper', socket.id, 'disconnect');
+        var shipper = io.getShipperBySocketID(socket.id);
+        var orders = io.getOrdersOfShipper(shipper.shipperID);
+        orders.forEach(function(e) {
+            e.orderInfo.isPending = true;
+            io.updateOrder(e.orderID, e.orderInfo);
+        });
+        console.log('after disconnect', orders);
+        io.removeShipper(shipper.shipperID);
+        io.forward(
+        {
+            type: 'shipper',
+            clientID: shipper.shipperID
+        },
+        [ { room: shipper.shipperID }, 'admin' ],
+        {
+            shipper: shipper
+        },
+        [ 'store:delete:shipper', 'admin:delete:shipper' ]);
+
+        io.forward(
+        {
+            type: 'shipper',
+            clientID: shipper.shipperID
+        },
+        [ { room: shipper.shipperID }, 'admin' ],
+        {
+            orders: orders
+        },
+        [ 'store:update:order', 'admin:update:order' ]);        
     });
 
-    socket.on('shipper:disconnect', function() {
-        
+    socket.on('shipper:disconnect', function() {        
     });
     
     socket.on('shipper:choose:express', function(data) {        

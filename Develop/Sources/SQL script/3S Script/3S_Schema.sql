@@ -59,7 +59,7 @@ PRIMARY KEY (managerID, storeID)
 
 CREATE TABLE GeneralLedger
 (
-ledgerID int PRIMARY KEY,
+ledgerID SERIAL PRIMARY KEY,
 adminID varchar(20) REFERENCES "user"(username),
 storeID varchar(8) REFERENCES Store(storeID),
 amount BIGINT,
@@ -137,7 +137,7 @@ typeName varchar(20)
 
 CREATE TABLE Task
 (
-taskID int PRIMARY KEY,
+taskID SERIAL PRIMARY KEY,
 orderID varchar(8) REFERENCES "order"(orderID),
 shipperID varchar(20) REFERENCES "user"(username),
 adminID varchar(20) REFERENCES "user"(username),
@@ -181,26 +181,26 @@ categoryID int PRIMARY KEY,
 categoryName varchar(50)
 );
 
-/*CREATE TABLE IssuePriority
+CREATE TABLE IssueType
 (
-priorityID int PRIMARY KEY,
-priority varchar(20)
-);*/
+typeID int PRIMARY KEY,
+categoryID int REFERENCES IssueCategory(categoryID),
+typeName text
+);
 
 CREATE TABLE Issue
 (
 issueID SERIAL PRIMARY KEY,
-categoryID int REFERENCES IssueCategory(categoryID),
---priority int REFERENCES IssuePriority(priorityID),
-reason text,
-description text
+typeID int REFERENCES IssueType(typeID),
+description text,
+isResolved boolean,
+createdDate date
 );
 
 CREATE TABLE OrderIssue
 (
 issueID int REFERENCES Issue(issueID),
 orderID varchar(8) REFERENCES "order"(orderID),
-date date,
 PRIMARY KEY(issueID, orderID)
 );
 
@@ -244,6 +244,7 @@ DROP TABLE BannedHistoryLog;
 DROP TABLE OrderLog;
 DROP TABLE OrderIssue;
 DROP TABLE Issue;
+DROP TABLE IssueType;
 DROP TABLE IssueCategory;
 DROP TABLE ConfirmationCode;
 DROP TABLE ConfirmationCodeType;

@@ -2,8 +2,8 @@
  * Created by khanhkc on 9/22/15.
  */
 
-function storeOrderController($scope, $state, dataService) {
-    GetStoreName();
+function storeOrderController($scope, $state, dataService, config) {
+
     $scope.order={
         codeVsShipper: GenerateRandomCode(6),
         codeVsCustomer: GenerateRandomCode(6),
@@ -125,12 +125,11 @@ function storeOrderController($scope, $state, dataService) {
     };
 
     $scope.postDraff = function(){
-        var urlBase = 'http://localhost:3000/orders';
+        var urlBase = config.baseURI + '/orders';
         var data = {
-            order: $scope.order,
-            good : $scope.goods
-        };
-        console.log(data);
+        //    order: $scope.order,
+        //    good : $scope.goods,
+        }
         dataService.postDataServer(urlBase,data);
     };
 
@@ -142,21 +141,9 @@ function storeOrderController($scope, $state, dataService) {
         return code;
     }
 
-    function GetStoreName(){
-        var urlBase = 'http://localhost:3000/api/getAllStoreName';
-        dataService.getDataServer(urlBase)
-            .success(function (rs) {
-                console.log(rs);
-            })
-            .error(function (error) {
-                console.log('Unable to load store name: ' + error);
-            });
-    }
-
-
-
 }
 
-storeOrderController.$inject = ['$scope', '$state', 'dataService'];
+
+storeOrderController.$inject = ['$scope', '$state', 'dataService', 'config'];
 angular.module('app').controller('storeOrderController', storeOrderController);
 

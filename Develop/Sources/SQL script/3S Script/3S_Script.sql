@@ -41,11 +41,11 @@ insert into managestore values ('nhungkaka', 'str2');
 
 -- generalledger
 
-insert into generalledger values ('1', 'khoangkiti', 'str1', null, '20000', '2015-10-24 00:00:00', 'Weekly total', null, '20000','0');
-insert into generalledger values ('2', 'khoangkiti', 'str2', null, '-30000', '2015-10-24 00:00:00', 'Weekly total', null, '30000','60000');
-insert into generalledger values ('3', 'khoangkiti', 'str3', null, '130000', '2015-10-24 00:00:00', 'Weekly total', null, '150000','20000');
-insert into generalledger values ('4', 'hoang', 'str1', '10000', '10000', '2015-10-25 00:00:00', 'Pay to system', '1', '10000','0');
-insert into generalledger values ('5', 'khoangkiti', 'str1', '10000', '0', '2015-10-26 00:00:00', 'Pay to system', '1', '0','0');
+insert into generalledger (adminid, storeid, amount, balance, paydate, note, payfrom, totaldelivery, totalcod) values ('khoangkiti', 'str1', null, '20000', '2015-10-24 00:00:00', 'Weekly total', null, '20000','0');
+insert into generalledger (adminid, storeid, amount, balance, paydate, note, payfrom, totaldelivery, totalcod) values ('khoangkiti', 'str2', null, '-30000', '2015-10-24 00:00:00', 'Weekly total', null, '30000','60000');
+insert into generalledger (adminid, storeid, amount, balance, paydate, note, payfrom, totaldelivery, totalcod) values ('khoangkiti', 'str3', null, '130000', '2015-10-24 00:00:00', 'Weekly total', null, '150000','20000');
+insert into generalledger (adminid, storeid, amount, balance, paydate, note, payfrom, totaldelivery, totalcod) values ('hoang', 'str1', '10000', '10000', '2015-10-25 00:00:00', 'Pay to system', '1', '10000','0');
+insert into generalledger (adminid, storeid, amount, balance, paydate, note, payfrom, totaldelivery, totalcod) values ('khoangkiti', 'str1', '10000', '0', '2015-10-26 00:00:00', 'Pay to system', '1', '0','0');
 
 -- stock
 
@@ -112,14 +112,14 @@ insert into tasktype VALUES ('3', 'Express');
 insert into tasktype VALUES ('4', 'Return');
 
 -- task
-insert into task values ('1','ord1', 'huykool', 'khoangkiti', '1', '1', '2015-2-9');
-insert into task values ('2','ord2', 'quyensheep', 'hoang', '1', '1', '2015-2-10');
-insert into task values ('3','ord3', 'huykool', 'hoang', '2', '2', '2015-2-10');
-insert into task values ('4','ord4', 'huykool', 'hoang', '2', '1',  '2015-2-15');
-insert into task values ('5','ord5', 'huykool', 'hoang', '1', '1', '2015-2-10');
-insert into task values ('6','ord6', 'huykool', 'hoang', '1', '2',  '2015-2-15');
-insert into task values ('7','ord7', 'huykool', 'hoang', '1', '3', '2015-2-9');
-insert into task values ('8','ord8', 'huykool', 'hoang', '2', '4', '2015-2-10');
+insert into task(orderid, shipperid, adminID, statusID, typeID, taskDate) values ('ord1', 'huykool', 'khoangkiti', '1', '1', '2015-2-9');
+insert into task(orderid, shipperid, adminID, statusID, typeID, taskDate) values ('ord2', 'quyensheep', 'hoang', '1', '1', '2015-2-10');
+insert into task(orderid, shipperid, adminID, statusID, typeID, taskDate) values ('ord3', 'huykool', 'hoang', '2', '2', '2015-2-10');
+insert into task(orderid, shipperid, adminID, statusID, typeID, taskDate) values ('ord4', 'huykool', 'hoang', '2', '1',  '2015-2-15');
+insert into task(orderid, shipperid, adminID, statusID, typeID, taskDate) values ('ord5', 'huykool', 'hoang', '1', '1', '2015-2-10');
+insert into task(orderid, shipperid, adminID, statusID, typeID, taskDate) values ('ord6', 'huykool', 'hoang', '1', '2',  '2015-2-15');
+insert into task(orderid, shipperid, adminID, statusID, typeID, taskDate) values ('ord7', 'huykool', 'hoang', '1', '3', '2015-2-9');
+insert into task(orderid, shipperid, adminID, statusID, typeID, taskDate) values ('ord8', 'huykool', 'hoang', '2', '4', '2015-2-10');
 
 
 -- goods
@@ -239,23 +239,27 @@ insert into confirmationcode values( '80', '123530', '4', 'ord20');
 insert into issuecategory  values ('1', 'Pending');
 insert into issuecategory  values ('2', 'Cancel');
 
--- issuepriority
---insert into issuepriority values ('1', 'High');
---insert into issuepriority values ('2', 'Medium');
---insert into issuepriority values ('3', 'Low');
+--issue Type
+insert into issuetype values ('1', '1', 'Traffic jam');
+insert into issuetype values ('2', '1', 'Vehicle');
+insert into issuetype values ('3', '1', 'Accident');
+insert into issuetype values ('4', '2', 'Goods is broken');
+insert into issuetype values ('5', '2', 'Cannot contact with customer');
+insert into issuetype values ('6', '1', 'Other');
+insert into issuetype values ('7', '2', 'Other');
+
 
 -- issue:id, issuecategory, reason, description
-insert into issue (categoryID,reason,description)   values ('1', 'Traffic jam', 'Tắc đường quá, em chưa đi tiếp được');
-insert into issue (categoryID,reason, description)   values ('1', 'Vehicle', 'Em bị hỏng xe, đang vá xăm');
-insert into issue (categoryID,reason, description)   values ('1', 'Accident', 'Em vừa bị tai nạn nhẹ, xin phép giao chậm');
-insert into issue (categoryID,reason, description)   values ('2', 'Goods is broken', 'Các đơn hàng này bị hỏng rồi, Admin xem giúp em');
-insert into issue (categoryID,reason, description)   values ('2', 'Cannot contact with customer', 'Không thể giao hàng cho khách hàng');
+insert into issue (typeid, description, isresolved, createddate)   values ('1', 'Tắc đường quá, em chưa đi tiếp được', 'false', '2015-11-1');
+insert into issue (typeid, description, isresolved, createddate)    values ('1', 'Em bị hỏng xe, đang vá xăm', 'false', '2015-11-1');
+insert into issue (typeid, description, isresolved, createddate)    values ('1', 'Em vừa bị tai nạn nhẹ, xin phép giao chậm', 'true', '2015-11-1');
+insert into issue (typeid, description, isresolved, createddate)    values ('2', 'Các đơn hàng này bị hỏng rồi, Admin xem giúp em', 'true', '2015-11-1');
 
 -- orderissue
-insert into orderissue values ('1', 'ord1', '2015-12-4');
-insert into orderissue values ('2', 'ord1', '2015-12-4');
-insert into orderissue values ('3', 'ord2', '2015-4-19');
-insert into orderissue values ('4', 'ord2', '2015-4-19');
+insert into orderissue values ('1', 'ord1');
+insert into orderissue values ('2', 'ord1');
+insert into orderissue values ('3', 'ord2');
+insert into orderissue values ('4', 'ord2');
 
 -- orderlog
 insert into orderlog  values ('1', 'ord1', 'str1', '1', '1', 'Tu Liem - Ha Noi', 'Cau Giay - Ha Noi', '2015-3-19', '2015-3-21', '01687555261', 'Nguyen Van Quyen', '1', '1', '20000', '0', '21.015,105.854', '21.025,105.884', '2015-9-8', 'khoangkiti');

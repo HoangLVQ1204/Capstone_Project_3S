@@ -2,7 +2,7 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminTransactionHistoryController($scope,$state, $http, $location) {
+function adminTransactionHistoryController($scope,$state, $http, $location, config) {
 
     $scope.ledgerList = [];
     $scope.autoList = [];
@@ -62,7 +62,7 @@ function adminTransactionHistoryController($scope,$state, $http, $location) {
     $scope.dateRange = '';
     $scope.autoDateRange = '';
 
-    $http.get("http://localhost:3000/api/ledgerList").success(function(response){
+    $http.get(config.baseURI + "/api/ledgerList").success(function(response){
        // $scope.ledgerList = response;
         response.map(function(ledger){
             if (ledger.amount == null) $scope.autoList.push(ledger)
@@ -91,5 +91,5 @@ function adminTransactionHistoryController($scope,$state, $http, $location) {
 
 }
 
-adminTransactionHistoryController.$inject = ['$scope','$state', '$http', '$location'];
+adminTransactionHistoryController.$inject = ['$scope','$state', '$http', '$location', 'config'];
 angular.module('app').controller('adminTransactionHistoryController',adminTransactionHistoryController);

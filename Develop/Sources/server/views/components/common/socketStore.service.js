@@ -13,6 +13,13 @@ function socketStore($q,socketService,authService,mapService){
     /*
         add handlers
     */
+    socketService.on('store:register:location', function(data) {
+        mapService.setMapData(data.msg.mapData)
+        .then(function() {
+            console.log('register', data);
+        });
+    });
+
     socketService.on('store:find:shipper', function(data) {
         var shipper = data.msg.shipper;        
         console.log('shipper returned', shipper);
@@ -25,6 +32,21 @@ function socketStore($q,socketService,authService,mapService){
         console.log('store:update:shipper', data);
         var shipper = data.msg.shipper;
         mapService.updateShipper(shipper);
+    });
+
+    socketService.on('store:delete:shipper', function(data) {
+        console.log('delete shipper', data);
+        var shipper = data.msg.shipper;
+        mapService.deleteShipper(shipper.shipperID);
+    });
+
+    socketService.on('store:update:order', function(data) {
+        console.log('store:update:order', data);
+        var orders = data.msg.orders;
+        orders.forEach(function(e) {
+            mapService.updateOrder(e.orderID, e.orderInfo);
+        });
+        console.log('after update', mapService.getOrders());
     });
 
     api.getCurrentUser = function() {

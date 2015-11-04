@@ -2,11 +2,11 @@
  * Created by hoanglvq on 9/22/15.
  */
 
-function adminController($scope,$state,$http,$q){
+function adminController($scope,$state,$http,$q,$rootScope,config){
     $scope.getUser = function(){
         console.log("get Users");
         return $http({
-            url: 'http://localhost:3000/users',
+            url: config.baseURI + '/users',
             method: 'GET'
         }).then(function(data){
             $scope.data  = data;
@@ -16,9 +16,9 @@ function adminController($scope,$state,$http,$q){
     }
 
     $scope.$watch('$viewContentLoaded', function(event) {
-        
+
         $('nav#menu-ver').mmenu({
-            searchfield   :  true,
+            searchfield   :  false,
             slidingSubmenus	: false
         }).on( "closing.mm", function(){
             setTimeout(function () { closeSub() }, 200);
@@ -33,6 +33,6 @@ function adminController($scope,$state,$http,$q){
     });
 }
 
-adminController.$inject = ['$scope','$state','$http','$q'];
+adminController.$inject = ['$scope','$state','$http','$q','$rootScope','config'];
 angular.module('app').controller('adminController',adminController);
 

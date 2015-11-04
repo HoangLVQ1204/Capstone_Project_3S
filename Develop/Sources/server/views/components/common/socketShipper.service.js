@@ -3,7 +3,7 @@
  */
 
 
-function socketShipper($q,socketService,authService,mapService) {
+function socketShipper($rootScope, $q,socketService,authService,mapService) {
     
     var EPSILON = 1e-8;
 
@@ -13,6 +13,14 @@ function socketShipper($q,socketService,authService,mapService) {
     /*
         add handlers
     */
+
+    socketService.on('shipper:register:location', function(data) {        
+        mapService.setMapData(data.msg.mapData)
+        .then(function() {
+            console.log('register', data);            
+        });
+    });
+
     socketService.on('shipper:choose:express', function(data) {
         var answer = confirm('Do you want to accept order from store of ' + data.msg.distanceText + ' away?');                
         if (answer) {
@@ -40,7 +48,8 @@ function socketShipper($q,socketService,authService,mapService) {
         mapService.addOrder(msg.orderID, msg.store, msg.shipper, msg.customer)
         .then(function() {
             console.log('shipper add order', data);
-        })
+            // console.log('after add order', mapService.getStoreMarkers(), mapService.getCustomerMarkers(), mapService.getOrders());            
+        });
     });
 
     api.getCurrentUser = function() {
@@ -142,5 +151,5 @@ function socketShipper($q,socketService,authService,mapService) {
     return api; 
 }
 
-socketShipper.$inject = ['$q','socketService','authService','mapService'];
+socketShipper.$inject = ['$rootScope', '$q','socketService','authService','mapService'];
 angular.module('app').factory('socketShipper', socketShipper);

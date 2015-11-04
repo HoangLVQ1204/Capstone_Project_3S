@@ -13,4 +13,9 @@ module.exports = function (app) {
     app.route('/api/getAllTaskType')
         .get(controller.getAllTaskType);
 
+    app.route('/api/updateAllTaskState')
+        .put(controller.updateTaskState);
+
+
+
 }

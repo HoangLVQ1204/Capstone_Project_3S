@@ -37,9 +37,23 @@ module.exports = function (app) {
             })
     };
 
+    var updateTaskState = function (req, res, next) {
+        var taskList = req.body;
+        return taskList.map(function (task) {
+                db.task.updateTaskState(task)
+                    .then(function (task) {
+                        //tasks = tasks.toJSON();
+                        res.status(200).json(task);
+                    }, function (err) {
+                        next(err);
+                    })
+        })
+    };
+
     return {
         getAllTask: getAllTask,
         getAllTaskType: getAllTaskType,
-        getAllTaskStatus: getAllTaskStatus
+        getAllTaskStatus: getAllTaskStatus,
+        updateTaskState: updateTaskState
     }
 }
