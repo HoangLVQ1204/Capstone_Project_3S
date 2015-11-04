@@ -39,6 +39,20 @@ function socketAdmin(socketService,authService,mapService){
         var shipper = data.msg.shipper;
         mapService.updateShipper(shipper);
     });
+
+    socketService.on('admin:delete:shipper', function(data) {
+        console.log('admin:delete:shipper', data);
+        var shipper = data.msg.shipper;
+        mapService.deleteShipper(shipper.shipperID);
+    });
+
+    socketService.on('admin:update:order', function(data) {
+        console.log('admin:update:order', data);
+        var orders = data.msg.orders;
+        orders.forEach(function(e) {
+            mapService.updateOrder(e.orderID, e.orderInfo);
+        });
+    });
     
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();        

@@ -106,7 +106,8 @@ function displayRelationship(model, object_1, object_2, $scope) {
             lng: model.longitude
         };
         //console.log(store, customer);
-        $scope.drawTwoArrows(start, dest_1, dest_2);
+        if (dest_1 && dest_2)
+            $scope.drawTwoArrows(start, dest_1, dest_2);
     });                
 }
 
