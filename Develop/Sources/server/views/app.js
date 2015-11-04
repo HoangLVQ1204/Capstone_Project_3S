@@ -15,7 +15,9 @@ angular.module('app', [
         shipper: 1,
         store: 2,
         admin: 3
-    }
+    },
+
+    baseUrl: "http://localhost:3000"
 
 }).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider,uiGmapGoogleMapApiProvider,config){
 
