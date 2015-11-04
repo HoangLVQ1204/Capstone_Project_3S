@@ -46,6 +46,12 @@ i {
   background-color: #35479E;
   box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1);
 }
+.loading-container .loading {
+  background-color: rgba(0, 0, 0, 0); !important;
+}
+a {
+ text-decoration: none;
+}
 
 /*END Common*/
 
@@ -345,7 +351,35 @@ ul.checkout-bar a {
     z-index: 99;
   }
 }
-
+.btn-default-cus{
+  line-height: 42px !important;
+  font-weight: bold;
+  font-size: 1.2em
+}
+.btn-success-cus {
+  color: #fff;
+  background-color: #5cb85c;
+  border-color: #5cb85c;
+  /*font-weight: bold;*/
+  font-size: 1.2em;
+  line-height: 42px !important;
+}
+.btn-success-cus:hover {
+  color: #fff;
+  background-color: #449d44;
+  border-color: #419641;
+}
+.popup {
+  border-radius: 10px !important;
+}
+.popup > .popup-head > .popup-title {
+  font-size: 1.2em !important;
+  font-weight: bold !important;
+}
+.popup-buttons > button {
+  background-color: #5cb85c !important;
+  border-color: #5cb85c !important;
+}
 
 /*--END StyleSheet For Order's Detail--*/
 

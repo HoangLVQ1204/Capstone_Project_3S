@@ -12,10 +12,10 @@ module.exports = function (app) {
     var getTask = function (req, res, next) {
         var shipperid = 'huykool';
         var taskdate = '2015-02-15';
-        var Task = db.task;
-        var Order = db.order;
+        var task = db.task;
+        var order = db.order;
 
-        return Order.getAllTaskOfShipper(Task, shipperid, taskdate)
+        return order.getAllTaskOfShipper(task, shipperid, taskdate)
             .then(function (tasks) {
                 var group = {};
                 if (_.isEmpty(tasks) == false) {
@@ -23,7 +23,9 @@ module.exports = function (app) {
                     _.each(tasks, function(task){
                         listTasks.push({
                             'orderid': task.dataValues.orderid,
+                            'taskid': task['tasks'][0].dataValues.taskid,
                             'typeid': task['tasks'][0].dataValues.typeid,
+                            'isPending': task.dataValues.ispending,
                             'statusid': task['tasks'][0].dataValues.statusid,
                             'pickupaddress': task.dataValues.pickupaddress,
                             'deliveryaddress': task.dataValues.deliveryaddress,
@@ -216,32 +218,109 @@ module.exports = function (app) {
 
     var createIssue = function (req, res, next) {
         //Instance new Issue
-        var newIssue = {};
-        newIssue.categoryID = req.body.category.categoryID;
-        newIssue.reason = req.body.reason.reasonName;
-        newIssue.description = req.body.description;
+        var newIssue = _.cloneDeep(req.body[0].issue);
+        newIssue.isresolved = false;
+        newIssue.createddate = new Date();
+        var orders = _.cloneDeep(req.body[0].orders);
+        var categoryissue = _.cloneDeep(req.body[0].categoryissue);
         db.issue.createNewIssue(newIssue)
             .then(function(issue) {
-                //Instance new list Order get an issued
-                var listOrders = [];
-                _.each(req.body.issuedOrder, function (order) {
-                    listOrders.push(order.val);
-                });
                 //Insert into orderissue
                 var newOrderIssue = {};
                 newOrderIssue.issueid = issue.issueid;
-                newOrderIssue.date = new Date();
-                _.each(listOrders, function(orderID) {
+                var isPending = true;
+                _.each(orders, function(orderID) {
                     newOrderIssue.orderid = orderID;
                     db.orderissue.createOrderIssue(newOrderIssue);
-                    //Change isPending
-                    db.order.changeIsPendingOrder(orderID);
-                })
-                res.sendStatus(200);
+                    if (_.parseInt(categoryissue) === 1) {
+                        //Change isPending
+                        db.order.changeIsPendingOrder(orderID, isPending);
+                    }
+                });
+                var group = [];
+                group.push({
+                    'issueid': issue.dataValues.issueid,
+                    'catissue': categoryissue
+                });
+                res.status(200).json(group);
             }, function (err) {
                 next(err);
             });
     };
+
+    var changeIsPending = function(req, res, next) {
+        var shipperid = 'huykool';
+        var issueId = req.body.issueId;
+        var task = db.task;
+        var order = db.order;
+        var orderissue = db.orderissue;
+        var issue = db.issue;
+        var issuetype = db.issuetype;
+        issue.hasMany(orderissue, {
+            foreignKey: 'issueid',
+            constraints: false
+        });
+        orderissue.belongsTo(order, {
+            foreignKey: 'orderid',
+            constraints: false
+        });
+        issue.belongsTo(issuetype, {
+            foreignKey: 'typeid',
+            constraints: false
+        });
+        task.belongsTo(order,{
+            foreignKey: 'orderid',
+            constraints: false
+        });
+        var resMess = [
+            {"id": 1, "content": "Your Issue is not resolved. Please waiting for Admin or contact to Admin."},
+            {"id": 2, "content": "Your all active task is Fail. Please confirm with Admin"},
+            {"id": 3, "content": "You can continue"}
+        ];
+        return issue.preChangeIsPending(task, order, issuetype, orderissue, shipperid, issueId)
+            .then(function(tasks){
+                var listOrders = [];
+                var listOrdersFail = [];
+                if(_.isEmpty(tasks) == false) {
+                    _.each(tasks, function(task){
+                        //Issue of current task not resolved -> Waiting for Admin
+                        if (task.isresolved == false) {
+                            //console.log(resMess[0]);
+                            res.status(200).json(resMess[0]);
+                        } else {
+                            _.each(task['orderissues'], function(item) {
+                                //If admin assign task for another shipper
+                                if (item.order['tasks'][0].statusid == 4) {
+                                    listOrdersFail.push(item.orderid);
+                                } else {
+                                    //status of task = 2
+                                    listOrders.push(item.orderid);
+                                }
+                            })
+                        }
+                    });
+                    //console.log('quyen1', listOrdersFail);
+                    if (listOrdersFail.length > 0) {
+                        _.each(listOrdersFail, function(orderID) {
+                            //Change isPending
+                            db.order.changeIsPendingOrder(orderID, false);
+                        });
+                        res.status(200).json(resMess[1]);
+                    }
+                    //console.log('quyen2', listOrders);
+                    if (listOrders.length > 0) {
+                        //change isPending of Order
+                        _.each(listOrders, function(orderID) {
+                            //Change isPending
+                            db.order.changeIsPendingOrder(orderID, false);
+                        });
+                        res.status(200).json(resMess[2]);
+                    }
+                }
+            }, function(err) {
+                next(err);
+            })
+    }
 
     var indexInStoreList = function(storeID, listStore){
         return -1;
@@ -354,6 +433,85 @@ module.exports = function (app) {
             })
     }
 
+    var getTaskBeIssuePending = function (req, res, next) {
+        var shipperid = 'huykool';
+        var task = db.task;
+        var order = db.order;
+        var orderissue = db.orderissue;
+        var issue = db.issue;
+        var issuetype = db.issuetype;
+        order.hasMany(orderissue, {
+           foreignKey: 'orderid',
+            constraints: false
+        });
+        task.belongsTo(order,{
+            foreignKey: 'orderid',
+            constraints: false
+        });
+        orderissue.belongsTo(issue, {
+            foreignKey: 'issueid',
+            constraints: false
+        });
+        issue.belongsTo(issuetype, {
+            foreignKey: 'typeid',
+            constraints: false
+        });
+
+        return order.getTaskBeIssuePending(task, issue, issuetype, orderissue, shipperid)
+            .then(function(tasks){
+                var group = {};
+                if(_.isEmpty(tasks) == false) {
+                    _.each(tasks, function(task){
+                        if(_.isEmpty(task['orderissues']) == false) {
+                            group[task['orderissues'][0].issueid] = group[task['orderissues'][0].issueid] || [];
+                            group[task['orderissues'][0].issueid].push({
+                                'orderid': task.orderid,
+                                'ispending': task.ispending,
+                                'isresolved': task['orderissues'][0].issue.isresolved,
+                                'taskid': task['tasks'][0].taskid
+                            });
+                        }
+                    });
+                }
+                res.status(200).json(group);
+            }, function(err) {
+                next(err);
+            })
+    }
+
+    var getAllTaskCancel = function(req, res, next) {
+        var shipperid = 'huykool';
+        var order = db.order;
+        var task = db.task;
+        var issue = db.issue;
+        var issuetype = db.issuetype;
+        var orderissue = db.orderissue;
+        order.hasMany(orderissue, {
+            foreignKey: 'orderid',
+            constraints: false
+        });
+        orderissue.belongsTo(issue, {
+            foreignKey: 'issueid',
+            constraints: false
+        });
+        issue.belongsTo(issuetype, {
+            foreignKey: 'typeid',
+            constraints: false
+        });
+        return order.getAllTaskCancel(task, issue, issuetype, orderissue, shipperid)
+            .then(function (tasks) {
+                var listTasks = [];
+                if(_.isEmpty(tasks) == false) {
+                    _.each(tasks, function(task){
+                        listTasks.push(task['tasks'][0].taskid);
+                    })
+                }
+                console.log('test', listTasks);
+                res.status(200).json(listTasks);
+            }, function (err) {
+                next(err);
+            })
+    }
 
 
     return {
@@ -365,12 +523,14 @@ module.exports = function (app) {
         nextStep: nextStep,
         nextStepCode: nextStepCode,
         createIssue: createIssue,
+        changeIsPending: changeIsPending,
         paramMapdata: paramMapdata,
         getMapData: getMapdata,
         getAllShipper: getAllShipper,
         getAllOrderToAssignTask: getAllOrderToAssignTask,
         getAllShipperWithTask: getAllShipperWithTask,
-
+        getTaskBeIssuePending: getTaskBeIssuePending,
+        getAllTaskCancel: getAllTaskCancel
     }
 
 }
