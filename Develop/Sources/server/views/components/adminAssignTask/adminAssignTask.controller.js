@@ -3,6 +3,7 @@
  */
 function adminAssignTaskController($scope,$state, $http, authService, config) {
 
+
     $scope.tasksList = [];
     $scope.orderList = [];
     $scope.taskList = [];
@@ -43,6 +44,9 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
     $scope.dateRange = null;
     $scope.dateNow = new Date();
     console.log(config.baseURI);
+
+
+    //console.log("URL:"+ config.baseURI + "/api/shipper/getAllShipperWithTask");
 
     $http.get(config.baseURI + "/api/shipper/getAllShipperWithTask").success(function(response){
         $scope.tasksList = response;

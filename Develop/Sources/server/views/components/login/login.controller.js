@@ -4,6 +4,7 @@
 
 function loginController($scope,$rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper){
 
+
     var showError = function(error){
         $scope.showUserError = true;
         $scope.errorMessage = error.message;
