@@ -135,7 +135,7 @@ angular.module('app', [
 
         if(authService.isRightRole(config.role.admin)){
             socketAdmin.registerSocket();
-            //$state.go("admin.dashboard");
+            $state.go("admin.dashboard");
         }
 
         if(authService.isRightRole(config.role.store)){
