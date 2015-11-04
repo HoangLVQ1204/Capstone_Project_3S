@@ -1,7 +1,7 @@
 /**
  * Created by Hoang on 10/18/2015.
  */
-function adminAssignTaskController($scope,$state, $http, $filter, config) {
+function adminAssignTaskController($scope,$state, $http, authService, config) {
 
     $scope.tasksList = [];
     $scope.orderList = [];
@@ -42,7 +42,7 @@ function adminAssignTaskController($scope,$state, $http, $filter, config) {
     $scope.selectedOrder =$scope.searchOrderOptions[0];
     $scope.dateRange = null;
     $scope.dateNow = new Date();
-
+    console.log(config.baseURI);
 
     $http.get(config.baseURI + "/api/shipper/getAllShipperWithTask").success(function(response){
         $scope.tasksList = response;
@@ -142,5 +142,5 @@ function adminAssignTaskController($scope,$state, $http, $filter, config) {
 
 }
 
-adminAssignTaskController.$inject = ['$scope','$state', '$http', '$filter', 'config'];
+adminAssignTaskController.$inject = ['$scope','$state', '$http', 'authService', 'config'];
 angular.module('app').controller('adminAssignTaskController',adminAssignTaskController);

@@ -2,7 +2,7 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminStoreListController($scope,$state, $http, $filter, config) {
+function adminStoreListController($scope,$state, $http, authService, config) {
 
     $scope.storeList = [];
     var smsData = {verticalEdge: 'right',
@@ -29,6 +29,7 @@ function adminStoreListController($scope,$state, $http, $filter, config) {
 
     $http.get(config.baseURI + "/api/store/getAllLedger").success(function(response){
         $scope.storeList = response;
+
         //console.log(1);
        //console.log(response);
     }).then(function () {
@@ -205,5 +206,5 @@ function adminStoreListController($scope,$state, $http, $filter, config) {
 
 }
 
-adminStoreListController.$inject = ['$scope','$state', '$http', '$filter','config'];
+adminStoreListController.$inject = ['$scope','$state', '$http', 'authService','config'];
 angular.module('app').controller('adminStoreListController',adminStoreListController);
