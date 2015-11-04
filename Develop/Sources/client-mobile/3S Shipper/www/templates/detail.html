@@ -87,6 +87,73 @@
     </script>
     </div>
   </ion-content>
+  <script id="confirm-modal.html" type="text/ng-template">
+    <ion-modal-view>
+      <ion-header-bar>
+        <h1 class="title">Confirm to next step</h1>
+      </ion-header-bar>
+      <ion-content>
+        <div class="list card">
+          <div>Do you want to {{action}}?</div>
+          <div class="button-bar">
+            <a class="button button-full button-positive" ng-click="nextStep(order.statusid)">Yes</a>
+            <a class="button button-full button-assertive" ng-click="closeModal()">No</a>
+          </div>
+        </div>
+      </ion-content>
+    </ion-modal-view>
+  </script>
+  <script id="confirm-code-modal.html" type="text/ng-template">
+    <ion-modal-view>
+      <ion-header-bar>
+        <h1 class="title">Enter code to next step</h1>
+      </ion-header-bar>
+      <ion-content>
+        <div>
+          <p>Please enter secret code to {{action}}!</p>
+          <label class="item item-input">
+            <span class="input-label">Code:</span>
+            <input type="text" ng-model="confirmcode"/>
+          </label>
+        </div>
+        <div class="button-bar">
+          <a class="button button-full button-positive" ng-click="nextStepConfirm(confirmcode)">Yes</a>
+          <a class="button button-full button-assertive" ng-click="closeModal()">No</a>
+        </div>
+      </ion-content>
+    </ion-modal-view>
+  </script>
+  <script id="status-popover.html" type="text/ng-template">
+    <ion-popover-view>
+      <ion-content>
+        {{currentStatus}}
+      </ion-content>
+    </ion-popover-view>
+  </script>
+  <!--<div id="map2">-->
+    <!--<ui-gmap-google-map center="center" zoom="12" control="" pan="true" dragging="true">-->
+
+      <!--<ui-gmap-markers models="shippers" coords="'self'" control="" icon="'icon'" idKey="'shipperID'"></ui-gmap-markers>-->
+
+      <!--<ui-gmap-markers models="stores" coords="'self'" control="" icon="'icon'" idKey="'storeID'"></ui-gmap-markers>-->
+
+      <!--<ui-gmap-markers models="customers" coords="'self'" control="" icon="'icon'" idKey="'customerID'"></ui-gmap-markers>-->
+
+    <!--</ui-gmap-google-map>-->
+  <!--</div>-->
+  <script id="loading.html" type="text/ng-template">
+    <div class="popup">
+      <div class="popup-head">
+        <h3 class="popup-title" style="font-size: 1.2em">Issue Cancel</h3>
+      </div>
+      <div class="popup-body">
+        <span>Your task is cancel. Waitting for Admin</span>
+      </div>
+      <div class="popup-buttons">
+        <a href="#/app/tasks" ng-click="hide()" class="button button-default btn-default-cus" >Back</a>
+      </div>
+    </div>
+  </script>
   <div class="fixed-button">
     <a type="button" href="#/app/bestway/pickup" class="btn-cus btn-primary-cus btn-circle-cus btn-xl-cus"><i class="ion-ios-paperplane" style="font-size: 26px"></i></a>
   </div>

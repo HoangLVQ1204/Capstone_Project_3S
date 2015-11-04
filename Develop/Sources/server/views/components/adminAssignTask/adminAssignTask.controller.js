@@ -1,7 +1,7 @@
 /**
  * Created by Hoang on 10/18/2015.
  */
-function adminAssignTaskController($scope,$state, $http, authService) {
+function adminAssignTaskController($scope,$state, $http, $filter, config) {
 
     $scope.tasksList = [];
     $scope.orderList = [];
@@ -44,22 +44,21 @@ function adminAssignTaskController($scope,$state, $http, authService) {
     $scope.dateNow = new Date();
 
 
-    $http.get("http://localhost:3000/api/shipper/getAllShipperWithTask").success(function(response){
+    $http.get(config.baseURI + "/api/shipper/getAllShipperWithTask").success(function(response){
         $scope.tasksList = response;
         $scope.displayedShipperCollection = [].concat($scope.tasksList);
         //console.log(1);
         //console.log(response);
     })
 
-    $http.get("http://localhost:3000/api/shipper/getAllOrderToAssignTask").success(function(response){
+    $http.get(config.baseURI + "/api/shipper/getAllOrderToAssignTask").success(function(response){
         $scope.orderList = response;
         $scope.displayedOrderCollection = [].concat($scope.orderList);
     })
 
 
     $scope.assignTask = function () {
-        $http.post("http://localhost:3000/api/shipper/updateTaskForShipper", $scope.tasksList).then(function success(response){
-
+        $http.post(config.baseURI + "/api/shipper/updateTaskForShipper", $scope.tasksList).then(function success(response){
             var data = new Object();
             data.verticalEdge='right';
             data.horizontalEdge='bottom';
@@ -143,5 +142,5 @@ function adminAssignTaskController($scope,$state, $http, authService) {
 
 }
 
-adminAssignTaskController.$inject = ['$scope','$state', '$http', 'authService'];
+adminAssignTaskController.$inject = ['$scope','$state', '$http', '$filter', 'config'];
 angular.module('app').controller('adminAssignTaskController',adminAssignTaskController);

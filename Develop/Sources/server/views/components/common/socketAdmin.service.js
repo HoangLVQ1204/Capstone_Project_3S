@@ -14,8 +14,10 @@ function socketAdmin(socketService,authService,mapService){
     */
 
     socketService.on('admin:register:location', function(data) {
-        console.log('register', data);
-        mapService.setMapData(data.msg.mapData);
+        mapService.setMapData(data.msg.mapData)
+        .then(function() {
+            console.log('register', data);
+        });
     });
 
     socketService.on('admin:add:shipper', function(data) {        
@@ -38,6 +40,20 @@ function socketAdmin(socketService,authService,mapService){
         console.log('admin:update:shipper', data);
         var shipper = data.msg.shipper;
         mapService.updateShipper(shipper);
+    });
+
+    socketService.on('admin:delete:shipper', function(data) {
+        console.log('admin:delete:shipper', data);
+        var shipper = data.msg.shipper;
+        mapService.deleteShipper(shipper.shipperID);
+    });
+
+    socketService.on('admin:update:order', function(data) {
+        console.log('admin:update:order', data);
+        var orders = data.msg.orders;
+        orders.forEach(function(e) {
+            mapService.updateOrder(e.orderID, e.orderInfo);
+        });
     });
     
     api.getCurrentUser = function() {

@@ -2,11 +2,11 @@
  * Created by hoanglvq on 9/22/15.
  */
 
-function adminController($scope,$state,$http,$q,$rootScope){
+function adminController($scope,$state,$http,$q,$rootScope,config){
     $scope.getUser = function(){
         console.log("get Users");
         return $http({
-            url: 'http://localhost:3000/users',
+            url: config.baseURI + '/users',
             method: 'GET'
         }).then(function(data){
             $scope.data  = data;
@@ -33,6 +33,6 @@ function adminController($scope,$state,$http,$q,$rootScope){
     });
 }
 
-adminController.$inject = ['$scope','$state','$http','$q','$rootScope'];
+adminController.$inject = ['$scope','$state','$http','$q','$rootScope','config'];
 angular.module('app').controller('adminController',adminController);
 

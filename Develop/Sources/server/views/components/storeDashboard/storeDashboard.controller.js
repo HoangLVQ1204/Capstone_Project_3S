@@ -2,7 +2,7 @@
  * Created by hoanglvq on 9/22/15.
  */
 
-function storeDashboardController($scope,$state,dataService, $http){
+function storeDashboardController($scope,$state,dataService, $http, config){
 
     //Option for drop down list
     $scope.searchOptionsInProcess = [
@@ -122,7 +122,7 @@ function storeDashboardController($scope,$state,dataService, $http){
     getDataFromServer();
 
     function getDataFromServer() {
-        var urlBase = 'http://localhost:3000/orders';
+        var urlBase = config.baseURI + '/orders';
         dataService.getDataServer(urlBase)
             .success(function (rs) {
                 $scope.orderToday = rs['Total'][2];
@@ -168,7 +168,7 @@ function storeDashboardController($scope,$state,dataService, $http){
     //cancel in process order
     $scope.cancerOrder = function(){
         if($scope.Order.statusname == 'Delivering' || $scope.Order.statusname == 'In stock' || $scope.Order.statusname == 'Bring to stock'){
-            var urlBase = 'http://localhost:3000/orders/cancel';
+            var urlBase = config.baseURI + '/orders/cancel';
             var cancelOrderId = $scope.Order.orderid;
             console.log(cancelOrderId);
             dataService.putDataServer(urlBase,cancelOrderId);
@@ -181,7 +181,7 @@ function storeDashboardController($scope,$state,dataService, $http){
 
     //delete Draff order
     $scope.deleteDraffOrder = function () {
-        var urlBase = 'http://localhost:3000/orders/'+ $scope.Order.orderid;
+        var urlBase = config.baseURI + '/orders/'+ $scope.Order.orderid;
         dataService.deleteDataServer(urlBase).then(function(ss){
             var index =  $scope.displayedCollectionDraff.indexOf( $scope.Order);
             if (index !== -1) {
@@ -197,7 +197,7 @@ function storeDashboardController($scope,$state,dataService, $http){
 
     //submit draff order
     $scope.submitDraff = function (order) {
-        var urlBase = 'http://localhost:3000/orders/putdraff';
+        var urlBase = config.baseURI + '/orders/putdraff';
         for(var i = 0; i < $scope.listDraff.length; i++){
             if ($scope.listDraff[i].orderid == order.orderid){
                 dataService.postDataServer(urlBase,$scope.listDraff[i]);
@@ -235,7 +235,7 @@ function storeDashboardController($scope,$state,dataService, $http){
 }
 
 
-storeDashboardController.$inject = ['$scope','$state','dataService','$http'];
+storeDashboardController.$inject = ['$scope','$state','dataService','$http','config'];
 
 angular.module('app').controller('storeDashboardController',storeDashboardController);
 

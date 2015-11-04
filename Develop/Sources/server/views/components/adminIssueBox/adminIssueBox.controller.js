@@ -2,10 +2,10 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminIssueBoxController($scope,$state, $http, $filter) {
+function adminIssueBoxController($scope,$state, $http, $filter, config) {
 
     $scope.issueList = [];
-    $http.get("http://localhost:3000/api/getAllIssue").success(function(response){
+    $http.get(config.baseURI + "/api/getAllIssue").success(function(response){
         $scope.issueList = response;
         //$scope.displayedOrderCollection = [].concat($scope.orderList);
         console.log($scope.issueList)
@@ -27,5 +27,5 @@ function adminIssueBoxController($scope,$state, $http, $filter) {
 
 }
 
-adminIssueBoxController.$inject = ['$scope','$state', '$http', '$filter'];
+adminIssueBoxController.$inject = ['$scope','$state', '$http', '$filter','config'];
 angular.module('app').controller('adminIssueBoxController',adminIssueBoxController);

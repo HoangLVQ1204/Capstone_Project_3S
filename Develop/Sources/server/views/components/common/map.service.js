@@ -186,8 +186,12 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     };
 
     api.updateOrderOfShipper = function(shipperID, orderID) {
-        var shipper = api.getOneShipper(shipperID);
-        shipper.order.push(orderID);
+        for (var i = 0; i < shipperMarkers.length; ++i) {
+            if (shipperMarkers[i].shipperID === shipperID) {
+                shipperMarkers[i].order.push(orderID);
+                return;
+            }            
+        }
     };
 
     api.getOneShipper = function(shipperID) {
@@ -195,12 +199,25 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         return _.clone(_.find(shipperMarkers, function(shipper) {
             return shipper.shipperID == shipperID;
         }), true);
-    }
+    };
 
-    api.updateShipper = function(data) {
-        var shipper = this.getOneShipper(data.shipperID);
-        shipper = _.merge(shipper, data);
-    }
+    api.updateShipper = function(newShipper) {
+        for (var i = 0; i < shipperMarkers.length; ++i) {
+            if (shipperMarkers[i].shipperID === newShipper.shipperID) {
+                shipperMarkers[i] = _.merge(shipperMarkers[i], newShipper);
+                return;
+            }            
+        }
+    };
+
+    api.deleteShipper = function(shipperID) {
+        for (var i = shipperMarkers.length - 1; i >= 0; --i) {
+            if (shipperMarkers[i].shipperID === shipperID) {
+                shipperMarkers.splice(i, 1);
+                return;
+            }
+        }
+    };
 
 
 
@@ -238,8 +255,12 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     };
 
     api.updateOrderOfStore = function(storeID, orderID) {
-        var store = api.getOneStore(storeID);
-        store.order.push(orderID);
+        for (var i = 0; i < storeMarkers.length; ++i) {
+            if (storeMarkers[i].storeID === storeID) {
+                storeMarkers[i].order.push(orderID);
+                return;
+            }            
+        }
     };
 
     api.getOneStore = function(storeID) {        
@@ -249,31 +270,43 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     };    
 
     api.setMapData = function(mapData) {
-        shipperMarkers = _.clone(mapData.shipper, true);
+        shipperMarkers.splice(0, shipperMarkers.length);
+        mapData.shipper.forEach(function(e) {
+            shipperMarkers.push(_.clone(e, true));
+        });        
         shipperMarkers.forEach(function(shipperMarker) {
             initShipper(shipperMarker, api);
+        });        
+
+        storeMarkers.splice(0, storeMarkers.length);
+        mapData.store.forEach(function(e) {
+            storeMarkers.push(_.clone(e, true));
+        });        
+        var storePromises = storeMarkers.map(function(storeMarker) {
+            return initStore(storeMarker, api);
         });
 
-        storeMarkers = _.clone(mapData.store, true);
-        storeMarkers.forEach(function(storeMarker) {
-            initStore(storeMarker, api)
-            .then(function() {
+        var customerPromises = Promise.all(storePromises)
+        .then(function() {            
+            for (var e in orders) delete orders[e];
+            for (var e in mapData.orders) orders[e] = _.clone(mapData.orders[e], true);            
+
+            customerMarkers.splice(0, customerMarkers.length);
+            mapData.customer.forEach(function(e) {
+                customerMarkers.push(_.clone(e, true));
+            });            
+            return customerMarkers.map(function(customerMarker) {
+                return initCustomer(customerMarker, orders, api)                
             });
-        });
+        });        
 
-        orders = _.clone(mapData.orders, true);
-
-        customerMarkers = _.clone(customerMarkers, true);
-        customerMarkers.forEach(function(customerMarker) {
-            initCustomer(customerMarker)
-            .then(function() {              
-            });
-        });
-
-        console.log('SET shipper', shipperMarkers);
-        console.log('SET store', storeMarkers);
-        console.log('SET orders', orders);
-        console.log('SET customer', customerMarkers);
+        return Promise.all(customerMarkers)
+        .then(function() {
+            console.log('SET shipper', shipperMarkers);
+            console.log('SET store', storeMarkers);
+            console.log('SET orders', orders);
+            console.log('SET customer', customerMarkers);
+        });        
     };
 
 
@@ -311,7 +344,9 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     api.addOrder = function(orderID, store, shipper, customer) {
         orders[orderID] = {
             shipperID: shipper.shipperID,
-            storeID: store.storeID            
+            storeID: store.storeID,
+            status: 'Picking up',
+            isPending: false
         };
         return api.addStore(store)
         .then(function() {
@@ -322,6 +357,10 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
             api.updateOrderOfStore(store.storeID, orderID);
         });
     };   
+
+    api.updateOrder = function(orderID, newOrder) {        
+        orders[orderID] = _.merge(orders[orderID], newOrder);
+    };
 
 
     return api;
@@ -392,19 +431,30 @@ var sampleData = {
         "orders": {            
             "order1": {
                 "shipperID": "shipper_1",
-                "storeID": "store_1",                
+                "storeID": "store_1"
+                /*
+                "status": ["Waiting"
+                    "Picking up"
+                    "Bring to stock"
+                    "In stock"
+                    "Delivering"
+                    "Done"
+                    "Canceling"
+                    "Cancel"],
+                "isPending": false
+                */
             },
             "order2": {
                 "shipperID": "shipper_2",
-                "storeID": "store_1",                
+                "storeID": "store_1"
             },
             "order3": {
                 "shipperID": "shipper_2",
-                "storeID": "store_2",                
+                "storeID": "store_2"
             },
             "order4": {
                 "shipperID": "shipper_3",
-                "storeID": "store_2",                
+                "storeID": "store_2"
             }
         }                
     },

@@ -55,6 +55,11 @@ module.exports = function(socket, io) {
         io.forward(data.sender, data.receiver, data.msg, 'shipper:add:order');
         io.forward(data.sender, 'admin', data.msg, 'admin:add:order');
 
-        io.addToRoom(socket, msg.shipper.shipperID);        
+        io.addToRoom(socket, msg.shipper.shipperID);    
+
+        console.log('total data:shippers', io.shippers);    
+        console.log('total data:stores', io.stores);    
+        console.log('total data:customers', io.customers);    
+        console.log('total data:orders', io.orders);            
     });
 }
