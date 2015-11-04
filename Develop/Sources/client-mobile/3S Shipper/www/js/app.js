@@ -164,6 +164,16 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
           }
         }
       })
+
+      .state('app.grabs', {
+        url: '/grabs',
+        views: {
+          'menuContent': {
+            templateUrl: 'templates/grabs.html',
+            controller: 'GrabCtrl'
+          }
+        }
+      })
     ;
 
     //Send token for each request
