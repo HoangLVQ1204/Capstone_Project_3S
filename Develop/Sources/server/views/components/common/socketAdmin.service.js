@@ -14,8 +14,10 @@ function socketAdmin(socketService,authService,mapService){
     */
 
     socketService.on('admin:register:location', function(data) {
-        console.log('register', data);
-        mapService.setMapData(data.msg.mapData);
+        mapService.setMapData(data.msg.mapData)
+        .then(function() {
+            console.log('register', data);
+        });
     });
 
     socketService.on('admin:add:shipper', function(data) {        

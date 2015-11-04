@@ -7,7 +7,8 @@ var Q = require('q');
 var GoogleMapsAPI = require('googlemaps');
 
 var config = {
-	key: 'AIzaSyALajTCGOGkS_TZBAXyUkjtWdSk5t4TIyY',	// Server key
+	// key: 'AIzaSyALajTCGOGkS_TZBAXyUkjtWdSk5t4TIyY',	// Server key
+	key: 'AIzaSyBeZoB6x9vE6s3okxnACQ2H_cprqfiI6aE',
 	secure: true
 };
 
@@ -34,18 +35,22 @@ api.getDistanceFromOneToMany = function(origin, destinations) {
 	};
 
 	var d = Q.defer();
-	gmAPI.distance(request, function(err, response) {		
-		if (response.status === 'OK') {
-			// console.log('response', response.rows[0].elements);
-			var results = response.rows[0].elements.map(function(element, index) {
-	            return {
-	                distance: element.distance,
-	                id: index
-	            };
-	        });                    
-            d.resolve(results);
-		} else {			
-			d.reject(response.status + ': ' + response.error_message);
+	gmAPI.distance(request, function(err, response) {	
+		if (err) {
+			d.reject(err);			
+		} else {
+			if (response.status === 'OK') {
+				// console.log('response', response.rows[0].elements);
+				var results = response.rows[0].elements.map(function(element, index) {
+		            return {
+		                distance: element.distance,
+		                id: index
+		            };
+		        });                    
+	            d.resolve(results);
+			} else {			
+				d.reject(response.status + ': ' + response.error_message);
+			}
 		}
 	});
 	return d.promise;

@@ -119,6 +119,8 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
     $scope.customerMarkers = $scope.customerMarkers || [];
     $scope.orders = $scope.orders || {};                
 
+    console.log($scope.shipperMarkers == mapService.getShipperMarkers());
+
     $scope.circleRadius = $scope.circleRadius || 1000000000;
 
     var initCenter = {
@@ -218,7 +220,9 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
         // Events for markers        
         $scope.shipperEvents = {
             mouseover: function(gMarker, eventName, model, mouseEvent) {                                 
-                console.log('mouseover', model.order);
+                console.log('mouseover', model.order);                
+                console.log('mouseover storeMarkers', $scope.storeMarkers);
+                console.log('mouseover customerMarkers', $scope.customerMarkers);
                 var content = '<div>' + 
                         '<h5>' + model.shipperID + '</h5>' +
                         '<ul>';

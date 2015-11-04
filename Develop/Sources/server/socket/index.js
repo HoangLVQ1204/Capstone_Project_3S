@@ -54,7 +54,8 @@ module.exports = function(server){
             socketID,
             latitude,
             longitude,
-            status   
+            status,
+            isConnected
         }
     */ 
     io.shippers = {};
@@ -196,6 +197,10 @@ module.exports = function(server){
     io.getDataForShipper = function(shipperID) {
         // Returns data for map of shipperID
         // Based on io.stores, io.shippers, io.customers, io.orders
+        console.log('total data:shippers', io.shippers);    
+        console.log('total data:stores', io.stores);    
+        console.log('total data:customers', io.customers);    
+        console.log('total data:orders', io.orders);    
 
         var result = {};
         result.shipper = [];
@@ -239,6 +244,7 @@ module.exports = function(server){
             result.customer.push(customer);
         }
 
+        console.log('check result', result);
         return result;
     };
 
@@ -315,7 +321,7 @@ module.exports = function(server){
 
     io.addShipper = function(shipper, socket) {
         io.shippers[shipper.shipperID] = {
-            order: [],
+            order: io.getOrderIDsOfShipper(shipper.shipperID),
             latitude: shipper.latitude,
             longitude: shipper.longitude,
             socketID: socket.id,
@@ -384,13 +390,20 @@ module.exports = function(server){
         });
     };
 
+    io.getOrderIDsOfShipper = function(shipperID) {
+        var orderIDs = Object.keys(io.orders);
+        return _.clone(orderIDs.filter(function(e) {
+            return io.orders[e].shipperID === shipperID;
+        }), true);        
+    };
+
     io.updateOrder = function(orderID, newOrder) {
         io.orders[orderID] = _.merge(io.orders[orderID], newOrder);
     };
 
     io.addCustomer = function(customer) {
         io.customers.push({
-            order: customer.order,
+            order: _.clone(customer.order),
             geoText: customer.geoText
         });
     };

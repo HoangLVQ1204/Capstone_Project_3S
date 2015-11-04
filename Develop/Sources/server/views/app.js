@@ -97,14 +97,14 @@ angular.module('app', [
 
         .state('store.dashboard',{
             url: '/dashboard',
-            template: '<layout></layout>',
-            controller: function($scope, $rootScope, mapService){
-                var mode = "all";
-                $scope.shippers = mapService.getShipperMarkers(mode);
-                $scope.stores = mapService.getStoreMarkers(mode);
-                $scope.customers = mapService.getCustomerMarkers(mode);
-                $scope.orders = mapService.getOrders(mode);
-            }
+            template: '<layout></layout>'
+            // controller: function($scope, $rootScope, mapService){
+            //     var mode = "all";
+            //     $scope.shippers = mapService.getShipperMarkers(mode);
+            //     $scope.stores = mapService.getStoreMarkers(mode);
+            //     $scope.customers = mapService.getCustomerMarkers(mode);
+            //     $scope.orders = mapService.getOrders(mode);
+            // }
         })
 
         .state('store.order',{
@@ -120,7 +120,7 @@ angular.module('app', [
     $httpProvider.interceptors.push('jwtInterceptor');
 
     uiGmapGoogleMapApiProvider.configure({
-        key: 'AIzaSyAFwZM1zlceJr8rMvXxHwS06S3ljhXnlDI',
+        key: 'AIzaSyD6DZIeop4shXgZWtMaTYbBoeC8CdbbRPw',
         v  : '3.20',
         libraries: 'geometry,visualization,drawing,places'
     })

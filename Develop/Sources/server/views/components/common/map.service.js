@@ -270,31 +270,43 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     };    
 
     api.setMapData = function(mapData) {
-        shipperMarkers = _.clone(mapData.shipper, true);
+        shipperMarkers.splice(0, shipperMarkers.length);
+        mapData.shipper.forEach(function(e) {
+            shipperMarkers.push(_.clone(e, true));
+        });        
         shipperMarkers.forEach(function(shipperMarker) {
             initShipper(shipperMarker, api);
+        });        
+
+        storeMarkers.splice(0, storeMarkers.length);
+        mapData.store.forEach(function(e) {
+            storeMarkers.push(_.clone(e, true));
+        });        
+        var storePromises = storeMarkers.map(function(storeMarker) {
+            return initStore(storeMarker, api);
         });
 
-        storeMarkers = _.clone(mapData.store, true);
-        storeMarkers.forEach(function(storeMarker) {
-            initStore(storeMarker, api)
-            .then(function() {
+        var customerPromises = Promise.all(storePromises)
+        .then(function() {            
+            for (var e in orders) delete orders[e];
+            for (var e in mapData.orders) orders[e] = _.clone(mapData.orders[e], true);            
+
+            customerMarkers.splice(0, customerMarkers.length);
+            mapData.customer.forEach(function(e) {
+                customerMarkers.push(_.clone(e, true));
+            });            
+            return customerMarkers.map(function(customerMarker) {
+                return initCustomer(customerMarker, orders, api)                
             });
-        });
+        });        
 
-        orders = _.clone(mapData.orders, true);
-
-        customerMarkers = _.clone(mapData.customer, true);
-        customerMarkers.forEach(function(customerMarker) {
-            initCustomer(customerMarker, orders, api)
-            .then(function() {              
-            });
-        });
-
-        console.log('SET shipper', shipperMarkers);
-        console.log('SET store', storeMarkers);
-        console.log('SET orders', orders);
-        console.log('SET customer', customerMarkers);
+        return Promise.all(customerMarkers)
+        .then(function() {
+            console.log('SET shipper', shipperMarkers);
+            console.log('SET store', storeMarkers);
+            console.log('SET orders', orders);
+            console.log('SET customer', customerMarkers);
+        });        
     };
 
 
@@ -333,7 +345,7 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         orders[orderID] = {
             shipperID: shipper.shipperID,
             storeID: store.storeID,
-            status: 'Waiting',
+            status: 'Picking up',
             isPending: false
         };
         return api.addStore(store)
