@@ -3,7 +3,7 @@
  */
 
 function storeOrderController($scope, $state, dataService) {
-
+    GetStoreName();
     $scope.order={
         codeVsShipper: GenerateRandomCode(6),
         codeVsCustomer: GenerateRandomCode(6),
@@ -127,9 +127,10 @@ function storeOrderController($scope, $state, dataService) {
     $scope.postDraff = function(){
         var urlBase = 'http://localhost:3000/orders';
         var data = {
-        //    order: $scope.order,
-        //    good : $scope.goods,
-        }
+            order: $scope.order,
+            good : $scope.goods
+        };
+        console.log(data);
         dataService.postDataServer(urlBase,data);
     };
 
@@ -141,8 +142,20 @@ function storeOrderController($scope, $state, dataService) {
         return code;
     }
 
-}
+    function GetStoreName(){
+        var urlBase = 'http://localhost:3000/api/getAllStoreName';
+        dataService.getDataServer(urlBase)
+            .success(function (rs) {
+                console.log(rs);
+            })
+            .error(function (error) {
+                console.log('Unable to load store name: ' + error);
+            });
+    }
 
+
+
+}
 
 storeOrderController.$inject = ['$scope', '$state', 'dataService'];
 angular.module('app').controller('storeOrderController', storeOrderController);
