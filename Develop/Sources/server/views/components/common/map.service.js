@@ -371,9 +371,6 @@ mapService.$inject = ['$q','$http','uiGmapGoogleMapApi','uiGmapIsReady'];
 angular.module('app').factory('mapService', mapService);
 
 
-
-
-
 // Sample Data from dataTest.json
 var sampleData = {
     "all": {
