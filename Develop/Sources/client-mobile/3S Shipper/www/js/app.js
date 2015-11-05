@@ -28,13 +28,13 @@ var app = angular.module('starter', ['ionic', 'ngCordova','uiGmapgoogle-maps','a
     });
 
     ////Check Is firt time sign in
-    //if (authService.isLogged === true) {
-    //  $location.path('/app/tasks');
-    //  $rootScope.$apply();
-    //} else {
-    //  $location.path('/sign-in');
-    //  $rootScope.$apply();
-    //}
+    if (authService.isLogged === true) {
+      $location.path('/app/tasks');
+      $rootScope.$apply();
+    } else {
+      $location.path('/sign-in');
+      $rootScope.$apply();
+    }
 
   }]);
 
