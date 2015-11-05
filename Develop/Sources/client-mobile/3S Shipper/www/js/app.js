@@ -17,17 +17,24 @@ var app = angular.module('starter', ['ionic', 'ngCordova','uiGmapgoogle-maps','a
       if (window.StatusBar) {
         // org.apache.cordova.statusbar required
         StatusBar.styleDefault();
+      }if (window.cordova && window.cordova.plugins.Keyboard) {
+        cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+        cordova.plugins.Keyboard.disableScroll(true);
+      }
+      if (window.StatusBar) {
+        // org.apache.cordova.statusbar required
+        StatusBar.styleDefault();
       }
     });
 
-    //Check Is firt time sign in
-    if (authService.isLogged === true) {
-      $location.path('/app/tasks');
-      $rootScope.$apply();
-    } else {
-      $location.path('/sign-in');
-      $rootScope.$apply();
-    }
+    ////Check Is firt time sign in
+    //if (authService.isLogged === true) {
+    //  $location.path('/app/tasks');
+    //  $rootScope.$apply();
+    //} else {
+    //  $location.path('/sign-in');
+    //  $rootScope.$apply();
+    //}
 
   }]);
 
@@ -50,6 +57,7 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
 
       .state('sign-in',{
         url: '/sign-in',
+        cache: false,
         templateUrl: 'templates/sign-in.html',
         controller: 'SignInCtrl'
       })

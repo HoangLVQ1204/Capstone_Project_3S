@@ -1,10 +1,23 @@
+<style type="text/css">
+  .alert {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+  }
+  .alert-danger {
+    padding: 16px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+  }
+  .alert > i {
+    font-size: 15px; !important;
+  }
+</style>
 <ion-view ng-controller="SignInCtrl" style="margin-top:100px">
-  <!--<ion-header-bar class="padding">-->
-  <!--<h1 class="title">3S Shipper</h1>-->
-  <!--</ion-header-bar>-->
   <ion-content>
     <div >
-      <h1 class="title" style="text-align: center">3S Shipper</h1>
+      <h1 class="title" style="text-align: center">Karry Well</h1>
     </div>
     <form id="SignInFrm" ng-submit="submitFrm()">
       <div class="list">
@@ -21,6 +34,6 @@
         </label>
       </div>
     </form>
-
+    <div ng-if="showUserError" class="alert alert-danger"><i class="ion-android-alert">&nbsp;&nbsp;{{errorMessage}}</i></div>
   </ion-content>
 </ion-view>
