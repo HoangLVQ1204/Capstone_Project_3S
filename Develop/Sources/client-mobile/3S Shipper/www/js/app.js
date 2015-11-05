@@ -25,8 +25,9 @@ var app = angular.module('starter', ['ionic', 'ngCordova','uiGmapgoogle-maps','a
         // org.apache.cordova.statusbar required
         StatusBar.styleDefault();
       }
-
     });
+
+    ////Check Is firt time sign in
     if (authService.isLogged()) {
       $location.path('/app/tasks');
       $rootScope.$apply();

@@ -2,6 +2,9 @@
  * Created by Kaka Hoang Huy on 10/27/2015.
  */
 
+// /*
+//     Helper functions
+// */
 function initShipperMarker($scope, geocoder, maps, shipperMarker) {
   shipperMarker.icon = $scope.shipperIcon;
 }
@@ -45,8 +48,9 @@ function initCustomerMarker($scope, geocoder, maps, customerMarker) {
 }
 
 var arrows = [];
+
 function drawArrow(fromMarker, toMarker, symbol, color, maps, myMap) {
-  console.log(fromMarker, toMarker);
+  //console.log(fromMarker, toMarker);
   arrows.push(new maps.Polyline({
     path: [fromMarker, toMarker],
     strokeColor: color,
@@ -57,10 +61,11 @@ function drawArrow(fromMarker, toMarker, symbol, color, maps, myMap) {
     map: myMap
   }));
 }
+
 function resetArrows() {
   arrows.forEach(function(arrow) {
     arrow.setMap(null);
-  });
+  })
   arrows = [];
 }
 
@@ -97,23 +102,27 @@ function displayRelationship(model, object_1, object_2, $scope) {
       lng: model.longitude
     };
     //console.log(store, customer);
-    $scope.drawTwoArrows(start, dest_1, dest_2);
+    if (dest_1 && dest_2)
+      $scope.drawTwoArrows(start, dest_1, dest_2);
   });
 }
 
 // RUN ORDER: controller => link function
-function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady){
-  console.log("directive map load");
+function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
+
   $scope.shipperMarkers = $scope.shipperMarkers || [];
   $scope.storeMarkers = $scope.storeMarkers || [];
   $scope.customerMarkers = $scope.customerMarkers || [];
   $scope.orders = $scope.orders || {};
+
+  console.log($scope.shipperMarkers == mapService.getShipperMarkers());
+
   $scope.circleRadius = $scope.circleRadius || 1000000000;
-  console.log($scope.orders);
+
   var initCenter = {
-    latitude: 21.029544,
-    longitude: 105.827340
-  };
+    latitude: 21.013419,
+    longitude: 105.526180
+  }
 
   $scope.center = $scope.center || initCenter;
 
@@ -175,7 +184,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady){
       zoom: 16,
       control: {},
       dragging: true
-    };
+    }
 
     /*
      Khởi tạo current Location
@@ -187,7 +196,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady){
         visible: false,
         icon : $scope.sourceIcon
       }
-    };
+    }
 
 
     // Initilize some attribute for markers
@@ -207,6 +216,9 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady){
     // Events for markers
     $scope.shipperEvents = {
       mouseover: function(gMarker, eventName, model, mouseEvent) {
+        console.log('mouseover', model.order);
+        console.log('mouseover storeMarkers', $scope.storeMarkers);
+        console.log('mouseover customerMarkers', $scope.customerMarkers);
         var content = '<div>' +
           '<h5>' + model.shipperID + '</h5>' +
           '<ul>';
@@ -230,6 +242,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady){
     };
     $scope.storeEvents = {
       mouseover: function(gMarker, eventName, model, mouseEvent) {
+        console.log('mouseover', model.order);
         var content = '<div>' +
           '<strong>' + model.geoText + '</strong>' +
           '<ul>';
@@ -273,61 +286,40 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady){
       }
     };
 
-
-    //$scope.markersClone = _.cloneDeep($scope.markers);
-    //$scope.fromMarker   = "";
-    //$scope.toMarker     = "";
-    //
-    //$scope.removeMarker = function(index, marker){
-    //    $scope.markersClone.splice(index,1);
-    //}
-
-
     // Test real-time
 
-    //setTimeout(function() {
-    //  console.log('time out');
-    //  var newOrder = "order2";
-    //  var shipperID = "shipper_2";
-    //  var storeID = "store_3";
-    //  var newStore = {
-    //    "order": [newOrder],
-    //    "latitude": 21.031526,
-    //    "longitude": 105.813359,
-    //    "storeID": storeID
-    //  };
-    //  var geoText = "306 Kim Mã,Ba Đình,Hà Nội,Việt Nam";
-    //  var newCustomer = {
-    //    "order": [newOrder],
-    //    "geoText": geoText
-    //  };
-    //  initStoreMarker($scope, geocoder, maps, newStore);
-    //  $scope.orders[newOrder] = {
-    //    "shipperID": shipperID,
-    //    "storeID": storeID
-    //  };
-    //  initCustomerMarker($scope, geocoder, maps, newCustomer);
-    //
-    //  // Add all new information
-    //  $scope.shipperMarkers[0].order.push(newOrder);
-    //  $scope.storeMarkers.push(newStore);
-    //  $scope.customerMarkers.push(newCustomer);
-    //  $scope.$apply();
-    //}, 5000);
-
-    //var t = 0;
-    //setInterval(function(){
-    //  console.log(t++);
-    //    $scope.shipperMarkers[0].latitude = $scope.shipperMarkers[0].latitude - 0.00001*t;
-    //    $scope.shipperMarkers[0].longitude = $scope.shipperMarkers[0].longitude - 0.00001*t;
-    //},2000);
-
-
+    // setTimeout(function() {
+    //     console.log('time out');
+    //     var newOrder = "order1";
+    //     var shipperID = "shipper_1";
+    //     var storeID = "store_3";
+    //     var newStore = {
+    //         "order": [newOrder],
+    //         "latitude": 21.031526,
+    //         "longitude": 105.813359,
+    //         "storeID": storeID
+    //     };
+    //     var geoText = "306 Kim Mã,Ba Đình,Hà Nội,Việt Nam";
+    //     var newCustomer = {
+    //         "order": [newOrder],
+    //         "geoText": geoText
+    //     };
+    //     initStoreMarker($scope, geocoder, maps, newStore);
+    //     $scope.orders[newOrder] = {
+    //         "shipperID": shipperID,
+    //         "storeID": storeID
+    //     };
+    //     initCustomerMarker($scope, geocoder, maps, newCustomer);
+    //     // Add all new information
+    //     $scope.shipperMarkers[0].order.push(newOrder);
+    //     $scope.storeMarkers.push(newStore);
+    //     $scope.customerMarkers.push(newCustomer);
+    //     $scope.$apply();
+    // }, 5000);
 
     // Filling control for all angular-google-map directives
     uiGmapIsReady.promise().then(function(instances) {
       var myMap = instances[0].map;
-
 
       $scope.openInfo = function(gMarker, content) {
         infoWindow.setContent(content);
@@ -335,7 +327,6 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady){
       };
 
       $scope.drawTwoArrows = function(start, dest_1, dest_2) {
-        console.log('draw 22222');
         var end = {
           lat: dest_1.latitude,
           lng: dest_1.longitude
@@ -357,5 +348,5 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady){
   //});
 }
 
-mapController.$inject = ['$scope','uiGmapGoogleMapApi','uiGmapIsReady'];
+mapController.$inject = ['$scope','uiGmapGoogleMapApi','uiGmapIsReady','mapService'];
 app.controller('mapCtrl',mapController);
