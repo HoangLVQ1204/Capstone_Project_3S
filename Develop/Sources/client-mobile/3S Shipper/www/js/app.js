@@ -28,7 +28,7 @@ var app = angular.module('starter', ['ionic', 'ngCordova','uiGmapgoogle-maps','a
     });
 
     ////Check Is firt time sign in
-    if (authService.isLogged === true) {
+    if (authService.isLogged()) {
       $location.path('/app/tasks');
       $rootScope.$apply();
     } else {

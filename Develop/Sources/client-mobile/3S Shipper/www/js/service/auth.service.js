@@ -20,9 +20,10 @@ app.factory('authService',function($http,$q,jwtHelper){
     }
 
     var isLogged = function(){
-      if(window.localStorage.getItem(tag) || window.localStorage.getItem(tag) !== "undefined"){
+      var localEHID = window.localStorage.getItem(tag);
+      if (window.localStorage.getItem(tag) != null){
         return true;
-      }else{
+      } else {
         return false;
       }
     }
