@@ -53,7 +53,7 @@
             </div>
           </label>
         </ion-item>
-        <ion-item menu-close ng-controller="SignInCtrl" ng-click="logOut()">
+        <ion-item menu-close ng-controller="SignInCtrl" ng-click="logOut()" ui-sref-opts="{reload: true}">
           <i class="ion-log-out"></i>
           Logout{{statuss}}
         </ion-item>

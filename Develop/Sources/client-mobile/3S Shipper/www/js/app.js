@@ -50,6 +50,7 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
 
       .state('sign-in',{
         url: '/sign-in',
+        cache: false,
         templateUrl: 'templates/sign-in.html',
         controller: 'SignInCtrl'
       })
