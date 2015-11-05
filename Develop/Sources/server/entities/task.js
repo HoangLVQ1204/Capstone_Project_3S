@@ -64,16 +64,15 @@ module.exports = function (sequelize, DataTypes) {
                     attributes: [['taskid', 'id'],['taskdate','date']],
                     where: {
                         shipperid: shipperid,
-                        //taskdate: taskdate
+                        statusid: {
+                            $in: [3,4]
+                        }
                     },
                     include: [
                         {
                             model: modelOrder,
                             //limit: 1,
                             attributes: [['orderid', 'code'], 'statusid', 'fee', 'cod'],
-                            where:{
-                                //statusid: '1 or 2'
-                            },
                             include: {
                                 model: modelOrderStatus,
                                 attributes: [['statusname', 'statusid']]
