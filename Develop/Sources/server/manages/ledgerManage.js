@@ -16,7 +16,25 @@ module.exports = function (app) {
             })
     };
 
+    var getLedgerOfStore = function (req, res, next) {
+        var storeid = req.params.storeid;
+        var perioddate = req.params.perioddate;
+
+        if (req.params.perioddate != 'null')
+            perioddate = new Date(perioddate);
+
+        //var enddate = new Date(req.params.enddate);
+        //console.log(perioddate)
+        return db.generalledger.getLedgerOfStore(db.store, storeid, perioddate)
+            .then(function (ledgerList) {
+                res.status(200).json(ledgerList);
+            }, function (err) {
+                next(err);
+            })
+    };
+
     return {
-        getAllLedger: getAllLedger
+        getAllLedger: getAllLedger,
+        getLedgerOfStore: getLedgerOfStore
     }
 }

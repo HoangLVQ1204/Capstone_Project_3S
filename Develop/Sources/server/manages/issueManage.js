@@ -16,8 +16,19 @@ module.exports = function (app) {
 
     var getIssueDetail = function (req, res, next) {
         var id = req.query.issueid;
-        console.log(id);
+       // console.log(id);
         return db.issue.getIssueDetail(db.orderissue, db.issuetype, db.issuecategory, id, db.order, db.task, db.orderstatus, db.taskstatus)
+            .then(function (issue) {
+                res.status(200).json(issue);
+            }, function (err) {
+                next(err);
+            })
+    };
+
+    var updateResolveIssue = function (req, res, next) {
+        var id = req.query.issueid;
+       // console.log(id);
+        return db.issue.updateResolveIssue(id)
             .then(function (issue) {
                 res.status(200).json(issue);
             }, function (err) {
@@ -28,6 +39,7 @@ module.exports = function (app) {
 
     return {
         getAllIssue: getAllIssue,
-        getIssueDetail: getIssueDetail
+        getIssueDetail: getIssueDetail,
+        updateResolveIssue: updateResolveIssue
     }
 }

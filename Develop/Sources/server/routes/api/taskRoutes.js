@@ -16,6 +16,9 @@ module.exports = function (app) {
     app.route('/api/updateAllTaskState')
         .put(controller.updateTaskState);
 
+    app.route('/api/updateTaskNoShipper')
+        .put(controller.updateTaskNoShipper);
+
 
 
 }

@@ -34,15 +34,15 @@
 
                                         <div id='aaa' class="col-sm-4 form-group pull-left">
                                             <div class="input-group input-icon">
-                                                <i class="fa fa-calendar ico"></i>
-                                                <input type="text"  class="form-control" daterange id="daterange" name="daterange" ng-model="dateRange"/>
-                                                <span class="input-group-btn">
-                                                    <div class="btn-group">
-                                                        <button type="button" class="btn btn-default">
-                                                            <i class="fa fa-times" ng-click="dateRange=''"></i>
-                                                        </button>
-                                                    </div><!-- //btn-group-->
-                                                </span>
+                                                <!--<i class="fa fa-calendar ico"></i>-->
+                                                <!--<input type="text"  class="form-control" daterange id="daterange" name="daterange" ng-model="dateRange"/>-->
+                                                <!--<span class="input-group-btn">-->
+                                                    <!--<div class="btn-group">-->
+                                                        <!--<button type="button" class="btn btn-default">-->
+                                                            <!--<i class="fa fa-times" ng-click="dateRange=''"></i>-->
+                                                        <!--</button>-->
+                                                    <!--</div>&lt;!&ndash; //btn-group&ndash;&gt;-->
+                                                <!--</span>-->
                                             </div>
                                         </div><!-- //form-group-->
                                         <div class="col-sm-4 pull-right">
@@ -67,14 +67,15 @@
                                         </div>
 
                                     </div>
+                                    <br>
                                     <thead>
                                     <tr>
-                                        <th st-sort="storeid" st-skip-natural="true" class="text-center sortable">StoreID</th>
-                                        <th st-sort="name" st-skip-natural="true" class="text-center sortable">Store's name</th>
-                                        <th st-sort="address" st-skip-natural="true" class="text-center sortable">Address</th>
-                                        <th st-sort="payment" st-skip-natural="true" class="text-center sortable">Last Balance</th>
-                                        <th st-sort="payment" st-skip-natural="true" class="text-center sortable">Current Balance</th>
-                                        <th st-sort="registereddate" st-skip-natural="true" class="text-center sortable">Registered Date</th>
+                                        <th st-sort="storeid" class="text-center sortable">StoreID</th>
+                                        <th st-sort="name" class="text-center sortable">Store's name</th>
+                                        <th st-sort="address" class="text-center sortable">Address</th>
+                                        <th st-sort="generalledgers[0].balance" class="text-center sortable">Last Period Balance</th>
+                                        <th st-sort="total" class="text-center sortable">Current Period Balance</th>
+                                        <!--<th st-sort="registereddate" st-skip-natural="true" class="text-center sortable">Registered Date</th>-->
                                         <th class="text-center">Options</th>
                                     </tr>
                                     </thead>
@@ -84,9 +85,15 @@
                                         <td>{{x.storeid}}</td>
                                         <td>{{x.name}}</td>
                                         <td>{{x.address}}</td>
-                                        <td class="center"> {{x.generalledgers[0].balance}}</td>
-                                        <td class="center"> {{x.currentFee - x.currentCoD + x.generalledgers[0].balance}}</td>
-                                        <td class="center"> {{x.registereddate|date:"dd/MM/yyyy"}}</td>
+                                        <td class="center">
+                                            <a href="" ng-click="showTransactionHistory(x, true)">{{x.generalledgers[0].balance}}</a>
+                                        </td>
+                                        <td class="center">
+                                            <a href="" ng-click="showTransactionHistory(x, false)">
+                                                {{x.total = x.currentFee - x.currentCoD + x.generalledgers[0].balance}}
+                                            </a>
+                                        </td>
+                                        <!--<td class="center"> {{x.registereddate|date:"dd/MM/yyyy"}}</td>-->
                                         <td>
                                         <span class="tooltip-area">
                                         <a class="btn btn-default btn-sm" title="Edit"><i class="fa fa-edit (alias)"></i></a>
@@ -110,7 +117,9 @@
                         </div>
                     </section>
                 </div>
-
+                <p style="font-style: italic"> * The last period balance is the balance of last period from
+                    {{fromAutoDate|date:'dd/MM/yyyy'}} to {{latestAutoDate|date:'dd/MM/yyyy'}} </p>
+                <p style="font-style: italic"> * The current period balance is the balance until now </p>
             </div>
             <!-- //content > row-->
 
@@ -124,7 +133,7 @@
     <!--//////////     MODAL EFFECT DEMO    //////////-->
     <!--//////////////////////////////////////////////////////////////////////-->
     <!--&ndash;&gt;-->
-    <div id="md-effect-confirm" class="modal fade" tabindex="-1" data-width="750">
+    <div id="md-effect-confirm" class="modal fade" tabindex="-1" data-width="800">
         <div class="modal-header bg-inverse bd-inverse-darken">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
             <h4 class="modal-title">Confirm payment</h4>
@@ -137,10 +146,11 @@
                 <tr>
 
                     <th width="20%" class="text-left">Store</th>
-                    <th width="15%" class="text-right">Delivery(VND)</th>
-                    <th width="15%" class="text-right">CoD(VND)</th>
-                    <th width="15%" class="text-right">Total(VND)</th>
-                    <th width="35%">Pay</th>
+                    <th width="10%" class="text-right">Delivery(VND)</th>
+                    <th width="10%" class="text-right">CoD(VND)</th>
+                    <th width="10%" class="text-right">Total(VND)</th>
+                    <th width="20%" class="text-right">Pay to</th>
+                    <th width="30%">Pay</th>
                     <th class="text-right"></th>
                 </tr>
                 </thead>
@@ -149,14 +159,20 @@
                     <td>{{selectedStore.name}}</td>
                     <td class="text-right">{{selectedStore.generalledgers[0].totaldelivery }}</td>
                     <td class="text-right">{{selectedStore.generalledgers[0].totalcod}}</td>
-                    <td class="text-right">{{selectedStore.generalledgers[0].totaldelivery - selectedStore.generalledgers[0].totalcod - payFee}}VND</td>
+                    <td class="text-right">{{selectedStore.generalledgers[0].totaldelivery - selectedStore.generalledgers[0].totalcod - payFee*(payfrom)}}</td>
+                    <td class="text-right">
+                        <select  class="form-control" ng-model="payfrom">
+                            <option value="1">KW</option>
+                            <option value="-1">{{selectedStore.name}}</option>
+                        </select>
+                    </td>
 
                     <td class="text-right">
                         <!--<div class="col-lg-16">-->
                             <!--<div class="input-icon input-group-sm">-->
                                 <!--<i class="fa fa-search ico"></i>-->
 
-                                <input type="search" id="inputValue" ng-change="checkOK($event)" parsley-type="number" required class="form-control input-group-sm text-right" ng-model="payFee">
+                                <input type="search" id="inputValue" ng-change="checkOK($event)" parsley-type="digits" required class="form-control input-group-sm text-right" ng-model="payFee">
                             <!--</div>-->
                         <!--</div>-->
                     </td>
@@ -168,11 +184,71 @@
                 </tr>
                 </tbody>
             </table>
+                <hr>
+                <p style="font-style: italic">* If payment is from KarryWell to {{selectedStore.name}} please choose pay to KW</p>
+                <p style="font-style: italic">* If payment is from {{selectedStore.name}} to KarryWell please choose pay to {{selectedStore.name}}</p>
+            </form>
+        </div>
+        <!-- //modal-body-->
+    </div>
+
+    <div id="md-effect-history" class="modal fade" tabindex="-1" data-width="800">
+        <div class="modal-header bg-inverse bd-inverse-darken">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+            <h4 class="modal-title">Transaction History of {{selectedStore.name}}</h4>
+        </div>
+        <!-- //modal-header-->
+        <div class="modal-body">
+            <form name="myForm" data-parsley-validate>
+            <table class="table table-bordered" st-table="displayedLedgerCollection" st-safe-src="ledgerListOfStore">
+                <thead>
+                <tr>
+                    <th width="2%" st-sort="ledgerid" class="text-center sortable">LedgerID</th>
+                    <th st-sort="lastbalance" class="text-center sortable">Last Balance(VND)</th>
+                    <th st-sort="amount" class="text-center sortable">Amount(VND)</th>
+                    <th st-sort="balance" class="text-center sortable">Balance(VND)</th>
+                    <th st-sort="totaldelivery" class="text-center sortable">Delivery(VND)</th>
+                    <th st-sort="totalcod" class="text-center sortable">CoD(VND)</th>
+                    <th st-sort="paydate" class="text-center sortable">Paydate</th>
+
+                    <th class="text-center">Note</th>
+                </tr>
+                </thead>
+                <tbody align="center" >
+
+                <tr class="odd gradeX" ng-repeat= "x in displayedLedgerCollection"
+                    ng-class="(x.amount==null) ? 'table_active' : ''">
+                    <td>{{x.ledgerid}}</td>
+                    <td>{{x.lastbalance}}</td>
+                    <td>{{x.amount}}</td>
+                    <td class="center"> {{x.balance}}</td>
+                    <td class="center"> {{x.totaldelivery}}</td>
+                    <td class="center"> {{x.totalcod}}</td>
+                    <td class="center"> {{x.paydate|date: "dd/MM/yyyy"}}</td>
+                    <td>
+                                        <span class="tooltip-area">
+                                        <a class="btn btn-default btn-sm" title="{{x.note}}"><i class="glyphicon glyphicon-exclamation-sign"></i></a>
+                                        </span>
+                    </td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="8" class="text-right">
+                        <div st-pagination="" st-items-by-page="5"></div>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+
+                <p style="font-style: italic">* The red row is ledger that is calculated automatically by system</p>
+
             </form>
         </div>
         <!-- //modal-body-->
     </div>
     <!-- //modal-->
+
     <div id="md-effect-block" class="modal fade" tabindex="-1" data-width="400">
         <div class="modal-header bg-inverse bd-inverse-darken">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>

@@ -9,4 +9,7 @@ module.exports = function (app) {
 
     app.route('/api/getIssueContent/:issueid?')
         .get(controller.getIssueDetail);
+
+    app.route('/api/updateResolveIssue/:issueid?')
+        .put(controller.updateResolveIssue);
 }

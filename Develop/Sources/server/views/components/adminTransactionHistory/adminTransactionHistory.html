@@ -20,10 +20,10 @@
 
                         <div class="tabbable panel-body">
                             <ul id="profile-tab" class="nav nav-tabs" data-provide="tabdrop">
-                                <li><a href="#" id="prevtab" data-change="prev"><i class="fa fa-chevron-left"></i></a></li>
-                                <li><a href="#" id="nexttab" class="change" data-change="next"><i class="fa fa-chevron-right"></i></a></li>
-                                <li class="active"><a href="#tab1" data-toggle="tab">Custom Payment</a></li>
-                                <li><a href="#tab2" data-toggle="tab">Auto Payment</a></li>
+                                <li><a href="" id="prevtab" data-change="prev"><i class="fa fa-chevron-left"></i></a></li>
+                                <li><a href="" id="nexttab" class="change" data-change="next"><i class="fa fa-chevron-right"></i></a></li>
+                                <li class="active"><a href="#tab1" data-toggle="tab" target="ui-self">Custom Payment</a></li>
+                                <li><a href="#tab2" data-toggle="tab" target="ui-self">Auto Payment</a></li>
                                 <li class="pull-right"><button class="btn btn-default" ng-click="go('/admin/storeList')">Confirm Payment</button></li>
 
                             </ul>
@@ -80,6 +80,7 @@
                                     <tr>
                                         <th width="2%" st-sort="ledgerid" class="text-center sortable">LedgerID</th>
                                         <th st-sort="store.name" class="text-center sortable">Store's name</th>
+                                        <th st-sort="lastbalance" class="text-center sortable">Last Balance(VND)</th>
                                         <th st-sort="amount" class="text-center sortable">Amount(VND)</th>
                                         <th st-sort="balance" class="text-center sortable">Balance(VND)</th>
                                         <th st-sort="totaldelivery" class="text-center sortable">Delivery(VND)</th>
@@ -94,6 +95,7 @@
                                     <tr class="odd gradeX" ng-repeat= "x in displayedLedgerCollection">
                                         <td>{{x.ledgerid}}</td>
                                         <td class="text-left">{{x.store.name}}</td>
+                                        <td>{{x.lastbalance = x.amount + x.balance}}</td>
                                         <td>{{x.amount}}</td>
                                         <td class="center"> {{x.balance}}</td>
                                         <td class="center"> {{x.totaldelivery}}</td>
@@ -108,7 +110,7 @@
                                     </tbody>
                                     <tfoot>
                                     <tr>
-                                        <td colspan="8" class="text-right">
+                                        <td colspan="9" class="text-right">
                                             <div st-pagination="" st-items-by-page="10"></div>
                                         </td>
                                     </tr>
