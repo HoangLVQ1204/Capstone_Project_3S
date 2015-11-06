@@ -77,7 +77,7 @@ function socketStore($q,socketService,authService,mapService){
             {
                 store: user
             },
-            'store:register:location');
+            'client:register');
 
             // Test findShipper
             api.findShipper();

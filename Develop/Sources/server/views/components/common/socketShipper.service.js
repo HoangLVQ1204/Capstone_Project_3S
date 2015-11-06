@@ -5,6 +5,7 @@
 
 function socketShipper($rootScope, $q,socketService,authService,mapService) {
 
+
     var EPSILON = 1e-8;
 
     var currentLocation = null;
@@ -133,7 +134,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
                             {
                                 shipper: user
                             },
-                            'shipper:register:location');
+                            'client:register');
 
                         // Test watch position
                         // var watchID = api.watchCurrentPosition();
