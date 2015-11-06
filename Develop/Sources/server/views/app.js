@@ -88,6 +88,7 @@ angular.module('app', [
         .state('admin.issueBox.content',{
             url: '/content?issueid',
             template: '<issue-content></issue-content>',
+            parent: 'admin.issueBox',
             access: config.role.admin
         })
 

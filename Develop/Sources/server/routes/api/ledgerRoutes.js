@@ -5,6 +5,9 @@ module.exports = function (app) {
     var controller = require('./../../manages/ledgerManage')(app);
 
     app.route('/api/ledgerList')
-        .get(controller.getAllLedger)
+        .get(controller.getAllLedger);
+
+    app.route('/api/getLedgerOfStore/:storeid/:perioddate')
+        .get(controller.getLedgerOfStore)
 
 }

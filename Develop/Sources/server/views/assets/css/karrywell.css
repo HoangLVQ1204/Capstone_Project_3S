@@ -24,3 +24,10 @@ body.leftMenu .mm-menu:not(.mm-right).mm-hassearch .mm-panel {
      /*background-color: #62707d !important;*/
      color: red !important;
 }
+.mail_active {
+     background: aliceblue;
+}
+
+.table_active {
+     background: #FFEBEE;
+}

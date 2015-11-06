@@ -16,6 +16,14 @@
                         </section>
                     </div>
                 </header>
+                 <textarea class="form-control" id="sms-success"  rows="5" style="display:none">
+                                                                 <i class="fa fa-check-circle"></i> Update successfully<br>
+                                                                Your update was updated.....
+                                                            </textarea>
+                 <textarea class="form-control" id="sms-fail"  rows="5" style="display:none">
+																	 <i class="fa fa-exclamation-triangle"></i> Update fail<br>
+																	There is an error to update information.....
+																</textarea>
                 <div class="panel-tools fully color bg-lightseagreen-darken" align="right">
                     <ul class="tooltip-area">
                         <li><a href="javascript:void(0)" class="btn btn-collapse" title="Collapse"><i class="fa fa-sort-amount-asc"></i></a></li>
@@ -29,8 +37,8 @@
                         <!--</div>-->
                         <div class="btn-group  pull-right">
                             <button type="button" class="btn btn-theme btn-transparent active" title="Resolve"><i class="fa fa-check"></i></button>
-                            <button type="button" class="btn btn-theme btn-transparent" title="Resolve">Continue</button>
-                            <button type="button" class="btn btn-theme btn-transparent" title="Resolve">Change shipper</button>
+                            <button type="button" class="btn btn-theme btn-transparent" ng-class="issue.isresolved ? 'active' : ''" ng-click="showConfirm($event,'continue')">Continue</button>
+                            <button type="button" class="btn btn-theme btn-transparent" ng-click="showConfirm($event,'change shipper')">Change shipper</button>
 
                         </div>
                     </div>
@@ -62,16 +70,16 @@
 
                         </tbody>
                     </table>
-                    <div class="align-lg-right">
-                        <button class="btn btn-theme-inverse hidden-print"> Fail Task </button>
-                    </div>
+                    <!--<div class="align-lg-right">-->
+                        <!--<button class="btn btn-theme-inverse hidden-print"> Fail Task </button>-->
+                    <!--</div>-->
                     <br>
 
                     <p>Please check this issue as soon as possible,<br> KarryWell</p>
                     <hr>
                             <div class="align-lg-left">
-                                <a href="#" class="btn btn-theme hidden-print"> ASSIGN TASK </a>
-                                <a href="#" class="btn btn-theme-inverse hidden-print"> TASK LIST </a>
+                                <a ui-sref="admin.assignTask" class="btn btn-theme hidden-print"> ASSIGN TASK </a>
+                                <a ui-sref="admin.taskList" class="btn btn-theme-inverse hidden-print"> TASK LIST </a>
                             </div>
 
 
@@ -84,6 +92,28 @@
         </div>
         <!-- //content > row > col-lg-12 -->
 
+    </div>
+    <!--////////////////////////////////////////////////////////////////////////-->
+    <!--//////////     MODAL EFFECT DEMO    //////////-->
+    <!--//////////////////////////////////////////////////////////////////////-->
+    <!--&ndash;&gt;-->
+    <!-- //modal-->
+    <div id="md-effect-block" class="modal fade" tabindex="-1" data-width="400">
+        <div class="modal-header bg-inverse bd-inverse-darken">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+            <h4 class="modal-title">Confirm Block</h4>
+        </div>
+        <!-- //modal-header-->
+        <div class="modal-body align-xs-center">
+            <form name="myForm">
+                <h5><strong>Are you sure to resolve this issue by {{resolveType}} options???</strong></h5><br>
+
+                <button type="button" class="btn btn-success btn-transparent" ng-click="updateResolve()"><i class="fa fa-check-circle"></i> Yes</button>
+                <button type="button" class="btn btn-danger btn-transparent" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i> No</button>
+                <hr>
+            </form>
+        </div>
+        <!-- //modal-body-->
     </div>
     <!-- //content > row-->
 </div>
