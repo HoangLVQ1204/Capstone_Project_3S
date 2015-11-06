@@ -2,10 +2,10 @@
 <ion-view title="Tasks">
   <ion-nav-back-button>
   </ion-nav-back-button>
-    <ion-tabs class="tabs-icon-top tabs-striped tabs-color-balanced">
+    <ion-tabs class="tabs-striped tabs-color-balanced">
         <ion-tab title="Pickup" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart" badge="badgeCountPick" badge-style="badge-assertive" on-select="tabSelected('pickup')">
         <ion-pane>
-          <ion-content >
+          <ion-content>
             <ion-list>
               <ion-item class="item-icon-right" ng-repeat="order in pickupTasks | orderBy: 'pickupdate' " type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.orderid}}', isCancel: '{{order.iscancel}}'})">
                 <div class="titleContent" style="min-height: 80px;">

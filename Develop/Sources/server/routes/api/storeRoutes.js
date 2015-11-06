@@ -2,6 +2,8 @@
 module.exports = function(app){
 
  	var controller = require('./../../manages/storeController')(app);
+	var authManage = require('./../../manages/authManage')(app);
+	var checkAll = [authManage.checkToken(),authManage.checkRole()];
 
  	app.param('storeid', controller.params);
 
@@ -35,4 +37,7 @@ module.exports = function(app){
 
 	app.route('/api/store/updateLedgerForOrder/:storeid')
 		.put(controller.updateLedgerForOrder);
-}
+
+	app.route('/api/getAllStoreName')
+		.get(checkAll,controller.getAllStoreName);
+};

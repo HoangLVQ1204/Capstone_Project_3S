@@ -209,6 +209,21 @@ module.exports = function(app) {
             });
     };
 
+    //KhanhKC
+    var getStoreName = function(req,res,next){
+        var storeId = req.user.stores[0];
+        console.log("//////////////////////////");
+        console.log(storeId);
+        console.log("//////////////////////////");
+        db.store.getOneStoreName(storeId)
+            .then(function (orders) {
+                res.status(201).json(orders);
+            },function(){
+                next(new Error("Can not find store name!"))
+            })
+
+    };
+
        return {
             get: get,
             getOne: getOne,
@@ -222,7 +237,8 @@ module.exports = function(app) {
             getTotalCoD: getTotalCoD,
             getLatestAutoAccountDate: getLatestAutoAccountDate,
             postNewLedger: postNewLedger,
-            updateLedgerForOrder: updateLedgerForOrder
+            updateLedgerForOrder: updateLedgerForOrder,
+            getAllStoreName: getStoreName
     }
 }
 

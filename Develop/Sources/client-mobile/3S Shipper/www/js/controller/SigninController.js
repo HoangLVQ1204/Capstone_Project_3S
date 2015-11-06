@@ -2,7 +2,7 @@
  * Created by Kaka Hoang Huy on 9/30/2015.
  */
 
-app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService', function($scope,$state, $ionicLoading, authService){
+app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService', 'socketShipper', function($scope,$state, $ionicLoading, authService, socketShipper){
 
   var showError = function(error){
     $scope.showUserError = true;
@@ -25,6 +25,7 @@ app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService',
         }
       })
       .catch(function(error){
+        $ionicLoading.hide();
         showError({
           message: 'Username or Password is invalid'
         });

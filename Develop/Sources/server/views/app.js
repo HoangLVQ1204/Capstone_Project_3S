@@ -153,7 +153,7 @@ angular.module('app', [
 
     }else{
 
-        $state.go("home");
+        $state.go("login");
 
     }
 
