@@ -198,7 +198,7 @@ angular.module('app', [
             $rootScope.styleBody = "full-lg";
         }
         else{
-            $rootScope.styleBody = "leftMenu nav-collapse";
+            $rootScope.styleBody = "";
         }
 
     });

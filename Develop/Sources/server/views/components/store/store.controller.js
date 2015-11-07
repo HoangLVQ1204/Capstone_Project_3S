@@ -22,10 +22,8 @@ function storeController($scope,$state,socketStore){
 
     $scope.$watch('$viewContentLoaded', function(event) {
 
-
-
             $('nav#menu-ver').mmenu({
-                searchfield   :  true,
+                searchfield   :  false,
                 slidingSubmenus	: false
             }).on( "closing.mm", function(){
                 setTimeout(function () { closeSub() }, 200);

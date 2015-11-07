@@ -31,3 +31,7 @@ body.leftMenu .mm-menu:not(.mm-right).mm-hassearch .mm-panel {
 .table_active {
      background: #FFEBEE;
 }
+
+.widget-collapse header a {
+     text-decoration: none;
+}
