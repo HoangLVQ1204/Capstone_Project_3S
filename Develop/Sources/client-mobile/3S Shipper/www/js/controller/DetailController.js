@@ -120,13 +120,13 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
 
   getDetailFromServer();
 
-  getCurrentPos().then(function (position) {
-    console.log(position.latitude);
-    console.log(position.longitude);
-    //$scope.shippers[0]["latitude"] = position.latitude;
-    //$scope.shippers[0]["longitude"] = position.longitude;
-    //getMapData();
-  });
+  //getCurrentPos().then(function (position) {
+  //  console.log(position.latitude);
+  //  console.log(position.longitude);
+  //  //$scope.shippers[0]["latitude"] = position.latitude;
+  //  //$scope.shippers[0]["longitude"] = position.longitude;
+  //  //getMapData();
+  //});
 
   //getMapData();
 
@@ -135,7 +135,7 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
   //// START - functions area
 
   function getListStatusFromServer() {
-    var urlBase = config.hostServer + 'api/statuslist';
+    var urlBase = config.hostServer + 'api/shipper/statuslist';
     dataService.getDataServer(urlBase)
       .success(function (rs) {
         $scope.statuslist = rs;
@@ -147,7 +147,7 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
   }
 
   function getDetailFromServer() {
-    var urlBase = config.hostServer + 'api/detail/' + $stateParams.orderId;
+    var urlBase = config.hostServer + 'api/shipper/detail/' + $stateParams.orderId;
     dataService.getDataServer(urlBase)
       .success(function (rs) {
         $scope.order = rs;
@@ -180,7 +180,7 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
   //  longitude: 105.83851
   //};
   function getMapData() {
-    var urlBase = config.hostServer + 'api/mapdata/' + $stateParams.orderId;
+    var urlBase = config.hostServer + 'api/shipper/mapdata/' + $stateParams.orderId;
     //dataService.getDataServer(urlBase).then(function (dataMap) {
     //  dataMap = dataMap.data;
     //var newOrder = "order2";
@@ -304,7 +304,7 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
   }
 
   $scope.nextStep = function step() {
-    var urlBase = config.hostServer + 'api/nextstep/';
+    var urlBase = config.hostServer + 'api/shipper/nextstep/';
     var data = {
       code: $scope.order.code,
       confirmcode: ''
@@ -340,7 +340,7 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
   };
   //// END POPOVER
   $scope.nextStepConfirm = function step(confirmationCode) {
-    var urlBase = config.hostServer + 'api/nextstep/';
+    var urlBase = config.hostServer + 'api/shipper/nextstep/';
     var data = {
       confirmcode: confirmationCode,
       code: $scope.order.code
