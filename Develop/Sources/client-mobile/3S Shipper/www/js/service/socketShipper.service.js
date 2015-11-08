@@ -3,7 +3,7 @@
  */
 
 
-function socketShipper($rootScope, $q,socketService,authService,mapService) {
+function socketShipper($rootScope, $q,socketService,authService,mapService, $ionicLoading, $timeout) {
 
 
   var EPSILON = 1e-8;
@@ -24,7 +24,54 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
   });
 
   socketService.on('shipper:choose:express', function(data) {
-    var answer = confirm('Do you want to accept order from store of ' + data.msg.distanceText + ' away?');
+    //Grab Express Order
+    $rootScope.counter = 20; /*20s*/
+    $rootScope.onTimeout = function(){
+      $rootScope.counter--;
+      mytimeout = $timeout($rootScope.onTimeout,1000);
+      if ($rootScope.counter == 0) {
+        $rootScope.stop();
+      }
+    };
+    var mytimeout = $timeout($rootScope.onTimeout,1000);
+
+    $rootScope.stop = function(){
+      $timeout.cancel(mytimeout);
+    };
+    //Ionic Loading
+    $rootScope.show = function() {
+      $ionicLoading.show({
+        template: '<div class="popup">' +
+        '<div class="popup-head" style="background-color: rgb(239, 71, 58);'  +
+        'border-radius: 5px;border-bottom: 1px solid rgb(239, 71, 58);padding: 12px 10px">' +
+        '<h3 class="popup-title" style="font-size: 1.2em; font-weight: bold;">Grab</h3>' +
+        '</div>' +
+        '<div class="popup-body">' +
+        '<span style="font-size: 2.5em; display: block; margin: 7px 0">{{counter}}</span>' +
+        '<div id="graborder">' +
+        '<p>Order: Order 1</p>' +
+        '<p>Địa chỉ: Bắc Giang - Hà Nội - Địa chỉ: Bắc Giang - Hà Nội</p>' +
+        '<p>Số điện thoại: 01679212683</p>' +
+        '</div>' +
+        '</div>' +
+        '<div class="popup-buttons">' +
+        '<a href="#" ng-click="hide()" class="button btn-default-cus" >Cancel</a>' +
+        '<a ng-click="grabExpressOrder()" class="button btn-success-cus btn-default-cus">Grab</a>' +
+        '</div>' +
+        '</div>',
+        scope: $rootScope,
+        duration: 20000
+      });
+    };
+    $rootScope.show();
+    $rootScope.hide = function(){
+      $ionicLoading.hide();
+    };
+    //var answer = confirm('Do you want to accept order from store of ' + data.msg.distanceText + ' away?');
+    var answer = false;
+    $rootScope.grabExpressOrder = function() {
+      answer = true;
+    };
     if (answer) {
       api.getCurrentUser()
         .then(function(user) {
@@ -154,5 +201,5 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
   return api;
 }
 
-socketShipper.$inject = ['$rootScope', '$q','socketService','authService','mapService'];
+socketShipper.$inject = ['$rootScope', '$q','socketService','authService','mapService', '$ionicLoading', '$timeout'];
 app.factory('socketShipper', socketShipper);
