@@ -3,7 +3,7 @@
  */
 app
   .factory('socketService', function ($rootScope) {
-    var socket = io();
+    var socket = io(config.hostServer);
     return {
       on: function (eventName, callback) {
         socket.on(eventName, function () {
