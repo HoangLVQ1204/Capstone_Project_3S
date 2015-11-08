@@ -24,8 +24,10 @@
       "url": "/orders",
       "role": [1,2]
     },
+
     {
-      "url": "/api/history",
-      "role": [1]
+      "url": "/api/getAllStoreName",
+      "role": [2]
     }
+
 ]

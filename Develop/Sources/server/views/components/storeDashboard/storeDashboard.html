@@ -88,7 +88,7 @@
                                             <table class="table table-striped table-hover table-bordered"
                                                    st-set-filter="customFilter" st-custom-date="createdate"
                                                    st-predicate="{{selectedInprocess.value}}"
-                                                   stdate="dateRangeInprocess"
+                                                   stdate="daterange"
                                                    search-watch-model="searchInprocess"
                                                    st-table="displayedCollectionInprocess"
                                                    st-safe-src="orderInprocess">
@@ -99,10 +99,8 @@
 
                                                         <div class=" input-icon">
                                                             <i class="fa fa-calendar ico"></i>
-                                                            <input type="text" daterange class="form-control"
-                                                                   name="daterange" id="dateRangeInprocess"
-                                                                   ng-model="dateRangeInprocess"
-                                                                   placeholder="Create Date"/>
+                                                            <input type="text" daterange class="form-control" name="daterange" daterange id="daterange"
+                                                                   ng-model="daterange" placeholder="Create Date"/>
                                                         </div>
 
 
@@ -142,9 +140,11 @@
                                                     </th>
                                                     <th st-sort="deliveryaddress" st-skip-natural="true"
                                                         class="text-center sortable">Delivery Address
-                                                    </th> <th st-sort="createdate" st-skip-natural="true"
+                                                    </th> 
+                                                    <th st-sort="createdate" st-skip-natural="true"
                                                         class="text-center sortable">Create Date
-                                                    </th> </th> <th st-sort="ordertype" st-skip-natural="true"
+                                                    </th>
+                                                    <th st-sort="ordertype" st-skip-natural="true"
                                                         class="text-center sortable">Type
                                                     </th>
                                                     <th st-sort="statusname" st-skip-natural="true"

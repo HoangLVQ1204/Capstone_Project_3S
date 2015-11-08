@@ -32,7 +32,8 @@ address varchar(100),
 DoB date,
 email varchar(50),
 phoneNumber varchar(11),
-addressCoordination text
+addressCoordination text,
+avatar varchar(50)
 );
 
 
@@ -43,9 +44,11 @@ storeID varchar(8) PRIMARY KEY,
 name varchar(50),
 description text,
 address varchar(100),
-addressCoordination text,
+latitude varchar(30),
+longitude varchar(30),
 phoneNumber varchar(11),
 email varchar(50),
+avatar varchar(50),
 registeredDate timestamp
 );
 

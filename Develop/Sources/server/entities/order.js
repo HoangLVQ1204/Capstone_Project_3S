@@ -190,11 +190,7 @@ module.exports = function(sequelize, DataTypes) {
 
 
       postOneOrder: function(newOrder){
-        var str = "000000" + parseInt(Math.random()*1000000);
-        var formatStr = str.substr(str.length - 6);
-        var newOrderID = "OD" + formatStr;
-        newOrder.orderid = newOrderID;
-        console.log("ORRDDDDDDDD=========",newOrderID);
+        
         return order.build(newOrder).save();
       },
 

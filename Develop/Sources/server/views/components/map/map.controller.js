@@ -143,7 +143,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
             + Địa điểm đến
 
          */
-        $scope.shipperIcon = 'http://maps.google.com/mapfiles/kml/shapes/motorcycling.png';            
+        $scope.shipperIcon = 'http://maps.google.com/mapfiles/kml/shapes/motorcycling.png';
         $scope.storeIcon = 'http://maps.google.com/mapfiles/kml/shapes/homegardenbusiness.png';
         $scope.customerIcon = 'http://maps.google.com/mapfiles/kml/shapes/man.png';            
 

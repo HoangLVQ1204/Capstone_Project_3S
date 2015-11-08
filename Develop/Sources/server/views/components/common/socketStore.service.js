@@ -50,22 +50,22 @@ function socketStore($q,socketService,authService,mapService){
     });
 
     api.getCurrentUser = function() {
-        var currentUser = authService.getCurrentInfoUser();        
-        // TODO: Change later
-        currentUser.latitude = 21.028784;
-        currentUser.longitude = 105.826088;
+        var currentUser = authService.getCurrentInfoUser();
+
+        //// TODO: Change later
+        //currentUser.latitude = 21.028784;
+        //currentUser.longitude = 105.826088;
 
         var dataStore = {
             storeID: currentUser.stores[0],
-            latitude: currentUser.latitude,
-            longitude: currentUser.longitude              
+            latitude: parseFloat(currentUser.stores[0].latitude),
+            longitude: parseFloat(currentUser.stores[0].longitude)
         };
         return dataStore;
     };
 
     api.registerSocket = function(){
         var user = api.getCurrentUser();
-        // console.log('storeee', user);
         mapService.addStore(user)
         .then(function() {                
             socketService.sendPacket(
@@ -77,7 +77,7 @@ function socketStore($q,socketService,authService,mapService){
             {
                 store: user
             },
-            'store:register:location');
+            'client:register');
 
             // Test findShipper
             api.findShipper();

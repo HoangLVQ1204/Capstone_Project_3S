@@ -219,7 +219,7 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
   background: #20242b;
   height: 100%;
   left: 0;
-  margin-left: 50px;
+  /*margin-left: 50px;*/
   min-width: 320px;
   overflow: hidden;
   position: absolute;

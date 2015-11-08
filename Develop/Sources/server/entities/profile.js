@@ -34,10 +34,23 @@ module.exports = function(sequelize, DataTypes) {
     addresscoordination: {
       type: DataTypes.TEXT,
       allowNull: true
+    },
+    avatar: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {
     freezeTableName: true,
-    timestamps: false
+    timestamps: false,
+    classMethods: {
+      getProfileUser: function(username){
+        return profile.findOne({
+          where: {
+            username: username
+          }
+        });
+      }
+    }
   });
   return profile
 };

@@ -23,10 +23,16 @@ module.exports = function(sequelize, DataTypes) {
                 managestore.belongsTo(db.user,{
                     foreignKey: 'managerid'
                 });
+                managestore.belongsTo(db.store,{
+                    foreignKey: 'storeid'
+                });
             },
-            getStoresOfUser: function(username){
+            getStoresOfUser: function(username,store){
                 return managestore.findAll({
-                  attributes: ['storeid'],
+                  include:[{
+                      model: store,
+                      attributes: ['storeid','latitude','longitude']
+                  }],
                   where: {
                     managerid: username
                   }
