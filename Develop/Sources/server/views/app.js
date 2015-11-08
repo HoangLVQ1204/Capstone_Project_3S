@@ -99,7 +99,8 @@ angular.module('app', [
 
         .state('store.dashboard',{
             url: '/dashboard',
-            template: '<layout></layout>'
+            template: '<layout></layout>',
+            access: config.role.store
             // controller: function($scope, $rootScope, mapService){
             //     var mode = "all";
             //     $scope.shippers = mapService.getShipperMarkers(mode);
