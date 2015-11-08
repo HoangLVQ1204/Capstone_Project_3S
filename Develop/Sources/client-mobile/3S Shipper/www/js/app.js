@@ -123,35 +123,7 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
           }
         }
       })
-      .state('app.map.mapdemo',{
-        url: '/mapdemo',
-        views: {
-          'googleMap': {
-            template: '<map shipper-markers="shippers" store-markers="stores" customer-markers="customers" orders="orders"></map>',
-            controller: function ($scope) {
-              // mode in ["all", "shipper", "store", "orderdetail"]
-              console.log("v1");
-              setTimeout(function(){
-                var mode = "all";
-                $scope.shippers = sampleData[mode].shipper;
-                $scope.stores = sampleData[mode].store;
-                $scope.customers = sampleData[mode].customer;
-                $scope.orders = sampleData[mode].orders;
-              }, 1000);
-
-
-            }
-          },
-          'menuContent2':{
-            templateUrl: 'templates/detail.html',
-            controller: 'DetailCtrl'
-          }
-        },
-        controller: function(){
-          console.log("both");
-        }
-      })
-
+      
       .state('app.bestway', {
         url: '/bestway/:tabParam',
         cache: false,

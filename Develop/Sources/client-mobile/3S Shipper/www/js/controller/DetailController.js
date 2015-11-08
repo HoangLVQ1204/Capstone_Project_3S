@@ -80,7 +80,7 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
     });
   };
 
-  var mode = "all";
+  var mode = "shipper";
 
   $scope.shippers = mapService.getShipperMarkers(mode);
   $scope.stores = mapService.getStoreMarkers(mode);
