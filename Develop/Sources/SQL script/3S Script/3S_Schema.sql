@@ -152,6 +152,7 @@ taskDate date
 CREATE TABLE Goods
 (
 goodsID int PRIMARY KEY,
+goodsName varchar(20),
 orderID varchar(8) REFERENCES "order"(orderID),
 stockID int REFERENCES Stock(stockID),
 weight float,
