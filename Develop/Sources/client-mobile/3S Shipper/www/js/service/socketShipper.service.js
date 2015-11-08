@@ -1,5 +1,5 @@
 /**
- * Created by hoanglvq on 10/26/15.
+ * Created by Kaka Hoang Huy on 11/08/15.
  */
 
 
@@ -16,7 +16,6 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
    */
 
   socketService.on('shipper:register:location', function(data) {
-    alert(0000);
     mapService.setMapData(data.msg.mapData)
       .then(function() {
         console.log('register', data);
@@ -122,7 +121,6 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
   };
 
   api.registerSocket = function(){
-    console.log(115553);
     api.getCurrentUser()
       .then(function(user) {
         mapService.addShipper(user)
