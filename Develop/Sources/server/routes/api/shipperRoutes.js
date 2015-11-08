@@ -27,32 +27,32 @@ module.exports = function (app) {
 
     app.get('/api/getAllTaskCancel', shipperCtrl.getAllTaskCancel);
 
-    app.route('/api/history')
+    app.route('/api/shipper/history')
         .get(checkAll, shipperCtrl.getHistory);
 
-    app.route('/api/detail/:orderid')
+    app.route('/api/shipper/detail/:orderid')
         .get(shipperCtrl.getDetail);
 
     app.param('orderid', shipperCtrl.paramOrderId);
 
-    app.route('/api/statuslist')
+    app.route('/api/shipper/statuslist')
         .get(shipperCtrl.getExpressStatusList);
 
-    app.route('/api/nextstep')
+    app.route('/api/shipper/nextstep')
         .put(shipperCtrl.nextStep);
 
-    app.route('/api/mapdata/:order')
+    app.route('/api/shipper/mapdata/:order')
         .get(shipperCtrl.getMapData);
 
     app.param('order', shipperCtrl.paramMapdata);
 
-    app.route('/api/status')
+    app.route('/api/shipper/status')
         .get(shipperCtrl.getShipperStatus);
 
-    app.route('/api/countTasks')
+    app.route('/api/shipper/countTasks')
         .get(shipperCtrl.countTaskOfShipper);
 
-    app.route('/api/change-status')
+    app.route('/api/shipper/change-status')
         .put(shipperCtrl.changeShipperStatus);
 
 }
