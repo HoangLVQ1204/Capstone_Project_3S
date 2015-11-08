@@ -20,17 +20,17 @@ insert into "user" values ('khoangkiti', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPX
 
 -- profile
 
-insert into profile values ('hoang', 'Nguyen Khac Hoang', '12213444', 'Ha Dong - Ha Noi', '1993-4-5', 'hoangnk@gmail.com', '0988277221', '1234,2344');
-insert into profile values ('huykool', 'Tran Dinh Hoang Huy', '23221123', 'Da nang - Da Nang', '1993-5-1', 'huytdh@gmail.com', '0166466566', '43434,43434');
-insert into profile values ('quyensheep', 'Nguyen Van Quyen', '33323222', 'Luc Nam - Bac Giang', '1993-3-26', 'quyennv@gmail.com', '0167932122', '-34343,3434');
-insert into profile values ('khanhkute', 'Kieu Cao Khanh', '1232323', 'Thach That - Ha Noi', '1993-8-5', 'khanhkc@gmail.com', '093332212', '3434,-3434');
-insert into profile values ('nhungkaka', 'Nguyen Thi Hong Nhung', '232322', 'Xuan Mai - Son Tay', '1993-10-10', 'nhungnth@gmail.com', '0988888302', '-343443,-3434');
-insert into profile values ('khoangkiti', 'Nguyen Van Hoang', '122134433', 'Tu Son - Bac Ninh', '1993-2-2', 'hoangkiti@gmail.com', '09999999', '-232,-1111');
+insert into profile values ('hoang', 'Nguyen Khac Hoang', '12213444', 'Ha Dong - Ha Noi', '1993-4-5', 'hoangnk@gmail.com', '0988277221', '1234,2344','assets/img/myavatar.jpg');
+insert into profile values ('huykool', 'Tran Dinh Hoang Huy', '23221123', 'Da nang - Da Nang', '1993-5-1', 'huytdh@gmail.com', '0166466566', '43434,43434','myavatar.jpg');
+insert into profile values ('quyensheep', 'Nguyen Van Quyen', '33323222', 'Luc Nam - Bac Giang', '1993-3-26', 'quyennv@gmail.com', '0167932122', '-34343,3434','myavatar.jpg');
+insert into profile values ('khanhkute', 'Kieu Cao Khanh', '1232323', 'Thach That - Ha Noi', '1993-8-5', 'khanhkc@gmail.com', '093332212', '3434,-3434','myavatar.jpg');
+insert into profile values ('nhungkaka', 'Nguyen Thi Hong Nhung', '232322', 'Xuan Mai - Son Tay', '1993-10-10', 'nhungnth@gmail.com', '0988888302', '-343443,-3434','myavatar.jpg');
+insert into profile values ('khoangkiti', 'Nguyen Van Hoang', '122134433', 'Tu Son - Bac Ninh', '1993-2-2', 'hoangkiti@gmail.com', '09999999', '-232,-1111','myavatar.jpg');
 
 -- store
-insert into store values ('str1', 'habbit shop', 'beautiful shop', 'Tu Liem - Ha Noi', '21.005,105.834', '0988666543', 'str1@gmail.com', '2015-4-5');
-insert into store values ('str2', 'sheep shop', 'beautiful shop', 'Cau Giay - Ha Noi', '21.205,105.734', '0988262712', 'str2@gmail.com', '2015-12-3');
-insert into store values ('str3', 'wall shop', 'beautiful shop', 'Hoan Kiem - Ha Noi', '20.905,105.934', '0162928111', 'str3@gmail.com', '2015-2-28');
+insert into store values ('str1', 'habbit shop', 'beautiful shop', 'Tu Liem - Ha Noi', '21.005','105.834', '0988666543', 'str1@gmail.com','', '2015-4-5');
+insert into store values ('str2', 'sheep shop', 'beautiful shop', 'Cau Giay - Ha Noi', '21.205','105.734', '0988262712', 'str2@gmail.com','', '2015-12-3');
+insert into store values ('str3', 'wall shop', 'beautiful shop', 'Hoan Kiem - Ha Noi', '20.905','105.934', '0162928111', 'str3@gmail.com','', '2015-2-28');
  
 
 -- managestore

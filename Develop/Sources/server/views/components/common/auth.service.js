@@ -3,7 +3,7 @@
  */
 
 angular.module('app')
-    .factory('authService',function($http,$q,jwtHelper,config){
+    .factory('authService',function($http,$q,jwtHelper,config,dataService,$state){
         var tag = 'EHID';
 
         var saveToken = function(token){
@@ -18,6 +18,11 @@ angular.module('app')
             }).then(function(data){
                 saveToken(data.data.token);
             });
+        }
+
+        var signOut = function(){
+            window.localStorage.removeItem(tag);
+            $state.go("login");
         }
 
         var isLogged = function(){
@@ -43,11 +48,18 @@ angular.module('app')
             return currentUser;
         }
 
+        var getProfileUser = function(){
+            var urlBase = config.baseURI + '/user/profile/' + getCurrentInfoUser().username;
+            return dataService.getDataServer(urlBase);
+        }
+
         return {
             signIn : signIn,
+            signOut: signOut,
             isLogged: isLogged,
             isRightRole: isRightRole,
-            getCurrentInfoUser: getCurrentInfoUser
+            getCurrentInfoUser: getCurrentInfoUser,
+            getProfileUser: getProfileUser
         };
     });
 

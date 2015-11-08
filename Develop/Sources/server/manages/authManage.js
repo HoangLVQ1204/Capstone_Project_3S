@@ -46,7 +46,7 @@ module.exports  = function(app){
             var currentRole         = req.user.userrole;
             var currentAccessRoles  = [];
             config.pathAccessRole.forEach(function(item){
-                console.log(item);
+
                 if(item.url == currentRoute){
                     currentAccessRoles = item.role;
                     return;
@@ -90,18 +90,11 @@ module.exports  = function(app){
                             res.status(401).send('Wrong password');
                         }else{
 
-                            //db.managestore.getAllData(db)
-                            //    .then(function(data){
-                            //        console.log("DATA HERE: ");
-                            //        console.log(data);
-                            //    })
-
                             if(user.userrole == 2 ){
-                                db.managestore.getStoresOfUser(user.username)
-                                    .then(function(listStore){                                        
+                                db.managestore.getStoresOfUser(user.username,db.store)
+                                    .then(function(listStore){
                                         var stores = listStore.map(function(data){
-                                            console.log(data.toJSON().storeid);
-                                            return data.toJSON().storeid;
+                                            return data.toJSON().store;
                                         });
                                         user.stores = stores;
                                         req.user = user;

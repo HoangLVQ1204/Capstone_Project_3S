@@ -99,15 +99,20 @@ angular.module('app', [
         })
 
         .state('store.dashboard',{
-            url: '/dashboard',
-            template: '<layout></layout>'
-            // controller: function($scope, $rootScope, mapService){
-            //     var mode = "all";
-            //     $scope.shippers = mapService.getShipperMarkers(mode);
-            //     $scope.stores = mapService.getStoreMarkers(mode);
-            //     $scope.customers = mapService.getCustomerMarkers(mode);
-            //     $scope.orders = mapService.getOrders(mode);
-            // }
+             url: '/dashboard',
+             template: '<layout></layout>',
+             controller: function($scope, $rootScope, mapService, authService){
+                 var mode = "all";
+                 $scope.shippers = mapService.getShipperMarkers(mode);
+                 $scope.stores = mapService.getStoreMarkers(mode);
+                 $scope.customers = mapService.getCustomerMarkers(mode);
+                 $scope.orders = mapService.getOrders(mode);
+                 $scope.center = {
+                     latitude: authService.getCurrentInfoUser().stores[0].latitude,
+                     longitude: authService.getCurrentInfoUser().stores[0].longitude
+                 }
+             },
+            access: config.role.store
         })
 
         .state('store.order',{
@@ -198,6 +203,7 @@ angular.module('app', [
             $rootScope.styleBody = "full-lg";
         }
         else{
+            //$rootScope.styleBody = "leftMenu nav-collapse";
             $rootScope.styleBody = "";
         }
 

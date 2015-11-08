@@ -20,21 +20,18 @@
                 <li class="hidden-xs hidden-sm"><a href="#" class="h-seperate">Help</a></li>
                 <li><button class="btn btn-circle btn-header-search" ><i class="fa fa-search"></i></button></li>
                 <li><a href="#" class="nav-collapse avatar-header" data-toggle="tooltip" title="Show / hide  menu" data-container="body" data-placement="bottom">
-                    <img alt="" src="assets/img/avatar.png"  class="circle">
+                    <img alt="" ng-src="{{inforUser.avatar}}"  class="circle">
                     <span class="badge">3</span>
                 </a>
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
-                        <em><strong>Hi</strong>, Nutprawee </em> <i class="dropdown-icon fa fa-angle-down"></i>
+                        <em><strong>Hi</strong>, {{inforUser.name}} </em> <i class="dropdown-icon fa fa-angle-down"></i>
                     </a>
                     <ul class="dropdown-menu pull-right icon-right arrow">
                         <li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
-                        <li><a href="#"><i class="fa fa-cog"></i> Setting </a></li>
-                        <li><a href="#"><i class="fa fa-bookmark"></i> Bookmarks</a></li>
-                        <li><a href="#"><i class="fa fa-money"></i> Make a Deposit</a></li>
                         <li class="divider"></li>
-                        <li><a href="#"><i class="fa fa-sign-out"></i> Signout </a></li>
+                        <li><a href="#" ng-click="signOut()"><i class="fa fa-sign-out"></i> Signout </a></li>
                     </ul>
                     <!-- //dropdown-menu-->
                 </li>
@@ -60,17 +57,16 @@
         <div id="nav-scroll">
             <div class="avatar-slide">
 
-								<span class="easy-chart avatar-chart" data-color="theme-inverse" data-percent="69" data-track-color="rgba(255,255,255,0.1)" data-line-width="5" data-size="118">
-										<span class="percent"></span>
-										<img alt="" src="assets/img/avatar.png" class="circle">
+								<span class="easy-chart avatar-chart" data-color="theme-inverse" data-percent="100" data-track-color="rgba(255,255,255,0.1)" data-line-width="5" data-size="118">
+										<img alt="" ng-src="{{inforStore.avatar}}" class="circle">
 								</span>
                 <!-- //avatar-chart-->
 
                 <div class="avatar-detail">
-                    <p><strong>Hi</strong>, Nutprawee</p>
-                    <p><a href="#">@ Chaing Mai , TH</a></p>
-                    <span>12,110 Sales</span>
-                    <span>106 Follower</span>
+                    <p><strong>Hi</strong>, {{inforStore.name}}</p>
+                    <p><a href="#">{{inforStore.phonenumber}}</a></p>
+                    <p><a href="#">{{inforStore.email}}</a></p>
+                    <p><a href="#">{{inforStore.address}}</a></p>
                 </div>
                 <!-- //avatar-detail-->
 
