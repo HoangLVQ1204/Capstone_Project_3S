@@ -23,6 +23,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
   });
 
   socketService.on('shipper:choose:express', function(data) {
+    console.log('choose express', data);
     //Grab Express Order
     $rootScope.counter = 20; /*20s*/
     $rootScope.onTimeout = function(){
