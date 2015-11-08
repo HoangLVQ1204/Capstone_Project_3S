@@ -27,8 +27,8 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(db) {
       },
-      postOneGood: function(newGood){
-        return goods.build(newGood).save();
+      postOneCode: function(newCode){
+        return confirmationcode.build(newCode).save();
       },
 
       deleteConfirmCode: function (orderid) {
