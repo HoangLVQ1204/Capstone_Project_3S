@@ -31,18 +31,12 @@
   },
   {
     "statusid": 6,
-    "statusname": "Returning to stock",
-    "nextAction": "Check code return stock",
-    "requiredcode": true
-  },
-  {
-    "statusid": 7,
-    "statusname": "Returning to store",
+    "statusname": "Canceling",
     "nextAction": "Check code return store",
     "requiredcode": true
   },
   {
-    "statusid": 8,
+    "statusid": 7,
     "statusname": "Done",
     "nextAction": null,
     "requiredcode": false

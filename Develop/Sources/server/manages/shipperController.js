@@ -57,8 +57,8 @@ module.exports = function (app) {
     };
 
     var getHistory = function (req, res, next) {
-        //var shipperid = req.userid;
-        var shipperid = 'huykool';
+        var shipper = _.cloneDeep(req.user);
+        var shipperid = shipper.username;
         var History = db.task;
         var Order = db.order;
         var OrderStatus = db.orderstatus;
@@ -94,19 +94,11 @@ module.exports = function (app) {
         var Order = db.order;
         var OrderStatus = db.orderstatus;
         var Goods = db.goods;
-        //Order.belongsTo(OrderStatus, {
-        //    foreignKey: 'statusid',
-        //    constraints: false
-        //});
-        //Order.hasMany(Goods, {
-        //    foreignKey: 'orderid',
-        //    constraints: false
-        //});
         Order.getOrderDetailById(OrderStatus, Goods, orderid)
             .then(function (rs) {
                 if (rs) {
                     rs = rs.toJSON();
-                    var detail = {
+                    req.detail = {
                         code: rs.orderid,
                         statusid: rs.statusid,
                         storeid: rs.storeid,
@@ -129,7 +121,6 @@ module.exports = function (app) {
                         heightsize: rs.goods[0].heightsize,
                         description: rs.goods[0].description
                     };
-                    req.detail = detail;
                     next();
                 } else {
                     next(new Error('No order with id' + orderid));
@@ -453,6 +444,8 @@ module.exports = function (app) {
         var shipperList;
         return db.user.getAllShipperWithTask(db.task, db.profile, db.order, db.orderstatus, db.tasktype, db.taskstatus)
             .then(function(shipper) {
+                console.log("--------------Data Task Shipper -------------------");
+                console.log(shipper);
                 res.status(200).json(shipper);
             }, function(err) {
                 next(err);
@@ -474,8 +467,23 @@ module.exports = function (app) {
             })
 
         })
-    }
+    };
 
+    //// START - Get status of shipper
+    //// HuyTDH - 03-11-15
+    var getShipperStatus = function(req, res, next){
+        //var shipperid =  req.user.userid;
+        var shipperid =  'huykool';
+        var User = db.user;
+        User.getShipperStatus(shipperid).then(function(rs){
+            rs = rs.toJSON();
+            var rss = (rs.status == 1)? false : true;
+            res.status(200).json(rss);
+        },function(er){
+            res.status(400).json("Cant not get status of shipper!");
+        });
+    };
+    //// END - Get status of shipper
     var getTaskBeIssuePending = function (req, res, next) {
         var shipperid = 'huykool';
         var task = db.task;
@@ -556,7 +564,64 @@ module.exports = function (app) {
             })
     }
 
+    //// START count task of shipper
+    //// HuyTDH 03-11-15
+    var countTaskOfShipper = function(req, res, next){
+        //var shipperid =  req.user.userid;
+        var shipperid =  'huykool';
+        var Task = db.task;
+        var TaskStatus = db.taskstatus;
+        TaskStatus.getAllTaskStatus().then(function(st){
+            var ls = {};
+            st.forEach(function(it){
+                it = it.toJSON();
+                ls[it.statusid] = it.statusname
+            });
+            Task.countTaskByShipperId(shipperid, TaskStatus).then(function(rs){
+                var tasks = {};
+                rs.forEach(function(item){
+                    item = item.toJSON();
+                    var obj = {};
+                    var key = '';
+                    console.log("====================");
+                    console.log(ls[item.statusid]);
+                    console.log("====================");
+                    var num = parseInt(item.count)? parseInt(item.count) : 0;
+                    tasks[ls[item.statusid]] = num;
+                    //tasks.push(obj);
+                });
+                res.status(200).json(tasks);
+            },function(er){
+                res.status(400).json(er);
+            });
+        },function(err){
+            res.status(400).json(err);
+        });
+    };
+    //// END count task of shipper
 
+    //// START change status of shipper
+    //// HuyTDH 03-11-15
+    var changeShipperStatus = function(req, res, next){
+        //var shipperid =  req.user.userid;
+        var shipperid =  'huykool';
+        var data = _.cloneDeep(req.body);
+        var User = db.user;
+        User.findUserByUsername(shipperid)
+        .then(function(shipper){
+             if(shipper){
+                 shipper.workingstatus = data.status;
+                User.putUser(shipper).then(function(rs){
+                    res.status(200).json("Change status successfully!");
+                }, function(er){
+                    res.status(400).json("Can not change your status");
+                });
+             }
+        },function(err){
+            res.status(400).json("Can not change your status");
+        });
+    };
+    //// END change status of shipper
 
     return {
         getTask: getTask,
@@ -574,6 +639,10 @@ module.exports = function (app) {
         getAllOrderToAssignTask: getAllOrderToAssignTask,
         getAllShipperWithTask: getAllShipperWithTask,
         updateTaskForShipper: updateTaskForShipper,
+        getShipperStatus: getShipperStatus,
+        countTaskOfShipper: countTaskOfShipper,
+        changeShipperStatus: changeShipperStatus,
+
         getTaskBeIssuePending: getTaskBeIssuePending,
         getAllTaskCancel: getAllTaskCancel
     }

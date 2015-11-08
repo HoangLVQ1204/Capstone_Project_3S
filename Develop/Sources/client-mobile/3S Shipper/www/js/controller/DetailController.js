@@ -2,8 +2,15 @@
  * Created by Kaka Hoang Huy on 10/19/2015.
  */
 
-function detailController($scope, $stateParams, dataService, $cordovaGeolocation, $ionicPopup, $ionicModal, $ionicPopover, uiGmapGoogleMapApi, uiGmapIsReady, $rootScope, $ionicLoading) {
+function detailController($scope, $stateParams, dataService, $cordovaGeolocation, $ionicPopup, $ionicPopover, uiGmapGoogleMapApi, uiGmapIsReady, $rootScope, $ionicLoading, mapService) {
 
+  //var mode = "all";
+  //$scope.shippers = mapService.getShipperMarkers(mode);
+  //$scope.stores = mapService.getStoreMarkers(mode);
+  //$scope.customers = mapService.getCustomerMarkers(mode);
+  //$scope.orders = mapService.getOrders(mode);
+  //
+  //return;
   $scope.isCancel = $stateParams.isCancel;
   //shipper category of issue = cancel
   if ($scope.isCancel == "true") {
@@ -73,22 +80,29 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
     });
   };
 
-  $scope.userPosition = {
-    //lat: "21.012529248181444",
-    //lgt: "105.52563034439083"
-    lat: "0",
-    lgt: "0"
-  };
+  var mode = "all";
 
-  $scope.statuslist = [];
-
-  $scope.order = {};
-
-  $scope.confirmcode = '';
-
-  $scope.errorlogs = '';
-
-  $scope.dataMap = {};
+  $scope.shippers = mapService.getShipperMarkers(mode);
+  $scope.stores = mapService.getStoreMarkers(mode);
+  $scope.customers = mapService.getCustomerMarkers(mode);
+  $scope.orders = mapService.getOrders(mode);
+  //// START: initiate data for scope
+  //$scope.userPosition = {
+  //  //lat: "21.012529248181444",
+  //  //lgt: "105.52563034439083"
+  //  lat: "0",
+  //  lgt: "0"
+  //};
+  //
+  //$scope.statuslist = [];
+  //
+  //$scope.order = {};
+  //
+  //$scope.confirmcode = '';
+  //
+  //$scope.errorlogs = '';
+  //
+  //$scope.dataMap = {};
   //// START Initiate data for map
   //$scope.shippers = [
   //  {
@@ -102,7 +116,7 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
   //$scope.stores = [];
   //$scope.customers = [];
   //$scope.orders = {};
-  //// END Initiate data for map
+  //// END: Initiate data for scope
 
   getDetailFromServer();
 
@@ -160,11 +174,11 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
       });
   }
 
-  getMapData();
-  $scope.center = {
-    latitude: 21.0287,
-    longitude: 105.83851
-  };
+  //getMapData();
+  //$scope.center = {
+  //  latitude: 21.0287,
+  //  longitude: 105.83851
+  //};
   function getMapData() {
     var urlBase = config.hostServer + 'api/mapdata/' + $stateParams.orderId;
     //dataService.getDataServer(urlBase).then(function (dataMap) {
@@ -271,7 +285,7 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
       $scope.orders = dataSamp.order;
       console.log("dataLoaded");
       $scope.$broadcast();
-    }, 10000000);
+    }, 10000);
 
     //$scope.dataMap = dataMap.data;
     //$scope.shippers = $scope.dataMap.shipper;
@@ -424,7 +438,7 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
   //setInterval(function(){ alert("Hello"); }, 3000);
 }
 
-detailController.$inject = ['$scope', '$stateParams', 'dataService', '$cordovaGeolocation', '$ionicPopup', '$ionicModal', '$ionicPopover', 'uiGmapGoogleMapApi', 'uiGmapIsReady', '$rootScope', '$ionicLoading'];
+detailController.$inject = ['$scope', '$stateParams', 'dataService', '$cordovaGeolocation', '$ionicPopup', '$ionicPopover', 'uiGmapGoogleMapApi', 'uiGmapIsReady', '$rootScope', '$ionicLoading', 'mapService'];
 app.controller('DetailCtrl', detailController);
 
 var sampleData = {

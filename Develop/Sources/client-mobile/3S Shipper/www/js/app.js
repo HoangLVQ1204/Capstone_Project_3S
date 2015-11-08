@@ -17,11 +17,18 @@ var app = angular.module('starter', ['ionic', 'ngCordova','uiGmapgoogle-maps','a
       if (window.StatusBar) {
         // org.apache.cordova.statusbar required
         StatusBar.styleDefault();
+      }if (window.cordova && window.cordova.plugins.Keyboard) {
+        cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+        cordova.plugins.Keyboard.disableScroll(true);
+      }
+      if (window.StatusBar) {
+        // org.apache.cordova.statusbar required
+        StatusBar.styleDefault();
       }
     });
 
-    //Check Is firt time sign in
-    if (authService.isLogged === true) {
+    ////Check Is firt time sign in
+    if (authService.isLogged()) {
       $location.path('/app/tasks');
       $rootScope.$apply();
     } else {
@@ -29,7 +36,7 @@ var app = angular.module('starter', ['ionic', 'ngCordova','uiGmapgoogle-maps','a
       $rootScope.$apply();
     }
 
-  }])
+  }]);
 
 app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvider, jwtInterceptorProvider, $httpProvider) {
   uiGmapGoogleMapApiProvider.configure({
@@ -50,6 +57,7 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
 
       .state('sign-in',{
         url: '/sign-in',
+        cache: false,
         templateUrl: 'templates/sign-in.html',
         controller: 'SignInCtrl'
       })
@@ -161,6 +169,16 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
         views: {
           'menuContent': {
             templateUrl: 'templates/splitMap.html'
+          }
+        }
+      })
+
+      .state('app.grabs', {
+        url: '/grabs',
+        views: {
+          'menuContent': {
+            templateUrl: 'templates/grabs.html',
+            controller: 'GrabCtrl'
           }
         }
       })

@@ -5,6 +5,7 @@
 function adminStoreListController($scope,$state, $http, authService, config) {
 
     $scope.storeList = [];
+    $scope.payfrom = '1';
     var smsData = {verticalEdge: 'right',
                 horizontalEdge: 'bottom'};
     var currentUser = authService.getCurrentInfoUser();
@@ -26,12 +27,19 @@ function adminStoreListController($scope,$state, $http, authService, config) {
     $scope.selected =$scope.searchOptions[0];
     $scope.dateRange = '';
 
+    $http.get(config.baseURI + "/api/store/getLatestAutoAccountDate").success(function(response){
+        $scope.latestAutoDate= response;
+        $scope.fromAutoDate = new Date($scope.latestAutoDate);
+        $scope.fromAutoDate.setDate($scope.fromAutoDate.getDate()-7);
+        //console.log( $scope.fromAutoDate);
+    })
+
 
     $http.get(config.baseURI + "/api/store/getAllLedger").success(function(response){
         $scope.storeList = response;
 
         //console.log(1);
-       //console.log(response);
+      // console.log(response);
     }).then(function () {
         $http.get(config.baseURI + "/api/store/getTotalCoD").success(function(response){
             $scope.currentCoD= response;
@@ -40,7 +48,7 @@ function adminStoreListController($scope,$state, $http, authService, config) {
     }).then(function () {
         $http.get(config.baseURI + "/api/store/getTotalFee").success(function(response){
             $scope.currentFee = response;
-            //console.log(response);
+            //==//console.log(response);
             var i=0;
             $scope.storeList.map(function (store) {
                 store.currentCoD =  $scope.currentCoD[i].totalCoD;
@@ -107,9 +115,10 @@ function adminStoreListController($scope,$state, $http, authService, config) {
         ledger.adminid = currentUser.username;
         ledger.amount = parseInt($scope.payFee);
         ledger.paydate = Date(Date.now());
-        if (ledger.amount >= 0)
+        ledger.payfrom = parseInt($scope.payfrom);
+        if (ledger.payfrom  == 1)
         {
-            ledger.payfrom = 1;
+            //ledger.payfrom = 1;
             ledger.totaldelivery = store.generalledgers[0].totaldelivery - ledger.amount;
             ledger.totalcod = store.generalledgers[0].totalcod;
 
@@ -118,7 +127,7 @@ function adminStoreListController($scope,$state, $http, authService, config) {
         {
             ledger.payfrom = 2;
             ledger.totaldelivery = store.generalledgers[0].totaldelivery;
-            ledger.totalcod = parseInt(store.generalledgers[0].totalcod) + ledger.amount;
+            ledger.totalcod = parseInt(store.generalledgers[0].totalcod) - ledger.amount;
         }
         ledger.balance = ledger.totaldelivery - ledger.totalcod;
         //console.log(ledger);
@@ -152,6 +161,41 @@ function adminStoreListController($scope,$state, $http, authService, config) {
 
 
     //----------------------------------
+    //FUNCTION SHOW TRANSACTION HISTORY
+    //-----------------------------------
+    $scope.showTransactionHistory = function (store, period){
+        var autoDate = $scope.latestAutoDate;
+        if (!period) autoDate='null';
+        $http.get(config.baseURI + "/api/getLedgerOfStore/" + store.storeid +"/" + autoDate).success(function(response){
+            $scope.ledgerListOfStore = response;
+            $scope.ledgerListOfStore.sort(function(x, y){
+                if (x.paydate > y.paydate) {
+                    return -1;
+                }
+                if (x.paydate < y.paydate) {
+                    return 1;
+                }
+                return 0;
+            });
+            $scope.ledgerListOfStore.map(function (ledger) {
+                if (ledger.amount != null) {
+
+                    ledger.amount = parseInt(ledger.amount);
+                    ledger.balance = parseInt(ledger.balance);
+                    ledger.totalcod = parseInt(ledger.totalcod);
+                    ledger.totaldelivery = parseInt(ledger.totaldelivery);
+                    ledger.lastbalance  = ledger.amount + ledger.balance;
+                }
+            })
+            $scope.displayedLedgerCollection = [].concat($scope.ledgerListOfStore);
+            $scope.selectedStore = store;
+            smsData.effect="md-slideRight";
+            $("#md-effect-history").attr('class','modal fade').addClass(smsData.effect).modal('show');
+             console.log(response);
+        })
+    }
+
+    //----------------------------------
     //FUNCTION GET TOTAL COD OF A STORE
     //-----------------------------------
     $scope.getLatestLedgerOfStore = function (storeid){
@@ -181,6 +225,7 @@ function adminStoreListController($scope,$state, $http, authService, config) {
             //console.log(response);
         })
     }
+
 
     //----------------------------------
     //FUNCTION LOAD SCRIPT

@@ -88,6 +88,7 @@ angular.module('app', [
         .state('admin.issueBox.content',{
             url: '/content?issueid',
             template: '<issue-content></issue-content>',
+            parent: 'admin.issueBox',
             access: config.role.admin
         })
 
@@ -98,16 +99,20 @@ angular.module('app', [
         })
 
         .state('store.dashboard',{
-            url: '/dashboard',
-            template: '<layout></layout>',
+             url: '/dashboard',
+             template: '<layout></layout>',
+             controller: function($scope, $rootScope, mapService, authService){
+                 var mode = "all";
+                 $scope.shippers = mapService.getShipperMarkers(mode);
+                 $scope.stores = mapService.getStoreMarkers(mode);
+                 $scope.customers = mapService.getCustomerMarkers(mode);
+                 $scope.orders = mapService.getOrders(mode);
+                 $scope.center = {
+                     latitude: authService.getCurrentInfoUser().stores[0].latitude,
+                     longitude: authService.getCurrentInfoUser().stores[0].longitude
+                 }
+             },
             access: config.role.store
-            // controller: function($scope, $rootScope, mapService){
-            //     var mode = "all";
-            //     $scope.shippers = mapService.getShipperMarkers(mode);
-            //     $scope.stores = mapService.getStoreMarkers(mode);
-            //     $scope.customers = mapService.getCustomerMarkers(mode);
-            //     $scope.orders = mapService.getOrders(mode);
-            // }
         })
 
         .state('store.order',{
@@ -153,7 +158,7 @@ angular.module('app', [
 
     }else{
 
-        $state.go("home");
+        $state.go("login");
 
     }
 
@@ -198,7 +203,8 @@ angular.module('app', [
             $rootScope.styleBody = "full-lg";
         }
         else{
-            $rootScope.styleBody = "leftMenu nav-collapse";
+            //$rootScope.styleBody = "leftMenu nav-collapse";
+            $rootScope.styleBody = "";
         }
 
     });

@@ -37,6 +37,7 @@ function adminTaskListController($scope,$state, $http, $filter, config) {
     }).then(function () {
         $http.get(config.baseURI  + "/api/getTaskList").success(function(response){
             $scope.taskList = response;
+            $scope.taskList.sort(dateSort);
         })
         .then(function () {
         $http.get(config.baseURI + "/api/getAllTaskType").success(function(response){
@@ -133,6 +134,16 @@ function adminTaskListController($scope,$state, $http, $filter, config) {
         })
     }
 
+
+    var dateSort =  function(x, y){
+        if (x.taskdate > y.taskdate) {
+            return -1;
+        }
+        if (x.taskdate < y.taskdate) {
+            return 1;
+        }
+        return 0;
+    };
     //----------------------------------
     //FUNCTION LOAD SCRIPT
     //-----------------------------------

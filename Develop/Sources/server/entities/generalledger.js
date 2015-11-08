@@ -116,6 +116,32 @@ module.exports = function(sequelize, DataTypes) {
              // as: 'order'
             }]
         })
+      },
+
+      getLedgerOfStore: function (store, storeid, perioddate) {
+
+        if (perioddate != 'null')
+        {
+          return generalledger.findAll({
+            include:[{
+              model: store
+              //as: 'store'
+            }],where: {
+                'storeid': storeid,
+                'paydate':  {
+                  gte: perioddate
+                }
+            }
+          })
+        }
+        else return generalledger.findAll({
+          include:[{
+            model: store
+            //as: 'store'
+          }],where: {
+            'storeid': storeid,
+          }
+        })
       }
   }
 });

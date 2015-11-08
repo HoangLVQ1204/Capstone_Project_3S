@@ -28,7 +28,7 @@ module.exports = function (app) {
     app.get('/api/getAllTaskCancel', shipperCtrl.getAllTaskCancel);
 
     app.route('/api/history')
-        .get(shipperCtrl.getHistory);
+        .get(checkAll, shipperCtrl.getHistory);
 
     app.route('/api/detail/:orderid')
         .get(shipperCtrl.getDetail);
@@ -45,5 +45,14 @@ module.exports = function (app) {
         .get(shipperCtrl.getMapData);
 
     app.param('order', shipperCtrl.paramMapdata);
+
+    app.route('/api/status')
+        .get(shipperCtrl.getShipperStatus);
+
+    app.route('/api/countTasks')
+        .get(shipperCtrl.countTaskOfShipper);
+
+    app.route('/api/change-status')
+        .put(shipperCtrl.changeShipperStatus);
 
 }

@@ -64,16 +64,15 @@ module.exports = function (sequelize, DataTypes) {
                     attributes: [['taskid', 'id'],['taskdate','date']],
                     where: {
                         shipperid: shipperid,
-                        //taskdate: taskdate
+                        statusid: {
+                            $in: [3,4]
+                        }
                     },
                     include: [
                         {
                             model: modelOrder,
                             //limit: 1,
                             attributes: [['orderid', 'code'], 'statusid', 'fee', 'cod'],
-                            where:{
-                                //statusid: '1 or 2'
-                            },
                             include: {
                                 model: modelOrderStatus,
                                 attributes: [['statusname', 'statusid']]
@@ -188,6 +187,20 @@ module.exports = function (sequelize, DataTypes) {
                 })
             },
 
+            countTaskByShipperId: function(shipperid, taskStatusModel){
+                return task.findAll({
+                    attributes: ['statusid', [sequelize.fn('count', sequelize.col('task.statusid')), 'count']],
+                    group: ['task.statusid'],
+                    where:{
+                        shipperid: shipperid
+                    },
+                    //include: {
+                    //    model: taskStatusModel,
+                    //    attributes: ['statusname']
+                    //}
+                })
+			},
+
             getAll: function () {
               return task.findAll();
             },
@@ -201,6 +214,7 @@ module.exports = function (sequelize, DataTypes) {
                         }
                     })
             }
+
         }
     });
     return task;

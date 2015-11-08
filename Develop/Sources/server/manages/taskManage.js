@@ -43,17 +43,30 @@ module.exports = function (app) {
                 db.task.updateTaskState(task)
                     .then(function (task) {
                         //tasks = tasks.toJSON();
-                        res.status(200).json(task);
+                        res.status(201).json(task);
                     }, function (err) {
                         next(err);
                     })
         })
     };
 
+    var updateTaskNoShipper = function (req, res, next) {
+        var taskidlist = req.body;
+        return taskidlist.map(function (taskid) {
+                db.task.updateShipperOfTask(taskid, null)
+                    .then(function (task) {
+                        res.status(201).json(task);
+                    }, function (err) {
+                        next(err);
+                    })
+        })
+    }
+
     return {
         getAllTask: getAllTask,
         getAllTaskType: getAllTaskType,
         getAllTaskStatus: getAllTaskStatus,
-        updateTaskState: updateTaskState
+        updateTaskState: updateTaskState,
+        updateTaskNoShipper: updateTaskNoShipper
     }
 }

@@ -172,7 +172,7 @@ module.exports = function(app) {
         var store = req.store;
         return db.generalledger.getLatestAutoAccountDate()
             .then(function(total) {
-                res.status(200).json(total);
+                res.status(200).json(total.paydate);
             }, function(err) {
                 next(err);
             })

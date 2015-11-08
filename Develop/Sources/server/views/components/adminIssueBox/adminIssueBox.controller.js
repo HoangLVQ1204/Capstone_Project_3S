@@ -8,9 +8,20 @@ function adminIssueBoxController($scope,$state, $http, $filter, config) {
     $http.get(config.baseURI + "/api/getAllIssue").success(function(response){
         $scope.issueList = response;
         //$scope.displayedOrderCollection = [].concat($scope.orderList);
-        console.log($scope.issueList)
+        //console.log($scope.issueList)
     })
 
+    //$scope.sortByDate = function () {
+    //    $scope.issueList.sort(function(x, y){
+    //        if (x.createddate < y.createddate) {
+    //            return -1;
+    //        }
+    //        if (x.createddate > y.createddate) {
+    //            return 1;
+    //        }
+    //        return 0;
+    //    })
+    //}
 
     //----------------------------------
     //FUNCTION LOAD SCRIPT
@@ -21,9 +32,6 @@ function adminIssueBoxController($scope,$state, $http, $filter, config) {
 
     });
 
-    jQuery(document).ready(function() {
-        jQuery("abbr.timeago").timeago();
-    });
 
 }
 
