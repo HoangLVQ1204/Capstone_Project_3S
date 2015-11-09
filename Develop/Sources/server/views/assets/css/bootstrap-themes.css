@@ -375,7 +375,8 @@ a.list-group-item .list-group-item-heading {
 }
 
 .panel .load-overlay {
-  background-color: rgba(17, 17, 17, 0.2);
+  /*background-color: rgba(17, 17, 17, 0.2);*/
+  background-color: rgba(0, 0, 0, 0.68)
 }
 
 .panel-default > .panel-heading + .panel-collapse .panel-body {
@@ -426,6 +427,15 @@ a.list-group-item .list-group-item-heading {
   -webkit-box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.225);
   box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.225);
 }
+
+.load-overlay > .btn {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-top: 150px;
+  margin-left: -30px;
+}
+
 .load-overlay > div {
   width: 60px;
   height: 60px;
@@ -440,7 +450,7 @@ a.list-group-item .list-group-item-heading {
   position: absolute;
   width: 16px;
   height: 16px;
-  background: #777;
+  background: #FF5460;
   top: 10px;
   left: 10px;
   border-radius: 50%;
@@ -459,7 +469,7 @@ a.list-group-item .list-group-item-heading {
   top: 10px;
   left: auto;
   right: 10px;
-  background: #777;
+  background: #FF9D84;
   transform-origin: -4px 20px;
   -o-transform-origin: -4px 20px;
   -ms-transform-origin: -4px 20px;
@@ -476,7 +486,7 @@ a.list-group-item .list-group-item-heading {
   left: auto;
   right: 10px;
   bottom: 10px;
-  background: #777;
+  background: #F0E797;
   transform-origin: -4px -4px;
   -o-transform-origin: -4px -4px;
   -ms-transform-origin: -4px -4px;
@@ -491,7 +501,7 @@ a.list-group-item .list-group-item-heading {
 .load-overlay > div > .c4 {
   top: auto;
   bottom: 10px;
-  background: #777;
+  background: #75B08A;
   transform-origin: 20px -4px;
   -o-transform-origin: 20px -4px;
   -ms-transform-origin: 20px -4px;

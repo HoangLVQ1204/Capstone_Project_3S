@@ -408,25 +408,25 @@ a.list-group-item .list-group-item-heading {
   position: absolute;
   top: 0;
   left: 0;
-  background-color: rgba(236, 237, 229, 0.6);
+  background-color: rgba(0,0,0,0.6);
   display: none;
   z-index: 100;
 }
 .load-overlay > span {
-  width: 100px;
+  width: 115px;
   position: absolute;
   left: 50%;
   top: 50%;
   line-height: 30px;
   margin-top: 20px;
   margin-left: -50px;
-  font-size: 12px;
+  font-size: 15px;
   text-align: center;
   color: #FFF;
-  background-color: #62707D;
-  border-radius: 2px;
-  -webkit-box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.225);
-  box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.225);
+  /*background-color: #62707D;*/
+  /*border-radius: 2px;*/
+  /*-webkit-box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.225);*/
+  /*box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.225);*/
 }
 .load-overlay > div {
   width: 60px;
@@ -442,7 +442,7 @@ a.list-group-item .list-group-item-heading {
   position: absolute;
   width: 16px;
   height: 16px;
-  background: #777;
+  background: #FF5460;
   top: 10px;
   left: 10px;
   border-radius: 50%;
@@ -461,7 +461,7 @@ a.list-group-item .list-group-item-heading {
   top: 10px;
   left: auto;
   right: 10px;
-  background: #777;
+  background: #FF9D84;
   transform-origin: -4px 20px;
   -o-transform-origin: -4px 20px;
   -ms-transform-origin: -4px 20px;
@@ -478,7 +478,7 @@ a.list-group-item .list-group-item-heading {
   left: auto;
   right: 10px;
   bottom: 10px;
-  background: #777;
+  background: #F0E797;
   transform-origin: -4px -4px;
   -o-transform-origin: -4px -4px;
   -ms-transform-origin: -4px -4px;
@@ -493,7 +493,7 @@ a.list-group-item .list-group-item-heading {
 .load-overlay > div > .c4 {
   top: auto;
   bottom: 10px;
-  background: #777;
+  background: #75B08A;
   transform-origin: 20px -4px;
   -o-transform-origin: 20px -4px;
   -ms-transform-origin: 20px -4px;

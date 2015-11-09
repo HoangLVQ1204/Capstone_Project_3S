@@ -19,7 +19,7 @@ app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService',
       .then(function(){
         if(authService.isRightRole(roles.shipper)){
           //TODO
-          //socketShipper.registerSocket();
+          socketShipper.registerSocket();
           $state.go('app.tasks');
           $ionicLoading.hide();
         }

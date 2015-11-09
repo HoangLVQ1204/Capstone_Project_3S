@@ -28,6 +28,11 @@
     {
       "url": "/api/getAllStoreName",
       "role": [2]
+    },
+
+    {
+      "url": "/api/shipper/history",
+      "role": [1]
     }
 
 ]
