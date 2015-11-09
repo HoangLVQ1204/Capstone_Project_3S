@@ -50,6 +50,11 @@ module.exports = function(sequelize, DataTypes) {
           constraints: false
         });
 
+        user.belongsTo(db.workingstatus, {
+          foreignKey: 'workingstatusid',
+          constraints: false
+        });
+
         user.hasMany(db.task,
             {as:'assigner', foreignKey: 'adminid'}
         );
@@ -63,10 +68,12 @@ module.exports = function(sequelize, DataTypes) {
         return user.findAll({});
       },
 
-      getAllUsersHasRole: function(role, profile) {
+      getAllUsersHasRole: function(role, profile, workingstatus) {
         return user.findAll({
           include:[{
               model: profile
+          },{
+            model: workingstatus
           }],
           where: {
             'userrole': role

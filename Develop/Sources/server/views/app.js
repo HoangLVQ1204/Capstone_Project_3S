@@ -79,6 +79,12 @@ angular.module('app', [
             access: config.role.admin
         })
 
+        .state('admin.shipperList',{
+            url: '/shipperList',
+            template: '<admin-shipper-list></admin-shipper-list>',
+            access: config.role.admin
+        })
+
         .state('admin.issueBox',{
             url: '/issueBox',
             template: '<admin-issue-box></admin-issue-box>',
@@ -136,7 +142,7 @@ angular.module('app', [
 
         if(authService.isRightRole(config.role.admin)){
             socketAdmin.registerSocket();
-            $state.go("admin.dashboard");
+            //$state.go("admin.dashboard");
         }
 
         if(authService.isRightRole(config.role.store)){
