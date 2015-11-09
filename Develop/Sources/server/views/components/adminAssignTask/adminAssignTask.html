@@ -30,7 +30,8 @@
 
                             <form>
                                 <table class="table table-bordered" st-set-filter="customFilter" st-predicate="{{selectedShipper.value}}" search-watch-model="search" st-table="displayedShipperCollection" st-safe-src="tasksList">
-
+                                    <h3>Shipper</h3>
+                                    <hr>
                                     <div class="row form-group" >
 
                                         <!--<div class="col-sm-4 form-group pull-left">-->
@@ -88,11 +89,17 @@
                                 </table>
                             </form>
                             </div>
-
+                            <!--<div class="col-xs-1">-->
+                                <!--<i class="fa fa-exclamation-triangle"></i>-->
+                            <!--</div>-->
                             <div class="col-lg-3">
+                                <div class="row">
+                                    <h3>Task</h3>
+                                    <hr></div>
                                 <div class="pull-right">
                                     <button type="submit" class="btn btn-theme" ng-click="assignTask()">Assign</button>
                                 </div>
+
                                 <form>
 
                                     <table class="table table-bordered table-hover" st-table="displayedTaskCollection" st-safe-src="taskList">
@@ -140,7 +147,11 @@
                             <div class="col-lg-6 pull-right">
                                 <form >
                                     <table class="table table-bordered table-hover" st-set-filter="customFilter" st-predicate="{{selectedOrder.value}}" search-watch-model="searchOrder" st-table="displayedOrderCollection" st-safe-src="orderList">
+                                        <div class="row">
+                                        <h3>Order to assign</h3>
 
+                                        </div>
+                                        <hr>
                                         <div class="row form-group" >
 
                                             <!--<div class="col-sm-4 form-group pull-left">-->

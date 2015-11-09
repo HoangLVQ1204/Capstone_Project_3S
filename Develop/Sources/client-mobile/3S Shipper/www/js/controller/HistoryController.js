@@ -6,7 +6,7 @@ app.controller('HistoryCtrl', ['$scope', 'dataService', function ($scope, dataFa
   getHistoryFromServer();
 
   function getHistoryFromServer() {
-    var urlBase = config.hostServer + 'api/history';
+    var urlBase = config.hostServer + 'api/shipper/history';
     dataFactory.getDataServer(urlBase)
       .success(function (rs) {
         $scope.historyorders = rs;

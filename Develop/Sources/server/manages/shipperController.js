@@ -407,7 +407,7 @@ module.exports = function (app) {
     };
 
     var getAllShipper = function(req, res, next) {
-        return db.user.getAllUsersHasRole(1, db.profile)
+        return db.user.getAllUsersHasRole(1, db.profile, db.workingstatus)
             .then(function(shipper) {
                 res.status(200).json(shipper);
             }, function(err) {

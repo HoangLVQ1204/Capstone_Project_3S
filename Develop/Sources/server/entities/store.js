@@ -97,14 +97,16 @@ module.exports = function(sequelize, DataTypes) {
         },
 
         //KhanhKC
-            getOneStoreName: function(storeid){
-                return store.findOne({
-                    attributes: ['storeid','name'],
+            getListStoreName: function(liststoreid){
+                return store.findAll({
+                    attributes: ['storeid','name','address','phonenumber'],
                     where:{
-                        'storeid':storeid,
+                        'storeid': {
+                            $in: liststoreid
+                        }
                     }
                 });
-            },
+            }
           //,
 
       //getStoreLedger: function(generalledger, storeid){
