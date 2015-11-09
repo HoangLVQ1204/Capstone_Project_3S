@@ -92,156 +92,7 @@
                                     <div class="wizard-status">Wizard step : <span></span></div>
                                 </div>
                             </footer>
-                        </div>
-                        <div class="tab-pane fade" id="step2" parsley-validate parsley-bind>
-                            <h3>Order information</h3> <hr>
-                            <div>
-                                <section class = "panel">
-                                    <label  class="fullWidth color"><strong>List goods</strong></label>
-                                    <div>
-                                        <table class="table table-hover table-bordered">
-                                            <thead>
-                                            <tr>
-                                                <th>#</th>                                                
-                                                <th>Name</th>
-                                                <th>Amount</th>
-                                                <th>Weight</th>
-                                                <th>Length</th>
-                                                <th>Width</th>
-                                                <th>Height</th>
-                                                <th>Description</th>
-                                                <th>Action</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody align="center">
-                                            <tr ng-repeat="x in goods">
-                                                <td>{{$index+1}}</td>                                                
-                                                <td>{{x.goodname}}</td>
-                                                <td>{{x.amount}}</td>
-                                                <td>{{x.weight}}</td>
-                                                <td>{{x.lengthsize}}</td>
-                                                <td>{{x.widthsize}}</td>
-                                                <td>{{x.heightsize}}</td>
-                                                <td>{{x.description}}</td>
-                                                <td width="15%"><span class=" tooltip-area">
-                                                    <a ng-click="setGood(x)"  class="btn btn-default btn-sm" data-toggle="modal" data-target="#md-edit-good"
-                                                       title="Edit"><i class="fa fa-edit (alias)"></i></a>
-                                                    <a ng-click="deleteGood($index)" class="btn btn-default btn-sm"
-                                                       title="Delete"><i class="fa fa-times"></i></a>
-                                                    </span></td>
-                                            </tr>
-                                            </tbody>
-                                            <tfoot>
-                                            <tr>
-                                                <td colspan="10" class="text-left">
-                                                    <div  class="col-sm-12 col-lg-12 btn-group btn-group-xs color">
-                                                        <button type="button" class=" btn btn-block buttonAdd " data-toggle="modal" data-target="#md-header-color"><i class="fa fa-plus"></i></button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            </tfoot>
-                                        </table>
-                                    </div>
-                                </section>
-                            </div>
-                            <label  class="fullWidth color"><strong>Delivery type</strong></label>
-                            <div class="form-group row">
-                                <div class="col-md-6">
-                                    <div   data-color="red">
-                                        <input  ng-model="order.ordertypeid" type="radio" name="somethign" value="2" />
-                                        <label>Express</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div  data-color="red">
-                                        <input ng-model="order.ordertypeid" type="radio" name="somethign" value="1" />
-                                        <label>Normal</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-12" >
-                                    <label class="fullWidth color"><strong>Cash on delivery</strong></label>
-                                </div>
-                                <div class="col-md-6">
-                                    <input ng-model="order.cod" type="text" class="form-control"
-                                           parsley-required="true"
-                                           parsley-type="number"
-                                           parsley-min="0"
-                                           placeholder="Unit: Vietnam dong">
-                                </div>
-                            </div>
-                            <hr>
-                            <footer class="row">
-                                <div class="col-sm-5">
-                                    <section class="wizard">
-                                        <button type="button" class="btn btn-inverse previous"><i
-                                                class="fa fa-angle-left"></i> Previous
-                                        </button>
-                                        <button type="button" class="btn btn-theme next">Next <i
-                                                class="fa fa-angle-right"></i></button>
-                                    </section>
-                                </div>
-                                <div class="col-sm-7 align-lg-right">
-                                    <div class="wizard-status">Wizard step : <span></span></div>
-                                </div>
-                            </footer>
-                        </div>
-                        <div class="tab-pane fade" id="step3" parsley-validate parsley-bind>
-                            <h3>Pickup information</h3><hr>
-
-                            <div class="form-group row">
-                                <div class="col-md-6">
-                                    <label class="control-label">Store</label>
-                                    <select parsley-required="true" class="form-control"
-                                            ng-options="x.name for x in stores track by x.storeid"
-                                            ng-model="storeid">
-
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="control-label">Phone</label>
-                                    <input  type="text"  class="form-control"
-                                           parsley-type="phone" parsley-required="true"
-                                           placeholder="Your store phone munber">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label">Address</label>
-                                    <textarea  class="form-control"
-                                              parsley-trigger="keyup" rows="1"
-                                              placeholder="Enter customer address"></textarea>
-                            </div>
-                            <hr>
-                            <footer class="row">
-                                <div class="col-sm-7">
-                                    <section class="wizard">
-                                        <button type="button" class="btn btn-inverse previous"><i
-                                                class="fa fa-angle-left"></i> Previous
-                                        </button>
-                                        <button type="submit" ng-click="postCompleteOrder()" class="btn btn-theme next">Submit</button>
-                                        <button type="button" ng-click="postDraff()" class="btn btn-theme-inverse">Save<i
-                                                class="fa fa-angle-right"></i>
-                                        </button>
-                                    </section>
-                                </div>
-                                <div class="col-sm-5 align-lg-right">
-                                    <div class="wizard-status">Wizard step : <span></span></div>
-                                </div>
-                            </footer>
-                        </div>
-
-                        <div class="tab-pane fade" id="step4">
-                            <h3 class="center">Thank You for order</h3><br>
-                        </div>
-                       
-                    </div>
-                </form>
-
-
-            </div>
-
-            <!--
+                             <!--
             ////////////////////////////////////////////////////////////////////////////
             //////////     MODAL ADD GOODS   //////////
             /////////////////////////////////////////////////////////////////////////
@@ -369,6 +220,156 @@
                 <!-- //modal-footer-->
             </div>
             <!-- //modal-->
+                        </div>
+                        <div class="tab-pane fade" id="step2" parsley-validate parsley-bind>
+                            <h3>Order information</h3> <hr>
+                            <div>
+                                <section class = "panel">
+                                    <label  class="fullWidth color"><strong>List goods</strong></label>
+                                    <div>
+                                        <table class="table table-hover table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th>#</th>                                                
+                                                <th>Name</th>
+                                                <th>Amount</th>
+                                                <th>Weight</th>
+                                                <th>Length</th>
+                                                <th>Width</th>
+                                                <th>Height</th>
+                                                <th>Description</th>
+                                                <th>Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody align="center">
+                                            <tr ng-repeat="x in goods">
+                                                <td>{{$index+1}}</td>                                                
+                                                <td>{{x.goodname}}</td>
+                                                <td>{{x.amount}}</td>
+                                                <td>{{x.weight}}</td>
+                                                <td>{{x.lengthsize}}</td>
+                                                <td>{{x.widthsize}}</td>
+                                                <td>{{x.heightsize}}</td>
+                                                <td>{{x.description}}</td>
+                                                <td width="15%"><span class=" tooltip-area">
+                                                    <a ng-click="setGood(x)"  class="btn btn-default btn-sm" data-toggle="modal" data-target="#md-edit-good"
+                                                       title="Edit"><i class="fa fa-edit (alias)"></i></a>
+                                                    <a ng-click="deleteGood($index)" class="btn btn-default btn-sm"
+                                                       title="Delete"><i class="fa fa-times"></i></a>
+                                                    </span></td>
+                                            </tr>
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td colspan="10" class="text-left">
+                                                    <div  class="col-sm-12 col-lg-12 btn-group btn-group-xs color">
+                                                        <button type="button" class=" btn btn-block buttonAdd " data-toggle="modal" data-target="#md-header-color"><i class="fa fa-plus"></i></button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </section>
+                            </div>
+                            <label  class="fullWidth color"><strong>Delivery type</strong></label>
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <div   data-color="red">
+                                        <input  ng-model="order.ordertypeid" type="radio" name="somethign" value="2" />
+                                        <label>Express</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div  data-color="red">
+                                        <input ng-model="order.ordertypeid" type="radio" name="somethign" value="1" />
+                                        <label>Normal</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-12" >
+                                    <label class="fullWidth color"><strong>Cash on delivery</strong></label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input ng-model="order.cod" type="text" class="form-control"
+                                           parsley-required="true"
+                                           parsley-type="number"
+                                           parsley-min="0"
+                                           placeholder="Unit: Vietnam dong">
+                                </div>
+                            </div>
+                            <hr>
+                            <footer class="row">
+                                <div class="col-sm-5">
+                                    <section class="wizard">
+                                        <button type="button" class="btn btn-inverse previous"><i
+                                                class="fa fa-angle-left"></i> Previous
+                                        </button>
+                                        <button type="button" class="btn btn-theme next">Next <i
+                                                class="fa fa-angle-right"></i></button>
+                                    </section>
+                                </div>
+                                <div class="col-sm-7 align-lg-right">
+                                    <div class="wizard-status">Wizard step : <span></span></div>
+                                </div>
+                            </footer>
+                        </div>
+                        <div class="tab-pane fade" id="step3" parsley-validate parsley-bind>
+                            <h3>Pickup information</h3><hr>
+
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label class="control-label">Store</label>
+                                    <select parsley-required="true" class="form-control"
+                                            ng-options="x.name for x in stores track by x.storeid"
+                                            ng-model="selectedStore">
+
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="control-label">Phone</label>
+                                    <input ng-model="selectedStore.phonenumber" type="text"  class="form-control"
+                                           parsley-type="phone" parsley-required="true"
+                                           placeholder="Your store phone munber" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Address</label>
+                                    <textarea ng-model="selectedStore.address" class="form-control"
+                                              parsley-trigger="keyup" rows="1"
+                                              placeholder="Enter customer address" disabled></textarea>
+                            </div>
+                            <hr>
+                            <footer class="row">
+                                <div class="col-sm-7">
+                                    <section class="wizard">
+                                        <button type="button" class="btn btn-inverse previous"><i
+                                                class="fa fa-angle-left"></i> Previous
+                                        </button>
+                                        <button type="submit" ng-click="postCompleteOrder()" class="btn btn-theme next">Submit</button>
+                                        <button type="button" ng-click="postDraff()" class="btn btn-theme-inverse">Save<i
+                                                class="fa fa-angle-right"></i>
+                                        </button>
+                                    </section>
+                                </div>
+                                <div class="col-sm-5 align-lg-right">
+                                    <div class="wizard-status">Wizard step : <span></span></div>
+                                </div>
+                            </footer>
+                        </div>
+
+                        <div class="tab-pane fade" id="step4">
+                            <h3 class="center">Thank You for order</h3><br>
+                        </div>
+                       
+                    </div>
+                </form>
+
+
+            </div>
+
+           
 
             <!--/////////////////////////////////////
                //////     Addition Information  ////
