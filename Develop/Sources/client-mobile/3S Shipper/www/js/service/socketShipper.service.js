@@ -24,20 +24,6 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
 
   socketService.on('shipper:choose:express', function(data) {
     console.log('choose express', data);
-    //Grab Express Order
-    $rootScope.counter = 20; /*20s*/
-    $rootScope.onTimeout = function(){
-      $rootScope.counter--;
-      mytimeout = $timeout($rootScope.onTimeout,1000);
-      if ($rootScope.counter == 0) {
-        $rootScope.stop();
-      }
-    };
-    var mytimeout = $timeout($rootScope.onTimeout,1000);
-
-    $rootScope.stop = function(){
-      $timeout.cancel(mytimeout);
-    };
     //Ionic Loading
     $rootScope.show = function() {
       $ionicLoading.show({
@@ -59,18 +45,56 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
         '<a ng-click="grabExpressOrder()" class="button btn-success-cus btn-default-cus">Grab</a>' +
         '</div>' +
         '</div>',
-        scope: $rootScope,
-        duration: 20000
+        scope: $rootScope
       });
     };
-    $rootScope.show();
     $rootScope.hide = function(){
+      $rootScope.isGrabbing = false;
+      console.log("hide");
       $ionicLoading.hide();
     };
+    //Grab Express Order
+    if(!$rootScope.isGrabbing) {
+      $rootScope.isGrabbing = true;
+      $rootScope.counter = 20;
+      /*20s*/
+      $rootScope.onTimeout = function () {
+        $rootScope.counter--;
+        mytimeout = $timeout($rootScope.onTimeout, 1000);
+        if ($rootScope.counter == 0) {
+          $rootScope.stop();
+        }
+      };
+      var mytimeout = $timeout($rootScope.onTimeout, 1000);
+
+      $rootScope.stop = function () {
+        $timeout.cancel(mytimeout);
+        $rootScope.hide();
+      };
+      $rootScope.show();
+    }else{
+      // TODO: Wait until modal hide
+    }
     //var answer = confirm('Do you want to accept order from store of ' + data.msg.distanceText + ' away?');
     var answer = false;
     $rootScope.grabExpressOrder = function() {
-      answer = true;
+      api.getCurrentUser()
+        .then(function(user) {
+          socketService.sendPacket(
+            {
+              type: 'shipper',
+              clientID: user.shipperID
+            },
+            data.sender,
+            {
+              shipper: user
+            },
+            'shipper:choose:express');
+          $rootScope.hide();
+        })
+        .catch(function(err) {
+          alert(err);
+        });
     };
     if (answer) {
       api.getCurrentUser()
@@ -173,6 +197,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
       .then(function(user) {
         mapService.addShipper(user)
           .then(function() {
+            console.log(":Heerer3");
             socketService.sendPacket(
               {
                 type: 'shipper',
@@ -191,9 +216,11 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
             //     api.stopWatchCurrentPosition(watchID);
             // }, 10000);
           });
+      },function(err){
+        console.log(":FailGetUser");
       })
       .catch(function(err){
-        alert(err);
+        console.log(err);
       });
   };
 
