@@ -198,13 +198,13 @@ angular.module('app', [
     });
 
     $rootScope.$on('$stateChangeSuccess', function(e, toState){
-
+        console.log(toState.name.indexOf("store"));
         if (toState.name == "login" || toState.name == "home" || toState.name == "error"){
             $rootScope.styleBody = "full-lg";
-        }
-        else{
-            //$rootScope.styleBody = "leftMenu nav-collapse";
+        }else if(toState.name.indexOf("store") == 0){
             $rootScope.styleBody = "";
+        }else{
+            $rootScope.styleBody = "leftMenu nav-collapse";
         }
 
     });

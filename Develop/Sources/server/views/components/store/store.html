@@ -201,6 +201,12 @@
                 </header>
             </div>
 
+            <div class="widget-collapse dark">
+                <header style="background-color:#f35958">
+                    <a data-toggle="collapse" target="_self" ng-click="test();" style="padding:20px 5px; color: white"><i class="fa fa-plus-square" style="color:white"></i> Test Find Shipper</a>
+                </header>
+            </div>
+
         </div>
         <!-- //nav-scroller-->
     </div>
@@ -235,6 +241,42 @@
     //////////////////////////////////////////////////////////////////////
     -->
     <div ui-view id="main"></div>
+
+    <!--
+		///////////////////////////////////////////////////////////////////
+		//////////     MODAL MAP STATIC     ////////
+		///////////////////////////////////////////////////////////////
+		-->
+    <div id="listAcceptedShipper" class="modal fade md-slideRight" tabindex="-1"  data-width="500" data-header-color="theme-inverse">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+            <h4 class="modal-title">Yeah! Finded a shipper</h4>
+        </div>
+        <!-- //modal-header-->
+        <div class="modal-body left">
+               <div class="row">
+                    <div class="col-md-3" >
+                        <img alt="" ng-src="{{inforUser.avatar}}" class="circle" style="width: 100px">
+                    </div>
+                    <div class="col-md-9">
+                        <h3><strong>Hi</strong>, I'm HoangLVQ</h3>
+                        <br>
+                        <h5><i class="fa fa-caret-right"></i> Shipper ID: <strong>SP90184</strong></h5>
+                        <h5><i class="fa fa-caret-right"></i> Distance: <strong>0.7 km</strong></h5>
+                        <h5><i class="fa fa-caret-right"></i> Time to go: <strong>10 min</strong></h5>
+                    </div>
+               </div>
+               <hr>
+               <div class="row">
+                        <div class="align-lg-right">
+                            <button class="btn btn-theme ">Accept</button>
+                            <button class="btn btn-inverse "> Cancel </button>
+                        </div>
+               </div>
+        </div>
+        <!-- //modal-body-->
+    </div>
+    <!-- //modal-->
 
     <!--
     ///////////////////////////////////////////////////////////////////
