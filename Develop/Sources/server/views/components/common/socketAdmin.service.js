@@ -71,18 +71,20 @@ function socketAdmin(socketService,authService,mapService){
     };
 
     api.registerSocket = function(){
-        var user = api.getCurrentUser();                
+        var user = api.getCurrentUser();
         socketService.sendPacket(
-        { 
+        {
             type: 'admin',
-            clientID: user.adminID 
+            clientID: user.adminID
         },
         'server',
         {
             admin: user
         },
-        'admin:register:location');        
+        'client:register');
     };
+
+
 
     return api;
 }

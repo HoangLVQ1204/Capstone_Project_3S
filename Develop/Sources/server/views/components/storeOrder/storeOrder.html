@@ -34,13 +34,13 @@
                                     <input type="text" name="fullname" ng-model="order.recipientname"
                                            class="form-control"
                                            parsley-rangelength="[5,15]"
-                                           placeholder="Your customer name">
+                                           placeholder="Your customer name" parsley-required="true">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="control-label">Phone</label>
                                     <input ng-model="order.recipientphone" type="text" class="form-control"
                                            parsley-type="phone"
-                                           placeholder="(XXX) XXXX XXX">
+                                           placeholder="(XXX) XXXX XXX" required>
                                 </div>
                             </div>
 
@@ -48,9 +48,9 @@
                                 <label class="control-label">Address</label>
                                     <textarea ng-model="order.deliveryaddress" class="form-control"
                                               parsley-trigger="keyup" rows="1"
-                                              placeholder="Enter customer address"></textarea>
+                                              placeholder="Enter customer address" required></textarea>
                             </div>
-                            <div class="form-group row">
+                            <!-- <div class="form-group row">
                                 <div class="col-md-4">
                                     <label class="control-label">City</label>
                                     <select class="selectpicker form-control">
@@ -76,7 +76,7 @@
                                         <option value="China">Truong Trinh</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> -->
                             <hr>
                             <footer class="row">
                                 <div class="col-sm-5">
@@ -102,8 +102,7 @@
                                         <table class="table table-hover table-bordered">
                                             <thead>
                                             <tr>
-                                                <th>#</th>
-                                                <th>ID</th>
+                                                <th>#</th>                                                
                                                 <th>Name</th>
                                                 <th>Amount</th>
                                                 <th>Weight</th>
@@ -116,8 +115,7 @@
                                             </thead>
                                             <tbody align="center">
                                             <tr ng-repeat="x in goods">
-                                                <td>{{$index+1}}</td>
-                                                <td>{{x.goodID}}</td>
+                                                <td>{{$index+1}}</td>                                                
                                                 <td>{{x.goodname}}</td>
                                                 <td>{{x.amount}}</td>
                                                 <td>{{x.weight}}</td>
@@ -167,7 +165,9 @@
                                 </div>
                                 <div class="col-md-6">
                                     <input ng-model="order.cod" type="text" class="form-control"
-                                           parsley-rangelength="[5,15]"
+                                           parsley-required="true"
+                                           parsley-type="number"
+                                           parsley-min="0"
                                            placeholder="Unit: Vietnam dong">
                                 </div>
                             </div>
@@ -193,22 +193,22 @@
                             <div class="form-group row">
                                 <div class="col-md-6">
                                     <label class="control-label">Store</label>
-                                    <select ng-model="storeid" class="selectpicker form-control">
-                                        <option value="str1">KFC1</option>
-                                        <option value="str2">KFC2</option>
-                                        <option value="str3">KFC3</option>
+                                    <select parsley-required="true" class="form-control"
+                                            ng-options="x.name for x in stores track by x.storeid"
+                                            ng-model="storeid">
+
                                     </select>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="control-label">Phone</label>
-                                    <input type="text" ng-model="order.pickupaddress" class="form-control"
-                                           parsley-rangelength="[5,15]"
+                                    <input  type="text"  class="form-control"
+                                           parsley-type="phone" parsley-required="true"
                                            placeholder="Your store phone munber">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label">Address</label>
-                                    <textarea ng-model="order.pickupaddress" class="form-control"
+                                    <textarea  class="form-control"
                                               parsley-trigger="keyup" rows="1"
                                               placeholder="Enter customer address"></textarea>
                             </div>
@@ -219,8 +219,8 @@
                                         <button type="button" class="btn btn-inverse previous"><i
                                                 class="fa fa-angle-left"></i> Previous
                                         </button>
-                                        <button type="submit" class="btn btn-theme next">Submit</button>
-                                        <button type="button" ng-click="postDraff()" class="btn btn-theme-inverse submit">Save<i
+                                        <button type="submit" ng-click="postCompleteOrder()" class="btn btn-theme next">Submit</button>
+                                        <button type="button" ng-click="postDraff()" class="btn btn-theme-inverse">Save<i
                                                 class="fa fa-angle-right"></i>
                                         </button>
                                     </section>
@@ -234,7 +234,7 @@
                         <div class="tab-pane fade" id="step4">
                             <h3 class="center">Thank You for order</h3><br>
                         </div>
-
+                       
                     </div>
                 </form>
 
@@ -299,7 +299,7 @@
                 </div>
                 <!-- //modal-body-->
                 <div class="modal-footer">
-                    <button type="submit" ng-click="addGood()" class="btn btn-theme" >Add</button>
+                    <button type="button" ng-click="addGood()" class="btn btn-theme" >Add</button>
                     <button type="button" data-dismiss="modal" class="btn btn-inverse">Close</button>
                 </div>
                 <!-- //modal-footer-->
@@ -314,7 +314,7 @@
                 <div class="modal-header bg-inverse bd-inverse-darken">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
                             class="fa fa-times"></i></button>
-                    <h4 class="modal-title">Edit good: {{good.goodID}}</h4>
+                    <h4 class="modal-title">Edit good</h4>
                 </div>
                 <!-- //modal-header-->
                 <div class="modal-body">
@@ -322,12 +322,12 @@
                         <div class="col-md-6">
                             <label class="control-label">Goods</label>
                             <input type="text" class="form-control"
-                                   parsley-rangelength="[5,15]"
+                                   parsley-rangelength="[5,15]" parsley-required="true"
                                    placeholder="Good name" ng-model="good.goodname">
                         </div>
                         <div class="col-md-3">
                             <label class="control-label">Amount</label>
-                            <input type="text" class="form-control " parsley-min="0" placeholder="0" ng-model="good.amount">
+                            <input type="text" class="form-control " parsley-required="true" parsley-min="0" placeholder="0" ng-model="good.amount">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -364,7 +364,7 @@
                 <!-- //modal-body-->
                 <div class="modal-footer">
                     <button type="button" data-dismiss="modal" class="btn btn-inverse">Close</button>
-                    <button type="submit" ng-click="editGood()" data-dismiss="modal" class="btn btn-theme" >Save</button>
+                    <button type="button" ng-click="editGood()" data-dismiss="modal" class="btn btn-theme" >Save</button>
                 </div>
                 <!-- //modal-footer-->
             </div>
@@ -381,11 +381,11 @@
                         <div class="panel-body">
                             <div class="form-group">
                                 <label class="control-label col-md-7 align-lg-left">Code for shiper</label>
-                                <label  class="control-label col-md-5">{{order.codeVsShipper}}</label>
+                                <label  class="control-label col-md-5">{{order.gatheringCode}}</label>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-7 align-lg-left">Code for customer</label>
-                                <label class="control-label col-md-5">{{order.codeVsCustomer}}</label>
+                                <label class="control-label col-md-5">{{order.deliverCode}}</label>
                             </div>
                             <label></label>
                             <div>
@@ -418,7 +418,6 @@
     </div>
     <!-- //main-->
 </div>
-<script>
 
-
-</script>
+</body>
+</html>

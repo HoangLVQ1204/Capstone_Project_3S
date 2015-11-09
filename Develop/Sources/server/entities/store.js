@@ -19,8 +19,12 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: true
         },
-        addresscoordination: {
-            type: DataTypes.TEXT,
+        latitude: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        longitude: {
+            type: DataTypes.STRING,
             allowNull: true
         },
         phonenumber: {
@@ -28,6 +32,10 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: true
         },
         email: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        avatar: {
             type: DataTypes.STRING,
             allowNull: true
         },
@@ -46,7 +54,7 @@ module.exports = function(sequelize, DataTypes) {
       getOneStore: function(storeid){
         return store.findOne({
           where:{
-            'storeid':storeid,
+            'storeid':storeid
           }
         });
       },
@@ -89,14 +97,16 @@ module.exports = function(sequelize, DataTypes) {
         },
 
         //KhanhKC
-            getOneStoreName: function(storeid){
-                return store.findOne({
-                    attributes: ['storeid','name'],
+            getListStoreName: function(liststoreid){
+                return store.findAll({
+                    attributes: ['storeid','name','address','phonenumber'],
                     where:{
-                        'storeid':storeid,
+                        'storeid': {
+                            $in: liststoreid
+                        }
                     }
                 });
-            },
+            }
           //,
 
       //getStoreLedger: function(generalledger, storeid){

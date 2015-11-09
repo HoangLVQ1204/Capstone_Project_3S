@@ -20,10 +20,14 @@ module.exports = function(socket, io) {
             radius: 1000000000,
             status: 1,
             limit: 2
-        };        
-                
+        };
+        console.log("List of Shippers: ");
+        console.log(io.getAllShippers());
         gmapUtil.getClosestShippers(data.msg.store, io.getAllShippers(), filter)
         .then(function(results) {
+            console.log("------------------------");
+            console.log('Data Store: ');
+            console.log(data);
             console.log('closest shippers', results);            
             results.forEach(function(e) {
                 // console.log('forward', data.sender);

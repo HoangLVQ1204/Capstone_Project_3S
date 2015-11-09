@@ -26,10 +26,10 @@ function storeDashboardController($scope,$state,dataService, $http, config){
             option: 'Delivery Address',
             value: 'deliveryaddress'
         },
-        {
-            option: 'Create Date',
-            value: 'createdate'
-        },
+        // {
+        //     option: 'Create Date',
+        //     value: 'createdate'
+        // },
         {
             option: 'Type',
             value: 'ordertype'

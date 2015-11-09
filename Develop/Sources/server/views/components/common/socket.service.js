@@ -4,6 +4,15 @@
 angular.module('app')
     .factory('socketService',function($rootScope){
         var socket = io();
+
+        socket.on('connect',function(){
+            socket
+                .on('authenticated',function(){
+                    console.log("Authen ok!");
+                })
+                .emit('authenticate',{token: localStorage.getItem('EHID')});
+        })
+
         return {
             on: function (eventName, callback){
                 socket.on(eventName,function(){

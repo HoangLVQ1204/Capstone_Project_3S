@@ -89,6 +89,15 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
 
+      //findUserByUsername:  function(username,profile){
+      //  return user.findOne({
+      //    include:[{model:profile, attributes: ['name','identitycard','avatar']}],
+      //    where: {
+      //      username: username
+      //    }
+      //  });
+      //},
+
       postOneUser: function(newUser){
         return user.build(newUser).save();
       },
@@ -108,7 +117,7 @@ module.exports = function(sequelize, DataTypes) {
             as:'tasks',
             include: [
               {
-              model: order,
+                model: order,
                 include: [{model: orderstatus,  attributes: ['statusname']}]
               },
               {

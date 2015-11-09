@@ -5,11 +5,13 @@
 
 var _ = require('lodash');
 
-module.exports = function(server){
+module.exports = function(server,app){
     
     var socketConnection = {};    
 
     var io = require('socket.io')(server);
+    var socketioJwt = require("socketio-jwt");
+    var config      = require('../config/config');
 
     /*
         io.admins[adminID] = {            
@@ -417,55 +419,131 @@ module.exports = function(server){
     };
 
 
-    io.on('connection',function(socket){
+    //io.use(socketioJwt.authorize({
+    //    secret: config.secrets.jwt,
+    //    handshake: true
+    //}));
 
-        console.log("have connection in Server");
+    //io.on('connection',socketioJwt.authorize({
+    //    secret: config.secrets.jwt,
+    //    timeout: 15000
+    //}).on('authenticated',function(socket){
+    //
+    //    //console.log("have connection in Server");
+    //    //
+    //    //console.log('hello! ', socket.decoded_token);
+    //
+    //
+    //});
 
-        socket.on("store:register:location",function(data){                    
-            console.log(data);
-            
-            var store = data.msg.store; 
-            if (io.containStore(store.storeID))
-                io.updateStore(store, socket);
-            else           
-                io.addStore(store, socket);
-                        
-            io.reply(data.sender, { mapData: io.getDataForStore(store.storeID) }, 'store:register:location');
-            io.forward(data.sender, 'admin', { store: io.getOneStore(store.storeID) }, 'admin:add:store');
-            
-            require('./socketStore')(socket, io);
+    io
+        .on('connection', socketioJwt.authorize({
+            secret: config.secrets.jwt,
+            timeout: 15000 // 15 seconds to send the authentication message
+        }))
+        .on('authenticated', function(socket){
+
+            var dataToken = socket.decoded_token;
+
+            socket.on("client:register",function(data){
+                if(dataToken.userrole == 1){
+
+                    console.log("This is Data Shipper: ");
+                    console.log(data);
+
+                    var shipper = data.msg.shipper;
+                    if (io.containShipper(shipper.shipperID))
+                        io.updateShipper(shipper, socket);
+                    else
+                        io.addShipper(shipper, socket);
+
+                    io.reply(data.sender, { mapData: io.getDataForShipper(shipper.shipperID) }, 'shipper:register:location');
+                    io.forward(data.sender, 'admin', { shipper: io.getOneShipper(shipper.shipperID) }, 'admin:add:shipper');
+
+                    require('./socketShipper')(socket, io);
+
+                }
+
+                if(dataToken.userrole == 2){
+
+                    console.log("This is Data Store: ");
+                    console.log(data);
+
+                    var store = data.msg.store;
+                    if (io.containStore(store.storeID))
+                        io.updateStore(store, socket);
+                    else
+                        io.addStore(store, socket);
+
+                    io.reply(data.sender, { mapData: io.getDataForStore(store.storeID) }, 'store:register:location');
+                    io.forward(data.sender, 'admin', { store: io.getOneStore(store.storeID) }, 'admin:add:store');
+
+                    require('./socketStore')(socket, io);
+                }
+
+                if(dataToken.userrole == 3){
+
+                    console.log("This is Data Admin: ");
+                    console.log(data);
+
+                    var admin = data.msg.admin;
+                    if (io.containAdmin(admin.adminID))
+                        io.updateAdmin(admin, socket);
+                    else
+                        io.addAdmin(admin, socket);
+
+                    io.reply(data.sender, { mapData: io.getDataForAdmin() }, 'admin:register:location');
+                    require('./socketAdmin')(socket, io);
+
+                }
+            })
+
+            //socket.on("store:register:location",function(data){
+            //    console.log(data);
+            //
+            //    var store = data.msg.store;
+            //    if (io.containStore(store.storeID))
+            //        io.updateStore(store, socket);
+            //    else
+            //        io.addStore(store, socket);
+            //
+            //    io.reply(data.sender, { mapData: io.getDataForStore(store.storeID) }, 'store:register:location');
+            //    io.forward(data.sender, 'admin', { store: io.getOneStore(store.storeID) }, 'admin:add:store');
+            //
+            //    require('./socketStore')(socket, io);
+            //});
+
+            //socket.on("admin:register:location",function(data){
+            //    console.log(data);
+            //
+            //    var admin = data.msg.admin;
+            //    if (io.containAdmin(admin.adminID))
+            //        io.updateAdmin(admin, socket);
+            //    else
+            //        io.addAdmin(admin, socket);
+            //
+            //    io.reply(data.sender, { mapData: io.getDataForAdmin() }, 'admin:register:location');
+            //    require('./socketAdmin')(socket, io);
+            //});
+
+            //socket.on("shipper:register:location",function(data){
+            //    console.log(data);
+            //
+            //    var shipper = data.msg.shipper;
+            //    if (io.containShipper(shipper.shipperID))
+            //        io.updateShipper(shipper, socket);
+            //    else
+            //        io.addShipper(shipper, socket);
+            //
+            //    io.reply(data.sender, { mapData: io.getDataForShipper(shipper.shipperID) }, 'shipper:register:location');
+            //    io.forward(data.sender, 'admin', { shipper: io.getOneShipper(shipper.shipperID) }, 'admin:add:shipper');
+            //
+            //    require('./socketShipper')(socket, io);
+            //});
+
+            //socket.on("client:register")
         });
 
-        socket.on("admin:register:location",function(data){
-            console.log(data);              
-
-            var admin = data.msg.admin;      
-            if (io.containAdmin(admin.adminID))
-                io.updateAdmin(admin, socket);
-            else           
-                io.addAdmin(admin, socket);
-
-            io.reply(data.sender, { mapData: io.getDataForAdmin() }, 'admin:register:location');                        
-            require('./socketAdmin')(socket, io);
-        });
-
-        socket.on("shipper:register:location",function(data){
-            console.log(data);
-            
-            var shipper = data.msg.shipper;              
-            if (io.containShipper(shipper.shipperID))
-                io.updateShipper(shipper, socket);
-            else 
-                io.addShipper(shipper, socket);
-                        
-            io.reply(data.sender, { mapData: io.getDataForShipper(shipper.shipperID) }, 'shipper:register:location');
-            io.forward(data.sender, 'admin', { shipper: io.getOneShipper(shipper.shipperID) }, 'admin:add:shipper');
-            
-            require('./socketShipper')(socket, io);
-        });
-
-
-    })
 
 }
 

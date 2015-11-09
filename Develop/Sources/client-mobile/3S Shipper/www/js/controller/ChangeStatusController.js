@@ -8,7 +8,7 @@ app.controller('ChangeStatusCtrl', ['$scope', '$ionicPopup', 'dataService', func
   $scope.status = true;
   var co = 0;
   var getStatus = function(){
-    var urlStatus =  config.hostServer + 'api/status';
+    var urlStatus =  config.hostServer + 'api/shipper/status';
     dataService.getDataServer(urlStatus).then(function(stt){
       $scope.status = stt.data;
       console.log(stt.data);
@@ -16,7 +16,7 @@ app.controller('ChangeStatusCtrl', ['$scope', '$ionicPopup', 'dataService', func
   };
   getStatus();
   $scope.changeStatus = function () {
-    var urlCountTask = config.hostServer + 'api/countTasks';
+    var urlCountTask = config.hostServer + 'api/shipper/countTasks';
     dataService.getDataServer(urlCountTask).then(function (rs) {
       $scope.tasks = rs.data;
       console.log($scope.tasks.Actived);
@@ -40,7 +40,7 @@ app.controller('ChangeStatusCtrl', ['$scope', '$ionicPopup', 'dataService', func
     });
   };
   var sendChangeRequest = function () {
-    var urlBase = config.hostServer + 'api/change-status';
+    var urlBase = config.hostServer + 'api/shipper/change-status';
     var data = {
       status: !$scope.status
     };

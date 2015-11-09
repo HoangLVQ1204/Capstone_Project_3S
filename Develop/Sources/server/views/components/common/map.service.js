@@ -14,7 +14,7 @@ var icons = {
     sourceIcon: 'https://chart.googleapis.com/chart?' +
         'chst=d_map_pin_letter&chld=S|FFFF00|000000',
     disabledIcon: 'http://chart.apis.google.com/chart?' +
-        'chst=d_map_pin_letter&chld=x|3366FF',
+        'chst=d_map_pin_letter&chld=x|3366FF'
 };
 
 function initShipper(shipperMarker, api) {  
@@ -225,9 +225,7 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     /*
         Store Markers
     */
-    api.getStoreMarkers = function(mode) {      
-        // use $http instead      
-        // storeMarkers = sampleData[mode].store;        
+    api.getStoreMarkers = function(mode) {
         return storeMarkers;
         //return sampleData[mode].store;
     };

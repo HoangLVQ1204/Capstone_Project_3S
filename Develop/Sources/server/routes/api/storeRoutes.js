@@ -13,7 +13,6 @@ module.exports = function(app){
 	app.route('/api/store/getLatestAutoAccountDate')
 		.get(controller.getLatestAutoAccountDate);
 
-
 	app.route('/api/store/postNewLedger')
 		.post(controller.postNewLedger);
 
