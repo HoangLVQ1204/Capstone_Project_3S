@@ -93,12 +93,10 @@ module.exports = function (app) {
                         group['Draff'].push(item);
                     }else if(_.isEqual(item['statusname'],'Done')){
                         group['Done'].push(item);
-                    }else if(item['ispending']) {
+                    }else {
                         group['Inprocess'].push(item);
                     }
-                    else if(!_.isEqual(item['statusname'],'Canceling')&&!_.isEqual(item['statusname'],'Cancel') ){
-                        group['Inprocess'].push(item);
-                    }
+                    
                     if(!_.isEqual(item['createdate'],'')){
                         var date = new Date(item['createdate']);
                         date.setHours(0,0,0,0);
@@ -182,9 +180,9 @@ module.exports = function (app) {
         var formatStr = str.substr(str.length - 6);
         var newOrderID = "OD" + formatStr;        
         newOrder.orderid = newOrderID;
-        console.log("ORRDDDDDDDD=========",newOrderID);
+       // console.log("ORRDDDDDDDD=========",newOrderID);
 
-        console.log("=============11===============",req.body);
+        console.log("=============req.body===============",req.body);
         newOrder.storeid = req.body.order.storeid;
         newOrder.ordertypeid = req.body.order.ordertypeid;
         newOrder.pickupaddress = req.body.order.pickupaddress;
@@ -198,7 +196,8 @@ module.exports = function (app) {
         newOrder.statusid = req.body.order.statusid;
         newOrder.ispending = 'false';
         newOrder.isdraff = req.body.order.isdraff;
-        newOrder.iscancel = 'false';        
+        newOrder.iscancel = 'false';
+        newOrder.createdate = new Date();        
         if(!_.isNumber(req.body.order.cod)){
             newOrder.cod = 0;
         }else {
@@ -217,40 +216,34 @@ module.exports = function (app) {
         var formatStr = str.substr(str.length - 6);                    
         var newCodeID = formatStr;
         /////////////
-
         
         var code1 = {
         'codecontent' : req.body.order.gatheringCode,
-        'typeid' : 1,
+        'typeid' : 2,
         'orderid' : newOrder.orderid,
         'codeid' : newCodeID++
        };
        var code2 = {
         'codecontent' : req.body.order.deliverCode,
-        'typeid' : 2,
+        'typeid' : 6,
         'orderid' : newOrder.orderid,
         'codeid' : newCodeID++
-       };
+       };       
        
-       var code4 = {
-        'codecontent' : req.body.order.outStockCode,
-        'typeid' : 4,
-        'orderid' : newOrder.orderid,
-        'codeid' : newCodeID++
-       };
        var code3 = {
         'codecontent' : req.body.order.inStockCode,
         'typeid' : 3,
         'orderid' : newOrder.orderid,
         'codeid' : newCodeID++
        };
+       var code4 = {
+        'codecontent' : req.body.order.returnStoreCode,
+        'typeid' : 5,
+        'orderid' : newOrder.orderid,
+        'codeid' : newCodeID++
+       };
        console.log("==============22==============");
-
-       // var postOrder =  db.order.postOneOrder(newOrder);
-        //var postCode1 = db.confirmationcode.postOneCode(code1);
-        //var postCode2 = db.confirmationcode.postOneCode(code2);
-        //var postCode3 = db.confirmationcode.postOneCode(code3);
-        //var postCode4 = db.confirmationcode.postOneCode(code4);    
+       
         return db.order.postOneOrder(newOrder)
             .then(function () {
                 console.log("==============33==============");

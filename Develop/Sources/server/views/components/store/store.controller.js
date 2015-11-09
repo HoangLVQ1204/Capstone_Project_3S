@@ -6,9 +6,6 @@ function storeController($scope,$state,socketStore,dataService,authService,confi
 
     authService.getProfileUser()
         .then(function(res){
-            console.log("-------DATA USER-------");
-            console.log(res.data);
-            console.log("-------DATA USER-------");
             $scope.inforUser = res.data;
         })
 
@@ -25,6 +22,23 @@ function storeController($scope,$state,socketStore,dataService,authService,confi
     $scope.signOut = function(){
         console.log("log out");
         authService.signOut();
+    }
+
+    function loading(){
+        var overlay=$('<div class="load-overlay"><div><div class="c1"></div><div class="c2"></div><div class="c3"></div><div class="c4"></div></div><span>Finding Shipper...</span><button class="btn btn-theme-inverse">Cancel</button></div>');
+        $("body").append(overlay);
+        overlay.css('opacity',3).fadeIn("slow");
+    }
+    function unloading(){
+        $("body").find(".load-overlay").fadeOut("slow",function(){ $(this).remove() });
+    }
+
+    $scope.test = function(){
+        loading();
+        setTimeout(function(){
+            unloading();
+            $("#listAcceptedShipper").modal("show");
+        }, 5000);
     }
     //document.getElementById("btnDemo").onclick = function() {alert("Hello")};
     //$state.go('app.login');
@@ -53,7 +67,6 @@ function storeController($scope,$state,socketStore,dataService,authService,confi
                     });
                 }
             });
-
         caplet();
     });
 }

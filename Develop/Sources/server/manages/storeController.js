@@ -211,9 +211,14 @@ module.exports = function(app) {
 
     //KhanhKC
     var getStoreName = function(req,res,next){
-        var listStoreID = req.user.stores;        
+        //console.log("================req.user==============",req.user);
+        var listStoreID = [];
+         _.each(req.user.stores, function(store){
+                listStoreID.push(store.storeid);
+          });       
         db.store.getListStoreName(listStoreID)
-            .then(function (storeRs) {               
+            .then(function (storeRs) { 
+                   // console.log("================req.user==============",storeRs);              
                 res.status(201).json(storeRs);
             }, function () {
                 next(new Error("Can not find store name!"))

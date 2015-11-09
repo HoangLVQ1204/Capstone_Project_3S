@@ -66,7 +66,7 @@
                         linkedCalendars: false,
                         autoUpdateInput: false,
                         locale: {
-                            format: "DD/MM/YYYY"
+                            //format: "DD/MM/YYYY"
 
                         }
                     });

@@ -8,7 +8,7 @@ function storeOrderController($scope, $state, dataService, config) {
         gatheringCode: GenerateRandomCode(6),
         deliverCode: GenerateRandomCode(6),
         inStockCode : GenerateRandomCode(6),
-        outStockCode : GenerateRandomCode(6),
+        returnStoreCode : GenerateRandomCode(6),
         storeid: '',
         ordertypeid: "2",
         pickupaddress: '',
@@ -66,7 +66,6 @@ function storeOrderController($scope, $state, dataService, config) {
                     
                         
                     
-                    
                     // Set the name for the next tab
                     $('#step4 h3').find("span").html($('#fullname').val());
 
@@ -105,7 +104,7 @@ function storeOrderController($scope, $state, dataService, config) {
             order: $scope.order,
             goods : $scope.goods,
         };
-        console.log(data);
+        console.log("==============data=========",data);
         dataService.postDataServer(urlBase,data);
 
     }
@@ -167,7 +166,7 @@ function storeOrderController($scope, $state, dataService, config) {
             order: $scope.order,
             goods : $scope.goods,
         };
-        console.log(data);
+        console.log("================data===============",data);
         dataService.postDataServer(urlBase,data);
 
     };
@@ -181,7 +180,7 @@ function storeOrderController($scope, $state, dataService, config) {
     //     console.log(data);
     //     dataService.postDataServer(urlBase,data);
 
-    // };
+    //  };
 
     function GenerateRandomCode(length){
         var code = "";
@@ -200,6 +199,7 @@ function storeOrderController($scope, $state, dataService, config) {
                 $scope.order.storeid = $scope.stores[0].storeid;
                 $scope.order.pickupaddress = $scope.stores[0].address;
                 $scope.order.pickupphone = $scope.stores[0].phonenumber;
+                $scope.selectedStore =  $scope.stores[0];
             })
             .error(function (error) {
                 console.log('Unable to load store name: ' + error);
