@@ -49,10 +49,10 @@ function storeDashboardController($scope,$state,dataService, $http, config){
             option: 'Order ID',
             value: 'orderid'
         },
-        {
-            option: 'Done Date',
-            value: 'donedate'
-        },
+        // {
+        //     option: 'Done Date',
+        //     value: 'donedate'
+        // },
         {
             option: 'Delivery Address',
             value: 'deliveryaddress'
@@ -176,6 +176,7 @@ function storeDashboardController($scope,$state,dataService, $http, config){
         var index =  $scope.displayedCollectionInprocess.indexOf( $scope.Order);
         if (index !== -1) {
             $scope.displayedCollectionInprocess.splice(index, 1);
+            $scope.orderInprocess.splice(index, 1);
         }
     };
 
@@ -186,6 +187,7 @@ function storeDashboardController($scope,$state,dataService, $http, config){
             var index =  $scope.displayedCollectionDraff.indexOf( $scope.Order);
             if (index !== -1) {
                 $scope.displayedCollectionDraff.splice(index, 1);
+                $scope.ordersDraff.splice(index, 1);
             }
             alertDelete.success();
         },function(err){
@@ -203,7 +205,9 @@ function storeDashboardController($scope,$state,dataService, $http, config){
                 dataService.postDataServer(urlBase,$scope.listDraff[i]);
                 var index =  $scope.displayedCollectionDraff.indexOf(order);
                 if (index !== -1) {
+                    $scope.ordersDraff.splice(index, 1)
                     $scope.displayedCollectionDraff.splice(index, 1);
+                    
                 }
             }
         }

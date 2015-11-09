@@ -88,24 +88,24 @@
                                             <table class="table table-striped table-hover table-bordered"
                                                    st-set-filter="customFilter" st-custom-date="createdate"
                                                    st-predicate="{{selectedInprocess.value}}"
-                                                   stdate="daterange"
+                                                   stdate="dateRange"
                                                    search-watch-model="searchInprocess"
                                                    st-table="displayedCollectionInprocess"
                                                    st-safe-src="orderInprocess">
 
                                                 <div class="row">
 
-                                                    <div class="col-md-4 form-group pull-left">
-
+                                                    <div class="col-md-3 form-group pull-left">
                                                         <div class=" input-icon">
                                                             <i class="fa fa-calendar ico"></i>
-                                                            <input type="text" daterange class="form-control" name="daterange" daterange id="daterange"
-                                                                   ng-model="daterange" placeholder="Create Date"/>
+                                                            <input type="text" daterange class="form-control" name="daterange" id="daterange"
+                                                                   ng-model="dateRange" placeholder="Create Date"/>
                                                         </div>
-
-
                                                     </div>
-                                                    <!-- //form-group-->
+                                                    <!--  <button type="button" class="btn btn-default">
+                                                        <i class="fa fa-times" ng-click="dateRange=''"></i>
+                                                    </button> -->
+                                                    
                                                     <div class="col-md-4 pull-right">
                                                         <div class="input-icon"><i class="fa fa-search ico"></i>
 
@@ -161,7 +161,7 @@
                                                     <td width="18%">{{x.recipientname}}</td>
                                                     <td width="13%"> {{x.recipientphone}}</td>
                                                     <td>{{x.deliveryaddress}}</td>
-                                                    <td width="10%">{{x.createdate | date: 'dd/MM/yyyy'}}</td>
+                                                    <td width="10%">{{x.createdate | date: 'MM/dd/yyyy'}}</td>
                                                     <td width="8%">{{x.ordertype}}</td>
                                                     <td width="9%"> {{x.statusname}}</td>
                                                     <td width="10%">
@@ -258,7 +258,7 @@
 
                                                         <div class=" input-icon">
                                                             <i class="fa fa-calendar ico"></i>
-                                                            <input type="text" daterange class="form-control"
+                                                            <input type="text" daterangedone class="form-control"
                                                                    name="daterange" id="dateRangeDone"
                                                                    ng-model="dateRangeDone" placeholder="Completion date"/>
                                                         </div>
@@ -318,7 +318,7 @@
                                                     <td>{{x.recipientname}}</td>
                                                     <td> {{x.recipientphone}}</td>
                                                     <td>{{x.deliveryaddress}}</td>
-                                                    <td>{{x.donedate|date:'dd/MM/yyyy'}}</td>
+                                                    <td>{{x.donedate|date:'MM/dd/yyyy'}}</td>
                                                     <!--<td> {{x.statusname}}</td>-->
                                                     <!-- <td  width="16%>
                                                      <span class="tooltip-area">
@@ -365,7 +365,7 @@
                                                     <div class="col-md-4 form-group pull-left">
                                                     <div class=" input-icon">
                                                     <i class="fa fa-calendar ico"></i>
-                                                    <input type="text" daterange class="form-control"
+                                                    <input type="text" daterangedraff class="form-control"
                                                     name="daterange" id="daterangeDraff"
                                                     ng-model="dateRangeDraff"  placeholder="Create date"/>
                                                     </div>
@@ -422,7 +422,7 @@
                                                     <td>{{x.recipientname}}</td>
                                                     <td> {{x.recipientphone}}</td>
                                                     <td>{{x.deliveryaddress}}</td>
-                                                    <td>{{x.createdate|date:'dd/MM/yyyy'}}</td>
+                                                    <td>{{x.createdate|date:'MM/dd/yyyy'}}</td>
                                                     <!--<td> {{x.statusname}}</td>-->
                                                     <td width="16%">
                                                         <span class=" tooltip-area">
