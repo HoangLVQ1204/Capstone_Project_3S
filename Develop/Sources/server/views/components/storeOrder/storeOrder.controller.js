@@ -96,15 +96,17 @@ function storeOrderController($scope, $state, dataService, config) {
                                         var $valid = content.parsley( 'validate' );                                        
                                             if(!$valid){                                                
                                                 return false;                                                
-                                            }
-                                            if($scope.goods.length==0){
+                                            }else if($scope.goods.length==0){
                                                 alertEmptyGood();
                                                 return false;   
-                                            }
-                                        
+                                            } 
                                         }
-                    }
-                      console.log("=======goood.length=======",$scope.goods.length);
+                    } 
+                    if(index==3){
+                        console.log(content) ;
+                        postCompleteOrder ();
+                    }                      
+                     
 
                 // Set the name for the next tab
                 $('#step4 h3').find("span").html($('#fullname').val());
@@ -137,7 +139,7 @@ function storeOrderController($scope, $state, dataService, config) {
         $("#addGoodModal").submit(function(e){
             e.preventDefault();
             if($(this).parsley( 'validate' )){ 
-            addGood();               
+                addGood();      
             }
         });
         
@@ -145,7 +147,27 @@ function storeOrderController($scope, $state, dataService, config) {
         $('input').on('ifChanged', function(event){
             $(event.target).parsley( 'validate' );
         });
-        ///Validate Add Modal//////
+        //Validate Add Modal//
+
+
+        //////////////////////////////////////
+        //////// Validate Edit Modal///////////
+        //////////////////////////////////////
+        $("#editGoodModal").submit(function(e){
+            e.preventDefault();
+            if($(this).parsley( 'validate' )){ 
+                //$("#md-edit-good").attr('class','modal fade').addClass(data.dismiss).modal('modal')
+                editGood();
+                $('#md-edit-good').modal('hide');              
+            }
+
+        });
+        
+        //iCheck[components] validate
+        $('input').on('ifChanged', function(event){
+            $(event.target).parsley( 'validate' );
+        });
+        ///Validate edit Modal//////
         
             handleStatusChanged();
 
@@ -185,7 +207,7 @@ function storeOrderController($scope, $state, dataService, config) {
         $scope.good = good;
     };
 
-    $scope.editGood = function(){
+    function editGood(){
         $scope.good = {goodID:$scope.good.goodID};
     };
 
@@ -193,6 +215,8 @@ function storeOrderController($scope, $state, dataService, config) {
         $scope.goods.push($scope.good);
         $scope.good.goodID++;
         $scope.good = {};
+        $scope.$apply();
+
     };
 
     $scope.deleteGood = function(goodID){
