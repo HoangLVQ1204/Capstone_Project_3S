@@ -224,6 +224,35 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
       });
   };
 
+  /*
+  * io: Send Issue
+  * */
+  api.sendInfoOfIssue = function(issueid){
+    console.log('send issue', issueid);
+    var currentShipper = authService.getCurrentInfoUser();
+    console.log('shipper', currentShipper);
+    socketService.sendPacket(
+      {
+        type: 'shipper',
+        clientID: currentShipper.username
+      },
+      //'store',
+      'admin',
+      {
+        //orders: [
+        //  {
+        //    orderid: 'ss',
+        //    status: 'ss'
+        //  }
+        //],
+        issue: {
+         issueid: issueid
+        }
+      },
+      'shipper:sendissue'
+    );
+  };
+
   return api;
 }
 

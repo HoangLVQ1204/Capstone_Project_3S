@@ -197,12 +197,14 @@ categoryID int REFERENCES IssueCategory(categoryID),
 typeName text
 );
 
+--resolveType: 1: continue, 2: changeShipper
 CREATE TABLE Issue
 (
 issueID SERIAL PRIMARY KEY,
 typeID int REFERENCES IssueType(typeID),
 description text,
 isResolved boolean,
+resolveType int,
 createdDate date
 );
 

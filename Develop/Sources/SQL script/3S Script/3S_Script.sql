@@ -259,10 +259,10 @@ insert into issuetype values ('7', '2', 'Other');
 
 
 -- issue:id, issuecategory, reason, description
-insert into issue (typeid, description, isresolved, createddate)   values ('1', 'Tắc đường quá, em chưa đi tiếp được', 'false', '2015-11-1');
-insert into issue (typeid, description, isresolved, createddate)    values ('1', 'Em bị hỏng xe, đang vá xăm', 'false', '2015-11-1');
-insert into issue (typeid, description, isresolved, createddate)    values ('1', 'Em vừa bị tai nạn nhẹ, xin phép giao chậm', 'true', '2015-11-1');
-insert into issue (typeid, description, isresolved, createddate)    values ('2', 'Các đơn hàng này bị hỏng rồi, Admin xem giúp em', 'true', '2015-11-1');
+insert into issue (typeid, description, isresolved, resolvetype, createddate)   values ('1', 'Tắc đường quá, em chưa đi tiếp được', 'false', '1',  '2015-11-1');
+insert into issue (typeid, description, isresolved, resolvetype, createddate)    values ('1', 'Em bị hỏng xe, đang vá xăm', 'false', '1', '2015-11-1');
+insert into issue (typeid, description, isresolved, resolvetype, createddate)    values ('1', 'Em vừa bị tai nạn nhẹ, xin phép giao chậm', 'true', '1', '2015-11-1');
+insert into issue (typeid, description, isresolved, resolvetype, createddate)    values ('2', 'Các đơn hàng này bị hỏng rồi, Admin xem giúp em', 'true', '1', '2015-11-1');
 
 -- orderissue
 insert into orderissue values ('1', 'ord1');
