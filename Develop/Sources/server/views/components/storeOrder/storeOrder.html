@@ -92,134 +92,7 @@
                                     <div class="wizard-status">Wizard step : <span></span></div>
                                 </div>
                             </footer>
-                             <!--
-            ////////////////////////////////////////////////////////////////////////////
-            //////////     MODAL ADD GOODS   //////////
-            /////////////////////////////////////////////////////////////////////////
-            -->
-            <div id="md-header-color" class="modal fade" data-header-color="#736086">
-                <div class="modal-header bg-inverse bd-inverse-darken">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
-                            class="fa fa-times"></i></button>
-                    <h4 class="modal-title">Add a good to order</h4>
-                </div>
-                <!-- //modal-header-->
-                <div class="modal-body">
-                    <div class="form-group row">
-                        <div class="col-md-6">
-                            <label class="control-label">Goods</label>
-                            <input type="text" class="form-control"
-                                   parsley-rangelength="[5,15]"
-                                   placeholder="Good name" ng-model="good.goodname">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="control-label">Amount</label>
-                            <input type="text" class="form-control " parsley-min="0" placeholder="0" ng-model="good.amount">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-3">
-                            <label class="control-label">Weight</label>
-                            <input type="text" class="form-control"
-                                   parsley-min="0"
-                                   placeholder="Gram" ng-model="good.weight">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="control-label">Length</label>
-                            <input type="text" class="form-control"
-                                   parsley-min="0"
-                                   placeholder="mm" ng-model="good.lengthsize">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="control-label">Width</label>
-                            <input type="text" class="form-control"
-                                   parsley-min="0"
-                                   placeholder="mm" ng-model="good.widthsize">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="control-label">High</label>
-                            <input type="text" class="form-control"
-                                   parsley-min="0"
-                                   placeholder="mm" ng-model="good.heightsize">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Good description</label>
-                        <input type="text" class="form-control" parsley-min="0" placeholder="" ng-model="good.description">
-                    </div>
-                </div>
-                <!-- //modal-body-->
-                <div class="modal-footer">
-                    <button type="button" ng-click="addGood()" class="btn btn-theme" >Add</button>
-                    <button type="button" data-dismiss="modal" class="btn btn-inverse">Close</button>
-                </div>
-                <!-- //modal-footer-->
-            </div>
-            <!-- //modal-->
-            <!--
-           ////////////////////////////////////////////////////////////////////////////
-           //////////     MODAL EDIT GOODS   //////////
-           /////////////////////////////////////////////////////////////////////////
-                       -->
-            <div id="md-edit-good" class="modal fade" data-header-color="#736086">
-                <div class="modal-header bg-inverse bd-inverse-darken">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
-                            class="fa fa-times"></i></button>
-                    <h4 class="modal-title">Edit good</h4>
-                </div>
-                <!-- //modal-header-->
-                <div class="modal-body">
-                    <div class="form-group row">
-                        <div class="col-md-6">
-                            <label class="control-label">Goods</label>
-                            <input type="text" class="form-control"
-                                   parsley-rangelength="[5,15]" parsley-required="true"
-                                   placeholder="Good name" ng-model="good.goodname">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="control-label">Amount</label>
-                            <input type="text" class="form-control " parsley-required="true" parsley-min="0" placeholder="0" ng-model="good.amount">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-md-3">
-                            <label class="control-label">Weight</label>
-                            <input type="text" class="form-control"
-                                   parsley-min="0"
-                                   placeholder="Gram" ng-model="good.weight">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="control-label">Length</label>
-                            <input type="text" class="form-control"
-                                   parsley-min="0"
-                                   placeholder="mm" ng-model="good.lengthsize">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="control-label">Width</label>
-                            <input type="text" class="form-control"
-                                   parsley-min="0"
-                                   placeholder="mm" ng-model="good.widthsize">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="control-label">High</label>
-                            <input type="text" class="form-control"
-                                   parsley-min="0"
-                                   placeholder="mm" ng-model="good.heightsize">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Good description</label>
-                        <input type="text" class="form-control" parsley-min="0" placeholder="" ng-model="good.description">
-                    </div>
-                </div>
-                <!-- //modal-body-->
-                <div class="modal-footer">
-                    <button type="button" data-dismiss="modal" class="btn btn-inverse">Close</button>
-                    <button type="button" ng-click="editGood()" data-dismiss="modal" class="btn btn-theme" >Save</button>
-                </div>
-                <!-- //modal-footer-->
-            </div>
-            <!-- //modal-->
+                             
                         </div>
                         <div class="tab-pane fade" id="step2" parsley-validate parsley-bind>
                             <h3>Order information</h3> <hr>
@@ -257,6 +130,7 @@
                                                     <a ng-click="deleteGood($index)" class="btn btn-default btn-sm"
                                                        title="Delete"><i class="fa fa-times"></i></a>
                                                     </span></td>
+
                                             </tr>
                                             </tbody>
                                             <tfoot>
@@ -365,10 +239,145 @@
                        
                     </div>
                 </form>
-
-
             </div>
+            <!--
+            ////////////////////////////////////////////////////////////////////////////
+            //////////     MODAL ADD GOODS   //////////
+            /////////////////////////////////////////////////////////////////////////
+            -->
+            <div id="md-header-color" class="modal fade" data-header-color="#736086">
+                <div class="modal-header bg-inverse bd-inverse-darken">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
+                            class="fa fa-times"></i></button>
+                    <h4 class="modal-title">Add a good to order</h4>
+                </div>
+                <!-- //modal-header-->
+                <form id = "addGoodModal" data-parsley-validate>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <label class="control-label">Goods</label>
+                                <input type="text" class="form-control"
+                                       parsley-rangelength="[5,15]" parsley-required="true"
+                                       placeholder="Good name" ng-model="good.goodname">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label">Amount</label>
+                                <input type="text" class="form-control " parsley-min="0" placeholder="0" ng-model="good.amount" data-parsley-type="number" parsley-required="true">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <label class="control-label">Weight</label>
+                                <input type="text" class="form-control"
+                                       parsley-min="0"
+                                       placeholder="Gram" ng-model="good.weight" data-parsley-type="number" parsley-required="true">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label">Length</label>
+                                <input type="text" class="form-control"
+                                       parsley-min="0"
+                                       placeholder="mm" ng-model="good.lengthsize" data-parsley-type="number" parsley-required="true">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label">Width</label>
+                                <input type="text" class="form-control"
+                                       parsley-min="0"
+                                       placeholder="mm" ng-model="good.widthsize" data-parsley-type="number" parsley-required="true">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="control-label">High</label>
+                                <input type="text" class="form-control"
+                                       parsley-min="0"
+                                       placeholder="mm" ng-model="good.heightsize" data-parsley-type="number" parsley-required="true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Good description</label>
+                            <input type="text" class="form-control" parsley-min="0" placeholder="" ng-model="good.description">
+                        </div>
+                    </div>
+                    <!-- //modal-body-->
+                    <div class="modal-footer">
+                        <button type="submit"class="btn btn-theme">Add</button>
+                        <button type="button" data-dismiss="modal" class="btn btn-inverse">Close</button>
+                    </div>
+                </form>
+                <!-- //modal-footer-->
+            </div>
+            <!-- //modal-->
+            <!--
+           ////////////////////////////////////////////////////////////////////////////
+           //////////     MODAL EDIT GOODS   //////////
+           /////////////////////////////////////////////////////////////////////////
+                       -->
+            <div id="md-edit-good" class="modal fade" data-header-color="#736086">
+                <div class="modal-header bg-inverse bd-inverse-darken">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
+                            class="fa fa-times"></i></button>
+                    <h4 class="modal-title">Edit good</h4>
+                </div>
+                <!-- //modal-header-->
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label class="control-label">Goods</label>
+                            <input type="text" class="form-control"
+                                   parsley-rangelength="[5,15]" parsley-required="true"
+                                   placeholder="Good name" ng-model="good.goodname">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control-label">Amount</label>
+                            <input type="text" class="form-control " parsley-required="true" parsley-min="0" placeholder="0" ng-model="good.amount">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <label class="control-label">Weight</label>
+                            <input type="text" class="form-control"
+                                   parsley-min="0"
+                                   placeholder="Gram" ng-model="good.weight">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control-label">Length</label>
+                            <input type="text" class="form-control"
+                                   parsley-min="0"
+                                   placeholder="mm" ng-model="good.lengthsize">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control-label">Width</label>
+                            <input type="text" class="form-control"
+                                   parsley-min="0"
+                                   placeholder="mm" ng-model="good.widthsize">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="control-label">High</label>
+                            <input type="text" class="form-control"
+                                   parsley-min="0"
+                                   placeholder="mm" ng-model="good.heightsize">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Good description</label>
+                        <input type="text" class="form-control" parsley-min="0" placeholder="" ng-model="good.description">
+                    </div>
+                </div>
+                <!-- //modal-body-->
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-inverse">Close</button>
+                    <button type="button" ng-click="editGood()" data-dismiss="modal" class="btn btn-theme" >Save</button>
+                </div>
+                <!-- //modal-footer-->
+            </div>
+            <!-- //modal-->
 
+            <!--///////////////////////////////////////////////////////
+              /////////////////////   Empty good   /////////////////
+             ///////////////////////////////////////////////////////////
+            -->
+            <textarea class="form-control theme" id="smsEmptyGood" rows="5" style="display:none">
+              You must add at least 1 good to order!
+             </textarea>
            
 
             <!--/////////////////////////////////////
