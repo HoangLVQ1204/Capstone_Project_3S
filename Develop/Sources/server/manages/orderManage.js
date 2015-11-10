@@ -97,7 +97,13 @@ module.exports = function (app) {
                         group['Inprocess'].push(item);
                     }
                     
-                    if(!_.isEqual(item['createdate'],'')){
+                    
+                    if(item.ledgerid == '' && !item['isdraff']){
+                        totalNewCod = totalNewCod + parseInt(item.cod);
+                        totalNewFee = totalNewFee + parseInt(item.fee);
+                        totalNewOrder++;
+
+                        if(!_.isEqual(item['createdate'],'')){
                         var date = new Date(item['createdate']);
                         date.setHours(0,0,0,0);
                         var today = new Date();
@@ -117,10 +123,6 @@ module.exports = function (app) {
                         }
 
                     }
-                    if(item.ledgerid == '' && !item['isdraff']){
-                        totalNewCod = totalNewCod + parseInt(item.cod);
-                        totalNewFee = totalNewFee + parseInt(item.fee);
-                        totalNewOrder++;
                     }
 
                 });
