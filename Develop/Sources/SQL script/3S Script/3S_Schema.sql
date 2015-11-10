@@ -4,13 +4,20 @@ roleID int PRIMARY KEY,
 roleName varchar(20)
 );
 
-CREATE TABLE WorkingStatus
+/*CREATE TABLE WorkingStatus
 (
 statusID int PRIMARY KEY,
 statusName varchar(20)
 --working status cua shipper: busy, available, away--
-);
+);*/
 
+-- UserStatus: user duoc accept boi admin hay chua
+--1 la chua inactive, 2 la active, 3 la ban--
+create table UserStatus
+(
+ statusID int PRIMARY KEY,
+ statusName varchar(10)
+);
 
 CREATE TABLE "user"
 (
@@ -18,9 +25,7 @@ username varchar(20) PRIMARY KEY,
 password varchar(255),
 userRole int REFERENCES Role(roleID),
 -- 0 la admin, 1  --
-userStatus int,
- --0 la chua accept, 1 la bi ban, 2 la binh thuong--
- workingStatusID int REFERENCES WorkingStatus(statusID)
+userStatus int REFERENCES UserStatus(statusID)
  );
 
 CREATE TABLE Profile
@@ -265,6 +270,6 @@ DROP TABLE ManageStore;
 DROP TABLE Store;
 DROP TABLE Profile;
 DROP TABLE "user";
-DROP TABLE WorkingStatus;
+DROP TABLE UserStatus;
 DROP TABLE Role;
 */

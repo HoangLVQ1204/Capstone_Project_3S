@@ -3,20 +3,25 @@ insert into role values ('1', 'Shipper');
 insert into role values ('2', 'Store');
 insert into role values ('3', 'Admin');
 
--- workingstatus
+/* workingstatus
 
 insert into workingstatus values ('1', 'On');
 insert into workingstatus values ('2', 'Off');
 insert into workingstatus values ('3', 'Busy');
+*/
+--userstatus
+insert into userstatus values ('1', 'Inactive');
+insert into userstatus values ('2', 'Active');
+insert into userstatus values ('3', 'Ban');
 
 -- user
 
-insert into "user" values ('hoang', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '3', '1', '1');
-insert into "user" values ('huykool', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '1', '1', '1');
-insert into "user" values ('quyensheep', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '1', '1', '1');
-insert into "user" values ('khanhkute', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '1', '1');
-insert into "user" values ('nhungkaka', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '1', '1');
-insert into "user" values ('khoangkiti', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '3', '1', '1');
+insert into "user" values ('hoang', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '3', '2');
+insert into "user" values ('huykool', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '1', '2');
+insert into "user" values ('quyensheep', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '1', '2');
+insert into "user" values ('khanhkute', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '2');
+insert into "user" values ('nhungkaka', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '2');
+insert into "user" values ('khoangkiti', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '3', '2');
 
 -- profile
 
