@@ -105,8 +105,8 @@ insert into "order" values ('ord20', 'str2', '2', 'Cát Linh, Ba Đình, Hà N�
 
 
 -- taskstatus
-insert into taskstatus VALUES  ('1', 'NotActive');
-insert into taskstatus VALUES ('2', 'Actived');
+insert into taskstatus VALUES  ('1', 'Inactive');
+insert into taskstatus VALUES ('2', 'Active');
 insert into taskstatus  VALUES ('3', 'Done');
 insert into taskstatus VALUES ('4', 'Fail');
 -- tasktype
