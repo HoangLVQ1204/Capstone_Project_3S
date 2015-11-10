@@ -127,6 +127,24 @@ angular.module('app', [
             access: config.role.store
         })
 
+        .state('store.orderdetail',{
+             url: '/orderdetail',
+             template: '<store-order-detail-layout></store-order-detail-layout>',
+             controller: function($scope, $rootScope, mapService, authService){
+                 var mode = "all";
+                 $scope.shippers = mapService.getShipperMarkers(mode);
+                 $scope.stores = mapService.getStoreMarkers(mode);
+                 $scope.customers = mapService.getCustomerMarkers(mode);
+                 $scope.orders = mapService.getOrders(mode);
+                 $scope.center = {
+                     latitude: authService.getCurrentInfoUser().stores[0].latitude,
+                     longitude: authService.getCurrentInfoUser().stores[0].longitude
+                 }
+             },
+            access: config.role.store
+        })
+
+
     jwtInterceptorProvider.tokenGetter = function(){
         return localStorage.getItem('EHID');
     };
