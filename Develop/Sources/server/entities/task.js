@@ -147,6 +147,7 @@ module.exports = function (sequelize, DataTypes) {
 
             assignTaskForShipper: function(shipper){
                 //console.log(shipper);
+
                 return task.findOrCreate({
                     where: {
                         orderid: shipper.orderid,
@@ -165,9 +166,9 @@ module.exports = function (sequelize, DataTypes) {
                                     'orderid': shipper.orderid,
                                     'shipperid': shipper.shipperid,
                                     'adminid': shipper.adminid,
-                                    'statusid': 1,
+                                    'statusid': 2,
                                     'typeid': shipper.typeid,
-                                    'taskdate': shipper.taskdate
+                                    'taskdate': new Date(Date.now())
                                 });
                             task.updateStatusOfTask(tasks.taskid, 5);
                         }

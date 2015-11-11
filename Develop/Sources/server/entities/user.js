@@ -21,11 +21,6 @@ module.exports = function(sequelize, DataTypes) {
     userstatus: {
       type: DataTypes.INTEGER,
       allowNull: true
-    },
-    workingstatusid: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      primaryKey: true
     }
   }, {
     freezeTableName: true,
@@ -50,10 +45,10 @@ module.exports = function(sequelize, DataTypes) {
           constraints: false
         });
 
-        user.belongsTo(db.workingstatus, {
-          foreignKey: 'workingstatusid',
-          constraints: false
-        });
+        //user.belongsTo(db.workingstatus, {
+        //  foreignKey: 'workingstatusid',
+        //  constraints: false
+        //});
 
         user.hasMany(db.task,
             {as:'assigner', foreignKey: 'adminid'}
@@ -115,9 +110,11 @@ module.exports = function(sequelize, DataTypes) {
           include:[{
             model: task,
             as:'tasks',
+            //required: false,
             include: [
               {
                 model: order,
+                attributes: ['orderid', 'storeid', 'statusid', 'deliveryaddress','pickupaddress'],
                 include: [{model: orderstatus,  attributes: ['statusname']}]
               },
               {
@@ -126,11 +123,13 @@ module.exports = function(sequelize, DataTypes) {
               },
               {
                 model: taskstatus,
+                //required: false,
                 attributes: ['statusname'],
                 where:{
                   statusid: [1,4]
                 }
-              }
+              },
+
             ]
           },{model: profile}],
           where: {
@@ -155,14 +154,14 @@ module.exports = function(sequelize, DataTypes) {
         }
       },
 
-      getShipperStatus: function(shipperid) {
-        return user.findOne({
-          attributes: [['workingstatusid', 'status']],
-          where: {
-            username: shipperid
-          }
-        });
-      },
+      //getShipperStatus: function(shipperid) {
+      //  return user.findOne({
+      //    attributes: [['workingstatusid', 'status']],
+      //    where: {
+      //      username: shipperid
+      //    }
+      //  });
+      //},
   }
 
   });

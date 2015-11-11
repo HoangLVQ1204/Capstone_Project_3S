@@ -9,13 +9,16 @@ module.exports = function (app) {
 
     var db = app.get('models');
 
+    /*
+     * Get all task of Shipper @quyennv
+     */
     var getTask = function (req, res, next) {
-        var shipperid = 'huykool';
-        var taskdate = '2015-02-15';
+        var shipperid = req.user.username;
+        //var taskdate = '2015-02-15';
         var task = db.task;
         var order = db.order;
 
-        return order.getAllTaskOfShipper(task, shipperid, taskdate)
+        return order.getAllTaskOfShipper(task, shipperid)
             .then(function (tasks) {
                 var group = {};
                 if (_.isEmpty(tasks) == false) {
@@ -244,6 +247,9 @@ module.exports = function (app) {
         return res.status(200).json('Test');
     };
 
+    /*
+     * create Issue @quyennv
+     */
     var createIssue = function (req, res, next) {
         //Instance new Issue
         var newIssue = _.cloneDeep(req.body[0].issue);
@@ -276,8 +282,12 @@ module.exports = function (app) {
             });
     };
 
+    /*
+     * Change is pending of order @quyennv
+     */
     var changeIsPending = function(req, res, next) {
-        var shipperid = 'huykool';
+        //console.log('quyen', req.user.username);
+        var shipperid = req.user.username;
         var issueId = req.body.issueId;
         var task = db.task;
         var order = db.order;
@@ -438,18 +448,28 @@ module.exports = function (app) {
     var  getAllOrderToAssignTask = function (req, res, next) {
         var orderList=[];
         var promise=[];
-        return db.order.getAllOrderToAssignTask(db.orderstatus, db.task)
+        return db.order.getAllOrderToAssignTask(db.orderstatus, db.task, db.taskstatus)
             .then(function(shipper) {
                 shipper.map(function(item) {
                     var order = new Object();
                     order.order = item;
                     if (item.tasks.length == 0) {
                         orderList.push(order);
-
                     }
                     else {
                         if (item.statusid == 4 && item.tasks.length==1) {
                             orderList.push(order);
+                        }
+                        if (item.tasks[item.tasks.length-1].shipperid == null) {
+                            var newOrder = new Object();
+                            //console.log(item.tasks[item.tasks.length-1].toJSON());
+                            newOrder = _.cloneDeep(item.tasks[item.tasks.length-1].toJSON());
+
+
+                            newOrder['order'] =  _.cloneDeep(item.toJSON());
+                            delete  newOrder['order']['tasks'];
+                            //newOrder.order = item;
+                            orderList.push(newOrder);
                         }
                     }
                 })
@@ -464,8 +484,8 @@ module.exports = function (app) {
         var shipperList;
         return db.user.getAllShipperWithTask(db.task, db.profile, db.order, db.orderstatus, db.tasktype, db.taskstatus)
             .then(function(shipper) {
-                console.log("--------------Data Task Shipper -------------------");
-                console.log(shipper);
+                //console.log("--------------Data Task Shipper -------------------");
+                //console.log(shipper);
                 res.status(200).json(shipper);
             }, function(err) {
                 next(err);
@@ -504,8 +524,12 @@ module.exports = function (app) {
         });
     };
     //// END - Get status of shipper
+    /*
+    * Get all Task of Shipper tobe Issue @quyennv
+    */
     var getTaskBeIssuePending = function (req, res, next) {
-        var shipperid = 'huykool';
+        //var shipperid = 'huykool';
+        var shipperid = req.user.username;
         var task = db.task;
         var order = db.order;
         var orderissue = db.orderissue;
@@ -550,8 +574,13 @@ module.exports = function (app) {
             })
     }
 
+    /*
+     * Get all Task of Shipper is cancel @quyennv
+     */
     var getAllTaskCancel = function(req, res, next) {
-        var shipperid = 'huykool';
+        //var shipperid = 'huykool';
+        //console.log('quyen', req.user.username);
+        var shipperid = req.user.username;
         var order = db.order;
         var task = db.task;
         var issue = db.issue;

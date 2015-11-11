@@ -20,14 +20,6 @@ function socketStore($q,socketService,authService,mapService){
         });
     });
 
-    socketService.on('store:find:shipper', function(data) {
-        var shipper = data.msg.shipper;        
-        console.log('shipper returned', shipper);
-
-        // Test selectShipper
-        api.selectShipper(shipper, {});
-    });
-
     socketService.on('store:update:shipper', function(data) {
         console.log('store:update:shipper', data);
         var shipper = data.msg.shipper;
@@ -79,8 +71,6 @@ function socketStore($q,socketService,authService,mapService){
             },
             'client:register');
 
-            // Test findShipper
-            api.findShipper();
         });
     };
     

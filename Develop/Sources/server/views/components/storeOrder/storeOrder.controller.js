@@ -38,6 +38,10 @@ function storeOrderController($scope, $state, dataService, config) {
 
             $('#validate-wizard').bootstrapWizard({
                 tabClass: "nav-wizard",
+            ////////////////////////////////////////////////
+            /////////////Validate when click submit/////////
+            ////////////////////////////////////////////////
+            /* 
                onNext: function (tab, navigation, index) {
                 console.log(index);
                 if (index == 3)
@@ -70,7 +74,43 @@ function storeOrderController($scope, $state, dataService, config) {
                     $('#step4 h3').find("span").html($('#fullname').val());
 
                 }
-            },
+            }, */
+            ////Validate when click submit/////
+
+                onNext: function(tab, navigation, index) {
+                    if(index==1){
+                        var content=$('#step'+index); 
+                                console.log(content) ;                                 
+                                    if(typeof  content.attr("parsley-validate") != 'undefined'){
+                                        var $valid = content.parsley( 'validate' );                                        
+                                            if(!$valid ){
+                                                return false;
+                                            }
+                                        
+                                        }
+                    }
+                    if(index==2){
+                        var content=$('#step'+index); 
+                                console.log(content) ;                                 
+                                    if(typeof  content.attr("parsley-validate") != 'undefined'){
+                                        var $valid = content.parsley( 'validate' );                                        
+                                            if(!$valid){                                                
+                                                return false;                                                
+                                            }else if($scope.goods.length==0){
+                                                alertEmptyGood();
+                                                return false;   
+                                            } 
+                                        }
+                    } 
+                    if(index==3){
+                        console.log(content) ;
+                        postCompleteOrder ();
+                    }                      
+                     
+
+                // Set the name for the next tab
+                $('#step4 h3').find("span").html($('#fullname').val());
+                },
                 onTabClick: function (tab, navigation, index) {
                     $.notific8('Please click <strong>next button</strong> to wizard next step!! ', {
                         life: 5000,
@@ -93,9 +133,46 @@ function storeOrderController($scope, $state, dataService, config) {
                 }
             });
 
+        //////////////////////////////////////
+        //////// Validate Add Modal///////////
+        //////////////////////////////////////
+        $("#addGoodModal").submit(function(e){
+            e.preventDefault();
+            if($(this).parsley( 'validate' )){ 
+                addGood();      
+            }
+        });
+        
+        //iCheck[components] validate
+        $('input').on('ifChanged', function(event){
+            $(event.target).parsley( 'validate' );
+        });
+        //Validate Add Modal//
+
+
+        //////////////////////////////////////
+        //////// Validate Edit Modal///////////
+        //////////////////////////////////////
+        $("#editGoodModal").submit(function(e){
+            e.preventDefault();
+            if($(this).parsley( 'validate' )){ 
+                //$("#md-edit-good").attr('class','modal fade').addClass(data.dismiss).modal('modal')
+                editGood();
+                $('#md-edit-good').modal('hide');              
+            }
+
+        });
+        
+        //iCheck[components] validate
+        $('input').on('ifChanged', function(event){
+            $(event.target).parsley( 'validate' );
+        });
+        ///Validate edit Modal//////
+        
             handleStatusChanged();
 
         });
+        
 
     function postCompleteOrder (){
         var urlBase = config.baseURI + '/orders';
@@ -121,22 +198,7 @@ function storeOrderController($scope, $state, dataService, config) {
             });
         }
 
-        ///////////////////////////////////////////////////
-        //....Validate Form...///
-        ///////////////////////////////////////////////////    
-
-        $("#alidate-wizard").submit(function(e){
-            e.preventDefault();
-            alert("send");
-            if(!$(this).parsley( 'validate' )){
-                alert("send");
-            }
-        });
         
-        //iCheck[components] validate
-        $('input').on('ifChanged', function(event){
-            $(event.target).parsley( 'validate' );
-        });  
 
     });
     //getDataFromServer();
@@ -145,14 +207,16 @@ function storeOrderController($scope, $state, dataService, config) {
         $scope.good = good;
     };
 
-    $scope.editGood = function(){
+    function editGood(){
         $scope.good = {goodID:$scope.good.goodID};
     };
 
-    $scope.addGood = function(){
+    function addGood(){
         $scope.goods.push($scope.good);
         $scope.good.goodID++;
         $scope.good = {};
+        $scope.$apply();
+
     };
 
     $scope.deleteGood = function(goodID){
@@ -169,18 +233,7 @@ function storeOrderController($scope, $state, dataService, config) {
         console.log("================data===============",data);
         dataService.postDataServer(urlBase,data);
 
-    };
-    // $scope.postCompleteOrder = function(){
-    //     var urlBase = config.baseURI + '/orders';
-    //     $scope.order.isdraff = false;
-    //     var data = {
-    //         order: $scope.order,
-    //         goods : $scope.goods,
-    //     };
-    //     console.log(data);
-    //     dataService.postDataServer(urlBase,data);
-
-    //  };
+    };    
 
     function GenerateRandomCode(length){
         var code = "";
@@ -205,6 +258,16 @@ function storeOrderController($scope, $state, dataService, config) {
                 console.log('Unable to load store name: ' + error);
             });
     }
+    function alertEmptyGood() {
+            var data = new Object();
+            data.verticalEdge = 'right';
+            data.horizontalEdge = 'top';
+            data.theme = 'theme';
+            $.notific8($("#smsEmptyGood").val(), data);
+            console.log("=======OK=====");
+    }
+        
+    
 
 }
 

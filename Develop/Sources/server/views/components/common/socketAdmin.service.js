@@ -55,6 +55,10 @@ function socketAdmin(socketService,authService,mapService){
             mapService.updateOrder(e.orderID, e.orderInfo);
         });
     });
+
+    socketService.on('admin:issue', function(data) {
+        console.log('admin:issue', data.msg.issue.issueid);
+    });
     
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();        

@@ -2,7 +2,7 @@
  * Created by hoanglvq on 9/22/15.
  */
 
-function storeController($scope,$state,socketStore,dataService,authService,config){
+function storeController($scope,$state,socketService,socketStore,dataService,authService,config){
 
     authService.getProfileUser()
         .then(function(res){
@@ -32,26 +32,42 @@ function storeController($scope,$state,socketStore,dataService,authService,confi
     function unloading(){
         $("body").find(".load-overlay").fadeOut("slow",function(){ $(this).remove() });
     }
+    $scope.listRightShippers = [];
+
+    socketService.on('store:find:shipper', function(data) {
+        var shipper = data.msg.shipper;
+        $scope.listRightShippers.push(shipper);
+        // Test selectShipper
+        //api.selectShipper(shipper, {});
+    });
+
+
 
     $scope.test = function(){
+        socketStore.findShipper();
         loading();
-        setTimeout(function(){
-            unloading();
-            $("#listAcceptedShipper").modal("show");
-        }, 5000);
-    }
-    //document.getElementById("btnDemo").onclick = function() {alert("Hello")};
-    //$state.go('app.login');
-    
-//    authService.userIsLoggedIn(function(role){
-//        if(role.isAdmin){
-//            
-//        }
-//        else if(role.isStore){
-//            $scope.menu = menuStore;
-//            //$state.go('app.store');
-//        }
-//    });
+        var s = 0;
+        $scope.listRightShippers = [];
+        var loopFindShipper = setInterval(function(){
+            if($scope.listRightShippers.length != 0){
+                $scope.rightShipper = $scope.listRightShippers[0];
+
+                unloading();
+                $("#listAcceptedShipper").modal("show");
+                clearInterval(loopFindShipper);
+                return;
+            }
+
+            s = s + 1;
+
+            if(s == 30){
+                unloading();
+                console.log("Can't find any Shipper NOW! Plz try again! ");
+                clearInterval(loopFindShipper);
+            }
+
+        },1000);
+    };
 
     $scope.$watch('$viewContentLoaded', function(event) {
 
@@ -71,6 +87,6 @@ function storeController($scope,$state,socketStore,dataService,authService,confi
     });
 }
 
-storeController.$inject = ['$scope','$state','socketStore','dataService','authService','config'];
+storeController.$inject = ['$scope','$state','socketService','socketStore','dataService','authService','config'];
 angular.module('app').controller('storeController',storeController);
 
