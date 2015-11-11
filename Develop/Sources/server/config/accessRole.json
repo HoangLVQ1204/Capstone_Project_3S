@@ -45,6 +45,22 @@
     {
       "url": "/api/shipper/getTaskBeIssuePending",
       "role": [1]
+    },
+    {
+      "url": "/api/shipper/nextstep",
+      "role": [1]
+    },
+    {
+      "url": "/api/shipper/status",
+      "role": [1]
+    },
+    {
+      "url": "/api/shipper/countTasks",
+      "role": [1]
+    },
+    {
+      "url": "/api/shipper/change-status",
+      "role": [1]
     }
 
 
