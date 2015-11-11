@@ -9,6 +9,8 @@
           </div>
           <div>
             <h2>{{order.code}}</h2>
+            <p ng-if="order.taskstatus == 3" class="label history-fail">Fail</p>
+            <p ng-if="order.taskstatus == 4" class="label history-done">Done</p>
             <p><i class="ion-ios-clock"></i> {{order.time | date : 'HH:mm dd-MM-yy'}}</p>
             <p><i class="ion-social-usd-outline">&nbsp;Fee:</i> {{order.fee | number}} VND</p>
             <p><i class="ion-social-usd-outline">&nbsp;COD:</i> {{order.COD | number}} VND</p>

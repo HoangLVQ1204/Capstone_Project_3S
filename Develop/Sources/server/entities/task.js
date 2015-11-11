@@ -62,7 +62,7 @@ module.exports = function (sequelize, DataTypes) {
             getAllHistoryOfShipper: function (shipperid, page, modelOrder, modelOrderStatus) {
                 var limitNum = (page > 0) ? 2 : 0;
                 return task.findAll({
-                    attributes: [['taskid', 'id'],['taskdate','date']],
+                    attributes: [['taskid', 'id'],['taskdate','date'],['statusid','taskstatus']],
                     order: [['taskdate','DESC']],
                     limit: limitNum,
                     offset: limitNum * (page - 1),

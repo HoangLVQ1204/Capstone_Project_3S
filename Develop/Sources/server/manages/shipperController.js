@@ -67,14 +67,6 @@ module.exports = function (app) {
         var History = db.task;
         var Order = db.order;
         var OrderStatus = db.orderstatus;
-        Order.belongsTo(OrderStatus, {
-            foreignKey: 'statusid',
-            constraints: false
-        });
-        History.belongsTo(Order, {
-            foreignKey: 'orderid',
-            constraints: false
-        });
         var getHistory = History.getAllHistoryOfShipper(shipperid, page, Order, OrderStatus);
         var getTotal = History.countTotalTaskHistoryOfShipper(shipperid);
         Promise.all([getHistory, getTotal])
@@ -92,6 +84,7 @@ module.exports = function (app) {
                         'date': dateWithoutHour,
                         'time': order.date,
                         'code': order.order.code,
+                        'taskstatus': order.taskstatus,
                         'statusid': order.order.orderstatus.statusid,
                         'fee': order.order.fee,
                         'COD': order.order.cod
