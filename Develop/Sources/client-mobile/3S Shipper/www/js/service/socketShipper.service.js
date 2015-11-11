@@ -35,9 +35,8 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
         '<div class="popup-body">' +
         '<span style="font-size: 2.5em; display: block; margin: 7px 0">{{counter}}</span>' +
         '<div id="graborder">' +
-        '<p>Order: Order 1</p>' +
-        '<p>Địa chỉ: Bắc Giang - Hà Nội - Địa chỉ: Bắc Giang - Hà Nội</p>' +
-        '<p>Số điện thoại: 01679212683</p>' +
+        '<p>Có một đơn hàng ở địa cách đây {{data.msg.distanceText}}.</p>' +
+        '<p>Bạn có muốn nhận đơn hàng này ?</p>' +
         '</div>' +
         '</div>' +
         '<div class="popup-buttons">' +
@@ -57,6 +56,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
     if(!$rootScope.isGrabbing) {
       $rootScope.isGrabbing = true;
       $rootScope.counter = 20;
+      $rootScope.data = data;
       /*20s*/
       $rootScope.onTimeout = function () {
         $rootScope.counter--;
@@ -222,6 +222,35 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
       .catch(function(err){
         console.log(err);
       });
+  };
+
+  /*
+  * io: Send Issue
+  * */
+  api.sendInfoOfIssue = function(issueid){
+    console.log('send issue', issueid);
+    var currentShipper = authService.getCurrentInfoUser();
+    console.log('shipper', currentShipper);
+    socketService.sendPacket(
+      {
+        type: 'shipper',
+        clientID: currentShipper.username
+      },
+      //'store',
+      'admin',
+      {
+        //orders: [
+        //  {
+        //    orderid: 'ss',
+        //    status: 'ss'
+        //  }
+        //],
+        issue: {
+         issueid: issueid
+        }
+      },
+      'shipper:sendissue'
+    );
   };
 
   return api;

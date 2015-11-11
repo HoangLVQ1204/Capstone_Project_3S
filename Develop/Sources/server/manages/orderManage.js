@@ -97,7 +97,13 @@ module.exports = function (app) {
                         group['Inprocess'].push(item);
                     }
                     
-                    if(!_.isEqual(item['createdate'],'')){
+                    
+                    if(item.ledgerid == '' && !item['isdraff']){
+                        totalNewCod = totalNewCod + parseInt(item.cod);
+                        totalNewFee = totalNewFee + parseInt(item.fee);
+                        totalNewOrder++;
+
+                        if(!_.isEqual(item['createdate'],'')){
                         var date = new Date(item['createdate']);
                         date.setHours(0,0,0,0);
                         var today = new Date();
@@ -117,10 +123,6 @@ module.exports = function (app) {
                         }
 
                     }
-                    if(item.ledgerid == '' && !item['isdraff']){
-                        totalNewCod = totalNewCod + parseInt(item.cod);
-                        totalNewFee = totalNewFee + parseInt(item.fee);
-                        totalNewOrder++;
                     }
 
                 });
@@ -364,6 +366,15 @@ module.exports = function (app) {
             //});
     };
 
+    var getOrderList = function (req, res, next) {
+        db.order.getAllOrder(db.orderstatus, db.ordertype, db.store)
+        .then(function(list){
+            res.status(200).json(list);
+        }, function(err) {
+            next(err);
+        });
+    };
+
 
     return {
         getAllOrder: getAllOrder,
@@ -374,5 +385,6 @@ module.exports = function (app) {
         deleteOrder : deleteOrder,
         putDraff : putDraff,
         cancelOrder: cancelOrder,
+        getOrderList: getOrderList
     }
 }

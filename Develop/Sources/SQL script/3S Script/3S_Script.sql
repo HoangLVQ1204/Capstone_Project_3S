@@ -3,20 +3,25 @@ insert into role values ('1', 'Shipper');
 insert into role values ('2', 'Store');
 insert into role values ('3', 'Admin');
 
--- workingstatus
+/* workingstatus
 
 insert into workingstatus values ('1', 'On');
 insert into workingstatus values ('2', 'Off');
 insert into workingstatus values ('3', 'Busy');
+*/
+--userstatus
+insert into userstatus values ('1', 'Inactive');
+insert into userstatus values ('2', 'Active');
+insert into userstatus values ('3', 'Ban');
 
 -- user
 
-insert into "user" values ('hoang', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '3', '1', '1');
-insert into "user" values ('huykool', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '1', '1', '1');
-insert into "user" values ('quyensheep', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '1', '1', '1');
-insert into "user" values ('khanhkute', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '1', '1');
-insert into "user" values ('nhungkaka', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '1', '1');
-insert into "user" values ('khoangkiti', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '3', '1', '1');
+insert into "user" values ('hoang', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '3', '2');
+insert into "user" values ('huykool', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '1', '2');
+insert into "user" values ('quyensheep', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '1', '2');
+insert into "user" values ('khanhkute', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '2');
+insert into "user" values ('nhungkaka', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '2');
+insert into "user" values ('khoangkiti', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '3', '2');
 
 -- profile
 
@@ -100,8 +105,8 @@ insert into "order" values ('ord20', 'str2', '2', 'Cát Linh, Ba Đình, Hà N�
 
 
 -- taskstatus
-insert into taskstatus VALUES  ('1', 'NotActive');
-insert into taskstatus VALUES ('2', 'Actived');
+insert into taskstatus VALUES  ('1', 'Inactive');
+insert into taskstatus VALUES ('2', 'Active');
 insert into taskstatus  VALUES ('3', 'Done');
 insert into taskstatus VALUES ('4', 'Fail');
 -- tasktype
@@ -254,10 +259,10 @@ insert into issuetype values ('7', '2', 'Other');
 
 
 -- issue:id, issuecategory, reason, description
-insert into issue (typeid, description, isresolved, createddate)   values ('1', 'Tắc đường quá, em chưa đi tiếp được', 'false', '2015-11-1');
-insert into issue (typeid, description, isresolved, createddate)    values ('1', 'Em bị hỏng xe, đang vá xăm', 'false', '2015-11-1');
-insert into issue (typeid, description, isresolved, createddate)    values ('1', 'Em vừa bị tai nạn nhẹ, xin phép giao chậm', 'true', '2015-11-1');
-insert into issue (typeid, description, isresolved, createddate)    values ('2', 'Các đơn hàng này bị hỏng rồi, Admin xem giúp em', 'true', '2015-11-1');
+insert into issue (typeid, description, isresolved, resolvetype, createddate)   values ('1', 'Tắc đường quá, em chưa đi tiếp được', 'false', '1',  '2015-11-1');
+insert into issue (typeid, description, isresolved, resolvetype, createddate)    values ('1', 'Em bị hỏng xe, đang vá xăm', 'false', '1', '2015-11-1');
+insert into issue (typeid, description, isresolved, resolvetype, createddate)    values ('1', 'Em vừa bị tai nạn nhẹ, xin phép giao chậm', 'true', '1', '2015-11-1');
+insert into issue (typeid, description, isresolved, resolvetype, createddate)    values ('2', 'Các đơn hàng này bị hỏng rồi, Admin xem giúp em', 'true', '1', '2015-11-1');
 
 -- orderissue
 insert into orderissue values ('1', 'ord1');
@@ -270,4 +275,4 @@ insert into orderlog  values ('1', 'ord1', 'str1', '1', '1', 'Tu Liem - Ha Noi',
 insert into orderlog values ('2', 'ord2', 'str2', '2', '2', 'Ho Tung Mau - Ha Noi', 'Hoan Kiem - Ha Noi', '2015-5-23', '2015-5-25', '0988627075', 'Nguyen Van Long', '2', '2', '0', '2000000', '21.045,105.834', '21.105,105.854', '2015-4-5', 'hoang');
 
 -- bannedhistorylog
-insert into bannedhistorylog values ('1', 'khoangkiti', 'quyensheep', 'Reject order', '2015-9-8');
+insert into bannedhistorylog values ('1', 'khoangkiti', 'quyensheep', null, 'Reject order', '2015-9-8');

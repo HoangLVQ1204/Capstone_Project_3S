@@ -31,7 +31,12 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     freezeTableName: true,
-    timestamps: false
+    timestamps: false,
+    classMethods: {
+      getAllHistory : function () {
+        return bannedhistorylog.findAll();
+      }
+    }
   });
   return bannedhistorylog;
 };

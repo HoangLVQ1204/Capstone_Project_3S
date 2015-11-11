@@ -85,6 +85,12 @@ angular.module('app', [
             access: config.role.admin
         })
 
+        .state('admin.orderList',{
+            url: '/orderList',
+            template: '<admin-order-list></admin-order-list>',
+            access: config.role.admin
+        })
+
         .state('admin.issueBox',{
             url: '/issueBox',
             template: '<admin-issue-box></admin-issue-box>',
@@ -94,7 +100,7 @@ angular.module('app', [
         .state('admin.issueBox.content',{
             url: '/content?issueid',
             template: '<issue-content></issue-content>',
-            parent: 'admin.issueBox',
+            //parent: 'admin.issueBox',
             access: config.role.admin
         })
 
@@ -126,6 +132,24 @@ angular.module('app', [
             template: '<store-order></store-order>',
             access: config.role.store
         })
+
+        .state('store.orderdetail',{
+             url: '/orderdetail',
+             template: '<store-order-detail-layout></store-order-detail-layout>',
+             controller: function($scope, $rootScope, mapService, authService){
+                 var mode = "all";
+                 $scope.shippers = mapService.getShipperMarkers(mode);
+                 $scope.stores = mapService.getStoreMarkers(mode);
+                 $scope.customers = mapService.getCustomerMarkers(mode);
+                 $scope.orders = mapService.getOrders(mode);
+                 $scope.center = {
+                     latitude: authService.getCurrentInfoUser().stores[0].latitude,
+                     longitude: authService.getCurrentInfoUser().stores[0].longitude
+                 }
+             },
+            access: config.role.store
+        })
+
 
     jwtInterceptorProvider.tokenGetter = function(){
         return localStorage.getItem('EHID');

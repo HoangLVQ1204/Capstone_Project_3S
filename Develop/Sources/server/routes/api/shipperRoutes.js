@@ -8,14 +8,13 @@ module.exports = function (app) {
     var authManage = require('./../../manages/authManage')(app);
     var checkAll = [authManage.checkToken(),authManage.checkRole()];
 
-    //app.get('/api/tasks', checkAll, shipperCtrl.getTask);
-    app.get('/api/tasks', shipperCtrl.getTask);
+    app.get('/api/tasks', checkAll, shipperCtrl.getTask);
 
     app.post('/api/shipper/updateTaskForShipper', shipperCtrl.updateTaskForShipper);
 
     app.get('/api/shipper/getAllShipper', shipperCtrl.getAllShipper);
 
-    app.get('/api/shipper/getTaskBeIssuePending', shipperCtrl.getTaskBeIssuePending);
+    app.get('/api/shipper/getTaskBeIssuePending', checkAll,  shipperCtrl.getTaskBeIssuePending);
 
     app.get('/api/shipper/getAllShipperWithTask', shipperCtrl.getAllShipperWithTask);
 
@@ -23,9 +22,9 @@ module.exports = function (app) {
 
     app.post('/api/issue', shipperCtrl.createIssue);
 
-    app.put('/api/changeIsPendingOrder', shipperCtrl.changeIsPending);
+    app.put('/api/changeIsPendingOrder', checkAll, shipperCtrl.changeIsPending);
 
-    app.get('/api/getAllTaskCancel', shipperCtrl.getAllTaskCancel);
+    app.get('/api/getAllTaskCancel', checkAll,  shipperCtrl.getAllTaskCancel);
 
     app.route('/api/shipper/history')
         .get(checkAll, shipperCtrl.getHistory);
