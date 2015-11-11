@@ -59,13 +59,17 @@ module.exports = function (sequelize, DataTypes) {
                     {as: 'shipper',foreignKey: 'shipperid'}
                 );
             },
-            getAllHistoryOfShipper: function (shipperid, modelOrder, modelOrderStatus) {
+            getAllHistoryOfShipper: function (shipperid, page, modelOrder, modelOrderStatus) {
+                var limitNum = (page > 0) ? 2 : 0;
                 return task.findAll({
                     attributes: [['taskid', 'id'],['taskdate','date']],
+                    order: [['taskdate','DESC']],
+                    limit: limitNum,
+                    offset: limitNum * (page - 1),
                     where: {
                         shipperid: shipperid,
                         statusid: {
-                            $in: [3,4]
+                            $in: [3, 4]
                         }
                     },
                     include: [
@@ -81,6 +85,20 @@ module.exports = function (sequelize, DataTypes) {
                     ]
                 });
             },
+            //// START - count total task history of one shipper
+            //// HuyTDH 10-11-2015
+            countTotalTaskHistoryOfShipper: function(shipperid){
+                return task.findOne({
+                    attributes: [[sequelize.fn('COUNT', sequelize.col('taskid')), 'total']],
+                    where: {
+                        shipperid: shipperid,
+                        statusid: {
+                            $in: [3,4]
+                        }
+                    }
+                });
+            },
+            //// END - count total task history of one shipper
             getMapdataById: function (orderModel, shipperID, order){
                 if(order=="all") {
                     return task.findAll({
