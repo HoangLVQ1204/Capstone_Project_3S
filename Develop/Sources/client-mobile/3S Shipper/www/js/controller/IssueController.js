@@ -1,7 +1,7 @@
 /**
  * Created by Kaka Hoang Huy on 9/30/2015.
  */
-app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoading', function ($scope, $ionicPopup, dataFactory, $ionicLoading) {
+app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoading', 'socketShipper', function ($scope, $ionicPopup, dataFactory, $ionicLoading, socketShipper) {
 
     console.log('get and save message sharing at IssueController');
     getAllTaskOfShipper();
@@ -230,6 +230,10 @@ $scope.listReasons = [
         var urlCreateBase = config.hostServer + 'api/issue';
         dataFactory.postDataServer(urlCreateBase, data)
           .success(function (rs) {
+            //socket
+            //TODO Send (listOrders)
+            //rs[0].issueid;
+            socketShipper.sendInfoOfIssue(rs[0].issueid);
             $ionicPopup.alert({
               title: 'Success',
               content: 'Your Issue is sent to Admin'

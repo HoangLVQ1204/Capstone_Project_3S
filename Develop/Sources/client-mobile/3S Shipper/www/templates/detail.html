@@ -7,8 +7,7 @@
       <ul class="checkout-bar">
         <!--<li class="visited first"></li>-->
         <a ng-repeat="status in statuslist" href="#" ng-click="openPopover($event)">
-          <li
-            ng-class="{visited: status.statusid < order.statusid, active: status.statusid==order.statusid, next: status.statusid > order.statusid}"></li>
+          <li ng-class="{visited: status.statusid < order.statusid, active: status.statusid==order.statusid, next: status.statusid > order.statusid}"></li>
         </a>
       </ul>
     </div>
@@ -21,52 +20,52 @@
         <div class="item item-input">
           <span class="input-label">Order code:</span>
 
-          <p class="">{{order.code}}</p>
+          <p class="detail-p">{{order.code}}</p>
         </div>
         <label class="item item-input">
           <span class="input-label">Status:</span>
 
-          <p class="">{{order.status}}</p>
+          <p class="detail-p">{{order.status}}</p>
         </label>
         <label class="item item-input">
           <span class="input-label">Recipient:</span>
 
-          <p class="">{{order.recipientname}}<br/>{{order.recipientphone}}</p>
+          <p class="detail-p">{{order.recipientname}}<br/>{{order.recipientphone}}</p>
         </label>
         <label class="item item-input">
           <span class="input-label">Pick-up Address:</span>
 
-          <p class="">{{order.pickupaddress}}</p>
+          <p class="detail-p">{{order.pickupaddress}}</p>
         </label>
         <label class="item item-input">
           <span class="input-label">Pick-up date:</span>
 
-          <p class="">{{order.pickupdate | date : 'dd-MM-yyyy'}}</p>
+          <p class="detail-p">{{order.pickupdate | date : 'dd-MM-yyyy'}}</p>
         </label>
         <label class="item item-input">
           <span class="input-label">Delivery Address:</span>
 
-          <p class="">{{order.deliveryaddress}}</p>
+          <p class="detail-p">{{order.deliveryaddress}}</p>
         </label>
         <label class="item item-input">
           <span class="input-label">Delivery Date:</span>
 
-          <p class="">{{order.deliverydate | date : 'dd-MM-yyyy'}}</p>
+          <p class="detail-p">{{order.deliverydate | date : 'dd-MM-yyyy'}}</p>
         </label>
         <label class="item item-input">
           <span class="input-label">COD:</span>
 
-          <p class="">{{order.cod | number}} VND</p>
+          <p class="detail-p">{{order.cod | number}} VND</p>
         </label>
         <label class="item item-input">
           <span class="input-label">Fee:</span>
 
-          <p class="">{{order.fee | number}} VND</p>
+          <p class="detail-p">{{order.fee | number}} VND</p>
         </label>
         <label class="item item-input">
           <span class="input-label">Goods Information:</span>
 
-          <p class="">
+          <p class="detail-p">
             Weight: {{order.weight}} (g)<br/>
             Size: {{order.lengthsize}} x {{order.widthsize}} x {{order.heightsize}} (cm)
           </p>

@@ -24,20 +24,6 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
 
   socketService.on('shipper:choose:express', function(data) {
     console.log('choose express', data);
-    //Grab Express Order
-    $rootScope.counter = 20; /*20s*/
-    $rootScope.onTimeout = function(){
-      $rootScope.counter--;
-      mytimeout = $timeout($rootScope.onTimeout,1000);
-      if ($rootScope.counter == 0) {
-        $rootScope.stop();
-      }
-    };
-    var mytimeout = $timeout($rootScope.onTimeout,1000);
-
-    $rootScope.stop = function(){
-      $timeout.cancel(mytimeout);
-    };
     //Ionic Loading
     $rootScope.show = function() {
       $ionicLoading.show({
@@ -49,9 +35,8 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
         '<div class="popup-body">' +
         '<span style="font-size: 2.5em; display: block; margin: 7px 0">{{counter}}</span>' +
         '<div id="graborder">' +
-        '<p>Order: Order 1</p>' +
-        '<p>Địa chỉ: Bắc Giang - Hà Nội - Địa chỉ: Bắc Giang - Hà Nội</p>' +
-        '<p>Số điện thoại: 01679212683</p>' +
+        '<p>Có một đơn hàng ở địa cách đây {{data.msg.distanceText}}.</p>' +
+        '<p>Bạn có muốn nhận đơn hàng này ?</p>' +
         '</div>' +
         '</div>' +
         '<div class="popup-buttons">' +
@@ -59,18 +44,57 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
         '<a ng-click="grabExpressOrder()" class="button btn-success-cus btn-default-cus">Grab</a>' +
         '</div>' +
         '</div>',
-        scope: $rootScope,
-        duration: 20000
+        scope: $rootScope
       });
     };
-    $rootScope.show();
     $rootScope.hide = function(){
+      $rootScope.isGrabbing = false;
+      console.log("hide");
       $ionicLoading.hide();
     };
+    //Grab Express Order
+    if(!$rootScope.isGrabbing) {
+      $rootScope.isGrabbing = true;
+      $rootScope.counter = 20;
+      $rootScope.data = data;
+      /*20s*/
+      $rootScope.onTimeout = function () {
+        $rootScope.counter--;
+        mytimeout = $timeout($rootScope.onTimeout, 1000);
+        if ($rootScope.counter == 0) {
+          $rootScope.stop();
+        }
+      };
+      var mytimeout = $timeout($rootScope.onTimeout, 1000);
+
+      $rootScope.stop = function () {
+        $timeout.cancel(mytimeout);
+        $rootScope.hide();
+      };
+      $rootScope.show();
+    }else{
+      // TODO: Wait until modal hide
+    }
     //var answer = confirm('Do you want to accept order from store of ' + data.msg.distanceText + ' away?');
     var answer = false;
     $rootScope.grabExpressOrder = function() {
-      answer = true;
+      api.getCurrentUser()
+        .then(function(user) {
+          socketService.sendPacket(
+            {
+              type: 'shipper',
+              clientID: user.shipperID
+            },
+            data.sender,
+            {
+              shipper: user
+            },
+            'shipper:choose:express');
+          $rootScope.hide();
+        })
+        .catch(function(err) {
+          alert(err);
+        });
     };
     if (answer) {
       api.getCurrentUser()
@@ -173,6 +197,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
       .then(function(user) {
         mapService.addShipper(user)
           .then(function() {
+            console.log(":Heerer3");
             socketService.sendPacket(
               {
                 type: 'shipper',
@@ -191,10 +216,41 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
             //     api.stopWatchCurrentPosition(watchID);
             // }, 10000);
           });
+      },function(err){
+        console.log(":FailGetUser");
       })
       .catch(function(err){
-        alert(err);
+        console.log(err);
       });
+  };
+
+  /*
+  * io: Send Issue
+  * */
+  api.sendInfoOfIssue = function(issueid){
+    console.log('send issue', issueid);
+    var currentShipper = authService.getCurrentInfoUser();
+    console.log('shipper', currentShipper);
+    socketService.sendPacket(
+      {
+        type: 'shipper',
+        clientID: currentShipper.username
+      },
+      //'store',
+      'admin',
+      {
+        //orders: [
+        //  {
+        //    orderid: 'ss',
+        //    status: 'ss'
+        //  }
+        //],
+        issue: {
+         issueid: issueid
+        }
+      },
+      'shipper:sendissue'
+    );
   };
 
   return api;

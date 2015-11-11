@@ -30,6 +30,7 @@ var app = angular.module('starter', ['ionic', 'ngCordova','uiGmapgoogle-maps','a
     ////Check Is firt time sign in
     if (authService.isLogged()) {
       socketShipper.registerSocket();
+      $rootScope.isGrabbing = false;
       $location.path('/app/tasks');
       $rootScope.$apply();
     } else {
@@ -124,7 +125,7 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
           }
         }
       })
-      
+
       .state('app.bestway', {
         url: '/bestway/:tabParam',
         cache: false,
