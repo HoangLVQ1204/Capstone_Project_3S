@@ -115,9 +115,11 @@ module.exports = function(sequelize, DataTypes) {
           include:[{
             model: task,
             as:'tasks',
+            //required: false,
             include: [
               {
                 model: order,
+                attributes: ['orderid', 'storeid', 'statusid', 'deliveryaddress','pickupaddress'],
                 include: [{model: orderstatus,  attributes: ['statusname']}]
               },
               {
@@ -126,11 +128,13 @@ module.exports = function(sequelize, DataTypes) {
               },
               {
                 model: taskstatus,
+                //required: false,
                 attributes: ['statusname'],
                 where:{
                   statusid: [1,4]
                 }
-              }
+              },
+
             ]
           },{model: profile}],
           where: {

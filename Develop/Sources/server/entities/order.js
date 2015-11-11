@@ -270,7 +270,7 @@ module.exports = function(sequelize, DataTypes) {
 
 
 
-      getAllOrderToAssignTask: function(orderstatus, task){
+      getAllOrderToAssignTask: function(orderstatus, task, taskstatus){
         return order.findAll({
           where: {
             'statusid': {$or: [1,4]},
@@ -282,7 +282,11 @@ module.exports = function(sequelize, DataTypes) {
           },
             {
               model: task,
-              required: false
+              required: false,
+              include:{
+                model: taskstatus,
+                attributes: ['statusname']
+              }
             }]
         })
       },
@@ -338,7 +342,24 @@ module.exports = function(sequelize, DataTypes) {
             }
           }]
         });
-      }
+      },
+
+      getAllOrder: function (oderstatusModel,ordertypeModel, storeModel) {
+        return order.findAll({
+          //where: {storeid:store_id },
+          include: [
+            {'model': oderstatusModel,
+              attributes: ['statusname']
+            },{
+              'model': ordertypeModel,
+              attributes: ['typename']
+            },{
+              'model': storeModel,
+              attributes: ['name']
+            }
+          ]
+        });
+      },
     }
   });
   return order;

@@ -418,18 +418,28 @@ module.exports = function (app) {
     var  getAllOrderToAssignTask = function (req, res, next) {
         var orderList=[];
         var promise=[];
-        return db.order.getAllOrderToAssignTask(db.orderstatus, db.task)
+        return db.order.getAllOrderToAssignTask(db.orderstatus, db.task, db.taskstatus)
             .then(function(shipper) {
                 shipper.map(function(item) {
                     var order = new Object();
                     order.order = item;
                     if (item.tasks.length == 0) {
                         orderList.push(order);
-
                     }
                     else {
                         if (item.statusid == 4 && item.tasks.length==1) {
                             orderList.push(order);
+                        }
+                        if (item.tasks[item.tasks.length-1].shipperid == null) {
+                            var newOrder = new Object();
+                            //console.log(item.tasks[item.tasks.length-1].toJSON());
+                            newOrder = _.cloneDeep(item.tasks[item.tasks.length-1].toJSON());
+
+
+                            newOrder['order'] =  _.cloneDeep(item.toJSON());
+                            delete  newOrder['order']['tasks'];
+                            //newOrder.order = item;
+                            orderList.push(newOrder);
                         }
                     }
                 })
@@ -444,8 +454,8 @@ module.exports = function (app) {
         var shipperList;
         return db.user.getAllShipperWithTask(db.task, db.profile, db.order, db.orderstatus, db.tasktype, db.taskstatus)
             .then(function(shipper) {
-                console.log("--------------Data Task Shipper -------------------");
-                console.log(shipper);
+                //console.log("--------------Data Task Shipper -------------------");
+                //console.log(shipper);
                 res.status(200).json(shipper);
             }, function(err) {
                 next(err);

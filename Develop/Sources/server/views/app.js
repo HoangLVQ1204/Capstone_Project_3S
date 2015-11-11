@@ -85,6 +85,12 @@ angular.module('app', [
             access: config.role.admin
         })
 
+        .state('admin.orderList',{
+            url: '/orderList',
+            template: '<admin-order-list></admin-order-list>',
+            access: config.role.admin
+        })
+
         .state('admin.issueBox',{
             url: '/issueBox',
             template: '<admin-issue-box></admin-issue-box>',
@@ -94,7 +100,7 @@ angular.module('app', [
         .state('admin.issueBox.content',{
             url: '/content?issueid',
             template: '<issue-content></issue-content>',
-            parent: 'admin.issueBox',
+            //parent: 'admin.issueBox',
             access: config.role.admin
         })
 
