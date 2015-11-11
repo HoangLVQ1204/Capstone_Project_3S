@@ -2,7 +2,34 @@
  * Created by hoanglvq on 10/26/15.
  */
 
+/*
+    TODO: notifications
+    - list of notifications    
+    - notificationService.js
+        + client-2-server
+        {
+            messages: [
+                {
+                    type: ['issue', 'info']
+                    content:
+                    url:
+                    notify: true/false
+                }
+            ]
+        }
 
+        + server-2-client
+        {
+            message: {
+                    type: ['issue', 'info']
+                    content:
+                    url:
+                    notify: true/false
+                }            
+        }        
+    - directives: ...
+
+*/
 var _ = require('lodash');
 
 module.exports = function(server,app){
