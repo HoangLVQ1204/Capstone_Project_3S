@@ -161,6 +161,13 @@ div.fixed {
   border-radius: 50px;
 }
 
+.history-fail {
+  background-color: #ef473a;
+}
+
+.history-done {
+  background-color: #33cd5f;
+}
 /* ---END StyleSheet of Task & History---*/
 
 /*---START StyleSheet of Profile---*/

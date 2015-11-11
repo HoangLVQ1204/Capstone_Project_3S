@@ -62,32 +62,45 @@ module.exports = function (app) {
     var getHistory = function (req, res, next) {
         var shipper = _.cloneDeep(req.user);
         var shipperid = shipper.username;
+        var page = _.cloneDeep(req.query.page);
+        page = page? page : 0;
         var History = db.task;
         var Order = db.order;
         var OrderStatus = db.orderstatus;
-        Order.belongsTo(OrderStatus, {
-            foreignKey: 'statusid',
-            constraints: false
-        });
-        History.belongsTo(Order, {
-            foreignKey: 'orderid',
-            constraints: false
-        });
-        History.getAllHistoryOfShipper(shipperid, Order, OrderStatus)
-            .then(function (history) {
+        var getHistory = History.getAllHistoryOfShipper(shipperid, page, Order, OrderStatus);
+        var getTotal = History.countTotalTaskHistoryOfShipper(shipperid);
+        Promise.all([getHistory, getTotal])
+            .then(function (p) {
+                var history = (p[0]) ? p[0] : [];
+                var total = (p[1]) ? p[1] : 0;
                 var listHistory = [];
                 history.map(function (order) {
                     order = order.toJSON();
+                    var dateWithoutHour = new Date(order.date);
+                    dateWithoutHour.setHours(0, 0, 0, 0);
+                    dateWithoutHour = dateWithoutHour.getTime();
                     listHistory.push({
                         'id': order.id,
-                        'date': new Date(order.date),
+                        'date': dateWithoutHour,
+                        'time': order.date,
                         'code': order.order.code,
+                        'taskstatus': order.taskstatus,
                         'statusid': order.order.orderstatus.statusid,
                         'fee': order.order.fee,
                         'COD': order.order.cod
                     });
                 });
-                return res.status(200).json(listHistory);
+                var curentPageResult = _.chain(listHistory)
+                    .groupBy("date")
+                    .pairs()
+                    .map(function (currentItem) {
+                        return _.object(_.zip(["date", "taskOfDate"], currentItem));
+                    })
+                    .value();
+                var result = {};
+                result['current'] = curentPageResult;
+                result['total'] = total;
+                return res.status(200).json(result);
             }, function (err) {
                 next(err);
             })
