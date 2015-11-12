@@ -20,6 +20,6 @@
       </ion-item>
       </div>
     </ion-list>
-    <div ng-if="historyorders.length < totalTask" ng-click="loadMore()" class="item item-divider">See more...</div>
+    <div ng-if="totalLoaded < totalTask" ng-click="loadMore()" class="item item-divider">See more...</div>
   </ion-content>
 </ion-view>
