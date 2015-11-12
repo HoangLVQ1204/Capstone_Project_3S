@@ -36,7 +36,7 @@ module.exports = function (app) {
                 var listOrders = [];
                 var statusname = '';
                 var createDate = '';
-                var doneDate ='';
+                var completedate ='';
                 var ledgerid ='';
                 _.each(orders, function(order){
                     if(order['orderstatus'] == null){
@@ -49,10 +49,10 @@ module.exports = function (app) {
                     }else {
                         createDate = order.dataValues.createdate;
                     }
-                    if(order.dataValues.donedate == null){
-                        doneDate = '';
+                    if(order.dataValues.completedate == null){
+                        completedate = '';
                     }else {
-                        doneDate = order.dataValues.donedate;
+                        completedate = order.dataValues.completedate;
                     }
                     if(order.dataValues.ledgerid == null){
                         ledgerid = '';
@@ -66,12 +66,11 @@ module.exports = function (app) {
                         'recipientname' : order.dataValues.recipientname,
                         'recipientphone' : order.dataValues.recipientphone,
                         'isdraff': order.dataValues.isdraff,
-                        'iscancel':order.dataValues.iscancel,
                         'ispending': order.dataValues.ispending,
                         'cod': order.dataValues.cod,
                         'fee' : order.dataValues.fee,
                         'createdate' : createDate,
-                        'donedate' : doneDate,
+                        'completedate' : completedate,
                         'ordertype': order['ordertype'].dataValues.typename,
                         'ledgerid': ledgerid
 
@@ -112,8 +111,8 @@ module.exports = function (app) {
                             todayOrder ++;
                     }
 
-                    if(!_.isEqual(item['donedate'],'')){
-                        var date = new Date(item['donedate']);
+                    if(!_.isEqual(item['completedate'],'')){
+                        var date = new Date(item['completedate']);
                         date.setHours(0,0,0,0);
                         var today = new Date();
                         today.setHours(0,0,0,0);
@@ -147,7 +146,7 @@ module.exports = function (app) {
         //var deliveryaddress = '';
         //var recipientname = '';
         //var recipientphone = '';
-        //var donedate = '';
+        //var completedate = '';
         //var createdate = '';
         //var cod = 0;
         //var fee = 0;
@@ -163,7 +162,7 @@ module.exports = function (app) {
         //    ispending : req.orderRs['ispending'],
         //    cod : req.orderRs['cod'],
         //    fee : req.orderRs['fee'],
-        //    donedate : req.orderRs['donedate'],
+        //    completedate : req.orderRs['completedate'],
         //    createdate : req.orderRs['createdate'],
         //    statusname : req.orderRs['orderstatus'].statusname
         //};
@@ -191,14 +190,13 @@ module.exports = function (app) {
         newOrder.deliveryaddress = req.body.order.deliveryaddress;
         //newOrder.pickupaddress = null;
         //newOrder.deliverydate = null;
-        //newOrder.donedate = null;
+        //newOrder.completedate = null;
         newOrder.recipientphone = req.body.order.recipientphone;
         newOrder.recipientname = req.body.order.recipientname;
         //newOrder.ledgerid = null;
         newOrder.statusid = req.body.order.statusid;
         newOrder.ispending = 'false';
         newOrder.isdraff = req.body.order.isdraff;
-        newOrder.iscancel = 'false';
         newOrder.createdate = new Date();        
         if(!_.isNumber(req.body.order.cod)){
             newOrder.cod = 0;

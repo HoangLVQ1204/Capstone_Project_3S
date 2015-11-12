@@ -503,6 +503,7 @@ module.exports = function(server,app){
                     console.log(data);
 
                     var store = data.msg.store;
+
                     if (io.containStore(store.storeID))
                         io.updateStore(store, socket);
                     else
@@ -579,7 +580,6 @@ module.exports = function(server,app){
     return {
         io: io
     }
-
 }
 
 

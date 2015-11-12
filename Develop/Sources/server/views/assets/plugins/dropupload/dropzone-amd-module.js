@@ -233,17 +233,17 @@ Emitter.prototype.hasListeners = function(event){
       autoProcessQueue: true,
       addRemoveLinks: false,
       previewsContainer: null,
-      dictDefaultMessage: "Drop files here to upload",
+      dictDefaultMessage: "Drop files here to avatar",
       dictFallbackMessage: "Your browser does not support drag'n'drop file uploads.",
-      dictFallbackText: "Please use the fallback form below to upload your files like in the olden days.",
+      dictFallbackText: "Please use the fallback form below to avatar your files like in the olden days.",
       dictFileTooBig: "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.",
-      dictInvalidFileType: "You can't upload files of this type.",
+      dictInvalidFileType: "You can't avatar files of this type.",
       dictResponseError: "Server responded with {{statusCode}} code.",
-      dictCancelUpload: "Cancel upload",
-      dictCancelUploadConfirmation: "Are you sure you want to cancel this upload?",
+      dictCancelUpload: "Cancel avatar",
+      dictCancelUploadConfirmation: "Are you sure you want to cancel this avatar?",
       dictRemoveFile: "Remove file",
       dictRemoveFileConfirmation: null,
-      dictMaxFilesExceeded: "You can not upload any more files.",
+      dictMaxFilesExceeded: "You can not avatar any more files.",
       accept: function(file, done) {
         return done();
       },
@@ -301,7 +301,7 @@ Emitter.prototype.hasListeners = function(event){
       },
       /*
       Those functions register themselves to the events on init and handle all
-      the user interface specific stuff. Overwriting them won't break the upload
+      the user interface specific stuff. Overwriting them won't break the avatar
       but can break the way it's displayed.
       You can overwrite them if you don't like the default behavior. If you just
       want to add an additional event handler, register it on the dropzone object
@@ -447,7 +447,7 @@ Emitter.prototype.hasListeners = function(event){
       completemultiple: noop,
       maxfilesexceeded: noop,
       maxfilesreached: noop,
-      previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-success-mark\"><span>✔</span></div>\n  <div class=\"dz-error-mark\"><span>✘</span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"
+      previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"dz-progress\"><span class=\"dz-avatar\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-success-mark\"><span>✔</span></div>\n  <div class=\"dz-error-mark\"><span>✘</span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"
     };
 
     extend = function() {

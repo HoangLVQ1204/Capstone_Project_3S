@@ -94,17 +94,7 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
           }
         }
       })
-
-      .state('app.status', {
-        url: '/status',
-        views: {
-          'menuContent': {
-            templateUrl: 'templates/status.html',
-            controller: 'StatusCtrl'
-          }
-        }
-      })
-
+      
       .state('app.issue', {
         url: '/issue',
         views: {
@@ -145,18 +135,7 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
             templateUrl: 'templates/splitMap.html'
           }
         }
-      })
-
-      .state('app.grabs', {
-        url: '/grabs',
-        views: {
-          'menuContent': {
-            templateUrl: 'templates/grabs.html',
-            controller: 'GrabCtrl'
-          }
-        }
-      })
-    ;
+      });
 
     //Send token for each request
     jwtInterceptorProvider.tokenGetter = function(){

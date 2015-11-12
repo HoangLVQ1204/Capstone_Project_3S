@@ -247,7 +247,9 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
         //],
         issue: {
          issueid: issueid
-        }
+        },
+        mssg1: " Shipper: SP09245 đã send issue ID 4567, Admin vui long confirm",
+        mssg2: " Info: ORDER 12345 hiện tại pendding. "
       },
       'shipper:sendissue'
     );
