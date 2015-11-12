@@ -53,7 +53,7 @@ a {
  text-decoration: none;
 }
 /*TODO* Fix not apear text of type off task*/
-a > .icon {
+.tab-item > .icon {
   display: inline-block !important;
 }
 
