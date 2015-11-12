@@ -22,6 +22,10 @@ function socketStore($q,socketService,authService,mapService){
         });
     });
 
+    socketService.on('shipper:change:order:status', function(data) {
+        alert(data);
+    });
+
     socketService.on('store:update:shipper', function(data) {
         console.log('store:update:shipper', data);
         var shipper = data.msg.shipper;
