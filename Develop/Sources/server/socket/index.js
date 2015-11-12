@@ -7,15 +7,16 @@
     - list of notifications    
     - notificationService.js
         + client-2-server
-        {
-            messages: [
+        data {
+
+            notification:
                 {
                     type: ['issue', 'info']
                     content:
                     url:
                     notify: true/false
                 }
-            ]
+
         }
 
         + server-2-client
@@ -313,7 +314,6 @@ module.exports = function(server,app){
     };
 
     io.addStore = function(store, socket) {
-        console.log("==================434========",store);
         io.stores[store.storeID] = {
             order: [],
             latitude: store.latitude,

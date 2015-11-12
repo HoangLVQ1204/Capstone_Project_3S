@@ -51,13 +51,11 @@ function storeController($scope,$state,socketService,socketStore,dataService,aut
         var loopFindShipper = setInterval(function(){
             if($scope.listRightShippers.length != 0){
                 $scope.rightShipper = $scope.listRightShippers[0];
-
                 unloading();
                 $("#listAcceptedShipper").modal("show");
                 clearInterval(loopFindShipper);
                 return;
             }
-
             s = s + 1;
 
             if(s == 30){

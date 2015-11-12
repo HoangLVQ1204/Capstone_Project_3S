@@ -126,6 +126,9 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
     api.registerSocket = function(){
         api.getCurrentUser()
             .then(function(user) {
+                console.log("---------Data shipper client ------");
+                console.log(user);
+                console.log("---------Data shipper client ------");
                 mapService.addShipper(user)
                     .then(function() {
                         socketService.sendPacket(
