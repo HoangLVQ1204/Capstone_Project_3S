@@ -1,4 +1,4 @@
---DROP/DELETE TABLE--
+﻿--DROP/DELETE TABLE--
 
 /*
 DROP TABLE BannedHistoryLog;
@@ -22,8 +22,12 @@ DROP TABLE ManageStore;
 DROP TABLE Store;
 DROP TABLE Profile;
 DROP TABLE "user";
+DROP TABLE workingstatus;
 DROP TABLE UserStatus;
 DROP TABLE Role;
+DROP TABLE ward;
+DROP TABLE district;
+DROP TABLE province;
 */
 
 
@@ -195,23 +199,6 @@ INSERT INTO "public"."confirmationcodetype" VALUES ('3', 'In Stock');
 INSERT INTO "public"."confirmationcodetype" VALUES ('5', 'Return store');
 INSERT INTO "public"."confirmationcodetype" VALUES ('6', 'Deliver');
 
--- ----------------------------
--- Table structure for confirmationcodetypes
--- ----------------------------
-DROP TABLE IF EXISTS "public"."confirmationcodetypes";
-CREATE TABLE "public"."confirmationcodetypes" (
-"typeid" int4 NOT NULL,
-"codetype" varchar(255) COLLATE "default",
-"createdAt" timestamptz(6) NOT NULL,
-"updatedAt" timestamptz(6) NOT NULL
-)
-WITH (OIDS=FALSE)
-
-;
-
--- ----------------------------
--- Records of confirmationcodetypes
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for generalledger
@@ -779,7 +766,7 @@ ALTER TABLE "public"."confirmationcodetype" ADD PRIMARY KEY ("typeid");
 -- ----------------------------
 -- Primary Key structure for table confirmationcodetypes
 -- ----------------------------
-ALTER TABLE "public"."confirmationcodetypes" ADD PRIMARY KEY ("typeid");
+
 
 -- ----------------------------
 -- Primary Key structure for table generalledger
@@ -974,18 +961,106 @@ ALTER TABLE "public"."user" ADD FOREIGN KEY ("userrole") REFERENCES "public"."ro
 
 
 -- DB location --
-CREATE TABLE `district` (
-  `districtid` varchar(5) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `type` varchar(30) NOT NULL,
-  `provinceid` varchar(5) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `province`
+--
+--DROP TABLE IF EXISTS "public"."province";
+CREATE TABLE "public"."province" (
+  "provinceid" varchar(5) COLLATE "default" NOT NULL,
+  "name" varchar(100) COLLATE "default" NOT NULL,
+  "type" varchar(30) COLLATE "default" NOT NULL
+) WITH (OIDS=FALSE);
+
+--
+-- Dumping data for table `province`
+--
+
+INSERT INTO "public"."province" VALUES
+('01', 'Hà Nội', 'Thành Phố'),
+('02', 'Hà Giang', 'Tỉnh'),
+('04', 'Cao Bằng', 'Tỉnh'),
+('06', 'Bắc Kạn', 'Tỉnh'),
+('08', 'Tuyên Quang', 'Tỉnh'),
+('10', 'Lào Cai', 'Tỉnh'),
+('11', 'Điện Biên', 'Tỉnh'),
+('12', 'Lai Châu', 'Tỉnh'),
+('14', 'Sơn La', 'Tỉnh'),
+('15', 'Yên Bái', 'Tỉnh'),
+('17', 'Hòa Bình', 'Tỉnh'),
+('19', 'Thái Nguyên', 'Tỉnh'),
+('20', 'Lạng Sơn', 'Tỉnh'),
+('22', 'Quảng Ninh', 'Tỉnh'),
+('24', 'Bắc Giang', 'Tỉnh'),
+('25', 'Phú Thọ', 'Tỉnh'),
+('26', 'Vĩnh Phúc', 'Tỉnh'),
+('27', 'Bắc Ninh', 'Tỉnh'),
+('30', 'Hải Dương', 'Tỉnh'),
+('31', 'Hải Phòng', 'Thành Phố'),
+('33', 'Hưng Yên', 'Tỉnh'),
+('34', 'Thái Bình', 'Tỉnh'),
+('35', 'Hà Nam', 'Tỉnh'),
+('36', 'Nam Định', 'Tỉnh'),
+('37', 'Ninh Bình', 'Tỉnh'),
+('38', 'Thanh Hóa', 'Tỉnh'),
+('40', 'Nghệ An', 'Tỉnh'),
+('42', 'Hà Tĩnh', 'Tỉnh'),
+('44', 'Quảng Bình', 'Tỉnh'),
+('45', 'Quảng Trị', 'Tỉnh'),
+('46', 'Thừa Thiên Huế', 'Tỉnh'),
+('48', 'Đà Nẵng', 'Thành Phố'),
+('49', 'Quảng Nam', 'Tỉnh'),
+('51', 'Quảng Ngãi', 'Tỉnh'),
+('52', 'Bình Định', 'Tỉnh'),
+('54', 'Phú Yên', 'Tỉnh'),
+('56', 'Khánh Hòa', 'Tỉnh'),
+('58', 'Ninh Thuận', 'Tỉnh'),
+('60', 'Bình Thuận', 'Tỉnh'),
+('62', 'Kon Tum', 'Tỉnh'),
+('64', 'Gia Lai', 'Tỉnh'),
+('66', 'Đắk Lắk', 'Tỉnh'),
+('67', 'Đắk Nông', 'Tỉnh'),
+('68', 'Lâm Đồng', 'Tỉnh'),
+('70', 'Bình Phước', 'Tỉnh'),
+('72', 'Tây Ninh', 'Tỉnh'),
+('74', 'Bình Dương', 'Tỉnh'),
+('75', 'Đồng Nai', 'Tỉnh'),
+('77', 'Bà Rịa - Vũng Tàu', 'Tỉnh'),
+('79', 'Hồ Chí Minh', 'Thành Phố'),
+('80', 'Long An', 'Tỉnh'),
+('82', 'Tiền Giang', 'Tỉnh'),
+('83', 'Bến Tre', 'Tỉnh'),
+('84', 'Trà Vinh', 'Tỉnh'),
+('86', 'Vĩnh Long', 'Tỉnh'),
+('87', 'Đồng Tháp', 'Tỉnh'),
+('89', 'An Giang', 'Tỉnh'),
+('91', 'Kiên Giang', 'Tỉnh'),
+('92', 'Cần Thơ', 'Thành Phố'),
+('93', 'Hậu Giang', 'Tỉnh'),
+('94', 'Sóc Trăng', 'Tỉnh'),
+('95', 'Bạc Liêu', 'Tỉnh'),
+('96', 'Cà Mau', 'Tỉnh');
+
+-- --------------------------------------------------------
+
 
 --
 -- Dumping data for table `district`
 --
 
-INSERT INTO `district` (`districtid`, `name`, `type`, `provinceid`) VALUES
+--DROP TABLE IF EXISTS "public"."district";
+CREATE TABLE "public"."district" (
+  "districtid" varchar(5) COLLATE "default" NOT NULL,
+  "name" varchar(100) COLLATE "default" NOT NULL,
+  "type" varchar(30) COLLATE "default" NOT NULL,
+  "provinceid" varchar(5) COLLATE "default" NOT NULL
+) WITH (OIDS=FALSE);
+
+--
+-- Dumping data for table `district`
+--
+
+INSERT INTO "public"."district"  VALUES
 ('001', 'Ba Đình', 'Quận', '01'),
 ('002', 'Hoàn Kiếm', 'Quận', '01'),
 ('003', 'Tây Hồ', 'Quận', '01'),
@@ -1687,103 +1762,22 @@ INSERT INTO `district` (`districtid`, `name`, `type`, `provinceid`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `province`
---
-
-CREATE TABLE `province` (
-  `provinceid` varchar(5) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `type` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `province`
---
-
-INSERT INTO `province` (`provinceid`, `name`, `type`) VALUES
-('01', 'Hà Nội', 'Thành Phố'),
-('02', 'Hà Giang', 'Tỉnh'),
-('04', 'Cao Bằng', 'Tỉnh'),
-('06', 'Bắc Kạn', 'Tỉnh'),
-('08', 'Tuyên Quang', 'Tỉnh'),
-('10', 'Lào Cai', 'Tỉnh'),
-('11', 'Điện Biên', 'Tỉnh'),
-('12', 'Lai Châu', 'Tỉnh'),
-('14', 'Sơn La', 'Tỉnh'),
-('15', 'Yên Bái', 'Tỉnh'),
-('17', 'Hòa Bình', 'Tỉnh'),
-('19', 'Thái Nguyên', 'Tỉnh'),
-('20', 'Lạng Sơn', 'Tỉnh'),
-('22', 'Quảng Ninh', 'Tỉnh'),
-('24', 'Bắc Giang', 'Tỉnh'),
-('25', 'Phú Thọ', 'Tỉnh'),
-('26', 'Vĩnh Phúc', 'Tỉnh'),
-('27', 'Bắc Ninh', 'Tỉnh'),
-('30', 'Hải Dương', 'Tỉnh'),
-('31', 'Hải Phòng', 'Thành Phố'),
-('33', 'Hưng Yên', 'Tỉnh'),
-('34', 'Thái Bình', 'Tỉnh'),
-('35', 'Hà Nam', 'Tỉnh'),
-('36', 'Nam Định', 'Tỉnh'),
-('37', 'Ninh Bình', 'Tỉnh'),
-('38', 'Thanh Hóa', 'Tỉnh'),
-('40', 'Nghệ An', 'Tỉnh'),
-('42', 'Hà Tĩnh', 'Tỉnh'),
-('44', 'Quảng Bình', 'Tỉnh'),
-('45', 'Quảng Trị', 'Tỉnh'),
-('46', 'Thừa Thiên Huế', 'Tỉnh'),
-('48', 'Đà Nẵng', 'Thành Phố'),
-('49', 'Quảng Nam', 'Tỉnh'),
-('51', 'Quảng Ngãi', 'Tỉnh'),
-('52', 'Bình Định', 'Tỉnh'),
-('54', 'Phú Yên', 'Tỉnh'),
-('56', 'Khánh Hòa', 'Tỉnh'),
-('58', 'Ninh Thuận', 'Tỉnh'),
-('60', 'Bình Thuận', 'Tỉnh'),
-('62', 'Kon Tum', 'Tỉnh'),
-('64', 'Gia Lai', 'Tỉnh'),
-('66', 'Đắk Lắk', 'Tỉnh'),
-('67', 'Đắk Nông', 'Tỉnh'),
-('68', 'Lâm Đồng', 'Tỉnh'),
-('70', 'Bình Phước', 'Tỉnh'),
-('72', 'Tây Ninh', 'Tỉnh'),
-('74', 'Bình Dương', 'Tỉnh'),
-('75', 'Đồng Nai', 'Tỉnh'),
-('77', 'Bà Rịa - Vũng Tàu', 'Tỉnh'),
-('79', 'Hồ Chí Minh', 'Thành Phố'),
-('80', 'Long An', 'Tỉnh'),
-('82', 'Tiền Giang', 'Tỉnh'),
-('83', 'Bến Tre', 'Tỉnh'),
-('84', 'Trà Vinh', 'Tỉnh'),
-('86', 'Vĩnh Long', 'Tỉnh'),
-('87', 'Đồng Tháp', 'Tỉnh'),
-('89', 'An Giang', 'Tỉnh'),
-('91', 'Kiên Giang', 'Tỉnh'),
-('92', 'Cần Thơ', 'Thành Phố'),
-('93', 'Hậu Giang', 'Tỉnh'),
-('94', 'Sóc Trăng', 'Tỉnh'),
-('95', 'Bạc Liêu', 'Tỉnh'),
-('96', 'Cà Mau', 'Tỉnh');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `ward`
 --
-
-CREATE TABLE `ward` (
-  `wardid` varchar(5) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `type` varchar(30) NOT NULL,
-  `location` varchar(30) NOT NULL,
-  `districtid` varchar(5) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+--DROP TABLE IF EXISTS "public"."ward";
+CREATE TABLE "ward" (
+  "wardid" varchar(5) COLLATE "default" NOT NULL,
+  "name" varchar(100) COLLATE "default" NOT NULL,
+  "type" varchar(30) COLLATE "default" NOT NULL,
+  "location" varchar(30) COLLATE "default" NOT NULL,
+  "districtid" varchar(5) COLLATE "default" NOT NULL
+) WITH (OIDS=FALSE);
 
 --
 -- Dumping data for table `ward`
 --
 
-INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
+INSERT INTO "public"."ward" VALUES
 ('00001', 'Phúc Xá', 'Phường', '21 02 52N, 105 50 52E', '001'),
 ('00004', 'Trúc Bạch', 'Phường', '21 02 50N, 105 50 21E', '001'),
 ('00006', 'Vĩnh Phúc', 'Phường', '21 02 37N, 105 48 28E', '001'),
@@ -2614,7 +2608,7 @@ INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
 ('02449', 'Xuân Vân', 'Xã', '21 57 11N, 105 13 53E', '075'),
 ('02452', 'Phúc Ninh', 'Xã', '21 56 24N, 105 11 05E', '075');
 
-INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
+INSERT INTO "public"."ward" VALUES
 ('02455', 'Hùng Lợi', 'Xã', '21 54 10N, 105 28 47E', '075'),
 ('02458', 'Trung Sơn', 'Xã', '21 54 20N, 105 24 47E', '075'),
 ('02461', 'Tân Tiến', 'Xã', '21 53 37N, 105 17 24E', '075'),
@@ -3460,7 +3454,7 @@ INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
 ('04855', 'Tân Minh', 'Xã', '20 55 14N, 105 08 41E', '150'),
 ('04858', 'Đoàn Kết', 'Xã', '20 55 01N, 105 04 32E', '150'),
 ('04861', 'Đồng Ruộng', 'Xã', '20 54 17N, 105 00 14E', '150');
-INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
+INSERT INTO "public"."ward" VALUES
 ('04864', 'Hào Lý', 'Xã', '20 55 31N, 105 15 51E', '150'),
 ('04867', 'Tu Lý', 'Xã', '20 53 34N, 105 14 56E', '150'),
 ('04870', 'Trung Thành', 'Xã', '20 52 27N, 105 06 10E', '150'),
@@ -4294,7 +4288,7 @@ INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
 ('07348', 'Ngọc Châu', 'Xã', '21 22 39N, 106 05 01E', '216'),
 ('07351', 'Ngọc Vân', 'Xã', '21 21 31N, 106 02 27E', '216'),
 ('07354', 'Việt Lập', 'Xã', '21 21 16N, 106 08 59E', '216');
-INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
+INSERT INTO "public"."ward" VALUES
 ('07357', 'Liên Chung', 'Xã', '21 21 36N, 106 10 14E', '216'),
 ('07360', 'Ngọc Thiện', 'Xã', '21 20 53N, 106 04 38E', '216'),
 ('07363', 'Ngọc Lý', 'Xã', '21 20 29N, 106 06 42E', '216'),
@@ -5133,7 +5127,7 @@ INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
 ('09832', 'Trạm Trôi', 'Thị Trấn', '21 04 07N, 105 42 26E', '274'),
 ('09835', 'Đức Thượng', 'Xã', '21 04 33N, 105 41 11E', '274'),
 ('09838', 'Minh Khai', 'Xã', '21 04 04N, 105 40 15E', '274');
-INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
+INSERT INTO "public"."ward" VALUES
 ('09841', 'Dương Liễu', 'Xã', '21 03 39N, 105 39 57E', '274'),
 ('09844', 'Di Trạch', 'Xã', '21 02 46N, 105 43 06E', '274'),
 ('09847', 'Đức Giang', 'Xã', '21 03 46N, 105 41 57E', '274'),
@@ -5965,7 +5959,7 @@ INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
 ('12307', 'Nhân La', 'Xã', '20 45 41N, 106 04 44E', '331'),
 ('12310', 'Phú Thịnh', 'Xã', '20 44 38N, 105 58 53E', '331'),
 ('12313', 'Mai Động', 'Xã', '20 43 14N, 105 58 14E', '331');
-INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
+INSERT INTO "public"."ward" VALUES
 ('12316', 'Đức Hợp', 'Xã', '20 43 24N, 105 59 21E', '331'),
 ('12319', 'Hùng An', 'Xã', '20 43 37N, 106 00 40E', '331'),
 ('12322', 'Ngọc Thanh', 'Xã', '20 43 15N, 106 01 48E', '331'),
@@ -6800,7 +6794,7 @@ INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
 ('14800', 'Quảng Hưng', 'Xã', '19 47 09N, 105 49 05E', '380');
 
 
-INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
+INSERT INTO "public"."ward" VALUES
 ('14803', 'Quảng Thắng', 'Xã', '19 46 54N, 105 45 47E', '380'),
 ('14806', 'Quảng Thành', 'Xã', '19 46 24N, 105 47 40E', '380'),
 ('14809', 'Bắc Sơn', 'Phường', '20 06 36N, 105 52 01E', '381'),
@@ -7634,7 +7628,7 @@ INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
 ('17284', 'Nghĩa Đồng', 'Xã', '19 10 29N, 105 20 50E', '423'),
 ('17287', 'Đồng Văn', 'Xã', '19 07 50N, 105 06 44E', '423'),
 ('17290', 'Nghĩa Thái', 'Xã', '19 09 25N, 105 18 55E', '423');
-INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
+INSERT INTO "public"."ward" VALUES
 ('17293', 'Nghĩa Hợp', 'Xã', '19 08 14N, 105 20 16E', '423'),
 ('17296', 'Nghĩa Hoàn', 'Xã', '19 08 28N, 105 16 23E', '423'),
 ('17299', 'Nghĩa Phúc', 'Xã', '19 06 47N, 105 12 25E', '423'),
@@ -8471,7 +8465,7 @@ INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
 ('19756', 'Phú Hiệp', 'Phường', '16 29 10N, 107 34 58E', '474'),
 ('19759', 'Phú Hậu', 'Phường', '16 29 41N, 107 34 58E', '474'),
 ('19762', 'Thuận Hòa', 'Phường', '16 28 10N, 107 34 14E', '474');
-INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
+INSERT INTO "public"."ward" VALUES
 ('19765', 'Thuận Thành', 'Phường', '16 28 16N, 107 34 34E', '474'),
 ('19768', 'Phú Hòa', 'Phường', '16 28 21N, 107 35 02E', '474'),
 ('19771', 'Phú Cát', 'Phường', '16 28 43N, 107 35 09E', '474'),
@@ -9312,7 +9306,7 @@ INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
 ('22153', 'An Mỹ', 'Xã', '13 12 30N, 109 16 06E', '559'),
 ('22156', 'An Chấn', 'Xã', '13 11 01N, 109 16 31E', '559'),
 ('22159', 'An Thọ', 'Xã', '13 10 40N, 109 11 52E', '559');
-INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
+INSERT INTO "public"."ward" VALUES
 ('22162', 'An Phú', 'Xã', '13 09 22N, 109 15 45E', '555'),
 ('22165', 'Củng Sơn', 'Thị Trấn', '13 03 30N, 108 57 35E', '560'),
 ('22168', 'Phước Tân', 'Xã', '13 18 44N, 108 52 10E', '560'),
@@ -10171,7 +10165,7 @@ INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
 ('24511', 'Hòa An', 'Xã', '12 42 47N, 108 19 57E', '654'),
 ('24514', 'Ea Kuăng', 'Xã', '12 41 27N, 108 23 17E', '654'),
 ('24517', 'Hoà Đông', 'Xã', '12 41 38N, 108 10 18E', '654');
-INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
+INSERT INTO "public"."ward" VALUES
 ('24520', 'Ea Hiu', 'Xã', '12 41 00N, 108 22 15E', '654'),
 ('24523', 'Hòa Tiến', 'Xã', '12 40 04N, 108 18 23E', '654'),
 ('24526', 'Tân Tiến', 'Xã', '12 38 46N, 108 19 49E', '654'),
@@ -11018,7 +11012,7 @@ INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
 ('26854', 'Trường Thạnh', 'Phường', '10 48 26N, 106 49 04E', '763'),
 ('26857', 'Long Phước', 'Phường', '10 48 17N, 106 51 20E', '763'),
 ('26860', 'Long Trường', 'Phường', '10 47 39N, 106 49 13E', '763');
-INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
+INSERT INTO "public"."ward" VALUES
 ('26863', 'Phước Bình', 'Phường', '10 48 57N, 106 46 14E', '763'),
 ('26866', 'Phú Hữu', 'Phường', '10 47 55N, 106 48 02E', '763'),
 ('26869', '15', 'Phường', '10 51 13N, 106 40 08E', '764'),
@@ -11855,7 +11849,7 @@ INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
 ('29332', 'Tam Ngãi', 'Xã', '9 54 19N, 106 01 32E', '845'),
 ('29335', 'Thông Hòa', 'Xã', '9 55 19N, 106 04 54E', '845'),
 ('29338', 'Thạnh Phú', 'Xã', '9 55 59N, 106 06 23E', '845');
-INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
+INSERT INTO "public"."ward" VALUES
 ('29341', 'Tiểu Cần', 'Thị Trấn', '9 48 41N, 106 11 46E', '846'),
 ('29344', 'Cầu Quan', 'Thị Trấn', '9 46 01N, 106 07 16E', '846'),
 ('29347', 'Phú Cần', 'Xã', '9 48 48N, 106 10 28E', '846'),
@@ -12703,7 +12697,7 @@ INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
 ('31684', 'Mỹ Xuyên', 'Thị Trấn', '9 33 22N, 105 59 06E', '947'),
 ('31687', 'Tài Văn', 'Xã', '9 33 29N, 106 02 37E', '951'),
 ('31690', 'Đại Tâm', 'Xã', '9 33 02N, 105 55 10E', '947');
-INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
+INSERT INTO "public"."ward" VALUES
 ('31693', 'Tham Đôn', 'Xã', '9 31 13N, 105 56 09E', '947'),
 ('31696', 'Viên An', 'Xã', '9 31 12N, 106 03 39E', '951'),
 ('31699', 'Thạnh Thới An', 'Xã', '9 29 43N, 106 00 58E', '951'),
@@ -12915,22 +12909,21 @@ INSERT INTO `ward` (`wardid`, `name`, `type`, `location`, `districtid`) VALUES
 -- Indexes for dumped tables
 --
 
---
--- Indexes for table `district`
---
-ALTER TABLE `district`
-  ADD PRIMARY KEY (`districtid`),
-  ADD KEY `provinceid` (`provinceid`);
 
 --
 -- Indexes for table `province`
 --
-ALTER TABLE `province`
-  ADD PRIMARY KEY (`provinceid`);
+ALTER TABLE "public"."province" ADD PRIMARY KEY ("provinceid");
+--
+
+-- Indexes for table `district`
+--
+ALTER TABLE "public"."district" ADD PRIMARY KEY ("districtid");
+ALTER TABLE "public"."district" ADD FOREIGN KEY ("provinceid") REFERENCES "public"."province" ("provinceid") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
 
 --
 -- Indexes for table `ward`
 --
-ALTER TABLE `ward`
-  ADD PRIMARY KEY (`wardid`),
-  ADD KEY `districtid` (`districtid`);
+ALTER TABLE "public"."ward" ADD PRIMARY KEY ("wardid");
+ALTER TABLE "public"."ward" ADD FOREIGN KEY ("districtid") REFERENCES "public"."district" ("districtid") ON DELETE NO ACTION ON UPDATE NO ACTION;
