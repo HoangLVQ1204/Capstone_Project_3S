@@ -13,6 +13,8 @@ function socketStore($q,socketService,authService,mapService){
     /*
         add handlers
     */
+
+    
     socketService.on('store:register:location', function(data) {
         mapService.setMapData(data.msg.mapData)
         .then(function() {
@@ -43,13 +45,8 @@ function socketStore($q,socketService,authService,mapService){
 
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();
-
-        //// TODO: Change later
-        //currentUser.latitude = 21.028784;
-        //currentUser.longitude = 105.826088;
-
         var dataStore = {
-            storeID: currentUser.stores[0],
+            storeID: currentUser.stores[0].storeid,
             latitude: parseFloat(currentUser.stores[0].latitude),
             longitude: parseFloat(currentUser.stores[0].longitude)
         };

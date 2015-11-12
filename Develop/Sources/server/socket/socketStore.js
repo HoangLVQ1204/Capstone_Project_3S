@@ -23,12 +23,14 @@ module.exports = function(socket, io) {
         };
         console.log("List of Shippers: ");
         console.log(io.getAllShippers());
+
         gmapUtil.getClosestShippers(data.msg.store, io.getAllShippers(), filter)
         .then(function(results) {
             console.log("------------------------");
             console.log('Data Store: ');
             console.log(data);
-            console.log('closest shippers', results);            
+            console.log('closest shippers', results);
+            console.log("------------------------");
             results.forEach(function(e) {
                 // console.log('forward', data.sender);
                 io.forward(

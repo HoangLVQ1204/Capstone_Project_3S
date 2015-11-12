@@ -25,7 +25,11 @@ api.getDistanceFromOneToMany = function(origin, destinations) {
 		if (index > 0) destinationsString += '|';
 		destinationsString += dest.latitude + ',' + dest.longitude;		
 	});
-	// console.log(originString, destinationsString);
+	console.log("--------- Data Distance --------");
+	console.log("originString: "+ originString);
+	console.log("destinationS: "+ destinations);
+	console.log("destinationString: "+ destinationsString);
+	console.log("--------- Data Distance --------");
 	var request = {
         origins: originString,
         destinations: destinationsString,
@@ -58,9 +62,18 @@ api.getDistanceFromOneToMany = function(origin, destinations) {
 
 api.getClosestShippers = function(store, shippers, filter) {
 	// filter shippers by status
+
+	console.log("---- Date before valid Shippers ---");
+	console.log(shippers);
+	console.log("---- Date before valid Shippers ---");
+
 	var validShippers = shippers.filter(function(shipper) {
 		return shipper.status === filter.status;
 	});
+
+	console.log("---- Date valid Shippers ---");
+	console.log(validShippers);
+	console.log("---- Date valid Shippers ---");
 
 	return api.getDistanceFromOneToMany(store, validShippers)
 	.then(function(results) {		
