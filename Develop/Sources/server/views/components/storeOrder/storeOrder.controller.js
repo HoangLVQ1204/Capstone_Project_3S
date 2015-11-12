@@ -24,7 +24,8 @@ function storeOrderController($scope, $state, dataService, config) {
         fee: '',
         cod:''
     };
-    $scope.good={goodID:0};
+    var bigestGoodId = 0;
+    $scope.good={};
     $scope.goods =[];
 
 
@@ -139,7 +140,8 @@ function storeOrderController($scope, $state, dataService, config) {
         $("#addGoodModal").submit(function(e){
             e.preventDefault();
             if($(this).parsley( 'validate' )){ 
-                addGood();      
+                addGood();
+                $('#md-add-good').modal('hide');      
             }
         });
         
@@ -156,8 +158,7 @@ function storeOrderController($scope, $state, dataService, config) {
         $("#editGoodModal").submit(function(e){
             e.preventDefault();
             if($(this).parsley( 'validate' )){ 
-                //$("#md-edit-good").attr('class','modal fade').addClass(data.dismiss).modal('modal')
-                editGood();
+                editGood()
                 $('#md-edit-good').modal('hide');              
             }
 
@@ -202,25 +203,47 @@ function storeOrderController($scope, $state, dataService, config) {
 
     });
     //getDataFromServer();
-
-    $scope.setGood = function(good){
-        $scope.good = good;
+    $scope.newGood = {};
+    var index;
+    $scope.setGood = function(good,index){
+        console.log("=======goods[]=khi click edit====",$scope.goods);
+        $scope.newGood = (JSON.parse(JSON.stringify(good)));  
+        index = index;      
     };
 
-    function editGood(){
-        $scope.good = {goodID:$scope.good.goodID};
-    };
+    $scope.refreshGood = function(){
+         $scope.good ={};
+    }
+
+    function editGood () {
+        // // $scope.good =  $scope.newGood;
+        // //
+        // console.log("=======newGood=====",$scope.newGood);
+        // console.log("=======goog=====",$scope.good);
+        // console.log("=======goods[]=sau khi an save====",$scope.goods);
+       //console.log("======na====",na);
+       for(var i = 0; i < $scope.goods.length;i++){
+        if( $scope.goods[i].goodID===$scope.newGood.goodID){
+            // console.log("=======good tim thay====",$scope.goods[i].goodID);
+            $scope.goods[i] = $scope.newGood;
+            // console.log("=======good sau khi thay====",$scope.goods[i]);
+        }
+
+       }
+$scope.$apply();
+
+    }
 
     function addGood(){
+        $scope.good.goodID = bigestGoodId;        
         $scope.goods.push($scope.good);
-        $scope.good.goodID++;
-        $scope.good = {};
         $scope.$apply();
-
+        bigestGoodId++;
+        console.log("=======goods[]=sau khi add====",$scope.goods);
     };
 
-    $scope.deleteGood = function(goodID){
-        $scope.goods.splice(goodID,1);
+    $scope.deleteGood = function(){
+        $scope.goods.splice(index,1);
     };
 
     $scope.postDraff = function(){
@@ -261,7 +284,7 @@ function storeOrderController($scope, $state, dataService, config) {
     function alertEmptyGood() {
             var data = new Object();
             data.verticalEdge = 'right';
-            data.horizontalEdge = 'top';
+            data.horizontalEdge = 'bottom';
             data.theme = 'theme';
             $.notific8($("#smsEmptyGood").val(), data);
             console.log("=======OK=====");
