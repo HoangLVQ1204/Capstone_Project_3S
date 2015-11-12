@@ -84,7 +84,6 @@ module.exports = function(server,app){
             socketID,
             latitude,
             longitude,
-            status,
             isConnected
         }
     */ 
@@ -339,11 +338,25 @@ module.exports = function(server,app){
         return !!io.shippers[shipperID];
     };
 
+    io.countNumTasksByShipperID = function(shipperID){
+        var orderIDs = Object.keys(io.orders);
+        return  (orderIDs.filter(function(e) {
+            return io.orders[e].shipperID === shipperID;
+        })).length();
+    }
+
+    io.updateNumTasksByShipperID = function(shipperID){
+        io.shippers[shipper.shipperID].numTasks = io.countNumTasksByShipperID(shipper.shipperID);
+    }
+
     io.updateShipper = function(shipper, socket) {
         io.shippers[shipper.shipperID].latitude = shipper.latitude;
         io.shippers[shipper.shipperID].longitude = shipper.longitude;
         io.shippers[shipper.shipperID].socketID = socket.id;
+        io.shippers[shipper.shipperID].isConnected = true;
+        io.shippers[shipper.shipperID].numTasks = io.countNumTasksByShipperID(shipper.shipperID);
     };
+
 
     io.updateOrderOfShipper = function(shipperID, orderID) {
         io.shippers[shipperID].order.push(orderID);
@@ -355,7 +368,8 @@ module.exports = function(server,app){
             latitude: shipper.latitude,
             longitude: shipper.longitude,
             socketID: socket.id,
-            status: shipper.status
+            isConnected: true,
+            numTasks: io.countNumTasksByShipperID(shipper.shipperID)
         };              
     };
 

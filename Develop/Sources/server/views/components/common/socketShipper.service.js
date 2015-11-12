@@ -62,8 +62,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
         d = $q.defer();
         navigator.geolocation.getCurrentPosition(function(position){
             var dataShipper = {
-                shipperID: currentUser.username,
-                status: currentUser.workingstatusid
+                shipperID: currentUser.username
             };
             currentLocation = position.coords;
             dataShipper.latitude = position.coords.latitude;
