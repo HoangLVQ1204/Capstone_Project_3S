@@ -26,16 +26,12 @@ module.exports = function(sequelize, DataTypes) {
     pickupdate: {
       type: DataTypes.DATE,
       allowNull: true
-    },
-    deliverydate: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
+    },    
     createdate: {
       type: DataTypes.DATE,
       allowNull: true
     },
-    donedate: {
+    completedate: {
       type: DataTypes.DATE,
       allowNull: true
     },
@@ -62,11 +58,7 @@ module.exports = function(sequelize, DataTypes) {
     isdraff: {
       type: DataTypes.BOOLEAN,
       allowNull: true
-    },
-    iscancel: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true
-    },
+    },    
     fee: {
       type: DataTypes.BIGINT,
       allowNull: true
@@ -149,7 +141,7 @@ module.exports = function(sequelize, DataTypes) {
       //KhanhKC
       storeGetAllOrders: function (oderstatusModel,ordertypeModel, store_id) {
         return order.findAll({
-          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','iscancel','ispending','cod','fee','donedate','createdate','ledgerid'],
+          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','ispending','cod','fee','completedate','createdate','ledgerid'],
           //where: {storeid:store_id },
           include: [
             {'model': oderstatusModel,
@@ -158,13 +150,13 @@ module.exports = function(sequelize, DataTypes) {
               'model': ordertypeModel,
               attributes: ['typename']
             }
-          ]
+          ],
+          order: 'createdate DESC'
         });
       },
 
       storeGetOneOrder: function (oderstatusModel, goodsModel,confirmationCodeModel, order_id) {
-        return order.findOne({
-          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','iscancel','ispending','cod','fee','donedate','createdate'],
+        return order.findOne({         
           where: {orderid:order_id},
           include: [
             {'model': oderstatusModel,
