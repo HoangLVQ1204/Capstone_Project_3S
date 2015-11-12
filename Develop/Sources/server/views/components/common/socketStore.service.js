@@ -24,6 +24,7 @@ function socketStore($q,socketService,authService,mapService){
 
     socketService.on('shipper:change:order:status', function(data) {
         alert(data);
+        console.log(data);
     });
 
     socketService.on('store:update:shipper', function(data) {
