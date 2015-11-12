@@ -27,7 +27,8 @@ module.exports = function (app) {
 
     var getAllOrder = function (req, res, next) {
 
-        var storeId = req.user.stores[0];
+        var storeId = req.user.stores[0].storeid;
+        //console.log("================storeId====================",storeId);
         var orderStatus = db.orderstatus;
         var order = db.order;
         var ordertype = db.ordertype;

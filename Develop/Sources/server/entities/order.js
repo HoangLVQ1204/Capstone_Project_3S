@@ -142,7 +142,7 @@ module.exports = function(sequelize, DataTypes) {
       storeGetAllOrders: function (oderstatusModel,ordertypeModel, store_id) {
         return order.findAll({
           attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','ispending','cod','fee','completedate','createdate','ledgerid'],
-          //where: {storeid:store_id },
+          where: {storeid:store_id },
           include: [
             {'model': oderstatusModel,
               attributes: ['statusname']
