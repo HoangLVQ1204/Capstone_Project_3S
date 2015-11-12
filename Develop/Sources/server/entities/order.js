@@ -27,15 +27,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: true
     },
-    deliverydate: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
     createdate: {
       type: DataTypes.DATE,
       allowNull: true
     },
-    donedate: {
+    completedate: {
       type: DataTypes.DATE,
       allowNull: true
     },
@@ -60,10 +56,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     isdraff: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true
-    },
-    iscancel: {
       type: DataTypes.BOOLEAN,
       allowNull: true
     },
@@ -149,7 +141,7 @@ module.exports = function(sequelize, DataTypes) {
       //KhanhKC
       storeGetAllOrders: function (oderstatusModel,ordertypeModel, store_id) {
         return order.findAll({
-          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','iscancel','ispending','cod','fee','donedate','createdate','ledgerid'],
+          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','ispending','cod','fee','completedate','createdate','ledgerid'],
           //where: {storeid:store_id },
           include: [
             {'model': oderstatusModel,
@@ -164,7 +156,7 @@ module.exports = function(sequelize, DataTypes) {
 
       storeGetOneOrder: function (oderstatusModel, goodsModel,confirmationCodeModel, order_id) {
         return order.findOne({
-          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','iscancel','ispending','cod','fee','donedate','createdate'],
+          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','ispending','cod','fee','completedate','createdate'],
           where: {orderid:order_id},
           include: [
             {'model': oderstatusModel,
@@ -243,17 +235,6 @@ module.exports = function(sequelize, DataTypes) {
             }
           })
         },
-
-      cancelOrder: function(orderid) {
-        return order.update(
-            {
-              iscancel: 'true',
-              statusid: 'Canceling',
-              fee:5000
-            },
-            { where: { orderid: orderid }} /* where criteria */
-        )
-	},
 
 	 updateLedgerForOrder: function(storeid, paydate, ledgerid){
         return order.update(

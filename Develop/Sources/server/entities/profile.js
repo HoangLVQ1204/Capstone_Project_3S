@@ -31,10 +31,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
-    addresscoordination: {
-      type: DataTypes.TEXT,
-      allowNull: true
-    },
     avatar: {
       type: DataTypes.STRING,
       allowNull: true

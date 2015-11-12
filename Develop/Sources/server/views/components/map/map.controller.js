@@ -27,9 +27,9 @@ function initStoreMarker($scope, geocoder, maps, storeMarker) {
                     geoText = results[0].formatted_address;
 
                 }
-            }               
-            storeMarker.geoText = geoText;                                   
-        }); 
+            }
+            storeMarker.geoText = geoText;
+        });
 }
 
 function initCustomerMarker($scope, geocoder, maps, customerMarker) {    

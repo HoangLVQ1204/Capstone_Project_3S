@@ -79,6 +79,7 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         // get geotext from latitude and longitude
         util.getGeoText = function(latitude, longitude) {
             var d = $q.defer();
+            console.log("latitude: " + latitude + " - longitude: " + longitude );
             geocoder.geocode({
                 'location': {
                     lat: latitude,
