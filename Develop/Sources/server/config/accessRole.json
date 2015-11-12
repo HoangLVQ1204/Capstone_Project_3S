@@ -18,7 +18,7 @@
     },
     {
       "url": "/store/dashboard",
-      "role": [1,2,3,4]
+      "role": [1,2]
     },
     {
       "url": "/orders",
@@ -45,7 +45,27 @@
     {
       "url": "/api/shipper/getTaskBeIssuePending",
       "role": [1]
-    }
+    },
+    {
+      "url": "/api/shipper/nextstep",
+      "role": [1]
+    },
+    {
+      "url": "/api/shipper/status",
+      "role": [1]
+    },
+    {
+      "url": "/api/shipper/countTasks",
+      "role": [1]
+    },
+    {
+      "url": "/api/shipper/change-status",
+      "role": [1]
+	},
 
+    {
+      "url": "/store/orderdetail",
+      "role": [1,2]
+    }
 
 ]

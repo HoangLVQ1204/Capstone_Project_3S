@@ -223,14 +223,14 @@ function storeDashboardController($scope,$state,dataService, $http, config){
         "success": function () {
             var data = new Object();
             data.verticalEdge = 'right';
-            data.horizontalEdge = 'top';
+            data.horizontalEdge = 'bottom';
             data.theme = 'success';
             $.notific8($("#smsDeleted").val(), data);
         },
         "error": function () {
             var data = new Object();
             data.verticalEdge = 'right';
-            data.horizontalEdge = 'top';
+            data.horizontalEdge = 'bottom';
             data.theme = 'theme';
             $.notific8($("#smsDeleteFail").val(), data);
         }

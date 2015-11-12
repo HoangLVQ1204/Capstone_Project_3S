@@ -341,6 +341,20 @@ module.exports = function(sequelize, DataTypes) {
           ]
         });
       },
+      //// HuyTDH - 12-11-15
+      shipperGetOneOrder: function (orderid, shipper, modelTask) {
+        return order.findOne({
+          where: {orderid: orderid},
+          include:[
+            {
+              'model': modelTask,
+              where: {
+                shipperid: shipper
+              }
+            }
+          ]
+        })
+      },
     }
   });
   return order;

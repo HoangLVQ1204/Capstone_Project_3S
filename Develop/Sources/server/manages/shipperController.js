@@ -62,32 +62,45 @@ module.exports = function (app) {
     var getHistory = function (req, res, next) {
         var shipper = _.cloneDeep(req.user);
         var shipperid = shipper.username;
+        var page = _.cloneDeep(req.query.page);
+        page = page? page : 0;
         var History = db.task;
         var Order = db.order;
         var OrderStatus = db.orderstatus;
-        Order.belongsTo(OrderStatus, {
-            foreignKey: 'statusid',
-            constraints: false
-        });
-        History.belongsTo(Order, {
-            foreignKey: 'orderid',
-            constraints: false
-        });
-        History.getAllHistoryOfShipper(shipperid, Order, OrderStatus)
-            .then(function (history) {
+        var getHistory = History.getAllHistoryOfShipper(shipperid, page, Order, OrderStatus);
+        var getTotal = History.countTotalTaskHistoryOfShipper(shipperid);
+        Promise.all([getHistory, getTotal])
+            .then(function (p) {
+                var history = (p[0]) ? p[0] : [];
+                var total = (p[1]) ? p[1] : 0;
                 var listHistory = [];
                 history.map(function (order) {
                     order = order.toJSON();
+                    var dateWithoutHour = new Date(order.date);
+                    dateWithoutHour.setHours(0, 0, 0, 0);
+                    dateWithoutHour = dateWithoutHour.getTime();
                     listHistory.push({
                         'id': order.id,
-                        'date': new Date(order.date),
+                        'date': dateWithoutHour,
+                        'time': order.date,
                         'code': order.order.code,
+                        'taskstatus': order.taskstatus,
                         'statusid': order.order.orderstatus.statusid,
                         'fee': order.order.fee,
                         'COD': order.order.cod
                     });
                 });
-                return res.status(200).json(listHistory);
+                var curentPageResult = _.chain(listHistory)
+                    .groupBy("date")
+                    .pairs()
+                    .map(function (currentItem) {
+                        return _.object(_.zip(["date", "taskOfDate"], currentItem));
+                    })
+                    .value();
+                var result = {};
+                result['current'] = curentPageResult;
+                result['total'] = total;
+                return res.status(200).json(result);
             }, function (err) {
                 next(err);
             })
@@ -161,11 +174,14 @@ module.exports = function (app) {
     };
 
     var nextStep = function (req, res, next) {
+        var shipper = _.cloneDeep(req.user);
+        var shipperid = shipper.username;
         var Order = db.order;
+        var Task = db.task;
         var data = _.cloneDeep(req.body);
         if (data) {
             var key = data.code;
-            Order.findOne({where: {orderid: key}}).then(function (orderObj) {
+            Order.shipperGetOneOrder(key, shipperid, Task).then(function (orderObj) {
                 if (orderObj) {
                     var nextStatus = 0;
                     var isRequireCode = false;
@@ -234,6 +250,7 @@ module.exports = function (app) {
         //Instance new Issue
         var newIssue = _.cloneDeep(req.body[0].issue);
         newIssue.isresolved = false;
+        newIssue.resolvetype = 1;
         newIssue.createddate = new Date();
         var orders = _.cloneDeep(req.body[0].orders);
         var categoryissue = _.cloneDeep(req.body[0].categoryissue);
@@ -492,16 +509,18 @@ module.exports = function (app) {
     //// START - Get status of shipper
     //// HuyTDH - 03-11-15
     var getShipperStatus = function(req, res, next){
-        //var shipperid =  req.user.userid;
-        var shipperid =  'huykool';
+        var shipper = _.cloneDeep(req.user);
+        var shipperid = shipper.username;
         var User = db.user;
-        User.getShipperStatus(shipperid).then(function(rs){
-            rs = rs.toJSON();
-            var rss = (rs.status == 1)? false : true;
-            res.status(200).json(rss);
-        },function(er){
-            res.status(400).json("Cant not get status of shipper!");
-        });
+        //User.getShipperStatus(shipperid).then(function(rs){
+        //    rs = rs.toJSON();
+        //    var rss = (rs.status != 1);
+        //    res.status(200).json(rss);
+        //},function(er){
+        //    res.status(400).json("Cant not get status of shipper!");
+        //});
+        //// TODO: Only change status on socket
+        res.status(200).json({'status': true});
     };
     //// END - Get status of shipper
     /*
@@ -596,8 +615,7 @@ module.exports = function (app) {
     //// START count task of shipper
     //// HuyTDH 03-11-15
     var countTaskOfShipper = function(req, res, next){
-        //var shipperid =  req.user.userid;
-        var shipperid =  'huykool';
+        var shipperid =  req.user.username;
         var Task = db.task;
         var TaskStatus = db.taskstatus;
         TaskStatus.getAllTaskStatus().then(function(st){
@@ -612,9 +630,6 @@ module.exports = function (app) {
                     item = item.toJSON();
                     var obj = {};
                     var key = '';
-                    console.log("====================");
-                    console.log(ls[item.statusid]);
-                    console.log("====================");
                     var num = parseInt(item.count)? parseInt(item.count) : 0;
                     tasks[ls[item.statusid]] = num;
                     //tasks.push(obj);
@@ -632,8 +647,7 @@ module.exports = function (app) {
     //// START change status of shipper
     //// HuyTDH 03-11-15
     var changeShipperStatus = function(req, res, next){
-        //var shipperid =  req.user.userid;
-        var shipperid =  'huykool';
+        var shipperid =  req.user.username;
         var data = _.cloneDeep(req.body);
         var User = db.user;
         User.findUserByUsername(shipperid)
@@ -651,6 +665,11 @@ module.exports = function (app) {
         });
     };
     //// END change status of shipper
+
+    var testSk = function(req, res, next){
+
+        res.status(400).json("Connection ok");
+    };
 
     return {
         getTask: getTask,
@@ -673,6 +692,7 @@ module.exports = function (app) {
         changeShipperStatus: changeShipperStatus,
 
         getTaskBeIssuePending: getTaskBeIssuePending,
-        getAllTaskCancel: getAllTaskCancel
+        getAllTaskCancel: getAllTaskCancel,
+        testSk: testSk,
     }
 }
