@@ -166,19 +166,19 @@ function storeDashboardController($scope,$state,dataService, $http, config){
     };
 
     //cancel in process order
-    $scope.cancerOrder = function(){
-        if($scope.Order.statusname == 'Delivering' || $scope.Order.statusname == 'In stock' || $scope.Order.statusname == 'Bring to stock'){
-            var urlBase = config.baseURI + '/orders/cancel';
-            var cancelOrderId = $scope.Order.orderid;
-            console.log(cancelOrderId);
-            dataService.putDataServer(urlBase,cancelOrderId);
-        }
-        var index =  $scope.displayedCollectionInprocess.indexOf( $scope.Order);
-        if (index !== -1) {
-            $scope.displayedCollectionInprocess.splice(index, 1);
-            $scope.orderInprocess.splice(index, 1);
-        }
-    };
+    // $scope.cancerOrder = function(){
+    //     if($scope.Order.statusname == 'Delivering' || $scope.Order.statusname == 'In stock' || $scope.Order.statusname == 'Bring to stock'){
+    //         var urlBase = config.baseURI + '/orders/cancel';
+    //         var cancelOrderId = $scope.Order.orderid;
+    //         console.log(cancelOrderId);
+    //         dataService.putDataServer(urlBase,cancelOrderId);
+    //     }
+    //     var index =  $scope.displayedCollectionInprocess.indexOf( $scope.Order);
+    //     if (index !== -1) {
+    //         $scope.displayedCollectionInprocess.splice(index, 1);
+    //         $scope.orderInprocess.splice(index, 1);
+    //     }
+    // };
 
     //delete Draff order
     $scope.deleteDraffOrder = function () {
