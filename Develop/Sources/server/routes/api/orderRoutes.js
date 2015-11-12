@@ -8,6 +8,9 @@ module.exports = function (app) {
 
     app.param('order_id', controller.params);
 
+    app.route('/api/getAllOrder')
+        .get(controller.getOrderList);
+
     app.route('/orders')
         .get(checkAll,controller.getAllOrder)
         .post(controller.postOne);

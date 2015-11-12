@@ -24,6 +24,8 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
             var result = $.grep($scope.$parent.issueList, function(e){ return e.issueid == $scope.issueid; });
             if (result.length == 1)
                result[0].isresolved = true;
+
+            $scope.$parent.issueList.sort( $scope.$parent.sortByDate);
             smsData.theme="theme-inverse";
             $.notific8($("#sms-success").val(), smsData);
 
@@ -41,6 +43,7 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
     //console.log(authService.getCurrentInfoUser());
     $scope.showConfirm = function (event, resolveType){
         //alert(1);
+        if ($scope.issue.isresolved) return;
         $scope.resolveType = resolveType;
         event.preventDefault();
         //$scope.getLatestLedgerOfStore(storeid);

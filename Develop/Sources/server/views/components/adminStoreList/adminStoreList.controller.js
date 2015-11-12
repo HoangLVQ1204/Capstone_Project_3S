@@ -27,6 +27,7 @@ function adminStoreListController($scope,$state, $http, authService, config) {
     $scope.selected =$scope.searchOptions[0];
     $scope.dateRange = '';
 
+    //get latest date of auto calculate
     $http.get(config.baseURI + "/api/store/getLatestAutoAccountDate").success(function(response){
         $scope.latestAutoDate= response;
         $scope.fromAutoDate = new Date($scope.latestAutoDate);
@@ -34,12 +35,9 @@ function adminStoreListController($scope,$state, $http, authService, config) {
         //console.log( $scope.fromAutoDate);
     })
 
-
+    //get List to display
     $http.get(config.baseURI + "/api/store/getAllLedger").success(function(response){
         $scope.storeList = response;
-
-        //console.log(1);
-      // console.log(response);
     }).then(function () {
         $http.get(config.baseURI + "/api/store/getTotalCoD").success(function(response){
             $scope.currentCoD= response;
@@ -97,6 +95,9 @@ function adminStoreListController($scope,$state, $http, authService, config) {
         $("#md-effect-block").attr('class','modal fade').addClass(data.effect).modal('show');
     };
 
+    //----------------------------------
+    //FUNCTION BLOCK A STORE
+    //-----------------------------------
     $scope.blockStore = function (store){
         //alert(1);
         //$scope.getLatestLedgerOfStore(storeid);
@@ -104,7 +105,7 @@ function adminStoreListController($scope,$state, $http, authService, config) {
         //var data=$(this).data();
     };
 
-
+    //add new ledger to database
     $scope.postLedger = function (store){
         //alert(1);
         //$scope.payFee = 0;
@@ -191,7 +192,7 @@ function adminStoreListController($scope,$state, $http, authService, config) {
             $scope.selectedStore = store;
             smsData.effect="md-slideRight";
             $("#md-effect-history").attr('class','modal fade').addClass(smsData.effect).modal('show');
-             console.log(response);
+             //console.log(response);
         })
     }
 

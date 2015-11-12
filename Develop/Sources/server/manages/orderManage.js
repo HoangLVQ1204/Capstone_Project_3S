@@ -366,6 +366,15 @@ module.exports = function (app) {
             //});
     };
 
+    var getOrderList = function (req, res, next) {
+        db.order.getAllOrder(db.orderstatus, db.ordertype, db.store)
+        .then(function(list){
+            res.status(200).json(list);
+        }, function(err) {
+            next(err);
+        });
+    };
+
 
     return {
         getAllOrder: getAllOrder,
@@ -376,5 +385,6 @@ module.exports = function (app) {
         deleteOrder : deleteOrder,
         putDraff : putDraff,
         cancelOrder: cancelOrder,
+        getOrderList: getOrderList
     }
 }

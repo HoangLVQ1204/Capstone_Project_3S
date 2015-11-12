@@ -8,14 +8,13 @@ module.exports = function (app) {
     var authManage = require('./../../manages/authManage')(app);
     var checkAll = [authManage.checkToken(),authManage.checkRole()];
 
-    //app.get('/api/tasks', checkAll, shipperCtrl.getTask);
-    app.get('/api/tasks', shipperCtrl.getTask);
+    app.get('/api/tasks', checkAll, shipperCtrl.getTask);
 
     app.post('/api/shipper/updateTaskForShipper', shipperCtrl.updateTaskForShipper);
 
     app.get('/api/shipper/getAllShipper', shipperCtrl.getAllShipper);
 
-    app.get('/api/shipper/getTaskBeIssuePending', shipperCtrl.getTaskBeIssuePending);
+    app.get('/api/shipper/getTaskBeIssuePending', checkAll,  shipperCtrl.getTaskBeIssuePending);
 
     app.get('/api/shipper/getAllShipperWithTask', shipperCtrl.getAllShipperWithTask);
 
@@ -23,9 +22,9 @@ module.exports = function (app) {
 
     app.post('/api/issue', shipperCtrl.createIssue);
 
-    app.put('/api/changeIsPendingOrder', shipperCtrl.changeIsPending);
+    app.put('/api/changeIsPendingOrder', checkAll, shipperCtrl.changeIsPending);
 
-    app.get('/api/getAllTaskCancel', shipperCtrl.getAllTaskCancel);
+    app.get('/api/getAllTaskCancel', checkAll,  shipperCtrl.getAllTaskCancel);
 
     app.route('/api/shipper/history')
         .get(checkAll, shipperCtrl.getHistory);
@@ -39,7 +38,7 @@ module.exports = function (app) {
         .get(shipperCtrl.getExpressStatusList);
 
     app.route('/api/shipper/nextstep')
-        .put(shipperCtrl.nextStep);
+        .put(checkAll, shipperCtrl.nextStep);
 
     app.route('/api/shipper/mapdata/:order')
         .get(shipperCtrl.getMapData);
@@ -47,12 +46,15 @@ module.exports = function (app) {
     app.param('order', shipperCtrl.paramMapdata);
 
     app.route('/api/shipper/status')
-        .get(shipperCtrl.getShipperStatus);
+        .get(checkAll, shipperCtrl.getShipperStatus);
 
     app.route('/api/shipper/countTasks')
-        .get(shipperCtrl.countTaskOfShipper);
+        .get(checkAll, shipperCtrl.countTaskOfShipper);
 
     app.route('/api/shipper/change-status')
-        .put(shipperCtrl.changeShipperStatus);
+        .put(checkAll, shipperCtrl.changeShipperStatus);
+
+    app.route('/api/shipper/test-socket')
+        .get(shipperCtrl.testSk);
 
 }

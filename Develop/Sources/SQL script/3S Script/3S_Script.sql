@@ -3,20 +3,25 @@ insert into role values ('1', 'Shipper');
 insert into role values ('2', 'Store');
 insert into role values ('3', 'Admin');
 
--- workingstatus
+/* workingstatus
 
 insert into workingstatus values ('1', 'On');
 insert into workingstatus values ('2', 'Off');
 insert into workingstatus values ('3', 'Busy');
+*/
+--userstatus
+insert into userstatus values ('1', 'Inactive');
+insert into userstatus values ('2', 'Active');
+insert into userstatus values ('3', 'Ban');
 
 -- user
 
-insert into "user" values ('hoang', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '3', '1', '1');
-insert into "user" values ('huykool', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '1', '1', '1');
-insert into "user" values ('quyensheep', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '1', '1', '1');
-insert into "user" values ('khanhkute', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '1', '1');
-insert into "user" values ('nhungkaka', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '1', '1');
-insert into "user" values ('khoangkiti', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '3', '1', '1');
+insert into "user" values ('hoang', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '3', '2');
+insert into "user" values ('huykool', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '1', '2');
+insert into "user" values ('quyensheep', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '1', '2');
+insert into "user" values ('khanhkute', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '2');
+insert into "user" values ('nhungkaka', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '2');
+insert into "user" values ('khoangkiti', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '3', '2');
 
 -- profile
 
@@ -100,8 +105,8 @@ insert into "order" values ('ord20', 'str2', '2', 'Cát Linh, Ba Đình, Hà N�
 
 
 -- taskstatus
-insert into taskstatus VALUES  ('1', 'NotActive');
-insert into taskstatus VALUES ('2', 'Actived');
+insert into taskstatus VALUES  ('1', 'Inactive');
+insert into taskstatus VALUES ('2', 'Active');
 insert into taskstatus  VALUES ('3', 'Done');
 insert into taskstatus VALUES ('4', 'Fail');
 -- tasktype
@@ -190,34 +195,42 @@ insert into confirmationcode values( '29', '123479', '2', 'ord8');
 insert into confirmationcode values( '30', '123480', '3', 'ord8');
 insert into confirmationcode values( '31', '123481', '5', 'ord8');
 insert into confirmationcode values( '32', '123482', '6', 'ord8');
+
 insert into confirmationcode values( '33', '123483', '2', 'ord9');
 insert into confirmationcode values( '34', '123484', '3', 'ord9');
 insert into confirmationcode values( '35', '123485', '5', 'ord9');
 insert into confirmationcode values( '36', '123486', '6', 'ord9');
+
 insert into confirmationcode values( '37', '123487', '2', 'ord10');
 insert into confirmationcode values( '38', '123488', '3', 'ord10');
 insert into confirmationcode values( '39', '123489', '5', 'ord10');
 insert into confirmationcode values( '40', '123490', '6', 'ord10');
+
 insert into confirmationcode values( '41', '123491', '2', 'ord11');
 insert into confirmationcode values( '42', '123492', '3', 'ord11');
 insert into confirmationcode values( '43', '123493', '5', 'ord11');
 insert into confirmationcode values( '44', '123494', '6', 'ord11');
+
 insert into confirmationcode values( '45', '123495', '2', 'ord12');
 insert into confirmationcode values( '46', '123496', '3', 'ord12');
 insert into confirmationcode values( '47', '123497', '5', 'ord12');
 insert into confirmationcode values( '48', '123498', '6', 'ord12');
+
 insert into confirmationcode values( '49', '123499', '2', 'ord13');
 insert into confirmationcode values( '50', '123500', '3', 'ord13');
 insert into confirmationcode values( '51', '123501', '5', 'ord13');
 insert into confirmationcode values( '52', '123502', '6', 'ord13');
+
 insert into confirmationcode values( '53', '123503', '2', 'ord14');
 insert into confirmationcode values( '54', '123504', '3', 'ord14');
 insert into confirmationcode values( '55', '123505', '5', 'ord14');
 insert into confirmationcode values( '56', '123506', '6', 'ord14');
+
 insert into confirmationcode values( '57', '123507', '2', 'ord15');
 insert into confirmationcode values( '58', '123508', '3', 'ord15');
 insert into confirmationcode values( '59', '123509', '5', 'ord15');
 insert into confirmationcode values( '60', '123510', '6', 'ord15');
+
 insert into confirmationcode values( '61', '123511', '2', 'ord16');
 insert into confirmationcode values( '62', '123512', '3', 'ord16');
 insert into confirmationcode values( '63', '123513', '5', 'ord16');
@@ -254,10 +267,10 @@ insert into issuetype values ('7', '2', 'Other');
 
 
 -- issue:id, issuecategory, reason, description
-insert into issue (typeid, description, isresolved, createddate)   values ('1', 'Tắc đường quá, em chưa đi tiếp được', 'false', '2015-11-1');
-insert into issue (typeid, description, isresolved, createddate)    values ('1', 'Em bị hỏng xe, đang vá xăm', 'false', '2015-11-1');
-insert into issue (typeid, description, isresolved, createddate)    values ('1', 'Em vừa bị tai nạn nhẹ, xin phép giao chậm', 'true', '2015-11-1');
-insert into issue (typeid, description, isresolved, createddate)    values ('2', 'Các đơn hàng này bị hỏng rồi, Admin xem giúp em', 'true', '2015-11-1');
+insert into issue (typeid, description, isresolved, resolvetype, createddate)   values ('1', 'Tắc đường quá, em chưa đi tiếp được', 'false', '1',  '2015-11-1');
+insert into issue (typeid, description, isresolved, resolvetype, createddate)    values ('1', 'Em bị hỏng xe, đang vá xăm', 'false', '1', '2015-11-1');
+insert into issue (typeid, description, isresolved, resolvetype, createddate)    values ('1', 'Em vừa bị tai nạn nhẹ, xin phép giao chậm', 'true', '1', '2015-11-1');
+insert into issue (typeid, description, isresolved, resolvetype, createddate)    values ('2', 'Các đơn hàng này bị hỏng rồi, Admin xem giúp em', 'true', '1', '2015-11-1');
 
 -- orderissue
 insert into orderissue values ('1', 'ord1');
@@ -270,4 +283,4 @@ insert into orderlog  values ('1', 'ord1', 'str1', '1', '1', 'Tu Liem - Ha Noi',
 insert into orderlog values ('2', 'ord2', 'str2', '2', '2', 'Ho Tung Mau - Ha Noi', 'Hoan Kiem - Ha Noi', '2015-5-23', '2015-5-25', '0988627075', 'Nguyen Van Long', '2', '2', '0', '2000000', '21.045,105.834', '21.105,105.854', '2015-4-5', 'hoang');
 
 -- bannedhistorylog
-insert into bannedhistorylog values ('1', 'khoangkiti', 'quyensheep', 'Reject order', '2015-9-8');
+insert into bannedhistorylog values ('1', 'khoangkiti', 'quyensheep', null, 'Reject order', '2015-9-8');

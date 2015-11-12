@@ -4,7 +4,8 @@
 function adminAssignTaskController($scope,$state, $http, authService, config) {
 
 
-    $scope.tasksList = [];
+    $scope.tasksList = [];//all task of shipper
+    $scope.shipperList = [];
     $scope.orderList = [];
     $scope.taskList = [];
     $scope.taskNoShipper = [];
@@ -46,17 +47,33 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
     $scope.dateNow = new Date();
     //console.log("URL:"+ config.baseURI + "/api/shipper/getAllShipperWithTask");
 
-    $http.get(config.baseURI + "/api/shipper/getAllShipperWithTask").success(function(response){
-        $scope.tasksList = response;
+    $http.get(config.baseURI + "/api/shipper/getAllShipper").success(function(response){
+        $scope.shipperList = response;
         $scope.displayedShipperCollection = [].concat($scope.tasksList);
-        console.log($scope.displayedShipperCollection)
+        //console.log($scope.displayedShipperCollection)
         //console.log(1);
         //console.log(response);
+    }).then(function () {
+        $http.get(config.baseURI + "/api/shipper/getAllShipperWithTask").success(function(response){
+            $scope.tasksList = response;
+            $scope.shipperList.map(function (shipper) {
+                var result = $.grep($scope.tasksList, function(e){ return e.username == shipper.username; });
+                shipper['tasks'] = [];
+                if (result.length==0) $scope.tasksList.push(shipper);
+
+            })
+            $scope.displayedShipperCollection = [].concat($scope.tasksList);
+            //console.log($scope.displayedShipperCollection)
+            //console.log(1);
+
+        })
     })
+
 
     $http.get(config.baseURI + "/api/shipper/getAllOrderToAssignTask").success(function(response){
         $scope.orderList = response;
         $scope.displayedOrderCollection = [].concat($scope.orderList);
+        console.log($scope.orderList);
     })
 
 
@@ -71,12 +88,16 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
             $scope.tasksList.map(function (shipper) {
                 shipper.tasks.map(function (task) {
                     if (task.statusid == 4 && task.shipperid != task.prevshipperid && task.prevshipperid!=null) {
-                        task.statusid = 1;
-                        task.taskstatus.statusname = "NotActive";
+                        var indexTask = shipper.tasks.indexOf(task);
+                        shipper.tasks.splice(indexTask, 1);
+                    }
+                    if (task.statusid == 1){
+                        task['taskstatus'] = new Object();
+                        task['taskstatus']['statusname'] = 'NotActive';
                     }
                 })
             })
-                $http.put(config.baseURI + "/api/updateTaskNoShipper", $scope.taskNoShipper);
+                //$http.put(config.baseURI + "/api/updateTaskNoShipper", $scope.taskNoShipper);
 
         }, function (error) {
             var data = new Object();
@@ -99,11 +120,11 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
                 order['orderid'] = order.order.orderid;
                 order['adminid'] = currentUser.username;
                 order['statusid'] = 1;
-                order['taskstatus'] = new Object();
-                order['taskstatus']['statusname'] = 'NotActive';
+                //order['taskstatus'] = new Object();
+                //order['taskstatus']['statusname'] = 'NotActive';
                 if (order.order.orderstatus == 1 ) order['typeid'] = 1
                   else order['typeid'] = 2;
-                order['taskdate'] = new Date();
+                order['taskdate'] = new Date(Date.now());
             }
             else {
                 //order['prevshipperid'] = order.shipperid;
@@ -113,7 +134,7 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
                 order['shipperid'] = $scope.pickedShipper.username;
             }
             $scope.taskList.unshift(order);
-            console.log($scope.taskNoShipper);
+            //console.log($scope.taskNoShipper);
             //$scope.taskList.sort(compare);
         }
     }
@@ -130,7 +151,7 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
             $scope.taskNoShipper.push(task.taskid);
             $scope.orderList.unshift(task);
 
-            //$scope.orderList.sort(compare);+
+            console.log($scope.orderList);
 
         }
     }

@@ -23,8 +23,11 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
     });
 
     socketService.on('shipper:choose:express', function(data) {
+
         var answer = confirm('Do you want to accept order from store of ' + data.msg.distanceText + ' away?');
-        if (answer) {
+
+        if(answer) {
+
             api.getCurrentUser()
                 .then(function(user) {
                     socketService.sendPacket(

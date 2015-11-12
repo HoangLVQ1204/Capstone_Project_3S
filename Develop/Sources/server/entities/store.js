@@ -47,6 +47,15 @@ module.exports = function(sequelize, DataTypes) {
         freezeTableName: true,
         timestamps: false,
         classMethods: {
+        associate: function(db) {
+
+            store.hasMany(db.bannedhistorylog, {
+                foreignKey: 'storeid',
+                constraints: false
+            });
+
+        },
+
       getAllStores: function() {
         return store.findAll({});
       },
@@ -80,6 +89,10 @@ module.exports = function(sequelize, DataTypes) {
                 model: generalledger,
                 where: {
                     $and: [{'totaldelivery': null}, {'totalcod': null}]
+                }, limit: 1, order: 'payDate DESC'
+              },{
+                model: bannedhistorylog,
+                where: {
                 }, limit: 1, order: 'payDate DESC'
               }]
             });

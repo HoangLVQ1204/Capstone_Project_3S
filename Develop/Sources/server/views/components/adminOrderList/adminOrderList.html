@@ -14,16 +14,16 @@
                 <div class="col-lg-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            <h2><strong>Shipper </strong>List </h2>
-                            <label class="color">All Shipper</label>
+                            <h2><strong>Order </strong>List </h2>
+                            <label class="color">All Order</label>
                         </header>
 
                         <div class="panel-body">
                             <form>
-                                <table class="table table-striped table-hover table-bordered" st-set-filter="customFilter" st-custom-date="profile.dob" st-predicate="{{selected.value}}" stdate="dateRange" search-watch-model="search" st-table="displayedCollection" st-safe-src="shipperList">
+                                <table class="table table-striped table-hover table-bordered" st-set-filter="customFilter" st-custom-date="{{selectedDate.value}}" st-predicate="{{selected.value}}" stdate="dateRange" search-watch-model-multiple="search" st-table="displayedCollection" st-safe-src="orderList">
 
                                     <div class="row" >
-                                        <div class="col-sm-4 form-group pull-left">
+                                        <div class="col-sm-5 form-group pull-left">
                                             <div class="input-group input-icon">
                                                 <i class="fa fa-calendar ico"></i>
                                                 <input type="text"  class="form-control" daterange id="daterange" name="daterange" ng-model="dateRange"/>
@@ -33,6 +33,13 @@
                                                             <i class="fa fa-times" ng-click="dateRange=''"></i>
                                                         </button>
                                                     </div><!-- //btn-group-->
+                                                    <div class="btn-group">
+                                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> {{selectedDate.option}} <span class="caret"></span> </button>
+                                                        <ul class="dropdown-menu align-xs-left" role="menu">
+                                                            <li><a href="" ng-click="selectedDate = dateOptions[0]">Pickup Date</a></li>
+                                                            <li><a href="" ng-click="selectedDate = dateOptions[1]">Delivery Date</a></li>
+                                                        </ul>
+                                                    </div>
                                                 </span>
                                             </div>
                                         </div><!-- //form-group-->
@@ -57,32 +64,34 @@
                                     </div>
                                     <thead>
                                     <tr>
-                                        <th width="5%" st-sort="username" class="text-center sortable">ShipperID</th>
-                                        <th st-sort="profile.name" class="text-center sortable">Full name</th>
-                                        <th st-sort="profile.address" class="text-center sortable">Address</th>
-                                        <th st-sort="profile.phonenumber" class="text-center sortable">PhoneNumber</th>
+                                        <th width="5%" st-sort="orderid" class="text-center sortable">OrderID</th>
+                                        <th st-sort="store.name" class="text-center sortable">Store name</th>
+                                        <th st-sort="pickupaddress" class="text-center sortable">Pickup Address</th>
+                                        <th st-sort="deliveryaddress" class="text-center sortable">Delivery Address</th>
+                                        <th st-sort="deliveryaddress" class="text-center sortable">Pickup Date</th>
+                                        <th st-sort="deliveryaddress" class="text-center sortable">Delivery Date</th>
                                         <!--<th st-sort="order.storeid" class="text-center sortable">DateOfBirth</th>-->
-                                        <th st-sort="workingstatus.statusname" class="text-center sortable">Status</th>
+                                        <th st-sort="orderstatus.statusname" class="text-center sortable">Status</th>
 
-                                        <th class="text-center sortable" st-sort="profile.dob">DateOfBirth</th>
+                                        <th class="text-center sortable" st-sort="ordertype.typename">Type</th>
                                         <th class="text-center">Option</th>
                                     </tr>
                                     </thead>
                                     <tbody align="center" >
 
                                     <tr class="odd gradeX" ng-repeat= "x in displayedCollection">
-                                        <td>{{x.username}}</td>
-                                        <td>{{x.profile.name}}</td>
-                                        <td>{{x.profile.address}}</td>
-                                        <td>{{x.profile.phonenumber}}</td>
+                                        <td>{{x.orderid}}</td>
+                                        <td>{{x.store.name}}</td>
+                                        <td>{{x.pickupaddress}}</td>
+                                        <td>{{x.deliveryaddress}}</td>
+                                        <td>{{x.pickupdate|date:"dd/MM/yyyy"}}</td>
+                                        <td>{{x.deliverydate|date:"dd/MM/yyyy"}}</td>
 
                                         <td class="center">
-                                            <span class="label bg-success" ng-show="x.workingstatusid == 1">{{x.workingstatus.statusname}}</span>
-                                            <span class="label label-default" ng-show="x.workingstatusid == 2">{{x.workingstatus.statusname}}</span>
-                                            <span class="label bg-danger" ng-show="x.workingstatusid == 3">{{x.workingstatus.statusname}}</span>
+                                            {{x.orderstatus.statusname}}
                                         </td>
 
-                                        <td class="center"> {{x.profile.dob|date:"dd/MM/yyyy"}}</td>
+                                        <td class="center"> {{x.ordertype.typename}}</td>
                                         <td>
                                         <span class="tooltip-area">
                                         <a class="btn btn-default btn-sm" title="Edit"><i class="fa fa-edit (alias)"></i></a>
@@ -92,7 +101,7 @@
                                     </tbody>
                                     <tfoot>
                                     <tr>
-                                        <td colspan="8" class="text-right">
+                                        <td colspan="9" class="text-right">
                                             <div st-pagination="" st-items-by-page="10"></div>
                                         </td>
                                     </tr>

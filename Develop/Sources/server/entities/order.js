@@ -115,7 +115,7 @@ module.exports = function(sequelize, DataTypes) {
         });
 
       },
-      getAllTaskOfShipper: function(task, shipperid, taskdate) {
+      getAllTaskOfShipper: function(task, shipperid) {
         return order.findAll({
           attributes: ['orderid', 'ordertypeid', 'ispending', 'pickupaddress', 'deliveryaddress', 'pickupdate', 'deliverydate', 'statusid'],
           //where: {'ispending': false},
@@ -124,7 +124,7 @@ module.exports = function(sequelize, DataTypes) {
             attributes: ['taskid', 'typeid', 'statusid', 'taskdate'],
             where: {
               shipperid: shipperid,
-              taskdate: taskdate,
+              //taskdate: taskdate,
               statusid: [1, 2]
             }
           }]
@@ -270,7 +270,7 @@ module.exports = function(sequelize, DataTypes) {
 
 
 
-      getAllOrderToAssignTask: function(orderstatus, task){
+      getAllOrderToAssignTask: function(orderstatus, task, taskstatus){
         return order.findAll({
           where: {
             'statusid': {$or: [1,4]},
@@ -282,7 +282,11 @@ module.exports = function(sequelize, DataTypes) {
           },
             {
               model: task,
-              required: false
+              required: false,
+              include:{
+                model: taskstatus,
+                attributes: ['statusname']
+              }
             }]
         })
       },
@@ -338,7 +342,38 @@ module.exports = function(sequelize, DataTypes) {
             }
           }]
         });
-      }
+      },
+
+      getAllOrder: function (oderstatusModel,ordertypeModel, storeModel) {
+        return order.findAll({
+          //where: {storeid:store_id },
+          include: [
+            {'model': oderstatusModel,
+              attributes: ['statusname']
+            },{
+              'model': ordertypeModel,
+              attributes: ['typename']
+            },{
+              'model': storeModel,
+              attributes: ['name']
+            }
+          ]
+        });
+      },
+      //// HuyTDH - 12-11-15
+      shipperGetOneOrder: function (orderid, shipper, modelTask) {
+        return order.findOne({
+          where: {orderid: orderid},
+          include:[
+            {
+              'model': modelTask,
+              where: {
+                shipperid: shipper
+              }
+            }
+          ]
+        })
+      },
     }
   });
   return order;

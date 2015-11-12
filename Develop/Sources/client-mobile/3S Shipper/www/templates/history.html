@@ -1,20 +1,25 @@
 <ion-view view-title="History">
   <ion-content>
     <ion-list>
-      <ion-item class="item-icon-right" ng-repeat="order in historyorders" type="item-text-wrap" href="#/app/detail/{{order.code}}">
+      <div ng-repeat="info in historyorders" class="item item-divider">{{info.date | date : 'fullDate'}}
+      <ion-item class="item-icon-right" ng-repeat="order in info.taskOfDate" type="item-text-wrap" href="#/app/detail/{{order.code}}">
         <div class="titleContent">
           <div>
             <img src="img/storeprofile.png"/>
           </div>
           <div>
             <h2>{{order.code}}</h2>
-            <p><i class="ion-ios-clock"></i> {{order.date | date : 'HH:mm dd-MM-yy'}}</p>
+            <p ng-if="order.taskstatus == 3" class="label history-fail">Fail</p>
+            <p ng-if="order.taskstatus == 4" class="label history-done">Done</p>
+            <p><i class="ion-ios-clock"></i> {{order.time | date : 'HH:mm dd-MM-yy'}}</p>
             <p><i class="ion-social-usd-outline">&nbsp;Fee:</i> {{order.fee | number}} VND</p>
             <p><i class="ion-social-usd-outline">&nbsp;COD:</i> {{order.COD | number}} VND</p>
           </div>
         </div>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
+      </div>
     </ion-list>
+    <div ng-if="historyorders.length < totalTask" ng-click="loadMore()" class="item item-divider">See more...</div>
   </ion-content>
 </ion-view>
