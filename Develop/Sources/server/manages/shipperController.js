@@ -4,6 +4,7 @@
 
 var _ = require('lodash');
 var configConstant = require('../config/configConstant');
+var server = require('../server');
 
 module.exports = function (app) {
 
@@ -666,8 +667,22 @@ module.exports = function (app) {
     //// END change status of shipper
 
     var testSk = function(req, res, next){
-
-        res.status(400).json("Connection ok");
+        var receiver = {
+            type: 'store',
+            clientID: {
+                storeID: {storeid: 'str667', latitude: '215615', longitude: '-545151'}
+            }
+        };
+        var msg = {
+            shipper: "sphuy",
+            order: 'order1',
+            content: 'Change order status'
+        };
+        server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
+        var rs = server.socket.stores;
+        //addOrder(1,2,3);
+        //console.log("SERVER==================",serverio);
+        res.status(200).json(rs);
     };
 
     return {

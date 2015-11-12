@@ -151,7 +151,7 @@ module.exports = function(server,app){
 
     /*
         sender: { type: xxx, clientID: xxx }
-        receiver = 'admin' || 'shipper' || 'store' || {room: ...} || { type: xxx, clientID: xxx } || Arrays of these types [ 'admin', { room: ...} ]
+        receiver = 'admin' || 'shipper' || 'store' || {room: ...} || { type: 'store', clientID: storeid } || Arrays of these types [ 'admin', { room: ...} ]
         msg = Object
         eventName = String || Array of Strings
     */
@@ -312,7 +312,8 @@ module.exports = function(server,app){
         io.stores[storeID].order.push(orderID);
     };
 
-    io.addStore = function(store, socket) {        
+    io.addStore = function(store, socket) {
+        console.log("==================434========",store);
         io.stores[store.storeID] = {
             order: [],
             latitude: store.latitude,
@@ -445,6 +446,11 @@ module.exports = function(server,app){
         });
     };
 
+    var i = 1;
+    io.test = function(){
+        i++;
+        return i;
+    };
 
     //io.use(socketioJwt.authorize({
     //    secret: config.secrets.jwt,
@@ -570,7 +576,9 @@ module.exports = function(server,app){
 
             //socket.on("client:register")
         });
-
+    return {
+        io: io
+    }
 
 }
 
