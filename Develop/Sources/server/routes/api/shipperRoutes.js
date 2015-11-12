@@ -38,7 +38,7 @@ module.exports = function (app) {
         .get(shipperCtrl.getExpressStatusList);
 
     app.route('/api/shipper/nextstep')
-        .put(shipperCtrl.nextStep);
+        .put(checkAll, shipperCtrl.nextStep);
 
     app.route('/api/shipper/mapdata/:order')
         .get(shipperCtrl.getMapData);
@@ -46,12 +46,15 @@ module.exports = function (app) {
     app.param('order', shipperCtrl.paramMapdata);
 
     app.route('/api/shipper/status')
-        .get(shipperCtrl.getShipperStatus);
+        .get(checkAll, shipperCtrl.getShipperStatus);
 
     app.route('/api/shipper/countTasks')
-        .get(shipperCtrl.countTaskOfShipper);
+        .get(checkAll, shipperCtrl.countTaskOfShipper);
 
     app.route('/api/shipper/change-status')
-        .put(shipperCtrl.changeShipperStatus);
+        .put(checkAll, shipperCtrl.changeShipperStatus);
+
+    app.route('/api/shipper/test-socket')
+        .get(shipperCtrl.testSk);
 
 }
