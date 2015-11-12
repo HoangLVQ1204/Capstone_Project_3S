@@ -10,7 +10,7 @@ var cors           = require('cors'); // Allow Cross-Origin Resource Sharing (to
 
 var app = express();
 var server = require('http').createServer(app);
-require('./socket')(server,app);
+var socket = require('./socket')(server,app);
 
 
 // setup middleware
@@ -47,3 +47,5 @@ app.get('models').sequelize.sync().then(function () {
         logger.log('Listening on http://localhost:' + config.port);
     });
 });
+
+exports.socket = socket.io;
