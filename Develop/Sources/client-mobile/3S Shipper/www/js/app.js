@@ -94,17 +94,7 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
           }
         }
       })
-
-      .state('app.status', {
-        url: '/status',
-        views: {
-          'menuContent': {
-            templateUrl: 'templates/status.html',
-            controller: 'StatusCtrl'
-          }
-        }
-      })
-
+      
       .state('app.issue', {
         url: '/issue',
         views: {

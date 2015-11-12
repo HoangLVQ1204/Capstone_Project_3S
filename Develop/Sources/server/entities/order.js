@@ -109,7 +109,7 @@ module.exports = function(sequelize, DataTypes) {
       },
       getAllTaskOfShipper: function(task, shipperid) {
         return order.findAll({
-          attributes: ['orderid', 'ordertypeid', 'ispending', 'pickupaddress', 'deliveryaddress', 'pickupdate', 'deliverydate', 'statusid'],
+          attributes: ['orderid', 'ordertypeid', 'ispending', 'pickupaddress', 'deliveryaddress', 'pickupdate', 'statusid'],
           //where: {'ispending': false},
           include: [{
             model: task,
