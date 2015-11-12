@@ -65,7 +65,7 @@ module.exports = function (app) {
                         'deliveryaddress': order.dataValues.deliveryaddress,
                         'recipientname' : order.dataValues.recipientname,
                         'recipientphone' : order.dataValues.recipientphone,
-                        'isdraff': order.dataValues.isdraff,
+                        'isdraff': order.dataValues.isdraff,                        
                         'ispending': order.dataValues.ispending,
                         'cod': order.dataValues.cod,
                         'fee' : order.dataValues.fee,
@@ -88,21 +88,20 @@ module.exports = function (app) {
                 group['Done'] = group['Done'] || [];
                 group['Inprocess'] = group['Inprocess'] || [];
                 _.each(listOrders, function(item) {
-                    if(item['isdraff']) {
+                    if(item.ledgerid == ''){
+
+                        if(item['isdraff']) {
                         group['Draff'].push(item);
-                    }else if(_.isEqual(item['statusname'],'Done')){
-                        group['Done'].push(item);
-                    }else {
-                        group['Inprocess'].push(item);
-                    }
-                    
-                    
-                    if(item.ledgerid == '' && !item['isdraff']){
-                        totalNewCod = totalNewCod + parseInt(item.cod);
-                        totalNewFee = totalNewFee + parseInt(item.fee);
+                        }else if(_.isEqual(item['statusname'],'Done')|| _.isEqual(item['statusname'],'Canceled') ){
+                            group['Done'].push(item);
+                            totalNewCod = totalNewCod + parseInt(item.cod);
+                            totalNewFee = totalNewFee + parseInt(item.fee);
+                        }else {
+                            group['Inprocess'].push(item);
+                        }                        
                         totalNewOrder++;
 
-                        if(!_.isEqual(item['createdate'],'')){
+                        if(!_.isEqual(item['createdate'],'' && !item['isdraff'])){
                         var date = new Date(item['createdate']);
                         date.setHours(0,0,0,0);
                         var today = new Date();
@@ -196,7 +195,7 @@ module.exports = function (app) {
         //newOrder.ledgerid = null;
         newOrder.statusid = req.body.order.statusid;
         newOrder.ispending = 'false';
-        newOrder.isdraff = req.body.order.isdraff;
+        newOrder.isdraff = req.body.order.isdraff;        
         newOrder.createdate = new Date();        
         if(!_.isNumber(req.body.order.cod)){
             newOrder.cod = 0;
@@ -315,8 +314,7 @@ module.exports = function (app) {
         order.ordertypeid = update.ordertypeid;
         order.pickupaddress = update.pickupaddress;
         order.deliveryaddress = update.deliveryaddress;
-        order.pickupdate = update.pickupdate;
-        order.deliverydate = update.deliverydate;
+        order.pickupdate = update.pickupdate;        
         order.recipientphone = update.recipientphone;
         order.recipientname = update.recipientname;
 

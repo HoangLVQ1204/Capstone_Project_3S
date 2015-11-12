@@ -26,7 +26,7 @@ module.exports = function(sequelize, DataTypes) {
     pickupdate: {
       type: DataTypes.DATE,
       allowNull: true
-    },
+    },    
     createdate: {
       type: DataTypes.DATE,
       allowNull: true
@@ -58,7 +58,7 @@ module.exports = function(sequelize, DataTypes) {
     isdraff: {
       type: DataTypes.BOOLEAN,
       allowNull: true
-    },
+    },    
     fee: {
       type: DataTypes.BIGINT,
       allowNull: true
@@ -109,7 +109,7 @@ module.exports = function(sequelize, DataTypes) {
       },
       getAllTaskOfShipper: function(task, shipperid) {
         return order.findAll({
-          attributes: ['orderid', 'ordertypeid', 'ispending', 'pickupaddress', 'deliveryaddress', 'pickupdate', 'statusid'],
+          attributes: ['orderid', 'ordertypeid', 'ispending', 'pickupaddress', 'deliveryaddress', 'pickupdate', 'deliverydate', 'statusid'],
           //where: {'ispending': false},
           include: [{
             model: task,
@@ -150,13 +150,13 @@ module.exports = function(sequelize, DataTypes) {
               'model': ordertypeModel,
               attributes: ['typename']
             }
-          ]
+          ],
+          order: 'createdate DESC'
         });
       },
 
       storeGetOneOrder: function (oderstatusModel, goodsModel,confirmationCodeModel, order_id) {
-        return order.findOne({
-          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','ispending','cod','fee','completedate','createdate'],
+        return order.findOne({         
           where: {orderid:order_id},
           include: [
             {'model': oderstatusModel,
@@ -235,6 +235,17 @@ module.exports = function(sequelize, DataTypes) {
             }
           })
         },
+
+      cancelOrder: function(orderid) {
+        return order.update(
+            {
+              iscancel: 'true',
+              statusid: 'Canceling',
+              fee:5000
+            },
+            { where: { orderid: orderid }} /* where criteria */
+        )
+	},
 
 	 updateLedgerForOrder: function(storeid, paydate, ledgerid){
         return order.update(
