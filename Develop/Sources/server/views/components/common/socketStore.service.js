@@ -22,6 +22,7 @@ function socketStore($q,socketService,authService,mapService){
 
     socketService.on('shipper:change:order:status', function(data) {
         alert(data);
+        console.log(data);
     });
 
     socketService.on('store:update:shipper', function(data) {
@@ -53,7 +54,7 @@ function socketStore($q,socketService,authService,mapService){
         //currentUser.longitude = 105.826088;
 
         var dataStore = {
-            storeID: currentUser.stores[0],
+            storeID: currentUser.stores[0].storeid,
             latitude: parseFloat(currentUser.stores[0].latitude),
             longitude: parseFloat(currentUser.stores[0].longitude)
         };
