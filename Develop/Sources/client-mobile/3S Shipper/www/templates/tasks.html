@@ -7,7 +7,7 @@
         <ion-pane>
           <ion-content>
             <ion-list>
-              <ion-item class="item-icon-right" ng-repeat="order in pickupTasks | orderBy: 'pickupdate' " type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.orderid}}', isCancel: '{{order.iscancel}}'})">
+              <ion-item class="item-icon-right" ng-repeat="order in pickupTasks | orderBy: 'pickupdate' " type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.taskid}}', isCancel: '{{order.iscancel}}'})">
                 <div class="titleContent" style="min-height: 90px;">
                   <div>
                     <img src="img/storeprofile.png"/>
@@ -34,7 +34,7 @@
         <ion-pane>
           <ion-content >
             <ion-list>
-              <ion-item class="item-icon-right" ng-repeat="order in shipTasks | orderBy: 'deliverydate'" type="item-text-wrap"  ui-sref="app.detail({orderId: '{{order.orderid}}', isCancel: '{{order.iscancel}}'})">
+              <ion-item class="item-icon-right" ng-repeat="order in shipTasks | orderBy: 'deliverydate'" type="item-text-wrap"  ui-sref="app.detail({orderId: '{{order.taskid}}', isCancel: '{{order.iscancel}}'})">
                 <div class="titleContent" style="min-height: 90px;">
                   <div>
                     <img src="img/storeprofile.png"/>
@@ -61,7 +61,7 @@
         <ion-pane>
           <ion-content>
             <ion-list>
-              <ion-item class="item-icon-right" ng-repeat="order in expressTasks" type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.orderid}}', isCancel: '{{order.iscancel}}'})">
+              <ion-item class="item-icon-right" ng-repeat="order in expressTasks" type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.taskid}}', isCancel: '{{order.iscancel}}'})">
                <div class="titleContent" style="min-height: 90px;">
                  <div>
                    <img src="img/storeprofile.png"/>
@@ -88,7 +88,7 @@
         <ion-pane>
           <ion-content>
             <ion-list>
-              <ion-item class="item-icon-right" ng-repeat="order in returnTasks" type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.orderid}}', isCancel: '{{order.iscancel}}'})">
+              <ion-item class="item-icon-right" ng-repeat="order in returnTasks" type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.taskid}}', isCancel: '{{order.iscancel}}'})">
                 <div class="titleContent" style="min-height: 90px;">
                   <div>
                     <img src="img/storeprofile.png"/>

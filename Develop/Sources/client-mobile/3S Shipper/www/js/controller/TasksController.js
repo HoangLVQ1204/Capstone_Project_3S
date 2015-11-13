@@ -97,7 +97,7 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
     $ionicLoading.show({
       //duration: 500,
       noBackdrop: false,
-      template: '<ion-spinner icon="bubbles" class="custom-icon"/>'
+      template: '<ion-spinner icon="bubbles" class="spinner-balanced"/>'
     });
     var urlBaseCancel = config.hostServer + "api/getAllTaskCancel";
     dataFactory.getDataServer(urlBaseCancel)
