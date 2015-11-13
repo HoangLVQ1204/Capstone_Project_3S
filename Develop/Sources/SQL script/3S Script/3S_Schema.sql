@@ -239,13 +239,14 @@ updater varchar(20) REFERENCES "user"(username)
 
 CREATE TABLE BannedHistoryLog
 (
-logID int PRIMARY KEY,
+logID SERIAL PRIMARY KEY,
 adminID varchar(20) REFERENCES "user"(username),
 shipperID varchar(20)REFERENCES "user"(username),
 storeID varchar(8) REFERENCES store(storeID),
 reason text,
 bannedTime date,
-type varchar(5)
+type int
+--1 la ban, 2 la unban--
 );
 
 

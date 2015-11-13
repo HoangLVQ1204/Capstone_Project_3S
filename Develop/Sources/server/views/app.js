@@ -91,6 +91,12 @@ angular.module('app', [
             access: config.role.admin
         })
 
+        .state('admin.addShipper',{
+            url: '/addShipper',
+            template: '<admin-add-shipper></admin-add-shipper>',
+            access: config.role.admin
+        })
+
         .state('admin.issueBox',{
             url: '/issueBox',
             template: '<admin-issue-box></admin-issue-box>',

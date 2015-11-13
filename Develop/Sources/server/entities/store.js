@@ -51,6 +51,7 @@ module.exports = function(sequelize, DataTypes) {
 
             store.hasMany(db.bannedhistorylog, {
                 foreignKey: 'storeid',
+                as: 'ban',
                 constraints: false
             });
 
@@ -90,21 +91,26 @@ module.exports = function(sequelize, DataTypes) {
                 where: {
                     $and: [{'totaldelivery': null}, {'totalcod': null}]
                 }, limit: 1, order: 'payDate DESC'
-              },{
-                model: bannedhistorylog,
-                where: {
-                }, limit: 1, order: 'payDate DESC'
-              }]
+              }
+              ]
             });
       },
 
-        getStoreLatestTotal: function(generalledger){
+        getStoreLatestTotal: function (generalledger, bannedhistorylog){
             return store.findAll({
                 include: [{
                     model: generalledger,
                     where: {
                         $and: [{'totaldelivery': {$ne: null}}, {'totalcod': {$ne: null}}]
-                    }, limit: 1, order: 'payDate DESC'
+                    },limit: 1, order: 'payDate DESC'
+                },{
+                    model: bannedhistorylog,
+
+                    as: 'ban',
+
+                    where: {
+                    }, limit: 1, order: 'bannedtime DESC'
+
                 }]
             });
         },
