@@ -25,8 +25,15 @@ angular.module('app')
     $stateProvider
         .state('notificationdemo',{
             url: '/notidemo',
-            template: '<notification></notification>',
+            template: '<notification notification="notification"></notification>',
             controller: function($scope) {
+                $scope.notification = {
+                    type: 'issue',
+                    title: 'big issue',
+                    content: 'This is big issue',
+                    url: 'bigissue',
+                    createddate: 'date 1'
+                };
             }
         })
 });
