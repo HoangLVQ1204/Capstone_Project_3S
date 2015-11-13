@@ -25,11 +25,7 @@ api.getDistanceFromOneToMany = function(origin, destinations) {
 		if (index > 0) destinationsString += '|';
 		destinationsString += dest.latitude + ',' + dest.longitude;		
 	});
-	console.log("--------- Data Distance --------");
-	console.log("originString: "+ originString);
-	console.log("destinationS: "+ destinations);
-	console.log("destinationString: "+ destinationsString);
-	console.log("--------- Data Distance --------");
+
 	var request = {
         origins: originString,
         destinations: destinationsString,
@@ -44,12 +40,12 @@ api.getDistanceFromOneToMany = function(origin, destinations) {
 			d.reject(err);			
 		} else {
 			if (response.status === 'OK') {
-				// console.log('response', response.rows[0].elements);
 				var results = response.rows[0].elements.map(function(element, index) {
-		            return {
-		                distance: element.distance,
-		                id: index
-		            };
+						return {
+							distance: element.distance,
+							duration: element.duration,
+							id: index
+						};
 		        });                    
 	            d.resolve(results);
 			} else {			
@@ -63,17 +59,9 @@ api.getDistanceFromOneToMany = function(origin, destinations) {
 api.getClosestShippers = function(store, shippers, filter) {
 	// filter shippers by status
 
-	console.log("---- Date before valid Shippers ---");
-	console.log(shippers);
-	console.log("---- Date before valid Shippers ---");
-
 	var validShippers = shippers.filter(function(shipper) {
-		return shipper.status === filter.status;
+		return (shipper.isConnected === filter.isConnected && shipper.numTasks < filter.maxTasks);
 	});
-
-	console.log("---- Date valid Shippers ---");
-	console.log(validShippers);
-	console.log("---- Date valid Shippers ---");
 
 	return api.getDistanceFromOneToMany(store, validShippers)
 	.then(function(results) {		
@@ -94,7 +82,8 @@ api.getClosestShippers = function(store, shippers, filter) {
 		results = results.map(function(e) {
 			return {
 				shipperID: validShippers[e.id].shipperID,
-				distanceText: e.distance.text
+				distanceText: e.distance.text,
+				durationText: e.duration.text
 			};
 		});		
 		

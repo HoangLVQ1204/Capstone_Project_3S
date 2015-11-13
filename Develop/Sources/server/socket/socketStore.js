@@ -4,7 +4,7 @@
 
 
 var gmapUtil = require('./googlemapUtil');
-
+var config   = require('../config/config');
 
 module.exports = function(socket, io) {
 	io.addToRoom(socket, 'store');
@@ -14,37 +14,46 @@ module.exports = function(socket, io) {
     });
 
     socket.on('store:find:shipper', function(data) {
-        var filter = {
-            // ban kinh (m)
-            // trang thai shipper  0: free, 1: busy
-            radius: 1000000000,
-            status: 1,
-            limit: 2
-        };
-        console.log("List of Shippers: ");
-        console.log(io.getAllShippers());
 
-        gmapUtil.getClosestShippers(data.msg.store, io.getAllShippers(), filter)
-        .then(function(results) {
-            console.log("------------------------");
-            console.log('Data Store: ');
-            console.log(data);
-            console.log('closest shippers', results);
-            console.log("------------------------");
-            results.forEach(function(e) {
-                // console.log('forward', data.sender);
-                io.forward(
+        var numShippers = io.getAllShippers();
+
+        if(numShippers.length != 0){
+            gmapUtil.getClosestShippers(data.msg.store, numShippers, config.filter)
+                .then(function(results) {
+                    console.log('closest shippers', results);
+                    if(results.length == 0){
+                        console.log("--CASE: NO SHIPPER IN FILTER--");
+                        io.reply(
+                            data.sender,
+                            {
+                                shipper: false
+                            },
+                            'store:find:shipper');
+                    }else{
+                        results.forEach(function(e) {
+                            io.forward(
+                                data.sender,
+                                {
+                                    type: 'shipper',
+                                    clientID: e.shipperID
+                                },
+                                {
+                                    distanceText: e.distanceText,
+                                    durationText: e.durationText
+                                },
+                                'shipper:choose:express');
+                        });
+                    }
+                });
+        }else{
+            console.log("--CASE: NO SHIPPER IN IO LIST--");
+            io.reply(
                 data.sender,
                 {
-                    type: 'shipper',
-                    clientID: e.shipperID
+                    shipper: false
                 },
-                {
-                    distanceText: e.distanceText
-                },                
-                'shipper:choose:express');
-            });
-        });      
+                'store:find:shipper');
+        }
     });
 
     socket.on('store:choose:shipper', function(data) {

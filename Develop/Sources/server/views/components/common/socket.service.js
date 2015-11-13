@@ -1,19 +1,30 @@
 /**
  * Created by hoanglvq on 10/25/15.
  */
+
+
 angular.module('app')
-    .factory('socketService',function($rootScope){
+    .factory('socketService',function($rootScope, $q){
         var socket = io();
-
-        socket.on('connect',function(){
-            socket
-                .on('authenticated',function(){
-                    console.log("Authen ok!");
-                })
-                .emit('authenticate',{token: localStorage.getItem('EHID')});
-        })
-
+        // socket.on('connect',function(){
+        //     console.log("connect client");            
+            // socket
+            //     .emit('authenticate',{token: localStorage.getItem('EHID')})
+            //     .on('authenticated',function(){
+            //         console.log("Authen ok!");
+                // })
+        // })
         return {
+            authenSocket: function(){
+                console.log("SEND TOKEN: "+ localStorage.getItem('EHID'));
+                var d = $q.defer();
+                this.on('authenticated',function(){
+                    console.log("Authen ok!");
+                    d.resolve();
+                });        
+                this.emit('authenticate',{token: localStorage.getItem('EHID')})                                                    
+                return d.promise;
+            },
             on: function (eventName, callback){
                 socket.on(eventName,function(){
                     var args = arguments;
@@ -45,5 +56,7 @@ angular.module('app')
                 };
                 this.emit(eventName, data, callback);
             }
+
+
         }
     })

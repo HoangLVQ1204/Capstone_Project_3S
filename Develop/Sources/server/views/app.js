@@ -91,6 +91,12 @@ angular.module('app', [
             access: config.role.admin
         })
 
+        .state('admin.addShipper',{
+            url: '/addShipper',
+            template: '<admin-add-shipper></admin-add-shipper>',
+            access: config.role.admin
+        })
+
         .state('admin.issueBox',{
             url: '/issueBox',
             template: '<admin-issue-box></admin-issue-box>',
@@ -107,7 +113,8 @@ angular.module('app', [
         .state('store',{
             abstract: true,
             url: '/store',
-            template: '<store></store>'
+            template: '<store></store>',
+            access: config.role.store
         })
 
         .state('store.dashboard',{
@@ -158,33 +165,35 @@ angular.module('app', [
     $httpProvider.interceptors.push('jwtInterceptor');
 
     uiGmapGoogleMapApiProvider.configure({
-        key: 'AIzaSyD6DZIeop4shXgZWtMaTYbBoeC8CdbbRPw',
+        key: 'AIzaSyD8_7oskfESbIw6fpTmYG9h68cRONrjCPc',
         v  : '3.20',
         libraries: 'geometry,visualization,drawing,places'
     })
 
-}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper, config){
+}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper, config,socketService){
 
 
 
     if(authService.isLogged()){
+        socketService.authenSocket()
+        .then(function() {
+            if(authService.isRightRole(config.role.admin)){
+                socketAdmin.registerSocket();
+                $state.go("admin.dashboard");
+            }
 
-        if(authService.isRightRole(config.role.admin)){
-            socketAdmin.registerSocket();
-            $state.go("admin.dashboard");
-        }
+            if(authService.isRightRole(config.role.store)){
+                socketStore.registerSocket();
+                $state.go("store.dashboard");
 
-        if(authService.isRightRole(config.role.store)){
-            socketStore.registerSocket();
-            $state.go("store.dashboard");
+            }
 
-        }
+            // if(authService.isRightRole(config.role.shipper)){
+            //     socketShipper.registerSocket();
+            //     $state.go("mapdemo");
 
-        if(authService.isRightRole(config.role.shipper)){
-            socketShipper.registerSocket();
-            $state.go("mapdemo");
-
-        }
+            // }
+        })        
 
     }else{
 
@@ -228,7 +237,7 @@ angular.module('app', [
     });
 
     $rootScope.$on('$stateChangeSuccess', function(e, toState){
-        console.log(toState.name.indexOf("store"));
+        // console.log(toState.name.indexOf("store"));
         if (toState.name == "login" || toState.name == "home" || toState.name == "error"){
             $rootScope.styleBody = "full-lg";
         }else if(toState.name.indexOf("store") == 0){

@@ -3,6 +3,19 @@
  */
 
 /*
+    TODO: Bug scenario for Shipper (similar to Store)
+    - Browser 1: Sign out. Then Sign in as Admin. Go to /mapdemo
+    - Browser 2: Sign out. Then Sign in as Shipper. Go to /mapdemo
+    - Check whether /mapdemo in Admin and Shipper show same position of shipper
+
+    Cause: Shipper sent client:register, but it is rejected. Socketiojwt maybe only check token 1 time
+    Resolve: Refresh Shipper tab to reconnect
+
+    Possible solution: https://auth0.com/blog/2014/01/15/auth-with-socket-io/
+*/
+
+
+/*
     TODO: notifications
     - list of notifications    
     - notificationService.js
@@ -12,6 +25,7 @@
             notification:
                 {
                     type: ['issue', 'info']
+                    title:
                     content:
                     url:
                     notify: true/false
@@ -84,8 +98,8 @@ module.exports = function(server,app){
             socketID,
             latitude,
             longitude,
-            status,
-            isConnected
+            isConnected,
+            numTasks
         }
     */ 
     io.shippers = {};
@@ -225,13 +239,6 @@ module.exports = function(server,app){
     };
 
     io.getDataForShipper = function(shipperID) {
-        // Returns data for map of shipperID
-        // Based on io.stores, io.shippers, io.customers, io.orders
-        console.log('total data:shippers', io.shippers);    
-        console.log('total data:stores', io.stores);    
-        console.log('total data:customers', io.customers);    
-        console.log('total data:orders', io.orders);    
-
         var result = {};
         result.shipper = [];
         result.store = [];
@@ -273,8 +280,6 @@ module.exports = function(server,app){
             });
             result.customer.push(customer);
         }
-
-        console.log('check result', result);
         return result;
     };
 
@@ -296,6 +301,7 @@ module.exports = function(server,app){
         result.customer = _.clone(io.customers, true);
         result.orders = _.clone(io.orders, true);
 
+        console.log('io.getDataForAdmin', io.shippers);
         return result;
     };
 
@@ -339,10 +345,23 @@ module.exports = function(server,app){
         return !!io.shippers[shipperID];
     };
 
+    io.countNumTasksByShipperID = function(shipperID){
+        var orderIDs = Object.keys(io.orders);
+        return  (orderIDs.filter(function(e) {
+            return io.orders[e].shipperID === shipperID;
+        })).length;
+    }
+
+    io.updateNumTasksByShipperID = function(shipperID){
+        io.shippers[shipper.shipperID].numTasks = io.countNumTasksByShipperID(shipper.shipperID);
+    }
+
     io.updateShipper = function(shipper, socket) {
         io.shippers[shipper.shipperID].latitude = shipper.latitude;
         io.shippers[shipper.shipperID].longitude = shipper.longitude;
         io.shippers[shipper.shipperID].socketID = socket.id;
+        io.shippers[shipper.shipperID].isConnected = true;
+        io.shippers[shipper.shipperID].numTasks = io.countNumTasksByShipperID(shipper.shipperID);
     };
 
     io.updateOrderOfShipper = function(shipperID, orderID) {
@@ -355,7 +374,8 @@ module.exports = function(server,app){
             latitude: shipper.latitude,
             longitude: shipper.longitude,
             socketID: socket.id,
-            status: shipper.status
+            isConnected: true,
+            numTasks: io.countNumTasksByShipperID(shipper.shipperID)
         };              
     };
 
@@ -363,8 +383,9 @@ module.exports = function(server,app){
         var shipperIDs = Object.keys(io.shippers);
         var shipperID = _.find(shipperIDs, function(e) {
             return io.shippers[e].socketID === socketID;
-        });
-        return io.getOneShipper(shipperID);
+        });        
+        if (!shipperID) return null;
+        return io.getOneShipper(shipperID);        
     };
 
     io.removeShipper = function(shipperID) {
@@ -372,14 +393,14 @@ module.exports = function(server,app){
     };
 
     io.getOneShipper = function(shipperID) {
-        // remove socketID
         var shipper = _.clone(io.shippers[shipperID], true);
         return {
             shipperID: shipperID,
             order: shipper.order,
             latitude: shipper.latitude,
             longitude: shipper.longitude,
-            status: shipper.status
+            isConnected: shipper.isConnected,
+            numTasks: shipper.numTasks
         };
     };
 
@@ -390,9 +411,11 @@ module.exports = function(server,app){
                 shipperID: shipperID,
                 latitude: io.shippers[shipperID].latitude,
                 longitude: io.shippers[shipperID].longitude,
-                status: io.shippers[shipperID].status
+                isConnected: io.shippers[shipperID].isConnected,
+                numTasks: io.shippers[shipperID].numTasks
             };
         });
+
         return shipperInfos;
     };
 
@@ -452,33 +475,18 @@ module.exports = function(server,app){
         return i;
     };
 
-    //io.use(socketioJwt.authorize({
-    //    secret: config.secrets.jwt,
-    //    handshake: true
-    //}));
-
-    //io.on('connection',socketioJwt.authorize({
-    //    secret: config.secrets.jwt,
-    //    timeout: 15000
-    //}).on('authenticated',function(socket){
-    //
-    //    //console.log("have connection in Server");
-    //    //
-    //    //console.log('hello! ', socket.decoded_token);
-    //
-    //
-    //});
-
     io
         .on('connection', socketioJwt.authorize({
             secret: config.secrets.jwt,
             timeout: 15000 // 15 seconds to send the authentication message
         }))
         .on('authenticated', function(socket){
-
+            console.log("--HAVE CONNECTION--");
             var dataToken = socket.decoded_token;
+            console.log('authenticated', dataToken);
 
             socket.on("client:register",function(data){
+
                 if(dataToken.userrole == 1){
 
                     console.log("This is Data Shipper: ");
@@ -489,6 +497,10 @@ module.exports = function(server,app){
                         io.updateShipper(shipper, socket);
                     else
                         io.addShipper(shipper, socket);
+
+                    console.log("---CHECK REGISTER SHIPPER---");
+                    console.log(io.getAllShippers());
+                    console.log("---CHECK REGISTER SHIPPER---");
 
                     io.reply(data.sender, { mapData: io.getDataForShipper(shipper.shipperID) }, 'shipper:register:location');
                     io.forward(data.sender, 'admin', { shipper: io.getOneShipper(shipper.shipperID) }, 'admin:add:shipper');
@@ -582,17 +594,6 @@ module.exports = function(server,app){
     }
 }
 
-
-
-/*
-
-hoang: admin
-khanhkute: store
-nhungkaka: store
-huykool: shipper
-quyensheep: shipper
-
-*/
 
 
 /* Oh, my dear

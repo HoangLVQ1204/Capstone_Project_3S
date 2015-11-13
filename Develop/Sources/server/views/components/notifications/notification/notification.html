@@ -1,0 +1,37 @@
+
+
+
+
+<div>
+	<div class="modal-body" style="padding:10">
+			<div class="widget-im notification">
+					<ul>	
+							<li>
+								<a ui-sref="{{ notification.url }}">
+									<section class="thumbnail-in">
+											<div class="widget-im-tools tooltip-area pull-right">
+													<span>
+															<time class="timeago" datetime="{{ notification.createddate }}">{{ notification.createddate }}</time>
+													</span>
+													<span>
+															<a href="javascript:void(0)" class="im-action" data-toggle="tooltip" data-placement="left" title="Action"><i class="fa fa-keyboard-o"></i></a>
+													</span>
+											</div>
+											<h4>{{ notification.title }} </h4>
+											<div class="im-thumbnail bg-theme"><i class="fa fa-bell-o"></i></div>
+											<div class="pre-text">{{ notification.content }}</div>
+									</section>
+									<div class="im-confirm-group">
+											<div class=" btn-group btn-group-justified">
+													<a class="btn btn-theme im-confirm" href="javascript:void(0)" data-confirm="no">Later.</a>
+											</div>
+									</div>
+								</a>
+							</li>							
+					</ul>
+			</div>
+			<!-- //widget-im-->
+	</div>
+	<!-- //modal-body-->	
+</div>
+
