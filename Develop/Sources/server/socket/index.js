@@ -84,7 +84,8 @@ module.exports = function(server,app){
             socketID,
             latitude,
             longitude,
-            isConnected
+            isConnected,
+            numTasks
         }
     */ 
     io.shippers = {};
@@ -224,13 +225,6 @@ module.exports = function(server,app){
     };
 
     io.getDataForShipper = function(shipperID) {
-        // Returns data for map of shipperID
-        // Based on io.stores, io.shippers, io.customers, io.orders
-        console.log('total data:shippers', io.shippers);    
-        console.log('total data:stores', io.stores);    
-        console.log('total data:customers', io.customers);    
-        console.log('total data:orders', io.orders);    
-
         var result = {};
         result.shipper = [];
         result.store = [];
@@ -272,8 +266,6 @@ module.exports = function(server,app){
             });
             result.customer.push(customer);
         }
-
-        console.log('check result', result);
         return result;
     };
 
@@ -342,7 +334,7 @@ module.exports = function(server,app){
         var orderIDs = Object.keys(io.orders);
         return  (orderIDs.filter(function(e) {
             return io.orders[e].shipperID === shipperID;
-        })).length();
+        })).length;
     }
 
     io.updateNumTasksByShipperID = function(shipperID){
@@ -356,7 +348,6 @@ module.exports = function(server,app){
         io.shippers[shipper.shipperID].isConnected = true;
         io.shippers[shipper.shipperID].numTasks = io.countNumTasksByShipperID(shipper.shipperID);
     };
-
 
     io.updateOrderOfShipper = function(shipperID, orderID) {
         io.shippers[shipperID].order.push(orderID);
@@ -386,14 +377,14 @@ module.exports = function(server,app){
     };
 
     io.getOneShipper = function(shipperID) {
-        // remove socketID
         var shipper = _.clone(io.shippers[shipperID], true);
         return {
             shipperID: shipperID,
             order: shipper.order,
             latitude: shipper.latitude,
             longitude: shipper.longitude,
-            status: shipper.status
+            isConnected: shipper.isConnected,
+            numTasks: shipper.numTasks
         };
     };
 
@@ -404,9 +395,11 @@ module.exports = function(server,app){
                 shipperID: shipperID,
                 latitude: io.shippers[shipperID].latitude,
                 longitude: io.shippers[shipperID].longitude,
-                status: io.shippers[shipperID].status
+                isConnected: io.shippers[shipperID].isConnected,
+                numTasks: io.shippers[shipperID].numTasks
             };
         });
+
         return shipperInfos;
     };
 
@@ -466,33 +459,17 @@ module.exports = function(server,app){
         return i;
     };
 
-    //io.use(socketioJwt.authorize({
-    //    secret: config.secrets.jwt,
-    //    handshake: true
-    //}));
-
-    //io.on('connection',socketioJwt.authorize({
-    //    secret: config.secrets.jwt,
-    //    timeout: 15000
-    //}).on('authenticated',function(socket){
-    //
-    //    //console.log("have connection in Server");
-    //    //
-    //    //console.log('hello! ', socket.decoded_token);
-    //
-    //
-    //});
-
     io
         .on('connection', socketioJwt.authorize({
             secret: config.secrets.jwt,
             timeout: 15000 // 15 seconds to send the authentication message
         }))
         .on('authenticated', function(socket){
-
+            console.log("--HAVE CONNECTION--");
             var dataToken = socket.decoded_token;
 
             socket.on("client:register",function(data){
+
                 if(dataToken.userrole == 1){
 
                     console.log("This is Data Shipper: ");
@@ -503,6 +480,10 @@ module.exports = function(server,app){
                         io.updateShipper(shipper, socket);
                     else
                         io.addShipper(shipper, socket);
+
+                    console.log("---CHECK REGISTER SHIPPER---");
+                    console.log(io.getAllShippers());
+                    console.log("---CHECK REGISTER SHIPPER---");
 
                     io.reply(data.sender, { mapData: io.getDataForShipper(shipper.shipperID) }, 'shipper:register:location');
                     io.forward(data.sender, 'admin', { shipper: io.getOneShipper(shipper.shipperID) }, 'admin:add:shipper');
@@ -531,8 +512,8 @@ module.exports = function(server,app){
 
                 if(dataToken.userrole == 3){
 
-                    console.log("This is Data Admin: ");
-                    console.log(data);
+                    //console.log("This is Data Admin: ");
+                    //console.log(data);
 
                     var admin = data.msg.admin;
                     if (io.containAdmin(admin.adminID))

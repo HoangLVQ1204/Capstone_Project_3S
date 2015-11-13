@@ -25,21 +25,38 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
     socketService.on('shipper:choose:express', function(data) {
 
         var answer = confirm('Do you want to accept order from store of ' + data.msg.distanceText + ' away?');
+        console.log("---DATA RECEIVE---");
+        console.log(data);
+        console.log("---DATA RECEIVE---");
 
         if(answer) {
 
             api.getCurrentUser()
                 .then(function(user) {
-                    socketService.sendPacket(
-                        {
-                            type: 'shipper',
-                            clientID: user.shipperID
-                        },
-                        data.sender,
-                        {
-                            shipper: user
-                        },
-                        'shipper:choose:express');
+                    user.distanceText = data.msg.distanceText;
+                    user.durationText = data.msg.durationText;
+
+                    authService.getProfileUser()
+                        .then(function(res){
+                            user.fullName    = res.data.name;
+                            user.avatar      = res.data.avatar;
+                            user.phonenumber = res.data.phonenumber;
+
+                            console.log("-- DATA BEFORE SEND --");
+                            console.log(res);
+                            console.log("-- DATA BEFORE SEND --");
+
+                            socketService.sendPacket(
+                                {
+                                    type: 'shipper',
+                                    clientID: user.shipperID
+                                },
+                                data.sender,
+                                {
+                                    shipper: user
+                                },
+                                'shipper:choose:express');
+                        })
                 })
                 .catch(function(err) {
                     alert(err);
@@ -125,11 +142,10 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
     api.registerSocket = function(){
         api.getCurrentUser()
             .then(function(user) {
-                console.log("---------Data shipper client ------");
-                console.log(user);
-                console.log("---------Data shipper client ------");
+                socketService.initSocket();
                 mapService.addShipper(user)
                     .then(function() {
+                        console.log("---TEST SEND SOCKET---");
                         socketService.sendPacket(
                             {
                                 type: 'shipper',

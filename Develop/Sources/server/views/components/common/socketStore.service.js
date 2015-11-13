@@ -22,10 +22,6 @@ function socketStore($q,socketService,authService,mapService){
         });
     });
 
-    socketService.on('shipper:change:order:status', function(data) {
-        alert(data);
-        console.log(data);
-    });
 
     socketService.on('store:update:shipper', function(data) {
         console.log('store:update:shipper', data);
@@ -60,6 +56,9 @@ function socketStore($q,socketService,authService,mapService){
 
     api.registerSocket = function(){
         var user = api.getCurrentUser();
+
+        socketService.initSocket();
+
         mapService.addStore(user)
         .then(function() {                
             socketService.sendPacket(
@@ -72,7 +71,6 @@ function socketStore($q,socketService,authService,mapService){
                 store: user
             },
             'client:register');
-
         });
     };
     

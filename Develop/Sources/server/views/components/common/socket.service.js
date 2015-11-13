@@ -4,16 +4,19 @@
 angular.module('app')
     .factory('socketService',function($rootScope){
         var socket = io();
-
-        socket.on('connect',function(){
-            socket
-                .on('authenticated',function(){
-                    console.log("Authen ok!");
-                })
-                .emit('authenticate',{token: localStorage.getItem('EHID')});
-        })
-
         return {
+            initSocket: function(){
+
+                socket.on('connect',function(){
+                    console.log("connect client");
+                    console.log("SEND TOKEN: "+ localStorage.getItem('EHID'));
+                    socket
+                        .emit('authenticate',{token: localStorage.getItem('EHID')})
+                        .on('authenticated',function(){
+                            console.log("Authen ok!");
+                        })
+                })
+            },
             on: function (eventName, callback){
                 socket.on(eventName,function(){
                     var args = arguments;
@@ -45,5 +48,7 @@ angular.module('app')
                 };
                 this.emit(eventName, data, callback);
             }
+
+
         }
     })
