@@ -41,40 +41,36 @@
                                            placeholder="(XXX) XXXX XXX">
                                 </div>
                             </div>
-
+                            
+                            <div class="form-group row">
+                                <div class="col-md-4">
+                                    <label class="control-label">City</label>
+                                    <select parsley-required="true" class="form-control"
+                                            ng-options="x.name for x in stores track by x.storeid"
+                                            ng-model="selectedStore">                                       
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="control-label">District</label>
+                                    <select parsley-required="true" class="form-control"
+                                            ng-options="x.name for x in stores track by x.storeid"
+                                            ng-model="selectedStore">                                        
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="control-label">Street</label>
+                                    <select parsley-required="true" class="form-control"
+                                            ng-options="x.name for x in stores track by x.storeid"
+                                            ng-model="selectedStore">                                       
+                                    </select>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label class="control-label">Address</label>
                                     <textarea ng-model="order.deliveryaddress" class="form-control"
                                               parsley-trigger="keyup" rows="1"
                                               placeholder="Enter customer address" required></textarea>
                             </div>
-                            <!-- <div class="form-group row">
-                                <div class="col-md-4">
-                                    <label class="control-label">City</label>
-                                    <select class="selectpicker form-control">
-                                        <option value="">Selcect your city</option>
-                                        <option value="Australia">Hai Ba Trung</option>
-                                        <option value="China">Cau Giay</option>
-                                        <option value="China">Cau Giay</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="control-label">District</label>
-                                    <select class="selectpicker form-control">
-                                        <option value="">Selcect your district</option>
-                                        <option value="Australia">Hai Ba Trung</option>
-                                        <option value="China">Cau Giay</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="control-label">Street</label>
-                                    <select class="selectpicker form-control">
-                                        <option value="">Select your street</option>
-                                        <option value="Australia">Tran Duy Hung</option>
-                                        <option value="China">Truong Trinh</option>
-                                    </select>
-                                </div>
-                            </div> -->
                             <hr>
                             <footer class="row">
                                 <div class="col-sm-5">
