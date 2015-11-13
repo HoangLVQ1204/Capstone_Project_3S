@@ -91,6 +91,12 @@ angular.module('app', [
             access: config.role.admin
         })
 
+        .state('admin.addShipper',{
+            url: '/addShipper',
+            template: '<admin-add-shipper></admin-add-shipper>',
+            access: config.role.admin
+        })
+
         .state('admin.issueBox',{
             url: '/issueBox',
             template: '<admin-issue-box></admin-issue-box>',
@@ -163,7 +169,7 @@ angular.module('app', [
         libraries: 'geometry,visualization,drawing,places'
     })
 
-}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper, config){
+}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper){
 
 
 
@@ -171,7 +177,7 @@ angular.module('app', [
 
         if(authService.isRightRole(config.role.admin)){
             socketAdmin.registerSocket();
-            $state.go("admin.dashboard");
+            //$state.go("admin.dashboard");
         }
 
         if(authService.isRightRole(config.role.store)){

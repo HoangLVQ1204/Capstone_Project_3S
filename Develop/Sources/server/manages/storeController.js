@@ -83,7 +83,7 @@ module.exports = function(app) {
     };
 
     var getAllLedger = function(req, res, next){
-        return db.store.getStoreLatestTotal(db.generalledger)
+        return db.store.getStoreLatestTotal(db.generalledger, db.bannedhistorylog)
             .then(function(store) {
                 res.status(200).json(store);
             }, function(err) {

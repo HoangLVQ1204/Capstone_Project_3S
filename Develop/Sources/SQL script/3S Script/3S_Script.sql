@@ -275,4 +275,4 @@ insert into orderlog  values ('1', 'ord1', 'str1', '1', '1', 'Tu Liem - Ha Noi',
 insert into orderlog values ('2', 'ord2', 'str2', '2', '2', 'Ho Tung Mau - Ha Noi', 'Hoan Kiem - Ha Noi', '2015-5-23', '2015-5-25', '0988627075', 'Nguyen Van Long', '2', '2', '0', '2000000', '21.045,105.834', '21.105,105.854', '2015-4-5', 'hoang');
 
 -- bannedhistorylog
-insert into bannedhistorylog values ('1', 'khoangkiti', 'quyensheep', null, 'Reject order', '2015-9-8');
+insert into bannedhistorylog(adminid, shipperid, storeid, reason, bannedtime, type) values ('khoangkiti', null, 'str3', 'Reject order', '2015-9-8',1);
