@@ -37,7 +37,6 @@ address varchar(100),
 DoB date,
 email varchar(50),
 phoneNumber varchar(11),
-addressCoordination text,
 avatar varchar(50)
 );
 

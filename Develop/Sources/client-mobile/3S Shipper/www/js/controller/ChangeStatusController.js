@@ -19,15 +19,15 @@ app.controller('ChangeStatusCtrl', ['$scope', '$ionicPopup', 'dataService', func
     var urlCountTask = config.hostServer + 'api/shipper/countTasks';
     dataService.getDataServer(urlCountTask).then(function (rs) {
       $scope.tasks = rs.data;
-      console.log($scope.tasks.Actived);
-      if ($scope.tasks.Actived > 0) {
+      console.log($scope.tasks.Active);
+      if ($scope.tasks.Active > 0) {
         console.log('11111112');
-        var content = "You have " + $scope.tasks.Actived + " active task(s)." +
+        var content = "You have " + $scope.tasks.Active + " active task(s)." +
           "You need to finish or send issue to cancel your task first!";
         showAlert("Error", content);
       } else {
-        if ($scope.NotActive > 0) {
-          var msg = "You have " + $scope.NotActive + " undone task(s)! If you go offline, your task will be remove! Still want to offline?";
+        if ($scope.Inactive > 0) {
+          var msg = "You have " + $scope.Inactive + " undone task(s)! If you go offline, your task will be remove! Still want to offline?";
           showConfirm("Warning", msg).then(function () {
             if (res) {
               sendChangeRequest();

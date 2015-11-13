@@ -52,6 +52,10 @@ i {
 a {
  text-decoration: none;
 }
+/*TODO* Fix not apear text of type off task*/
+.tab-item > .icon {
+  display: inline-block !important;
+}
 
 /*END Common*/
 
@@ -161,6 +165,13 @@ div.fixed {
   border-radius: 50px;
 }
 
+.history-fail {
+  background-color: #ef473a;
+}
+
+.history-done {
+  background-color: #33cd5f;
+}
 /* ---END StyleSheet of Task & History---*/
 
 /*---START StyleSheet of Profile---*/

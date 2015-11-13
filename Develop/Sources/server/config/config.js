@@ -7,10 +7,20 @@ var config = {
 	test: 'testing',
 	port: process.env.PORT || 3000,
 	expireTime: 24*60*10*60,
+
+	// Config authentication & authorization
 	secrets: {
 		jwt: process.env.JWT || 'hoanglvqse90184'
 	},
-	pathAccessRole: accessRole
+	pathAccessRole: accessRole,
+
+	// Config filter finding shipper
+	filter: {
+		radius: 1000000000,
+		isConnected: true,
+		limit: 4,
+		maxTasks: 3
+	}
 };
 
 process.env.NODE_ENV = process.env.NODE_ENV || config.dev;

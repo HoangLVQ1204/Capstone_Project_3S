@@ -113,7 +113,8 @@ angular.module('app', [
         .state('store',{
             abstract: true,
             url: '/store',
-            template: '<store></store>'
+            template: '<store></store>',
+            access: config.role.store
         })
 
         .state('store.dashboard',{

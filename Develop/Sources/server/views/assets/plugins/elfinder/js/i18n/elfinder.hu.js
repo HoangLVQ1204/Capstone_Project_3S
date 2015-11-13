@@ -50,7 +50,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'errCopyTo'            : 'Copying files to volume "$1" not allowed.',
 			'errUploadCommon'      : 'Feltöltési hiba.',
 			'errUpload'            : 'Nem sikerült a fájlt feltölteni. ($1)',
-			'errUploadNoFiles'     : 'No files found for upload.',
+			'errUploadNoFiles'     : 'No files found for avatar.',
 			'errMaxSize'           : 'Data exceeds the maximum allowed size.',
 			'errFileMaxSize'       : 'File exceeds maximum allowed size.',
 			'errUploadMime'        : 'File type not allowed.',

@@ -25,7 +25,7 @@ api.getDistanceFromOneToMany = function(origin, destinations) {
 		if (index > 0) destinationsString += '|';
 		destinationsString += dest.latitude + ',' + dest.longitude;		
 	});
-	// console.log(originString, destinationsString);
+
 	var request = {
         origins: originString,
         destinations: destinationsString,
@@ -40,12 +40,12 @@ api.getDistanceFromOneToMany = function(origin, destinations) {
 			d.reject(err);			
 		} else {
 			if (response.status === 'OK') {
-				// console.log('response', response.rows[0].elements);
 				var results = response.rows[0].elements.map(function(element, index) {
-		            return {
-		                distance: element.distance,
-		                id: index
-		            };
+						return {
+							distance: element.distance,
+							duration: element.duration,
+							id: index
+						};
 		        });                    
 	            d.resolve(results);
 			} else {			
@@ -58,8 +58,9 @@ api.getDistanceFromOneToMany = function(origin, destinations) {
 
 api.getClosestShippers = function(store, shippers, filter) {
 	// filter shippers by status
+
 	var validShippers = shippers.filter(function(shipper) {
-		return shipper.status === filter.status;
+		return (shipper.isConnected === filter.isConnected && shipper.numTasks < filter.maxTasks);
 	});
 
 	return api.getDistanceFromOneToMany(store, validShippers)
@@ -81,7 +82,8 @@ api.getClosestShippers = function(store, shippers, filter) {
 		results = results.map(function(e) {
 			return {
 				shipperID: validShippers[e.id].shipperID,
-				distanceText: e.distance.text
+				distanceText: e.distance.text,
+				durationText: e.duration.text
 			};
 		});		
 		

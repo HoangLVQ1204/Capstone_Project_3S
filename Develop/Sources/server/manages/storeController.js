@@ -47,10 +47,7 @@ module.exports = function(app) {
     var put = function(req, res, next) {
         var store = req.store;
         var update = req.body;
-        //console.log(req.user.username, req.body);
-
         _.merge(store, update);
-
         return db.store.putStore(store)
             .then(function(saved) {
                 if (saved) {
@@ -75,7 +72,6 @@ module.exports = function(app) {
     var getLatestLedgerOfStore = function(req, res, next){
         return db.generalledger.getLatestLedgerOfStore(req.store.storeid)
             .then(function(ledger) {
-                //console.log(ledger.paydate);
                 res.status(200).json(ledger);
             }, function(err) {
                 next(err);
@@ -102,28 +98,23 @@ module.exports = function(app) {
                db.generalledger.getLatestAutoAccountDate()
                     .then(function(total) {
                         paydate = total.paydate;
-                        //console.log(1);
                     }, function(err) {
                         next(err);
                     })
             .then(function () {
                 var fee = [];
-                //console.log(paydate);
-                //console.log(2);
                         storeList.map(function(item){
                             promises.push(db.order.getTotalShipFeeOfStore(item.storeid, paydate).then(function (total) {
                                 var newFee = new Object();
                                 if (isNaN(total))  newFee.totalFee = 0;
                                 else newFee.totalFee  = total;
                                 fee.push(newFee);
-                                //console.log(total);
                     }))
                 })
                 Promise.all(promises).then(function() {
                     // _.merge(fee, storeList);
                     res.status(200).json(fee);
                 }, function (err) {
-                    //console.log(1);
                     res.status(400).json(err);
                 })
             })
@@ -141,7 +132,6 @@ module.exports = function(app) {
                 db.generalledger.getLatestAutoAccountDate()
                     .then(function(total) {
                         paydate = total.paydate;
-                        //console.log(1);
                     }, function(err) {
                         next(err);
                     })
@@ -154,14 +144,12 @@ module.exports = function(app) {
                                 if (isNaN(total))  newFee.totalCoD = 0;
                                 else newFee.totalCoD  = total;
                                 cod.push(newFee);
-                                //console.log(total);
                             }))
                         })
                         Promise.all(promises).then(function() {
                             // _.merge(fee, storeList);
                             res.status(200).json(cod);
                         }, function (err) {
-                            //console.log(1);
                             res.status(400).json(err);
                         })
                     })
@@ -211,14 +199,12 @@ module.exports = function(app) {
 
     //KhanhKC
     var getStoreName = function(req,res,next){
-        console.log("================req.user==============",req.user);
         var listStoreID = [];
          _.each(req.user.stores, function(store){
                 listStoreID.push(store.storeid);
           });       
         db.store.getListStoreName(listStoreID)
-            .then(function (storeRs) { 
-                    console.log("================req.user==============",storeRs);              
+            .then(function (storeRs) {
                 res.status(201).json(storeRs);
             }, function () {
                 next(new Error("Can not find store name!"))
