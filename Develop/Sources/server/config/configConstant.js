@@ -10,7 +10,7 @@ var constant = {
         EXPRESS_TYPE: 1,
         COMMON_TYPE: 2
     },
-    expressStatusList: pathToExpressStatus,
+    statusList: pathToExpressStatus,
     normalStatusList: pathToNormalStatus
 };
 module.exports = constant;

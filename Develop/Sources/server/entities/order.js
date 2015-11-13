@@ -123,19 +123,30 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
 
-      getOrderDetailById: function (orderStatusModel, goodsModel, orderid) {
+      getOrderDetailById: function (taskID, shipperID, orderStatusModel, goodsModel, taskModel) {
         return order.findOne({
-          attributes:{ exclude: ['ledgerid']},
+          attributes:{ exclude: ['ledgerid', 'createdate', 'isdraff', 'pickupaddresscoordination', 'deliveryaddresscoordination']},
           where: {
-            orderid: orderid
+            isdraff: false
           },
-          include: [{
-            model: orderStatusModel,
-            attributes: [['statusname','status']]
-          }, {
-            model: goodsModel,
-            limit: 1
-          }]
+          include: [
+            {
+              model: orderStatusModel,
+              attributes: [['statusname', 'status']]
+            },
+            {
+              model: goodsModel,
+              attributes: {exclude: ['goodsid', 'orderid']}
+            },
+            {
+              model: taskModel,
+              attributes: ['taskid', 'statusid', 'typeid'],
+              where: {
+                taskid: taskID,
+                shipperid: shipperID
+              }
+            }
+          ]
         });
       },
       //KhanhKC
@@ -353,14 +364,15 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
       //// HuyTDH - 12-11-15
-      shipperGetOneOrder: function (orderid, shipper, modelTask) {
+      shipperGetOneOrder: function (taskid, orderid, shipper, modelTask) {
         return order.findOne({
           where: {orderid: orderid},
           include:[
             {
               'model': modelTask,
               where: {
-                shipperid: shipper
+                shipperid: shipper,
+                taskid: taskid
               }
             }
           ]

@@ -1,26 +1,109 @@
-[
-  {
-    "statusid": 1,
-    "statusname": "Waiting",
-    "nextAction": "Start",
-    "requiredcode": false
-  },
-  {
-    "statusid": 2,
-    "statusname": "Picking up",
-    "nextAction": "Check code pick up",
-    "requiredcode": true
-  },
-  {
-    "statusid": 5,
-    "statusname": "Delivering",
-    "nextAction": "Check code deliver",
-    "requiredcode": true
-  },
-  {
-    "statusid": 7,
-    "statusname": "Done",
-    "nextAction": null,
-    "requiredcode": false
-  }
-]
+{
+  "1": [
+    {
+      "statusid": 1,
+      "statusname": "Waiting",
+      "nextAction": "Start",
+      "requiredcode": false
+    },
+    {
+      "statusid": 2,
+      "statusname": "Picking up",
+      "nextAction": "Check code pick up",
+      "requiredcode": true
+    },
+    {
+      "statusid": 3,
+      "statusname": "Bring to stock",
+      "nextAction": "Check-in stock",
+      "requiredcode": true
+    },
+    {
+      "statusid": 4,
+      "statusname": "In stock",
+      "nextAction": null,
+      "requiredcode": false
+    }
+  ],
+
+  "2": [
+    {
+      "statusid": 0,
+      "statusname": "Waiting",
+      "nextAction": "Start",
+      "requiredcode": false
+    },
+    {
+      "statusid": 4,
+      "statusname": "In stock",
+      "nextAction": "Start deliver",
+      "requiredcode": false
+    },
+    {
+      "statusid": 5,
+      "statusname": "Delivering",
+      "nextAction": "Check code deliver",
+      "requiredcode": true
+    },
+    {
+      "statusid": 7,
+      "statusname": "Done",
+      "nextAction": null,
+      "requiredcode": false
+    }
+  ],
+
+  "3": [
+    {
+      "statusid": 1,
+      "statusname": "Waiting",
+      "nextAction": "Start",
+      "requiredcode": false
+    },
+    {
+      "statusid": 2,
+      "statusname": "Picking up",
+      "nextAction": "Check code pick up",
+      "requiredcode": true
+    },
+    {
+      "statusid": 5,
+      "statusname": "Delivering",
+      "nextAction": "Check code deliver",
+      "requiredcode": true
+    },
+    {
+      "statusid": 7,
+      "statusname": "Done",
+      "nextAction": null,
+      "requiredcode": false
+    }
+  ],
+
+  "4": [
+    {
+      "statusid": 1,
+      "statusname": "Waiting",
+      "nextAction": "Start",
+      "requiredcode": false
+    },
+    {
+      "statusid": 2,
+      "statusname": "Picking up",
+      "nextAction": "Check code pick up",
+      "requiredcode": true
+    },
+    {
+      "statusid": 5,
+      "statusname": "Returning",
+      "nextAction": "Check code return",
+      "requiredcode": true
+    },
+    {
+      "statusid": 7,
+      "statusname": "Done",
+      "nextAction": null,
+      "requiredcode": false
+    }
+  ]
+}

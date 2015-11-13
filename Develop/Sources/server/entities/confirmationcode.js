@@ -41,6 +41,16 @@ module.exports = function(sequelize, DataTypes) {
 
       putOrder: function (currentOrder) {
         return currentOrder.save();
+      },
+
+      checkCode: function (orderid, code, type) {
+        return confirmationcode.findOne({
+          where: {
+            orderid: orderid,
+            codecontent: code,
+            typeid: type
+          }
+        });
       }
     }
   });
