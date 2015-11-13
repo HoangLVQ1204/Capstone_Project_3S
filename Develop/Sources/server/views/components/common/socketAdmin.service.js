@@ -12,7 +12,7 @@ function socketAdmin(socketService,authService,mapService){
     /*
         add handlers
     */
-
+    
     socketService.on('admin:register:location', function(data) {
         mapService.setMapData(data.msg.mapData)
         .then(function() {
@@ -20,11 +20,13 @@ function socketAdmin(socketService,authService,mapService){
         });
     });
 
-    socketService.on('admin:add:shipper', function(data) {        
+    socketService.on('admin:add:shipper', function(data) {   
+        console.log('admin:add:shipper', data);          
         mapService.addShipper(data.msg.shipper);
     });
 
-    socketService.on('admin:add:store', function(data) {        
+    socketService.on('admin:add:store', function(data) { 
+        // console.log('admin:add:store', data);       
         mapService.addStore(data.msg.store);
     });
 
@@ -77,6 +79,7 @@ function socketAdmin(socketService,authService,mapService){
     api.registerSocket = function(){
         socketService.authenSocket();
         var user = api.getCurrentUser();
+        // console.log('registerSocket', user);
         socketService.sendPacket(
         {
             type: 'admin',

@@ -75,7 +75,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
 
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();
-
+        console.log('api.getCurrentUser', currentUser);
         d = $q.defer();
         navigator.geolocation.getCurrentPosition(function(position){
             var dataShipper = {
@@ -103,7 +103,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
             // }
             console.log('different location');
             currentLocation = position.coords;
-            var currentUser = authService.getCurrentInfoUser();
+            var currentUser = authService.getCurrentInfoUser();            
             socketService.sendPacket(
                 {
                     type: 'shipper',

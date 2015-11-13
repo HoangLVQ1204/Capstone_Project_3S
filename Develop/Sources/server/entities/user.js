@@ -67,8 +67,6 @@ module.exports = function(sequelize, DataTypes) {
         return user.findAll({
           include:[{
               model: profile
-          },{
-            model: workingstatus
           }],
           where: {
             'userrole': role

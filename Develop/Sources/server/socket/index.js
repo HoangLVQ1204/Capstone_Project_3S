@@ -3,6 +3,19 @@
  */
 
 /*
+    TODO: Bug scenario for Shipper (similar to Store)
+    - Browser 1: Sign out. Then Sign in as Admin. Go to /mapdemo
+    - Browser 2: Sign out. Then Sign in as Shipper. Go to /mapdemo
+    - Check whether /mapdemo in Admin and Shipper show same position of shipper
+
+    Cause: Shipper sent client:register, but it is rejected. Socketiojwt maybe only check token 1 time
+    Resolve: Refresh Shipper tab to reconnect
+
+    Possible solution: https://auth0.com/blog/2014/01/15/auth-with-socket-io/
+*/
+
+
+/*
     TODO: notifications
     - list of notifications    
     - notificationService.js
@@ -287,6 +300,7 @@ module.exports = function(server,app){
         result.customer = _.clone(io.customers, true);
         result.orders = _.clone(io.orders, true);
 
+        console.log('io.getDataForAdmin', io.shippers);
         return result;
     };
 
@@ -369,6 +383,7 @@ module.exports = function(server,app){
         var shipperID = _.find(shipperIDs, function(e) {
             return io.shippers[e].socketID === socketID;
         });
+        console.log('io.getShipperBySocketID', shipperID);
         return io.getOneShipper(shipperID);
     };
 
@@ -467,6 +482,7 @@ module.exports = function(server,app){
         .on('authenticated', function(socket){
             console.log("--HAVE CONNECTION--");
             var dataToken = socket.decoded_token;
+            console.log('authenticated', dataToken);
 
             socket.on("client:register",function(data){
 
@@ -511,6 +527,7 @@ module.exports = function(server,app){
                 }
 
                 if(dataToken.userrole == 3){
+
                     console.log("This is Data Admin: ");
                     console.log(data);
 
@@ -576,17 +593,6 @@ module.exports = function(server,app){
     }
 }
 
-
-
-/*
-
-hoang: admin
-khanhkute: store
-nhungkaka: store
-huykool: shipper
-quyensheep: shipper
-
-*/
 
 
 /* Oh, my dear
