@@ -12,17 +12,13 @@
         <!-- //logo-area-->
 
         <div class="tools-bar">
-            <ul class="nav navbar-nav nav-main-xs">
-                <li><a href="#menu" class="icon-toolsbar"><i class="fa fa-bars"></i></a></li>
-            </ul>
             <ul class="nav navbar-nav navbar-right tooltip-area">
-                <li><a href="#menu-right" data-toggle="tooltip" title="Right Menu" data-container="body" data-placement="left"><i class="fa fa-align-right"></i></a></li>
                 <li class="hidden-xs hidden-sm"><a href="#" class="h-seperate">Help</a></li>
-                <li><button class="btn btn-circle btn-header-search" ><i class="fa fa-search"></i></button></li>
-                <li><a href="#" class="nav-collapse avatar-header" data-toggle="tooltip" title="Show / hide  menu" data-container="body" data-placement="bottom">
-                    <img alt="" ng-src="{{inforUser.avatar}}"  class="circle">
-                    <span class="badge">3</span>
-                </a>
+                <li>
+                    <a ui-sref="#"  class="nav-collapse avatar-header">
+                        <img alt="" ng-src="{{inforUser.avatar}}"  class="circle">
+                        <span class="badge">3</span>
+                    </a>
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
@@ -247,6 +243,27 @@
 		//////////     MODAL MAP STATIC     ////////
 		///////////////////////////////////////////////////////////////
 		-->
+    <div id="listAcceptedShipper_Fail" class="modal fade md-slideRight" tabindex="-1"  data-width="500" data-header-color="theme-inverse">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+            <h4 class="modal-title">Not find a shipper</h4>
+        </div>
+        <!-- //modal-header-->
+        <div class="modal-body left">
+               <div class="row">
+                    <div class="col-md-3" >
+                        <img alt="" ng-src="{{rightShipper.avatar}}" class="circle" style="width: 100px">
+                    </div>
+                    <div class="col-md-9" style="margin-top: 20px">
+                        <h4><strong>Sorry!</strong> Now all shippers are busy</h4>
+                        <br>
+                        <h5>Please try again later!</h5>
+                    </div>
+               </div>
+        </div>
+        <!-- //modal-body-->
+    </div>
+
     <div id="listAcceptedShipper" class="modal fade md-slideRight" tabindex="-1"  data-width="500" data-header-color="theme-inverse">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
@@ -254,18 +271,51 @@
         </div>
         <!-- //modal-header-->
         <div class="modal-body left">
-               <div class="row">
-                    <div class="col-md-3" >
-                        <img alt="" ng-src="{{inforUser.avatar}}" class="circle" style="width: 100px">
+            <div class="row">
+                <div class="col-md-3" >
+                    <img alt="" ng-src="{{rightShipper.avatar}}" class="circle" style="width: 100px">
+                </div>
+                <div class="col-md-9">
+                    <h3><strong>Hi</strong>, I'm {{rightShipper.fullName}}</h3>
+                    <br>
+                    <div class="row">
+                        <label class="col-md-3">
+                            <i class="fa fa-caret-right"></i>ShipperID
+                        </label>
+                        <div class="col-md-9">
+                            <strong>{{rightShipper.shipperID}}</strong>
+                        </div>
                     </div>
-                    <div class="col-md-9">
-                        <h3><strong>Hi</strong>, {{rightShipper.shipperID}}</h3>
-                        <br>
-                        <h5><i class="fa fa-caret-right"></i> Shipper ID: <strong>SP90184</strong></h5>
-                        <h5><i class="fa fa-caret-right"></i> Distance: <strong>0.7 km</strong></h5>
-                        <h5><i class="fa fa-caret-right"></i> Time to go: <strong>10 min</strong></h5>
+                    <div class="row">
+                        <label class="col-md-3">
+                            <i class="fa fa-caret-right"></i>Phone
+                        </label>
+                        <div class="col-md-9">
+                            <strong>{{rightShipper.phonenumber}}</strong>
+                        </div>
                     </div>
-               </div>
+                    <div class="row">
+                        <label class="col-md-3">
+                            <i class="fa fa-caret-right"></i>Distance
+                        </label>
+                        <div class="col-md-9">
+                            <strong>{{rightShipper.distanceText}}</strong>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-3">
+                            <i class="fa fa-caret-right"></i>Duration
+                        </label>
+                        <div class="col-md-9">
+                            <strong>{{rightShipper.durationText}}</strong>
+                        </div>
+                    </div>
+                    <!--<h5><i class="fa fa-caret-right"></i> ShipperID: <span class="pull-right"><strong>{{rightShipper.shipperID}}</strong></span></h5>-->
+                    <!--<h5><i class="fa fa-caret-right"></i> Phone:     <span class="pull-right"><strong>{{rightShipper.phonenumber}}</strong></span></h5>-->
+                    <!--<h5><i class="fa fa-caret-right"></i> Distance:  <span class="pull-right"><strong>{{rightShipper.distanceText}}</strong></span></h5>-->
+                    <!--<h5><i class="fa fa-caret-right"></i> Duration:  <span class="pull-right"><strong>{{rightShipper.durationText}}</strong></span></h5>-->
+                </div>
+            </div>
         </div>
         <!-- //modal-body-->
     </div>

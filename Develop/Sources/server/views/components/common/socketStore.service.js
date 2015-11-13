@@ -13,6 +13,8 @@ function socketStore($q,socketService,authService,mapService){
     /*
         add handlers
     */
+
+    
     socketService.on('store:register:location', function(data) {
         mapService.setMapData(data.msg.mapData)
         .then(function() {
@@ -20,9 +22,6 @@ function socketStore($q,socketService,authService,mapService){
         });
     });
 
-    socketService.on('shipper:change:order:status', function(data) {
-        alert(data);
-    });
 
     socketService.on('store:update:shipper', function(data) {
         console.log('store:update:shipper', data);
@@ -47,13 +46,8 @@ function socketStore($q,socketService,authService,mapService){
 
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();
-
-        //// TODO: Change later
-        //currentUser.latitude = 21.028784;
-        //currentUser.longitude = 105.826088;
-
         var dataStore = {
-            storeID: currentUser.stores[0],
+            storeID: currentUser.stores[0].storeid,
             latitude: parseFloat(currentUser.stores[0].latitude),
             longitude: parseFloat(currentUser.stores[0].longitude)
         };
@@ -62,6 +56,9 @@ function socketStore($q,socketService,authService,mapService){
 
     api.registerSocket = function(){
         var user = api.getCurrentUser();
+
+        socketService.initSocket();
+
         mapService.addStore(user)
         .then(function() {                
             socketService.sendPacket(
@@ -74,7 +71,6 @@ function socketStore($q,socketService,authService,mapService){
                 store: user
             },
             'client:register');
-
         });
     };
     

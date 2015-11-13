@@ -42,7 +42,6 @@ module.exports  = function(app){
         return function(req,res,next){
 
             var currentRoute        = req.route.path;
-            console.log('ccc', currentRoute);
             var currentRole         = req.user.userrole;
             var currentAccessRoles  = [];
             config.pathAccessRole.forEach(function(item){
@@ -129,7 +128,6 @@ module.exports  = function(app){
                 username       : user.username,
                 userrole       : user.userrole,
                 userstatus     : user.userstatus,
-                workingstatusid: user.workingstatusid,
                 stores         : user.stores,
                 time           : new Date()
             },

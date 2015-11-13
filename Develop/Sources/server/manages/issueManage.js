@@ -36,10 +36,22 @@ module.exports = function (app) {
             })
     };
 
+    var postBannedLog = function (req, res, next) {
+        var log = req.body;
+        console.log(log);
+        return db.bannedhistorylog.postNewLog(log)
+            .then(function (log) {
+                res.status(201).json(log);
+            }, function (err) {
+                next(err);
+            })
+    };
+
 
     return {
         getAllIssue: getAllIssue,
         getIssueDetail: getIssueDetail,
-        updateResolveIssue: updateResolveIssue
+        updateResolveIssue: updateResolveIssue,
+        postBannedLog: postBannedLog
     }
 }

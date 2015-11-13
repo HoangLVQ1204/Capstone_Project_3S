@@ -2,7 +2,7 @@
  * Created by hoanglvq on 10/19/15.
  */
 
-function loginController($scope,$rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper){
+function loginController($scope,$rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper,socketService){
 
 
     var showError = function(error){
@@ -19,22 +19,41 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
             main.addClass("slideDown");
 
         authService.signIn($scope.user)
-            .then(function(){
-                if(authService.isRightRole(config.role.admin)){
-                    socketAdmin.registerSocket();
-                    $state.go('admin.dashboard');
-                }
+            .then(function(res){
 
-                if(authService.isRightRole(config.role.store)){
-                    socketStore.registerSocket();
-                    $state.go('store.dashboard');
-                }
+                authService.saveToken(res.data.token);
+                socketService.authenSocket()
+                .then(function() {
+                    console.log('then initSocket');
+                    if(authService.isRightRole(config.role.admin)){
+                        socketAdmin.registerSocket();
+                        $state.go('admin.dashboard');
+                    }
 
-                if(authService.isRightRole(config.role.shipper)){
-                    socketShipper.registerSocket();
-                    console.log("xxx");
-                    $state.go('mapdemo');
-                }
+                    if(authService.isRightRole(config.role.store)){
+                        socketStore.registerSocket();
+                        $state.go('store.dashboard');
+                    }
+
+                    if(authService.isRightRole(config.role.shipper)){                    
+                        socketShipper.registerSocket();
+                        $state.go('mapdemo');
+                    }  
+                });
+                // if(authService.isRightRole(config.role.admin)){
+                //     socketAdmin.registerSocket();
+                //     $state.go('admin.dashboard');
+                // }
+
+                // if(authService.isRightRole(config.role.store)){
+                //     socketStore.registerSocket();
+                //     $state.go('store.dashboard');
+                // }
+
+                // if(authService.isRightRole(config.role.shipper)){                    
+                //     socketShipper.registerSocket();
+                //     $state.go('mapdemo');
+                // }
             })
             .catch(function(error){
                 main.removeClass("slideDown");
@@ -77,6 +96,6 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
     });
 }
 
-loginController.$inject = ['$scope','$rootScope','$state','authService','config','socketStore','socketAdmin','socketShipper'];
+loginController.$inject = ['$scope','$rootScope','$state','authService','config','socketStore','socketAdmin','socketShipper','socketService'];
 angular.module('app').controller('loginController',loginController);
 

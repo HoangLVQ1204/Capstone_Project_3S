@@ -5,7 +5,6 @@ module.exports = function(app) {
     var db = app.get('models');
 
     var params = function(req, res, next, username) {
-        console.log("Username: "+username);
         return db.user.findUserByUsername(username)
         .then(function(user) {
             if (user) {
@@ -21,7 +20,6 @@ module.exports = function(app) {
     
     var get = function(req,res,next) {        
         var user = req.user;
-        console.log(user);
         db.user.getAllUsers()
             .then(function(users) {
                 res.status(200).json(users);
@@ -32,10 +30,8 @@ module.exports = function(app) {
 
     var getProfileUser = function(req,res,next){
         var username = req.user.username;
-        console.log("Profile: " + username);
         db.profile.getProfileUser(username)
             .then(function(user){
-                console.log(user);
                 res.status(200).json(user);
             },function(err){
                 next(err);

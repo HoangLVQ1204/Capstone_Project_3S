@@ -95,10 +95,12 @@
                                         </td>
                                         <!--<td class="center"> {{x.registereddate|date:"dd/MM/yyyy"}}</td>-->
                                         <td>
+
                                         <span class="tooltip-area">
                                         <a class="btn btn-default btn-sm" title="Edit"><i class="fa fa-edit (alias)"></i></a>
                                         <a class="btn btn-default btn-sm" title="Send Message"><i class="fa fa-envelope"></i></a>
-                                        <a class="btn btn-default btn-sm md-effect" title="Block" ng-click="blockConfirm($event, x)"><i class="fa fa-ban"></i></a>
+                                        <a class="btn btn-default btn-sm md-effect" title="Block" ng-click="blockConfirm($event, x)" ng-show="x.ban[0].type!=1"><i class="fa fa-ban"></i></a>
+                                        <a class="btn btn-default btn-sm md-effect" title="Unblock" ng-click="blockConfirm($event, x)" ng-show="x.ban[0].type==1"><i class="glyphicon glyphicon-ok-circle"></i></a>
                                         <a class="btn btn-default btn-sm" title="Export"><i class="glyphicon glyphicon-export"></i></i></a>
                                         <a class="btn btn-default btn-sm md-effect" ng-click="showConfirm($event, x)" data-effect="md-flipVer" title="Confirm Payment"><i class="fa fa-check-square-o"></i></i></a>
                                         </span>
@@ -256,8 +258,10 @@
         </div>
         <!-- //modal-header-->
         <div class="modal-body align-xs-center">
-            <form name="myForm">
-                <h5><strong>Are you sure to block {{selectedStore.name}}?</strong></h5><br>
+            <form name="myForm" data-parsley-validate>
+                <h5><strong>Are you sure to {{blocktext}} {{selectedStore.name}} with this reason?</strong></h5><br>
+                <input type="search" id="blockReason" required class="form-control text-center" placeholder="Type reason here..." ng-model="reason">
+                <br>
                 <button type="button" class="btn btn-danger" ng-click="blockStore(selectedStore)"><i class="fa fa-check-circle"></i> Yes</button>
                 <button type="button" class="btn btn-inverse" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i> No</button>
             </form>

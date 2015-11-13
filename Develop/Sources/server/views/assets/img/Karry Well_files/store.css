@@ -1,0 +1,40 @@
+.storePanel {
+    /*margin: 15px;*/
+}
+.storeMap{
+    position: fixed;
+    top: 50px;;
+    min-height: 30px;
+    z-index: 5;
+}
+.storeTab-content {
+    padding: 10px;
+    background-color: #FFF;
+    position: relative;
+    z-index: 2;
+    margin-bottom: 20px;
+}
+
+.fullWidth{
+    width: 100%;
+}
+
+.buttonAdd{
+    background: #F9F8F5;
+    color: #898989;
+}
+
+.store-bg-red {
+    background: #f35958;
+    color: white;
+}
+
+.store-bg-green {
+    background: #0aa699;
+    color: white;
+}
+
+.store-bg-blue {
+    background: #735f87;
+    color: white;
+}

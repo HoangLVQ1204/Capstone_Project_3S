@@ -12,4 +12,7 @@ module.exports = function (app) {
 
     app.route('/api/updateResolveIssue/:issueid?')
         .put(controller.updateResolveIssue);
+
+    app.route('/api/log/postBannedLog')
+        .post(controller.postBannedLog);
 }

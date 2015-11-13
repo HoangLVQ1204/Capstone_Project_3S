@@ -1,0 +1,37 @@
+body.leftMenu .mm-menu:not(.mm-right).mm-hassearch .mm-panel {
+     padding-top: 0px;
+}
+
+.angular-google-map-container {
+     height: 300px;
+}
+.sortable {
+     cursor: pointer;
+}
+
+.st-sort-ascent:after {
+     content: '\25B2';
+}
+.st-sort-descent:after {
+     content: '\25BC';
+}
+.st-selected {
+     background-color: #62707d !important;
+     color: white !important;
+}
+
+.fail-task {
+     /*background-color: #62707d !important;*/
+     color: red !important;
+}
+.mail_active {
+     background: aliceblue;
+}
+
+.table_active {
+     background: #FFEBEE;
+}
+
+.widget-collapse header a {
+     text-decoration: none;
+}
