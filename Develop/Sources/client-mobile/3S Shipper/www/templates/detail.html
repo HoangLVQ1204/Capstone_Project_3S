@@ -20,12 +20,12 @@
         <div class="item item-input">
           <span class="input-label">Order code:</span>
 
-          <p class="detail-p">{{order.code}}</p>
+          <p class="detail-p">{{order.orderid}}</p>
         </div>
         <label class="item item-input">
           <span class="input-label">Status:</span>
 
-          <p class="detail-p">{{order.status}}</p>
+          <p class="detail-p">{{order.orderstatus.status}}</p>
         </label>
         <label class="item item-input">
           <span class="input-label">Recipient:</span>
@@ -42,12 +42,12 @@
 
           <p class="detail-p">{{order.pickupdate | date : 'dd-MM-yyyy'}}</p>
         </label>
-        <label class="item item-input">
+        <label class="item item-input" ng-if="order.tasks[0].typeid != 1">
           <span class="input-label">Delivery Address:</span>
 
           <p class="detail-p">{{order.deliveryaddress}}</p>
         </label>
-        <label class="item item-input">
+        <label class="item item-input" ng-if="order.tasks[0].typeid != 1">
           <span class="input-label">Delivery Date:</span>
 
           <p class="detail-p">{{order.deliverydate | date : 'dd-MM-yyyy'}}</p>
@@ -65,9 +65,9 @@
         <label class="item item-input">
           <span class="input-label">Goods Information:</span>
 
-          <p class="detail-p">
-            Weight: {{order.weight}} (g)<br/>
-            Size: {{order.lengthsize}} x {{order.widthsize}} x {{order.heightsize}} (cm)
+          <p class="detail-p" ng-repeat="goods in order.goods">
+            Weight: {{goods.weight}} (g)<br/>
+            Size: {{goods.lengthsize}} x {{goods.widthsize}} x {{goods.heightsize}} (cm)
           </p>
         </label>
       </div>

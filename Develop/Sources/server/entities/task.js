@@ -232,6 +232,17 @@ module.exports = function (sequelize, DataTypes) {
                             'taskid': newTask.taskid
                         }
                     })
+            },
+
+            updateTaskStatus: function (newStatus, taskid, shipperid) {
+                return task.update(
+                    {'statusid': newStatus},
+                    {
+                        where: {
+                            'taskid': taskid,
+                            'shipperid': shipperid
+                        }
+                    })
             }
 
         }
