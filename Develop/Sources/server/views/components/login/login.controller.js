@@ -23,12 +23,17 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
 
                 authService.saveToken(res.data.token);
 
+                console.log("---DATA TOKEN---");
+                console.log(window.localStorage.getItem('EHID'));
+                console.log("---DATA TOKEN---");
+
                 if(authService.isRightRole(config.role.admin)){
                     socketAdmin.registerSocket();
                     $state.go('admin.dashboard');
                 }
 
                 if(authService.isRightRole(config.role.store)){
+                    console.log("LOGIN STORE");
                     socketStore.registerSocket();
                     $state.go('store.dashboard');
                 }

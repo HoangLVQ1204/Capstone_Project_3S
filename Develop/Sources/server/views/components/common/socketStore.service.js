@@ -55,10 +55,11 @@ function socketStore($q,socketService,authService,mapService){
     };
 
     api.registerSocket = function(){
+
+        socketService.authenSocket();
+        console.log("AUTHEN SOCKET HERE");
+
         var user = api.getCurrentUser();
-
-        socketService.initSocket();
-
         mapService.addStore(user)
         .then(function() {                
             socketService.sendPacket(

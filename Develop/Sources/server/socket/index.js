@@ -511,9 +511,8 @@ module.exports = function(server,app){
                 }
 
                 if(dataToken.userrole == 3){
-
-                    //console.log("This is Data Admin: ");
-                    //console.log(data);
+                    console.log("This is Data Admin: ");
+                    console.log(data);
 
                     var admin = data.msg.admin;
                     if (io.containAdmin(admin.adminID))

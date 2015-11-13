@@ -48,35 +48,40 @@ function storeController($scope,$state,socketService,socketStore,dataService,aut
         //api.selectShipper(shipper, {});
     });
 
-
+    $scope.makeExpressOrder = function(){
+        
+    };
 
     $scope.test = function(){
-        socketStore.findShipper();
-        loading();
-        var s = 0;
-        $scope.listRightShippers = [];
-        var loopFindShipper = setInterval(function(){
-            if($scope.listRightShippers.length != 0){
-                $scope.rightShipper = $scope.listRightShippers[0];
-                $scope.$apply();
-                unloading();
-                $("#listAcceptedShipper").modal("show");
-                clearInterval(loopFindShipper);
-                return;
-            }
-            s = s + 1;
 
-            if(s == 60 || flag){
-                unloading();
-                $scope.rightShipper = {
-                    avatar: "assets/img/notfound.png"
-                };
-                $scope.$apply();
-                $("#listAcceptedShipper_Fail").modal("show");
-                clearInterval(loopFindShipper);
-                flag = false;
-            }
-        },1000);
+        $("#listAcceptedShipper").modal("show");
+
+        //socketStore.findShipper();
+        //loading();
+        //var s = 0;
+        //$scope.listRightShippers = [];
+        //var loopFindShipper = setInterval(function(){
+        //    if($scope.listRightShippers.length != 0){
+        //        $scope.rightShipper = $scope.listRightShippers[0];
+        //        $scope.$apply();
+        //        unloading();
+        //        $("#listAcceptedShipper").modal("show");
+        //        clearInterval(loopFindShipper);
+        //        return;
+        //    }
+        //    s = s + 1;
+        //
+        //    if(s == 60 || flag){
+        //        unloading();
+        //        $scope.rightShipper = {
+        //            avatar: "assets/img/notfound.png"
+        //        };
+        //        $scope.$apply();
+        //        $("#listAcceptedShipper_Fail").modal("show");
+        //        clearInterval(loopFindShipper);
+        //        flag = false;
+        //    }
+        //},1000);
     };
 
     $scope.$watch('$viewContentLoaded', function(event) {
