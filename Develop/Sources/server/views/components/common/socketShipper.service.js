@@ -141,8 +141,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
 
     api.registerSocket = function(){
         api.getCurrentUser()
-            .then(function(user) {
-                socketService.initSocket();
+            .then(function(user) {                
                 mapService.addShipper(user)
                     .then(function() {
                         console.log("---TEST SEND SOCKET---");

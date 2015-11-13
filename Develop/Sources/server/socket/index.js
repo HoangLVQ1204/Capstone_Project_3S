@@ -25,6 +25,7 @@
             notification:
                 {
                     type: ['issue', 'info']
+                    title:
                     content:
                     url:
                     notify: true/false
@@ -382,9 +383,9 @@ module.exports = function(server,app){
         var shipperIDs = Object.keys(io.shippers);
         var shipperID = _.find(shipperIDs, function(e) {
             return io.shippers[e].socketID === socketID;
-        });
-        console.log('io.getShipperBySocketID', shipperID);
-        return io.getOneShipper(shipperID);
+        });        
+        if (!shipperID) return null;
+        return io.getOneShipper(shipperID);        
     };
 
     io.removeShipper = function(shipperID) {

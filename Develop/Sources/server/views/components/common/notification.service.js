@@ -12,6 +12,6 @@ function notificationService($q,$http){
     return api;
 }
 
-mapService.$inject = ['$q','$http'];
+notificationService.$inject = ['$q','$http'];
 
 angular.module('app').factory('notificationService', notificationService);
