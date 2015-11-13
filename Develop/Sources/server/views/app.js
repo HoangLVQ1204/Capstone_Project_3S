@@ -164,28 +164,30 @@ angular.module('app', [
         libraries: 'geometry,visualization,drawing,places'
     })
 
-}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper, config){
+}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper, config,socketService){
 
 
 
     if(authService.isLogged()){
+        socketService.authenSocket()
+        .then(function() {
+            if(authService.isRightRole(config.role.admin)){
+                socketAdmin.registerSocket();
+                $state.go("admin.dashboard");
+            }
 
-        if(authService.isRightRole(config.role.admin)){
-            socketAdmin.registerSocket();
-            $state.go("admin.dashboard");
-        }
+            if(authService.isRightRole(config.role.store)){
+                socketStore.registerSocket();
+                $state.go("store.dashboard");
 
-        if(authService.isRightRole(config.role.store)){
-            socketStore.registerSocket();
-            $state.go("store.dashboard");
+            }
 
-        }
+            if(authService.isRightRole(config.role.shipper)){
+                socketShipper.registerSocket();
+                $state.go("mapdemo");
 
-        if(authService.isRightRole(config.role.shipper)){
-            socketShipper.registerSocket();
-            $state.go("mapdemo");
-
-        }
+            }
+        })        
 
     }else{
 

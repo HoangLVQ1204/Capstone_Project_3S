@@ -12,7 +12,7 @@ function socketAdmin(socketService,authService,mapService){
     /*
         add handlers
     */
-
+    
     socketService.on('admin:register:location', function(data) {
         mapService.setMapData(data.msg.mapData)
         .then(function() {

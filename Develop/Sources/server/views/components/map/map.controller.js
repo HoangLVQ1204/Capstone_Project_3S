@@ -1,14 +1,11 @@
 /**
- * Created by hoanglvq on 10/22/15.
- */
-/**
  * Created by hoanglvq on 10/19/15.
  */
 
 
-// /*
-//     Helper functions
-// */
+/*
+    Helper functions
+*/
 function initShipperMarker($scope, geocoder, maps, shipperMarker) {
     shipperMarker.icon = $scope.shipperIcon;
 }

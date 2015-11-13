@@ -300,6 +300,7 @@ module.exports = function(server,app){
         result.customer = _.clone(io.customers, true);
         result.orders = _.clone(io.orders, true);
 
+        console.log('io.getDataForAdmin', io.shippers);
         return result;
     };
 
@@ -382,6 +383,7 @@ module.exports = function(server,app){
         var shipperID = _.find(shipperIDs, function(e) {
             return io.shippers[e].socketID === socketID;
         });
+        console.log('io.getShipperBySocketID', shipperID);
         return io.getOneShipper(shipperID);
     };
 
@@ -472,28 +474,7 @@ module.exports = function(server,app){
         return i;
     };
 
-<<<<<<< HEAD
     io
-=======
-    //io.use(socketioJwt.authorize({
-    //    secret: config.secrets.jwt,
-    //    handshake: true
-    //}));
-
-    //io.on('connection',socketioJwt.authorize({
-    //    secret: config.secrets.jwt,
-    //    timeout: 15000
-    //}).on('authenticated',function(socket){
-    //
-    //    //console.log("have connection in Server");
-    //    //
-    //    //console.log('hello! ', socket.decoded_token);
-    //
-    //
-    //});
-
-    io.sockets
->>>>>>> Bug scenario of Shipper and Store
         .on('connection', socketioJwt.authorize({
             secret: config.secrets.jwt,
             timeout: 15000 // 15 seconds to send the authentication message
@@ -547,8 +528,8 @@ module.exports = function(server,app){
 
                 if(dataToken.userrole == 3){
 
-                    //console.log("This is Data Admin: ");
-                    //console.log(data);
+                    console.log("This is Data Admin: ");
+                    console.log(data);
 
                     var admin = data.msg.admin;
                     if (io.containAdmin(admin.adminID))
