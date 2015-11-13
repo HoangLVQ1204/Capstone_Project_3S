@@ -5,7 +5,7 @@
 
 // RUN ORDER: controller => link function   
 function notificationController($scope){
-
+	console.log($scope.notification);
 }
 
 notificationController.$inject = ['$scope'];

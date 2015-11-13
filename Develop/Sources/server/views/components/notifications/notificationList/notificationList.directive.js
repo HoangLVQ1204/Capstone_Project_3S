@@ -22,7 +22,7 @@ angular.module('app')
 
     $stateProvider
         .state('notificationListdemo',{
-            url: '/notidemo',
+            url: '/notiListdemo',
             template: '<notification-list></notification-list>',
             controller: function($scope) {
             }

@@ -10,7 +10,9 @@ angular.module('app')
             controllerAs: 'notificationCtrl',
             replace: true,
             restrict: 'E',
-            scope: {}
+            scope: {
+                notification: '='
+            }
         }
     });
 
