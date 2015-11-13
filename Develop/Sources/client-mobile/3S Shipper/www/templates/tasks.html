@@ -8,7 +8,7 @@
           <ion-content>
             <ion-list>
               <ion-item class="item-icon-right" ng-repeat="order in pickupTasks | orderBy: 'pickupdate' " type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.orderid}}', isCancel: '{{order.iscancel}}'})">
-                <div class="titleContent" style="min-height: 80px;">
+                <div class="titleContent" style="min-height: 90px;">
                   <div>
                     <img src="img/storeprofile.png"/>
                   </div>
@@ -18,8 +18,10 @@
                     <p ng-show="{{order.statusid == 1}}" class="statusPd label">Inactive</p>
                     <!--Actived-->
                     <p ng-show="{{order.statusid == 2}}" class="statusDn label">Actived</p>
-                    <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
-                    <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
+                    <div class="tasklocate">
+                      <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
+                      <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
+                    </div>
                   </div>
                 </div>
                 <i class="icon ion-chevron-right icon-accessory"></i>
@@ -33,7 +35,7 @@
           <ion-content >
             <ion-list>
               <ion-item class="item-icon-right" ng-repeat="order in shipTasks | orderBy: 'deliverydate'" type="item-text-wrap"  ui-sref="app.detail({orderId: '{{order.orderid}}', isCancel: '{{order.iscancel}}'})">
-                <div class="titleContent" style="min-height: 80px;">
+                <div class="titleContent" style="min-height: 90px;">
                   <div>
                     <img src="img/storeprofile.png"/>
                   </div>
@@ -43,8 +45,10 @@
                     <p ng-show="{{order.statusid == 1}}" class="statusPd label">Inactive</p>
                     <!--Actived-->
                     <p ng-show="{{order.statusid == 2}}" class="statusDn label">Actived</p>
-                    <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
-                    <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
+                    <div class="tasklocate">
+                      <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
+                      <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
+                    </div>
                   </div>
                 </div>
                 <i class="icon ion-chevron-right icon-accessory"></i>
@@ -58,7 +62,7 @@
           <ion-content>
             <ion-list>
               <ion-item class="item-icon-right" ng-repeat="order in expressTasks" type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.orderid}}', isCancel: '{{order.iscancel}}'})">
-               <div class="titleContent" style="min-height: 80px;">
+               <div class="titleContent" style="min-height: 90px;">
                  <div>
                    <img src="img/storeprofile.png"/>
                  </div>
@@ -68,8 +72,10 @@
                    <p ng-show="{{order.statusid == 1}}" class="statusPd label">Inactive</p>
                    <!--Actived-->
                    <p ng-show="{{order.statusid == 2}}" class="statusDn label">Actived</p>
-                   <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
-                   <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
+                   <div class="tasklocate">
+                     <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
+                     <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
+                   </div>
                  </div>
                </div>
                 <i class="icon ion-chevron-right icon-accessory"></i>
@@ -83,7 +89,7 @@
           <ion-content>
             <ion-list>
               <ion-item class="item-icon-right" ng-repeat="order in returnTasks" type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.orderid}}', isCancel: '{{order.iscancel}}'})">
-                <div class="titleContent" style="min-height: 80px;">
+                <div class="titleContent" style="min-height: 90px;">
                   <div>
                     <img src="img/storeprofile.png"/>
                   </div>
@@ -93,8 +99,10 @@
                     <p ng-show="{{order.statusid == 1}}" class="statusPd label">Inactive</p>
                     <!--Actived-->
                     <p ng-show="{{order.statusid == 2}}" class="statusDn label">Actived</p>
-                    <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
-                    <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
+                    <div class="tasklocate">
+                      <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
+                      <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
+                    </div>
                   </div>
                 </div>
                 <i class="icon ion-chevron-right icon-accessory"></i>

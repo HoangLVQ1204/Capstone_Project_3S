@@ -52,9 +52,9 @@ i {
 a {
  text-decoration: none;
 }
-/*TODO* Fix not apear text of type off task*/
-.tab-item > .icon {
-  display: inline-block !important;
+
+.tab-item {
+  line-height: 4px;
 }
 
 /*END Common*/
@@ -88,6 +88,14 @@ a {
   font-weight: bold;
   color: #9B9B9B;
   font-size: 1.2em;
+}
+
+.titleContent div:nth-child(2) p {
+  margin-top: 4px !important;
+}
+
+.tasklocate > p{
+  width: 170px;
 }
 
 /*Side left - Header bar && nav bar*/
