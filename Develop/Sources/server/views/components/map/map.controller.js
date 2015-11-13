@@ -119,7 +119,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
     $scope.customerMarkers = $scope.customerMarkers || [];
     $scope.orders = $scope.orders || {};                
 
-    console.log($scope.shipperMarkers == mapService.getShipperMarkers());
+    // console.log($scope.shipperMarkers == mapService.getShipperMarkers());
 
     $scope.circleRadius = $scope.circleRadius || 1000000000;
 
@@ -228,7 +228,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
                         '<ul>';
 
                 model.order.forEach(function(order) {
-                    content += '<li>' + order + '</li>';
+                    content += '<li>' + order + '(' + $scope.orders[order].status + ', ' + $scope.orders[order].isPending + ')</li>';
                 });     
 
                 content += '</ul>' +
@@ -252,7 +252,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
                         '<ul>';
 
                 model.order.forEach(function(order) {
-                    content += '<li>' + order + '</li>';
+                    content += '<li>' + order + '(' + $scope.orders[order].status + ', ' + $scope.orders[order].isPending + ')</li>';
                 });     
                                     
                 content += '</ul>' +                        
@@ -274,7 +274,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
                         '<ul>';
 
                 model.order.forEach(function(order) {
-                    content += '<li>' + order + '</li>';
+                    content += '<li>' + order + '(' + $scope.orders[order].status + ', ' + $scope.orders[order].isPending + ')</li>';
                 });     
                                     
                 content += '</ul>' +                        

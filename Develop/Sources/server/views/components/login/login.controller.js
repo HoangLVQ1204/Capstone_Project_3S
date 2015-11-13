@@ -22,7 +22,6 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
             .then(function(res){
 
                 authService.saveToken(res.data.token);
-
                 if(authService.isRightRole(config.role.admin)){
                     socketAdmin.registerSocket();
                     $state.go('admin.dashboard');
@@ -33,7 +32,7 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
                     $state.go('store.dashboard');
                 }
 
-                if(authService.isRightRole(config.role.shipper)){
+                if(authService.isRightRole(config.role.shipper)){                    
                     socketShipper.registerSocket();
                     $state.go('mapdemo');
                 }

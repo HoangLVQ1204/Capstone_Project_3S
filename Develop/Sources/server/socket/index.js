@@ -3,6 +3,19 @@
  */
 
 /*
+    TODO: Bug scenario for Shipper (similar to Store)
+    - Browser 1: Sign out. Then Sign in as Admin. Go to /mapdemo
+    - Browser 2: Sign out. Then Sign in as Shipper. Go to /mapdemo
+    - Check whether /mapdemo in Admin and Shipper show same position of shipper
+
+    Cause: Shipper sent client:register, but it is rejected. Socketiojwt maybe only check token 1 time
+    Resolve: Refresh Shipper tab to reconnect
+
+    Possible solution: https://auth0.com/blog/2014/01/15/auth-with-socket-io/
+*/
+
+
+/*
     TODO: notifications
     - list of notifications    
     - notificationService.js
@@ -459,7 +472,28 @@ module.exports = function(server,app){
         return i;
     };
 
+<<<<<<< HEAD
     io
+=======
+    //io.use(socketioJwt.authorize({
+    //    secret: config.secrets.jwt,
+    //    handshake: true
+    //}));
+
+    //io.on('connection',socketioJwt.authorize({
+    //    secret: config.secrets.jwt,
+    //    timeout: 15000
+    //}).on('authenticated',function(socket){
+    //
+    //    //console.log("have connection in Server");
+    //    //
+    //    //console.log('hello! ', socket.decoded_token);
+    //
+    //
+    //});
+
+    io.sockets
+>>>>>>> Bug scenario of Shipper and Store
         .on('connection', socketioJwt.authorize({
             secret: config.secrets.jwt,
             timeout: 15000 // 15 seconds to send the authentication message
@@ -467,6 +501,7 @@ module.exports = function(server,app){
         .on('authenticated', function(socket){
             console.log("--HAVE CONNECTION--");
             var dataToken = socket.decoded_token;
+            console.log('authenticated', dataToken);
 
             socket.on("client:register",function(data){
 
@@ -577,17 +612,6 @@ module.exports = function(server,app){
     }
 }
 
-
-
-/*
-
-hoang: admin
-khanhkute: store
-nhungkaka: store
-huykool: shipper
-quyensheep: shipper
-
-*/
 
 
 /* Oh, my dear

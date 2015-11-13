@@ -6,7 +6,6 @@ angular.module('app')
         var socket = io();
         return {
             initSocket: function(){
-
                 socket.on('connect',function(){
                     console.log("connect client");
                     console.log("SEND TOKEN: "+ localStorage.getItem('EHID'));

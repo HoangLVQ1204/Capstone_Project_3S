@@ -75,7 +75,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
 
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();
-
+        console.log('api.getCurrentUser', currentUser);
         d = $q.defer();
         navigator.geolocation.getCurrentPosition(function(position){
             var dataShipper = {
@@ -103,7 +103,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
             // }
             console.log('different location');
             currentLocation = position.coords;
-            var currentUser = authService.getCurrentInfoUser();
+            var currentUser = authService.getCurrentInfoUser();            
             socketService.sendPacket(
                 {
                     type: 'shipper',
@@ -142,10 +142,19 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
     api.registerSocket = function(){
         api.getCurrentUser()
             .then(function(user) {
+<<<<<<< HEAD
                 socketService.initSocket();
                 mapService.addShipper(user)
                     .then(function() {
                         console.log("---TEST SEND SOCKET---");
+=======
+                // console.log("---------Data shipper client ------");
+                console.log('Data shipper client', user);
+                // console.log("---------Data shipper client ------");
+                mapService.addShipper(user)
+                    .then(function() {
+                        // console.log('mapService.addShipper', localStorage.getItem('EHID'));
+>>>>>>> Bug scenario of Shipper and Store
                         socketService.sendPacket(
                             {
                                 type: 'shipper',
