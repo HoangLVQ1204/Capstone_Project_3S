@@ -168,6 +168,18 @@ function storeOrderController($scope, $state, dataService, config,socketService,
         },1000);
     }
 
+    $scope.createExpressOrder = function(){
+        var rightShipper = $scope.rightShipper;
+        var urlOrder = config.baseURI + '/orders';
+        $scope.order.statusid = '2';
+        var data = {
+            order: $scope.order,
+            goods : $scope.goods
+        };
+        dataService.postDataServer(urlOrder,data);
+        
+    }
+
     function postCompleteOrder(){
 
         var typeOrder = $scope.order.ordertypeid;
