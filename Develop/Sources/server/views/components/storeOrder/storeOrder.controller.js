@@ -2,7 +2,7 @@
  * Created by khanhkc on 9/22/15.
  */
 
-function storeOrderController($scope, $state, dataService, config) {
+function storeOrderController($scope, $state, dataService, config,socketService,socketStore) {
     getStoreName();
     $scope.order={
         gatheringCode: GenerateRandomCode(6),
@@ -24,6 +24,7 @@ function storeOrderController($scope, $state, dataService, config) {
         fee: '',
         cod:''
     };
+
     var bigestGoodId = 0;
     $scope.good={};
     $scope.goods =[];
@@ -32,56 +33,13 @@ function storeOrderController($scope, $state, dataService, config) {
     $scope.$watch('$viewContentLoaded', function (event) {
         caplet();
 
-        ///////////////////////////////////////////////////
-        //////////....Animation for wizard..../////////////
-        ///////////////////////////////////////////////////
         $(document).ready(function () {            
 
             $('#validate-wizard').bootstrapWizard({
                 tabClass: "nav-wizard",
-            ////////////////////////////////////////////////
-            /////////////Validate when click submit/////////
-            ////////////////////////////////////////////////
-            /* 
-               onNext: function (tab, navigation, index) {
-                console.log(index);
-                if (index == 3)
-                {
-                    var tab = $('#step' + index); 
-                    
-                        var valid = true;
-                        //if (!valid) onTabShow()
-                        valid = $('#step1').parsley('validate') && valid;
-                        valid = $('#step2').parsley('validate') && valid;
-                        valid = $('#step3').parsley('validate') && valid;
-                        console.log(valid);
-                        if (!valid) {
-                            //onTabShow(tab, navigation, i);
-                             // $('#step' + i).addClass('active');
-                             // $('#step3').removeClass('active');
-                             // tab.prevAll().addClass('completed');
-                             //    tab.nextAll().removeClass('completed');
-                             //    if (tab.hasClass("active")) {
-                             //        tab.removeClass('completed');
-                             //    }
-                            return false;
-                        }else{
-                            postCompleteOrder ();
-                        }
-                    
-                        
-                    
-                    // Set the name for the next tab
-                    $('#step4 h3').find("span").html($('#fullname').val());
-
-                }
-            }, */
-            ////Validate when click submit/////
-
                 onNext: function(tab, navigation, index) {
                     if(index==1){
-                        var content=$('#step'+index); 
-                                console.log(content) ;                                 
+                        var content=$('#step'+index);
                                     if(typeof  content.attr("parsley-validate") != 'undefined'){
                                         var $valid = content.parsley( 'validate' );                                        
                                             if(!$valid ){
@@ -91,8 +49,7 @@ function storeOrderController($scope, $state, dataService, config) {
                                         }
                     }
                     if(index==2){
-                        var content=$('#step'+index); 
-                                console.log(content) ;                                 
+                        var content=$('#step'+index);
                                     if(typeof  content.attr("parsley-validate") != 'undefined'){
                                         var $valid = content.parsley( 'validate' );                                        
                                             if(!$valid){                                                
@@ -104,13 +61,9 @@ function storeOrderController($scope, $state, dataService, config) {
                                         }
                     } 
                     if(index==3){
-                        console.log(content) ;
-                        postCompleteOrder ();
-                    }                      
-                     
-
-                // Set the name for the next tab
-                $('#step4 h3').find("span").html($('#fullname').val());
+                        postCompleteOrder();
+                    }
+                    $('#step4 h3').find("span").html($('#fullname').val());
                 },
                 onTabClick: function (tab, navigation, index) {
                     $.notific8('Please click <strong>next button</strong> to wizard next step!! ', {
@@ -134,77 +87,127 @@ function storeOrderController($scope, $state, dataService, config) {
                 }
             });
 
-        //////////////////////////////////////
-        //////// Validate Add Modal///////////
-        //////////////////////////////////////
-        $("#addGoodModal").submit(function(e){
-            e.preventDefault();
-            if($(this).parsley( 'validate' )){ 
-                addGood();
-                $('#md-add-good').modal('hide');      
-            }
-        });
-        
-        //iCheck[components] validate
-        $('input').on('ifChanged', function(event){
-            $(event.target).parsley( 'validate' );
-        });
-        //Validate Add Modal//
+            $("#addGoodModal").submit(function(e){
+                e.preventDefault();
+                if($(this).parsley( 'validate' )){
+                    addGood();
+                    $('#md-add-good').modal('hide');
+                }
+            });
 
+            $('input').on('ifChanged', function(event){
+                $(event.target).parsley( 'validate' );
+            });
 
-        //////////////////////////////////////
-        //////// Validate Edit Modal///////////
-        //////////////////////////////////////
-        $("#editGoodModal").submit(function(e){
-            e.preventDefault();
-            if($(this).parsley( 'validate' )){ 
-                editGood()
-                $('#md-edit-good').modal('hide');              
-            }
+            $("#editGoodModal").submit(function(e){
+                e.preventDefault();
+                if($(this).parsley( 'validate' )){
+                    editGood()
+                    $('#md-edit-good').modal('hide');
+                }
 
-        });
-        
-        //iCheck[components] validate
-        $('input').on('ifChanged', function(event){
-            $(event.target).parsley( 'validate' );
-        });
-        ///Validate edit Modal//////
-        
+            });
+
+            $('input').on('ifChanged', function(event){
+                $(event.target).parsley( 'validate' );
+            });
+
             handleStatusChanged();
-
         });
-        
+    });
 
-    function postCompleteOrder (){
+    $scope.listRightShippers = [];
+
+    var flag = false;
+
+    socketService.on('store:find:shipper', function(data) {
+        var shipper = data.msg.shipper;
+        if(!shipper){
+            flag = true;
+        }else{
+            $scope.listRightShippers.push(shipper);
+        }
+    });
+
+    function loading(){
+        var overlay=$('<div class="load-overlay"><div><div class="c1"></div><div class="c2"></div><div class="c3"></div><div class="c4"></div></div><span>Finding Shipper...</span><button class="btn btn-theme-inverse">Cancel</button></div>');
+        $("body").append(overlay);
+        overlay.css('opacity',3).fadeIn("slow");
+    }
+
+    function unloading(){
+        $("body").find(".load-overlay").fadeOut("slow",function(){ $(this).remove() });
+    }
+
+    function findCloseShipper(){
+        socketStore.findShipper();
+        loading();
+        var s = 0;
+        $scope.listRightShippers = [];
+        var loopFindShipper = setInterval(function(){
+            if($scope.listRightShippers.length != 0){
+                $scope.rightShipper = $scope.listRightShippers[0];
+                $scope.$apply();
+                unloading();
+                $("#listAcceptedShipper").modal("show");
+                clearInterval(loopFindShipper);
+                return;
+            }
+            s = s + 1;
+
+            if(s == 60 || flag){
+                unloading();
+                $scope.rightShipper = {
+                    avatar: "assets/img/notfound.png"
+                };
+                $scope.$apply();
+                $("#listAcceptedShipper_Fail").modal("show");
+                clearInterval(loopFindShipper);
+                flag = false;
+            }
+        },1000);
+    }
+
+    function postCompleteOrder(){
+
+        var typeOrder = $scope.order.ordertypeid;
         var urlBase = config.baseURI + '/orders';
         $scope.order.isdraff = false;
         var data = {
             order: $scope.order,
-            goods : $scope.goods,
+            goods : $scope.goods
         };
-        console.log("==============data=========",data);
-        dataService.postDataServer(urlBase,data);
 
-    }
-        ///////////////////////////////////////////////////
-        //....Disable textbox when click on checkbox....///
-        ///////////////////////////////////////////////////
-        function handleStatusChanged() {
-            $('#enElementCb').on('change', function () {
-                if (!$('#enElementCb').is(':checked')) {
-                    $('#elementsToEn :input').attr('disabled', true);
-                } else {
-                    $('#elementsToEn :input').removeAttr('disabled');
-                }
-            });
+        if(typeOrder == 1){
+            dataService.postDataServer(urlBase,data);
+        }
+        else if(typeOrder == 2){
+            findCloseShipper();
         }
 
-        
+    }
 
-    });
-    //getDataFromServer();
+
+
+
+
+    function handleStatusChanged() {
+        $('#enElementCb').on('change', function () {
+            if (!$('#enElementCb').is(':checked')) {
+                $('#elementsToEn :input').attr('disabled', true);
+            } else {
+                $('#elementsToEn :input').removeAttr('disabled');
+            }
+        });
+    }
+
+
+
+
     $scope.newGood = {};
+
     var index;
+
     $scope.setGood = function(good,index){
         console.log("=======goods[]=khi click edit====",$scope.goods);
         $scope.newGood = (JSON.parse(JSON.stringify(good)));  
@@ -216,36 +219,24 @@ function storeOrderController($scope, $state, dataService, config) {
     }
 
     function editGood () {
-        // // $scope.good =  $scope.newGood;
-        // //
-        // console.log("=======newGood=====",$scope.newGood);
-        // console.log("=======goog=====",$scope.good);
-        // console.log("=======goods[]=sau khi an save====",$scope.goods);
-       //console.log("======na====",na);
-       for(var i = 0; i < $scope.goods.length;i++){
-        if( $scope.goods[i].goodID===$scope.newGood.goodID){
-            // console.log("=======good tim thay====",$scope.goods[i].goodID);
-            $scope.goods[i] = $scope.newGood;
-            // console.log("=======good sau khi thay====",$scope.goods[i]);
-        }
-
+        for(var i = 0; i < $scope.goods.length;i++){
+            if( $scope.goods[i].goodID===$scope.newGood.goodID){
+                $scope.goods[i] = $scope.newGood;
+            }
        }
-$scope.$apply();
-
+        $scope.$apply();
     }
-
     function addGood(){
         $scope.good.goodID = bigestGoodId;        
         $scope.goods.push($scope.good);
         $scope.$apply();
         bigestGoodId++;
         console.log("=======goods[]=sau khi add====",$scope.goods);
-    };
+    }
 
     $scope.deleteGood = function(){
         $scope.goods.splice(index,1);
     };
-
     $scope.postDraff = function(){
         var urlBase = config.baseURI + '/orders';
         $scope.order.isdraff = true;
@@ -253,7 +244,6 @@ $scope.$apply();
             order: $scope.order,
             goods : $scope.goods,
         };
-        console.log("================data===============",data);
         dataService.postDataServer(urlBase,data);
 
     };    
@@ -265,13 +255,11 @@ $scope.$apply();
             code += chars.charAt(Math.floor(Math.random() * chars.length));
         return code;
     }
-
     function getStoreName(){
         var urlBase = config.baseURI + '/api/getAllStoreName';
         dataService.getDataServer(urlBase)
             .success(function (rs) {
-                $scope.stores = rs;   
-                console.log("================",rs); 
+                $scope.stores = rs;
                 $scope.order.storeid = $scope.stores[0].storeid;
                 $scope.order.pickupaddress = $scope.stores[0].address;
                 $scope.order.pickupphone = $scope.stores[0].phonenumber;
@@ -287,14 +275,11 @@ $scope.$apply();
             data.horizontalEdge = 'bottom';
             data.theme = 'theme';
             $.notific8($("#smsEmptyGood").val(), data);
-            console.log("=======OK=====");
     }
-        
-    
 
 }
 
 
-storeOrderController.$inject = ['$scope', '$state', 'dataService', 'config'];
+storeOrderController.$inject = ['$scope', '$state', 'dataService', 'config','socketService','socketStore'];
 angular.module('app').controller('storeOrderController', storeOrderController);
 
