@@ -176,8 +176,7 @@ module.exports = function (app) {
                         delete rs['deliveryaddress'];
                         delete rs['completedate'];
                     }
-                    var statuslist = configConstant.statusList[type];
-                    req.statuslist = statuslist;
+                    req.statuslist = configConstant.statusList[type];
                     req.detail = rs;
                     var resObj = {
                         "detail": req.detail,
