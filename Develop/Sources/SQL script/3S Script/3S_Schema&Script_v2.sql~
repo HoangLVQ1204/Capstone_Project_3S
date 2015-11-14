@@ -12949,10 +12949,8 @@ CREATE TABLE "public"."notification" (
 "notificationid" int4 DEFAULT nextval('notification_notificationid_seq'::regclass) NOT NULL,
 "type" varchar(20) COLLATE "default",
 "title" text COLLATE "default",
-"content" text COLLATE "default",
+"description" text COLLATE "default",
 "url" varchar(1000) COLLATE "default",
-"isread" bool,
-"username" varchar(20) COLLATE "default" NOT NULL,
 "createddate" date
 )
 WITH (OIDS=FALSE)
@@ -12960,15 +12958,10 @@ WITH (OIDS=FALSE)
 ;
 
 -- ----------------------------
--- Foreign Key structure for table "public"."notification"
--- ----------------------------
-ALTER TABLE "public"."notification" ADD FOREIGN KEY ("username") REFERENCES "public"."user" ("username") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- ----------------------------
 -- Records of notification
 -- ----------------------------
-INSERT INTO "public"."notification" ("type", "title", "description", "url", "createddate") VALUES ('issue', 'big issue', 'This is big issue', 'bigissue', '2015-11-11');
-INSERT INTO "public"."notification" ("type", "title", "description", "url", "createddate") VALUES ('issue', 'small issue', 'This is small issue', 'smallissue', '2015-11-11');
-INSERT INTO "public"."notification" ("type", "title", "description", "url", "createddate") VALUES ('info', 'new info', 'This is an issue', 'newinfo', '2015-11-11');
+INSERT INTO "public"."notification" VALUES ('issue', 'big issue', 'This is big issue', 'bigissue', '2015-11-11');
+INSERT INTO "public"."notification" VALUES ('issue', 'small issue', 'This is small issue', 'smallissue', '2015-11-11');
+INSERT INTO "public"."notification" VALUES ('info', 'new info', 'This is an issue', 'bigissue', '2015-11-11');
 
 

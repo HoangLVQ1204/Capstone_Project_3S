@@ -188,11 +188,11 @@ angular.module('app', [
 
             }
 
-            // if(authService.isRightRole(config.role.shipper)){
-            //     socketShipper.registerSocket();
-            //     $state.go("mapdemo");
+            if(authService.isRightRole(config.role.shipper)){
+                socketShipper.registerSocket();
+                // $state.go("mapdemo");
 
-            // }
+            }
         })        
 
     }else{
