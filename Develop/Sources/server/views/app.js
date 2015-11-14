@@ -170,8 +170,34 @@ angular.module('app', [
         libraries: 'geometry,visualization,drawing,places'
     })
 
-}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper, config,socketService){
+}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper, config,socketService, notificationService){
 
+    // Notification component
+    $rootScope.numberNewNoti = notificationService.getNumberNewNotifications();
+    $rootScope.readNewNoti = function() {
+
+    };
+
+    $rootScope.notify = function(notification) {
+        // console.log('notify', notification);
+        $rootScope.numberNewNoti += 1;
+        notificationService.setNumberNewNotifications($rootScope.numberNewNoti);
+        notificationService.addNotification(notification);
+        var data = {
+            horizontal: 'bottom',
+            vertical: 'right',
+            horizontalEdge: 'bottom',
+            verticalEdge: 'right',
+            theme: (notification.type === 'issue' ? 'red' : 'yellow')
+        };                
+        var template = '<div class="btn" onclick="location.href=\'' + notification.url + '\'">' +
+                '<h4 style="color: blue">' + notification.title + '</h4>' + 
+                '<span style="color: blue">' + notification.content + '</span>'
+                '</div>';
+        // console.log(template, notification.url);
+        $.notific8(template, data);
+        $rootScope.$apply();
+    };
 
 
     if(authService.isLogged()){
@@ -184,13 +210,13 @@ angular.module('app', [
 
             if(authService.isRightRole(config.role.store)){
                 socketStore.registerSocket();
-                $state.go("store.dashboard");
+                // $state.go("store.dashboard");
 
             }
 
              if(authService.isRightRole(config.role.shipper)){
                  socketShipper.registerSocket();
-                 $state.go("mapdemo");
+                 // $state.go("mapdemo");
 
              }
         })        
