@@ -32,21 +32,21 @@ angular.module('app')
                         type: 'issue',
                         title: 'big issue',
                         content: 'This is big issue',
-                        url: 'bigissue',
+                        url: '/notiListdemo',
                         createddate: 'date 1'
                     },
                     {
                         type: 'issue',
                         title: 'small issue',
                         content: 'This is small issue',
-                        url: 'smallissue',
+                        url: '/notiListdemo',
                         createddate: 'date 2'
                     },
                     {
                         type: 'info',
                         title: 'new info',
                         content: 'This is an info',
-                        url: 'info',
+                        url: '/notiListdemo',
                         createddate: 'date 3'
                     }
                 ];
