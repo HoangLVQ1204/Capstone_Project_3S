@@ -77,6 +77,7 @@ function socketAdmin(socketService,authService,mapService){
     };
 
     api.registerSocket = function(){
+        socketService.authenSocket();
         var user = api.getCurrentUser();
         // console.log('registerSocket', user);
         socketService.sendPacket(

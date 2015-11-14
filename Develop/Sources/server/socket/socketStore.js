@@ -24,6 +24,7 @@ module.exports = function(socket, io) {
         //    'numTasks': '0'
         //});
         //console.log("TEST", numShippers);
+        console.log('store:find:shipper', numShippers, data.msg.store);
         if(numShippers.length != 0){
             gmapUtil.getClosestShippers(data.msg.store, numShippers, config.filter)
                 .then(function(results) {

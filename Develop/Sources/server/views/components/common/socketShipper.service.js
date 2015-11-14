@@ -71,6 +71,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
                 console.log('shipper add order', data);
                 // console.log('after add order', mapService.getStoreMarkers(), mapService.getCustomerMarkers(), mapService.getOrders());
             });
+        
     });
 
     api.getCurrentUser = function() {

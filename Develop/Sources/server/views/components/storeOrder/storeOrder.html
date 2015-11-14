@@ -42,39 +42,37 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label class="control-label">Address</label>
-                                    <textarea ng-model="order.deliveryaddress" class="form-control"
-                                              parsley-trigger="keyup" rows="1"
-                                              placeholder="Enter customer address" required></textarea>
-                            </div>
-                            <!-- <div class="form-group row">
+                            <div class="form-group row">
                                 <div class="col-md-4">
-                                    <label class="control-label">City</label>
-                                    <select class="selectpicker form-control">
-                                        <option value="">Selcect your city</option>
-                                        <option value="Australia">Hai Ba Trung</option>
-                                        <option value="China">Cau Giay</option>
-                                        <option value="China">Cau Giay</option>
+                                    <label class="control-label">Province</label>
+                                    <select parsley-required="true" class="form-control"
+                                            ng-options="x.name for x in listProvince track by x.provinceid"
+                                            ng-model="selectedProvince" ng-change="updateDistrict()">
+
                                     </select>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="control-label">District</label>
-                                    <select class="selectpicker form-control">
-                                        <option value="">Selcect your district</option>
-                                        <option value="Australia">Hai Ba Trung</option>
-                                        <option value="China">Cau Giay</option>
+                                    <select parsley-required="true" class="form-control"
+                                            ng-options="x.name for x in listDistrict track by x.districtid"
+                                            ng-model="selectedDistrict" ng-change="updateWard()"
+                                            >
                                     </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="control-label">Street</label>
-                                    <select class="selectpicker form-control">
-                                        <option value="">Select your street</option>
-                                        <option value="Australia">Tran Duy Hung</option>
-                                        <option value="China">Truong Trinh</option>
+                                    <label class="control-label">Ward</label>
+                                    <select parsley-required="true" class="form-control"
+                                            ng-options="x.name for x in listWard track by x.wardid"
+                                            ng-model="selectedWard" ng-change="updateDeliveryAdd()">
                                     </select>
                                 </div>
-                            </div> -->
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Address</label>
+                                    <textarea ng-model="houseNumber" class="form-control"
+                                              parsley-trigger="keyup" rows="1"
+                                              placeholder="Number Street (Eg: 40 Duy Tân)" ng-change="updateDeliveryAdd()" required></textarea>
+                            </div>
                             <hr>
                             <footer class="row">
                                 <div class="col-sm-5">
@@ -90,7 +88,6 @@
                                     <div class="wizard-status">Wizard step : <span></span></div>
                                 </div>
                             </footer>
-                             
                         </div>
                         <div class="tab-pane fade" id="step2" parsley-validate parsley-bind>
                             <h3>Order information</h3> <hr>
@@ -101,7 +98,7 @@
                                         <table class="table table-hover table-bordered">
                                             <thead>
                                             <tr>
-                                                <th>#</th>                                                
+                                                <th>#</th>
                                                 <th>Name</th>
                                                 <th>Amount</th>
                                                 <th>Weight</th>
@@ -114,7 +111,7 @@
                                             </thead>
                                             <tbody align="center">
                                             <tr ng-repeat="x in goods">
-                                                <td>{{$index+1}}</td>                                                
+                                                <td>{{$index+1}}</td>
                                                 <td>{{x.goodname}}</td>
                                                 <td>{{x.amount}}</td>
                                                 <td>{{x.weight}}</td>
@@ -148,13 +145,13 @@
                             <div class="form-group row">
                                 <div class="col-md-6">
                                     <div   data-color="red">
-                                        <input  ng-model="order.ordertypeid" type="radio" name="somethign" value="2" />
+                                        <input  ng-model="order.ordertypeid" ng-change="updateFee()" type="radio" name="ordertype" value="2" />
                                         <label>Express</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div  data-color="red">
-                                        <input ng-model="order.ordertypeid" type="radio" name="somethign" value="1" />
+                                        <input ng-model="order.ordertypeid" ng-change="updateFee()" type="radio" name="ordertype" value="1" />
                                         <label>Normal</label>
                                     </div>
                                 </div>
@@ -218,7 +215,7 @@
                                         <button type="button" class="btn btn-inverse previous"><i
                                                 class="fa fa-angle-left"></i> Previous
                                         </button>
-                                        <button type="submit" ng-click="postCompleteOrder()" class="btn btn-theme next">Submit <i class="fa fa-angle-right"></i></button>
+                                        <button type="submit" class="btn btn-theme next">Submit <i class="fa fa-angle-right"></i></button>
                                     </section>
                                 </div>
                                 <div class="col-sm-5 align-lg-right">
@@ -230,7 +227,6 @@
                         <div class="tab-pane fade" id="step4">
                             <h3 class="center">Thank You for order</h3><br>
                         </div>
-                       
                     </div>
                 </form>
             </div>
@@ -300,11 +296,11 @@
                 <!-- //modal-footer-->
             </div>
             <!-- //modal-->
-             <!--
-            ////////////////////////////////////////////////////////////////////////////
-            //////////     MODAL EDIT GOODS   //////////
-            /////////////////////////////////////////////////////////////////////////
-            -->
+            <!--
+           ////////////////////////////////////////////////////////////////////////////
+           //////////     MODAL EDIT GOODS   //////////
+           /////////////////////////////////////////////////////////////////////////
+           -->
             <div id="md-edit-good" class="modal fade" data-header-color="#736086">
                 <div class="modal-header bg-inverse bd-inverse-darken">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
@@ -378,16 +374,16 @@
                             class="fa fa-times"></i></button>
                     <h4 class="modal-title"><strong>Delete </strong> goods</h4>
                 </div>
-                <!-- //modal-header-->                
-                    <div class="modal-body">
-                        <h4>Do you want to delete goods: {{newGood.goodname}}</h4>
-                    </div>
-                    <!-- //modal-body-->
-                    <div class="modal-footer">
-                        <button type="button" ng-click="deleteGood()" data-dismiss="modal" class="btn btn-theme">Yes</button>
-                        <button type="button"  data-dismiss="modal" class="btn btn-inverse">No</button>
-                    </div>
-                
+                <!-- //modal-header-->
+                <div class="modal-body">
+                    <h4>Do you want to delete goods: {{newGood.goodname}}</h4>
+                </div>
+                <!-- //modal-body-->
+                <div class="modal-footer">
+                    <button type="button" ng-click="deleteGood()" data-dismiss="modal" class="btn btn-theme">Yes</button>
+                    <button type="button"  data-dismiss="modal" class="btn btn-inverse">No</button>
+                </div>
+
                 <!-- //modal-footer-->
             </div>
             <!-- //modal-->
@@ -400,7 +396,6 @@
             <textarea class="form-control theme" id="smsEmptyGood" rows="5" style="display:none">
               You must add at least 1 good to order!
              </textarea>
-           
 
             <!--/////////////////////////////////////
                //////     Addition Information  ////
@@ -409,30 +404,53 @@
                 <div class=""><br><br><br>
 
                     <div class="panel">
-                        <div class="panel-heading"><h3><strong>Additional</strong> Information </h3></div>
+                        <div class="panel-heading"><h3><strong>Order </strong> Information </h3></div>
                         <div class="panel-body">
+                            <label  class="fullWidth color"><strong>Confirm Code</strong></label>
                             <div class="form-group">
-                                <label class="control-label col-md-7 align-lg-left">Code for shiper</label>
-                                <label  class="control-label col-md-5">{{order.gatheringCode}}</label>
+                                <label class="control-label col-md-7 align-lg-left">Code for cusotmer:</label>
+                                <label  class="control-label col-md-5 align-lg-right">{{order.deliverCode}} VND</label>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-7 align-lg-left">Code for customer</label>
-                                <label class="control-label col-md-5">{{order.deliverCode}}</label>
+                                <label class="control-label col-md-7 align-lg-left">Code for shipper:</label>
+                                <label  class="control-label col-md-5 align-lg-right">{{order.gatheringCode}} VND</label>
                             </div>
-                            <label></label>
+
+
+                            <label  class="fullWidth color"><strong>Delivery Information</strong></label>
+                            <div class="form-group">                                
+                                <label  class="control-label col-md-7 align-lg-left"><i class="fa fa-user"></i> {{order.recipientname}}</label>
+                                <label  class="control-label col-md-5 align-lg-right"><i class="fa fa-phone"></i> {{order.recipientphone}}</label> 
+                                 <label  class="control-label col-md-12"><i class="fa fa-home"></i> {{order.deliveryaddress}}</label>
+                            </div>   
+
+
+                            <label  class="fullWidth color"><strong>Pickup Information</strong></label>
+                            <div class="form-group">                                
+                                <label  class="control-label col-md-7 align-lg-left"><i class="fa fa-user"></i> {{order.storeid}}</label>
+                                <label  class="control-label col-md-5 align-lg-right"><i class="fa fa-phone"></i> {{order.pickupphone}}</label> 
+                                 <label  class="control-label col-md-12"><i class="fa fa-home"></i> {{order.pickupaddress}}</label>
+                            </div> 
+
+
+                           <label  class="fullWidth color"><strong>Other Information</strong></label>
                             <div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-7 align-lg-left">Cash on delivery:</label>
-                                <label  class="control-label col-md-5">{{order.cod|number}} VND</label>
+                                <label  class="control-label col-md-5 align-lg-right">{{order.cod|number}} VND</label>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-7 align-lg-left">Over weight fee:</label>
+                                <label class="control-label col-md-5 align-lg-right">{{order.overWeightFee|number}} VND</label>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-7 align-lg-left">Ship fee:</label>
-                                <label class="control-label col-md-5">0 VND</label>
-                            </div>
+                                <label class="control-label col-md-5 align-lg-right">{{order.fee|number}} VND</label>
+                            </div>                             
                             <div class="form-group">
                                 <label class="control-label col-md-7 align-lg-left">Total:</label>
-                                <label class="control-label col-md-5">0 VND</label>
+                                <label class="control-label col-md-5 align-lg-right">{{order.cod-0 + order.overWeightFee-0 + order.fee-0| number}} VND</label>
                             </div>
                         </div>
                     </div>
@@ -450,6 +468,81 @@
     </div>
     <!-- //main-->
 </div>
-
+<div id="listAcceptedShipper_Fail" class="modal fade md-slideRight" tabindex="-1"  data-width="500" data-header-color="theme-inverse">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+        <h4 class="modal-title">Not find a shipper</h4>
+    </div>
+    <!-- //modal-header-->
+    <div class="modal-body left">
+        <div class="row">
+            <div class="col-md-3" >
+                <img alt="" ng-src="{{rightShipper.avatar}}" class="circle" style="width: 100px">
+            </div>
+            <div class="col-md-9" style="margin-top: 20px">
+                <h4><strong>Sorry!</strong> Now all shippers are busy</h4>
+                <br>
+                <h5>Please try again later!</h5>
+            </div>
+        </div>
+    </div>
+    <!-- //modal-body-->
+</div>
+<div id="listAcceptedShipper" class="modal fade md-slideRight" tabindex="-1"  data-width="500" data-header-color="theme-inverse">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+        <h4 class="modal-title">Yeah! Finded a shipper</h4>
+    </div>
+    <!-- //modal-header-->
+    <div class="modal-body left">
+        <div class="row">
+            <div class="col-md-3" >
+                <img alt="" ng-src="{{rightShipper.avatar}}" class="circle" style="width: 100px">
+            </div>
+            <div class="col-md-9">
+                <h3><strong>Hi</strong>, I'm {{rightShipper.fullName}}</h3>
+                <br>
+                <div class="row">
+                    <label class="col-md-3">
+                        <i class="fa fa-caret-right"></i>ShipperID
+                    </label>
+                    <div class="col-md-9">
+                        <strong>{{rightShipper.shipperID}}</strong>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-md-3">
+                        <i class="fa fa-caret-right"></i>Phone
+                    </label>
+                    <div class="col-md-9">
+                        <strong>{{rightShipper.phonenumber}}</strong>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-md-3">
+                        <i class="fa fa-caret-right"></i>Distance
+                    </label>
+                    <div class="col-md-9">
+                        <strong>{{rightShipper.distanceText}}</strong>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-md-3">
+                        <i class="fa fa-caret-right"></i>Duration
+                    </label>
+                    <div class="col-md-9">
+                        <strong>{{rightShipper.durationText}}</strong>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="align-lg-right">
+                <button class="btn btn-theme" ng-click="makeExpressOrder()">Accept</button>
+                <button class="btn btn-inverse">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <!-- //modal-body-->
+</div>
 </body>
 </html>

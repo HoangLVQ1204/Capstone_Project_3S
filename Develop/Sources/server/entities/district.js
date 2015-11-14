@@ -23,7 +23,21 @@ module.exports = function(sequelize, DataTypes) {
   },
   {
     freezeTableName: true,
-    timestamps: false
+    timestamps: false,
+     classMethods:{
+      associate: function(db) {   
+
+        district.hasMany(db.ward, {
+          foreignKey: 'districtid',
+          constraints: false
+        });    
+
+      },
+      getAllDistrict: function() {
+        return district.findAll({});
+      }
+    }
+
   });
   return district;
 };
