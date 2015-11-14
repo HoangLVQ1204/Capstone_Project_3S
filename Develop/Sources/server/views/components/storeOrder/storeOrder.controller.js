@@ -172,12 +172,15 @@ function storeOrderController($scope, $state, dataService, config,socketService,
         var rightShipper = $scope.rightShipper;
         var urlOrder = config.baseURI + '/orders';
         $scope.order.statusid = '2';
-        var data = {
+        var dataOrder = {
             order: $scope.order,
             goods : $scope.goods
         };
-        dataService.postDataServer(urlOrder,data);
-        
+        dataService.postDataServer(urlOrder,dataOrder);
+        var dataRightShipper = $scope.rightShipper;
+        var dataTask = {
+
+        }
     }
 
     function postCompleteOrder(){

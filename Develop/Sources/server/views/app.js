@@ -37,6 +37,11 @@ angular.module('app', [
             template: '<login></login>'
         })
 
+        .state('register',{
+            url: '/register',
+            template: '<store-register></store-register>'
+        })
+
         .state('error',{
             url: '/error',
             templateUrl: '/components/404/error.html'
@@ -238,7 +243,7 @@ angular.module('app', [
 
     $rootScope.$on('$stateChangeSuccess', function(e, toState){
         // console.log(toState.name.indexOf("store"));
-        if (toState.name == "login" || toState.name == "home" || toState.name == "error"){
+        if (toState.name == "login" || toState.name == "home" || toState.name == "error" || toState.name == "register"){
             $rootScope.styleBody = "full-lg";
         }else if(toState.name.indexOf("store") == 0){
             $rootScope.styleBody = "";

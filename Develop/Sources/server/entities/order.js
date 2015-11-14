@@ -193,13 +193,15 @@ module.exports = function(sequelize, DataTypes) {
 
 
       postOneOrder: function(newOrder){
-        
-        return order.build(newOrder).save();
+        return order.build(newOrder).save().then(function(order){
+          return order;
+        })
       },
 
       putOrder: function (currentOrder) {
         return currentOrder.save();
       },
+
       changeIsPendingOrder: function(orderID, isPending) {
          return order.update(
              {ispending: isPending},
@@ -208,6 +210,7 @@ module.exports = function(sequelize, DataTypes) {
              }}
          );
       },
+
       submitDraffOrder: function(orderid) {
         return order.update(
             {
@@ -219,7 +222,6 @@ module.exports = function(sequelize, DataTypes) {
 		  },
 
       getTotalShipFeeOfStore: function(storeid, paydate){
-       // console.log(paydate)
         return order.sum('fee',{
           where: {
             'storeid': storeid,

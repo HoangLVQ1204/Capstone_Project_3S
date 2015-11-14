@@ -750,6 +750,6 @@ module.exports = function (app) {
 
         getTaskBeIssuePending: getTaskBeIssuePending,
         getAllTaskCancel: getAllTaskCancel,
-        testSk: testSk,
+        testSk: testSk
     }
 }
