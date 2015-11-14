@@ -3,64 +3,37 @@
  */
 
 
-/*
-	Helper functions
-*/
-
-function genPagination($scope) {
+function notificationListController($scope, config, dataService, notificationService){	
 	$scope.pageNumbers = [];
-	for (var i = 0; i < parseInt(($scope.totalNotifications + $scope.notificationsPerPage - 1) / $scope.notificationsPerPage); ++i) {
-		$scope.pageNumbers.push(false);
-	}
-	if ($scope.pageNumbers.length) {
-		$scope.pageNumbers[0] = true;
-	}
-}
-
-function getPageOfNotifications(page, $scope, config, dataService) {
-	var offset = page * $scope.notificationsPerPage;
-	var limit = $scope.notificationsPerPage;
-	var urlBase = config.baseURI + '/api/notifications?offset=' + offset + '&limit=' + limit;
-	dataService.getDataServer(urlBase)
-	.then(function(data) {
-		// console.log('getPageOfNotifications', data.data);
-		$scope.listNotifications = data.data;
-	});
-}
-
-function notificationListController($scope, config, dataService){ 	
-	$scope.notificationsPerPage = 7;   
-	$scope.pageNumbers = [];
-	$scope.listNotifications = [];
-	$scope.currentPage = 0;
+	$scope.listNotifications = [];	
 	$scope.totalNotifications = 0;
-
-	var urlBase = config.baseURI + '/api/notifications/total';
-	dataService.getDataServer(urlBase)
-	.then(function(data) {
-		// console.log('getDataServer', data);
-		$scope.totalNotifications = data.data;
-		genPagination($scope);
-	});
+	notificationService.getTotalNumberNotificationsServer()
+	.then(function() {
+		$scope.totalNotifications = notificationService.getTotalNumberNotifications();
+		$scope.pageNumbers = notificationService.getPageNumbers();
+		return notificationService.getListNotificationsServer();
+	})	
+	.then(function() {
+		$scope.listNotifications = notificationService.getListNotifications();		
+	});	
 
 	$scope.selectPage = function(page) {
-		$scope.currentPage = page;
-		for (var i = 0; i < $scope.pageNumbers.length; ++i) {
-			if (i == page) $scope.pageNumbers[i] = true;
-			else $scope.pageNumbers[i] = false;
-		}
-		getPageOfNotifications($scope.currentPage, $scope, config, dataService);
+		notificationService.setCurrentPage(page);		
+		notificationService.getListNotificationsServer()
+		.then(function() {
+			$scope.listNotifications = notificationService.getListNotifications();
+		});
 	};
 
 	$scope.goLeft = function() {
-		if ($scope.currentPage > 0) {			
-			$scope.selectPage($scope.currentPage - 1);
+		if (notificationService.getCurrentPage() > 0) {			
+			$scope.selectPage(notificationService.getCurrentPage() - 1);
 		}
 	};	
 
 	$scope.goRight = function() {
-		if ($scope.currentPage < $scope.pageNumbers.length - 1) {			
-			$scope.selectPage($scope.currentPage + 1);
+		if (notificationService.getCurrentPage() < $scope.pageNumbers.length - 1) {			
+			$scope.selectPage(notificationService.getCurrentPage() + 1);
 		}
 	};
 
@@ -82,21 +55,14 @@ function notificationListController($scope, config, dataService){
 			return days + ' day' + (days > 1 ? 's' : '');
 		}
 		return diff;
-	}
-
-	$scope.readNotification = function(item) {
-		item.isread = true;		
-		var urlBase = config.baseURI + '/api/notifications/' + item.notificationid;		
-		dataService.putDataServer(urlBase, item)
-		.then(function(data) {
-			console.log('readNotification', data);
-		})
 	};
 
-	getPageOfNotifications(0, $scope, config, dataService);
+	$scope.readNotification = function(item) {
+		notificationService.readNotification(item);
+	};
 }
 
-notificationListController.$inject = ['$scope', 'config', 'dataService'];
+notificationListController.$inject = ['$scope', 'config', 'dataService', 'notificationService'];
 angular.module('app').controller('notificationListController',notificationListController);
 
 

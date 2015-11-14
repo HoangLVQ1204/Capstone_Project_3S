@@ -2,7 +2,7 @@
  * Created by hoanglvq on 9/22/15.
  */
 
-function storeController($scope,$state,socketService,socketStore,dataService,authService,config){
+function storeController($scope,$state,socketService,socketStore,dataService,authService,config,$rootScope){
 
     authService.getProfileUser()
         .then(function(res){
@@ -93,9 +93,32 @@ function storeController($scope,$state,socketService,socketStore,dataService,aut
                 }
             });
         caplet();
+
+        // Test notification
+        // var temp = {
+        //     type: 'issue',
+        //     title: 'big issue',
+        //     content: 'This is big issue',
+        //     url: '/notidemo',
+        //     createddate: 'date 1'
+        // };
+        // $rootScope.notify(temp);
     });
+
+    // Test notification
+    setTimeout(function() {        
+        var temp = {
+            type: 'issue',
+            title: 'issue 1',
+            content: 'This is very big issue number 1',
+            url: 'https://google.com',
+            isread: false,
+            createddate: new Date()
+        };
+        $rootScope.notify(temp);
+    }, 1000);
 }
 
-storeController.$inject = ['$scope','$state','socketService','socketStore','dataService','authService','config'];
+storeController.$inject = ['$scope','$state','socketService','socketStore','dataService','authService','config','$rootScope'];
 angular.module('app').controller('storeController',storeController);
 

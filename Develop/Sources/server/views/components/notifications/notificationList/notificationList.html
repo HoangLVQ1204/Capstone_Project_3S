@@ -16,9 +16,9 @@
 	<div class="panel-body align-lg-center">
 	
 			<ul class="pagination">
-					<li ng-click="goLeft()"><a href="#"><i class="fa fa-angle-left"></i></a></li>
-					<li ng-repeat="e in pageNumbers track by $index" ng-class="{active: e}" ng-click="selectPage($index)"><a href="#">{{ $index + 1 }}</a></li>
-					<li ng-click="goRight()"><a href="#"><i class="fa fa-angle-right"></i></a></li>
+					<li ng-click="goLeft()"><a><i class="fa fa-angle-left"></i></a></li>
+					<li ng-repeat="e in pageNumbers track by $index" ng-class="{active: e}" ng-click="selectPage($index)"><a>{{ $index + 1 }}</a></li>
+					<li ng-click="goRight()"><a><i class="fa fa-angle-right"></i></a></li>
 			</ul>			
 	</div>	
 	<!-- //modal-body-->	

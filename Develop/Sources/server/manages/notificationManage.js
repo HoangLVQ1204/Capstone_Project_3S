@@ -30,7 +30,7 @@ module.exports = function (app) {
         notification.username = req.user.username;        
         db.notification.addNotification(notification)
         .then(function(data) {
-            res.status(201).json(notification.toJSON());
+            res.status(201).json(data.toJSON());
         });
     };
 

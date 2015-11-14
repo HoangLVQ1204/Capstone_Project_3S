@@ -27,7 +27,15 @@ module.exports = function(sequelize, DataTypes) {
   },
   {
     freezeTableName: true,
-    timestamps: false
+    timestamps: false,
+    classMethods:{
+      associate: function(db) { 
+      },
+      getAllWard: function() {
+        return ward.findAll({});
+      }
+    }
+
   });
   return ward;
 };
