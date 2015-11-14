@@ -365,6 +365,10 @@ module.exports = function(server,app){
         io.shippers[shipper.shipperID].numTasks = io.countNumTasksByShipperID(shipper.shipperID);
     };
 
+    io.updateStatusShipper = function(shipper) {
+        io.shippers[shipper.shipperID].isConnected = false;
+    };
+
     io.updateOrderOfShipper = function(shipperID, orderID) {
         io.shippers[shipperID].order.push(orderID);
     };

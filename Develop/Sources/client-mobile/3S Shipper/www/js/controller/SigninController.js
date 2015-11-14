@@ -2,7 +2,7 @@
  * Created by Kaka Hoang Huy on 9/30/2015.
  */
 
-app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService', 'socketShipper', function($scope,$state, $ionicLoading, authService, socketShipper){
+app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService', 'socketShipper', 'socketService', function($scope,$state, $ionicLoading, authService, socketShipper, socketService){
 
   var showError = function(error){
     $scope.showUserError = true;
@@ -16,13 +16,16 @@ app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService',
       template: '<ion-spinner icon="bubbles" class="spinner-balanced"/>'
     });
     authService.signIn($scope.user)
-      .then(function(){
-        if(authService.isRightRole(roles.shipper)){
-          //TODO
-          socketShipper.registerSocket();
-          $state.go('app.tasks');
-          $ionicLoading.hide();
-        }
+      .then(function(res){
+        authService.saveToken(res.data.token);
+        socketService.authenSocket()
+          .then(function(){
+            if(authService.isRightRole(roles.shipper)){
+              socketShipper.registerSocket();
+              $state.go('app.tasks');
+              $ionicLoading.hide();
+            }
+          });
       })
       .catch(function(error){
         $ionicLoading.hide();
@@ -38,6 +41,7 @@ app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService',
       noBackdrop: false,
       template: '<ion-spinner icon="bubbles" class="spinner-balanced"/>'
     });
+    socketShipper.updateStatusShipper();
     authService.signOut();
     $state.go('sign-in');
   }
