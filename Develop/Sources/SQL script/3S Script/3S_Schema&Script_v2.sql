@@ -12955,9 +12955,7 @@ CREATE TABLE "public"."notification" (
 "username" varchar(20) COLLATE "default" NOT NULL,
 "createddate" date
 )
-WITH (OIDS=FALSE)
-
-;
+WITH (OIDS=FALSE);
 
 -- ----------------------------
 -- Foreign Key structure for table "public"."notification"
@@ -12967,8 +12965,9 @@ ALTER TABLE "public"."notification" ADD FOREIGN KEY ("username") REFERENCES "pub
 -- ----------------------------
 -- Records of notification
 -- ----------------------------
-INSERT INTO "public"."notification" ("type", "title", "description", "url", "createddate") VALUES ('issue', 'big issue', 'This is big issue', 'bigissue', '2015-11-11');
-INSERT INTO "public"."notification" ("type", "title", "description", "url", "createddate") VALUES ('issue', 'small issue', 'This is small issue', 'smallissue', '2015-11-11');
-INSERT INTO "public"."notification" ("type", "title", "description", "url", "createddate") VALUES ('info', 'new info', 'This is an issue', 'newinfo', '2015-11-11');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('issue', 'big issue', 'This is big issue', '/notiListdemo','f','ST000001','2015-11-11');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('issue', 'small issue', 'This is small issue', '/notiListdemo','f','ST000001','2015-11-11');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('info', 'new info', 'This is an issue', '/notiListdemo','f','ST000001','2015-11-11');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('info', 'new info', 'This is an issue', '/notiListdemo','f','AD000001','2015-11-11');
 
 
