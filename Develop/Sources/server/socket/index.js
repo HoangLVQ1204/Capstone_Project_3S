@@ -178,7 +178,8 @@ module.exports = function(server,app){
         var listEvents = [].concat(eventName);
         [].concat(receiver).forEach(function(type, index) {     
             data.receiver = type;
-            io.receiverSocket(type).emit(listEvents[index], data, callback);            
+            var connection = io.receiverSocket(type);
+            if(connection) connection.emit(listEvents[index], data, callback);
         });        
     }
 
