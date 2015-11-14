@@ -12965,9 +12965,24 @@ ALTER TABLE "public"."notification" ADD FOREIGN KEY ("username") REFERENCES "pub
 -- ----------------------------
 -- Records of notification
 -- ----------------------------
-INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('issue', 'big issue', 'This is big issue', '/notiListdemo','f','ST000001','2015-11-11');
-INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('issue', 'small issue', 'This is small issue', '/notiListdemo','f','ST000001','2015-11-11');
-INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('info', 'new info', 'This is an issue', '/notiListdemo','f','ST000001','2015-11-11');
-INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('info', 'new info', 'This is an issue', '/notiListdemo','f','AD000001','2015-11-11');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('issue', 'big issue', 'This is big issue', 'http://google.com','f','ST000001','2015-11-11');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('issue', 'small issue', 'This is small issue', '/#/notiListdemo','f','ST000001','2015-11-12');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('info', 'new info', 'This is info of ST000001', '/#/notiListdemo','f','ST000001','2015-11-13');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('info', 'new info', 'This is info of AD000001', 'http://facebook.com','f','AD000001','2015-11-12');
+
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('issue', 'big issue', 'This is big issue', '/#/notiListdemo','f','ST000001','2015-11-01');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('issue', 'small issue', 'This is small issue', 'http://facebook.com','f','ST000001','2015-11-02');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('info', 'new info', 'This is info of ST000001', '/#/notiListdemo','f','ST000001','2015-11-03');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('info', 'new info', 'This is info of AD000001', '/#/notiListdemo','f','AD000001','2015-11-02');
+
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('issue', 'big issue', 'This is big issue', '/#/notiListdemo','f','ST000001','2015-11-07');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('issue', 'small issue', 'This is small issue', '/#/notiListdemo','f','ST000001','2015-11-06');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('info', 'new info', 'This is info of ST000001', '/#/notiListdemo','f','ST000001','2015-11-05');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('info', 'new info', 'This is info of AD000001', 'http://google.com','f','AD000001','2015-11-05');
+
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('issue', 'big issue', 'This is big issue', '/#/notiListdemo','f','ST000001','2015-10-07');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('issue', 'small issue', 'This is small issue', '/#/notiListdemo','f','ST000001','2015-10-06');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('info', 'new info', 'This is info of ST000001', '/#/notiListdemo','f','ST000001','2015-10-06');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('info', 'new info', 'This is info of AD000001', '/#/notiListdemo','f','AD000001','2015-10-07');
 
 

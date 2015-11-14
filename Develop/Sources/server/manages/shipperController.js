@@ -112,7 +112,8 @@ module.exports = function (app) {
         var OrderStatus = db.orderstatus;
         var Goods = db.goods;
         var Task = db.task;
-        var taskid = detailtaskid;
+        //var shipper = _.cloneDeep(req.user);
+        //var shipperid = shipper.username;
         var shipperid = 'SP000001';
         Order.getOrderDetailById(detailtaskid, shipperid, OrderStatus, Goods, Task)
             .then(function (rs) {
@@ -223,7 +224,7 @@ module.exports = function (app) {
                                     completedate: completeDate
                                 }).then(function (rs) {
                                     //:TODO socket need to check null
-                                    //server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
+                                    server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
                                     if(oldStatus == taskBegin.statusid){
                                         Task.updateTaskStatus(2, taskid, shipperid).then(function (ok) {
                                             return res.status(200).json("Your task was active!");
@@ -254,7 +255,7 @@ module.exports = function (app) {
                             completedate: completeDate
                         }).then(function (rs) {
                             //:TODO socket need to check null
-                            //server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
+                            server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
                             var taskBegin = statusList[0];
                             var taskDone = statusList[statusList.length - 1];
                             if(oldStatus == taskBegin.statusid){
@@ -716,7 +717,7 @@ module.exports = function (app) {
     var testSk = function(req, res, next){
         var receiver = {
             type: 'store',
-            clientID: 'STR001'
+            clientID: 'STR003'
         };
         var msg = {
             shipper: "sphuy",

@@ -86,7 +86,6 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
     var urlBase = config.hostServer + 'api/shipper/detail/' + $stateParams.orderId;
     dataService.getDataServer(urlBase)
       .success(function (rs) {
-        console.log("DETAIL: ",rs);
         if(rs) {
           $scope.order = rs.detail;
           $scope.statuslist = rs.statuslist;

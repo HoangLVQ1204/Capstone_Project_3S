@@ -104,7 +104,6 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
       .success(function (rs) {
         $scope.listTaskIssueCancel = rs;
         getListOfTask();
-        $ionicLoading.hide();
       })
       .error(function (error) {
         console.log('Unable to load customer data: ' + error);
@@ -121,6 +120,7 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
     dataFactory.getDataServer(urlBase)
       .success(function (rs) {
         formatData(rs);
+        $ionicLoading.hide();
       })
       .error(function (error) {
         console.log('Unable to load customer data: ' + error);
