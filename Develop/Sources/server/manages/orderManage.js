@@ -179,25 +179,20 @@ module.exports = function (app) {
 
         var str = "000000" + parseInt(Math.random()*1000000);
         var formatStr = str.substr(str.length - 6);
-        var newOrderID = "OD" + formatStr;        
-        newOrder.orderid = newOrderID;
-       // console.log("ORRDDDDDDDD=========",newOrderID);
+        var newOrderID = "OD" + formatStr;
 
-        console.log("=============req.body===============",req.body);
+        newOrder.orderid = newOrderID;
         newOrder.storeid = req.body.order.storeid;
         newOrder.ordertypeid = req.body.order.ordertypeid;
         newOrder.pickupaddress = req.body.order.pickupaddress;
         newOrder.deliveryaddress = req.body.order.deliveryaddress;
-        //newOrder.pickupaddress = null;
-        //newOrder.deliverydate = null;
-        //newOrder.completedate = null;
         newOrder.recipientphone = req.body.order.recipientphone;
         newOrder.recipientname = req.body.order.recipientname;
-        //newOrder.ledgerid = null;
         newOrder.statusid = req.body.order.statusid;
         newOrder.ispending = 'false';
         newOrder.isdraff = req.body.order.isdraff;        
-        newOrder.createdate = new Date();        
+        newOrder.createdate = new Date();
+
         if(!_.isNumber(req.body.order.cod)){
             newOrder.cod = 0;
         }else {
@@ -208,14 +203,11 @@ module.exports = function (app) {
             newOrder.fee = 0;
         }else {
             newOrder.fee = req.body.order.fee;
-        } 
-       
-       console.log("==============11===============");
-       ////////////
+        }
+
         var str = "000000" + parseInt(Math.random()*1000000);
         var formatStr = str.substr(str.length - 6);                    
         var newCodeID = formatStr;
-        /////////////
         
         var code1 = {
         'codecontent' : req.body.order.gatheringCode,
@@ -242,16 +234,13 @@ module.exports = function (app) {
         'orderid' : newOrder.orderid,
         'codeid' : newCodeID++
        };
-       console.log("==============22==============");
        
         return db.order.postOneOrder(newOrder)
             .then(function () {
-                console.log("==============33==============");
                 db.confirmationcode.postOneCode(code1);
                 db.confirmationcode.postOneCode(code2);
                 db.confirmationcode.postOneCode(code3);
                 db.confirmationcode.postOneCode(code4);
-                console.log("==============44==============");
                 for(var i = 0; i < req.body.goods.length; i++){
                     var good = {};
                     var str = "000000" + parseInt(Math.random()*1000000);
@@ -292,13 +281,13 @@ module.exports = function (app) {
                     good.description = req.body.goods[i].description;
 
                     db.goods.postOneGood(good);
-                    console.log("==============55==============");
                 }
 
             })
-            
-             .then(function () {
-                res.status(201).json("Saved");
+             .then(function (order) {
+                console.log("--- New Order ID ---");
+                console.log(order.orderid);
+                res.status(201).json(order.orderid);
             }, function(err){
                 next(err);
             })
