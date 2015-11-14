@@ -61,11 +61,16 @@
     {
       "url": "/api/shipper/change-status",
       "role": [1]
-	},
+	  },
 
     {
       "url": "/store/orderdetail",
       "role": [1,2]
+    },
+
+    {
+      "url": "/api/getProvince",
+      "role": [2]
     }
 
 ]
