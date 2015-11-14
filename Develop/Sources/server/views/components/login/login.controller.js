@@ -57,7 +57,13 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
             })
             .catch(function(error){
                 main.removeClass("slideDown");
-                $.notific8('Check Username or Password again !! ',{ life:5000,horizontalEdge:"bottom", theme:"danger" ,heading:" ERROR :); "});
+                $.notific8('Check Username or Password again !! ',
+                    {
+                        life:5000,
+                        horizontalEdge:"bottom",
+                        theme:"danger" ,
+                        heading:" ERROR :); "
+                    });
                 return false;
             })
     };
