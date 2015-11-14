@@ -29,13 +29,6 @@ var app = angular.module('starter', ['ionic', 'ngCordova','uiGmapgoogle-maps','a
 
     ////Check Is firt time sign in
     if (authService.isLogged()) {
-      if (!authService.isRightRole(roles.shipper)) {
-        $ionicLoading.hide();
-        authService.signOut();
-        showError({
-          message: 'Username or Password is invalid'
-        });
-      }
       socketService.authenSocket()
         .then(function(){
           socketShipper.registerSocket();
