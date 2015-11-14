@@ -29,8 +29,8 @@ module.exports = function (app) {
     app.route('/api/shipper/history')
         .get(checkAll, shipperCtrl.getHistory);
 
-    app.route('/api/shipper/detail/:detailtaskid')
-        .get(checkAll, shipperCtrl.getDetail);
+    app.route('/api/shipper/detail')
+        .get(shipperCtrl.getDetail);
 
     app.param('detailtaskid', shipperCtrl.paramOrderId);
 

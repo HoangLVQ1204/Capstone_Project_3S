@@ -160,11 +160,36 @@ module.exports = function (app) {
     };
 
     var getDetail = function (req, res, next) {
-        var rs = {
-            "detail": req.detail,
-            "statuslist": req.statuslist
-        };
-        return res.status(200).json(rs);
+        var detailtaskid = req.query.taskid;
+        var Order = db.order;
+        var OrderStatus = db.orderstatus;
+        var Goods = db.goods;
+        var Task = db.task;
+        var shipper = _.cloneDeep(req.user);
+        var shipperid = shipper.username;
+        Order.getOrderDetailById(detailtaskid, shipperid, OrderStatus, Goods, Task)
+            .then(function (rs) {
+                if (rs) {
+                    rs = rs.toJSON();
+                    var type = rs.tasks[0].typeid;
+                    if(rs.tasks[0].typeid == 1){
+                        delete rs['deliveryaddress'];
+                        delete rs['completedate'];
+                    }
+                    var statuslist = configConstant.statusList[type];
+                    req.statuslist = statuslist;
+                    req.detail = rs;
+                    var resObj = {
+                        "detail": req.detail,
+                        "statuslist": req.statuslist
+                    };
+                    return res.status(200).json(resObj);
+                } else {
+                    return res.status(400).json('Can not found this task detail');
+                }
+            }, function (err) {
+                return res.status(400).json('Can not found this task detail');
+            });
     };
 
     var getOrderStatusList = function (req, res, next) {
@@ -260,7 +285,6 @@ module.exports = function (app) {
                             var taskDone = statusList[statusList.length - 1];
                             if(oldStatus == taskBegin.statusid){
                                 Task.updateTaskStatus(2,taskid,shipperid).then(function(ok){
-                                    console.log("/////////////////////////////////////////////1");
                                     return res.status(200).json("Your task was active!");
                                 },function(er){
                                     return res.status(400).json("Sorry! Something went wrong!");
