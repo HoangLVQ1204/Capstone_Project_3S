@@ -62,11 +62,24 @@ module.exports = function (app) {
         })
     }
 
+    var createTask = function(req,res,next){
+        var taskData = req.body.task;
+        console.log(taskData);
+        return db.task.createTaskForShipper(taskData)
+                .then(function(newTask) {
+                    console.log(newTask.taskid);
+                    res.status(201).json(newTask);
+                }, function(err) {
+                    next(err);
+                })
+    }
+
     return {
         getAllTask: getAllTask,
         getAllTaskType: getAllTaskType,
         getAllTaskStatus: getAllTaskStatus,
         updateTaskState: updateTaskState,
-        updateTaskNoShipper: updateTaskNoShipper
+        updateTaskNoShipper: updateTaskNoShipper,
+        createTask: createTask
     }
 }

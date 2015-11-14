@@ -38,10 +38,19 @@ module.exports = function(app) {
             });
     }
 
+    var createStoreOwnerAccount = function(req,res,next){
+        var dataUser = req.body.dataUser;
+
+
+    }
+
+    function genAuto
+
     return {
         get: get,
         getProfileUser: getProfileUser,
-        params: params
+        params: params,
+        createStoreOwnerAccount: createStoreOwnerAccount
     }
 }
 
