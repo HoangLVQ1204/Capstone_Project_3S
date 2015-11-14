@@ -2,21 +2,14 @@
 
 
 
-<div>	
-    <!--
-	//////////////////////////////////////////////////////////////////////////
-	//////////     MODAL NOTIFICATION     //////////
-	//////////////////////////////////////////////////////////////////////
-	-->	
-	<div class="modal-body" style="padding:10">
-			<div class="widget-im notification">
-					<ul>								
-							<li ng-repeat="notification in listNotifications">	
-								<div ng-include src="notification.type" ui-sref="{{ notification.url }}"></div>
-							</li>								
-					</ul>
-			</div>
-			<!-- //widget-im-->
+<div>    
+	<h3>History</h3>	
+	<div class="widget-im notification">
+			<ul>								
+					<li ng-repeat="notification in listNotifications">					
+						<div ng-include src="notification.type"></div>
+					</li>								
+			</ul>
 	</div>
 	<div class="panel-body align-lg-center">
 	
