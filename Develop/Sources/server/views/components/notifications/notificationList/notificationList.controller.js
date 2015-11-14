@@ -4,14 +4,37 @@
 
 
 // RUN ORDER: controller => link function   
-function notificationListController($scope){       
+function notificationListController($scope){    
+	$scope.notificationsPerPage = 20;   
+	$scope.pageNumbers = [
+		{
+			id: 1,
+			active: true
+		},
+		{
+			id: 2,
+			active: false
+		},
+		{
+			id: 3,
+			active: false
+		}
+	];
+
+	$scope.selectPage = function(item) {
+		$scope.pageNumbers.forEach(function(e) {
+			if (e.id == item.id) e.active = true;
+			else e.active = false;
+		});
+	};
+
 	// $scope.listNotifications = [	
  //       	{
  //       		type: 'issue',
- //                     title: 'big issue',
+ //            title: 'big issue',
  //       		content: 'This is big issue',
  //       		url: 'bigissue',
- //                     createddate: 'date 1'
+ //            createddate: 'date 1'
  //       	},
  //       	{
  //       		type: 'issue',
