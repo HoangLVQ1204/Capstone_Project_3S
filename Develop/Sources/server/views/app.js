@@ -184,13 +184,13 @@ angular.module('app', [
 
             if(authService.isRightRole(config.role.store)){
                 socketStore.registerSocket();
-                $state.go("store.dashboard");
+                // $state.go("store.dashboard");
 
             }
 
              if(authService.isRightRole(config.role.shipper)){
                  socketShipper.registerSocket();
-                 $state.go("mapdemo");
+                 // $state.go("mapdemo");
 
              }
         })        
