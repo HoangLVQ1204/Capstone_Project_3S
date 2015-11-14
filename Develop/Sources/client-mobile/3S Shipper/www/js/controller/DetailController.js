@@ -83,7 +83,7 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
   getDetailFromServer();
 
   function getDetailFromServer() {
-    var urlBase = config.hostServer + 'api/shipper/detail/' + $stateParams.orderId;
+    var urlBase = config.hostServer + 'api/shipper/detail?taskid=' + $stateParams.orderId;
     dataService.getDataServer(urlBase)
       .success(function (rs) {
         if(rs) {

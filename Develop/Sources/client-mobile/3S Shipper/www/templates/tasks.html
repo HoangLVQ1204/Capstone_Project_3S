@@ -3,7 +3,34 @@
   <ion-nav-back-button>
   </ion-nav-back-button>
     <ion-tabs class="tabs-striped tabs-color-balanced">
-        <ion-tab title="Pickup" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart" badge="badgeCountPick" badge-style="badge-assertive" on-select="tabSelected('pickup')">
+      <ion-tab title="Express" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart"  badge="badgeCountExpress" badge-style="badge-assertive" on-select="tabSelected('express')">
+        <ion-pane>
+          <ion-content>
+            <ion-list>
+              <ion-item class="item-icon-right" ng-repeat="order in expressTasks" type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.taskid}}', isCancel: '{{order.iscancel}}'})">
+                <div class="titleContent" style="min-height: 90px;">
+                  <div>
+                    <img src="img/storeprofile.png"/>
+                  </div>
+                  <div>
+                    <h2>{{order.orderid}}</h2>
+                    <!--Inactive-->
+                    <p ng-show="{{order.statusid == 1}}" class="statusPd label">Inactive</p>
+                    <!--Actived-->
+                    <p ng-show="{{order.statusid == 2}}" class="statusDn label">Actived</p>
+                    <div class="tasklocate">
+                      <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
+                      <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
+                    </div>
+                  </div>
+                </div>
+                <i class="icon ion-chevron-right icon-accessory"></i>
+              </ion-item>
+            </ion-list>
+          </ion-content>
+        </ion-pane>
+      </ion-tab>
+      <ion-tab title="Pickup" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart" badge="badgeCountPick" badge-style="badge-assertive" on-select="tabSelected('pickup')">
         <ion-pane>
           <ion-content>
             <ion-list>
@@ -51,33 +78,6 @@
                     </div>
                   </div>
                 </div>
-                <i class="icon ion-chevron-right icon-accessory"></i>
-              </ion-item>
-            </ion-list>
-          </ion-content>
-        </ion-pane>
-      </ion-tab>
-      <ion-tab title="Express" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart"  badge="badgeCountExpress" badge-style="badge-assertive" on-select="tabSelected('express')">
-        <ion-pane>
-          <ion-content>
-            <ion-list>
-              <ion-item class="item-icon-right" ng-repeat="order in expressTasks" type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.taskid}}', isCancel: '{{order.iscancel}}'})">
-               <div class="titleContent" style="min-height: 90px;">
-                 <div>
-                   <img src="img/storeprofile.png"/>
-                 </div>
-                 <div>
-                   <h2>{{order.orderid}}</h2>
-                   <!--Inactive-->
-                   <p ng-show="{{order.statusid == 1}}" class="statusPd label">Inactive</p>
-                   <!--Actived-->
-                   <p ng-show="{{order.statusid == 2}}" class="statusDn label">Actived</p>
-                   <div class="tasklocate">
-                     <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
-                     <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
-                   </div>
-                 </div>
-               </div>
                 <i class="icon ion-chevron-right icon-accessory"></i>
               </ion-item>
             </ion-list>
