@@ -66,6 +66,7 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
 
       .state('app.history', {
         url: '/history',
+        cache: false,
         views: {
           'menuContent': {
             templateUrl: 'templates/history.html',
@@ -94,7 +95,7 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
           }
         }
       })
-      
+
       .state('app.issue', {
         url: '/issue',
         views: {

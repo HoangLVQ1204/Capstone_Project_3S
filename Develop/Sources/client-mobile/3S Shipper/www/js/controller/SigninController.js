@@ -13,7 +13,7 @@ app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService',
     $ionicLoading.show({
       //duration: 500,
       noBackdrop: false,
-      template: '<ion-spinner icon="android" class="custom-icon"/>'
+      template: '<ion-spinner icon="bubbles" class="spinner-balanced"/>'
     });
     authService.signIn($scope.user)
       .then(function(){
@@ -36,7 +36,7 @@ app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService',
     $ionicLoading.show({
       duration: 200,
       noBackdrop: false,
-      template: '<ion-spinner icon="android" class="custom-icon"/>'
+      template: '<ion-spinner icon="bubbles" class="spinner-balanced"/>'
     });
     authService.signOut();
     $state.go('sign-in');
