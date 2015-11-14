@@ -20,6 +20,11 @@ var config = {
 		isConnected: true,
 		limit: 4,
 		maxTasks: 3
+	},
+
+	// Config filter location
+	fileterLocation: {
+		in: ["00001",'00002']
 	}
 };
 
