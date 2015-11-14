@@ -223,7 +223,7 @@ module.exports = function (app) {
                                     completedate: completeDate
                                 }).then(function (rs) {
                                     //:TODO socket need to check null
-                                    //server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
+                                    server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
                                     if(oldStatus == taskBegin.statusid){
                                         Task.updateTaskStatus(2, taskid, shipperid).then(function (ok) {
                                             return res.status(200).json("Your task was active!");
@@ -254,7 +254,7 @@ module.exports = function (app) {
                             completedate: completeDate
                         }).then(function (rs) {
                             //:TODO socket need to check null
-                            //server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
+                            server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
                             var taskBegin = statusList[0];
                             var taskDone = statusList[statusList.length - 1];
                             if(oldStatus == taskBegin.statusid){
