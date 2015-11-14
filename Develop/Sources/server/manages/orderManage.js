@@ -2,6 +2,7 @@
  * Created by Cao Khanh on 21/10/2015.
  */
 var _ = require('lodash');
+var config = require('../config/config');
 
 module.exports = function (app) {
     var db = app.get('models');
@@ -177,40 +178,87 @@ module.exports = function (app) {
     var post = function (req, res, next) {
         var newOrder = {};
 
+        /*
+         * By HuyTDH - 09/10/2015
+         * This function is used to create ID for order       
+         */
         var str = "000000" + parseInt(Math.random()*1000000);
         var formatStr = str.substr(str.length - 6);
         var newOrderID = "OD" + formatStr;        
         newOrder.orderid = newOrderID;
-       // console.log("ORRDDDDDDDD=========",newOrderID);
+        ////////
 
-        console.log("=============req.body===============",req.body);
+        /*
+         * By KhanhKC - 14/11/2015
+         * This function is used to caculate Ship fee       
+         */
+         var fee = 0;
+         var district = req.body.selectedDistrict;
+         var innerCity = config.fileterLocation.in;
+
+         if(innerCity.indexOf(district)> -1){
+            if(req.body.order.ordertypeid == '1'){
+                fee = 10000;
+            }else {
+                fee = 20000;
+            }                
+        }else {
+            if(req.body.order.ordertypeid == '1'){
+                fee = 20000;
+            }else {
+                fee = 30000;
+            }       
+        }
+        ///////
+
+        /*
+         * By KhanhKC - 14/11/2015
+         * This function is used to caculate total weight of order       
+        */
+        var totalWeight = 0;
+        for(var i = 0; i <req.body.goods.length;i++){
+            totalWeight = totalWeight + req.body.goods[i].weight*req.body.goods[i].amount;
+        }
+        ///////
+
+        /*
+         * By KhanhKC - 14/11/2015
+         * This function is used to caculate over weight fee of order       
+        */
+        var overWeightFee = 0;        
+        if(totalWeight > 4000 ){
+            //console.log("===========totalWeight=======", totalWeight);
+            if(innerCity.indexOf(district)> -1){
+                overWeightFee = (totalWeight - 4000)*2*2;
+                //console.log("=============In=========");
+            }else {
+                overWeightFee = (totalWeight - 4000)*2*2.5;
+                //console.log("=============Out=========");
+            }
+            
+        }
+        ///////
+        //console.log("=============fee===============",fee);
+        //console.log("=============overWeightFee===============",overWeightFee);
+        //console.log("=============req.body===============",req.body);
         newOrder.storeid = req.body.order.storeid;
         newOrder.ordertypeid = req.body.order.ordertypeid;
         newOrder.pickupaddress = req.body.order.pickupaddress;
         newOrder.deliveryaddress = req.body.order.deliveryaddress;
-        //newOrder.pickupaddress = null;
-        //newOrder.deliverydate = null;
-        //newOrder.completedate = null;
         newOrder.recipientphone = req.body.order.recipientphone;
         newOrder.recipientname = req.body.order.recipientname;
-        //newOrder.ledgerid = null;
         newOrder.statusid = req.body.order.statusid;
         newOrder.ispending = 'false';
         newOrder.isdraff = req.body.order.isdraff;        
-        newOrder.createdate = new Date();        
+        newOrder.createdate = new Date(); 
+        newOrder.fee = fee; 
+        newOrder.overweightfee = overWeightFee;      
         if(!_.isNumber(req.body.order.cod)){
             newOrder.cod = 0;
         }else {
             newOrder.cod = req.body.order.cod;
         }
-
-        if(!_.isNumber(req.body.order.fee)){
-            newOrder.fee = 0;
-        }else {
-            newOrder.fee = req.body.order.fee;
-        } 
-       
-       console.log("==============11===============");
+        //console.log("==============11===============");
        ////////////
         var str = "000000" + parseInt(Math.random()*1000000);
         var formatStr = str.substr(str.length - 6);                    
@@ -242,16 +290,16 @@ module.exports = function (app) {
         'orderid' : newOrder.orderid,
         'codeid' : newCodeID++
        };
-       console.log("==============22==============");
+       //console.log("==============22==============");
        
         return db.order.postOneOrder(newOrder)
             .then(function () {
-                console.log("==============33==============");
+                //console.log("==============33==============");
                 db.confirmationcode.postOneCode(code1);
                 db.confirmationcode.postOneCode(code2);
                 db.confirmationcode.postOneCode(code3);
                 db.confirmationcode.postOneCode(code4);
-                console.log("==============44==============");
+                //console.log("==============44==============");
                 for(var i = 0; i < req.body.goods.length; i++){
                     var good = {};
                     var str = "000000" + parseInt(Math.random()*1000000);
@@ -292,7 +340,7 @@ module.exports = function (app) {
                     good.description = req.body.goods[i].description;
 
                     db.goods.postOneGood(good);
-                    console.log("==============55==============");
+                    //console.log("==============55==============");
                 }
 
             })
