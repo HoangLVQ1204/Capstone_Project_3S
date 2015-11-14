@@ -1,4 +1,60 @@
-<div>
-    List notification
+
+
+
+
+<div>	
+    <!--
+	//////////////////////////////////////////////////////////////////////////
+	//////////     MODAL NOTIFICATION     //////////
+	//////////////////////////////////////////////////////////////////////
+	-->	
+	<div class="modal-body" style="padding:10">
+			<div class="widget-im notification">
+					<ul>								
+							<li ng-repeat="notification in listNotifications">	
+								<div ng-include src="notification.type" ui-sref="{{ notification.url }}"></div>
+							</li>								
+					</ul>
+			</div>
+			<!-- //widget-im-->
+	</div>
+	<div class="panel-body align-lg-center">
+	
+			<ul class="pagination">
+					<li><a href="#"><i class="fa fa-angle-left"></i></a></li>
+					<li ng-repeat="item in pageNumbers" ng-class="{active: item.active}" ng-click="selectPage(item)"><a href="#">{{ item.id }}</a></li>
+					<li><a href="#"><i class="fa fa-angle-right"></i></a></li>
+			</ul>			
+	</div>	
+	<!-- //modal-body-->	
+
+	
+	<script type="text/ng-template" id="info">
+		<section class="thumbnail-in">
+				<div class="widget-im-tools tooltip-area pull-right">
+						<span>
+								<time class="timeago" datetime="2013-11-17T14:24:17Z">{{ notification.createddate }}</time>
+						</span>						
+				</div>
+				<h4>{{ notification.title }}</h4>
+				<div class="im-thumbnail bg-theme"><i class="fa fa-bell-o"></i></div>
+				<div class="pre-text">{{ notification.content }}</div>
+		</section>		
+	</script>
+
+	
+	<script type="text/ng-template" id="issue">		
+		<section class="thumbnail-in">			
+				<div class="widget-im-tools tooltip-area pull-right">
+						<span>
+								<time class="timeago" datetime="2013-11-17T01:24:17Z">{{ notification.createddate }}</time>
+						</span>
+						
+				</div>
+				<h4>{{ notification.title }}</h4>
+				<div class="im-thumbnail bg-warning"><i class="fa fa-exclamation-triangle"></i></div>
+				<div class="pre-text">{{ notification.content }}</div>			
+		</section>
+	</script>
 </div>
 

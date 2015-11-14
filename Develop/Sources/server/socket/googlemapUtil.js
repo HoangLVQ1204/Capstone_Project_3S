@@ -62,7 +62,7 @@ api.getClosestShippers = function(store, shippers, filter) {
 	var validShippers = shippers.filter(function(shipper) {
 		return (shipper.isConnected === filter.isConnected && shipper.numTasks < filter.maxTasks);
 	});
-
+	console.log('validShippers', validShippers);
 	return api.getDistanceFromOneToMany(store, validShippers)
 	.then(function(results) {		
 		// filter by radius

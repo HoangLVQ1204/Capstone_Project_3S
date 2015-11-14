@@ -107,37 +107,48 @@ module.exports = function (app) {
             })
     };
 
-    var paramOrderId = function (req, res, next, orderid) {
+    var paramOrderId = function (req, res, next, detailtaskid) {
         var Order = db.order;
         var OrderStatus = db.orderstatus;
         var Goods = db.goods;
-        Order.getOrderDetailById(OrderStatus, Goods, orderid)
+        var Task = db.task;
+        var taskid = detailtaskid;
+        var shipperid = 'SP000001';
+        Order.getOrderDetailById(detailtaskid, shipperid, OrderStatus, Goods, Task)
             .then(function (rs) {
                 if (rs) {
                     rs = rs.toJSON();
-                    req.detail = {
-                        code: rs.orderid,
-                        statusid: rs.statusid,
-                        storeid: rs.storeid,
-                        ordertypeid: rs.ordertypeid,
-                        pickupaddress: rs.pickupaddress,
-                        deliveryaddress: rs.deliveryaddress,
-                        pickupdate: rs.pickupdate,
-                        deliverydate: rs.deliverydate,
-                        recipientphone: rs.recipientphone,
-                        recipientname: rs.recipientname,
-                        fee: rs.fee,
-                        cod: rs.cod,
-                        pickupaddresscoordination: rs.pickupaddresscoordination.split(','),
-                        deliveryaddresscoordination: rs.deliveryaddresscoordination.split(','),
-                        status: rs.orderstatus.status, // No need to get status name
-                        //stockid: 1, // Need to get stock info (join with stock)
-                        weight: rs.goods[0].weight,
-                        lengthsize: rs.goods[0].lengthsize,
-                        widthsize: rs.goods[0].widthsize,
-                        heightsize: rs.goods[0].heightsize,
-                        description: rs.goods[0].description
-                    };
+                    var type = rs.tasks[0].typeid;
+                    if(rs.tasks[0].typeid == 1){
+                        delete rs['deliveryaddress'];
+                        delete rs['completedate'];
+                    }
+                    var statuslist = configConstant.statusList[type];
+                    req.statuslist = statuslist;
+                    req.detail = rs;
+                    //req.details = {
+                    //    code: rs.orderid,
+                    //    statusid: rs.statusid,
+                    //    storeid: rs.storeid,
+                    //    ordertypeid: rs.ordertypeid,
+                    //    pickupaddress: rs.pickupaddress,
+                    //    deliveryaddress: rs.deliveryaddress,
+                    //    pickupdate: rs.pickupdate,
+                    //    deliverydate: rs.deliverydate,
+                    //    recipientphone: rs.recipientphone,
+                    //    recipientname: rs.recipientname,
+                    //    fee: rs.fee,
+                    //    cod: rs.cod,
+                    //    //pickupaddresscoordination: rs.pickupaddresscoordination.split(','),
+                    //    //deliveryaddresscoordination: rs.deliveryaddresscoordination.split(','),
+                    //    status: rs.orderstatus.status, // No need to get status name
+                    //    //stockid: 1, // Need to get stock info (join with stock)
+                    //    weight: rs.goods[0].weight,
+                    //    lengthsize: rs.goods[0].lengthsize,
+                    //    widthsize: rs.goods[0].widthsize,
+                    //    heightsize: rs.goods[0].heightsize,
+                    //    description: rs.goods[0].description
+                    //};
                     next();
                 } else {
                     next(new Error('No order with id' + orderid));
@@ -148,30 +159,16 @@ module.exports = function (app) {
     };
 
     var getDetail = function (req, res, next) {
-        return res.status(200).json(req.detail);
+        var rs = {
+            "detail": req.detail,
+            "statuslist": req.statuslist
+        };
+        return res.status(200).json(rs);
     };
 
-    var getExpressStatusList = function (req, res, next) {
-        var rs = configConstant.expressStatusList;
+    var getOrderStatusList = function (req, res, next) {
+        var rs = configConstant.statusList;
         return res.status(200).json(rs);
-
-        //// START TEST % DUPLICATE
-        //var list = [];
-        //var sample = 1*500;
-        //var len = 10*1000;
-        //for(var i = 0;  i < sample; i++){
-        //    var d = Math.random();
-        //    list.push(parseInt(d*len));
-        //}
-        //list.sort();
-        //var count = 0;
-        //for(var i = 0;  i < list.length - 1; i++){
-        //    if(list[i]==list[i+1]) count++;
-        //}
-        //rs = "SH" + parseFloat(count*100/sample);
-        //return res.status(200).json(100*count/sample+" % duplicate");
-        //// END TEST % DUPLICATE
-
     };
 
     var nextStep = function (req, res, next) {
@@ -182,18 +179,32 @@ module.exports = function (app) {
         var data = _.cloneDeep(req.body);
         if (data) {
             var key = data.code;
-            Order.shipperGetOneOrder(key, shipperid, Task).then(function (orderObj) {
+            var taskid = data.taskid;
+            Order.shipperGetOneOrder(taskid, key, shipperid, Task).then(function (orderObj) {
                 if (orderObj) {
+                    // DATA TO SEND SOCKET
+                    var receiver = {
+                        type: 'store',
+                        clientID: orderObj.storeid
+                    };
+                    var msg = {
+                        shipper: shipperid,
+                        order: orderObj.orderid,
+                        content: 'change order status',
+                        type: 'Inform'
+                    };
+
+                    // DATA TO RESPONSE CLIENT
+                    var oldStatus = orderObj.statusid;
                     var nextStatus = 0;
                     var isRequireCode = false;
-                    // Need to check is canceled
-                    // Need to check is canceled
-                    // Need to check is canceled
-                    // Need to check is canceled
-                    // Need to check is canceled
-                    var statusList = (orderObj.ordertypeid == configConstant.orderType.EXPRESS_TYPE) ? configConstant.expressStatusList : configConstant.normalStatusList;
+                    // :TODO Need to check is canceled
+                    // :TODO Need to check is canceled
+                    var statusList = configConstant.statusList[orderObj.tasks[0].typeid];
+                    var taskBegin = statusList[0];
+                    var taskDone = statusList[statusList.length - 1];
                     for (var i = 0; i < statusList.length; i++) {
-                        st = statusList[i];
+                        var st = statusList[i];
                         if (orderObj.statusid < st.statusid) {
                             nextStatus = st.statusid;
                             break;
@@ -202,19 +213,32 @@ module.exports = function (app) {
                             isRequireCode = st.requiredcode;
                         }
                     }
+                    var completeDate = (nextStatus == 7)? new Date(): orderObj.completedate;
                     if (isRequireCode) {
-                        db.confirmationcode.findOne({
-                            where: {
-                                orderid: key,
-                                codecontent: data.confirmcode,
-                                typeid: orderObj.statusid
-                            }
-                        }).then(function (codeObj) {
+                        db.confirmationcode.checkCode(key, data.confirmcode, orderObj.statusid)
+                            .then(function (codeObj) {
                             if (codeObj) {
                                 orderObj.update({
-                                    statusid: nextStatus
+                                    statusid: nextStatus,
+                                    completedate: completeDate
                                 }).then(function (rs) {
-                                    return res.status(200).json("Update successfully!");
+                                    //:TODO socket need to check null
+                                    //server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
+                                    if(oldStatus == taskBegin.statusid){
+                                        Task.updateTaskStatus(2, taskid, shipperid).then(function (ok) {
+                                            return res.status(200).json("Your task was active!");
+                                        },function(er){
+                                            return res.status(400).json("Sorry! Something went wrong!");
+                                        });
+                                    }else if(nextStatus == taskDone.statusid){
+                                        Task.updateTaskStatus(3,taskid,shipperid).then(function(ok){
+                                            return res.status(200).json("Your task was done!");
+                                        },function(er){
+                                            return res.status(400).json("Sorry! Something went wrong!");
+                                        });
+                                    }else{
+                                        return res.status(200).json("Your order has been moved to next step! Continue your work!");
+                                    }
                                 }, function (er) {
                                     return res.status(400).json("Update failed!");
                                 });
@@ -226,13 +250,35 @@ module.exports = function (app) {
                         });
                     } else {
                         orderObj.update({
-                            statusid: nextStatus
+                            statusid: nextStatus,
+                            completedate: completeDate
                         }).then(function (rs) {
-                            return res.status(200).json("Update successfully!");
+                            //:TODO socket need to check null
+                            //server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
+                            var taskBegin = statusList[0];
+                            var taskDone = statusList[statusList.length - 1];
+                            if(oldStatus == taskBegin.statusid){
+                                Task.updateTaskStatus(2,taskid,shipperid).then(function(ok){
+                                    console.log("/////////////////////////////////////////////1");
+                                    return res.status(200).json("Your task was active!");
+                                },function(er){
+                                    return res.status(400).json("Sorry! Something went wrong!");
+                                });
+                            }else if(nextStatus == taskDone.statusid){
+                                Task.updateTaskStatus(3,taskid,shipperid).then(function(ok){
+                                    return res.status(200).json("Your task was done!");
+                                },function(er){
+                                    return res.status(400).json("Sorry! Something went wrong!");
+                                });
+                            }else{
+                                return res.status(200).json("Your order has been moved to next step! Continue your work!");
+                            }
                         }, function (er) {
                             return res.status(400).json("Update failed!");
                         });
                     }
+                }else{
+                    return res.status(400).json("Update failed!");
                 }
             }, function () {
                 return res.status(400).json("Can't find this order!");
@@ -670,9 +716,7 @@ module.exports = function (app) {
     var testSk = function(req, res, next){
         var receiver = {
             type: 'store',
-            clientID: {
-                storeID: {storeid: 'str667', latitude: '215615', longitude: '-545151'}
-            }
+            clientID: 'STR001'
         };
         var msg = {
             shipper: "sphuy",
@@ -681,8 +725,6 @@ module.exports = function (app) {
         };
         server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
         var rs = server.socket.stores;
-        //addOrder(1,2,3);
-        //console.log("SERVER==================",serverio);
         res.status(200).json(rs);
     };
 
@@ -691,7 +733,7 @@ module.exports = function (app) {
         getHistory: getHistory,
         getDetail: getDetail,
         paramOrderId: paramOrderId,
-        getExpressStatusList: getExpressStatusList,
+        getOrderStatusList: getOrderStatusList,
         nextStep: nextStep,
         nextStepCode: nextStepCode,
         createIssue: createIssue,

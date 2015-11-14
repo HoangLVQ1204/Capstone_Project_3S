@@ -71,6 +71,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
                 console.log('shipper add order', data);
                 // console.log('after add order', mapService.getStoreMarkers(), mapService.getCustomerMarkers(), mapService.getOrders());
             });
+        
     });
 
     api.getCurrentUser = function() {
@@ -141,8 +142,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
 
     api.registerSocket = function(){
         api.getCurrentUser()
-            .then(function(user) {
-                socketService.initSocket();
+            .then(function(user) {                
                 mapService.addShipper(user)
                     .then(function() {
                         console.log("---TEST SEND SOCKET---");

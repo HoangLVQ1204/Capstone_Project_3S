@@ -165,7 +165,7 @@ angular.module('app', [
     $httpProvider.interceptors.push('jwtInterceptor');
 
     uiGmapGoogleMapApiProvider.configure({
-        key: 'AIzaSyD6DZIeop4shXgZWtMaTYbBoeC8CdbbRPw',
+        key: 'AIzaSyD8_7oskfESbIw6fpTmYG9h68cRONrjCPc',
         v  : '3.20',
         libraries: 'geometry,visualization,drawing,places'
     })
@@ -188,11 +188,11 @@ angular.module('app', [
 
             }
 
-            if(authService.isRightRole(config.role.shipper)){
-                socketShipper.registerSocket();
-                $state.go("mapdemo");
+             if(authService.isRightRole(config.role.shipper)){
+                 socketShipper.registerSocket();
+                 $state.go("mapdemo");
 
-            }
+             }
         })        
 
     }else{

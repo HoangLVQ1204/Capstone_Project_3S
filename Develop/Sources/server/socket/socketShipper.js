@@ -10,6 +10,7 @@ module.exports = function(socket, io) {
     socket.on('disconnect', function() {
         console.log('Shipper', socket.id, 'disconnect');
         var shipper = io.getShipperBySocketID(socket.id);
+        if (!shipper) return;
         var orders = io.getOrdersOfShipper(shipper.shipperID);
         orders.forEach(function(e) {
             e.orderInfo.isPending = true;
