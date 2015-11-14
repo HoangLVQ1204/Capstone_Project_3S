@@ -24,6 +24,12 @@ app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService',
               socketShipper.registerSocket();
               $state.go('app.tasks');
               $ionicLoading.hide();
+            } else {
+              authService.signOut();
+              $ionicLoading.hide();
+              showError({
+                message: 'Username or Password is invalid'
+              });
             }
           });
       })
