@@ -112,7 +112,8 @@ module.exports = function (app) {
         var OrderStatus = db.orderstatus;
         var Goods = db.goods;
         var Task = db.task;
-        var taskid = detailtaskid;
+        //var shipper = _.cloneDeep(req.user);
+        //var shipperid = shipper.username;
         var shipperid = 'SP000001';
         Order.getOrderDetailById(detailtaskid, shipperid, OrderStatus, Goods, Task)
             .then(function (rs) {
@@ -716,7 +717,7 @@ module.exports = function (app) {
     var testSk = function(req, res, next){
         var receiver = {
             type: 'store',
-            clientID: 'STR001'
+            clientID: 'STR003'
         };
         var msg = {
             shipper: "sphuy",
