@@ -44,7 +44,7 @@ module.exports = function(socket, io) {
     socket.on('shipper:disconnect', function() {        
     });
     
-    socket.on('shipper:choose:express', function(data) {        
+    socket.on('shipper:choose:express', function(data) {
     	io.forward(data.sender, data.receiver, data.msg, 'store:find:shipper');
     });
 
@@ -56,5 +56,10 @@ module.exports = function(socket, io) {
         console.log('socketShipper recieve socket send issue', data);
         console.log('quyen', data.receiver);
         io.forward(data.sender, data.receiver, data.msg, 'admin:issue');
+    });
+    socket.on('shipper:update:status', function(data) {
+        var shipper = io.getOneShipper(data.msg.shipperID);
+        io.updateStatusShipper(shipper);
+        console.log(shipper);
     });
 }

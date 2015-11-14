@@ -6,7 +6,7 @@
 // 'starter.manages' is found in manages.js
 var app = angular.module('starter', ['ionic', 'ngCordova','uiGmapgoogle-maps','angular-jwt']);
 
-  app.run(['$ionicPlatform', 'authService', '$rootScope', '$location', 'socketShipper', function ($ionicPlatform, authService, $rootScope, $location, socketShipper) {
+  app.run(['$ionicPlatform', 'authService', '$rootScope', '$location', 'socketShipper', 'socketService', function ($ionicPlatform, authService, $rootScope, $location, socketShipper, socketService) {
     $ionicPlatform.ready(function () {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
@@ -29,13 +29,14 @@ var app = angular.module('starter', ['ionic', 'ngCordova','uiGmapgoogle-maps','a
 
     ////Check Is firt time sign in
     if (authService.isLogged()) {
-      socketShipper.registerSocket();
-      $rootScope.isGrabbing = false;
-      $location.path('/app/tasks');
-      $rootScope.$apply();
+      socketService.authenSocket()
+        .then(function(){
+          socketShipper.registerSocket();
+          $rootScope.isGrabbing = false;
+          $location.path('/app/tasks');
+        });
     } else {
       $location.path('/sign-in');
-      $rootScope.$apply();
     }
 
   }]);
