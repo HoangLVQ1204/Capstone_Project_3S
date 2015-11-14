@@ -31,7 +31,7 @@ angular.module('app')
                     type: 'issue',
                     title: 'big issue',
                     content: 'This is big issue',
-                    url: 'bigissue',
+                    url: '/notidemo',
                     createddate: 'date 1'
                 };
             }

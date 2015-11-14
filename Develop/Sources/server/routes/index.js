@@ -10,6 +10,7 @@ var ledgerRoutes = require('./api/ledgerRoutes');
 var taskRoutes = require('./api/taskRoutes');
 var issueRoutes = require('./api/issueRoutes');
 var provinceRoutes = require('./api/provinceRoutes');
+var notificationRoutes = require('./api/notificationRoutes');
 var storeRoutes = require('./api/storeRoutes');
 module.exports = function (app) {
     loginRoutes(app);
@@ -21,5 +22,6 @@ module.exports = function (app) {
     taskRoutes(app);
     issueRoutes(app);
     provinceRoutes(app);   
+    notificationRoutes(app);
 }
 

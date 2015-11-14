@@ -71,6 +71,20 @@
     {
       "url": "/api/getProvince",
       "role": [2]
-    }
+    },
 
+    {
+      "url": "/api/notifications",
+      "role": [1,2,3]
+    },
+    
+    {
+      "url": "/api/notifications/total",
+      "role": [1,2,3]
+    },
+
+    {
+      "url": "/api/notifications/:notification_id",
+      "role": [1,2,3]
+    }
 ]
