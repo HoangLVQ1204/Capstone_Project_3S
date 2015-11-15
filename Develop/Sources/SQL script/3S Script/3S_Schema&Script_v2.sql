@@ -21,6 +21,7 @@ DROP TABLE GeneralLedger;
 DROP TABLE ManageStore;
 DROP TABLE Store;
 DROP TABLE Profile;
+DROP TABLE notification;
 DROP TABLE "user";
 DROP TABLE workingstatus;
 DROP TABLE UserStatus;

@@ -29,7 +29,13 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(db) {
       },
       postOneCode: function(newCode){
-        return confirmationcode.build(newCode).save();
+        return confirmationcode.build(
+          {
+            codecontent: newCode.codecontent,
+            typeid: newCode.typeid,
+            orderid: newCode.orderid
+          }
+        ).save();
       },
 
       deleteConfirmCode: function (orderid) {
