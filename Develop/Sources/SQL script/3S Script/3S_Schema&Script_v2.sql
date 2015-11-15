@@ -22,6 +22,7 @@ DROP TABLE GeneralLedger;
 DROP TABLE ManageStore;
 DROP TABLE Store;
 DROP TABLE Profile;
+DROP TABLE notification;
 DROP TABLE "user";
 DROP TABLE workingstatus;
 DROP TABLE UserStatus;
@@ -97,6 +98,29 @@ CREATE SEQUENCE "public"."task_taskid_seq"
  CACHE 1;
 
 -- ----------------------------
+-- Sequence structure for goods_goodsid_seq
+-- ----------------------------
+DROP SEQUENCE IF EXISTS "public"."goods_goodsid_seq";
+CREATE SEQUENCE "public"."goods_goodsid_seq"
+ INCREMENT 1
+ MINVALUE 1
+ MAXVALUE 9223372036854775807
+ START 1
+ CACHE 1;
+
+ -- ----------------------------
+-- Sequence structure for confirmationcode_codeid_seq
+-- ----------------------------
+DROP SEQUENCE IF EXISTS "public"."confirmationcode_codeid_seq";
+CREATE SEQUENCE "public"."confirmationcode_codeid_seq"
+ INCREMENT 1
+ MINVALUE 1
+ MAXVALUE 9223372036854775807
+ START 1
+ CACHE 1;
+
+
+-- ----------------------------
 -- Table structure for bannedhistorylog
 -- ----------------------------
 DROP TABLE IF EXISTS "public"."bannedhistorylog";
@@ -122,7 +146,7 @@ WITH (OIDS=FALSE)
 -- ----------------------------
 DROP TABLE IF EXISTS "public"."confirmationcode";
 CREATE TABLE "public"."confirmationcode" (
-"codeid" int4 NOT NULL,
+"codeid" int4 DEFAULT nextval('confirmationcode_codeid_seq'::regclass) NOT NULL,
 "codecontent" int4,
 "typeid" int4,
 "orderid" varchar(8) COLLATE "default"
@@ -250,7 +274,7 @@ INSERT INTO "public"."generalledger" VALUES ('9', 'AD000001', 'STR004', '-10000'
 -- ----------------------------
 DROP TABLE IF EXISTS "public"."goods";
 CREATE TABLE "public"."goods" (
-"goodsid" int4 NOT NULL,
+"goodsid" int4 DEFAULT nextval('goods_goodsid_seq'::regclass) NOT NULL,
 "goodsname" varchar(20) COLLATE "default",
 "orderid" varchar(8) COLLATE "default",
 "stockid" int4,
@@ -394,6 +418,7 @@ CREATE TABLE "public"."order" (
 "isdraff" bool,
 "fee" int8,
 "cod" int8,
+"overweightfee" int8,
 "pickupaddresscoordination" text COLLATE "default",
 "deliveryaddresscoordination" text COLLATE "default"
 )
@@ -404,24 +429,24 @@ WITH (OIDS=FALSE)
 -- ----------------------------
 -- Records of order
 -- ----------------------------
-INSERT INTO "public"."order" VALUES ('OD090909', 'STR001', '1', 'Quận Long Biên - Hà Nội', 'Quận Thanh Xuân - Hà Nội', '2015-11-09', '2015-11-09', null, '0911212122', 'Anh Khanh', null, '1', 'f', 'f', '50000', '10000', '514515', '5151');
-INSERT INTO "public"."order" VALUES ('OD122122', 'STR002', '1', 'Thị xã Sơn Tây - Hà Nội', 'Huyện Phúc Thọ- Hà Nội', '2015-11-09', '2015-11-09', null, '0944512111', 'Chi Nghia', null, '4', 'f', 'f', '100000', '0', '51251514', '5151');
-INSERT INTO "public"."order" VALUES ('OD122222', 'STR002', '1', 'Huyện Gia Lâm - Hà Nội', 'Huyện Đông Anh - Hà Nội', '2015-11-09', '2015-11-09', null, '0944151544', 'Anh Kien', null, '2', 'f', 'f','50000', '500000', '215454', '515415');
-INSERT INTO "public"."order" VALUES ('OD123322', 'STR002', '1', 'Quận Tây Hồ - Hà Nội', 'Quận Cầu Giấy - Hà Nội', '2015-11-09', '2015-11-09', '2015-11-11', '0165554222', 'Anh Loang', null, '7', 'f', 'f','10000', '20000', '515151', '515151');
-INSERT INTO "public"."order" VALUES ('OD123451', 'STR003', '1', 'Từ Liêm - Hà Nội', 'Cầu Giấy - Hà Nội', '2015-11-04', '2015-11-06', '2015-11-07', '0911241212', 'Anh Hoàng', '1', '7', 'f', 'f', '50000', '20000', '3524231545115', '54545454');
-INSERT INTO "public"."order" VALUES ('OD154444', 'STR002', '1', 'Huyện Từ Liêm - Hà Nội', 'Huyện Thanh Trì - Hà Nội', '2015-11-09', '2015-11-08', null, '0955412112', 'Anh Hoang', null, '1', 'f', 'f', '10000', '5000', '5515616', '5151515');
-INSERT INTO "public"."order" VALUES ('OD154515', 'STR004', '1', 'Quận Hoàng Mai - Hà Nội', 'Quận Thanh Xuân - Hà Nội', '2015-11-03', '2015-11-02', '2015-11-04', '0912311221', 'Anh Nam', '7', '7', 'f', 'f', '20000', '200000', '2121515', '216156151');
-INSERT INTO "public"."order" VALUES ('OD190271', 'STR001', '1', 'Huyện Từ Liêm - Hà Nội', 'Huyện Thanh Trì - Hà Nội', '2015-11-09', '2015-11-09', null, '01645445454', 'Anh Tam', null, '2', 'f', 'f', '60000', '400000', '5454', '5454');
-INSERT INTO "public"."order" VALUES ('OD192851', 'STR001', '2', 'Quận Hà Đông - Hà Nội', 'Huyện Ba Vì - Hà Nội', '2015-11-11', '2015-11-11', null, '0911215455', 'Anh Fan', null, '6', 'f', 'f', '20000', '100000', '5215151', '51515');
-INSERT INTO "public"."order" VALUES ('OD515645', 'STR004', '1', 'Quận Cầu Giấy - Hà Nội', 'Quận Tây Hồ - Hà Nội', '2015-11-03', '2015-11-02', '2015-11-04', '0165554512', 'Anh Hải', null, '7', 'f', 'f', '100000', '50000', '155111', '561155611');
-INSERT INTO "public"."order" VALUES ('OD555461', 'STR004', '2', 'Huyện Thanh Trì - Hà Nội', 'Huyện Gia Lâm - Hà Nội', '2015-11-11', '2015-11-11', null, '0165545555', 'Anh Huy', null, '2', 'f', 'f','50000', '500000', '545641', '65415615');
-INSERT INTO "public"."order" VALUES ('OD666121', 'STR002', '2', 'Quận Hai Bà Trưng - Hà Nội', 'Quận Ba Đình - Hà Nội', '2015-11-11', '2015-11-11', null, '0941121212', 'Anh Manh', null, '5', 'f', 'f','38000', '80000', '5451541', '515151');
-INSERT INTO "public"."order" VALUES ('OD666612', 'STR001', '1', 'Hoàn Kiếm - Hà Nội', 'Hai Bà Trưng - Hà Nội', '2015-11-04', '2015-11-03', '2015-11-07', '01625456455', 'Anh Kinh', '2', '7', 'f', 'f','50000', '100000', '4545614564', '564561564564');
-INSERT INTO "public"."order" VALUES ('OD828101', 'STR003', '1', 'Quận Hoàn Kiếm - Hà Nội', 'Quận Đống Đa - Hà Nội', '2015-11-09', '2015-11-09', null, '0944545421', 'Anh Tien', null, '5', 'f', 'f','20000', '0', '515645', '5454');
-INSERT INTO "public"."order" VALUES ('OD872818', 'STR003', '1', 'Huyện Thanh Trì - Hà Nội', 'Quận Thanh Xuân - Hà Nội', '2015-11-09', '2015-11-09', null, '0168445455', 'Anh Anhki', null, '2', 'f', 'f','50000', '0', '54545', '54564');
-INSERT INTO "public"."order" VALUES ('OD901001', 'STR003', '2', 'Huyện Đan Phượng - Hà Nội', 'Huyện Hoài Đức - Hà Nội', '2015-11-11', '2015-11-11', null, '01644511122', 'Anh Dien', null, '2', 'f', 'f','50000', '100000', '656556', '6565');
-INSERT INTO "public"."order" VALUES ('OD981921', 'STR001', '1', 'Huyện Đông Anh - Hà Nội', 'Huyện Sóc Sơn - Hà Nội', '2015-11-10', '2015-11-10', '2015-11-11', '09445211542', 'Anh Ranh', null, '7', 'f', 'f','80000', '900000', '474454', '1111223');
-INSERT INTO "public"."order" VALUES ('OD999811', 'STR002', '1', 'Huyện Đan Phượng - Hà Nội', 'Huyện Hoài Đức - Hà Nội', '2015-11-09', '2015-11-09', '2015-11-13', '0955412121', 'Chi Anh', null, '8', 'f', 'f','40000', '0', '5156456', '545454');
+INSERT INTO "public"."order" VALUES ('OD090909', 'STR001', '1', 'Quận Long Biên - Hà Nội', 'Quận Thanh Xuân - Hà Nội', '2015-11-09', '2015-11-09', null, '0911212122', 'Anh Khanh', null, '1', 'f', 'f', '50000', '10000','0', '514515', '5151');
+INSERT INTO "public"."order" VALUES ('OD122122', 'STR002', '1', 'Thị xã Sơn Tây - Hà Nội', 'Huyện Phúc Thọ- Hà Nội', '2015-11-09', '2015-11-09', null, '0944512111', 'Chi Nghia', null, '4', 'f', 'f', '100000', '0','0', '51251514', '5151');
+INSERT INTO "public"."order" VALUES ('OD122222', 'STR002', '1', 'Huyện Gia Lâm - Hà Nội', 'Huyện Đông Anh - Hà Nội', '2015-11-09', '2015-11-09', null, '0944151544', 'Anh Kien', null, '2', 'f', 'f','50000', '500000','0', '215454', '515415');
+INSERT INTO "public"."order" VALUES ('OD123322', 'STR002', '1', 'Quận Tây Hồ - Hà Nội', 'Quận Cầu Giấy - Hà Nội', '2015-11-09', '2015-11-09', '2015-11-11', '0165554222', 'Anh Loang', null, '7', 'f', 'f','10000', '20000','0', '515151', '515151');
+INSERT INTO "public"."order" VALUES ('OD123451', 'STR003', '1', 'Từ Liêm - Hà Nội', 'Cầu Giấy - Hà Nội', '2015-11-04', '2015-11-06', '2015-11-07', '0911241212', 'Anh Hoàng', '1', '7', 'f', 'f', '50000', '20000','0', '3524231545115', '54545454');
+INSERT INTO "public"."order" VALUES ('OD154444', 'STR002', '1', 'Huyện Từ Liêm - Hà Nội', 'Huyện Thanh Trì - Hà Nội', '2015-11-09', '2015-11-08', null, '0955412112', 'Anh Hoang', null, '1', 'f', 'f', '10000', '5000','0', '5515616', '5151515');
+INSERT INTO "public"."order" VALUES ('OD154515', 'STR004', '1', 'Quận Hoàng Mai - Hà Nội', 'Quận Thanh Xuân - Hà Nội', '2015-11-03', '2015-11-02', '2015-11-04', '0912311221', 'Anh Nam', '7', '7', 'f', 'f', '20000', '200000','0', '2121515', '216156151');
+INSERT INTO "public"."order" VALUES ('OD190271', 'STR001', '1', 'Huyện Từ Liêm - Hà Nội', 'Huyện Thanh Trì - Hà Nội', '2015-11-09', '2015-11-09', null, '01645445454', 'Anh Tam', null, '2', 'f', 'f', '60000', '400000','0', '5454', '5454');
+INSERT INTO "public"."order" VALUES ('OD192851', 'STR001', '2', 'Quận Hà Đông - Hà Nội', 'Huyện Ba Vì - Hà Nội', '2015-11-11', '2015-11-11', null, '0911215455', 'Anh Fan', null, '6', 'f', 'f', '20000', '100000','0', '5215151', '51515');
+INSERT INTO "public"."order" VALUES ('OD515645', 'STR004', '1', 'Quận Cầu Giấy - Hà Nội', 'Quận Tây Hồ - Hà Nội', '2015-11-03', '2015-11-02', '2015-11-04', '0165554512', 'Anh Hải', null, '7', 'f', 'f', '100000', '50000','0', '155111', '561155611');
+INSERT INTO "public"."order" VALUES ('OD555461', 'STR004', '2', 'Huyện Thanh Trì - Hà Nội', 'Huyện Gia Lâm - Hà Nội', '2015-11-11', '2015-11-11', null, '0165545555', 'Anh Huy', null, '2', 'f', 'f','50000', '500000','0', '545641', '65415615');
+INSERT INTO "public"."order" VALUES ('OD666121', 'STR002', '2', 'Quận Hai Bà Trưng - Hà Nội', 'Quận Ba Đình - Hà Nội', '2015-11-11', '2015-11-11', null, '0941121212', 'Anh Manh', null, '5', 'f', 'f','38000', '80000','0', '5451541', '515151');
+INSERT INTO "public"."order" VALUES ('OD666612', 'STR001', '1', 'Hoàn Kiếm - Hà Nội', 'Hai Bà Trưng - Hà Nội', '2015-11-04', '2015-11-03', '2015-11-07', '01625456455', 'Anh Kinh', '2', '7', 'f', 'f','50000', '100000','0', '4545614564', '564561564564');
+INSERT INTO "public"."order" VALUES ('OD828101', 'STR003', '1', 'Quận Hoàn Kiếm - Hà Nội', 'Quận Đống Đa - Hà Nội', '2015-11-09', '2015-11-09', null, '0944545421', 'Anh Tien', null, '5', 'f', 'f','20000', '0','0', '515645', '5454');
+INSERT INTO "public"."order" VALUES ('OD872818', 'STR003', '1', 'Huyện Thanh Trì - Hà Nội', 'Quận Thanh Xuân - Hà Nội', '2015-11-09', '2015-11-09', null, '0168445455', 'Anh Anhki', null, '2', 'f', 'f','50000','30000','0', '54545', '54564');
+INSERT INTO "public"."order" VALUES ('OD901001', 'STR003', '2', 'Huyện Đan Phượng - Hà Nội', 'Huyện Hoài Đức - Hà Nội', '2015-11-11', '2015-11-11', null, '01644511122', 'Anh Dien', null, '2', 'f', 'f','50000', '100000','0', '656556', '6565');
+INSERT INTO "public"."order" VALUES ('OD981921', 'STR001', '1', 'Huyện Đông Anh - Hà Nội', 'Huyện Sóc Sơn - Hà Nội', '2015-11-10', '2015-11-10', '2015-11-11', '09445211542', 'Anh Ranh', null, '7', 'f', 'f','80000', '900000','0', '474454', '1111223');
+INSERT INTO "public"."order" VALUES ('OD999811', 'STR002', '1', 'Huyện Đan Phượng - Hà Nội', 'Huyện Hoài Đức - Hà Nội', '2015-11-09', '2015-11-09', '2015-11-13', '0955412121', 'Chi Anh', null, '8', 'f', 'f','40000', '0','0', '5156456', '545454');
 
 
 -- ----------------------------
@@ -759,6 +784,8 @@ WITH (OIDS=FALSE)
 ALTER SEQUENCE "public"."generalledger_ledgerid_seq" OWNED BY "generalledger"."ledgerid";
 ALTER SEQUENCE "public"."issue_issueid_seq" OWNED BY "issue"."issueid";
 ALTER SEQUENCE "public"."task_taskid_seq" OWNED BY "task"."taskid";
+ALTER SEQUENCE "public"."goods_goodsid_seq" OWNED BY "goods"."goodsid";
+ALTER SEQUENCE "public"."confirmationcode_codeid_seq" OWNED BY "confirmationcode"."codeid";
 
 -- ----------------------------
 -- Primary Key structure for table bannedhistorylog

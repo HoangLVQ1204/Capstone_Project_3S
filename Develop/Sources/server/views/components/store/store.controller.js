@@ -106,17 +106,17 @@ function storeController($scope,$state,socketService,socketStore,dataService,aut
     });
 
     // Test notification
-    //setTimeout(function() {
-    //    var temp = {
-    //        type: 'issue',
-    //        title: 'issue 1',
-    //        content: 'This is very big issue number 1',
-    //        url: 'https://google.com',
-    //        isread: false,
-    //        createddate: new Date()
-    //    };
-    //    $rootScope.notify(temp);
-    //}, 1000);
+    setTimeout(function() {        
+        var temp = {
+            type: 'issue',
+            title: 'issue 1',
+            content: 'This is very big issue number 1',
+            url: '/#/notiListdemo',
+            isread: false,
+            createddate: new Date()
+        };
+        $rootScope.notify(temp);
+    }, 1000);
 }
 
 storeController.$inject = ['$scope','$state','socketService','socketStore','dataService','authService','config','$rootScope'];

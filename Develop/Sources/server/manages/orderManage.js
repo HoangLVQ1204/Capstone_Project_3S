@@ -2,6 +2,7 @@
  * Created by Cao Khanh on 21/10/2015.
  */
 var _ = require('lodash');
+var config = require('../config/config');
 
 module.exports = function (app) {
     var db = app.get('models');
@@ -177,11 +178,69 @@ module.exports = function (app) {
     var post = function (req, res, next) {
         var newOrder = {};
 
+        /*
+         * By HuyTDH - 09/10/2015
+         * This function is used to create ID for order       
+         */
         var str = "000000" + parseInt(Math.random()*1000000);
         var formatStr = str.substr(str.length - 6);
         var newOrderID = "OD" + formatStr;
-
         newOrder.orderid = newOrderID;
+        ////////
+
+        /*
+         * By KhanhKC - 14/11/2015
+         * This function is used to caculate Ship fee       
+         */
+         var fee = 0;
+         var district = req.body.selectedDistrict;
+         var innerCity = config.fileterLocation.in;
+
+         if(innerCity.indexOf(district)> -1){
+            if(req.body.order.ordertypeid == '1'){
+                fee = 10000;
+            }else {
+                fee = 20000;
+            }                
+        }else {
+            if(req.body.order.ordertypeid == '1'){
+                fee = 20000;
+            }else {
+                fee = 30000;
+            }       
+        }
+        ///////
+
+        /*
+         * By KhanhKC - 14/11/2015
+         * This function is used to caculate total weight of order       
+        */
+        var totalWeight = 0;
+        for(var i = 0; i <req.body.goods.length;i++){
+            totalWeight = totalWeight + req.body.goods[i].weight*req.body.goods[i].amount;
+        }
+        ///////
+
+        /*
+         * By KhanhKC - 14/11/2015
+         * This function is used to caculate over weight fee of order       
+        */
+        var overWeightFee = 0;        
+        if(totalWeight > 4000 ){
+            console.log("===========totalWeight=======", totalWeight);
+            if(innerCity.indexOf(district)> -1){
+                overWeightFee = (totalWeight - 4000)*2*2;
+                console.log("=============In=========",district);
+            }else {
+                overWeightFee = (totalWeight - 4000)*2*2.5;
+                console.log("=============Out=========",district);
+            }
+            
+        }
+        ///////
+        //console.log("=============fee===============",fee);        
+        console.log("=============overWeightFee=======",overWeightFee);
+        console.log("=============req.body===============",req.body);
         newOrder.storeid = req.body.order.storeid;
         newOrder.ordertypeid = req.body.order.ordertypeid;
         newOrder.pickupaddress = req.body.order.pickupaddress;
@@ -191,96 +250,85 @@ module.exports = function (app) {
         newOrder.statusid = req.body.order.statusid;
         newOrder.ispending = 'false';
         newOrder.isdraff = req.body.order.isdraff;        
-        newOrder.createdate = new Date();
-
-        if(!_.isNumber(req.body.order.cod)){
+        newOrder.createdate = new Date(); 
+        newOrder.fee = fee; 
+        newOrder.overweightfee = overWeightFee;      
+        if(!_.isNumber(parseInt(req.body.order.cod))){
             newOrder.cod = 0;
         }else {
-            newOrder.cod = req.body.order.cod;
+            newOrder.cod = parseInt(req.body.order.cod);
         }
-
-        if(!_.isNumber(req.body.order.fee)){
-            newOrder.fee = 0;
-        }else {
-            newOrder.fee = req.body.order.fee;
-        }
-
-        var str = "000000" + parseInt(Math.random()*1000000);
-        var formatStr = str.substr(str.length - 6);                    
-        var newCodeID = formatStr;
-        
+        //console.log("==============11===============");
+               
         var code1 = {
-        'codecontent' : req.body.order.gatheringCode,
+        'codecontent' : parseInt(req.body.order.gatheringCode),
         'typeid' : 2,
-        'orderid' : newOrder.orderid,
-        'codeid' : newCodeID++
+        'orderid' : newOrder.orderid        
        };
        var code2 = {
-        'codecontent' : req.body.order.deliverCode,
+        'codecontent' : parseInt(req.body.order.deliverCode),
         'typeid' : 6,
-        'orderid' : newOrder.orderid,
-        'codeid' : newCodeID++
+        'orderid' : newOrder.orderid
        };       
        
        var code3 = {
-        'codecontent' : req.body.order.inStockCode,
+        'codecontent' : parseInt(req.body.order.inStockCode),
         'typeid' : 3,
-        'orderid' : newOrder.orderid,
-        'codeid' : newCodeID++
+        'orderid' : newOrder.orderid
        };
        var code4 = {
-        'codecontent' : req.body.order.returnStoreCode,
+        'codecontent' : parseInt(req.body.order.returnStoreCode),
         'typeid' : 5,
-        'orderid' : newOrder.orderid,
-        'codeid' : newCodeID++
+        'orderid' : newOrder.orderid
        };
+       //console.log("==============22==============");
        
         return db.order.postOneOrder(newOrder)
-            .then(function (order) {
+            .then(function () {
+                //console.log("==============33==============");
                 db.confirmationcode.postOneCode(code1);
                 db.confirmationcode.postOneCode(code2);
                 db.confirmationcode.postOneCode(code3);
                 db.confirmationcode.postOneCode(code4);
+                //console.log("==============44==============");
                 for(var i = 0; i < req.body.goods.length; i++){
-                    var good = {};
-                    var str = "000000" + parseInt(Math.random()*1000000);
-                    var formatStr = str.substr(str.length - 6);                    
-                    var newGoodID =  formatStr;
-                    good.goodsid = newGoodID;
+                    var good = {};                    
                     good.orderid = newOrderID;
                     good.stockid = null;
-                    if(!_.isNumber(req.body.goods[i].weight)){
+                    good.goodsname = req.body.goods[i].goodsname;
+                    good.description = req.body.goods[i].description;
+                    if(!_.isNumber(parseInt(req.body.goods[i].weight))){
                         good.weight = 0;
                     } else {
-                        good.weight = req.body.goods[i].weight;
+                        good.weight = parseInt(req.body.goods[i].weight);
                     }
 
-                    if(!_.isNumber(req.body.goods[i].lengthsize)){
+                    if(!_.isNumber(parseInt(req.body.goods[i].lengthsize))){
                         good.lengthsize = 0;
                     } else {
-                        good.lengthsize = req.body.goods[i].lengthsize;
+                        good.lengthsize = parseInt(req.body.goods[i].lengthsize);
                     }
 
-                    if(!_.isNumber(req.body.goods[i].widthsize)){
+                    if(!_.isNumber(parseInt(req.body.goods[i].widthsize))){
                         good.widthsize = 0;
                     } else {
-                        good.widthsize = req.body.goods[i].widthsize;
+                        good.widthsize = parseInt(req.body.goods[i].widthsize);
                     }
 
-                    if(!_.isNumber(req.body.goods[i].heightsize)){
+                    if(!_.isNumber(parseInt(req.body.goods[i].heightsize))){
                         good.heightsize = 0;
                     } else {
-                        good.heightsize = req.body.goods[i].heightsize;
+                        good.heightsize = parseInt(req.body.goods[i].heightsize);
                     }
 
-                    if(!_.isNumber(req.body.goods[i].amount)){
+                    if(!_.isNumber(parseInt(req.body.goods[i].amount))){
                         good.amount = 0;
                     } else {
-                        good.amount = req.body.goods[i].amount;
-                    }
-                    good.description = req.body.goods[i].description;
-
+                        good.amount = parseInt(req.body.goods[i].amount);
+                    }                    
+                    console.log("===========good=======",good);
                     db.goods.postOneGood(good);
+                    //console.log("==============55==============");
                 }
                 return order;
             },function(err){

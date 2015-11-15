@@ -5,7 +5,12 @@ module.exports = function(sequelize, DataTypes) {
     goodsid: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
+    },
+    goodsname: {
+      type: DataTypes.TEXT,
+      allowNull: true
     },
     orderid: {
       type: DataTypes.STRING,
@@ -49,7 +54,19 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(db) {
       },
       postOneGood: function(newGood){
-        return goods.build(newGood).save();
+        return goods.build(
+          {
+            goodsname: newGood.goodsname,
+            orderid: newGood.orderid,
+            stockid: newGood.stockid,
+            weight: newGood.weight,
+            lengthsize: newGood.lengthsize,
+            widthsize: newGood.widthsize,
+            heightsize: newGood.heightsize,
+            description: newGood.description,
+            amount: newGood.amount
+          }
+        ).save();
       },
 
       deleteGood: function (orderid) {

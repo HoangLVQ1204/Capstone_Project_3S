@@ -67,6 +67,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.BIGINT,
       allowNull: true
     },
+    overweightfee: {
+      type: DataTypes.BIGINT,
+      allowNull: true
+    },
     pickupaddresscoordination: {
       type: DataTypes.TEXT,
       allowNull: true

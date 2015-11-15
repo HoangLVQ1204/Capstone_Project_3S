@@ -44,7 +44,6 @@ module.exports = function(app) {
 
     }
 
-
     return {
         get: get,
         getProfileUser: getProfileUser,

@@ -62,7 +62,7 @@ module.exports = function(sequelize, DataTypes) {
           },
           offset: offset,
           limit: limit,
-          order: 'createddate DESC'
+          order: 'notificationid DESC'
         });
       },
 

@@ -24,7 +24,7 @@ var config = {
 
 	// Config filter location
 	fileterLocation: {
-		in: ["00001",'00002']
+		in: ["001",'002','003','005','006','007','008','009']
 	}
 };
 

@@ -27,11 +27,11 @@ app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService',
         } else {
           socketService.authenSocket()
             .then(function(){
-              if(authService.isRightRole(roles.shipper)){
+              //if(authService.isRightRole(roles.shipper)){
                 socketShipper.registerSocket();
                 $state.go('app.tasks');
                 $ionicLoading.hide();
-              }
+              //}
             });
         }
       })
