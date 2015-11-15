@@ -97,6 +97,29 @@ CREATE SEQUENCE "public"."task_taskid_seq"
  CACHE 1;
 
 -- ----------------------------
+-- Sequence structure for goods_goodsid_seq
+-- ----------------------------
+DROP SEQUENCE IF EXISTS "public"."goods_goodsid_seq";
+CREATE SEQUENCE "public"."goods_goodsid_seq"
+ INCREMENT 1
+ MINVALUE 1
+ MAXVALUE 9223372036854775807
+ START 1
+ CACHE 1;
+
+ -- ----------------------------
+-- Sequence structure for confirmationcode_codeid_seq
+-- ----------------------------
+DROP SEQUENCE IF EXISTS "public"."confirmationcode_codeid_seq";
+CREATE SEQUENCE "public"."confirmationcode_codeid_seq"
+ INCREMENT 1
+ MINVALUE 1
+ MAXVALUE 9223372036854775807
+ START 1
+ CACHE 1;
+
+
+-- ----------------------------
 -- Table structure for bannedhistorylog
 -- ----------------------------
 DROP TABLE IF EXISTS "public"."bannedhistorylog";
@@ -122,7 +145,7 @@ WITH (OIDS=FALSE)
 -- ----------------------------
 DROP TABLE IF EXISTS "public"."confirmationcode";
 CREATE TABLE "public"."confirmationcode" (
-"codeid" int4 NOT NULL,
+"codeid" int4 DEFAULT nextval('confirmationcode_codeid_seq'::regclass) NOT NULL,
 "codecontent" int4,
 "typeid" int4,
 "orderid" varchar(8) COLLATE "default"
@@ -250,7 +273,7 @@ INSERT INTO "public"."generalledger" VALUES ('9', 'AD000001', 'STR004', '-10000'
 -- ----------------------------
 DROP TABLE IF EXISTS "public"."goods";
 CREATE TABLE "public"."goods" (
-"goodsid" int4 NOT NULL,
+"goodsid" int4 DEFAULT nextval('goods_goodsid_seq'::regclass) NOT NULL,
 "goodsname" varchar(20) COLLATE "default",
 "orderid" varchar(8) COLLATE "default",
 "stockid" int4,
@@ -760,6 +783,8 @@ WITH (OIDS=FALSE)
 ALTER SEQUENCE "public"."generalledger_ledgerid_seq" OWNED BY "generalledger"."ledgerid";
 ALTER SEQUENCE "public"."issue_issueid_seq" OWNED BY "issue"."issueid";
 ALTER SEQUENCE "public"."task_taskid_seq" OWNED BY "task"."taskid";
+ALTER SEQUENCE "public"."goods_goodsid_seq" OWNED BY "goods"."goodsid";
+ALTER SEQUENCE "public"."confirmationcode_codeid_seq" OWNED BY "confirmationcode"."codeid";
 
 -- ----------------------------
 -- Primary Key structure for table bannedhistorylog
