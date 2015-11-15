@@ -88,6 +88,7 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
       .success(function (rs) {
         if(rs) {
           $scope.order = rs.detail;
+          console.log("DETAIL: ",$scope.order);
           $scope.statuslist = rs.statuslist;
         }
       })

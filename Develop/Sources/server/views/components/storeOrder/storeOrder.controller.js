@@ -302,6 +302,12 @@ function storeOrderController($scope, dataService, config, socketService, socket
             goods : $scope.goods,
             selectedDistrict: $scope.selectedDistrict.districtid
         };
+        //console.log("==============data=========",data);
+        dataService.postDataServer(urlBase,data).then(function(rs){
+            console.log("OK",rs);
+        },function(er){
+            console.log("!OK",er);
+        });
 
         if($scope.order.ordertypeid == 1){
             dataService.postDataServer(urlBase,data)
