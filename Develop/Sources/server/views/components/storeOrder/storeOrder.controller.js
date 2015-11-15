@@ -11,7 +11,7 @@ function storeOrderController($scope, $state, dataService, config) {
         inStockCode : GenerateRandomCode(6),
         returnStoreCode : GenerateRandomCode(6),
         storeid: '',
-        ordertypeid: "2",
+        ordertypeid: "1",
         pickupaddress: '',
         pickupphone: '',
         deliveryaddress: '',
@@ -22,7 +22,7 @@ function storeOrderController($scope, $state, dataService, config) {
         ledgerid: '',
         statusid: '1',
         isdraff: false,
-        fee: 20000,
+        fee: 10000,
         cod:'',
         overWeightFee: 0
     };
@@ -163,7 +163,9 @@ function storeOrderController($scope, $state, dataService, config) {
             $("#editGoodModal").submit(function(e){
                 e.preventDefault();
                 if($(this).parsley( 'validate' )){
-                    editGood()
+                    editGood();
+                    $scope.order.overWeightFee = calculateOverWeightFee($scope.selectedDistrict.districtid,$scope.goods);
+                    $scope.$apply(); 
                     $('#md-edit-good').modal('hide');
                 }
 
@@ -246,14 +248,13 @@ function storeOrderController($scope, $state, dataService, config) {
         var data = {
             order: $scope.order,
             goods : $scope.goods,
+            selectedDistrict: $scope.selectedDistrict.districtid
         };
         //console.log("==============data=========",data);
         dataService.postDataServer(urlBase,data);
 
     }          
     function caculatateWeight(listGoods){
-        var totalWeight = 0
-        //console.log("=============listGood=======",listGoods);
         var totalWeight = 0;
         for(var i = 0; i <listGoods.length;i++){
             totalWeight = totalWeight + listGoods[i].weight*listGoods[i].amount;
@@ -266,15 +267,18 @@ function storeOrderController($scope, $state, dataService, config) {
     function calculateOverWeightFee(districtId,listGoods){
         var totalWeight = caculatateWeight(listGoods);
         var overWeightFee = 0;
-        var listInDistrictId =['001','002','003','005','006','007','008','009'];
+        var listInDistrictId =["001","002","003","005","006","007","008","009"];
         if(totalWeight > 4000 ){
-            if(listInDistrictId.indexOf(districtId)){
+            if(listInDistrictId.indexOf(districtId)>-1){
+                console.log("=============IN=======",districtId);
                 overWeightFee = (totalWeight - 4000)*2*2;
             }else {
+                console.log("=============out=======",districtId);
                 overWeightFee = (totalWeight - 4000)*2*2.5;
             }
             
         }
+        console.log("=============totalWeight=======",totalWeight);
         console.log("=============overWeightFee=======",overWeightFee);
         return overWeightFee;        
     }
@@ -347,8 +351,6 @@ function storeOrderController($scope, $state, dataService, config) {
 
                 $scope.listWard = $scope.selectedDistrict.wards;
                 $scope.selectedWard = $scope.listWard[0];
-                //console.log("========ward========", $scope.selectedWard);
-                //$scope.order.deliveryaddress = $scope.add + ", " + $scope.selectedWard.name + ", " + $scope.selectedDistrict.name + ", " + $scope.selectedProvince.name;        
                 updateDeliveryAdd();
             })
             .error(function (error) {
@@ -366,8 +368,6 @@ function storeOrderController($scope, $state, dataService, config) {
         $scope.listWard = $scope.selectedDistrict.wards;
         $scope.selectedWard = $scope.listWard[0];
 
-        //console.log("========ward========", $scope.selectedWard);
-        //$scope.order.deliveryaddress = $scope.add + ", " + $scope.selectedWard.name + ", " + $scope.selectedDistrict.name + ", " + $scope.selectedProvince.name;        
         updateDeliveryAdd();
     }
      $scope.updateWard= function(){
@@ -376,9 +376,8 @@ function storeOrderController($scope, $state, dataService, config) {
         //console.log("========district========", $scope.selectedDistrict);
         $scope.listWard = $scope.selectedDistrict.wards;
         $scope.selectedWard = $scope.listWard[0];
-        //console.log("========ward========", $scope.selectedWard);
-        //$scope.order.fee = calculateFee($scope.selectedDistrict.districtid,$scope.order.ordertypeid);
         updateDeliveryAdd();
+        $scope.order.fee = calculateFee($scope.selectedDistrict.districtid,$scope.order.ordertypeid);
         
      }
      $scope.updateDeliveryAdd = function(){
@@ -394,8 +393,7 @@ function storeOrderController($scope, $state, dataService, config) {
         data.verticalEdge = 'right';
         data.horizontalEdge = 'bottom';
         data.theme = 'theme';
-        $.notific8($("#smsEmptyGood").val(), data);
-        //console.log("=======OK=====");
+        $.notific8($("#smsEmptyGood").val(), data);       
     }
 
 

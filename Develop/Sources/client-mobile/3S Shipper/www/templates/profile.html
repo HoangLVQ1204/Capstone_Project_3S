@@ -2,24 +2,24 @@
   <ion-content>
     <div id="content">
       <div id="profile-info">
-        <img id="profile-image" src="img/profile1.png">
+        <img id="profile-image" src="{{profile.avatar}}">
         <h3 id="profile-name">{{profile.name}}</h3>
       </div>
       <div class="list" id="listProfile">
         <div class="item">
-          <p><i class="ion-android-calendar"></i>&nbsp;&nbsp;Date of Birtd: {{profile.dob}}</p>
+          <p><i class="ion-android-calendar"></i> Date of Birtd: {{profile.dob| date : 'dd-MM-yyyy'}}</p>
         </div>
         <div class="item">
-          <p><i class="ion-card"></i>&nbsp;&nbsp;Identity Card: {{profile.identitycard}}</p>
+          <p><i class="ion-card"></i> Identity Card: {{profile.identitycard}}</p>
         </div>
         <div class="item">
-          <p><i class="ion-ios-telephone"></i>&nbsp;&nbsp;Phone Number: {{profile.phonenumber}}</p>
+          <p><i class="ion-android-call"></i> Phone Number: {{profile.phonenumber}}</p>
         </div>
         <div class="item">
-          <p><i class="ion-email"></i>&nbsp;&nbsp;Email: {{profile.email}}</p>
+          <p><i class="ion-email"></i> Email: {{profile.email}}</p>
         </div>
         <div class="item">
-          <p><i class="ion-android-home"></i>&nbsp;&nbsp;Address: {{profile.address}}</p>
+          <p><i class="ion-android-home"></i> Address: {{profile.address}}</p>
         </div>
       </div>
     </div>
