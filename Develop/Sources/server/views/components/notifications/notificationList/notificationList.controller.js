@@ -5,8 +5,11 @@
 
 function notificationListController($scope, config, dataService, notificationService){	
 	$scope.pageNumbers = [];
-	$scope.listNotifications = [];	
+
+	$scope.listNotifications = [];
+
 	$scope.totalNotifications = 0;
+
 	notificationService.getTotalNumberNotificationsServer()
 	.then(function() {
 		$scope.totalNotifications = notificationService.getTotalNumberNotifications();

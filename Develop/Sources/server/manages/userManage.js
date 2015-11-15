@@ -44,8 +44,6 @@ module.exports = function(app) {
 
     }
 
-    //function genAuto
-
     return {
         get: get,
         getProfileUser: getProfileUser,

@@ -160,11 +160,35 @@ module.exports = function (app) {
     };
 
     var getDetail = function (req, res, next) {
-        var rs = {
-            "detail": req.detail,
-            "statuslist": req.statuslist
-        };
-        return res.status(200).json(rs);
+        var detailtaskid = req.query.taskid;
+        var Order = db.order;
+        var OrderStatus = db.orderstatus;
+        var Goods = db.goods;
+        var Task = db.task;
+        var shipper = _.cloneDeep(req.user);
+        var shipperid = shipper.username;
+        Order.getOrderDetailById(detailtaskid, shipperid, OrderStatus, Goods, Task)
+            .then(function (rs) {
+                if (rs) {
+                    rs = rs.toJSON();
+                    var type = rs.tasks[0].typeid;
+                    if(rs.tasks[0].typeid == 1){
+                        delete rs['deliveryaddress'];
+                        delete rs['completedate'];
+                    }
+                    req.statuslist = configConstant.statusList[type];
+                    req.detail = rs;
+                    var resObj = {
+                        "detail": req.detail,
+                        "statuslist": req.statuslist
+                    };
+                    return res.status(200).json(resObj);
+                } else {
+                    return res.status(400).json('Can not found this task detail');
+                }
+            }, function (err) {
+                return res.status(400).json('Can not found this task detail');
+            });
     };
 
     var getOrderStatusList = function (req, res, next) {
@@ -188,11 +212,15 @@ module.exports = function (app) {
                         type: 'store',
                         clientID: orderObj.storeid
                     };
+
                     var msg = {
-                        shipper: shipperid,
-                        order: orderObj.orderid,
-                        content: 'change order status',
-                        type: 'Inform'
+                        type: 'Info',
+                        title: 'Shipper changed order status',
+                        content: shipperid + ' changed status of order ' + orderObj.orderid,
+                        url: '#',
+                        isread: false,
+                        username: orderObj.storeid,
+                        createddate: new Date()
                     };
 
                     // DATA TO RESPONSE CLIENT
@@ -223,8 +251,12 @@ module.exports = function (app) {
                                     statusid: nextStatus,
                                     completedate: completeDate
                                 }).then(function (rs) {
-                                    //:TODO socket need to check null
                                     server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
+                                    db.managestore.getUsersByStoreID(orderObj.storeid).then(function(rs){
+                                        if(rs.length>0) manager = rs[0].manager;
+                                        msg[username] = manager;
+                                        db.notification.addNotification(msg);
+                                    });
                                     if(oldStatus == taskBegin.statusid){
                                         Task.updateTaskStatus(2, taskid, shipperid).then(function (ok) {
                                             return res.status(200).json("Your task was active!");
@@ -254,13 +286,16 @@ module.exports = function (app) {
                             statusid: nextStatus,
                             completedate: completeDate
                         }).then(function (rs) {
-                            //:TODO socket need to check null
                             server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
+                            db.managestore.getUsersByStoreID(orderObj.storeid).then(function(rs){
+                                if(rs.length>0) manager = rs[0].manager;
+                                msg[username] = manager;
+                                db.notification.addNotification(msg);
+                            });
                             var taskBegin = statusList[0];
                             var taskDone = statusList[statusList.length - 1];
                             if(oldStatus == taskBegin.statusid){
                                 Task.updateTaskStatus(2,taskid,shipperid).then(function(ok){
-                                    console.log("/////////////////////////////////////////////1");
                                     return res.status(200).json("Your task was active!");
                                 },function(er){
                                     return res.status(400).json("Sorry! Something went wrong!");
@@ -719,14 +754,42 @@ module.exports = function (app) {
         //    type: 'store',
         //    clientID: 'STR003'
         //};
+        ////var msg = {
+        ////    shipper: "sphuy",
+        ////    order: 'order1',
+        ////    content: 'Change order status'
+        ////};
         //var msg = {
-        //    shipper: "sphuy",
-        //    order: 'order1',
-        //    content: 'Change order status'
+        //    type: "info",
+        //    title: "Test",
+        //    content: "This is test",
+        //    url: "http://localhost:3000/api/shipper/test-socket",
+        //    isread: false,
+        //    username: 'ST000003',
+        //    createddate: new Date()
         //};
         //server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
-        var rs = server.socket.shippers;
-        res.status(200).json(rs);
+        //var rs = server.socket.stores;
+        db.managestore.getUsersByStoreID('STR0003').then(function(rs){
+            if(rs.length>0)
+            res.status(200).json(rs);
+            else res.status(200).json("OKKK");
+        });
+        //res.status(200).json(rs);
+        //var noti = {
+        //    type: "info",
+        //    title: "Test",
+        //    content: "This is test",
+        //    url: "#",
+        //    isread: false,
+        //    username: 'ST000003',
+        //    createddate: new Date()
+        //};
+        //db.notification.addNotification(noti).then(function(rs){
+        //    res.status(200).json(rs);
+        //},function(er){
+        //    res.status(400).json(er);
+        //})
     };
 
     return {

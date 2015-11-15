@@ -63,7 +63,7 @@
       "role": [1]
     },
     {
-      "url": "/api/shipper/detail/:detailtaskid",
+      "url": "/api/shipper/detail",
       "role": [1]
     },
 
