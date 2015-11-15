@@ -44,7 +44,7 @@ module.exports = function(app) {
 
     }
 
-    function genAuto
+    //function genAuto
 
     return {
         get: get,

@@ -715,17 +715,17 @@ module.exports = function (app) {
     //// END change status of shipper
 
     var testSk = function(req, res, next){
-        var receiver = {
-            type: 'store',
-            clientID: 'STR003'
-        };
-        var msg = {
-            shipper: "sphuy",
-            order: 'order1',
-            content: 'Change order status'
-        };
-        server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
-        var rs = server.socket.stores;
+        //var receiver = {
+        //    type: 'store',
+        //    clientID: 'STR003'
+        //};
+        //var msg = {
+        //    shipper: "sphuy",
+        //    order: 'order1',
+        //    content: 'Change order status'
+        //};
+        //server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
+        var rs = server.socket.shippers;
         res.status(200).json(rs);
     };
 
