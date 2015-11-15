@@ -188,24 +188,27 @@ angular.module('app', [
     $rootScope.readNewNoti = function() {
 
     };
-
+    
     $rootScope.notify = function(notification) {
         $rootScope.numberNewNoti += 1;
         notificationService.setNumberNewNotifications($rootScope.numberNewNoti);
         notificationService.addNotification(notification);
         var data = {
-            life:10000000000000,
+            life: 3000,
             horizontal: 'bottom',
             vertical: 'right',
             horizontalEdge: 'bottom',
             verticalEdge: 'right',
             theme: (notification.type === 'issue' ? 'danger' : 'success')
         };                
-        var template = '<div onclick="location.href=\'' + notification.url + '\'">' +
+        var template = '<div class="btn globalNoti" onclick="location.href=\'' + notification.url + '\'">' +
                 '<h4 style="color: white"><strong>' + notification.title + '</strong></h4>' +
                 '<span style="color: white">' + notification.content + '</span>'
-                '</div>';
+                '</div>';        
         $.notific8(template, data);
+        $('.globalNoti').on('click', function() {
+            console.log('click globalNoti');
+        });
         $rootScope.$apply();
     };
 
@@ -215,18 +218,18 @@ angular.module('app', [
         .then(function() {
             if(authService.isRightRole(config.role.admin)){
                 socketAdmin.registerSocket();
-                $state.go("admin.dashboard");
+                // $state.go("admin.dashboard");
             }
 
             if(authService.isRightRole(config.role.store)){
                 socketStore.registerSocket();
-                $state.go("store.dashboard");
+                // $state.go("store.dashboard");
 
             }
 
              if(authService.isRightRole(config.role.shipper)){
                  socketShipper.registerSocket();
-                 $state.go("mapdemo");
+                 // $state.go("mapdemo");
 
              }
         })        

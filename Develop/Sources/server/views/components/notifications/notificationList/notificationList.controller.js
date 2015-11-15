@@ -3,7 +3,9 @@
  */
 
 
-function notificationListController($scope, config, dataService, notificationService){	
+function notificationListController($scope, config, dataService, notificationService, $rootScope){	
+	console.log('notificationListController');
+	$rootScope.numberNewNoti = 0;
 	$scope.pageNumbers = [];
 
 	$scope.listNotifications = [];
@@ -65,7 +67,7 @@ function notificationListController($scope, config, dataService, notificationSer
 	};
 }
 
-notificationListController.$inject = ['$scope', 'config', 'dataService', 'notificationService'];
+notificationListController.$inject = ['$scope', 'config', 'dataService', 'notificationService', '$rootScope'];
 angular.module('app').controller('notificationListController',notificationListController);
 
 

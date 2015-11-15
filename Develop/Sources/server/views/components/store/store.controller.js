@@ -111,7 +111,7 @@ function storeController($scope,$state,socketService,socketStore,dataService,aut
             type: 'issue',
             title: 'issue 1',
             content: 'This is very big issue number 1',
-            url: 'https://google.com',
+            url: '/#/notiListdemo',
             isread: false,
             createddate: new Date()
         };
