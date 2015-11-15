@@ -193,7 +193,7 @@ module.exports = function(sequelize, DataTypes) {
 
 
       postOneOrder: function(newOrder){
-        return order.build(newOrder).save().then(function(order){
+        return order.create(newOrder).then(function(order){
           return order;
         })
       },

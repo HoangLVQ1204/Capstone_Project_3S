@@ -236,7 +236,7 @@ module.exports = function (app) {
        };
        
         return db.order.postOneOrder(newOrder)
-            .then(function () {
+            .then(function (order) {
                 db.confirmationcode.postOneCode(code1);
                 db.confirmationcode.postOneCode(code2);
                 db.confirmationcode.postOneCode(code3);
@@ -282,14 +282,12 @@ module.exports = function (app) {
 
                     db.goods.postOneGood(good);
                 }
-
-            })
-             .then(function (order) {
-                console.log("--- New Order ID ---");
-                console.log(order.orderid);
-                res.status(201).json(order.orderid);
-            }, function(err){
+                return order;
+            },function(err){
                 next(err);
+            })
+             .then(function(order) {
+                res.status(201).json(order);
             })
         };
            

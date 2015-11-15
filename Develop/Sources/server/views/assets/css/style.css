@@ -23,7 +23,7 @@ html {
 
 body {
   background: #1C1D1F;
-  color: #6f7b8a;
+  color: rgba(0,0,0,0.87);
   font-family: "Ubuntu";
   font-weight: 300;
   min-width: 320px;

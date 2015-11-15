@@ -17,7 +17,7 @@ angular.module('app', [
         admin: 3
     },
 
-    baseURI: "http://localhost:3000"
+    baseURI: ""
 
 }).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider,uiGmapGoogleMapApiProvider,config){
 
@@ -194,7 +194,7 @@ angular.module('app', [
         notificationService.setNumberNewNotifications($rootScope.numberNewNoti);
         notificationService.addNotification(notification);
         var data = {
-            life:10000000000000,
+            life:5000,
             horizontal: 'bottom',
             vertical: 'right',
             horizontalEdge: 'bottom',
