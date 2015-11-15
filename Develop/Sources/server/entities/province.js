@@ -1,4 +1,6 @@
-/* jshint indent: 2 */
+/**
+ * Created by Cao Khanh on 13/11/2015.
+ */
 
 module.exports = function(sequelize, DataTypes) {
   var province =  sequelize.define('province', {
@@ -18,7 +20,29 @@ module.exports = function(sequelize, DataTypes) {
   },
   {
     freezeTableName: true,
-    timestamps: false
+    timestamps: false,
+    classMethods:{
+      associate: function(db) {
+
+        province.hasMany(db.district, {
+          foreignKey: 'provinceid',
+          constraints: false
+        });    
+
+      },
+      getAllProvince: function(districtModel,wardModel) {
+        return province.findAll({
+           include: [{
+            model: districtModel,
+            include: [{
+              model: wardModel,
+            }]            
+          },         
+          ]
+        });
+      }
+    }
+
   });
   return province;
 };

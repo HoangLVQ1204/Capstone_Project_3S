@@ -19,6 +19,7 @@ module.exports = function (app) {
     app.route('/api/updateTaskNoShipper')
         .put(controller.updateTaskNoShipper);
 
-
+    app.route('/api/createTask')
+        .post(controller.createTask);
 
 }

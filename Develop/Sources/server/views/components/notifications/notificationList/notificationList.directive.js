@@ -10,7 +10,9 @@ angular.module('app')
             controllerAs: 'notificationListCtrl',
             replace: true,
             restrict: 'E',
-            scope: {}
+            scope: {
+                listNotifications: '='
+            }
         }
     });
 
@@ -25,6 +27,29 @@ angular.module('app')
             url: '/notiListdemo',
             template: '<notification-list></notification-list>',
             controller: function($scope) {
+                // $scope.listNotifications = [    
+                //     {
+                //         type: 'issue',
+                //         title: 'big issue',
+                //         content: 'This is big issue',
+                //         url: '/notiListdemo',
+                //         createddate: 'date 1'
+                //     },
+                //     {
+                //         type: 'issue',
+                //         title: 'small issue',
+                //         content: 'This is small issue',
+                //         url: '/notiListdemo',
+                //         createddate: 'date 2'
+                //     },
+                //     {
+                //         type: 'info',
+                //         title: 'new info',
+                //         content: 'This is an info',
+                //         url: '/notiListdemo',
+                //         createddate: 'date 3'
+                //     }
+                // ];
             }
         })
 });

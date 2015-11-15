@@ -3,7 +3,7 @@
     /////////////////////////////////////////////////////////////////////////
     //////////     HEADER  CONTENT     ///////////////
     //////////////////////////////////////////////////////////////////////
-    -->
+    -->    
     <div id="header">
 
         <div class="logo-area clearfix">
@@ -17,7 +17,7 @@
                 <li>
                     <a ui-sref="#"  class="nav-collapse avatar-header">
                         <img alt="" ng-src="{{inforUser.avatar}}"  class="circle">
-                        <span class="badge">3</span>
+                        <span class="badge">{{ $root.numberNewNoti }}</span>
                     </a>
                 </li>
                 <li class="dropdown">
@@ -81,125 +81,33 @@
             </div>
             <!-- //avatar-slide-->
 
-
-            <!--<div class="widget-collapse dark">-->
-                <!--<header>-->
-                    <!--<a data-toggle="collapse" href="#collapseSummary"><i class="collapse-caret fa fa-angle-up"></i> Summary Order </a>-->
-                <!--</header>-->
-                <!--<section class="collapse in" id="collapseSummary">-->
-                    <!--<div class="collapse-boby" style="padding:0">-->
-
-                        <!--<div class="widget-mini-chart align-xs-left">-->
-                            <!--<div class="pull-right" >-->
-                                <!--<div class="sparkline mini-chart" data-type="bar" data-color="warning" data-bar-width="10" data-height="35">2,3,4,5,7,4,5</div>-->
-                            <!--</div>-->
-                            <!--<p>This week's balance</p>-->
-                            <!--<h4>$12,788</h4>-->
-                        <!--</div>-->
-                        <!--&lt;!&ndash; //widget-mini-chart &ndash;&gt;-->
-
-                        <!--<div class="widget-mini-chart align-xs-right">-->
-                            <!--<div class="pull-left">-->
-                                <!--<div class="sparkline mini-chart" data-type="bar" data-color="theme" data-bar-width="10" data-height="45">2,3,7,5,4,6,6,3</div>-->
-                            <!--</div>-->
-                            <!--<p>This week sales</p>-->
-                            <!--<h4>1,325 item</h4>-->
-                        <!--</div>-->
-                        <!--&lt;!&ndash; //widget-mini-chart &ndash;&gt;-->
-
-                    <!--</div>-->
-                    <!--&lt;!&ndash; //collapse-boby&ndash;&gt;-->
-
-                <!--</section>-->
-                <!--&lt;!&ndash; //collapse&ndash;&gt;-->
-            <!--</div>-->
-            <!-- //widget-collapse-->
-
-
-
             <div class="widget-collapse dark">
                 <header>
-                    <a data-toggle="collapse" ui-sref="store.dashboard" ><i class="icon  fa fa-laptop"></i> Dashboard</a>
+                    <a ui-sref="store.dashboard" ><i class="icon  fa fa-laptop"></i> Dashboard</a>
                 </header>
-                <!--<section class="collapse" id="collapseTasks">-->
-
-                    <!--<div class="collapse-boby">-->
-
-                        <!--<div class="widget-slider">-->
-                            <!--<p>Upload status</p>-->
-                            <!--<div class="progress progress-dark progress-xs tooltip-in">-->
-                                <!--<div class="progress-bar bg-darkorange" aria-valuetransitiongoal="75"></div>-->
-                            <!--</div>-->
-                            <!--<label class="progress-label">Master.zip 4 / 5 </label>-->
-                            <!--&lt;!&ndash; //progress&ndash;&gt;-->
-
-                            <!--<div class="progress progress-dark progress-xs">-->
-                                <!--<div class="progress-bar bg-theme-inverse" aria-valuetransitiongoal="45"></div>-->
-                            <!--</div>-->
-                            <!--<label class="progress-label lasted">Profile 2 / 5 </label>-->
-                            <!--&lt;!&ndash; //progress&ndash;&gt;-->
-
-                        <!--</div>-->
-                        <!--&lt;!&ndash; //widget-slider&ndash;&gt;-->
-
-                    <!--</div>-->
-                    <!--&lt;!&ndash; //collapse-boby&ndash;&gt;-->
-
-                <!--</section>-->
-                <!-- //collapse-->
             </div>
-            <!-- //widget-collapse-->
-
-
 
             <div class="widget-collapse dark">
                 <header>
-                    <a data-toggle="collapse" href="#collapseSetting" target="_self"><i class="fa fa-book"></i> Payment</a>
+                    <a  href="#collapseSetting" target="_self"><i class="fa fa-book"></i> Payment</a>
                 </header>
-                <!--<section class="collapse in" id="collapseSetting">-->
-                    <!--<div class="collapse-boby" style="padding:0">-->
-
-                        <!--<ul class="widget-slide-setting">-->
-                            <!--<li>-->
-                                <!--<div class="ios-switch theme pull-right">-->
-                                    <!--<div class="switch"><input type="checkbox" name="option"></div>-->
-                                <!--</div>-->
-                                <!--<label>Switch <span>OFF</span></label>-->
-                                <!--<small>Lorem ipsum dolor sit amet</small>-->
-                            <!--</li>-->
-                            <!--<li>-->
-                                <!--<div class="ios-switch theme-inverse pull-right">-->
-                                    <!--<div class="switch"><input type="checkbox" name="option_1" checked></div>-->
-                                <!--</div>-->
-                                <!--<label>Switch <span>ON</span></label>-->
-                                <!--<small>Lorem ipsum dolor sit amet</small>-->
-                            <!--</li>-->
-                        <!--</ul>-->
-                        <!--&lt;!&ndash; //widget-slide-setting&ndash;&gt;-->
-
-                    <!--</div>-->
-                    <!--&lt;!&ndash; //collapse-boby&ndash;&gt;-->
-
-                <!--</section>-->
-                <!-- //collapse-->
             </div>
-            <!-- //widget-collapse-->
 
             <div class="widget-collapse dark">
                 <header>
-                    <a data-toggle="collapse" href="#collapseSetting" target="_self"><i class="icon  fa fa-envelope"></i> Feedback</a>
+                    <a  href="#collapseSetting" target="_self"><i class="icon  fa fa-envelope"></i> Feedback</a>
                 </header>
             </div>
 
             <div class="widget-collapse dark">
                 <header style="background-color:#f35958">
-                    <a data-toggle="collapse" ui-sref="store.order" style="padding:20px 5px; color: white"><i class="fa fa-plus-square" style="color:white"></i> Make Order</a>
+                    <a  ui-sref="store.order" style="padding:20px 5px; color: white"><i class="fa fa-plus-square" style="color:white"></i> Make Order</a>
                 </header>
             </div>
 
             <div class="widget-collapse dark">
                 <header style="background-color:#f35958">
-                    <a data-toggle="collapse" target="_self" ng-click="test();" style="padding:20px 5px; color: white"><i class="fa fa-plus-square" style="color:white"></i> Test Find Shipper</a>
+                    <a  target="_self" ng-click="test();" style="padding:20px 5px; color: white"><i class="fa fa-plus-square" style="color:white"></i> Test Find Shipper</a>
                 </header>
             </div>
 
@@ -243,82 +151,83 @@
 		//////////     MODAL MAP STATIC     ////////
 		///////////////////////////////////////////////////////////////
 		-->
-    <div id="listAcceptedShipper_Fail" class="modal fade md-slideRight" tabindex="-1"  data-width="500" data-header-color="theme-inverse">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
-            <h4 class="modal-title">Not find a shipper</h4>
-        </div>
-        <!-- //modal-header-->
-        <div class="modal-body left">
-               <div class="row">
-                    <div class="col-md-3" >
-                        <img alt="" ng-src="{{rightShipper.avatar}}" class="circle" style="width: 100px">
-                    </div>
-                    <div class="col-md-9" style="margin-top: 20px">
-                        <h4><strong>Sorry!</strong> Now all shippers are busy</h4>
-                        <br>
-                        <h5>Please try again later!</h5>
-                    </div>
-               </div>
-        </div>
-        <!-- //modal-body-->
-    </div>
+    <!--<div id="listAcceptedShipper_Fail" class="modal fade md-slideRight" tabindex="-1"  data-width="500" data-header-color="theme-inverse">-->
+        <!--<div class="modal-header">-->
+            <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>-->
+            <!--<h4 class="modal-title">Not find a shipper</h4>-->
+        <!--</div>-->
+        <!--&lt;!&ndash; //modal-header&ndash;&gt;-->
+        <!--<div class="modal-body left">-->
+               <!--<div class="row">-->
+                    <!--<div class="col-md-3" >-->
+                        <!--<img alt="" ng-src="{{rightShipper.avatar}}" class="circle" style="width: 100px">-->
+                    <!--</div>-->
+                    <!--<div class="col-md-9" style="margin-top: 20px">-->
+                        <!--<h4><strong>Sorry!</strong> Now all shippers are busy</h4>-->
+                        <!--<br>-->
+                        <!--<h5>Please try again later!</h5>-->
+                    <!--</div>-->
+               <!--</div>-->
+        <!--</div>-->
+        <!--&lt;!&ndash; //modal-body&ndash;&gt;-->
+    <!--</div>-->
 
-    <div id="listAcceptedShipper" class="modal fade md-slideRight" tabindex="-1"  data-width="500" data-header-color="theme-inverse">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
-            <h4 class="modal-title">Yeah! Finded a shipper</h4>
-        </div>
-        <!-- //modal-header-->
-        <div class="modal-body left">
-            <div class="row">
-                <div class="col-md-3" >
-                    <img alt="" ng-src="{{rightShipper.avatar}}" class="circle" style="width: 100px">
-                </div>
-                <div class="col-md-9">
-                    <h3><strong>Hi</strong>, I'm {{rightShipper.fullName}}</h3>
-                    <br>
-                    <div class="row">
-                        <label class="col-md-3">
-                            <i class="fa fa-caret-right"></i>ShipperID
-                        </label>
-                        <div class="col-md-9">
-                            <strong>{{rightShipper.shipperID}}</strong>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <label class="col-md-3">
-                            <i class="fa fa-caret-right"></i>Phone
-                        </label>
-                        <div class="col-md-9">
-                            <strong>{{rightShipper.phonenumber}}</strong>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <label class="col-md-3">
-                            <i class="fa fa-caret-right"></i>Distance
-                        </label>
-                        <div class="col-md-9">
-                            <strong>{{rightShipper.distanceText}}</strong>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <label class="col-md-3">
-                            <i class="fa fa-caret-right"></i>Duration
-                        </label>
-                        <div class="col-md-9">
-                            <strong>{{rightShipper.durationText}}</strong>
-                        </div>
-                    </div>
-                    <!--<h5><i class="fa fa-caret-right"></i> ShipperID: <span class="pull-right"><strong>{{rightShipper.shipperID}}</strong></span></h5>-->
-                    <!--<h5><i class="fa fa-caret-right"></i> Phone:     <span class="pull-right"><strong>{{rightShipper.phonenumber}}</strong></span></h5>-->
-                    <!--<h5><i class="fa fa-caret-right"></i> Distance:  <span class="pull-right"><strong>{{rightShipper.distanceText}}</strong></span></h5>-->
-                    <!--<h5><i class="fa fa-caret-right"></i> Duration:  <span class="pull-right"><strong>{{rightShipper.durationText}}</strong></span></h5>-->
-                </div>
-            </div>
-        </div>
-        <!-- //modal-body-->
-    </div>
+    <!--<div id="listAcceptedShipper" class="modal fade md-slideRight" tabindex="-1"  data-width="500" data-header-color="theme-inverse">-->
+        <!--<div class="modal-header">-->
+            <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>-->
+            <!--<h4 class="modal-title">Yeah! Finded a shipper</h4>-->
+        <!--</div>-->
+        <!--&lt;!&ndash; //modal-header&ndash;&gt;-->
+        <!--<div class="modal-body left">-->
+            <!--<div class="row">-->
+                <!--<div class="col-md-3" >-->
+                    <!--<img alt="" ng-src="{{rightShipper.avatar}}" class="circle" style="width: 100px">-->
+                <!--</div>-->
+                <!--<div class="col-md-9">-->
+                    <!--<h3><strong>Hi</strong>, I'm {{rightShipper.fullName}}</h3>-->
+                    <!--<br>-->
+                    <!--<div class="row">-->
+                        <!--<label class="col-md-3">-->
+                            <!--<i class="fa fa-caret-right"></i>ShipperID-->
+                        <!--</label>-->
+                        <!--<div class="col-md-9">-->
+                            <!--<strong>{{rightShipper.shipperID}}</strong>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="row">-->
+                        <!--<label class="col-md-3">-->
+                            <!--<i class="fa fa-caret-right"></i>Phone-->
+                        <!--</label>-->
+                        <!--<div class="col-md-9">-->
+                            <!--<strong>{{rightShipper.phonenumber}}</strong>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="row">-->
+                        <!--<label class="col-md-3">-->
+                            <!--<i class="fa fa-caret-right"></i>Distance-->
+                        <!--</label>-->
+                        <!--<div class="col-md-9">-->
+                            <!--<strong>{{rightShipper.distanceText}}</strong>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="row">-->
+                        <!--<label class="col-md-3">-->
+                            <!--<i class="fa fa-caret-right"></i>Duration-->
+                        <!--</label>-->
+                        <!--<div class="col-md-9">-->
+                            <!--<strong>{{rightShipper.durationText}}</strong>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<hr>-->
+                <!--<div class="align-lg-right">-->
+                    <!--<button class="btn btn-theme" ng-click="makeExpressOrder()">Accept</button>-->
+                    <!--<button class="btn btn-inverse">Cancel</button>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--&lt;!&ndash; //modal-body&ndash;&gt;-->
+    <!--</div>-->
     <!-- //modal-->
 
     <!--
@@ -529,5 +438,4 @@
         <!-- //modal-body-->
     </div>
     <!-- //modal-->
-
 </div>

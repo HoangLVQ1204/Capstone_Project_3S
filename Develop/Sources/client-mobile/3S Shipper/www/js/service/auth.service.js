@@ -2,7 +2,7 @@
  * Created by Nguyen Van Quyen on 10/27/2015.
  */
 
-app.factory('authService', function ($http, $q, jwtHelper) {
+app.factory('authService', function ($http, $q, jwtHelper, dataService) {
   var tag = 'EHID';
 
   var saveToken = function (token) {
@@ -14,9 +14,7 @@ app.factory('authService', function ($http, $q, jwtHelper) {
       data: data,
       url: config.hostServer + 'auth/signin',
       method: 'POST'
-    }).then(function (data) {
-      saveToken(data.data.token);
-    });
+    })
   }
 
   var isLogged = function () {
@@ -41,11 +39,20 @@ app.factory('authService', function ($http, $q, jwtHelper) {
     return jwtHelper.decodeToken(localStorage.getItem('EHID'));
   };
 
+  var getProfileUser = function(){
+    var urlBase = config.hostServer + 'user/profile/' + getCurrentInfoUser().username;
+    return dataService.getDataServer(urlBase);
+  };
+
+
+
   return {
     signIn: signIn,
     isLogged: isLogged,
     isRightRole: isRightRole,
     signOut: signOut,
-    getCurrentInfoUser: getCurrentInfoUser
+    getCurrentInfoUser: getCurrentInfoUser,
+    getProfileUser: getProfileUser,
+    saveToken: saveToken
   };
 });

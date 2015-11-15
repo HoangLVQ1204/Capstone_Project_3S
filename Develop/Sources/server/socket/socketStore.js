@@ -16,7 +16,15 @@ module.exports = function(socket, io) {
     socket.on('store:find:shipper', function(data) {
 
         var numShippers = io.getAllShippers();
-
+        //numShippers.push({
+        //    'shipperID': 'SPSP11',
+        //    'latitude': '21212',
+        //    'longitude': '1230',
+        //    'isConnected': true,
+        //    'numTasks': '0'
+        //});
+        //console.log("TEST", numShippers);
+        console.log('store:find:shipper', numShippers, data.msg.store);
         if(numShippers.length != 0){
             gmapUtil.getClosestShippers(data.msg.store, numShippers, config.filter)
                 .then(function(results) {
@@ -44,7 +52,16 @@ module.exports = function(socket, io) {
                                 'shipper:choose:express');
                         });
                     }
-                });
+                }).catch(function(error){
+                    console.log("--CASE: FILTER ERROR. NO SHIPPER IN FILTER--");
+                    io.reply(
+                        data.sender,
+                        {
+                            shipper: false
+                        },
+                        'store:find:shipper'
+                    );
+                })
         }else{
             console.log("--CASE: NO SHIPPER IN IO LIST--");
             io.reply(

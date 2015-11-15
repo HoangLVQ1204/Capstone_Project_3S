@@ -6,6 +6,7 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
   console.log('reload data at TaskController');
   getAllTaskBeIssued();
   getAllTaskCancel();
+
   //Select tab for find bestway screen
   $scope.tabSelected = function(tab) {
     $scope.tabParam = tab;
@@ -39,6 +40,7 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
     });
   };
   //END Alert Dialog
+
   /*
    * By QuyenNV - 1/11/2015
    * Get All Task of Shipper be issued(issue.isResolved = false or order.isPending = true).
@@ -66,12 +68,12 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
         console.log('Unable to load customer data: ' + error);
       });
   }
+
   /*
    * By QuyenNV - 1/11/2015
    * ChangePending of order
    * */
   $scope.changeIsPending = function (issueId) {
-    console.log('test', issueId);
       //Change ispending of Task
     var data = {'issueId': issueId};
       var urlBase = config.hostServer + "api/changeIsPendingOrder";
@@ -92,10 +94,14 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
    * So status of task also 'Inactive' and 'Active'
    * */
   function getAllTaskCancel() {
+    $ionicLoading.show({
+      //duration: 500,
+      noBackdrop: false,
+      template: '<ion-spinner icon="bubbles" class="spinner-balanced"/>'
+    });
     var urlBaseCancel = config.hostServer + "api/getAllTaskCancel";
     dataFactory.getDataServer(urlBaseCancel)
       .success(function (rs) {
-        //console.log('hello', rs);
         $scope.listTaskIssueCancel = rs;
         getListOfTask();
       })
@@ -114,6 +120,7 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
     dataFactory.getDataServer(urlBase)
       .success(function (rs) {
         formatData(rs);
+        $ionicLoading.hide();
       })
       .error(function (error) {
         console.log('Unable to load customer data: ' + error);
@@ -128,7 +135,6 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
   function formatData(rs) {
     if (undefined !== rs['Pickup'] && rs['Pickup'].length) {
       isIssued(rs['Pickup']);
-      //console.log("Pickup", rs['Pickup']);
       $scope.pickupTasks = rs['Pickup'];
       $scope.badgeCountPick = rs['Pickup'].length;
     } else {
@@ -137,7 +143,6 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
     }
     if (undefined !== rs['Ship'] && rs['Ship'].length) {
       isIssued(rs['Ship']);
-      //console.log("Ship", rs['Ship']);
       $scope.shipTasks = rs['Ship'];
       $scope.badgeCountShip = rs['Ship'].length;
     } else {
@@ -161,6 +166,7 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
       $scope.badgeCountReturn = 0;
     }
   }
+
   /*
    * By QuyenNV - 23/10/2015
    * This function is check task get an issued

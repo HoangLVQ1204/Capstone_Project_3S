@@ -37,6 +37,11 @@ angular.module('app', [
             template: '<login></login>'
         })
 
+        .state('register',{
+            url: '/register',
+            template: '<store-register></store-register>'
+        })
+
         .state('error',{
             url: '/error',
             templateUrl: '/components/404/error.html'
@@ -178,6 +183,12 @@ angular.module('app', [
             access: config.role.store
         })
 
+        .state('store.notification',{
+            url: '/notification',
+            template: '<notification-list></notification-list>',
+            access: config.role.store
+        })
+
 
     jwtInterceptorProvider.tokenGetter = function(){
         return localStorage.getItem('EHID');
@@ -191,8 +202,36 @@ angular.module('app', [
         libraries: 'geometry,visualization,drawing,places'
     })
 
-}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper, config,socketService){
+}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper, config,socketService, notificationService){
 
+    // Notification component
+    $rootScope.numberNewNoti = notificationService.getNumberNewNotifications();
+    $rootScope.readNewNoti = function() {
+
+    };
+    
+    $rootScope.notify = function(notification) {
+        $rootScope.numberNewNoti += 1;
+        notificationService.setNumberNewNotifications($rootScope.numberNewNoti);
+        //notificationService.addNotification(notification);
+        var data = {
+            life: 3000,
+            horizontal: 'bottom',
+            vertical: 'right',
+            horizontalEdge: 'bottom',
+            verticalEdge: 'right',
+            theme: (notification.type === 'issue' ? 'danger' : 'success')
+        };                
+        var template = '<div class="btn globalNoti" onclick="location.href=\'' + notification.url + '\'">' +
+                '<h4 style="color: white"><strong>' + notification.title + '</strong></h4>' +
+                '<span style="color: white">' + notification.content + '</span>'
+                '</div>';        
+        $.notific8(template, data);
+        $('.globalNoti').on('click', function() {
+            console.log('click globalNoti');
+        });
+        $rootScope.$apply();
+    };
 
 
     if(authService.isLogged()){
@@ -209,11 +248,11 @@ angular.module('app', [
 
             }
 
-            // if(authService.isRightRole(config.role.shipper)){
-            //     socketShipper.registerSocket();
-            //     $state.go("mapdemo");
+             if(authService.isRightRole(config.role.shipper)){
+                 socketShipper.registerSocket();
+                 $state.go("mapdemo");
 
-            // }
+             }
         })        
 
     }else{
@@ -259,7 +298,7 @@ angular.module('app', [
 
     $rootScope.$on('$stateChangeSuccess', function(e, toState){
         // console.log(toState.name.indexOf("store"));
-        if (toState.name == "login" || toState.name == "home" || toState.name == "error"){
+        if (toState.name == "login" || toState.name == "home" || toState.name == "error" || toState.name == "register"){
             $rootScope.styleBody = "full-lg";
         }else if(toState.name.indexOf("store") == 0){
             $rootScope.styleBody = "";

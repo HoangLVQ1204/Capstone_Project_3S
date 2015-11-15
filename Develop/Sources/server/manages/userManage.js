@@ -91,10 +91,17 @@ module.exports = function(app) {
                 next(err);
             });
     };
+
+   var createStoreOwnerAccount = function(req,res,next){
+        var dataUser = req.body.dataUser;
+
+
+    }
     return {
         get: get,
         getProfileUser: getProfileUser,
         params: params,
+        createStoreOwnerAccount: createStoreOwnerAccount
         paramUsername: paramUsername,
         getUserDetail: getUserDetail,
         putUser: putUser,

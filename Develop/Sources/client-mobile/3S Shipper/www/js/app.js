@@ -6,7 +6,7 @@
 // 'starter.manages' is found in manages.js
 var app = angular.module('starter', ['ionic', 'ngCordova','uiGmapgoogle-maps','angular-jwt']);
 
-  app.run(['$ionicPlatform', 'authService', '$rootScope', '$location', 'socketShipper', function ($ionicPlatform, authService, $rootScope, $location, socketShipper) {
+  app.run(['$ionicPlatform', 'authService', '$rootScope', '$location', 'socketShipper', 'socketService', function ($ionicPlatform, authService, $rootScope, $location, socketShipper, socketService) {
     $ionicPlatform.ready(function () {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
@@ -29,18 +29,23 @@ var app = angular.module('starter', ['ionic', 'ngCordova','uiGmapgoogle-maps','a
 
     ////Check Is firt time sign in
     if (authService.isLogged()) {
-      socketShipper.registerSocket();
-      $rootScope.isGrabbing = false;
-      $location.path('/app/tasks');
-      $rootScope.$apply();
+      socketService.authenSocket()
+        .then(function(){
+          socketShipper.registerSocket();
+          $rootScope.isGrabbing = false;
+          $location.path('/app/tasks');
+        });
     } else {
       $location.path('/sign-in');
-      $rootScope.$apply();
     }
 
   }]);
 
-app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvider, jwtInterceptorProvider, $httpProvider) {
+app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvider, jwtInterceptorProvider, $httpProvider, $ionicConfigProvider) {
+
+  //Fix tab bottom in android
+  $ionicConfigProvider.tabs.position('bottom');
+
   uiGmapGoogleMapApiProvider.configure({
     key: 'AIzaSyA_tcRSfGJdCCDLvGXGPZqdOMQC9bniNoo',
     v: '3.17',
@@ -66,6 +71,7 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
 
       .state('app.history', {
         url: '/history',
+        cache: false,
         views: {
           'menuContent': {
             templateUrl: 'templates/history.html',
@@ -94,7 +100,7 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
           }
         }
       })
-      
+
       .state('app.issue', {
         url: '/issue',
         views: {

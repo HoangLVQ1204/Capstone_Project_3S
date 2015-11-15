@@ -18,7 +18,7 @@ module.exports = function (sequelize, DataTypes) {
         },
         adminid: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         statusid: {
             type: DataTypes.INTEGER,
@@ -85,6 +85,7 @@ module.exports = function (sequelize, DataTypes) {
                     ]
                 });
             },
+
             //// START - count total task history of one shipper
             //// HuyTDH 10-11-2015
             countTotalTaskHistoryOfShipper: function(shipperid){
@@ -99,6 +100,7 @@ module.exports = function (sequelize, DataTypes) {
                 });
             },
             //// END - count total task history of one shipper
+
             getMapdataById: function (orderModel, shipperID, order){
                 if(order=="all") {
                     return task.findAll({
@@ -146,8 +148,6 @@ module.exports = function (sequelize, DataTypes) {
                         },
 
             assignTaskForShipper: function(shipper){
-                //console.log(shipper);
-
                 return task.findOrCreate({
                     where: {
                         orderid: shipper.orderid,
@@ -174,6 +174,19 @@ module.exports = function (sequelize, DataTypes) {
                         }
                     else  task.updateShipperOfTask(tasks.taskid, shipper.shipperid);
 
+                })
+            },
+
+            createTaskForShipper: function(dataTask){
+                return task.create({
+                    'orderid': dataTask.orderid,
+                    'shipperid': dataTask.shipperid,
+                    'adminid': dataTask.adminid,
+                    'statusid': dataTask.statusid,
+                    'typeid': dataTask.typeid,
+                    'taskdate': new Date(Date.now())
+                }).then(function(task){
+                    return task;
                 })
             },
 
@@ -230,6 +243,17 @@ module.exports = function (sequelize, DataTypes) {
                     {
                         where: {
                             'taskid': newTask.taskid
+                        }
+                    })
+            },
+
+            updateTaskStatus: function (newStatus, taskid, shipperid) {
+                return task.update(
+                    {'statusid': newStatus},
+                    {
+                        where: {
+                            'taskid': taskid,
+                            'shipperid': shipperid
                         }
                     })
             }

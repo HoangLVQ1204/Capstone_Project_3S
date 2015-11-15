@@ -21,8 +21,8 @@ angular.module('app')
                 this.on('authenticated',function(){
                     console.log("Authen ok!");
                     d.resolve();
-                });        
-                this.emit('authenticate',{token: localStorage.getItem('EHID')})                                                    
+                });
+                this.emit('authenticate',{token: localStorage.getItem('EHID')})
                 return d.promise;
             },
             on: function (eventName, callback){

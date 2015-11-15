@@ -33,13 +33,13 @@ module.exports = function (app) {
     app.route('/api/shipper/history')
         .get(checkAll, shipperCtrl.getHistory);
 
-    app.route('/api/shipper/detail/:orderid')
-        .get(shipperCtrl.getDetail);
+    app.route('/api/shipper/detail')
+        .get(checkAll, shipperCtrl.getDetail);
 
-    app.param('orderid', shipperCtrl.paramOrderId);
+    app.param('detailtaskid', shipperCtrl.paramOrderId);
 
     app.route('/api/shipper/statuslist')
-        .get(shipperCtrl.getExpressStatusList);
+        .get(shipperCtrl.getOrderStatusList);
 
     app.route('/api/shipper/nextstep')
         .put(checkAll, shipperCtrl.nextStep);

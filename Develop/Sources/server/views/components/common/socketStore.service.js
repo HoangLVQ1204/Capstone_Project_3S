@@ -3,7 +3,7 @@
  */
 
 
-function socketStore($q,socketService,authService,mapService){
+function socketStore($q,socketService,authService,mapService, $rootScope){
 
     var EPSILON = 1e-8;
 
@@ -42,6 +42,14 @@ function socketStore($q,socketService,authService,mapService){
             mapService.updateOrder(e.orderID, e.orderInfo);
         });
         console.log('after update', mapService.getOrders());
+    });
+
+    socketService.on('shipper:change:order:status', function(data) {
+        console.log(data);
+        $rootScope.notify(data.msg);
+        data['message'] = data.msg.content;
+
+        $rootScope.$emit("evChange", data);
     });
 
     api.getCurrentUser = function() {
@@ -134,5 +142,5 @@ function socketStore($q,socketService,authService,mapService){
     return api;        
 };
 
-socketStore.$inject = ['$q','socketService','authService','mapService'];
+socketStore.$inject = ['$q','socketService','authService','mapService','$rootScope'];
 angular.module('app').factory('socketStore', socketStore);

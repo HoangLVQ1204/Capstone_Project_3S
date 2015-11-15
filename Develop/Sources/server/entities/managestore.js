@@ -42,6 +42,14 @@ module.exports = function(sequelize, DataTypes) {
                         model: db.user
                     }]
                 })
+            },
+            getUsersByStoreID: function (storeID){
+                return managestore.findAll({
+                    attributes: [['managerid','manager']],
+                    where: {
+                        storeid: storeID
+                    }
+                })
             }
         }
       }
