@@ -64,11 +64,15 @@
         </label>
         <label class="item item-input">
           <span class="input-label">Goods Information:</span>
-
-          <p class="detail-p" ng-repeat="goods in order.goods">
-            Weight: {{goods.weight}} (g)<br/>
-            Size: {{goods.lengthsize}} x {{goods.widthsize}} x {{goods.heightsize}} (cm)
+          <ul>
+            <li ng-repeat="goods in order.goods">
+          <p class="detail-p">
+            <span ng-if="order.goods.length>1">{{$index+1}}.</span> {{goods.goodsname}} x {{goods.amount}} (items)<br/>
+             - Weight: {{goods.weight}} (g)<br/>
+             - Size: {{goods.lengthsize}} x {{goods.widthsize}} x {{goods.heightsize}} (cm)
           </p>
+            </li>
+            </ul>
         </label>
       </div>
     </div>
