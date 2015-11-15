@@ -11,7 +11,7 @@ function storeOrderController($scope, $state, dataService, config) {
         inStockCode : GenerateRandomCode(6),
         returnStoreCode : GenerateRandomCode(6),
         storeid: '',
-        ordertypeid: "2",
+        ordertypeid: "1",
         pickupaddress: '',
         pickupphone: '',
         deliveryaddress: '',
@@ -22,7 +22,7 @@ function storeOrderController($scope, $state, dataService, config) {
         ledgerid: '',
         statusid: '1',
         isdraff: false,
-        fee: 20000,
+        fee: 10000,
         cod:'',
         overWeightFee: 0
     };
@@ -372,6 +372,7 @@ function storeOrderController($scope, $state, dataService, config) {
         $scope.listWard = $scope.selectedDistrict.wards;
         $scope.selectedWard = $scope.listWard[0];
         updateDeliveryAdd();
+        $scope.order.fee = calculateFee($scope.selectedDistrict.districtid,$scope.order.ordertypeid);
         
      }
      $scope.updateDeliveryAdd = function(){

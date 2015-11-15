@@ -9,9 +9,8 @@ module.exports = function(app){
  	app.param('username', controller.params);
  	 	
 	//app.get('/users',checkAll,controller.get);
-
 	app.get('/user/profile/:username',controller.getProfileUser);
-
+	app.post('/user/register',controller.createStoreOwnerAccount);
     //app.route('/api/users/:user_id')
     //	.get(controller.getOne)
     //	.put(controller.put)

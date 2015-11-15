@@ -23,7 +23,6 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
   });
 
   socketService.on('shipper:choose:express', function(data) {
-    console.log('choose express', data);
     //Ionic Loading
     $rootScope.show = function() {
       $ionicLoading.show({
@@ -76,44 +75,59 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
       // TODO: Wait until modal hide
     }
     //var answer = confirm('Do you want to accept order from store of ' + data.msg.distanceText + ' away?');
-    var answer = false;
+    //var answer = false;
+
     $rootScope.grabExpressOrder = function() {
+      console.log('fc grabExpressOrder');
+      console.log('data recieve', data);
       api.getCurrentUser()
         .then(function(user) {
-          socketService.sendPacket(
-            {
-              type: 'shipper',
-              clientID: user.shipperID
-            },
-            data.sender,
-            {
-              shipper: user
-            },
-            'shipper:choose:express');
-          $rootScope.hide();
+          user.distanceText = data.msg.distanceText;
+          user.durationText = data.msg.durationText;
+          authService.getProfileUser()
+            .then(function(res){
+              user.fullName    = res.data.name;
+              user.avatar      = res.data.avatar;
+              user.phonenumber = res.data.phonenumber;
+              console.log("-- DATA BEFORE SEND --");
+              console.log(res);
+              console.log("-- DATA BEFORE SEND --");
+
+              socketService.sendPacket(
+                {
+                  type: 'shipper',
+                  clientID: user.shipperID
+                },
+                data.sender,
+                {
+                  shipper: user
+                },
+                'shipper:choose:express');
+                $rootScope.hide();
+            });
         })
         .catch(function(err) {
-          alert(err);
+          console.log(err);
         });
     };
-    if (answer) {
-      api.getCurrentUser()
-        .then(function(user) {
-          socketService.sendPacket(
-            {
-              type: 'shipper',
-              clientID: user.shipperID
-            },
-            data.sender,
-            {
-              shipper: user
-            },
-            'shipper:choose:express');
-        })
-        .catch(function(err) {
-          alert(err);
-        });
-    }
+    //if (answer) {
+    //  api.getCurrentUser()
+    //    .then(function(user) {
+    //      socketService.sendPacket(
+    //        {
+    //          type: 'shipper',
+    //          clientID: user.shipperID
+    //        },
+    //        data.sender,
+    //        {
+    //          shipper: user
+    //        },
+    //        'shipper:choose:express');
+    //    })
+    //    .catch(function(err) {
+    //      alert(err);
+    //    });
+    //}
   });
 
   socketService.on('shipper:add:order', function(data) {
@@ -226,6 +240,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
 
   /*
   * io: Send Issue
+  * @author: quyennv
   * */
   api.sendInfoOfIssue = function(issueid){
     console.log('send issue', issueid);
@@ -253,6 +268,26 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
       },
       'shipper:sendissue'
     );
+  };
+
+  /*
+   * io: Change status of shipper when shipper logout
+   * @author: quyennv
+   * */
+  api.updateStatusShipper = function() {
+    var shipper = authService.getCurrentInfoUser();
+    console.log("shipper", shipper);
+    socketService.sendPacket(
+      {
+        type: 'shipper',
+        clientID: shipper.username
+      },
+      'admin',
+      {
+        shipperID: shipper.username
+      },
+      'shipper:update:status'
+    )
   };
 
   return api;

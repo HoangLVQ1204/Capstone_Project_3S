@@ -37,6 +37,11 @@ angular.module('app', [
             template: '<login></login>'
         })
 
+        .state('register',{
+            url: '/register',
+            template: '<store-register></store-register>'
+        })
+
         .state('error',{
             url: '/error',
             templateUrl: '/components/404/error.html'
@@ -170,8 +175,34 @@ angular.module('app', [
         libraries: 'geometry,visualization,drawing,places'
     })
 
-}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper, config,socketService){
+}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper, config,socketService, notificationService){
 
+    // Notification component
+    $rootScope.numberNewNoti = notificationService.getNumberNewNotifications();
+    $rootScope.readNewNoti = function() {
+
+    };
+
+    $rootScope.notify = function(notification) {
+        // console.log('notify', notification);
+        $rootScope.numberNewNoti += 1;
+        notificationService.setNumberNewNotifications($rootScope.numberNewNoti);
+        notificationService.addNotification(notification);
+        var data = {
+            horizontal: 'bottom',
+            vertical: 'right',
+            horizontalEdge: 'bottom',
+            verticalEdge: 'right',
+            theme: (notification.type === 'issue' ? 'red' : 'yellow')
+        };                
+        var template = '<div class="btn" onclick="location.href=\'' + notification.url + '\'">' +
+                '<h4 style="color: blue">' + notification.title + '</h4>' + 
+                '<span style="color: blue">' + notification.content + '</span>'
+                '</div>';
+        // console.log(template, notification.url);
+        $.notific8(template, data);
+        $rootScope.$apply();
+    };
 
 
     if(authService.isLogged()){
@@ -184,13 +215,13 @@ angular.module('app', [
 
             if(authService.isRightRole(config.role.store)){
                 socketStore.registerSocket();
-                $state.go("store.dashboard");
+                // $state.go("store.dashboard");
 
             }
 
              if(authService.isRightRole(config.role.shipper)){
                  socketShipper.registerSocket();
-                 $state.go("mapdemo");
+                 // $state.go("mapdemo");
 
              }
         })        
@@ -238,7 +269,7 @@ angular.module('app', [
 
     $rootScope.$on('$stateChangeSuccess', function(e, toState){
         // console.log(toState.name.indexOf("store"));
-        if (toState.name == "login" || toState.name == "home" || toState.name == "error"){
+        if (toState.name == "login" || toState.name == "home" || toState.name == "error" || toState.name == "register"){
             $rootScope.styleBody = "full-lg";
         }else if(toState.name.indexOf("store") == 0){
             $rootScope.styleBody = "";

@@ -184,7 +184,7 @@ module.exports = function (app) {
          */
         var str = "000000" + parseInt(Math.random()*1000000);
         var formatStr = str.substr(str.length - 6);
-        var newOrderID = "OD" + formatStr;        
+        var newOrderID = "OD" + formatStr;
         newOrder.orderid = newOrderID;
         ////////
 
@@ -227,20 +227,20 @@ module.exports = function (app) {
         */
         var overWeightFee = 0;        
         if(totalWeight > 4000 ){
-            //console.log("===========totalWeight=======", totalWeight);
+            console.log("===========totalWeight=======", totalWeight);
             if(innerCity.indexOf(district)> -1){
                 overWeightFee = (totalWeight - 4000)*2*2;
-                //console.log("=============In=========");
+                console.log("=============In=========",overWeightFee);
             }else {
                 overWeightFee = (totalWeight - 4000)*2*2.5;
-                //console.log("=============Out=========");
+                console.log("=============Out=========",overWeightFee);
             }
             
         }
         ///////
         //console.log("=============fee===============",fee);
         //console.log("=============overWeightFee===============",overWeightFee);
-        //console.log("=============req.body===============",req.body);
+        console.log("=============req.body===============",req.body);
         newOrder.storeid = req.body.order.storeid;
         newOrder.ordertypeid = req.body.order.ordertypeid;
         newOrder.pickupaddress = req.body.order.pickupaddress;
@@ -253,17 +253,16 @@ module.exports = function (app) {
         newOrder.createdate = new Date(); 
         newOrder.fee = fee; 
         newOrder.overweightfee = overWeightFee;      
-        if(!_.isNumber(req.body.order.cod)){
+        if(!_.isNumber(parseInt(req.body.order.cod))){
             newOrder.cod = 0;
         }else {
-            newOrder.cod = req.body.order.cod;
+            newOrder.cod = parseInt(req.body.order.cod);
         }
         //console.log("==============11===============");
        ////////////
         var str = "000000" + parseInt(Math.random()*1000000);
         var formatStr = str.substr(str.length - 6);                    
         var newCodeID = formatStr;
-        /////////////
         
         var code1 = {
         'codecontent' : req.body.order.gatheringCode,
@@ -308,45 +307,47 @@ module.exports = function (app) {
                     good.goodsid = newGoodID;
                     good.orderid = newOrderID;
                     good.stockid = null;
-                    if(!_.isNumber(req.body.goods[i].weight)){
+                    good.goodsname = req.body.goods[i].goodsname;
+                    good.description = req.body.goods[i].description;
+                    if(!_.isNumber(parseInt(req.body.goods[i].weight))){
                         good.weight = 0;
                     } else {
-                        good.weight = req.body.goods[i].weight;
+                        good.weight = parseInt(req.body.goods[i].weight);
                     }
 
-                    if(!_.isNumber(req.body.goods[i].lengthsize)){
+                    if(!_.isNumber(parseInt(req.body.goods[i].lengthsize))){
                         good.lengthsize = 0;
                     } else {
-                        good.lengthsize = req.body.goods[i].lengthsize;
+                        good.lengthsize = parseInt(req.body.goods[i].lengthsize);
                     }
 
-                    if(!_.isNumber(req.body.goods[i].widthsize)){
+                    if(!_.isNumber(parseInt(req.body.goods[i].widthsize))){
                         good.widthsize = 0;
                     } else {
-                        good.widthsize = req.body.goods[i].widthsize;
+                        good.widthsize = parseInt(req.body.goods[i].widthsize);
                     }
 
-                    if(!_.isNumber(req.body.goods[i].heightsize)){
+                    if(!_.isNumber(parseInt(req.body.goods[i].heightsize))){
                         good.heightsize = 0;
                     } else {
-                        good.heightsize = req.body.goods[i].heightsize;
+                        good.heightsize = parseInt(req.body.goods[i].heightsize);
                     }
 
-                    if(!_.isNumber(req.body.goods[i].amount)){
+                    if(!_.isNumber(parseInt(req.body.goods[i].amount))){
                         good.amount = 0;
                     } else {
-                        good.amount = req.body.goods[i].amount;
-                    }
-                    good.description = req.body.goods[i].description;
-
+                        good.amount = parseInt(req.body.goods[i].amount);
+                    }                    
+                    console.log("===========good=======",good);
                     db.goods.postOneGood(good);
                     //console.log("==============55==============");
                 }
 
             })
-            
-             .then(function () {
-                res.status(201).json("Saved");
+             .then(function (order) {
+                // console.log("--- New Order ID ---");
+                // console.log(order.orderid);
+                res.status(201).json("OK");
             }, function(err){
                 next(err);
             })

@@ -61,7 +61,11 @@
     {
       "url": "/api/shipper/change-status",
       "role": [1]
-	  },
+    },
+    {
+      "url": "/api/shipper/detail",
+      "role": [1]
+    },
 
     {
       "url": "/store/orderdetail",

@@ -113,7 +113,7 @@
                                             <tbody align="center">
                                             <tr ng-repeat="x in goods">
                                                 <td>{{$index+1}}</td>
-                                                <td>{{x.goodname}}</td>
+                                                <td>{{x.goodsname}}</td>
                                                 <td>{{x.amount}}</td>
                                                 <td>{{x.weight}}</td>
                                                 <td>{{x.lengthsize}}</td>
@@ -252,7 +252,7 @@
                                 <label class="control-label">Goods</label>
                                 <input type="text" class="form-control"
                                        parsley-required="true"
-                                       placeholder="Good name" ng-model="good.goodname">
+                                       placeholder="Good name" ng-model="good.goodsname">
                             </div>
                             <div class="col-md-3">
                                 <label class="control-label">Amount</label>
@@ -318,7 +318,7 @@
                                 <label class="control-label">Goods</label>
                                 <input type="text" class="form-control"
                                        parsley-required="true"
-                                       placeholder="Good name" ng-init="na = good.goodname" ng-model="newGood.goodname">
+                                       placeholder="Good name" ng-init="na = good.goodsname" ng-model="newGood.goodsname">
                             </div>
                             <div class="col-md-3">
                                 <label class="control-label">Amount</label>
@@ -379,7 +379,7 @@
                 </div>
                 <!-- //modal-header-->
                 <div class="modal-body">
-                    <h4>Do you want to delete goods: {{newGood.goodname}}</h4>
+                    <h4>Do you want to delete goods: {{newGood.goodsname}}</h4>
                 </div>
                 <!-- //modal-body-->
                 <div class="modal-footer">

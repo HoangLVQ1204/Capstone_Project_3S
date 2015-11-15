@@ -7,6 +7,10 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
+    goodsname: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
     orderid: {
       type: DataTypes.STRING,
       allowNull: true,

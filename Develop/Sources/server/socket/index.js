@@ -140,9 +140,11 @@ module.exports = function(server,app){
         }
         if (receiver.clientID) {    // clientID = shipperID || storeID            
             var socketID = '';
+            console.log("RECEIVERRRRRRR ",receiver,"====================");
             if (receiver.type === 'shipper') {
                 if(io.shippers[receiver.clientID]) socketID = io.shippers[receiver.clientID].socketID;
             } else if (receiver.type == 'store') {
+                console.log("EMIT STOREEEEEEEE",io.stores['STR003'],"=================");
                 if(io.stores[receiver.clientID]) socketID = io.stores[receiver.clientID].socketID;
             } else if (receiver.type == 'admin') {
                 if(io.admins[receiver.clientID]) socketID = io.admins[receiver.clientID].socketID;
@@ -175,11 +177,13 @@ module.exports = function(server,app){
             sender: sender,            
             msg: msg
         };
+        console.log("DATAAAAAAAA  ", data,"=========---=========");
         var listEvents = [].concat(eventName);
         [].concat(receiver).forEach(function(type, index) {     
             data.receiver = type;
             var connection = io.receiverSocket(type);
             if(connection) connection.emit(listEvents[index], data, callback);
+            console.log("CONNECTIONNNNN ", (connection!=undefined),"=========---=========");
         });        
     }
 
@@ -363,6 +367,10 @@ module.exports = function(server,app){
         io.shippers[shipper.shipperID].socketID = socket.id;
         io.shippers[shipper.shipperID].isConnected = true;
         io.shippers[shipper.shipperID].numTasks = io.countNumTasksByShipperID(shipper.shipperID);
+    };
+
+    io.updateStatusShipper = function(shipper) {
+        io.shippers[shipper.shipperID].isConnected = false;
     };
 
     io.updateOrderOfShipper = function(shipperID, orderID) {
