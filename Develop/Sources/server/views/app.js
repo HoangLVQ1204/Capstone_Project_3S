@@ -162,6 +162,12 @@ angular.module('app', [
             access: config.role.store
         })
 
+        .state('store.notification',{
+            url: '/notification',
+            template: '<notification-list></notification-list>',
+            access: config.role.store
+        })
+
 
     jwtInterceptorProvider.tokenGetter = function(){
         return localStorage.getItem('EHID');
@@ -184,22 +190,21 @@ angular.module('app', [
     };
 
     $rootScope.notify = function(notification) {
-        // console.log('notify', notification);
         $rootScope.numberNewNoti += 1;
         notificationService.setNumberNewNotifications($rootScope.numberNewNoti);
-        notificationService.addNotification(notification);
+        //notificationService.addNotification(notification);
         var data = {
+            life:10000000000000,
             horizontal: 'bottom',
             vertical: 'right',
             horizontalEdge: 'bottom',
             verticalEdge: 'right',
-            theme: (notification.type === 'issue' ? 'red' : 'yellow')
+            theme: (notification.type === 'issue' ? 'danger' : 'success')
         };                
-        var template = '<div class="btn" onclick="location.href=\'' + notification.url + '\'">' +
-                '<h4 style="color: blue">' + notification.title + '</h4>' + 
-                '<span style="color: blue">' + notification.content + '</span>'
+        var template = '<div onclick="location.href=\'' + notification.url + '\'">' +
+                '<h4 style="color: white"><strong>' + notification.title + '</strong></h4>' +
+                '<span style="color: white">' + notification.content + '</span>'
                 '</div>';
-        // console.log(template, notification.url);
         $.notific8(template, data);
         $rootScope.$apply();
     };
@@ -215,13 +220,13 @@ angular.module('app', [
 
             if(authService.isRightRole(config.role.store)){
                 socketStore.registerSocket();
-                // $state.go("store.dashboard");
+                $state.go("store.dashboard");
 
             }
 
              if(authService.isRightRole(config.role.shipper)){
                  socketShipper.registerSocket();
-                 // $state.go("mapdemo");
+                 $state.go("mapdemo");
 
              }
         })        
