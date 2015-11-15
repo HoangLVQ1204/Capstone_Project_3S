@@ -213,8 +213,8 @@ module.exports = function(sequelize, DataTypes) {
           where: {
             'storeid': storeid,
             'ledgerid': null,
-            'deliverydate': {gte: paydate},
-            'statusid':  [6, 8]
+            'completedate': {gte: paydate},
+            'statusid':  [7, 8]
           }
         })
       },
@@ -230,8 +230,8 @@ module.exports = function(sequelize, DataTypes) {
             where: {
               'storeid': storeid,
               'ledgerid':  null,
-              'deliverydate': {gte: paydate},
-              'statusid':  [6, 8]
+              'completedate': {gte: paydate},
+              'statusid':  [7, 8]
             }
           })
         },
@@ -254,8 +254,8 @@ module.exports = function(sequelize, DataTypes) {
           where: {
             'storeid': storeid,
             'ledgerid':  null,
-            'deliverydate': {lt: paydate},
-            'statusid': [6, 8]
+            'completedate': {lt: paydate},
+            'statusid': [7, 8]
           }
         })
       },

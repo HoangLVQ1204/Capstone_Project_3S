@@ -55,86 +55,128 @@ module.exports = function(sequelize, DataTypes) {
                 constraints: false
             });
 
+            store.hasMany(db.managestore, {
+                foreignKey: 'storeid',
+                constraints: false
+            });
+
+            store.hasMany(db.generalledger,  {
+                foreignKey : 'storeid'
+            });
         },
 
-      getAllStores: function() {
-        return store.findAll({});
-      },
+          getAllStores: function() {
+            return store.findAll({});
+          },
 
-      getOneStore: function(storeid){
-        return store.findOne({
-          where:{
-            'storeid':storeid
-          }
-        });
-      },
-
-      postOneStore: function(newStore){
-        return store.build(newStore).save();
-      },
-
-      deleteStore: function (stores) {
-        return stores.destroy()
-      },
-
-      putStore: function(currentStore){
-        return currentStore.save();
-      },
-
-
-      getAllStoreLedger: function(generalledger){
-        //generalledger.belongsTo(store);
-
-            return store.findAll({
-              include: [{
-                model: generalledger,
-                where: {
-                    $and: [{'totaldelivery': null}, {'totalcod': null}]
-                }, limit: 1, order: 'payDate DESC'
+          getOneStore: function(storeid){
+            return store.findOne({
+              where:{
+                'storeid':storeid
               }
-              ]
             });
-      },
+          },
 
-        getStoreLatestTotal: function (generalledger, bannedhistorylog){
-            return store.findAll({
-                include: [{
+          postOneStore: function(newStore){
+            return store.build(newStore).save();
+          },
+
+          deleteStore: function (stores) {
+            return stores.destroy()
+          },
+
+          putStore: function(currentStore){
+            return currentStore.save();
+          },
+
+
+          getAllStoreLedger: function(generalledger){
+            //generalledger.belongsTo(store);
+
+                return store.findAll({
+                  include: [{
                     model: generalledger,
                     where: {
-                        $and: [{'totaldelivery': {$ne: null}}, {'totalcod': {$ne: null}}]
-                    },limit: 1, order: 'payDate DESC'
-                },{
-                    model: bannedhistorylog,
-
-                    as: 'ban',
-
-                    where: {
-                    }, limit: 1, order: 'bannedtime DESC'
-
-                }]
-            });
-        },
-
-        //KhanhKC
-            getListStoreName: function(liststoreid){
-                return store.findAll({
-                    attributes: ['storeid','name','address','phonenumber'],
-                    where:{
-                        'storeid': {
-                            $in: liststoreid
-                        }
-                    }
+                        $and: [{'totaldelivery': null}, {'totalcod': null}]
+                    }, limit: 1, order: 'payDate DESC'
+                  }
+                  ]
                 });
-            }
-          //,
+          },
 
-      //getStoreLedger: function(generalledger, storeid){
-      //  //generalledger.belongsTo(store);
-      //
-      //  return store.findAll({where:{'storeid':storeid},include: [generalledger]});
-      //}
+          getStoreLatestTotal: function (generalledger, bannedhistorylog, managestore, user){
+                return store.findAll({
+                    include: [{
+                        model: generalledger,
+                        where: {
+                            $and: [{'totaldelivery': {$ne: null}}, {'totalcod': {$ne: null}}]
+                        },limit: 1, order: 'payDate DESC'
+                    },{
+                        model: bannedhistorylog,
+                        as: 'ban',
+                        where: {
+                        }, limit: 1, order: 'bannedtime DESC'
+                    },{
+                        model:managestore,
+                        include: {
+                            model: user,
+                            attributes: ['userstatus'],
+                            where: {
+                                'userstatus': [2,3]
+                            }
+                        }
+                    }],
 
-    }
+                });
+            },
+
+            //KhanhKC
+          getListStoreName: function(liststoreid){
+                    return store.findAll({
+                        attributes: ['storeid','name','address','phonenumber'],
+                        where:{
+                            'storeid': {
+                                $in: liststoreid
+                            }
+                        }
+                    });
+                },
+              //,
+
+          getStoreDetail: function(storeid, managestore, user, profile){
+                    return store.findOne({
+                        include: {
+                            model: managestore,
+                            attributes: ['storeid'],
+                            include: {
+                                model: user,
+                                attributes: ['username'],
+                                include: {model: profile}
+                            }
+                        },
+                        where:{
+                            'storeid':storeid
+                        }
+                    });
+                },
+
+
+          getAllInactiveStore: function(managestore, user, profile) {
+                    return store.findAll({
+                        include:[{
+                            model: managestore,
+                            include: {
+                                model: user,
+                                include: {model: profile},
+                                where: {
+                                    'userstatus': 1
+                                }
+
+                            }
+                        }]
+                    });
+                },
+        }
     });
     return store;
 };

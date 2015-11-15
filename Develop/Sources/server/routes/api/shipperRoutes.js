@@ -10,7 +10,11 @@ module.exports = function (app) {
 
     app.get('/api/tasks', checkAll, shipperCtrl.getTask);
 
+    app.get('/api/shipper/getNewShipperID', shipperCtrl.createShipperID);
+
     app.post('/api/shipper/updateTaskForShipper', shipperCtrl.updateTaskForShipper);
+
+    app.post('/api/shipper/addNewShipper', shipperCtrl.addNewUser);
 
     app.get('/api/shipper/getAllShipper', shipperCtrl.getAllShipper);
 
@@ -56,5 +60,7 @@ module.exports = function (app) {
 
     app.route('/api/shipper/test-socket')
         .get(shipperCtrl.testSk);
+
+
 
 }

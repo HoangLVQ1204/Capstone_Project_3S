@@ -15,9 +15,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
         freezeTableName: true,
         timestamps: false,
-        instanceMethods: {
 
-        },
         classMethods: {
             associate: function(db){
                 managestore.belongsTo(db.user,{

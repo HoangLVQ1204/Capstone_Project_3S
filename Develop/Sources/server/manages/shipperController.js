@@ -686,6 +686,51 @@ module.exports = function (app) {
         res.status(200).json(rs);
     };
 
+    //function create new shipperid
+    var createShipperID = function(req, res, next){
+        var isExisted = false;
+        do
+        {
+            var str = "000000" + parseInt(Math.random()*1000000);
+            var formatStr = str.substr(str.length - 6);
+            var newShipperID = "SP" + formatStr;
+            //console.log(newShipperID);
+            db.user.findUserByUsername(newShipperID)
+                .then(function(shipper){
+                    console.log(newShipperID, shipper);
+                    if(!shipper){
+                        //console.log('AAA');
+                        isExisted = true;
+                        res.status(200).json(newShipperID);
+                    }
+                },function(err){
+                    //console.log(newShipperID, shipper);
+                    res.status(400).json("Can not get new shipperid");
+                });
+        } while (isExisted);
+    };
+
+    //function add new Shipper to system
+    var addNewUser = function(req, res, next){
+        var user = req.body;
+            db.user.addNewUser(user.account)
+                .then(function(){
+                    db.profile.addNewProfile(user.profile)
+                        .then(function(profile){
+                            res.status(201).json(profile);
+                        },function(err){
+                            //console.log(newShipperID, shipper);
+                            res.status(400).json("Can not add new profile");
+                        });
+                },function(err){
+                    //console.log(newShipperID, shipper);
+                    res.status(400).json("Can not add new user");
+                });
+
+    };
+
+
+
     return {
         getTask: getTask,
         getHistory: getHistory,
@@ -709,5 +754,8 @@ module.exports = function (app) {
         getTaskBeIssuePending: getTaskBeIssuePending,
         getAllTaskCancel: getAllTaskCancel,
         testSk: testSk,
+        createShipperID: createShipperID,
+        addNewUser: addNewUser
+
     }
 }

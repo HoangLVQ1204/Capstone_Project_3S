@@ -7,10 +7,19 @@ module.exports = function(app){
 	var checkAll = [authManage.checkToken(),authManage.checkRole()];
 
  	app.param('username', controller.params);
- 	 	
+
 	//app.get('/users',checkAll,controller.get);
 
 	app.get('/user/profile/:username',controller.getProfileUser);
+
+	app.route('/api/user/:user')
+		.get(controller.getUserDetail)
+		.put(controller.putUser);
+
+	app.route('/api/userProfile/:user')
+		.put(controller.putProfile);
+
+	app.param('user', controller.paramUsername);
 
     //app.route('/api/users/:user_id')
     //	.get(controller.getOne)

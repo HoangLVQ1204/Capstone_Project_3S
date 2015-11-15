@@ -36,12 +36,69 @@ module.exports = function(app) {
             },function(err){
                 next(err);
             });
-    }
+    };
 
+    var paramUsername = function(req, res, next, username) {
+        //console.log(shipperid)
+        return db.user.findUserDetail(username, db.profile)
+            .then(function(user) {
+                if (user) {
+                    req.user = user;
+                    next();
+                } else {
+                    next(new Error('No user with that id'));
+                }
+            }, function(err) {
+                next(err);
+            });
+    };
+
+    var getUserDetail = function(req, res, next) {
+        res.status(200).json(req.user.toJSON());
+    };
+
+    var putUser = function (req, res, next) {
+        var curUser = req.user.toJSON();
+        var newUser = req.body;
+        //console.log(curUser.toJSON());
+        //console.log(newUser);
+
+        _.merge(curUser, newUser);
+
+        delete curUser.profile;
+        //console.log(curUser)
+        return db.user.putUser(curUser)
+            .then(function(user){
+                res.status(201).json(user);
+            },function(err){
+                next(err);
+            });
+    };
+
+    var putProfile = function (req, res, next) {
+        var curUser = req.user.profile.toJSON();
+        var newUser = req.body;
+        //console.log(curUser);
+        //console.log(newUser);
+
+        _.merge(curUser, newUser);
+
+        //delete curUser.profile;
+        return db.profile.updateProfile(curUser)
+            .then(function(user){
+                res.status(201).json(user);
+            },function(err){
+                next(err);
+            });
+    };
     return {
         get: get,
         getProfileUser: getProfileUser,
-        params: params
+        params: params,
+        paramUsername: paramUsername,
+        getUserDetail: getUserDetail,
+        putUser: putUser,
+        putProfile: putProfile
     }
 }
 

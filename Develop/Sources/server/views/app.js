@@ -110,6 +110,27 @@ angular.module('app', [
             access: config.role.admin
         })
 
+        .state('admin.userDetail',{
+            url: '/userDetail?username',
+            template: '<admin-user-detail></admin-user-detail>',
+            //parent: 'admin.issueBox',
+            access: config.role.admin
+        })
+
+        .state('admin.storeDetail',{
+            url: '/storeDetail?storeid',
+            template: '<admin-store-detail></admin-store-detail>',
+            //parent: 'admin.issueBox',
+            access: config.role.admin
+        })
+
+        .state('admin.acceptStore',{
+            url: '/acceptStore',
+            template: '<admin-accept-store></admin-accept-store>',
+            //parent: 'admin.issueBox',
+            access: config.role.admin
+        })
+
         .state('store',{
             abstract: true,
             url: '/store',
