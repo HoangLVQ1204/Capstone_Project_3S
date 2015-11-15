@@ -5,7 +5,8 @@ module.exports = function(sequelize, DataTypes) {
     codeid: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     codecontent: {
       type: DataTypes.INTEGER,
