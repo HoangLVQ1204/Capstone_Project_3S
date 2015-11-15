@@ -212,11 +212,15 @@ module.exports = function (app) {
                         type: 'store',
                         clientID: orderObj.storeid
                     };
+
                     var msg = {
-                        shipper: shipperid,
-                        order: orderObj.orderid,
-                        content: 'change order status',
-                        type: 'Inform'
+                        type: 'Info',
+                        title: 'Shipper changed order status',
+                        content: shipperid + ' changed status of order ' + orderObj.orderid,
+                        url: '#',
+                        isread: false,
+                        username: orderObj.storeid,
+                        createddate: new Date()
                     };
 
                     // DATA TO RESPONSE CLIENT
@@ -247,8 +251,8 @@ module.exports = function (app) {
                                     statusid: nextStatus,
                                     completedate: completeDate
                                 }).then(function (rs) {
-                                    //:TODO socket need to check null
                                     server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
+                                    db.notification.addNotification(msg);
                                     if(oldStatus == taskBegin.statusid){
                                         Task.updateTaskStatus(2, taskid, shipperid).then(function (ok) {
                                             return res.status(200).json("Your task was active!");
@@ -278,8 +282,8 @@ module.exports = function (app) {
                             statusid: nextStatus,
                             completedate: completeDate
                         }).then(function (rs) {
-                            //:TODO socket need to check null
                             server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
+                            db.notification.addNotification(msg);
                             var taskBegin = statusList[0];
                             var taskDone = statusList[statusList.length - 1];
                             if(oldStatus == taskBegin.statusid){
@@ -742,14 +746,37 @@ module.exports = function (app) {
             type: 'store',
             clientID: 'STR003'
         };
+        //var msg = {
+        //    shipper: "sphuy",
+        //    order: 'order1',
+        //    content: 'Change order status'
+        //};
         var msg = {
-            shipper: "sphuy",
-            order: 'order1',
-            content: 'Change order status'
+            type: "info",
+            title: "Test",
+            content: "This is test",
+            url: "http://localhost:3000/api/shipper/test-socket",
+            isread: false,
+            username: 'ST000003',
+            createddate: new Date()
         };
         server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
         var rs = server.socket.stores;
         res.status(200).json(rs);
+        //var noti = {
+        //    type: "info",
+        //    title: "Test",
+        //    content: "This is test",
+        //    url: "#",
+        //    isread: false,
+        //    username: 'ST000003',
+        //    createddate: new Date()
+        //};
+        //db.notification.addNotification(noti).then(function(rs){
+        //    res.status(200).json(rs);
+        //},function(er){
+        //    res.status(400).json(er);
+        //})
     };
 
     return {

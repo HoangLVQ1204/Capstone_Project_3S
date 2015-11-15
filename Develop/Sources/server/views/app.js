@@ -192,7 +192,7 @@ angular.module('app', [
     $rootScope.notify = function(notification) {
         $rootScope.numberNewNoti += 1;
         notificationService.setNumberNewNotifications($rootScope.numberNewNoti);
-        notificationService.addNotification(notification);
+        //notificationService.addNotification(notification);
         var data = {
             life:10000000000000,
             horizontal: 'bottom',
