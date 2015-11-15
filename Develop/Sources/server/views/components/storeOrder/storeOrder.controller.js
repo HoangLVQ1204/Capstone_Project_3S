@@ -163,7 +163,9 @@ function storeOrderController($scope, $state, dataService, config) {
             $("#editGoodModal").submit(function(e){
                 e.preventDefault();
                 if($(this).parsley( 'validate' )){
-                    editGood()
+                    editGood();
+                    $scope.order.overWeightFee = calculateOverWeightFee($scope.selectedDistrict.districtid,$scope.goods);
+                    $scope.$apply(); 
                     $('#md-edit-good').modal('hide');
                 }
 
@@ -265,15 +267,18 @@ function storeOrderController($scope, $state, dataService, config) {
     function calculateOverWeightFee(districtId,listGoods){
         var totalWeight = caculatateWeight(listGoods);
         var overWeightFee = 0;
-        var listInDistrictId =['001','002','003','005','006','007','008','009'];
+        var listInDistrictId =["001","002","003","005","006","007","008","009"];
         if(totalWeight > 4000 ){
-            if(listInDistrictId.indexOf(districtId)){
+            if(listInDistrictId.indexOf(districtId)>-1){
+                console.log("=============IN=======",districtId);
                 overWeightFee = (totalWeight - 4000)*2*2;
             }else {
+                console.log("=============out=======",districtId);
                 overWeightFee = (totalWeight - 4000)*2*2.5;
             }
             
         }
+        console.log("=============totalWeight=======",totalWeight);
         console.log("=============overWeightFee=======",overWeightFee);
         return overWeightFee;        
     }
