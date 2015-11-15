@@ -41,7 +41,11 @@ var app = angular.module('starter', ['ionic', 'ngCordova','uiGmapgoogle-maps','a
 
   }]);
 
-app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvider, jwtInterceptorProvider, $httpProvider) {
+app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvider, jwtInterceptorProvider, $httpProvider, $ionicConfigProvider) {
+
+  //Fix tab bottom in android
+  $ionicConfigProvider.tabs.position('bottom');
+
   uiGmapGoogleMapApiProvider.configure({
     key: 'AIzaSyA_tcRSfGJdCCDLvGXGPZqdOMQC9bniNoo',
     v: '3.17',
