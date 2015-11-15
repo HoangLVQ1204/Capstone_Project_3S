@@ -252,7 +252,11 @@ module.exports = function (app) {
                                     completedate: completeDate
                                 }).then(function (rs) {
                                     server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
-                                    db.notification.addNotification(msg);
+                                    db.managestore.getUsersByStoreID(orderObj.storeid).then(function(rs){
+                                        if(rs.length>0) manager = rs[0].manager;
+                                        msg[username] = manager;
+                                        db.notification.addNotification(msg);
+                                    });
                                     if(oldStatus == taskBegin.statusid){
                                         Task.updateTaskStatus(2, taskid, shipperid).then(function (ok) {
                                             return res.status(200).json("Your task was active!");
@@ -283,7 +287,11 @@ module.exports = function (app) {
                             completedate: completeDate
                         }).then(function (rs) {
                             server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
-                            db.notification.addNotification(msg);
+                            db.managestore.getUsersByStoreID(orderObj.storeid).then(function(rs){
+                                if(rs.length>0) manager = rs[0].manager;
+                                msg[username] = manager;
+                                db.notification.addNotification(msg);
+                            });
                             var taskBegin = statusList[0];
                             var taskDone = statusList[statusList.length - 1];
                             if(oldStatus == taskBegin.statusid){
@@ -742,27 +750,32 @@ module.exports = function (app) {
     //// END change status of shipper
 
     var testSk = function(req, res, next){
-        var receiver = {
-            type: 'store',
-            clientID: 'STR003'
-        };
-        //var msg = {
-        //    shipper: "sphuy",
-        //    order: 'order1',
-        //    content: 'Change order status'
+        //var receiver = {
+        //    type: 'store',
+        //    clientID: 'STR003'
         //};
-        var msg = {
-            type: "info",
-            title: "Test",
-            content: "This is test",
-            url: "http://localhost:3000/api/shipper/test-socket",
-            isread: false,
-            username: 'ST000003',
-            createddate: new Date()
-        };
-        server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
-        var rs = server.socket.stores;
-        res.status(200).json(rs);
+        ////var msg = {
+        ////    shipper: "sphuy",
+        ////    order: 'order1',
+        ////    content: 'Change order status'
+        ////};
+        //var msg = {
+        //    type: "info",
+        //    title: "Test",
+        //    content: "This is test",
+        //    url: "http://localhost:3000/api/shipper/test-socket",
+        //    isread: false,
+        //    username: 'ST000003',
+        //    createddate: new Date()
+        //};
+        //server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
+        //var rs = server.socket.stores;
+        db.managestore.getUsersByStoreID('STR0003').then(function(rs){
+            if(rs.length>0)
+            res.status(200).json(rs);
+            else res.status(200).json("OKKK");
+        });
+        //res.status(200).json(rs);
         //var noti = {
         //    type: "info",
         //    title: "Test",
