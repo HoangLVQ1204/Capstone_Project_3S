@@ -101,7 +101,7 @@ module.exports = function(app) {
         get: get,
         getProfileUser: getProfileUser,
         params: params,
-        createStoreOwnerAccount: createStoreOwnerAccount
+        createStoreOwnerAccount: createStoreOwnerAccount,
         paramUsername: paramUsername,
         getUserDetail: getUserDetail,
         putUser: putUser,
