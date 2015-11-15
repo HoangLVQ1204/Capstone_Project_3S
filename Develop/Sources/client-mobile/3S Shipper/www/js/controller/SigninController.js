@@ -15,33 +15,42 @@ app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService',
       noBackdrop: false,
       template: '<ion-spinner icon="bubbles" class="spinner-balanced"/>'
     });
-    authService.signIn($scope.user)
-      .then(function(res){
-        authService.saveToken(res.data.token);
-        if (!authService.isRightRole(roles.shipper)) {
+    if(typeof $scope.user === "undefined" ||  $scope.user.username === "" || $scope.user.password === "") {
+      $ionicLoading.hide();
+      showError({
+        message: 'Username and Password cannot be blank'
+      });
+    } else {
+      authService.signIn($scope.user)
+        .then(function(res){
+          authService.saveToken(res.data.token);
+          //check role
+          if (!authService.isRightRole(roles.shipper)) {
+            $ionicLoading.hide();
+            authService.signOut();
+            showError({
+              message: 'Username or Password is invalid'
+            });
+          } else {
+            socketService.authenSocket()
+              .then(function(){
+                socketShipper.registerSocket();
+                $state.go('app.tasks');
+                console.log("test1");
+                //$ionicLoading.hide();
+              });
+          }
+        })
+        .catch(function(error){
           $ionicLoading.hide();
-          authService.signOut();
           showError({
             message: 'Username or Password is invalid'
           });
-        } else {
-          socketService.authenSocket()
-            .then(function(){
-              //if(authService.isRightRole(roles.shipper)){
-                socketShipper.registerSocket();
-                $state.go('app.tasks');
-                $ionicLoading.hide();
-              //}
-            });
-        }
-      })
-      .catch(function(error){
-        $ionicLoading.hide();
-        showError({
-          message: 'Username or Password is invalid'
-        });
-      })
-  }
+        })
+    }
+
+
+  };
 
   $scope.logOut = function() {
     $ionicLoading.show({

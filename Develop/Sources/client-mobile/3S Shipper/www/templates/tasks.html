@@ -2,10 +2,11 @@
 <ion-view title="Tasks">
   <ion-nav-back-button>
   </ion-nav-back-button>
-    <ion-tabs class="tabs-striped tabs-color-balanced">
+    <ion-tabs class="tabs-striped tabs-color-balanced ">
       <ion-tab title="Express" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart"  badge="badgeCountExpress" badge-style="badge-assertive" on-select="tabSelected('express')">
         <ion-pane>
           <ion-content>
+            <p ng-if="badgeCountExpress == 0" class="notasks">No Task</p>
             <ion-list>
               <ion-item class="item-icon-right" ng-repeat="order in expressTasks" type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.taskid}}', isCancel: '{{order.iscancel}}'})">
                 <div class="titleContent" style="min-height: 90px;">
@@ -33,6 +34,7 @@
       <ion-tab title="Pickup" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart" badge="badgeCountPick" badge-style="badge-assertive" on-select="tabSelected('pickup')">
         <ion-pane>
           <ion-content>
+            <p ng-if="badgeCountPick == 0" class="notasks">No Task</p>
             <ion-list>
               <ion-item class="item-icon-right" ng-repeat="order in pickupTasks | orderBy: 'pickupdate' " type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.taskid}}', isCancel: '{{order.iscancel}}'})">
                 <div class="titleContent" style="min-height: 90px;">
@@ -60,6 +62,7 @@
       <ion-tab title="Ship" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart"  badge="badgeCountShip" badge-style="badge-assertive" on-select="tabSelected('ship')">
         <ion-pane>
           <ion-content >
+            <p ng-if="badgeCountShip == 0" class="notasks">No Task</p>
             <ion-list>
               <ion-item class="item-icon-right" ng-repeat="order in shipTasks | orderBy: 'deliverydate'" type="item-text-wrap"  ui-sref="app.detail({orderId: '{{order.taskid}}', isCancel: '{{order.iscancel}}'})">
                 <div class="titleContent" style="min-height: 90px;">
@@ -87,6 +90,7 @@
       <ion-tab title="Return" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart"  badge="badgeCountReturn" badge-style="badge-assertive" on-select="tabSelected('express')">
         <ion-pane>
           <ion-content>
+            <p ng-if="badgeCountReturn == 0" class="notasks">No Task</p>
             <ion-list>
               <ion-item class="item-icon-right" ng-repeat="order in returnTasks" type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.taskid}}', isCancel: '{{order.iscancel}}'})">
                 <div class="titleContent" style="min-height: 90px;">

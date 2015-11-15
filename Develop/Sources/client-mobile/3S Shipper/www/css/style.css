@@ -98,6 +98,13 @@ a {
   width: 170px;
 }
 
+.notasks {
+  font-size: 2em;
+  color: #9B9B9B;
+  margin-top: 15px;
+  margin-left: 5px;
+}
+
 /*Side left - Header bar && nav bar*/
 .clBar {
   background-color: #3F51B5;

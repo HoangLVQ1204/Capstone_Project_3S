@@ -16,6 +16,7 @@ module.exports = function (app) {
     };
 
     var get = function(req, res, next) {
+        console.log('notificationManage GET');
         var username = req.user.username;
         var offset = req.query.offset;
         var limit = req.query.limit;
@@ -26,6 +27,7 @@ module.exports = function (app) {
     };
 
     var post = function(req, res, next) {
+        console.log('notificationManage POST');
         var notification = req.body;
         notification.username = req.user.username;        
         db.notification.addNotification(notification)
@@ -35,6 +37,7 @@ module.exports = function (app) {
     };
 
     var put = function(req, res, next) {
+        console.log('notificationManage PUT');
         var notification_id = req.params.notification_id;
         var data = req.body;
         data.notification_id = notification_id;
