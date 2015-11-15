@@ -54,7 +54,19 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(db) {
       },
       postOneGood: function(newGood){
-        return goods.build(newGood).save();
+        return goods.build(
+          {
+            goodsname: newGood.goodsname,
+            orderid: newGood.orderid,
+            stockid: newGood.stockid,
+            weight: newGood.weight,
+            lengthsize: newGood.lengthsize,
+            widthsize: newGood.widthsize,
+            heightsize: newGood.heightsize,
+            description: newGood.description,
+            amount: newGood.amount
+          }
+        ).save();
       },
 
       deleteGood: function (orderid) {

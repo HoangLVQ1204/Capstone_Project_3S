@@ -230,16 +230,16 @@ module.exports = function (app) {
             console.log("===========totalWeight=======", totalWeight);
             if(innerCity.indexOf(district)> -1){
                 overWeightFee = (totalWeight - 4000)*2*2;
-                console.log("=============In=========",overWeightFee);
+                console.log("=============In=========",district);
             }else {
                 overWeightFee = (totalWeight - 4000)*2*2.5;
-                console.log("=============Out=========",overWeightFee);
+                console.log("=============Out=========",district);
             }
             
         }
         ///////
-        //console.log("=============fee===============",fee);
-        //console.log("=============overWeightFee===============",overWeightFee);
+        //console.log("=============fee===============",fee);        
+        console.log("=============overWeightFee=======",overWeightFee);
         console.log("=============req.body===============",req.body);
         newOrder.storeid = req.body.order.storeid;
         newOrder.ordertypeid = req.body.order.ordertypeid;
@@ -259,35 +259,27 @@ module.exports = function (app) {
             newOrder.cod = parseInt(req.body.order.cod);
         }
         //console.log("==============11===============");
-       ////////////
-        var str = "000000" + parseInt(Math.random()*1000000);
-        var formatStr = str.substr(str.length - 6);                    
-        var newCodeID = formatStr;
-        
+               
         var code1 = {
-        'codecontent' : req.body.order.gatheringCode,
+        'codecontent' : parseInt(req.body.order.gatheringCode),
         'typeid' : 2,
-        'orderid' : newOrder.orderid,
-        'codeid' : newCodeID++
+        'orderid' : newOrder.orderid        
        };
        var code2 = {
-        'codecontent' : req.body.order.deliverCode,
+        'codecontent' : parseInt(req.body.order.deliverCode),
         'typeid' : 6,
-        'orderid' : newOrder.orderid,
-        'codeid' : newCodeID++
+        'orderid' : newOrder.orderid
        };       
        
        var code3 = {
-        'codecontent' : req.body.order.inStockCode,
+        'codecontent' : parseInt(req.body.order.inStockCode),
         'typeid' : 3,
-        'orderid' : newOrder.orderid,
-        'codeid' : newCodeID++
+        'orderid' : newOrder.orderid
        };
        var code4 = {
-        'codecontent' : req.body.order.returnStoreCode,
+        'codecontent' : parseInt(req.body.order.returnStoreCode),
         'typeid' : 5,
-        'orderid' : newOrder.orderid,
-        'codeid' : newCodeID++
+        'orderid' : newOrder.orderid
        };
        //console.log("==============22==============");
        
@@ -300,11 +292,7 @@ module.exports = function (app) {
                 db.confirmationcode.postOneCode(code4);
                 //console.log("==============44==============");
                 for(var i = 0; i < req.body.goods.length; i++){
-                    var good = {};
-                    var str = "000000" + parseInt(Math.random()*1000000);
-                    var formatStr = str.substr(str.length - 6);                    
-                    var newGoodID =  formatStr;
-                    good.goodsid = newGoodID;
+                    var good = {};                    
                     good.orderid = newOrderID;
                     good.stockid = null;
                     good.goodsname = req.body.goods[i].goodsname;
