@@ -21,7 +21,9 @@ function storeController($scope,$state,socketService,socketStore,dataService,aut
 
     $scope.signOut = function(){
         console.log("log out");
+        socketService.disconnect();
         authService.signOut();
+        $state.go("login");
     }
 
     function loading(){

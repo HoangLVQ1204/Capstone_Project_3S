@@ -63,7 +63,7 @@ module.exports = function(sequelize, DataTypes) {
         return user.findAll({});
       },
 
-      getAllUsersHasRole: function(role, profile, workingstatus) {
+      getAllUsersHasRole: function(role, profile) {
         return user.findAll({
           include:[{
               model: profile
@@ -82,16 +82,17 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
 
-      //findUserByUsername:  function(username,profile){
-      //  return user.findOne({
-      //    include:[{model:profile, attributes: ['name','identitycard','avatar']}],
-      //    where: {
-      //      username: username
-      //    }
-      //  });
-      //},
 
-      postOneUser: function(newUser){
+      findUserDetail:  function(username,profile){
+        return user.findOne({
+          include:[{model:profile}],
+          where: {
+            username: username
+          }
+        });
+      },
+
+      addNewUser: function(newUser){
         return user.build(newUser).save();
       },
 
@@ -100,7 +101,14 @@ module.exports = function(sequelize, DataTypes) {
       },
 
       putUser: function(currentUser) {
-        return currentUser.save();
+        //console.log(currentUser)
+        return user.update({
+          'password': currentUser.password,
+          'userrole': currentUser.userrole,
+          'userstatus': currentUser.userstatus
+        },{where: {
+          'username': currentUser.username
+        }})
       },
 
       getAllShipperWithTask: function(task, profile, order, orderstatus, tasktype, taskstatus) {

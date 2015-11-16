@@ -22,6 +22,7 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
             .then(function(res){
 
                 authService.saveToken(res.data.token);
+                console.log('saveToken + authenSocket');
                 socketService.authenSocket()
                 .then(function() {
                     console.log('then initSocket');

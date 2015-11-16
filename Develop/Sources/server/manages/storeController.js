@@ -4,7 +4,7 @@ module.exports = function(app) {
 
     var db = app.get('models');
     //db.generalledger.belongsTo(db.store);
-    db.store.hasMany(db.generalledger,  {foreignKey : 'storeid'});
+
 
     var params = function(req, res, next, storeid) {
         return db.store.getOneStore(storeid)
@@ -79,7 +79,7 @@ module.exports = function(app) {
     };
 
     var getAllLedger = function(req, res, next){
-        return db.store.getStoreLatestTotal(db.generalledger, db.bannedhistorylog)
+        return db.store.getStoreLatestTotal(db.generalledger, db.bannedhistorylog, db.managestore, db.user)
             .then(function(store) {
                 res.status(200).json(store);
             }, function(err) {
@@ -205,7 +205,29 @@ module.exports = function(app) {
           });       
         db.store.getListStoreName(listStoreID)
             .then(function (storeRs) {
-                res.status(201).json(storeRs);
+                res.status(200).json(storeRs);
+            }, function () {
+                next(new Error("Can not find store name!"))
+            });
+
+    };
+
+    var getStoreDetail = function(req,res,next){
+
+        db.store.getStoreDetail(req.store.storeid, db.managestore, db.user, db.profile)
+            .then(function (store) {
+                res.status(200).json(store);
+            }, function () {
+                next(new Error("Can not find store name!"))
+            });
+
+    };
+
+    var getAllInactiveStore = function(req,res,next){
+
+        db.store.getAllInactiveStore(db.managestore, db.user, db.profile)
+            .then(function (store) {
+                res.status(200).json(store);
             }, function () {
                 next(new Error("Can not find store name!"))
             });
@@ -226,7 +248,9 @@ module.exports = function(app) {
             getLatestAutoAccountDate: getLatestAutoAccountDate,
             postNewLedger: postNewLedger,
             updateLedgerForOrder: updateLedgerForOrder,
-            getAllStoreName: getStoreName
+            getAllStoreName: getStoreName,
+            getStoreDetail: getStoreDetail,
+            getAllInactiveStore: getAllInactiveStore
     }
 }
 

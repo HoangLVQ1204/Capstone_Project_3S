@@ -49,6 +49,25 @@ module.exports = function(sequelize, DataTypes) {
             username: username
           }
         });
+      },
+      addNewProfile: function(newProfile){
+        return profile.build(newProfile).save();
+      },
+      updateProfile: function(newProfile){
+        return profile.update({
+            'name': newProfile.name,
+            'identitycard': newProfile.identitycard,
+            'address': newProfile.address,
+            'dob': newProfile.dob,
+            'email': newProfile.email,
+            'phonenumber': newProfile.phonenumber,
+            'avatar': newProfile.avatar
+        },{
+            where: {
+              'username': newProfile.username
+
+            }
+        })
       }
     }
   });
