@@ -167,7 +167,7 @@ angular.module('app', [
         })
 
         .state('store.orderdetail',{
-             url: '/orderdetail',
+             url: '/orderdetail?orderid',
              template: '<store-order-detail-layout></store-order-detail-layout>',
              controller: function($scope, $rootScope, mapService, authService){
                  var mode = "all";

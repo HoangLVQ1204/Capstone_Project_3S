@@ -165,7 +165,7 @@
                                                     <td width="10%">
                                                         <span class=" tooltip-area">
                                                     <a class="btn btn-default btn-sm"
-                                                       title="Edit"><i class="fa fa-edit (alias)"></i></a>
+                                                       title="Edit"><i class="fa fa-edit (alias)" ui-sref="store.orderdetail({orderid: x.orderid})"></i></a>
                                                     <a ng-disabled ="x.statusname == 'Canceling'" ng-click="setOrder(x)" data-toggle="modal"
                                                        data-target="#md-cancel-order" class="btn btn-default btn-sm"
                                                        title="Cancel"><i class="fa fa-times"></i></a>
