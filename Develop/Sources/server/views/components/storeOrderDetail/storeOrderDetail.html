@@ -1,85 +1,147 @@
 <div class="panel">
-	<div class="column">
-		<div class="row">
-			<div class="col-md-2"></div>
-			<div class="col-md-10">
-				<div class="col-md-2">
-				<div class="text-center bs-wizard-stepnum">
-                    <p>Đóng gói xong - Sẵn sàng giao hàng</p>
-                    <span>2015-11-09 17:55:02</span>
-                </div>
-				<div class="progress">
-					<div class="progress-bar  bg-success" role="progressbar" aria-valuenow="80" aria-valuemin="0" 
-					aria-valuemax="100" style="width: 100% "></div>
-					<span>O</span>
-				</div>		
-			</div>		
+	<header class= "panel-heading">
+		<h2><strong>Order</strong> Detail</h2>
+	</header>
 
-			</div>
+	<div class="column panel-body">
+		<div></div>
+
+		<div class="col-md-3">
+			<br>
+			<h3><strong>Shipper</strong> Info</h3>
+			<hr>
+			<div class=" align-lg-center">
+				<img alt="" src="assets/avatar/shipper/SP000001.jpg" class="circle" style="max-width:120px; border:5px #edece5 solid; margin:0;">	
+			</div>					
 		</div>
-		<br><br>
-		<div>
-			<div class="col-md-12" parsley-validate parsley-bind> 			
-			<div class= "col-md-3">
-				<label  class="fullWidth color"><strong>Delivery Information</strong></label>
-				<div class="form-group">                                
-                    <div class="input-icon"> <i class="fa fa-user ico"></i>
-						<input class="form-control " type="text" placeholder="Username">
+		<div class="column col-md-9">	
+			<form>	
+				<br>
+				<h3><strong>Delivery</strong> Info</h3>
+				<hr>
+
+				<div class="form-group row">
+					<div class="col-md-6">
+						<label class="control-label">Full name</label>
+						<input type="text" name="fullname" ng-model="data.recipientname"
+						class="form-control"
+						placeholder="Your customer name" parsley-required="true">
 					</div>
-					<div class="input-icon"> <i class="fa fa-phone ico"></i>
-						<input class="form-control " type="text" placeholder="Phone"  value="098989898" disabled>
+					<div class="col-md-6">
+						<label class="control-label">Phone</label>
+						<input ng-model="data.recipientphone" type="text" class="form-control"
+						parsley-type="phone"  parsley-required="true"
+						placeholder="(XXX) XXXX XXX">
 					</div>
-					<div class="input-icon"> <i class="fa fa-home ico"></i>
-						<input class="form-control " type="text" placeholder="Address">
-					</div>                    
-                </div> 
-			</div>
-			<div class= "col-md-3">
-				 <label  class="fullWidth color"><strong>Pickup Information</strong></label>
-				<div class="form-group">                                
-                    <div class="input-icon"> <i class="fa fa-user ico"></i>
-						<input class="form-control " type="text" placeholder="Username">
-					</div><br>
-					<div class="input-icon"> <i class="fa fa-phone ico"></i>
-						<input class="form-control " type="text" placeholder="Phone"  value="Dang Van A">
-					</div><br>
-					<div class="input-icon"> <i class="fa fa-home ico"></i>
-						<input class="form-control " type="text" placeholder="Address">
-					</div>                    
-                </div> 
-			</div>
-			<div class= "col-md-3">
-				<label  class="fullWidth color"><strong>Other Information</strong></label>
+				</div>
+				<div class="form-group row">
+					<div class="col-md-4">
+						<label class="control-label">Province</label>
+						<select parsley-required="true" class="form-control"
+						ng-options="x.name for x in listProvince track by x.provinceid"
+						ng-model="selectedProvince" ng-change="updateDistrict()"></select>
+					</div>
+					<div class="col-md-4">
+						<label class="control-label">District</label>
+						<select parsley-required="true" class="form-control"
+						ng-options="x.name for x in listDistrict track by x.districtid"
+						ng-model="selectedDistrict" ng-change="updateWard()"></select>
+					</div>
+					<div class="col-md-4">
+						<label class="control-label">Ward</label>
+						<select parsley-required="true" class="form-control"
+						ng-options="x.name for x in listWard track by x.wardid"
+						ng-model="selectedWard" ng-change="updateDeliveryAdd()"></select>
+					</div>
+				</div>
 				<div class="form-group">
-                                <label class="control-label col-md-7 align-lg-left">Cash on delivery:</label>
-                                <label  class="control-label col-md-5 align-lg-right">{{order.cod|number}} VND</label>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-7 align-lg-left">Over weight fee:</label>
-                                <label class="control-label col-md-5 align-lg-right">{{order.overWeightFee|number}} VND</label>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-7 align-lg-left">Ship fee:</label>
-                                <label class="control-label col-md-5 align-lg-right">{{order.fee|number}} VND</label>
-                            </div>  
+					<label class="control-label">Address</label>
+					<textarea ng-model="houseNumber" class="form-control"
+					parsley-trigger="keyup" rows="1"
+					placeholder="Number Street (Eg: 40 Duy Tân)" ng-change="updateDeliveryAdd()" required></textarea>
+				</div>
+				
+				
+				<br>
+				<h3><strong>Pickup</strong> Info</h3>
+				<hr>
+				<div class="form-group row">
+					<div class="col-md-6">
+						<label class="control-label">Store</label>
+						<select parsley-required="true" class="form-control"
+						ng-options="x.name for x in stores track by x.storeid"
+						ng-model="selectedStore">
+					</select>
+				</div>
+				<div class="col-md-6">
+					<label class="control-label">Phone</label>
+					<input ng-model="selectedStore.phonenumber" type="text"  class="form-control"
+					parsley-type="phone" parsley-required="true"
+					placeholder="Your store phone munber" disabled>
+				</div>
 			</div>
-			<div class="col-md-3">
-				<label  class="fullWidth color"><strong>Confirm Code</strong></label>
-                            <div class="form-group">
-                                <label class="control-label col-md-7 align-lg-left">Code for cusotmer:</label>
-                                <label  class="control-label col-md-5 align-lg-right">{{order.deliverCode}}</label>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-7 align-lg-left">Code for shipper:</label>
-                                <label  class="control-label col-md-5 align-lg-right">{{order.gatheringCode}}</label>
-                            </div>
-			</div>			
-            </div>
-			<div>asdfsadf</div>
-		</div>
+			<div class="form-group">
+				<label class="control-label">Address</label>
+				<textarea ng-model="selectedStore.address" class="form-control"
+				parsley-trigger="keyup" rows="1"
+				placeholder="Enter customer address" disabled></textarea>
+			</div>
+
+			<br>
+			<h3><strong>Goods</strong> Info</h3>
+			<hr>
+			<table class="table table-hover table-bordered">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Name</th>
+						<th>Amount</th>
+						<th>Weight</th>
+						<th>Length</th>
+						<th>Width</th>
+						<th>Height</th>
+						<th>Description</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody align="center">
+					<tr ng-repeat="x in listgoods">
+						<td>{{$index+1}}</td>
+						<td>{{x.goodsname}}</td>
+						<td>{{x.amount}}</td>
+						<td>{{x.weight}}</td>
+						<td>{{x.lengthsize}}</td>
+						<td>{{x.widthsize}}</td>
+						<td>{{x.heightsize}}</td>
+						<td>{{x.description}}</td>
+						<td width="15%"><span class=" tooltip-area">
+							<a ng-click="setGood(x,$index)"  class="btn btn-default btn-sm" data-toggle="modal" data-target="#md-edit-good"
+							title="Edit"><i class="fa fa-edit (alias)"></i></a>
+							<a ng-click="setGood(x,$index)" data-toggle="modal" data-target="#md-delete-goods" class="btn btn-default btn-sm"
+							title="Delete"><i class="fa fa-times"></i></a>
+						</span></td>
+
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="10" class="text-left">
+							<div  class="col-sm-12 col-lg-12 btn-group btn-group-xs color">
+								<button type="button" ng-click="refreshGood()" class=" btn btn-block buttonAdd " data-toggle="modal" data-target="#md-add-good"><i class="fa fa-plus"></i></button>
+							</div>
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+			<hr>
+			<div class="form-group">
+				<button type="button" class="btn btn-theme"> Update Order</button>
+			</div>
+		</form>
 	</div>
+	<!-- /row-->
+</div>
 </div>
 
 
 
-			
