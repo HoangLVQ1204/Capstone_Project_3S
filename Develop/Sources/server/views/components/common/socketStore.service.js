@@ -45,7 +45,6 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
     });
 
     socketService.on('shipper:change:order:status', function(data) {
-        console.log(data);
         $rootScope.notify(data.msg);
         data['message'] = data.msg.content;
 

@@ -140,11 +140,11 @@ module.exports = function(server,app){
         }
         if (receiver.clientID) {    // clientID = shipperID || storeID            
             var socketID = '';
-            console.log("RECEIVERRRRRRR ",receiver,"====================");
+
             if (receiver.type === 'shipper') {
                 if(io.shippers[receiver.clientID]) socketID = io.shippers[receiver.clientID].socketID;
             } else if (receiver.type == 'store') {
-                console.log("EMIT STOREEEEEEEE",io.stores['STR003'],"=================");
+
                 if(io.stores[receiver.clientID]) socketID = io.stores[receiver.clientID].socketID;
             } else if (receiver.type == 'admin') {
                 if(io.admins[receiver.clientID]) socketID = io.admins[receiver.clientID].socketID;
@@ -177,13 +177,12 @@ module.exports = function(server,app){
             sender: sender,            
             msg: msg
         };
-        console.log("DATAAAAAAAA  ", data,"=========---=========");
+
         var listEvents = [].concat(eventName);
         [].concat(receiver).forEach(function(type, index) {     
             data.receiver = type;
             var connection = io.receiverSocket(type);
             if(connection) connection.emit(listEvents[index], data, callback);
-            console.log("CONNECTIONNNNN ", (connection!=undefined),"=========---=========");
         });        
     }
 
@@ -492,24 +491,19 @@ module.exports = function(server,app){
         .on('authenticated', function(socket){
             console.log("--HAVE CONNECTION--");
             var dataToken = socket.decoded_token;
-            console.log('authenticated', dataToken);
-
             socket.on("client:register",function(data){
 
                 if(dataToken.userrole == 1){
 
-                    console.log("This is Data Shipper: ");
+                    console.log("---This is Data Shipper---");
                     console.log(data);
+                    console.log("---This is Data Shipper---");
 
                     var shipper = data.msg.shipper;
                     if (io.containShipper(shipper.shipperID))
                         io.updateShipper(shipper, socket);
                     else
                         io.addShipper(shipper, socket);
-
-                    console.log("---CHECK REGISTER SHIPPER---");
-                    console.log(io.getAllShippers());
-                    console.log("---CHECK REGISTER SHIPPER---");
 
                     io.reply(data.sender, { mapData: io.getDataForShipper(shipper.shipperID) }, 'shipper:register:location');
                     io.forward(data.sender, 'admin', { shipper: io.getOneShipper(shipper.shipperID) }, 'admin:add:shipper');
@@ -520,8 +514,9 @@ module.exports = function(server,app){
 
                 if(dataToken.userrole == 2){
 
-                    console.log("This is Data Store: ");
+                    console.log("---This is Data Store---");
                     console.log(data);
+                    console.log("---This is Data Store---");
 
                     var store = data.msg.store;
 
@@ -538,8 +533,9 @@ module.exports = function(server,app){
 
                 if(dataToken.userrole == 3){
 
-                    console.log("This is Data Admin: ");
+                    console.log("---This is Data Admin---");
                     console.log(data);
+                    console.log("---This is Data Admin---");
 
                     var admin = data.msg.admin;
                     if (io.containAdmin(admin.adminID))
@@ -552,85 +548,8 @@ module.exports = function(server,app){
 
                 }
             })
-
-            //socket.on("store:register:location",function(data){
-            //    console.log(data);
-            //
-            //    var store = data.msg.store;
-            //    if (io.containStore(store.storeID))
-            //        io.updateStore(store, socket);
-            //    else
-            //        io.addStore(store, socket);
-            //
-            //    io.reply(data.sender, { mapData: io.getDataForStore(store.storeID) }, 'store:register:location');
-            //    io.forward(data.sender, 'admin', { store: io.getOneStore(store.storeID) }, 'admin:add:store');
-            //
-            //    require('./socketStore')(socket, io);
-            //});
-
-            //socket.on("admin:register:location",function(data){
-            //    console.log(data);
-            //
-            //    var admin = data.msg.admin;
-            //    if (io.containAdmin(admin.adminID))
-            //        io.updateAdmin(admin, socket);
-            //    else
-            //        io.addAdmin(admin, socket);
-            //
-            //    io.reply(data.sender, { mapData: io.getDataForAdmin() }, 'admin:register:location');
-            //    require('./socketAdmin')(socket, io);
-            //});
-
-            //socket.on("shipper:register:location",function(data){
-            //    console.log(data);
-            //
-            //    var shipper = data.msg.shipper;
-            //    if (io.containShipper(shipper.shipperID))
-            //        io.updateShipper(shipper, socket);
-            //    else
-            //        io.addShipper(shipper, socket);
-            //
-            //    io.reply(data.sender, { mapData: io.getDataForShipper(shipper.shipperID) }, 'shipper:register:location');
-            //    io.forward(data.sender, 'admin', { shipper: io.getOneShipper(shipper.shipperID) }, 'admin:add:shipper');
-            //
-            //    require('./socketShipper')(socket, io);
-            //});
-
-            //socket.on("client:register")
         });
     return {
         io: io
     }
 }
-
-
-
-/* Oh, my dear
-
-
-// sending to sender-client only
-socket.emit('message', "this is a test");
-
-// sending to all clients, include sender
-io.emit('message', "this is a test");
-
-// sending to all clients except sender
-socket.broadcast.emit('message', "this is a test");
-
-// sending to all clients in 'game' room(channel) except sender
-socket.broadcast.to('game').emit('message', 'nice game');
-
-// sending to all clients in 'game' room(channel), include sender
-io.in('game').emit('message', 'cool game');
-
-// sending to sender client, only if they are in 'game' room(channel)
-socket.to('game').emit('message', 'enjoy the game');
-
-// sending to all clients in namespace 'myNamespace', include sender
-io.of('myNamespace').emit('message', 'gg');
-
-// sending to individual socketid
-socket.broadcast.to(socketid).emit('message', 'for your eyes only');
-
-
-*/

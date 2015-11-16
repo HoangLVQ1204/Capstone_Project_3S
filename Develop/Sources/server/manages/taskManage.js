@@ -63,8 +63,7 @@ module.exports = function (app) {
     }
 
     var createTask = function(req,res,next){
-        var taskData = req.body.task;
-        console.log(taskData);
+        var taskData = req.body;
         return db.task.createTaskForShipper(taskData)
                 .then(function(newTask) {
                     console.log(newTask.taskid);

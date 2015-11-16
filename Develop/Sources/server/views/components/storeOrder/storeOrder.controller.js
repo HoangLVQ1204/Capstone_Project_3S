@@ -283,11 +283,14 @@ function storeOrderController($scope, dataService, config, socketService, socket
                     typeid: 3
                 }
                 dataService.postDataServer(urlBaseTask,dataTask)
-                then(function(res){
-                    console.log("---DATA NEW TASK ID---");
-                    console.log(res);
-                    console.log("---DATA NEW TASK ID---");
-                })
+                    .then(function(res){
+                        if(res.status != 500){
+
+                            $rootScope.notify()
+                        }else{
+
+                        }
+                    })
             })
 
 
@@ -303,19 +306,10 @@ function storeOrderController($scope, dataService, config, socketService, socket
             selectedDistrict: $scope.selectedDistrict.districtid
         };
         //console.log("==============data=========",data);
-        dataService.postDataServer(urlBase,data).then(function(rs){
-            console.log("OK",rs);
-        },function(er){
-            console.log("!OK",er);
-        });
+
 
         if($scope.order.ordertypeid == 1){
-            dataService.postDataServer(urlBase,data)
-                .then(function(res){
-                    console.log("---DATA NEW ORDER ID---");
-                    console.log(res);
-                    console.log("---DATA NEW ORDER ID---");
-                })
+            dataService.postDataServer(urlBase,data);
         }else if($scope.order.ordertypeid == 2){
             findExpressShipper();
         }
