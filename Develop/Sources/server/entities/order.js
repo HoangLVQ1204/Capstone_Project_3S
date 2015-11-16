@@ -71,6 +71,18 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.BIGINT,
       allowNull: true
     },
+    deliveryprovinceid: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    deliverydistrictid: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    deliverywardid: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     pickupaddresscoordination: {
       type: DataTypes.TEXT,
       allowNull: true

@@ -239,7 +239,7 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
 
     // START Listen to socket changes
     $rootScope.$on("evChange", function(event, args){
-        alert(args.message);
+        //alert(args.message);
         console.log(args);
         getDataFromServer();
     });

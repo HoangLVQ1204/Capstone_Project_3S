@@ -230,9 +230,9 @@ angular.module('app', [
         $('.globalNoti').on('click', function() {
             console.log('click globalNoti');
         });
-        $rootScope.$apply();
+        //$rootScope.$apply();
     };
-
+//he he
 
     if(authService.isLogged()){
         socketService.authenSocket()
