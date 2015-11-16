@@ -251,7 +251,11 @@ function storeOrderController($scope, $state, dataService, config) {
             selectedDistrict: $scope.selectedDistrict.districtid
         };
         //console.log("==============data=========",data);
-        dataService.postDataServer(urlBase,data);
+        dataService.postDataServer(urlBase,data).then(function(rs){
+            console.log("OK",rs);
+        },function(er){
+            console.log("!OK",er);
+        });
 
     }          
     function caculatateWeight(listGoods){

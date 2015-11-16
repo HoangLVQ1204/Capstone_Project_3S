@@ -82,10 +82,11 @@ function notificationService($q,$http, config, dataService){
         return listNotifications;
     };
 
-    api.readNotification = function(item) {
-        item.isread = true;     
-        var urlBase = config.baseURI + '/api/notifications/' + item.notificationid;     
-        dataService.putDataServer(urlBase, item)
+    api.readNotification = function(index) {
+        if (listNotifications[index].isread) return;
+        listNotifications[index].isread = true;
+        var urlBase = config.baseURI + '/api/notifications/' + listNotifications[index].notificationid;     
+        dataService.putDataServer(urlBase, listNotifications[index])
         .then(function(data) {
             console.log('readNotification', data);
         });

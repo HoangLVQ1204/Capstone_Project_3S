@@ -39,4 +39,10 @@ module.exports = function(app){
 
 	app.route('/api/getAllStoreName')
 		.get(checkAll,controller.getAllStoreName);
+
+	app.route('/api/getInactiveStore')
+		.get(controller.getAllInactiveStore);
+
+	app.route('/api/storeDetail/:storeid')
+		.get(controller.getStoreDetail);
 };

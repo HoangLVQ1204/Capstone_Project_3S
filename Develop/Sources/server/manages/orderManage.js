@@ -252,12 +252,8 @@ module.exports = function (app) {
         newOrder.isdraff = req.body.order.isdraff;        
         newOrder.createdate = new Date(); 
         newOrder.fee = fee; 
-        newOrder.overweightfee = overWeightFee;      
-        if(!_.isNumber(parseInt(req.body.order.cod))){
-            newOrder.cod = 0;
-        }else {
-            newOrder.cod = parseInt(req.body.order.cod);
-        }
+        newOrder.overweightfee = overWeightFee;
+        newOrder.cod = parseInt(req.body.order.cod)?parseInt(req.body.order.cod):0;
         //console.log("==============11===============");
                
         var code1 = {
@@ -282,9 +278,9 @@ module.exports = function (app) {
         'orderid' : newOrder.orderid
        };
        //console.log("==============22==============");
-       
-        return db.order.postOneOrder(newOrder)
-            .then(function () {
+        db.order.postOneOrder(newOrder)
+            .then(function (order) {
+                //return res.status(200).json(order);
                 //console.log("==============33==============");
                 db.confirmationcode.postOneCode(code1);
                 db.confirmationcode.postOneCode(code2);
@@ -327,18 +323,22 @@ module.exports = function (app) {
                         good.amount = parseInt(req.body.goods[i].amount);
                     }                    
                     console.log("===========good=======",good);
-                    db.goods.postOneGood(good);
+                    db.goods.postOneGood(good).then(function(goodsObj){
+                        
+                    });
                     //console.log("==============55==============");
                 }
 
-            })
-             .then(function (order) {
-                // console.log("--- New Order ID ---");
-                // console.log(order.orderid);
-                res.status(201).json("OK");
-            }, function(err){
-                next(err);
-            })
+                return res.status(200).json(order);
+
+            });
+            // .then(function (order) {
+            //    // console.log("--- New Order ID ---");
+            //    // console.log(order.orderid);
+            //    res.status(201).json("OK");
+            //}, function(err){
+            //    next(err);
+            //})
         };
            
     

@@ -10,7 +10,7 @@ module.exports = function(socket, io) {
 	io.addToRoom(socket, 'store');
 
     socket.on('disconnect', function() {
-        console.log('Store', socket.id, 'disconnect');        
+        console.log('Store', socket.id, 'disconnect');
     });
 
     socket.on('store:find:shipper', function(data) {

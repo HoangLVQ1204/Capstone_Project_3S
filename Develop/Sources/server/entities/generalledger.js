@@ -76,7 +76,7 @@ module.exports = function(sequelize, DataTypes) {
       getLatestAutoAccountDate: function(){
         return generalledger.findOne({
           where:{
-            $and: [{'amount':  null}, {'payfrom': null}]
+            $and: [{'amount':  null}, {'payfrom': 3}]
           }, limit: 1, order: 'payDate DESC'
         });
       },
@@ -85,7 +85,7 @@ module.exports = function(sequelize, DataTypes) {
         return generalledger.findOne({
           where:{
             'storeid': storeid,
-            $and: [{'amount':  null}, {'payfrom': null}]
+            $and: [{'amount':  null}, {'payfrom': 3}]
           }, limit: 1, order: 'payDate DESC'
         });
       },
@@ -119,7 +119,7 @@ module.exports = function(sequelize, DataTypes) {
       },
 
       getLedgerOfStore: function (store, storeid, perioddate) {
-
+        
         if (perioddate != 'null')
         {
           return generalledger.findAll({
@@ -139,7 +139,7 @@ module.exports = function(sequelize, DataTypes) {
             model: store
             //as: 'store'
           }],where: {
-            'storeid': storeid,
+            'storeid': storeid
           }
         })
       }

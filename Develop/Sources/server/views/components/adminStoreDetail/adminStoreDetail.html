@@ -2,19 +2,44 @@
 
     <div class="nav-collapse" style="margin-left: 0px;">
 
-        <ol class="breadcrumb">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Library</a></li>
-            <li class="active">Data</li>
-        </ol>
+
         <!-- //breadcrumb-->
 
-        <div id="content">
+        <div id="">
+
             <div class="row panel">
-                <header class="panel-heading">
-                    <h2><strong>Add </strong>New Shipper </h2>
-                    <label class="color">New</label>
-                </header>
+                <div id="overview">
+                    <div class="row">
+                        <div class="col-sm-11">
+                            <section class="profile-cover">
+                                <div class="profile-avatar">
+                                    <div>
+                                        <img alt="" src="assets/img/avatar5.png" class="circle">
+                                        <span>{{store.managestores[0].user.profile.name}}</span>
+                                    </div>
+                                    <a class="btn btn-theme" title="Add friends"><i class="fa fa-plus"></i> friends</a>
+                                    <a class="btn btn-theme-inverse" ><i class="fa fa-comments"></i> messages</a>
+                                </div>
+                                <div class="profile-status">
+                                    <a class="btn"> 14,548 <small>Sales</small></a>
+                                    <a class="btn"> 254 <small> Follower</small></a>
+                                </div>
+                            </section>
+                        </div>
+                        <!-- //content > row > col-sm-9 -->
+
+                        <!--<div class="col-sm-3">-->
+                            <!--<section class="profile-about">-->
+                                <!--<h3>About</h3>-->
+                                <!--<hr>-->
+                                <!--<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque non leo convallis nibh tristique commodo.</p>-->
+                            <!--</section>-->
+                        <!--</div>-->
+                        <!-- //content > row > col-lg-3 -->
+                    </div>
+                    <!-- //row-->
+                </div>
+                <br>
                 <div class="col-lg-8">
 
                     <div class="row">
@@ -23,72 +48,62 @@
                             <img alt="" src="assets/img/avatar.png" class="circle" style="max-width:120px; border:5px #edece5 solid; margin:25px 0;">
 
                             <div class="form-group">
+                                <!--<h5>{{shipper.profile.name}}</h5>-->
+                                <!--<h5>{{shipper.profile.dob|date:'dd/MM/yyyy'}}</h5>-->
                                 <button type="button" class="btn btn-theme"> Choose picture...</button>
                             </div>
 
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-8 ">
                             <br>
-                            <h3><strong>Account</strong> Info</h3>
+                            <h2><strong>{{store.name}}</strong></h2>
                             <hr>
                              <textarea class="form-control" id="sms-success"  rows="5" style="display:none">
-																	 <i class="fa fa-check-circle"></i> Create successfully<br>
-																	New Shipper was added to Karry Well..
+																	 <i class="fa fa-check-circle"></i> Update successfully<br>
+																	New information was updated...
 																</textarea>
                          <textarea class="form-control" id="sms-fail"  rows="5" style="display:none">
-																	 <i class="fa fa-exclamation-triangle"></i> Create fail<br>
-																	There is an error to add new Shipper.....
+																	 <i class="fa fa-exclamation-triangle"></i> Update fail<br>
+																	There is an error to update new information.....
 																</textarea>
                             <form id="formID" data-parsley-validate>
 
                                 <div class="form-group row" >
                                     <div class="col-md-6">
-                                        <label class="control-label">ShipperID</label>
-                                        <input type="text" class="form-control" ng-model="newShipper.account.username" disabled>
+                                        <label class="control-label">StoreID</label>
+                                        <input type="text" class="form-control" ng-model="store.storeid" disabled>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label class="control-label">Indentity Card</label>
-                                        <input type="text" class="form-control" ng-model="newShipper.profile.identitycard" required parsley-rangelength="[9,9]" parsley-type="digits" placeholder="Indentity card..">
-                                    </div>
+
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label" >Name</label>
-                                    <input type="text" class="form-control" ng-model="newShipper.profile.name" required placeholder="Shipper's full name..">
+                                    <input type="text" class="form-control" ng-model="store.name" required placeholder="Shipper's full name..">
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label" >Email Address</label>
-                                    <input type="text" class="form-control" ng-model="newShipper.profile.email" parsley-type="email" required placeholder="Email...">
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label">Password</label>
-                                    <input type="password" class="form-control" ng-model="newShipper.account.password" id="pword"  parsley-rangelength="[4,8]"  required placeholder="4-8 Characters">
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label">Confirm Password</label>
-                                    <input type="password" class="form-control"  parsley-trigger="keyup" required  parsley-equalto="#pword" placeholder="Confirm Password" parsley-error-message="Password don't match" >
+                                    <input type="text" class="form-control" ng-model="store.email" parsley-type="email" required placeholder="Email...">
                                 </div>
 
                                 <div class="form-group row">
                                     <div class="col-md-6">
-                                        <label class="control-label">Date of birth</label>
-                                        <input class="form-control"  value="10/24/1984" single-date-picker ng-model="newShipper.profile.dob" parsley-americandate="true" required placeholder="Date of birth..">
+                                        <label class="control-label">Registered Date</label>
+                                        <input class="form-control" disabled value="{{store.registereddate|date:'dd/MM/yyyy'}}" parsley-americandate="true" required placeholder="Date of birth..">
 
                                     </div>
 
                                     <div class="col-md-6">
                                         <label class="control-label">Phone number</label>
-                                        <input type="text" class="form-control" ng-model="newShipper.profile.phonenumber" parsley-type="digits" parsley-rangelength="[10,11]" required placeholder="Phone number..">
+                                        <input type="text" class="form-control" ng-model="store.phonenumber" parsley-type="digits" parsley-rangelength="[10,11]" required placeholder="Phone number..">
                                     </div>
 
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Address</label>
-                                    <input class="form-control" ng-model="newShipper.profile.address" placeholder="Address.." required>
+                                    <input class="form-control" ng-model="store.address" placeholder="Address.." required>
                                 </div>
                                 <hr>
                                 <div class="form-group">
-                                    <button type="button" class="btn btn-theme" ng-click="createShipper()"> Create Account</button>
+                                    <button type="button" class="btn btn-theme" ng-click="update()"> Update</button>
                                 </div>
                             </form>
                         </div>
@@ -205,5 +220,68 @@
     <!--//////////     MODAL EFFECT DEMO    //////////-->
     <!--//////////////////////////////////////////////////////////////////////-->
     <!--&ndash;&gt;-->
+    <div id="md-effect-confirm" class="modal fade" tabindex="-1" data-width="750">
+        <div class="modal-header bg-inverse bd-inverse-darken">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+            <h4 class="modal-title">Confirm payment</h4>
+        </div>
+        <!-- //modal-header-->
+        <div class="modal-body">
+            <form name="myForm" data-parsley-validate>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
 
+                        <th width="20%" class="text-left">Store</th>
+                        <th width="15%" class="text-right">Delivery(VND)</th>
+                        <th width="15%" class="text-right">CoD(VND)</th>
+                        <th width="15%" class="text-right">Total(VND)</th>
+                        <th width="35%">Pay</th>
+                        <th class="text-right"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{selectedStore.name}}</td>
+                        <td class="text-right">{{selectedStore.generalledgers[0].totaldelivery }}</td>
+                        <td class="text-right">{{selectedStore.generalledgers[0].totalcod}}</td>
+                        <td class="text-right">{{selectedStore.generalledgers[0].totaldelivery - selectedStore.generalledgers[0].totalcod - payFee}}VND</td>
+
+                        <td class="text-right">
+                            <!--<div class="col-lg-16">-->
+                            <!--<div class="input-icon input-group-sm">-->
+                            <!--<i class="fa fa-search ico"></i>-->
+
+                            <input type="search" id="inputValue" ng-change="checkOK($event)" parsley-type="number" required class="form-control input-group-sm text-right" ng-model="payFee">
+                            <!--</div>-->
+                            <!--</div>-->
+                        </td>
+                        <td  class="text-right">
+                    <span class="tooltip-area">
+                    <a class="btn btn-danger" title="Confirm" ng-click="postLedger(selectedStore)"> <i class="fa fa-check-circle"></i> </a>
+                    </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+        <!-- //modal-body-->
+    </div>
+    <!-- //modal-->
+    <div id="md-effect-block" class="modal fade" tabindex="-1" data-width="400">
+        <div class="modal-header bg-inverse bd-inverse-darken">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+            <h4 class="modal-title">Confirm Block</h4>
+        </div>
+        <!-- //modal-header-->
+        <div class="modal-body align-xs-center">
+            <form name="myForm">
+                <h5><strong>Are you sure to block {{selectedStore.name}}???</strong></h5><br>
+                <button type="button" class="btn btn-success btn-transparent" ng-click="blockStore(selectedStore)"><i class="fa fa-check-circle"></i> Yes</button>
+                <button type="button" class="btn btn-danger btn-transparent" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i> No</button>
+            </form>
+        </div>
+        <!-- //modal-body-->
+    </div>
 </div>
