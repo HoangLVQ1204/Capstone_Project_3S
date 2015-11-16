@@ -217,7 +217,7 @@ module.exports = function (app) {
                         type: 'Info',
                         title: 'Shipper changed order status',
                         content: shipperid + ' changed status of order ' + orderObj.orderid,
-                        url: '#',
+                        url: '#/store/dashboard',
                         isread: false,
                         username: orderObj.storeid,
                         createddate: new Date()
@@ -253,9 +253,12 @@ module.exports = function (app) {
                                 }).then(function (rs) {
                                     server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
                                     db.managestore.getUsersByStoreID(orderObj.storeid).then(function(rs){
-                                        if(rs.length>0) manager = rs[0].manager;
-                                        msg[username] = manager;
+                                        var manager = '';
+                                        if(rs.length>0) manager = rs[0].dataValues.manager;
+                                        msg['username'] = manager;
                                         db.notification.addNotification(msg);
+                                    },function(er){
+                                        console.log("MANAGERRRERROR:",er);
                                     });
                                     if(oldStatus == taskBegin.statusid){
                                         Task.updateTaskStatus(2, taskid, shipperid).then(function (ok) {
@@ -288,8 +291,9 @@ module.exports = function (app) {
                         }).then(function (rs) {
                             server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
                             db.managestore.getUsersByStoreID(orderObj.storeid).then(function(rs){
-                                if(rs.length>0) manager = rs[0].manager;
-                                msg[username] = manager;
+                                var manager = '';
+                                if(rs.length>0) manager = rs[0].dataValues.manager;
+                                msg['username'] = manager;
                                 db.notification.addNotification(msg);
                             });
                             var taskBegin = statusList[0];
