@@ -251,14 +251,17 @@ module.exports = function (app) {
                                     statusid: nextStatus,
                                     completedate: completeDate
                                 }).then(function (rs) {
-                                    server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
+                                    if(orderObj.statusid == 2){
+                                        db.profile.getProfileUser(shipperid).then(function(profile){
+                                            msg['[profile'] = profile;
+                                            server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
+                                        });
+                                    }
                                     db.managestore.getUsersByStoreID(orderObj.storeid).then(function(rs){
                                         var manager = '';
                                         if(rs.length>0) manager = rs[0].dataValues.manager;
                                         msg['username'] = manager;
                                         db.notification.addNotification(msg);
-                                    },function(er){
-                                        console.log("MANAGERRRERROR:",er);
                                     });
                                     if(oldStatus == taskBegin.statusid){
                                         Task.updateTaskStatus(2, taskid, shipperid).then(function (ok) {

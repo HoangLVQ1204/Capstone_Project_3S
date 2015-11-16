@@ -229,12 +229,14 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
             //     console.log('stop watch');
             //     api.stopWatchCurrentPosition(watchID);
             // }, 10000);
+          }, function(err){
+            console.log(":Fail " + err);
           });
       },function(err){
-        console.log(":FailGetUser");
+        console.log(":FailGetUser " + err);
       })
       .catch(function(err){
-        console.log(err);
+        console.log(":Failllll " + err);
       });
   };
 
