@@ -409,6 +409,23 @@ module.exports = function (app) {
         });
     };
 
+    var getTodayTotal = function (req, res, next) {
+        var total = new Object();
+        db.order.getTodayTotalDelivery()
+        .then(function(fee){
+                db.order.getTodayTotalCoD()
+                    .then(function(cod){
+                        total['fee'] = fee;
+                        total['cod'] = cod;
+                        res.status(200).json(total);
+                    }, function(err) {
+                        next(err);
+                    })
+        }, function(err) {
+            next(err);
+        });
+    };
+
 
     return {
         getAllOrder: getAllOrder,
@@ -419,6 +436,7 @@ module.exports = function (app) {
         deleteOrder : deleteOrder,
         putDraff : putDraff,
         cancelOrder: cancelOrder,
-        getOrderList: getOrderList
+        getOrderList: getOrderList,
+        getTodayTotal: getTodayTotal
     }
 }
