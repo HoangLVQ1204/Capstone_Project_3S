@@ -6,7 +6,7 @@
 // 'starter.manages' is found in manages.js
 var app = angular.module('starter', ['ionic', 'ngCordova','uiGmapgoogle-maps','angular-jwt']);
 
-  app.run(['$ionicPlatform', 'authService', '$rootScope', '$location', 'socketShipper', 'socketService', function ($ionicPlatform, authService, $rootScope, $location, socketShipper, socketService) {
+  app.run(['$ionicPlatform', 'authService', '$rootScope', '$location', 'socketShipper', 'socketService', '$state', function ($ionicPlatform, authService, $rootScope, $location, socketShipper, socketService, $state) {
     $ionicPlatform.ready(function () {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
@@ -33,10 +33,12 @@ var app = angular.module('starter', ['ionic', 'ngCordova','uiGmapgoogle-maps','a
         .then(function(){
           socketShipper.registerSocket();
           $rootScope.isGrabbing = false;
-          $location.path('/app/tasks');
+          //$location.path('/app/tasks');
+          $state.go("app.tasks");
         });
     } else {
-      $location.path('/sign-in');
+      //$location.path('/sign-in');
+      $state.go('sign-in');
     }
 
   }]);

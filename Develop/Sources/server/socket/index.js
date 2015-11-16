@@ -140,11 +140,11 @@ module.exports = function(server,app){
         }
         if (receiver.clientID) {    // clientID = shipperID || storeID            
             var socketID = '';
-            console.log("RECEIVERRRRRRR ",receiver,"====================");
+            console.log("RECEIVERRRRRRR ",receiver,"====================", io.shippers);
             if (receiver.type === 'shipper') {
                 if(io.shippers[receiver.clientID]) socketID = io.shippers[receiver.clientID].socketID;
             } else if (receiver.type == 'store') {
-                console.log("EMIT STOREEEEEEEE",io.stores['STR003'],"=================");
+                console.log("EMIT STOREEEEEEEE",io.stores[receiver.clientID],"=================");
                 if(io.stores[receiver.clientID]) socketID = io.stores[receiver.clientID].socketID;
             } else if (receiver.type == 'admin') {
                 if(io.admins[receiver.clientID]) socketID = io.admins[receiver.clientID].socketID;
@@ -184,7 +184,7 @@ module.exports = function(server,app){
             var connection = io.receiverSocket(type);
             if(connection) connection.emit(listEvents[index], data, callback);
             console.log("CONNECTIONNNNN ", (connection!=undefined),"=========---=========");
-        });        
+        });
     }
 
     // var distanceFrom = function(currentPosition,shippers,distanceRadius){
@@ -500,7 +500,6 @@ module.exports = function(server,app){
 
                     console.log("This is Data Shipper: ");
                     console.log(data);
-
                     var shipper = data.msg.shipper;
                     if (io.containShipper(shipper.shipperID))
                         io.updateShipper(shipper, socket);
