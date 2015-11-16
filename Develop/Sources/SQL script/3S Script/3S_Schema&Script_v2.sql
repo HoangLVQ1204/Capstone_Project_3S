@@ -21,7 +21,6 @@ DROP TABLE GeneralLedger;
 DROP TABLE ManageStore;
 DROP TABLE Store;
 DROP TABLE Profile;
-DROP TABLE notification;
 DROP TABLE "user";
 DROP TABLE workingstatus;
 DROP TABLE UserStatus;
@@ -29,6 +28,7 @@ DROP TABLE Role;
 DROP TABLE ward;
 DROP TABLE district;
 DROP TABLE province;
+DROP TABLE notification
 */
 
 
@@ -157,62 +157,62 @@ WITH (OIDS=FALSE)
 -- ----------------------------
 -- Records of confirmationcode
 -- ----------------------------
-INSERT INTO "public"."confirmationcode" VALUES ('1', '234222', '2', 'OD122222');
-INSERT INTO "public"."confirmationcode" VALUES ('2', '233333', '3', 'OD122222');
-INSERT INTO "public"."confirmationcode" VALUES ('3', '333222', '5', 'OD122222');
-INSERT INTO "public"."confirmationcode" VALUES ('4', '122111', '6', 'OD122222');
-INSERT INTO "public"."confirmationcode" VALUES ('5', '123987', '2', 'OD981921');
-INSERT INTO "public"."confirmationcode" VALUES ('6', '998022', '3', 'OD981921');
-INSERT INTO "public"."confirmationcode" VALUES ('7', '90909', '5', 'OD981921');
-INSERT INTO "public"."confirmationcode" VALUES ('8', '80872', '6', 'OD981921');
-INSERT INTO "public"."confirmationcode" VALUES ('9', '123459', '2', 'OD555461');
-INSERT INTO "public"."confirmationcode" VALUES ('10', '123460', '3', 'OD555461');
-INSERT INTO "public"."confirmationcode" VALUES ('11', '123461', '5', 'OD555461');
-INSERT INTO "public"."confirmationcode" VALUES ('12', '123462', '6', 'OD555461');
-INSERT INTO "public"."confirmationcode" VALUES ('13', '123463', '2', 'OD123322');
-INSERT INTO "public"."confirmationcode" VALUES ('14', '123464', '3', 'OD123322');
-INSERT INTO "public"."confirmationcode" VALUES ('15', '123465', '5', 'OD123322');
-INSERT INTO "public"."confirmationcode" VALUES ('16', '123466', '6', 'OD123322');
-INSERT INTO "public"."confirmationcode" VALUES ('17', '123467', '2', 'OD192851');
-INSERT INTO "public"."confirmationcode" VALUES ('18', '123468', '3', 'OD192851');
-INSERT INTO "public"."confirmationcode" VALUES ('19', '123469', '5', 'OD192851');
-INSERT INTO "public"."confirmationcode" VALUES ('20', '123470', '6', 'OD192851');
-INSERT INTO "public"."confirmationcode" VALUES ('21', '123471', '2', 'OD122122');
-INSERT INTO "public"."confirmationcode" VALUES ('22', '123472', '3', 'OD122122');
-INSERT INTO "public"."confirmationcode" VALUES ('23', '123473', '5', 'OD122122');
-INSERT INTO "public"."confirmationcode" VALUES ('24', '123474', '6', 'OD122122');
-INSERT INTO "public"."confirmationcode" VALUES ('25', '123475', '2', 'OD999811');
-INSERT INTO "public"."confirmationcode" VALUES ('26', '123476', '3', 'OD999811');
-INSERT INTO "public"."confirmationcode" VALUES ('27', '123477', '5', 'OD999811');
-INSERT INTO "public"."confirmationcode" VALUES ('28', '123478', '6', 'OD999811');
-INSERT INTO "public"."confirmationcode" VALUES ('29', '123479', '2', 'OD872818');
-INSERT INTO "public"."confirmationcode" VALUES ('30', '123480', '3', 'OD872818');
-INSERT INTO "public"."confirmationcode" VALUES ('31', '123481', '5', 'OD872818');
-INSERT INTO "public"."confirmationcode" VALUES ('32', '123482', '6', 'OD872818');
-INSERT INTO "public"."confirmationcode" VALUES ('33', '123483', '2', 'OD901001');
-INSERT INTO "public"."confirmationcode" VALUES ('34', '123484', '3', 'OD901001');
-INSERT INTO "public"."confirmationcode" VALUES ('35', '123485', '5', 'OD901001');
-INSERT INTO "public"."confirmationcode" VALUES ('36', '123486', '6', 'OD901001');
-INSERT INTO "public"."confirmationcode" VALUES ('37', '123487', '2', 'OD828101');
-INSERT INTO "public"."confirmationcode" VALUES ('38', '123488', '3', 'OD828101');
-INSERT INTO "public"."confirmationcode" VALUES ('39', '123489', '5', 'OD828101');
-INSERT INTO "public"."confirmationcode" VALUES ('40', '123490', '6', 'OD828101');
-INSERT INTO "public"."confirmationcode" VALUES ('41', '123491', '2', 'OD666121');
-INSERT INTO "public"."confirmationcode" VALUES ('42', '123492', '3', 'OD666121');
-INSERT INTO "public"."confirmationcode" VALUES ('43', '123493', '5', 'OD666121');
-INSERT INTO "public"."confirmationcode" VALUES ('44', '123494', '6', 'OD666121');
-INSERT INTO "public"."confirmationcode" VALUES ('45', '123495', '2', 'OD090909');
-INSERT INTO "public"."confirmationcode" VALUES ('46', '123496', '3', 'OD090909');
-INSERT INTO "public"."confirmationcode" VALUES ('47', '123497', '5', 'OD090909');
-INSERT INTO "public"."confirmationcode" VALUES ('48', '123498', '6', 'OD090909');
-INSERT INTO "public"."confirmationcode" VALUES ('49', '123499', '2', 'OD190271');
-INSERT INTO "public"."confirmationcode" VALUES ('50', '123500', '3', 'OD190271');
-INSERT INTO "public"."confirmationcode" VALUES ('51', '123501', '5', 'OD190271');
-INSERT INTO "public"."confirmationcode" VALUES ('52', '123502', '6', 'OD190271');
-INSERT INTO "public"."confirmationcode" VALUES ('53', '123503', '2', 'OD154444');
-INSERT INTO "public"."confirmationcode" VALUES ('54', '123504', '3', 'OD154444');
-INSERT INTO "public"."confirmationcode" VALUES ('55', '123505', '5', 'OD154444');
-INSERT INTO "public"."confirmationcode" VALUES ('56', '123506', '6', 'OD154444');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('234222', '2', 'OD122222');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('233333', '3', 'OD122222');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('333222', '5', 'OD122222');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('122111', '6', 'OD122222');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123987', '2', 'OD981921');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('998022', '3', 'OD981921');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('90909', '5', 'OD981921');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('80872', '6', 'OD981921');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123459', '2', 'OD555461');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123460', '3', 'OD555461');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123461', '5', 'OD555461');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123462', '6', 'OD555461');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123463', '2', 'OD123322');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123464', '3', 'OD123322');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123465', '5', 'OD123322');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123466', '6', 'OD123322');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123467', '2', 'OD192851');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123468', '3', 'OD192851');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123469', '5', 'OD192851');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123470', '6', 'OD192851');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123471', '2', 'OD122122');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123472', '3', 'OD122122');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123473', '5', 'OD122122');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123474', '6', 'OD122122');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123475', '2', 'OD999811');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123476', '3', 'OD999811');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123477', '5', 'OD999811');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123478', '6', 'OD999811');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123479', '2', 'OD872818');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123480', '3', 'OD872818');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123481', '5', 'OD872818');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123482', '6', 'OD872818');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123483', '2', 'OD901001');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123484', '3', 'OD901001');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123485', '5', 'OD901001');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123486', '6', 'OD901001');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123487', '2', 'OD828101');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123488', '3', 'OD828101');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123489', '5', 'OD828101');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123490', '6', 'OD828101');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123491', '2', 'OD666121');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123492', '3', 'OD666121');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123493', '5', 'OD666121');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123494', '6', 'OD666121');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123495', '2', 'OD090909');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123496', '3', 'OD090909');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123497', '5', 'OD090909');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123498', '6', 'OD090909');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123499', '2', 'OD190271');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123500', '3', 'OD190271');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123501', '5', 'OD190271');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123502', '6', 'OD190271');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123503', '2', 'OD154444');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123504', '3', 'OD154444');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123505', '5', 'OD154444');
+INSERT INTO "public"."confirmationcode" (codecontent, typeid, orderid) VALUES ('123506', '6', 'OD154444');
 
 -- ----------------------------
 -- Table structure for confirmationcodetype
@@ -291,26 +291,26 @@ WITH (OIDS=FALSE)
 -- ----------------------------
 -- Records of goods
 -- ----------------------------
-INSERT INTO "public"."goods" VALUES ('1', 'Apricot', 'OD122222', null, '32', '20', '50', '35', 'Very height', '2');
-INSERT INTO "public"."goods" VALUES ('2', 'Asparagus', 'OD981921', null, '34', '34', '34', '50', 'Very width', '1');
-INSERT INTO "public"."goods" VALUES ('3', 'Aubergine', 'OD555461', null, '34', '34', '34', '50', 'Very width', '3');
-INSERT INTO "public"."goods" VALUES ('4', 'Avocado', 'OD555461', null, '34', '34', '34', '50', 'Very width', '1');
-INSERT INTO "public"."goods" VALUES ('5', 'Banana', 'OD123322', null, '34', '34', '34', '50', 'Very width', '4');
-INSERT INTO "public"."goods" VALUES ('6', 'Banana', 'OD123322', null, '34', '34', '34', '50', 'Very width', '1');
-INSERT INTO "public"."goods" VALUES ('7', 'Beetroot', 'OD192851', null, '34', '34', '34', '50', 'Very width', '2');
-INSERT INTO "public"."goods" VALUES ('8', 'Black-eye bean', 'OD122122', '1', '34', '34', '34', '50', 'Very width', '3');
-INSERT INTO "public"."goods" VALUES ('9', 'Broad bean', 'OD999811', null, '34', '34', '34', '50', 'Very width', '1');
-INSERT INTO "public"."goods" VALUES ('10', 'Broccoli', 'OD872818', null, '34', '34', '34', '50', 'Very width', '4');
-INSERT INTO "public"."goods" VALUES ('11', 'Broccoli', 'OD901001', null, '34', '34', '34', '50', 'Very width', '3');
-INSERT INTO "public"."goods" VALUES ('12', 'Brussels sprout', 'OD828101', null, '34', '34', '34', '50', 'Very width', '2');
-INSERT INTO "public"."goods" VALUES ('13', 'Butternut Squash', 'OD666121', null, '34', '34', '34', '50', 'Very width', '1');
-INSERT INTO "public"."goods" VALUES ('14', 'Carrot', 'OD090909', null, '34', '34', '34', '50', 'Very width', '3');
-INSERT INTO "public"."goods" VALUES ('15', 'Cherry', 'OD190271', null, '34', '34', '34', '50', 'Very width', '2');
-INSERT INTO "public"."goods" VALUES ('16', 'Clementine', 'OD154444', null, '34', '34', '34', '50', 'Very width', '4');
-INSERT INTO "public"."goods" VALUES ('17', 'Courgette', 'OD901001', null, '34', '34', '34', '50', 'Very width', '1');
-INSERT INTO "public"."goods" VALUES ('18', 'Date', 'OD154444', null, '34', '34', '34', '50', 'Very width', '4');
-INSERT INTO "public"."goods" VALUES ('19', 'Elderberry', 'OD190271', null, '34', '34', '34', '50', 'Very width', '2');
-INSERT INTO "public"."goods" VALUES ('20', 'Endive', 'OD190271', null, '34', '34', '34', '50', 'Very width', '3');
+INSERT INTO "public"."goods" (goodsname, orderid, stockid, weight, lengthsize, widthsize, heightsize, description, amount) VALUES ('Apricot', 'OD122222', null, '32', '20', '50', '35', 'Very height', '2');
+INSERT INTO "public"."goods" (goodsname, orderid, stockid, weight, lengthsize, widthsize, heightsize, description, amount) VALUES ('Asparagus', 'OD981921', null, '34', '34', '34', '50', 'Very width', '1');
+INSERT INTO "public"."goods" (goodsname, orderid, stockid, weight, lengthsize, widthsize, heightsize, description, amount) VALUES ('Aubergine', 'OD555461', null, '34', '34', '34', '50', 'Very width', '3');
+INSERT INTO "public"."goods" (goodsname, orderid, stockid, weight, lengthsize, widthsize, heightsize, description, amount) VALUES ('Avocado', 'OD555461', null, '34', '34', '34', '50', 'Very width', '1');
+INSERT INTO "public"."goods" (goodsname, orderid, stockid, weight, lengthsize, widthsize, heightsize, description, amount) VALUES ('Banana', 'OD123322', null, '34', '34', '34', '50', 'Very width', '4');
+INSERT INTO "public"."goods" (goodsname, orderid, stockid, weight, lengthsize, widthsize, heightsize, description, amount) VALUES ('Banana', 'OD123322', null, '34', '34', '34', '50', 'Very width', '1');
+INSERT INTO "public"."goods" (goodsname, orderid, stockid, weight, lengthsize, widthsize, heightsize, description, amount) VALUES ('Beetroot', 'OD192851', null, '34', '34', '34', '50', 'Very width', '2');
+INSERT INTO "public"."goods" (goodsname, orderid, stockid, weight, lengthsize, widthsize, heightsize, description, amount) VALUES ('Black-eye bean', 'OD122122', '1', '34', '34', '34', '50', 'Very width', '3');
+INSERT INTO "public"."goods" (goodsname, orderid, stockid, weight, lengthsize, widthsize, heightsize, description, amount) VALUES ('Broad bean', 'OD999811', null, '34', '34', '34', '50', 'Very width', '1');
+INSERT INTO "public"."goods" (goodsname, orderid, stockid, weight, lengthsize, widthsize, heightsize, description, amount) VALUES ('Broccoli', 'OD872818', null, '34', '34', '34', '50', 'Very width', '4');
+INSERT INTO "public"."goods" (goodsname, orderid, stockid, weight, lengthsize, widthsize, heightsize, description, amount) VALUES ('Broccoli', 'OD901001', null, '34', '34', '34', '50', 'Very width', '3');
+INSERT INTO "public"."goods" (goodsname, orderid, stockid, weight, lengthsize, widthsize, heightsize, description, amount) VALUES ('Brussels sprout', 'OD828101', null, '34', '34', '34', '50', 'Very width', '2');
+INSERT INTO "public"."goods" (goodsname, orderid, stockid, weight, lengthsize, widthsize, heightsize, description, amount) VALUES ('Butternut Squash', 'OD666121', null, '34', '34', '34', '50', 'Very width', '1');
+INSERT INTO "public"."goods" (goodsname, orderid, stockid, weight, lengthsize, widthsize, heightsize, description, amount) VALUES ('Carrot', 'OD090909', null, '34', '34', '34', '50', 'Very width', '3');
+INSERT INTO "public"."goods" (goodsname, orderid, stockid, weight, lengthsize, widthsize, heightsize, description, amount) VALUES ('Cherry', 'OD190271', null, '34', '34', '34', '50', 'Very width', '2');
+INSERT INTO "public"."goods" (goodsname, orderid, stockid, weight, lengthsize, widthsize, heightsize, description, amount) VALUES ('Clementine', 'OD154444', null, '34', '34', '34', '50', 'Very width', '4');
+INSERT INTO "public"."goods" (goodsname, orderid, stockid, weight, lengthsize, widthsize, heightsize, description, amount) VALUES ('Courgette', 'OD901001', null, '34', '34', '34', '50', 'Very width', '1');
+INSERT INTO "public"."goods" (goodsname, orderid, stockid, weight, lengthsize, widthsize, heightsize, description, amount) VALUES ('Date', 'OD154444', null, '34', '34', '34', '50', 'Very width', '4');
+INSERT INTO "public"."goods" (goodsname, orderid, stockid, weight, lengthsize, widthsize, heightsize, description, amount) VALUES ('Elderberry', 'OD190271', null, '34', '34', '34', '50', 'Very width', '2');
+INSERT INTO "public"."goods" (goodsname, orderid, stockid, weight, lengthsize, widthsize, heightsize, description, amount) VALUES ('Endive', 'OD190271', null, '34', '34', '34', '50', 'Very width', '3');
 
 -- ----------------------------
 -- Table structure for issue
