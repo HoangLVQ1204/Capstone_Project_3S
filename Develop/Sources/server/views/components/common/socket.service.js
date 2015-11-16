@@ -75,12 +75,13 @@ angular.module('app')
         };
 
         api.connect = function() {
+            var d = $q.defer();
             if (socket.connected) {
                 console.log('socket is already connected');
-                return;
+                d.resolve();
+                return d.promise;
             }
             socket.connect();
-            var d = $q.defer();
             socket.on('connect', function() {
                 console.log('CONNECTED');
                 d.resolve();
