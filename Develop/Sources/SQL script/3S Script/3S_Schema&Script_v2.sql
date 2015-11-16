@@ -1,6 +1,7 @@
 ﻿--DROP/DELETE TABLE--
 
 /*
+DROP TABLE Notification;
 DROP TABLE BannedHistoryLog;
 DROP TABLE OrderLog;
 DROP TABLE OrderIssue;
@@ -910,6 +911,7 @@ ALTER TABLE "public"."userstatus" ADD PRIMARY KEY ("statusid");
 -- Primary Key structure for table workingstatus
 -- ----------------------------
 ALTER TABLE "public"."workingstatus" ADD PRIMARY KEY ("statusid");
+
 
 -- ----------------------------
 -- Foreign Key structure for table "public"."bannedhistorylog"
@@ -12985,6 +12987,11 @@ CREATE TABLE "public"."notification" (
 WITH (OIDS=FALSE);
 
 -- ----------------------------
+-- Primary Key structure for table notification
+-- ----------------------------
+ALTER TABLE "public"."notification" ADD PRIMARY KEY ("notificationid");
+
+-- ----------------------------
 -- Foreign Key structure for table "public"."notification"
 -- ----------------------------
 ALTER TABLE "public"."notification" ADD FOREIGN KEY ("username") REFERENCES "public"."user" ("username") ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -13011,5 +13018,3 @@ INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread"
 INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('issue', 'small issue', 'This is small issue', '/#/notiListdemo','f','ST000001','2015-10-06');
 INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('info', 'new info', 'This is info of ST000001', '/#/notiListdemo','f','ST000001','2015-10-06');
 INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread","username", "createddate") VALUES ('info', 'new info', 'This is info of AD000001', '/#/notiListdemo','f','AD000001','2015-10-07');
-
-
