@@ -5,7 +5,8 @@
 
 angular.module('app')
     .factory('socketService',function($rootScope, $q){
-        var socket = io();
+        var socket = io();        
+        // console.dir(socket);
         // socket.on('connect',function(){
         //     console.log("connect client");            
             // socket
@@ -14,8 +15,16 @@ angular.module('app')
             //         console.log("Authen ok!");
                 // })
         // })
+        socket.on('connect', function() {
+            console.log('CONNECTED');
+        });
+        socket.on('disconnect', function() {
+            console.log('DISCONNECTED');
+        });
+        
         return {
             authenSocket: function(){
+                this.connect();
                 console.log("SEND TOKEN: "+ localStorage.getItem('EHID'));
                 var d = $q.defer();
                 this.on('authenticated',function(){
@@ -55,8 +64,19 @@ angular.module('app')
                     msg: msg
                 };
                 this.emit(eventName, data, callback);
+            },
+
+            disconnect: function() {
+                // console.log('socket.disconnect', socket.disconnect);
+                socket.disconnect();
+            },
+
+            connect: function() {
+                if (socket.connected) {
+                    console.log('socket is already connected');
+                    return;
+                }
+                socket.connect();
             }
-
-
         }
     })
