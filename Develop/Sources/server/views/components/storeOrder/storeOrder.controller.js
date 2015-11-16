@@ -285,10 +285,25 @@ function storeOrderController($scope, dataService, config, socketService, socket
                 dataService.postDataServer(urlBaseTask,dataTask)
                     .then(function(res){
                         if(res.status != 500){
-
-                            $rootScope.notify()
+                            var temp = {
+                                type: '',
+                                title: 'EXPRESS ORDER: SUCCESS',
+                                content: 'ORDER ID: '+orderID+ 'created successfully',
+                                url: '/#/notiListdemo',
+                                isread: false,
+                                createddate: new Date()
+                            };
+                            $rootScope.notify(temp);
                         }else{
-
+                            var temp = {
+                                type: 'issue',
+                                title: 'EXPRESS ORDER: FAIL',
+                                content: 'ORDER ID: '+orderID+ 'created fail! Please try again late!',
+                                url: '/#/notiListdemo',
+                                isread: false,
+                                createddate: new Date()
+                            };
+                            $rootScope.notify(temp);
                         }
                     })
             })
