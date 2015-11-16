@@ -3,19 +3,6 @@
  */
 
 /*
-    TODO: Bug scenario for Shipper (similar to Store)
-    - Browser 1: Sign out. Then Sign in as Admin. Go to /mapdemo
-    - Browser 2: Sign out. Then Sign in as Shipper. Go to /mapdemo
-    - Check whether /mapdemo in Admin and Shipper show same position of shipper
-
-    Cause: Shipper sent client:register, but it is rejected. Socketiojwt maybe only check token 1 time
-    Resolve: Refresh Shipper tab to reconnect
-
-    Possible solution: https://auth0.com/blog/2014/01/15/auth-with-socket-io/
-*/
-
-
-/*
     TODO: notifications
     - list of notifications    
     - notificationService.js
@@ -45,6 +32,7 @@
     - directives: ...
 
 */
+
 var _ = require('lodash');
 
 module.exports = function(server,app){
@@ -129,6 +117,7 @@ module.exports = function(server,app){
     */
     io.orders = {};
 
+
     // Returns socket by receiver type
     io.receiverSocket = function(receiver) {        
         if (receiver === 'admin' || receiver === 'shipper' || receiver === 'store') {
@@ -140,11 +129,11 @@ module.exports = function(server,app){
         }
         if (receiver.clientID) {    // clientID = shipperID || storeID            
             var socketID = '';
-            console.log("RECEIVERRRRRRR ",receiver,"====================");
+            console.log("RECEIVERRRRRRR ",receiver,"====================", io.shippers);
             if (receiver.type === 'shipper') {
                 if(io.shippers[receiver.clientID]) socketID = io.shippers[receiver.clientID].socketID;
             } else if (receiver.type == 'store') {
-                console.log("EMIT STOREEEEEEEE",io.stores['STR003'],"=================");
+                console.log("EMIT STOREEEEEEEE",io.stores[receiver.clientID],"=================");
                 if(io.stores[receiver.clientID]) socketID = io.stores[receiver.clientID].socketID;
             } else if (receiver.type == 'admin') {
                 if(io.admins[receiver.clientID]) socketID = io.admins[receiver.clientID].socketID;
@@ -184,7 +173,7 @@ module.exports = function(server,app){
             var connection = io.receiverSocket(type);
             if(connection) connection.emit(listEvents[index], data, callback);
             console.log("CONNECTIONNNNN ", (connection!=undefined),"=========---=========");
-        });        
+        });
     }
 
     // var distanceFrom = function(currentPosition,shippers,distanceRadius){
@@ -397,8 +386,9 @@ module.exports = function(server,app){
         return io.getOneShipper(shipperID);        
     };
 
-    io.removeShipper = function(shipperID) {
-        delete io.shippers[shipperID];
+    io.disconnectShipper = function(shipperID) {
+        // delete io.shippers[shipperID];
+        io.shippers[shipperID].isConnected = false;
     };
 
     io.getOneShipper = function(shipperID) {
@@ -485,7 +475,7 @@ module.exports = function(server,app){
     };
 
     io
-        .on('connection', socketioJwt.authorize({
+        .on('connect', socketioJwt.authorize({
             secret: config.secrets.jwt,
             timeout: 15000 // 15 seconds to send the authentication message
         }))
@@ -500,7 +490,6 @@ module.exports = function(server,app){
 
                     console.log("This is Data Shipper: ");
                     console.log(data);
-
                     var shipper = data.msg.shipper;
                     if (io.containShipper(shipper.shipperID))
                         io.updateShipper(shipper, socket);

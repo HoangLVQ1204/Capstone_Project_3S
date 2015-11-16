@@ -10,7 +10,7 @@ module.exports = function(socket, io) {
 	io.addToRoom(socket, 'store');
 
     socket.on('disconnect', function() {
-        console.log('Store', socket.id, 'disconnect');        
+        console.log('Store', socket.id, 'disconnect');
     });
 
     socket.on('store:find:shipper', function(data) {
@@ -49,19 +49,11 @@ module.exports = function(socket, io) {
                                     distanceText: e.distanceText,
                                     durationText: e.durationText
                                 },
-                                'shipper:choose:express');
+                                'shipper:choose:express'
+                            );
                         });
                     }
-                }).catch(function(error){
-                    console.log("--CASE: FILTER ERROR. NO SHIPPER IN FILTER--");
-                    io.reply(
-                        data.sender,
-                        {
-                            shipper: false
-                        },
-                        'store:find:shipper'
-                    );
-                })
+                });
         }else{
             console.log("--CASE: NO SHIPPER IN IO LIST--");
             io.reply(

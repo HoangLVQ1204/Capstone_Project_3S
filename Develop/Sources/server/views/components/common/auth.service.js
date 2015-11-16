@@ -21,7 +21,7 @@ angular.module('app')
 
         var signOut = function(){
             window.localStorage.removeItem(tag);
-            $state.go("login");
+            // $state.go("login");
         }
 
         var isLogged = function(){
