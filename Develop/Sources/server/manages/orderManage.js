@@ -277,6 +277,7 @@ module.exports = function (app) {
         'typeid' : 5,
         'orderid' : newOrder.orderid
        };
+       console.log("==========code===========",code1);
        //console.log("==============22==============");
         db.order.postOneOrder(newOrder)
             .then(function (order) {
@@ -293,35 +294,12 @@ module.exports = function (app) {
                     good.stockid = null;
                     good.goodsname = req.body.goods[i].goodsname;
                     good.description = req.body.goods[i].description;
-                    if(!_.isNumber(parseInt(req.body.goods[i].weight))){
-                        good.weight = 0;
-                    } else {
-                        good.weight = parseInt(req.body.goods[i].weight);
-                    }
-
-                    if(!_.isNumber(parseInt(req.body.goods[i].lengthsize))){
-                        good.lengthsize = 0;
-                    } else {
-                        good.lengthsize = parseInt(req.body.goods[i].lengthsize);
-                    }
-
-                    if(!_.isNumber(parseInt(req.body.goods[i].widthsize))){
-                        good.widthsize = 0;
-                    } else {
-                        good.widthsize = parseInt(req.body.goods[i].widthsize);
-                    }
-
-                    if(!_.isNumber(parseInt(req.body.goods[i].heightsize))){
-                        good.heightsize = 0;
-                    } else {
-                        good.heightsize = parseInt(req.body.goods[i].heightsize);
-                    }
-
-                    if(!_.isNumber(parseInt(req.body.goods[i].amount))){
-                        good.amount = 0;
-                    } else {
-                        good.amount = parseInt(req.body.goods[i].amount);
-                    }                    
+                    good.weight = parseInt(req.body.goods[i].weight)?parseInt(req.body.goods[i].weight):0;
+                    good.lengthsize = parseInt(req.body.goods[i].lengthsize)?parseInt(req.body.goods[i].lengthsize):0;
+                    good.widthsize = parseInt(req.body.goods[i].widthsize)?parseInt(req.body.goods[i].widthsize):0;
+                    good.heightsize = parseInt(req.body.goods[i].heightsize)?parseInt(req.body.goods[i].heightsize):0;
+                    good.amount = parseInt(req.body.goods[i].amount)?parseInt(req.body.goods[i].amount):0;
+                    
                     console.log("===========good=======",good);
                     db.goods.postOneGood(good).then(function(goodsObj){
                         
