@@ -52,7 +52,7 @@ function adminStoreListController($scope,$state, $http, authService, config) {
                 store.currentCoD =  $scope.currentCoD[i].totalCoD;
                 store.currentFee =  $scope.currentFee[i].totalFee;
                 store.generalledgers[0].balance =  parseInt(store.generalledgers[0].balance);
-               //console.log(store.currentCoD);
+                //console.log(store);
                 i++;
                 return store;
             })
@@ -198,6 +198,7 @@ function adminStoreListController($scope,$state, $http, authService, config) {
         if (!period) autoDate='null';
         $http.get(config.baseURI + "/api/getLedgerOfStore/" + store.storeid +"/" + autoDate).success(function(response){
             $scope.ledgerListOfStore = response;
+
             $scope.ledgerListOfStore.sort(function(x, y){
                 if (x.paydate > y.paydate) {
                     return -1;
