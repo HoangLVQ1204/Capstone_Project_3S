@@ -25,13 +25,13 @@ api.getDistanceFromOneToMany = function(origin, destinations) {
 		if (index > 0) destinationsString += '|';
 		destinationsString += dest.latitude + ',' + dest.longitude;		
 	});
-
+	console.log("TTTTTTTTTTT", destinationsString);
 	var request = {
         origins: originString,
         destinations: destinationsString,
         mode: 'driving',        
         units: 'metric',
-        language: 'vi'
+        language: 'en'
 	};
 
 	var d = Q.defer();
@@ -46,7 +46,7 @@ api.getDistanceFromOneToMany = function(origin, destinations) {
 							duration: element.duration,
 							id: index
 						};
-		        });                    
+		        });
 	            d.resolve(results);
 			} else {			
 				d.reject(response.status + ': ' + response.error_message);
@@ -64,7 +64,7 @@ api.getClosestShippers = function(store, shippers, filter) {
 	});
 
 	return api.getDistanceFromOneToMany(store, validShippers)
-	.then(function(results) {		
+	.then(function(results) {
 		// filter by radius
 		results = results.filter(function(e) {
 			return e.distance.value <= filter.radius;

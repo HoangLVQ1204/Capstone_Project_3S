@@ -41,7 +41,8 @@ module.exports = function(socket, io) {
                                     distanceText: e.distanceText,
                                     durationText: e.durationText
                                 },
-                                'shipper:choose:express');
+                                'shipper:choose:express'
+                            );
                         });
                     }
                 }).catch(function(error){

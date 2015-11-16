@@ -129,7 +129,6 @@ module.exports = function(server,app){
         }
         if (receiver.clientID) {    // clientID = shipperID || storeID            
             var socketID = '';
-
             if (receiver.type === 'shipper') {
                 if(io.shippers[receiver.clientID]) socketID = io.shippers[receiver.clientID].socketID;
             } else if (receiver.type == 'store') {
@@ -172,7 +171,8 @@ module.exports = function(server,app){
             data.receiver = type;
             var connection = io.receiverSocket(type);
             if(connection) connection.emit(listEvents[index], data, callback);
-        });        
+
+        });
     }
 
     // var distanceFrom = function(currentPosition,shippers,distanceRadius){
@@ -487,6 +487,7 @@ module.exports = function(server,app){
 
                     console.log("---This is Data Shipper---");
                     console.log(data);
+
                     console.log("---This is Data Shipper---");
 
                     var shipper = data.msg.shipper;
