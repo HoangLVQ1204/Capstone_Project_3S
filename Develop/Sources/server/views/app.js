@@ -17,7 +17,7 @@ angular.module('app', [
         admin: 3
     },
 
-    baseURI: "http://localhost:3000"
+    baseURI: ""
 
 }).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider,uiGmapGoogleMapApiProvider,config){
 
@@ -56,7 +56,7 @@ angular.module('app', [
 
         .state('admin.dashboard',{
             url: '/dashboard',
-            template: '<h1>Dashboard Page đang trong quá trình xây dựng !!!!</h1>',
+            template: '<admin-layout></admin-layout>',
             access: config.role.admin
         })
 
