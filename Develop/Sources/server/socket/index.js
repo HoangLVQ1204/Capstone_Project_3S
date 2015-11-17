@@ -429,6 +429,10 @@ module.exports = function(server,app){
         };
     };
 
+    io.removeOrder = function(orderID) {
+        delete io.orders[orderID];
+    };
+
     io.getOrdersOfShipper = function(shipperID) {
         var orderIDs = Object.keys(io.orders);
         var filteredOrderIDs = _.clone(orderIDs.filter(function(e) {
@@ -464,14 +468,23 @@ module.exports = function(server,app){
     io.addToRoom = function(socket, roomID) {
         socket.join(roomID, function() {
             console.log(socket.id, 'join to room', roomID);
-            console.log('Room ' + roomID, io.nsps['/'].adapter.rooms[roomID]);            
+            console.log('Room ' + roomID+ ":::::: ");// + io.sockets.clients(roomID));
+            var clients_in_the_room = io.sockets.adapter.rooms[roomID];
+            for (var clientId in clients_in_the_room ) {
+                console.log('client: %s', clientId); //Seeing is believing
+                //var client_socket = io.sockets.connected[clientId];//Do whatever you want with this
+            }
         });
     };
 
-    var i = 1;
-    io.test = function(){
-        i++;
-        return i;
+    io.leaveRoom = function(socket, roomID) {
+        socket.leave(roomID);
+    };
+
+    io.findSocketIdByShipperId = function(shipperid){
+        var socket =  io.shippers[shipperid];
+        if(socket) return socket.socketID;
+        return null;
     };
 
     io
