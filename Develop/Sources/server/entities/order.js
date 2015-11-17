@@ -1,5 +1,5 @@
 /* jshint indent: 2 */
-
+var moment         = require('moment');
 module.exports = function(sequelize, DataTypes) {
   var order =  sequelize.define('order', {
     orderid: {
@@ -69,6 +69,18 @@ module.exports = function(sequelize, DataTypes) {
     },
     overweightfee: {
       type: DataTypes.BIGINT,
+      allowNull: true
+    },
+    deliveryprovinceid: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    deliverydistrictid: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    deliverywardid: {
+      type: DataTypes.STRING,
       allowNull: true
     },
     pickupaddresscoordination: {
@@ -382,6 +394,29 @@ module.exports = function(sequelize, DataTypes) {
           ]
         })
       },
+
+      //// HoangNK - get total delivery and cod of day
+      getTodayTotalDelivery: function () {
+        //console.log( moment().format('DD/MM/YYYY'));
+        return order.sum('fee',{
+          where: {
+            completedate: moment().format(),
+            statusid: [7,8]
+          }
+        })
+      },
+
+      getTodayTotalCoD: function () {
+        //console.log( moment().format('DD/MM/YYYY'));
+        return order.sum('cod',{
+          where: {
+            completedate: moment().format(),
+            statusid: [7,8]
+          }
+        })
+      },
+
+
     }
   });
   return order;

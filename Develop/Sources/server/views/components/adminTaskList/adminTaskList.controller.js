@@ -16,17 +16,26 @@ function adminTaskListController($scope,$state, $http, $filter, config) {
             value: ''
         },
         {
-            option: 'Name',
-            value: 'name'
+            option: 'ShipperID',
+            value: 'shipperid'
         },{
-            option: 'Address',
-            value: 'address'
+            option: 'StoreID',
+            value: 'order.storeid'
         },{
-            option: 'Payment',
-            value: 'payment'
+            option: 'OrderID',
+            value: 'orderid'
+        },{
+            option: 'Order Status',
+            value: 'orderstatus.statusname'
+        },{
+            option: 'Task Status',
+            value: 'taskstatus.statusname'
+        },{
+            option: 'Type',
+            value: 'tasktype.typename'
         }];
     $scope.selected = $scope.searchOptions[0];
-    $scope.dateRange = '';
+    $scope.dateRange = null;
     $scope.taskStatusOptions =[];
     $scope.taskTypeOptions =[];
 

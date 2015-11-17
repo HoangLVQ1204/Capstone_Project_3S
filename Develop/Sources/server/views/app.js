@@ -56,7 +56,7 @@ angular.module('app', [
 
         .state('admin.dashboard',{
             url: '/dashboard',
-            template: '<h1>Dashboard Page đang trong quá trình xây dựng !!!!</h1>',
+            template: '<admin-layout></admin-layout>',
             access: config.role.admin
         })
 
@@ -230,9 +230,9 @@ angular.module('app', [
         $('.globalNoti').on('click', function() {
             console.log('click globalNoti');
         });
-        $rootScope.$apply();
+        //$rootScope.$apply();
     };
-
+//he he
 
     if(authService.isLogged()){
         socketService.authenSocket()

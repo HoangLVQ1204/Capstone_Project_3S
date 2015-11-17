@@ -5,7 +5,7 @@
 function storeDashboardController($scope,$state,dataService, $http, config, $rootScope){
 
     //Option for drop down list
-    $scope.searchOptionsInProcess = [
+    $scope.searchOptionsInactive = [
         {
             option: 'All',
             value: ''
@@ -40,7 +40,7 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
         }
 
     ];
-    $scope.searchOptionsDone = [
+    $scope.searchOptionsActive = [
         {
             option: 'All',
             value: ''
@@ -66,7 +66,7 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
             value: 'recipientphone'
         }
     ];
-    $scope.searchOptionsDraff = [
+    $scope.searchOptionsDone = [
         {
             option: 'All',
             value: ''
@@ -239,7 +239,7 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
 
     // START Listen to socket changes
     $rootScope.$on("evChange", function(event, args){
-        alert(args.message);
+        //alert(args.message);
         console.log(args);
         getDataFromServer();
     });
