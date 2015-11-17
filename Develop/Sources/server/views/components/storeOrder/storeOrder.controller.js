@@ -2,7 +2,7 @@
  * Created by khanhkc on 9/22/15.
  */
 
-function storeOrderController($scope, dataService, config, socketService, socketStore) {
+function storeOrderController($scope,$rootScope, dataService, config, socketService, socketStore) {
     getStoreName();
     getProvince ();
     $scope.order={
@@ -192,17 +192,6 @@ function storeOrderController($scope, dataService, config, socketService, socket
         $scope.goods.splice(index,1);
     };
 
-    $scope.postDraff = function(){
-        var urlBase = config.baseURI + '/orders';
-        $scope.order.isdraff = true;
-        var data = {
-            order: $scope.order,
-            goods : $scope.goods,
-        };
-        //console.log("================data===============",data);
-        dataService.postDataServer(urlBase,data);
-
-    };
 
     function loading(){
         var overlay=$('<div class="load-overlay"><div><div class="c1"></div><div class="c2"></div><div class="c3"></div><div class="c4"></div></div><span>Finding Shipper...</span><button class="btn btn-theme-inverse">Cancel</button></div>');
@@ -258,6 +247,7 @@ function storeOrderController($scope, dataService, config, socketService, socket
     }
 
     $scope.createExpressOrder = function(){
+
         var urlBaseOrder = config.baseURI + '/orders';
         var urlBaseTask = config.baseURI + '/api/createTask';
 
@@ -271,60 +261,88 @@ function storeOrderController($scope, dataService, config, socketService, socket
             .then(function(res){
                 var orderID = res.data.orderid;
 
-                console.log("---DATA ORDER ID---");
-                console.log(orderID);
-                console.log("---DATA ORDER ID---");
-
                 var dataTask = {
                     orderid: orderID,
                     shipperid: $scope.rightShipper.shipperID,
                     adminid: null,
                     statusid: 2,
                     typeid: 3
-                }
+                };
+
                 dataService.postDataServer(urlBaseTask,dataTask)
                     .then(function(res){
-                        if(res.status != 500){
-                            var temp = {
-                                type: '',
-                                title: 'EXPRESS ORDER: SUCCESS',
-                                content: 'ORDER ID: '+orderID+ 'created successfully',
-                                url: '/#/notiListdemo',
-                                isread: false,
-                                createddate: new Date()
-                            };
-                            $rootScope.notify(temp);
-                        }else{
-                            var temp = {
-                                type: 'issue',
-                                title: 'EXPRESS ORDER: FAIL',
-                                content: 'ORDER ID: '+orderID+ 'created fail! Please try again late!',
-                                url: '/#/notiListdemo',
-                                isread: false,
-                                createddate: new Date()
-                            };
-                            $rootScope.notify(temp);
-                        }
+
+                        $("#listAcceptedShipper").modal("hide");
+
+                        setTimeout(function(){
+                            if(res.status != 500){
+
+                                $.notific8('ORDER ID: '+orderID+ ' is created successfully! ',
+                                    {
+                                        life:10000,
+                                        horizontalEdge:"bottom",
+                                        theme:"success" ,
+                                        heading:" INFO:"
+                                    });
+
+                            }else{
+
+                                $.notific8('ORDER ID: '+orderID+ ' is created fail! Please try again late! ',
+                                    {
+                                        life:10000,
+                                        horizontalEdge:"bottom",
+                                        theme:"danger" ,
+                                        heading:" ERROR: "
+                                    });
+                            }
+                        }, 3000);
                     })
             })
 
 
     }
 
-
-    function postCompleteOrder (){
+    $scope.createNormalOrder = function(){
         var urlBase = config.baseURI + '/orders';
         $scope.order.isdraff = false;
+
         var data = {
             order: $scope.order,
             goods : $scope.goods,
             selectedDistrict: $scope.selectedDistrict.districtid
         };
-        //console.log("==============data=========",data);
+        dataService.postDataServer(urlBase,data);
+    }
 
+    $scope.createDraffOrder = function(){
 
+        var urlBase = config.baseURI + '/orders';
+        $scope.order.isdraff = true;
+
+        var data = {
+            order: $scope.order,
+            goods : $scope.goods,
+            selectedDistrict: $scope.selectedDistrict.districtid
+        };
+
+        dataService.postDataServer(urlBase,data)
+            .then(function(res){
+                var orderID = res.data.orderid;
+                setTimeout(function(){
+                    $.notific8('ORDER ID: '+orderID+ 'is added to Draff ',
+                        {
+                            life:10000,
+                            horizontalEdge:"bottom",
+                            theme:"success" ,
+                            heading:" INFO:"
+                        });
+                },3000);
+            })
+    }
+
+    function postCompleteOrder (){
         if($scope.order.ordertypeid == 1){
-            dataService.postDataServer(urlBase,data);
+            $scope.createNormalOrder();
         }else if($scope.order.ordertypeid == 2){
             findExpressShipper();
         }
@@ -474,6 +492,6 @@ function storeOrderController($scope, dataService, config, socketService, socket
 }
 
 
-storeOrderController.$inject = ['$scope', 'dataService', 'config','socketService','socketStore'];
+storeOrderController.$inject = ['$scope','$rootScope','dataService', 'config','socketService','socketStore'];
 angular.module('app').controller('storeOrderController', storeOrderController);
 

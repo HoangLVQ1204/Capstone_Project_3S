@@ -79,7 +79,6 @@ module.exports = function(server,app){
         }
     */
     io.stores = {};
-
     /*
         io.shippers[shipperID] = {
             order: [],
@@ -162,7 +161,7 @@ module.exports = function(server,app){
     */
     io.forward = function(sender, receiver, msg, eventName, callback) {
         var data = {
-            sender: sender,            
+            sender: sender,
             msg: msg
         };
 
@@ -332,8 +331,6 @@ module.exports = function(server,app){
         };
     };
 
-
-
     io.containShipper = function(shipperID) {
         return !!io.shippers[shipperID];
     };
@@ -356,6 +353,14 @@ module.exports = function(server,app){
         io.shippers[shipper.shipperID].isConnected = true;
         io.shippers[shipper.shipperID].numTasks = io.countNumTasksByShipperID(shipper.shipperID);
     };
+
+    io.getListConnectedShippers = function(){
+        var listRightShippers = [{
+            SPID : 'SP000001',
+            isConnected: true
+        }]
+        return listRightShippers;
+    }
 
     io.updateStatusShipper = function(shipper) {
         io.shippers[shipper.shipperID].isConnected = false;
@@ -417,8 +422,6 @@ module.exports = function(server,app){
         return shipperInfos;
     };
 
-
-
     io.addOrder = function(orderID, storeID, shipperID) {
         io.orders[orderID] = {
             shipperID: shipperID,
@@ -465,12 +468,6 @@ module.exports = function(server,app){
             console.log(socket.id, 'join to room', roomID);
             console.log('Room ' + roomID, io.nsps['/'].adapter.rooms[roomID]);            
         });
-    };
-
-    var i = 1;
-    io.test = function(){
-        i++;
-        return i;
     };
 
     io
@@ -533,8 +530,13 @@ module.exports = function(server,app){
                         io.updateAdmin(admin, socket);
                     else
                         io.addAdmin(admin, socket);
-
-                    io.reply(data.sender, { mapData: io.getDataForAdmin() }, 'admin:register:location');
+                    io.reply(
+                        data.sender,
+                        {
+                            mapData: io.getDataForAdmin(),
+                            shipperData: io.getListConnectedShippers()
+                        },
+                        'admin:register:location');
                     require('./socketAdmin')(socket, io);
 
                 }

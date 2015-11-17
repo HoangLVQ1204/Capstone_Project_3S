@@ -51,33 +51,36 @@ function storeController($scope,$state,socketService,socketStore,dataService,aut
     });
 
     $scope.test = function(){
-
-        socketStore.findShipper();
-        loading();
-        var s = 0;
-        $scope.listRightShippers = [];
-        var loopFindShipper = setInterval(function(){
-            if($scope.listRightShippers.length != 0){
-                $scope.rightShipper = $scope.listRightShippers[0];
-                $scope.$apply();
-                unloading();
-                $("#listAcceptedShipper").modal("show");
-                clearInterval(loopFindShipper);
-                return;
-            }
-            s = s + 1;
-
-            if(s == 60 || flag){
-                unloading();
-                $scope.rightShipper = {
-                    avatar: "assets/img/notfound.png"
-                };
-                $scope.$apply();
-                $("#listAcceptedShipper_Fail").modal("show");
-                clearInterval(loopFindShipper);
-                flag = false;
-            }
-        },1000);
+        $("#listAcceptedShipper").modal("show");
+        setTimeout(function(){
+            $("#listAcceptedShipper").modal("hide");
+        },3000);
+        //socketStore.findShipper();
+        //loading();
+        //var s = 0;
+        //$scope.listRightShippers = [];
+        //var loopFindShipper = setInterval(function(){
+        //    if($scope.listRightShippers.length != 0){
+        //        $scope.rightShipper = $scope.listRightShippers[0];
+        //        $scope.$apply();
+        //        unloading();
+        //        $("#listAcceptedShipper").modal("show");
+        //        clearInterval(loopFindShipper);
+        //        return;
+        //    }
+        //    s = s + 1;
+        //
+        //    if(s == 60 || flag){
+        //        unloading();
+        //        $scope.rightShipper = {
+        //            avatar: "assets/img/notfound.png"
+        //        };
+        //        $scope.$apply();
+        //        $("#listAcceptedShipper_Fail").modal("show");
+        //        clearInterval(loopFindShipper);
+        //        flag = false;
+        //    }
+        //},1000);
     };
 
     $scope.$watch('$viewContentLoaded', function(event) {
@@ -108,17 +111,17 @@ function storeController($scope,$state,socketService,socketStore,dataService,aut
     });
 
     // Test notification
-    setTimeout(function() {        
-        var temp = {
-            type: 'issue',
-            title: 'issue 1',
-            content: 'This is very big issue number 1',
-            url: '/#/notiListdemo',
-            isread: false,
-            createddate: new Date()
-        };
-        $rootScope.notify(temp);
-    }, 1000);
+    //setTimeout(function() {
+    //    var temp = {
+    //        type: 'issue',
+    //        title: 'issue 1',
+    //        content: 'This is very big issue number 1',
+    //        url: '/#/notiListdemo',
+    //        isread: false,
+    //        createddate: new Date()
+    //    };
+    //    $rootScope.notify(temp);
+    //}, 1000);
 }
 
 storeController.$inject = ['$scope','$state','socketService','socketStore','dataService','authService','config','$rootScope'];
