@@ -141,37 +141,7 @@ module.exports = function (app) {
     };
 
 
-    var getOne = function (req, res, next) {
-        //var listOrders = [];
-        //var statusname = '';
-        //var deliveryaddress = '';
-        //var recipientname = '';
-        //var recipientphone = '';
-        //var completedate = '';
-        //var createdate = '';
-        //var cod = 0;
-        //var fee = 0;
-        //console.log(req.orderRs['orderid']);
-        //var order = {
-        //    orderid : req.orderRs['orderid'],
-        //    deliveryaddress : req.orderRs['deliveryaddress'],
-        //    recipientname : req.orderRs['recipientname'],
-        //    recipientphone : req.orderRs['recipientphone'],
-        //    statusid : req.orderRs['statusid'],
-        //    isdraff : req.orderRs['isdraff'],
-        //    iscancel : req.orderRs['iscancel'],
-        //    ispending : req.orderRs['ispending'],
-        //    cod : req.orderRs['cod'],
-        //    fee : req.orderRs['fee'],
-        //    completedate : req.orderRs['completedate'],
-        //    createdate : req.orderRs['createdate'],
-        //    statusname : req.orderRs['orderstatus'].statusname
-        //};
-        //
-        //var rs =  req.orderRs['goods'];
-        //_.each(rs, function(item) {
-        //    console.log(item.dataValues.goodsid);
-        //});
+    var getOne = function (req, res, next) {        
         res.status(200).json(req.orderRs);
     };
 

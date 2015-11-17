@@ -7,10 +7,12 @@
 		<div></div>		
 		<div class="column">
 			<div>
-				<div >
+				<div>
 					<label class="control-label col-md-12 color-white align-lg-center"><h4>Order id: <strong>{{order.orderid}}</strong></h4></label>
-					<label class="control-label col-md-12 color-white align-lg-center"><h4>Order status: <strong>{{order.orderstatus.statusname}}</strong></h4></label>
+					<label class="control-label col-md-6 color-white align-lg-right"><h4>Order status: <strong>{{order.orderstatus.statusname}}</strong></h4></label>
+          <label class="control-label col-md-6 color-white align-lg-left"><h4>Delivery type: <strong>{{deliveryType}}</strong></h4></label>
 				</div>
+        
 				<div class="row bg-lightseagreen">
 					<div class="col-md-4">
 						<div class="form-group">
@@ -35,7 +37,7 @@
 					<div class="col-md-4">
 						<div class="form-group">
 							<label class="control-label color-white col-md-7 align-lg-left">Over weight fee:</label>
-							<label class="control-label color-white col-md-5 align-lg-right">{{order.overWeightFee|number}} VND</label>
+							<label class="control-label color-white col-md-5 align-lg-right">{{order.overweightfee|number}} VND</label>
 						</div>
 					</div>
 				</div>
@@ -64,36 +66,42 @@
 							</div>
 						</div>				
 						<div class="form-group row" ng-if="!disabled">
-							<div class="col-md-4" >
-								<label class="control-label">Province</label>
-								<select parsley-required="true" class="form-control"
-								ng-options="x.name for x in listProvince track by x.provinceid"
-								ng-model="selectedProvince" ng-disabled="disabled" ng-change="updateDistrict()"></select>
-							</div>
 							<div class="col-md-4">
-								<label class="control-label">District</label>
-								<select parsley-required="true" class="form-control"
-								ng-options="x.name for x in listDistrict track by x.districtid"
-								ng-model="selectedDistrict" ng-disabled="disabled" ng-change="updateWard()"></select>
-							</div>
-							<div class="col-md-4">
-								<label class="control-label" >Ward</label>
-								<select parsley-required="true" class="form-control"
-								ng-options="x.name for x in listWard track by x.wardid"
-								ng-model="selectedWard" ng-disabled="disabled" ng-change="updateDeliveryAdd()"></select>
-							</div>
+                                    <label class="control-label">Province</label>
+                                    <select parsley-required="true" class="form-control"
+                                            ng-options="x.name for x in listProvince track by x.provinceid"
+                                            ng-model="data.selectedProvince" ng-change="updateDistrict()">
+
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="control-label">District</label>
+                                    <select parsley-required="true" class="form-control"
+                                            ng-options="x.name for x in listDistrict track by x.districtid"
+                                            ng-model="data.selectedDistrict" ng-change="updateWard()"> </select>
+                                </div>
+                                <h5>{{selectedDistrictxxx.name}}</h5>
+                                <div class="col-md-4">
+                                    <label class="control-label">Ward</label>
+                                    <select parsley-required="true" class="form-control"
+                                            ng-options="x.name for x in listWard track by x.wardid"
+                                            ng-model="data.selectedWard" ng-change="updateDeliveryAdd()">
+                                    </select>
+                                </div>
+                                <h5>{{selectedWard.name}}</h5>
+
 						</div>
 						<div class="form-group" ng-if="!disabled">
 							<label class="control-label">Address</label>
-							<textarea ng-model="houseNumber" class="form-control"
+							<textarea ng-model="order.deliveryaddress" class="form-control"
 							parsley-trigger="keyup" rows="1"
 							placeholder="Number Street (Eg: 40 Duy Tân)" ng-disabled="disabled" ng-change="updateDeliveryAdd()" required></textarea>
 						</div>
 						<div class="form-group">
 							<label class="control-label">Address</label>
-							<textarea ng-model="order.deliveryaddress" class="form-control"
+							<textarea  class="form-control"
 							parsley-trigger="keyup" rows="1"
-							disabled></textarea>
+							disabled>{{order.deliveryaddress+ ', ' + data.selectedWard.name + ', ' +data.selectedDistrict.name + ', ' + data.selectedProvince.name + ', Việt Nam'}}</textarea>
 						</div>
 
 					</div>
