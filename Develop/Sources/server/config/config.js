@@ -16,7 +16,7 @@ var config = {
 
 	// Config filter finding shipper
 	filter: {
-		radius: 1000000000,
+		radius: 100000000,
 		isConnected: true,
 		limit: 4,
 		maxTasks: 3

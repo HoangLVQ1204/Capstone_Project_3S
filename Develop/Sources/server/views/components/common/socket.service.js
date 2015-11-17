@@ -5,7 +5,8 @@
 
 angular.module('app')
     .factory('socketService',function($rootScope, $q){
-        var socket = io();
+        var socket = io();        
+        // console.dir(socket);
         // socket.on('connect',function(){
         //     console.log("connect client");            
             // socket
@@ -14,49 +15,79 @@ angular.module('app')
             //         console.log("Authen ok!");
                 // })
         // })
-        return {
-            authenSocket: function(){
+        
+        socket.on('disconnect', function() {
+            console.log('DISCONNECTED');
+        });
+        
+        var api = {};
+
+        api.authenSocket = function(){
+            return api.connect()
+            .then(function() {
                 console.log("SEND TOKEN: "+ localStorage.getItem('EHID'));
                 var d = $q.defer();
-                this.on('authenticated',function(){
+                api.on('authenticated',function(){
                     console.log("Authen ok!");
                     d.resolve();
                 });
-                this.emit('authenticate',{token: localStorage.getItem('EHID')})
+                api.emit('authenticate',{token: localStorage.getItem('EHID')})
                 return d.promise;
-            },
-            on: function (eventName, callback){
-                socket.on(eventName,function(){
-                    var args = arguments;
-                    $rootScope.$apply(function(){
+            });
+        };
+
+        api.on = function (eventName, callback){
+            socket.on(eventName,function(){
+                var args = arguments;
+                $rootScope.$apply(function(){
+                    callback.apply(socket,args);
+                })
+            })
+        };
+
+        api.emit = function (eventName,data,callback){
+            socket.emit(eventName,data,function(){
+                var args = arguments;
+                $rootScope.$apply(function(){
+                    if(callback){
                         callback.apply(socket,args);
-                    })
+                    }
                 })
-            },
-            emit: function (eventName,data,callback){
-                socket.emit(eventName,data,function(){
-                    var args = arguments;
-                    $rootScope.$apply(function(){
-                        if(callback){
-                            callback.apply(socket,args);
-                        }
-                    })
-                })
-            },
-            /*
-                sender: { type: xxx, clientID: xxx }
-                receiver = 'admin' || 'shipper' || 'store' || {room: ...} || { type: xxx, clientID: xxx} || Arrays of these types
-                
-            */
-            sendPacket: function(sender, receiver, msg, eventName, callback) {
-                var data = {
-                    sender: sender,
-                    receiver: receiver,
-                    msg: msg
-                };
-                this.emit(eventName, data, callback);
+            })
+        };
+        /*
+            sender: { type: xxx, clientID: xxx }
+            receiver = 'admin' || 'shipper' || 'store' || {room: ...} || { type: xxx, clientID: xxx} || Arrays of these types
+            
+        */
+        api.sendPacket = function(sender, receiver, msg, eventName, callback) {
+            var data = {
+                sender: sender,
+                receiver: receiver,
+                msg: msg
+            };
+            api.emit(eventName, data, callback);
+        };
+
+        api.disconnect = function() {
+            // console.log('socket.disconnect', socket.disconnect);
+            socket.disconnect();
+        };
+
+        api.connect = function() {
+            var d = $q.defer();
+            if (socket.connected) {
+                console.log('socket is already connected');
+                d.resolve();
+                return d.promise;
             }
+            socket.connect();
+            socket.on('connect', function() {
+                console.log('CONNECTED');
+                d.resolve();
+            });
+            return d.promise;
+        };
 
-
-        }
+        return api;
     })

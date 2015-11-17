@@ -11,6 +11,9 @@ module.exports = function (app) {
     app.route('/api/getAllOrder')
         .get(controller.getOrderList);
 
+    app.route('/api/getTodayTotal')
+        .get(controller.getTodayTotal);
+
     app.route('/orders')
         .get(checkAll,controller.getAllOrder)
         .post(controller.postOne);

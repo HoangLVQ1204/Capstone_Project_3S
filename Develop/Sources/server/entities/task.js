@@ -256,7 +256,8 @@ module.exports = function (sequelize, DataTypes) {
                             'shipperid': shipperid
                         }
                     })
-            }
+            },
+
 
         }
     });
