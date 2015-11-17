@@ -59,6 +59,9 @@ function storeController($scope,$state,socketService,socketStore,dataService,aut
         var loopFindShipper = setInterval(function(){
             if($scope.listRightShippers.length != 0){
                 $scope.rightShipper = $scope.listRightShippers[0];
+                // console.log('rightShipper', $scope.rightShipper);
+                // Found right shipper
+                socketStore.selectShipper($scope.rightShipper, {}, 'order_1');
                 $scope.$apply();
                 unloading();
                 $("#listAcceptedShipper").modal("show");
@@ -119,6 +122,18 @@ function storeController($scope,$state,socketService,socketStore,dataService,aut
         };
         $rootScope.notify(temp);
     }, 1000);
+
+    // setTimeout(function() {        
+    //     var temp = {
+    //         type: 'info',
+    //         title: 'info 2',
+    //         content: 'This is very big info number 2',
+    //         url: '/#/notiListdemo',
+    //         isread: false,
+    //         createddate: new Date()
+    //     };
+    //     $rootScope.notify(temp);
+    // }, 3000);
 }
 
 storeController.$inject = ['$scope','$state','socketService','socketStore','dataService','authService','config','$rootScope'];

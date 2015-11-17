@@ -15,6 +15,7 @@ function notificationService($q,$http, config, dataService){
     var listNotifications = [];
     var totalNumberNotifications = 0;
     var numberNewNotifications = 0;
+    var totalUnreadNotifications = 0;
     var pageNumbers = [];
 
     function enableCurrentPage() {
@@ -45,6 +46,23 @@ function notificationService($q,$http, config, dataService){
     api.getTotalNumberNotifications = function() {
         return totalNumberNotifications;
     };
+
+    api.getTotalUnreadNotificationsServer = function() {
+        var urlBase = config.baseURI + '/api/notifications/unread';
+        return dataService.getDataServer(urlBase)
+        .then(function(data) {            
+            totalUnreadNotifications = data.data;
+            genPagination();            
+        });
+    };
+
+    api.getTotalUnreadNotifications = function() {
+        return totalUnreadNotifications;
+    };
+
+    api.setTotalUnreadNotifications = function(number) {
+        totalUnreadNotifications = number;
+    };    
 
     api.getPageNumbers = function() {
         return pageNumbers;
@@ -92,6 +110,7 @@ function notificationService($q,$http, config, dataService){
         });
     };
 
+    // Move update database to server
     api.addNotification = function(item) {
         var urlBase = config.baseURI + '/api/notifications';
         dataService.postDataServer(urlBase, item)

@@ -33,6 +33,10 @@
 
 */
 
+/*
+    BUG: Disable cache in browser
+*/
+
 var _ = require('lodash');
 
 module.exports = function(server,app){
@@ -491,13 +495,29 @@ module.exports = function(server,app){
                     console.log("---This is Data Shipper---");
 
                     var shipper = data.msg.shipper;
-                    if (io.containShipper(shipper.shipperID))
+                    if (io.containShipper(shipper.shipperID)) {
                         io.updateShipper(shipper, socket);
-                    else
+                        var orders = io.getOrdersOfShipper(shipper.shipperID);
+                        orders.forEach(function(e) {
+                            e.orderInfo.isPending = false;
+                            io.updateOrder(e.orderID, e.orderInfo);
+                        });
+                        console.log('after connect', orders);
+                        io.forward(
+                        {
+                            type: 'shipper',
+                            clientID: shipper.shipperID
+                        },
+                        [ { room: shipper.shipperID }, 'admin' ],
+                        {
+                            orders: orders
+                        },
+                        [ 'store:update:order', 'admin:update:order' ]);        
+                    } else
                         io.addShipper(shipper, socket);
 
                     io.reply(data.sender, { mapData: io.getDataForShipper(shipper.shipperID) }, 'shipper:register:location');
-                    io.forward(data.sender, 'admin', { shipper: io.getOneShipper(shipper.shipperID) }, 'admin:add:shipper');
+                    io.forward(data.sender, ['admin', { room: shipper.shipperID }], { shipper: io.getOneShipper(shipper.shipperID) }, ['admin:add:shipper', 'store:add:shipper']);
 
                     require('./socketShipper')(socket, io);
 
@@ -511,9 +531,9 @@ module.exports = function(server,app){
 
                     var store = data.msg.store;
 
-                    if (io.containStore(store.storeID))
+                    if (io.containStore(store.storeID)) {
                         io.updateStore(store, socket);
-                    else
+                    } else
                         io.addStore(store, socket);
 
                     io.reply(data.sender, { mapData: io.getDataForStore(store.storeID) }, 'store:register:location');

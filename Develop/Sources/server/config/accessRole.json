@@ -88,6 +88,11 @@
     },
 
     {
+      "url": "/api/notifications/unread",
+      "role": [1,2,3]
+    },
+
+    {
       "url": "/api/notifications/:notification_id",
       "role": [1,2,3]
     }

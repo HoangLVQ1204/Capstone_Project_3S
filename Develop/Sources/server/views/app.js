@@ -205,14 +205,17 @@ angular.module('app', [
 }).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper, config,socketService, notificationService){
 
     // Notification component
-    $rootScope.numberNewNoti = notificationService.getNumberNewNotifications();
+    notificationService.getTotalUnreadNotificationsServer()
+    .then(function() {
+        $rootScope.numberUnreadNoti = notificationService.getTotalUnreadNotifications();
+    })
     $rootScope.readNewNoti = function() {
 
     };
     
     $rootScope.notify = function(notification) {
-        $rootScope.numberNewNoti += 1;
-        notificationService.setNumberNewNotifications($rootScope.numberNewNoti);
+        $rootScope.numberUnreadNoti += 1;
+        notificationService.setTotalUnreadNotifications($rootScope.numberUnreadNoti);
         //notificationService.addNotification(notification);
         var data = {
             life: 3000,
