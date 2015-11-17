@@ -238,15 +238,25 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
 
 
     // START Listen to socket changes
-    $rootScope.$on("evChange", function(event, args){
+    $rootScope.$on("evChange", function(event, data){
         //alert(args.message);
-        console.log(args);
+        console.dir(data);
         getDataFromServer();
+        //SHOW INFORMATION OF THE SHIPPER WHO PICKED ORDER
+        if(data.msg.profile) {
+            $scope.theShipper = data.msg.profile;
+            $scope.thePickedOrder = data.msg.order;
+            console.dir($scope.theShipper);
+            $("#informMsg").modal("show");
+            setTimeout(function () {
+                $("#informMsg").modal("hide");
+            }, 3000);
+        }
+        //END SHOW INFORMATION OF SHIPPER
     });
     $scope.theShipper = {};
-    setTimeout(function(){
-        $("#informMsg").modal("show");
-    },0);
+    $scope.thePickedOrder = '';
+    $scope.hostServer = config.hostServer;
     // END listen to socket changes
 
 }

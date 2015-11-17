@@ -617,17 +617,17 @@
         <div class="modal-body left">
             <div class="row">
                 <div class="col-md-3" >
-                    <img alt="" ng-src="theShipper.avatar" class="circle" style="width: 100px">
+                    <img alt="" ng-src="{{hostServer+theShipper.avatar}}" class="circle" style="width: 100px">
                 </div>
                 <div class="col-md-9">
-                    <h3><strong>Hi</strong>, I'm {{theShipper.fullName}}</h3>
+                    <h3><strong>Hi</strong>, I'm {{theShipper.name}}</h3>
                     <br/>
                     <div class="row">
                         <label class="col-md-4">
                             <i class="fa fa-caret-right"></i> ShipperID
                         </label>
                         <div class="col-md-8">
-                            <strong>{{theShipper.shipperID}}</strong>
+                            <strong>{{theShipper.username}}</strong>
                         </div>
                     </div>
                     <div class="row">
@@ -640,14 +640,14 @@
                     </div>
                     <div class="row">
                         <label class="col-md-4">
-                            <i class="fa fa-caret-right"></i> Identify Card
+                            <i class="fa fa-caret-right"></i> Identity Card
                         </label>
                         <div class="col-md-8">
-                            <strong>{{theShipper.identifycard}}</strong>
+                            <strong>{{theShipper.identitycard}}</strong>
                         </div>
                     </div>
                     <br/>
-                    <span class="label" style="background-color:green;">Confirmed to pick-up your order:</span>
+                    <span class="label" style="background-color:#2ecc71;">Confirmed to pick-up your order:</span>
                     <br/>
                     <br/>
                     <div class="row">
@@ -655,13 +655,13 @@
                             <i class="fa fa-caret-right"></i> Order
                         </label>
                         <div class="col-md-8">
-                            <strong>OD11111{{theShipper.orderid}}</strong>
+                            <strong>{{thePickedOrder}}</strong>
                         </div>
                     </div>
                 </div>
                 <hr>
                 <div class="align-lg-right">
-                    <button class="btn btn-green" data-dismiss="modal">OK</button>
+                    <button class="btn btn-success" data-dismiss="modal">OK</button>
                 </div>
             </div>
         </div>
