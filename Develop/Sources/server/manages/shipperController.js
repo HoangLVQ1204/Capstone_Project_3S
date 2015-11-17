@@ -253,7 +253,8 @@ module.exports = function (app) {
                                 }).then(function (rs) {
                                     if(orderObj.statusid == 2){
                                         db.profile.getProfileUser(shipperid).then(function(profile){
-                                            msg['[profile'] = profile;
+                                            msg['profile'] = profile;
+                                            msg['order'] = orderObj.orderid;
                                             server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
                                         });
                                     }
@@ -340,7 +341,7 @@ module.exports = function (app) {
         //Instance new Issue
         var newIssue = _.cloneDeep(req.body[0].issue);
         newIssue.isresolved = false;
-        newIssue.resolvetype = 1;
+        newIssue.resolvetype = null;
         newIssue.createddate = new Date();
         var orders = _.cloneDeep(req.body[0].orders);
         var categoryissue = _.cloneDeep(req.body[0].categoryissue);
@@ -756,30 +757,38 @@ module.exports = function (app) {
     //// END change status of shipper
 
     var testSk = function(req, res, next){
-        //var receiver = {
-        //    type: 'store',
-        //    clientID: 'STR003'
-        //};
+        var receiver = {
+            type: 'store',
+            clientID: 'STR003'
+        };
         ////var msg = {
         ////    shipper: "sphuy",
         ////    order: 'order1',
         ////    content: 'Change order status'
         ////};
-        //var msg = {
-        //    type: "info",
-        //    title: "Test",
-        //    content: "This is test",
-        //    url: "http://localhost:3000/api/shipper/test-socket",
-        //    isread: false,
-        //    username: 'ST000003',
-        //    createddate: new Date()
-        //};
+        var msg = {
+            type: "info",
+            title: "Test",
+            content: "This is test",
+            url: "http://localhost:3000/#/store/dashboard",
+            isread: false,
+            username: 'ST000003',
+            createddate: new Date()
+        };
         //server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
         //var rs = server.socket.stores;
-        db.managestore.getUsersByStoreID('STR0003').then(function(rs){
-            if(rs.length>0)
-            res.status(200).json(rs);
-            else res.status(200).json("OKKK");
+        //db.managestore.getUsersByStoreID('STR0003').then(function(rs){
+        //    if(rs.length>0)
+        //    res.status(200).json(rs);
+        //    else res.status(200).json("OKKK");
+        //});
+        var shipperid = 'SP000001';
+        var ORDERID = 'OD013124';
+        db.profile.getProfileUser(shipperid).then(function(profile){
+            msg['profile'] = profile;
+            msg['order'] = ORDERID;
+            server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
+            res.status(200).json(profile);
         });
         //res.status(200).json(rs);
         //var noti = {

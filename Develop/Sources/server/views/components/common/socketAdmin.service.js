@@ -3,7 +3,7 @@
  */
 
 
-function socketAdmin(socketService,authService,mapService){
+function socketAdmin(socketService,authService,mapService, $rootScope){
 
     var EPSILON = 1e-8;            
 
@@ -14,15 +14,24 @@ function socketAdmin(socketService,authService,mapService){
     */
     
     socketService.on('admin:register:location', function(data) {
+
         mapService.setMapData(data.msg.mapData)
         .then(function() {
-            console.log('register', data);
+                //console.log('register', data);
+            });
+
+        $rootScope.onlineShipper = 0;
+        //$rootScope.$apply();
+        data.msg.shipperList.map(function (shipper) {
+            if (shipper.isConnected) $rootScope.onlineShipper++;
         });
+
     });
 
     socketService.on('admin:add:shipper', function(data) {   
-        console.log('admin:add:shipper', data);          
+       // console.log('admin:add:shipper', data);
         mapService.addShipper(data.msg.shipper);
+        $rootScope.$emit("admin:dashboard:getShipperList", data.msg.shipperList);
     });
 
     socketService.on('admin:add:store', function(data) { 
@@ -42,12 +51,14 @@ function socketAdmin(socketService,authService,mapService){
         console.log('admin:update:shipper', data);
         var shipper = data.msg.shipper;
         mapService.updateShipper(shipper);
+
     });
 
     socketService.on('admin:delete:shipper', function(data) {
         console.log('admin:delete:shipper', data);
         var shipper = data.msg.shipper;
         mapService.deleteShipper(shipper.shipperID);
+        $rootScope.$emit("admin:dashboard:getShipperList", data.msg.shipperList);
     });
 
     socketService.on('admin:update:order', function(data) {
@@ -55,11 +66,13 @@ function socketAdmin(socketService,authService,mapService){
         var orders = data.msg.orders;
         orders.forEach(function(e) {
             mapService.updateOrder(e.orderID, e.orderInfo);
+
         });
     });
 
     socketService.on('admin:issue', function(data) {
-        console.log('admin:issue', data.msg.issue.issueid);
+        console.log('admin:issue', data.msg);
+        $rootScope.$emit("admin:issue:newIssue", data.msg);
     });
     
     api.getCurrentUser = function() {
@@ -98,6 +111,6 @@ function socketAdmin(socketService,authService,mapService){
 }
 
 
-socketAdmin.$inject = ['socketService','authService','mapService'];
+socketAdmin.$inject = ['socketService','authService','mapService', '$rootScope'];
 
 angular.module('app').factory('socketAdmin', socketAdmin);

@@ -6,6 +6,7 @@ module.exports = function(socket, io) {
     io.addToRoom(socket, 'admin');
 
     socket.on('disconnect', function() {
+
         console.log('Admin', socket.id, 'disconnect');
     });
 

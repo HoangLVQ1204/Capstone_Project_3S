@@ -25,7 +25,8 @@ module.exports = function(socket, io) {
         },
         [ { room: shipper.shipperID }, 'admin' ],
         {
-            shipper: shipper
+            shipper: shipper,
+            shipperList: io.getAllShippers()
         },
         [ 'store:delete:shipper', 'admin:delete:shipper' ]);
 
