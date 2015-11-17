@@ -17,7 +17,7 @@ angular.module('app', [
         admin: 3
     },
 
-    baseURI: "http://localhost:3000"
+    baseURI: ""
 
 }).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider,uiGmapGoogleMapApiProvider,config){
 
