@@ -77,9 +77,15 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
 
-      putOrder: function (currentOrder) {
-        return currentOrder.save();
-      }
+      updateGoods: function (currentGoods,goodsid) {
+        return goods.update(
+          currentGoods,
+          {
+            where:{
+              'goodsid': goodsid
+            }
+          })
+      },
     }
   });
   return goods;

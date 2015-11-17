@@ -7,11 +7,11 @@ var config = require('../config/config');
 module.exports = function (app) {
     var db = app.get('models');
 
-    var params = function (req, res, next, order_id) {
+    var params = function (req, res, next, orderid) {
         var OrderStatus = db.orderstatus;
         var goods = db.goods;
         var confirmCode = db.confirmationcode;
-        return db.order.storeGetOneOrder(OrderStatus,goods,confirmCode,order_id)
+        return db.order.storeGetOneOrder(OrderStatus,goods,confirmCode,orderid)
             .then(function (order) {
                 if (order) {
                     req.orderRs = order;
@@ -200,17 +200,17 @@ module.exports = function (app) {
             console.log("===========totalWeight=======", totalWeight);
             if(innerCity.indexOf(district)> -1){
                 overWeightFee = (totalWeight - 4000)*2*2;
-                console.log("=============In=========",district);
+                //console.log("=============In=========",district);
             }else {
                 overWeightFee = (totalWeight - 4000)*2*2.5;
-                console.log("=============Out=========",district);
+                //console.log("=============Out=========",district);
             }
             
         }
         ///////
         //console.log("=============fee===============",fee);        
-        console.log("=============overWeightFee=======",overWeightFee);
-        console.log("=============req.body===============",req.body);
+        //console.log("=============overWeightFee=======",overWeightFee);
+        //console.log("=============req.body===============",req.body);
         newOrder.storeid = req.body.order.storeid;
         newOrder.ordertypeid = req.body.order.ordertypeid;
         newOrder.pickupaddress = req.body.order.pickupaddress;
@@ -220,7 +220,7 @@ module.exports = function (app) {
         newOrder.statusid = req.body.order.statusid;
         newOrder.ispending = 'false';
         newOrder.isdraff = req.body.order.isdraff;        
-        newOrder.createdate = new Date(); 
+        newOrder.createdate = new Date();         
         newOrder.fee = fee; 
         newOrder.overweightfee = overWeightFee;
         newOrder.cod = parseInt(req.body.order.cod)?parseInt(req.body.order.cod):0;
@@ -313,28 +313,51 @@ module.exports = function (app) {
            
     
 
-    var put = function (req, res, next) {
-        var order = {};
-        var update = req.body;
-
-        order.orderid = update.orderid;
-        order.storeid = update.storeid;
-        order.ordertypeid = update.ordertypeid;
-        order.pickupaddress = update.pickupaddress;
-        order.deliveryaddress = update.deliveryaddress;
-        order.pickupdate = update.pickupdate;        
-        order.recipientphone = update.recipientphone;
-        order.recipientname = update.recipientname;
-
-        return db.order.putOrder(order)
-            .then(function(save){
-                if(save){
-                    res.status(201).json(order);
+        var updateOrder = function (req, res, next) {
+            var order = {};        
+            console.log("===========req.body========",req.body);
+            var updateOrder = req.body.order;
+            var listupdateGoods = req.body.listgoods;
+            var clStoreid = req.user.stores[0].storeid;        
+            order.ordertypeid = updateOrder.ordertypeid;
+            order.recipientname = updateOrder.recipientname;
+            order.recipientphone = updateOrder.recipientphone;
+            order.deliveryaddress = updateOrder.deliveryaddress;
+            order.deliveryprovinceid = updateOrder.deliveryprovinceid;
+            order.deliverydistrictid = updateOrder.deliverydistrictid;
+            order.deliverywardid = updateOrder.deliverywardid;
+            order.ordertypeid = updateOrder.ordertypeid;
+            order.cod = updateOrder.cod;
+            order.fee = updateOrder.fee;
+            order.overweightfee = updateOrder.overweightfee;
+            db.order.getOneOrder(updateOrder.orderid)
+            .then(function(orderRs){
+                if(orderRs.storeid == clStoreid){
+                    for(var i =0; i <listupdateGoods.length;i++){
+                        var updateGoods = listupdateGoods[i];
+                        var newGoods = {
+                            goodsname: updateGoods.goodsname,
+                            weight: updateGoods.weight,
+                            lengthsize: updateGoods.lengthsize,
+                            widthsize: updateGoods.widthsize,
+                            heightsize: updateGoods.heightsize,
+                            description: updateGoods.description
+                        }
+                        db.goods.updateGoods(newGoods,updateGoods.goodsid)                        
+                    }
+                    db.order.updateOrder(order,updateOrder.orderid)
+                    .then(function(rs){                            
+                        if(rs){
+                            res.status(201).json(order);
+                        }else {
+                            next( new Error('Cannot save user'));
+                        }
+                    })
                 }else {
-                    next( new Error('Cannot save user'));
+                    next(err);
                 }
             })
-    };
+};
 
     var deleteOrder = function (req, res, next) {
         req.orderRs = req.orderRs.toJSON();
@@ -402,7 +425,7 @@ module.exports = function (app) {
         getOne: getOne,
         postOne: post,
         params: params,
-        put : put,
+        updateOrder : updateOrder,
         deleteOrder : deleteOrder,
         putDraff : putDraff,
         cancelOrder: cancelOrder,

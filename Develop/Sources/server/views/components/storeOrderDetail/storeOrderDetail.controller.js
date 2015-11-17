@@ -47,12 +47,12 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
 
     $("#edit-order-form").submit(function(e){
       e.preventDefault();
-      if($(this).parsley( 'validate' )){ 
-
-      }
       if($scope.listgoods.length==0){
         alertEmptyGood();        
+      }else if($(this).parsley( 'validate' )){
+        updateOrderToServer();
       }
+      
 
     });
 
@@ -85,7 +85,7 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
                } else {
                   $scope.deliveryType = "Express";
                }
-               console.log("==============rs===========",rs);
+               //console.log("==============rs===========",rs);
                calculateOverWeightFee($scope.order.deliverydistrictid,$scope.listgoods);
             })
             .error(function (error) {
@@ -94,8 +94,17 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
     };
 
     function updateOrderToServer(){
-        var urlBase = config.baseURI + '/order/' + $scope.orderid;
-        dataService.putDataServer(urlBase,data)
+        var urlBase = config.baseURI + '/orders/' + $scope.orderid;
+        $scope.order.deliveryprovinceid  = $scope.data.selectedProvince.provinceid;
+        $scope.order.deliverydistrictid = $scope.data.selectedDistrict.districtid;
+        $scope.order.deliverywardid = $scope.data.selectedWard.wardid;
+        var data = {
+          order: $scope.order,
+          listgoods: $scope.listgoods,
+        }        
+        dataService.putDataServer(urlBase,data);
+        $scope.disabled = true; 
+        $scope.$apply();
     }
 
     $scope.newGood = {};
@@ -103,9 +112,9 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
     $scope.setGood = function(good,index){        
         $scope.newGood = (JSON.parse(JSON.stringify(good)));
         index = index;
-        console.log("=======goods[]=khi click edit====",good);
-        console.log("========newGood=======", $scope.newGood);
-        console.log("=============index=============", index);
+        //console.log("=======goods[]=khi click edit====",good);
+        //console.log("========newGood=======", $scope.newGood);
+        //console.log("=============index=============", index);
     };
 
     $scope.refreshGood = function(){
@@ -115,7 +124,7 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
     function editGood () {
         for(var i = 0; i < $scope.listgoods.length;i++){
             if( $scope.listgoods[i].goodsid === $scope.newGood.goodsid){
-                console.log("=============trugn nhau===========");
+                //console.log("=============trugn nhau===========");
                 $scope.listgoods[i] = $scope.newGood;
             }
         }
@@ -127,7 +136,7 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
         $scope.listgoods.push($scope.good);
         $scope.$apply();
         bigestGoodId++;
-        console.log("=======goods[]=sau khi add====",$scope.goods);
+        //console.log("=======goods[]=sau khi add====",$scope.goods);
     }
 
     $scope.deleteGood = function(){
@@ -139,7 +148,7 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
         for(var i = 0; i <listGoods.length;i++){
             totalWeight = totalWeight + listGoods[i].weight*listGoods[i].amount;
         }
-        console.log("=============totalWeight=======",totalWeight);
+        //console.log("=============totalWeight=======",totalWeight);
         return totalWeight;
 
     }
@@ -150,16 +159,16 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
         var listInDistrictId =["001","002","003","005","006","007","008","009"];
         if(totalWeight > 4000 ){
             if(listInDistrictId.indexOf(districtId)>-1){
-                console.log("=============IN=======",districtId);
+                //console.log("=============IN=======",districtId);
                 overWeightFee = (totalWeight - 4000)*2*2;
             }else {
-                console.log("=============out=======",districtId);
+                //console.log("=============out=======",districtId);
                 overWeightFee = (totalWeight - 4000)*2*2.5;
             }
             
         }
-         console.log("=============totalWeight=======",totalWeight);
-         console.log("=============overWeightFee=======",overWeightFee);
+         //console.log("=============totalWeight=======",totalWeight);
+         //console.log("=============overWeightFee=======",overWeightFee);
          return overWeightFee;        
     }
 
@@ -167,13 +176,13 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
         var fee = 0;
         var listInDistrictId =["001","002","003","005","006","007","008","009"];
         if(listInDistrictId.indexOf(districtId)> -1){
-            if(deliveryType == '1'){
+            if(deliveryType == "Normal"){
                 fee = 10000;
             }else {
                 fee = 20000;
             }                
         }else {
-            if(deliveryType == '1'){
+            if(deliveryType == "Normal"){
                 fee = 20000;
             }else {
                 fee = 30000;
@@ -186,7 +195,7 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
     }
 
     $scope.updateFee = function(){
-        $scope.order.fee = calculateFee($scope.data.selectedDistrict,$scope.order.ordertypeid);
+        $scope.order.fee = calculateFee($scope.data.selectedDistrict,$scope.deliveryType);
     }
 
     function getStoreName(){
@@ -215,7 +224,7 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
                 $scope.data.selectedProvince = $scope.listProvince[0];
 
                 $scope.listDistrict = $scope.data.selectedProvince.districts;
-                for(var i=0; i<  $scope.listDistrict.length;i++){
+                for(var i=0; i< $scope.listDistrict.length;i++){
                     if($scope.listDistrict[i].districtid == $scope.order.deliverydistrictid){
                         $scope.data.selectedDistrict = $scope.listDistrict[i];
                     }

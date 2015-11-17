@@ -6,356 +6,377 @@
 	<div class="column panel-body">
 		<div></div>		
 		<div class="column">
-			<div>
-				<div>
-					<label class="control-label col-md-12 color-white align-lg-center"><h4>Order id: <strong>{{order.orderid}}</strong></h4></label>
-					<label class="control-label col-md-6 color-white align-lg-right"><h4>Order status: <strong>{{order.orderstatus.statusname}}</strong></h4></label>
+			<div>	       
+        <div class="row bg-lightseagreen">
+          <div>
+          <label class="control-label col-md-12 color-white align-lg-center"><h4>Order id: <strong>{{order.orderid}}</strong></h4></label>
+          <label class="control-label col-md-6 color-white align-lg-right"><h4>Order status: <strong>{{order.orderstatus.statusname}}</strong></h4></label>
           <label class="control-label col-md-6 color-white align-lg-left"><h4>Delivery type: <strong>{{deliveryType}}</strong></h4></label>
-				</div>
-        
-				<div class="row bg-lightseagreen">
-					<div class="col-md-4">
-						<div class="form-group">
-							<label class="control-label color-white col-md-7 align-lg-left">Code for cusotmer:</label>
-							<label  class="control-label color-white col-md-5 align-lg-right">{{codeForCustomer}}</label>
-						</div>
-						<div class="form-group">
-							<label class="control-label color-white col-md-7 align-lg-left">Code for shipper:</label>
-							<label  class="control-label color-white col-md-5 align-lg-right">{{codeForShipper}}</label>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="form-group">
-							<label class="control-label color-white col-md-7 align-lg-left">Cash on delivery:</label>
-							<label  class="control-label color-white col-md-5 align-lg-right">{{order.cod|number}} VND</label>
-						</div>
-						<div class="form-group">
-							<label class="control-label color-white col-md-7 align-lg-left">Ship fee:</label>
-							<label class="control-label color-white col-md-5 align-lg-right">{{order.fee|number}} VND</label>
-						</div>  
-					</div>
-					<div class="col-md-4">
-						<div class="form-group">
-							<label class="control-label color-white col-md-7 align-lg-left">Over weight fee:</label>
-							<label class="control-label color-white col-md-5 align-lg-right">{{order.overweightfee|number}} VND</label>
-						</div>
-					</div>
-				</div>
-			</div>
-			
-			
-			<form id="edit-order-form">
-				<div class="row">
-					<div class="col-md-7" >						
-						<br>
-						<h3><strong>Delivery</strong> Info</h3>
-						<hr>
+        </div>
+         
+          <div class="form-group col-md-3">
+           <label class="color-white align-lg-right ">Code for cusotmer: {{codeForCustomer}}</label>
+          </div>
 
-						<div class="form-group row">
-							<div class="col-md-6">
-								<label class="control-label">Full name</label>
-								<input type="text" name="fullname" ng-disabled="disabled" ng-model="order.recipientname"
-								class="form-control"
-								placeholder="Your customer name" parsley-required="true">
-							</div>
-							<div class="col-md-6">
-								<label class="control-label">Phone</label>
-								<input ng-model="order.recipientphone" ng-disabled="disabled" type="text" class="form-control"
-								parsley-type="phone"  parsley-required="true"
-								placeholder="(XXX) XXXX XXX">
-							</div>
-						</div>				
-						<div class="form-group row" ng-if="!disabled">
-							<div class="col-md-4">
-                                    <label class="control-label">Province</label>
-                                    <select parsley-required="true" class="form-control"
-                                            ng-options="x.name for x in listProvince track by x.provinceid"
-                                            ng-model="data.selectedProvince" ng-change="updateDistrict()">
+         <div class="form-group col-md-2">
+           <label class="control-label color-white  align-lg-center">Code for shipper: {{codeForShipper}}</label>
+           
+         </div>
+       
+        <div class="form-group col-md-2">
+         <label class="control-label color-white align-lg-center">Cash on delivery: {{order.cod|number}} VND</label>
+         
+       </div>
 
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="control-label">District</label>
-                                    <select parsley-required="true" class="form-control"
-                                            ng-options="x.name for x in listDistrict track by x.districtid"
-                                            ng-model="data.selectedDistrict" ng-change="updateWard()"> </select>
-                                </div>
-                                <h5>{{selectedDistrictxxx.name}}</h5>
-                                <div class="col-md-4">
-                                    <label class="control-label">Ward</label>
-                                    <select parsley-required="true" class="form-control"
-                                            ng-options="x.name for x in listWard track by x.wardid"
-                                            ng-model="data.selectedWard" ng-change="updateDeliveryAdd()">
-                                    </select>
-                                </div>
-                                <h5>{{selectedWard.name}}</h5>
+       <div class="form-group col-md-2">
+         <label class="control-label color-white  align-lg-center">Ship fee: {{order.fee|number}} VND</label>
+         
+       </div>  
+    
+      <div class="form-group col-md-3">
+       <label class="control-label color-white  align-lg-left">Over weight fee: {{order.overweightfee|number}} VND</label>
+      
+     </div>
+   <!-- </div> -->
+ </div>
+</div>
 
-						</div>
-						<div class="form-group" ng-if="!disabled">
-							<label class="control-label">Address</label>
-							<textarea ng-model="order.deliveryaddress" class="form-control"
-							parsley-trigger="keyup" rows="1"
-							placeholder="Number Street (Eg: 40 Duy Tân)" ng-disabled="disabled" ng-change="updateDeliveryAdd()" required></textarea>
-						</div>
-						<div class="form-group">
-							<label class="control-label">Address</label>
-							<textarea  class="form-control"
-							parsley-trigger="keyup" rows="1"
-							disabled>{{order.deliveryaddress+ ', ' + data.selectedWard.name + ', ' +data.selectedDistrict.name + ', ' + data.selectedProvince.name + ', Việt Nam'}}</textarea>
-						</div>
 
-					</div>
-					<div class="col-md-5">
-						<br>
-						<h3><strong>Pickup</strong> Info</h3>
-						<hr>
-						<div class="form-group row">
-							<div class="col-md-6">
-								<label class="control-label">Store</label>
-								<select parsley-required="true" class="form-control"
-								ng-options="x.name for x in stores track by x.storeid"
-								ng-model="selectedStore" ng-disabled="disabled">
-							</select>
-						</div>
-						<div class="col-md-6">
-							<label class="control-label">Phone</label>
-							<input ng-model="selectedStore.phonenumber" type="text"  class="form-control"
-							parsley-type="phone" parsley-required="true"
-							placeholder="Your store phone munber" disabled>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="control-label">Address</label>
-						<textarea ng-model="selectedStore.address" class="form-control"
-						parsley-trigger="keyup" rows="1"
-						placeholder="Enter customer address" disabled></textarea>
-					</div>
-				</div>
-			</div>
-			
-			<br>
-			<h3><strong>Goods</strong> Info</h3>
-			<hr>
-			<table class="table table-hover table-bordered">
-				<thead>
-					<tr>
-						<th>#</th>
-						<th>Name</th>
-						<th>Amount</th>
-						<th>Weight</th>
-						<th>Length</th>
-						<th>Width</th>
-						<th>Height</th>
-						<th>Description</th>
-						<th ng-if="!disabled">Action</th>
-					</tr>
-				</thead>
-				<tbody align="center">
-					<tr ng-repeat="x in listgoods">
-						<td>{{$index+1}}</td>
-						<td>{{x.goodsname}}</td>
-						<td>{{x.amount}}</td>
-						<td>{{x.weight}}</td>
-						<td>{{x.lengthsize}}</td>
-						<td>{{x.widthsize}}</td>
-						<td>{{x.heightsize}}</td>
-						<td>{{x.description}}</td>
-						<td ng-if="!disabled" width="15%"><span class=" tooltip-area">
-							<a ng-click="setGood(x,$index)"  class="btn btn-default btn-sm" data-toggle="modal" data-target="#md-edit-good"
-							title="Edit"><i class="fa fa-edit (alias)"></i></a>
-							<a ng-click="setGood(x,$index)" data-toggle="modal" data-target="#md-delete-goods" class="btn btn-default btn-sm"
-							title="Delete"><i class="fa fa-times"></i></a>
-						</span></td>
+<form id="edit-order-form">
+  <div class="row">
+   <div class="col-md-7" >						
+    <br>
+    <h3><strong>Delivery</strong> Info</h3>
+    <hr>
 
-					</tr>
-				</tbody>
-				<tfoot>
-					<tr>
-						<td ng-if="!disabled" colspan="{{colspan}}" class="text-left">
-							<div  class="col-sm-12 col-lg-12 btn-group btn-group-xs color">
-								<button type="button" ng-click="refreshGood()" class=" btn btn-block buttonAdd " data-toggle="modal" data-target="#md-add-good">Add goods</button>
-							</div>
-						</td>
-					</tr>
-				</tfoot>
-			</table>
-			<hr>
-			<div class="form-group">
-				<button ng-if="disabled" type="button" ng-click="changeToEn()" class="btn btn-theme"> Edit Order</button>
-				<button ng-if="!disabled" type="submit" class="btn btn-theme"> Update Order</button>
-			</div>
-		</form>
+    <div class="form-group row">
+     <div class="col-md-6">
+      <label class="control-label">Full name</label>
+      <input type="text" name="fullname" ng-disabled="disabled" ng-model="order.recipientname"
+      class="form-control"
+      placeholder="Your customer name" parsley-required="true">
+    </div>
+    <div class="col-md-6">
+      <label class="control-label">Phone</label>
+      <input ng-model="order.recipientphone" ng-disabled="disabled" type="text" class="form-control"
+      parsley-type="phone"  parsley-required="true"
+      placeholder="(XXX) XXXX XXX">
+    </div>
+  </div>				
+  <div class="form-group row" ng-if="!disabled">
+   <div class="col-md-4">
+    <label class="control-label">Province</label>
+    <select parsley-required="true" class="form-control"
+    ng-options="x.name for x in listProvince track by x.provinceid"
+    ng-model="data.selectedProvince" ng-change="updateDistrict()">
 
-	</div>	
+  </select>
+</div>
+<div class="col-md-4">
+  <label class="control-label">District</label>
+  <select parsley-required="true" class="form-control"
+  ng-options="x.name for x in listDistrict track by x.districtid"
+  ng-model="data.selectedDistrict" ng-change="updateWard()"> </select>
+</div>
+<h5>{{selectedDistrictxxx.name}}</h5>
+<div class="col-md-4">
+  <label class="control-label">Ward</label>
+  <select parsley-required="true" class="form-control"
+  ng-options="x.name for x in listWard track by x.wardid"
+  ng-model="data.selectedWard" ng-change="updateDeliveryAdd()">
+</select>
+</div>
+<h5>{{selectedWard.name}}</h5>
+
+</div>
+<div class="form-group" ng-if="!disabled">
+ <label class="control-label">Address</label>
+ <textarea ng-model="order.deliveryaddress" class="form-control"
+ parsley-trigger="keyup" rows="1"
+ placeholder="Number Street (Eg: 40 Duy Tân)" ng-disabled="disabled" ng-change="updateDeliveryAdd()" required></textarea>
+</div>
+<div class="form-group">
+ <label class="control-label">Address</label>
+ <textarea  class="form-control"
+ parsley-trigger="keyup" rows="1"
+ disabled>{{order.deliveryaddress+ ', ' + data.selectedWard.name + ', ' +data.selectedDistrict.name + ', ' + data.selectedProvince.name + ', Việt Nam'}}</textarea>
+</div>
+
+</div>
+<div class="col-md-5">
+  <br>
+  <h3><strong>Pickup</strong> Info</h3>
+  <hr>
+  <div class="form-group row">
+   <div class="col-md-6">
+    <label class="control-label">Store</label>
+    <select parsley-required="true" class="form-control"
+    ng-options="x.name for x in stores track by x.storeid"
+    ng-model="selectedStore" ng-disabled="disabled">
+  </select>
+</div>
+<div class="col-md-6">
+ <label class="control-label">Phone</label>
+ <input ng-model="selectedStore.phonenumber" type="text"  class="form-control"
+ parsley-type="phone" parsley-required="true"
+ placeholder="Your store phone munber" disabled>
+</div>
+</div>
+<div class="form-group">
+  <label class="control-label">Address</label>
+  <textarea ng-model="selectedStore.address" class="form-control"
+  parsley-trigger="keyup" rows="1"
+  placeholder="Enter customer address" disabled></textarea>
+</div>
+<div ng-if="!disabled" class="form-group row">
+  <div class="col-md-6"><label class="fullWidth color"><strong>Delivery type</strong></label> </div>
+  <div class="col-md-6"><label class="fullWidth color"><strong>Cash on delivery</strong></label></div>   
+
+  <div class="col-md-3">
+    <div data-color="red">
+      <input  ng-model="deliveryType" ng-change="updateFee()" type="radio" name="ordertype" value="Express" />
+      <label>Express</label>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div  data-color="red">
+      <input ng-model="deliveryType" ng-change="updateFee()" type="radio" name="ordertype" value="Normal" />
+      <label>Normal</label>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <input ng-model="order.cod" type="text" class="form-control"
+    parsley-type="number"
+    parsley-min="0" parsley-max="10000000"
+    placeholder="Unit: Vietnam dong">
+  </div>
+</div>
+</div>
+</div>
+
+<br>
+<h3><strong>Goods</strong> Info</h3>
+<hr>
+<table class="table table-hover table-bordered">
+  <thead>
+   <tr>
+    <th>#</th>
+    <th>Name</th>
+    <th>Amount</th>
+    <th>Weight</th>
+    <th>Length</th>
+    <th>Width</th>
+    <th>Height</th>
+    <th>Description</th>
+    <th ng-if="!disabled">Action</th>
+  </tr>
+</thead>
+<tbody align="center">
+ <tr ng-repeat="x in listgoods">
+  <td>{{$index+1}}</td>
+  <td>{{x.goodsname}}</td>
+  <td>{{x.amount}}</td>
+  <td>{{x.weight}}</td>
+  <td>{{x.lengthsize}}</td>
+  <td>{{x.widthsize}}</td>
+  <td>{{x.heightsize}}</td>
+  <td>{{x.description}}</td>
+  <td ng-if="!disabled" width="15%"><span class=" tooltip-area">
+   <a ng-click="setGood(x,$index)"  class="btn btn-default btn-sm" data-toggle="modal" data-target="#md-edit-good"
+   title="Edit"><i class="fa fa-edit (alias)"></i></a>
+   <a ng-click="setGood(x,$index)" data-toggle="modal" data-target="#md-delete-goods" class="btn btn-default btn-sm"
+   title="Delete"><i class="fa fa-times"></i></a>
+ </span></td>
+
+</tr>
+</tbody>
+<tfoot>
+ <tr>
+  <td ng-if="!disabled" colspan="{{colspan}}" class="text-left">
+   <div  class="col-sm-12 col-lg-12 btn-group btn-group-xs color">
+    <button type="button" ng-click="refreshGood()" class=" btn btn-block buttonAdd " data-toggle="modal" data-target="#md-add-good">Add goods</button>
+  </div>
+</td>
+</tr>
+</tfoot>
+</table>
+<hr>
+<div class="form-group">
+  <button ng-if="disabled" type="button" ng-click="changeToEn()" class="btn btn-theme"> Edit Order</button>
+  <button ng-if="!disabled" type="submit" class="btn btn-theme"> Update Order</button>
+</div>
+</form>
+
+</div>	
 			<!--
 			////////////////////////////////////////////////////////////////////////////
             //////////     MODAL ADD GOODS   //////////
             /////////////////////////////////////////////////////////////////////////
-        -->
-        <div id="md-add-good" class="modal fade" data-header-color="#736086">
-        	<div class="modal-header bg-inverse bd-inverse-darken">
-        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
-        			class="fa fa-times"></i></button>
-        			<h4 class="modal-title">Add a good to order</h4>
-        		</div>
-        		<!-- //modal-header-->
-        		<form id = "addGoodModal" data-parsley-validate>
-        			<div class="modal-body">
-        				<div class="form-group row">
-        					<div class="col-md-6">
-        						<label class="control-label">Goods</label>
-        						<input type="text" class="form-control"
-        						parsley-required="true"
-        						placeholder="Good name" ng-model="good.goodsname">
-        					</div>
-        					<div class="col-md-3">
-        						<label class="control-label">Amount</label>
-        						<input type="text" class="form-control " parsley-min="0" parsley-max="10"  placeholder="0" ng-model="good.amount" data-parsley-type="number" parsley-required="true">
-        					</div>
-        				</div>
-        				<div class="form-group row">
-        					<div class="col-md-3">
-        						<label class="control-label">Weight</label>
-        						<input type="text" class="form-control"
-        						parsley-min="0" parsley-max="5000"
-        						placeholder="Gram" ng-model="good.weight" data-parsley-type="number" parsley-required="true">
-        					</div>
-        					<div class="col-md-3">
-        						<label class="control-label">Length</label>
-        						<input type="text" class="form-control"
-        						parsley-min="0" parsley-max="500"
-        						placeholder="mm" ng-model="good.lengthsize" data-parsley-type="number" parsley-required="true">
-        					</div>
-        					<div class="col-md-3">
-        						<label class="control-label">Width</label>
-        						<input type="text" class="form-control"
-        						parsley-min="0" arsley-max="500"
-        						placeholder="mm" ng-model="good.widthsize" data-parsley-type="number" parsley-required="true">
-        					</div>
-        					<div class="col-md-3">
-        						<label class="control-label">High</label>
-        						<input type="text" class="form-control"
-        						parsley-min="0" arsley-max="500"
-        						placeholder="mm" ng-model="good.heightsize" data-parsley-type="number" parsley-required="true">
-        					</div>
-        				</div>
-        				<div class="form-group">
-        					<label class="control-label">Good description</label>
-        					<input type="text" class="form-control" ng-model="good.description">
-        				</div>
-        			</div>
-        			<!-- //modal-body-->
-        			<div class="modal-footer">
-        				<button type="submit"class="btn btn-theme">Add</button>
-        				<button type="button" data-dismiss="modal" class="btn btn-inverse">Close</button>
-        			</div>
-        		</form>
-        		<!-- //modal-footer-->
-        	</div>
-        	<!-- //modal-->
+          -->
+          <div id="md-add-good" class="modal fade" data-header-color="#736086">
+           <div class="modal-header bg-inverse bd-inverse-darken">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
+             class="fa fa-times"></i></button>
+             <h4 class="modal-title">Add a good to order</h4>
+           </div>
+           <!-- //modal-header-->
+           <form id = "addGoodModal" data-parsley-validate>
+             <div class="modal-body">
+              <div class="form-group row">
+               <div class="col-md-6">
+                <label class="control-label">Goods</label>
+                <input type="text" class="form-control"
+                parsley-required="true"
+                placeholder="Good name" ng-model="good.goodsname">
+              </div>
+              <div class="col-md-3">
+                <label class="control-label">Amount</label>
+                <input type="text" class="form-control " parsley-min="0" parsley-max="10"  placeholder="0" ng-model="good.amount" data-parsley-type="number" parsley-required="true">
+              </div>
+            </div>
+            <div class="form-group row">
+             <div class="col-md-3">
+              <label class="control-label">Weight</label>
+              <input type="text" class="form-control"
+              parsley-min="0" parsley-max="5000"
+              placeholder="Gram" ng-model="good.weight" data-parsley-type="number" parsley-required="true">
+            </div>
+            <div class="col-md-3">
+              <label class="control-label">Length</label>
+              <input type="text" class="form-control"
+              parsley-min="0" parsley-max="500"
+              placeholder="mm" ng-model="good.lengthsize" data-parsley-type="number" parsley-required="true">
+            </div>
+            <div class="col-md-3">
+              <label class="control-label">Width</label>
+              <input type="text" class="form-control"
+              parsley-min="0" arsley-max="500"
+              placeholder="mm" ng-model="good.widthsize" data-parsley-type="number" parsley-required="true">
+            </div>
+            <div class="col-md-3">
+              <label class="control-label">High</label>
+              <input type="text" class="form-control"
+              parsley-min="0" arsley-max="500"
+              placeholder="mm" ng-model="good.heightsize" data-parsley-type="number" parsley-required="true">
+            </div>
+          </div>
+          <div class="form-group">
+           <label class="control-label">Good description</label>
+           <input type="text" class="form-control" ng-model="good.description">
+         </div>
+       </div>
+       <!-- //modal-body-->
+       <div class="modal-footer">
+        <button type="submit"class="btn btn-theme">Add</button>
+        <button type="button" data-dismiss="modal" class="btn btn-inverse">Close</button>
+      </div>
+    </form>
+    <!-- //modal-footer-->
+  </div>
+  <!-- //modal-->
             <!--
            ////////////////////////////////////////////////////////////////////////////
            //////////     MODAL EDIT GOODS   //////////
            /////////////////////////////////////////////////////////////////////////
-       -->
-       <div id="md-edit-good" class="modal fade" data-header-color="#736086">
-       	<div class="modal-header bg-inverse bd-inverse-darken">
-       		<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
-       			class="fa fa-times"></i></button>
-       			<h4 class="modal-title">Edit good</h4>
-       		</div>
-       		<!-- //modal-header-->
-       		<form id = "editGoodModal" data-parsley-validate>
-       			<div class="modal-body">
-       				<div class="form-group row">
-       					<div class="col-md-6">
-       						<label class="control-label">Goods</label>
-       						<input type="text" class="form-control"
-       						parsley-required="true"
-       						placeholder="Good name" ng-init="na = good.goodsname" ng-model="newGood.goodsname">
-       					</div>
-       					<div class="col-md-3">
-       						<label class="control-label">Amount</label>
-       						<input type="text" class="form-control " parsley-min="0" parsley-max="10"  placeholder="0" ng-model="newGood.amount" data-parsley-type="number" parsley-required="true">
-       					</div>
-       				</div>
-       				<div class="form-group row">
-       					<div class="col-md-3">
-       						<label class="control-label">Weight</label>
-       						<input type="text" class="form-control"
-       						parsley-min="0" parsley-max="5000"
-       						placeholder="Gram" ng-model="newGood.weight" data-parsley-type="number" parsley-required="true">
-       					</div>
-       					<div class="col-md-3">
-       						<label class="control-label">Length</label>
-       						<input type="text" class="form-control"
-       						parsley-min="0" parsley-max="500"
-       						placeholder="mm" ng-model="newGood.lengthsize" data-parsley-type="number" parsley-required="true">
-       					</div>
-       					<div class="col-md-3">
-       						<label class="control-label">Width</label>
-       						<input type="text" class="form-control"
-       						parsley-min="0" arsley-max="500"
-       						placeholder="mm" ng-model="newGood.widthsize" data-parsley-type="number" parsley-required="true">
-       					</div>
-       					<div class="col-md-3">
-       						<label class="control-label">High</label>
-       						<input type="text" class="form-control"
-       						parsley-min="0" arsley-max="500"
-       						placeholder="mm" ng-model="newGood.heightsize" data-parsley-type="number" parsley-required="true">
-       					</div>
-       				</div>
-       				<div class="form-group">
-       					<label class="control-label">Good description</label>
-       					<input type="text" class="form-control" ng-model="newGood.description">
-       				</div>
-       			</div>
-       			<!-- //modal-body-->
-       			<div class="modal-footer">
-       				<button type="submit"  class="btn btn-theme">Save</button>
-       				<button type="button"  data-dismiss="modal" class="btn btn-inverse">Close</button>
-       			</div>
-       		</form>
-       		<!-- //modal-footer-->
-       	</div>
-       	<!-- //modal-->
+         -->
+         <div id="md-edit-good" class="modal fade" data-header-color="#736086">
+          <div class="modal-header bg-inverse bd-inverse-darken">
+           <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
+            class="fa fa-times"></i></button>
+            <h4 class="modal-title">Edit good</h4>
+          </div>
+          <!-- //modal-header-->
+          <form id = "editGoodModal" data-parsley-validate>
+            <div class="modal-body">
+             <div class="form-group row">
+              <div class="col-md-6">
+               <label class="control-label">Goods</label>
+               <input type="text" class="form-control"
+               parsley-required="true"
+               placeholder="Good name" ng-init="na = good.goodsname" ng-model="newGood.goodsname">
+             </div>
+             <div class="col-md-3">
+               <label class="control-label">Amount</label>
+               <input type="text" class="form-control " parsley-min="0" parsley-max="10"  placeholder="0" ng-model="newGood.amount" data-parsley-type="number" parsley-required="true">
+             </div>
+           </div>
+           <div class="form-group row">
+            <div class="col-md-3">
+             <label class="control-label">Weight</label>
+             <input type="text" class="form-control"
+             parsley-min="0" parsley-max="5000"
+             placeholder="Gram" ng-model="newGood.weight" data-parsley-type="number" parsley-required="true">
+           </div>
+           <div class="col-md-3">
+             <label class="control-label">Length</label>
+             <input type="text" class="form-control"
+             parsley-min="0" parsley-max="500"
+             placeholder="mm" ng-model="newGood.lengthsize" data-parsley-type="number" parsley-required="true">
+           </div>
+           <div class="col-md-3">
+             <label class="control-label">Width</label>
+             <input type="text" class="form-control"
+             parsley-min="0" arsley-max="500"
+             placeholder="mm" ng-model="newGood.widthsize" data-parsley-type="number" parsley-required="true">
+           </div>
+           <div class="col-md-3">
+             <label class="control-label">High</label>
+             <input type="text" class="form-control"
+             parsley-min="0" arsley-max="500"
+             placeholder="mm" ng-model="newGood.heightsize" data-parsley-type="number" parsley-required="true">
+           </div>
+         </div>
+         <div class="form-group">
+          <label class="control-label">Good description</label>
+          <input type="text" class="form-control" ng-model="newGood.description">
+        </div>
+      </div>
+      <!-- //modal-body-->
+      <div class="modal-footer">
+       <button type="submit"  class="btn btn-theme">Save</button>
+       <button type="button"  data-dismiss="modal" class="btn btn-inverse">Close</button>
+     </div>
+   </form>
+   <!-- //modal-footer-->
+ </div>
+ <!-- //modal-->
 
             <!--
             ////////////////////////////////////////////////////////////////////////////
             //////////     MODAL CONFIRM DELETE GOOD   //////////
             /////////////////////////////////////////////////////////////////////////
-        -->
-        <div id="md-delete-goods" class="modal fade" data-header-color="#736086">
-        	<div class="modal-header bg-inverse bd-inverse-darken">
-        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
-        			class="fa fa-times"></i></button>
-        			<h4 class="modal-title"><strong>Delete </strong> goods</h4>
-        		</div>
-        		<!-- //modal-header-->
-        		<div class="modal-body">
-        			<h4>Do you want to delete goods: {{newGood.goodsname}}</h4>
-        		</div>
-        		<!-- //modal-body-->
-        		<div class="modal-footer">
-        			<button type="button" ng-click="deleteGood()" data-dismiss="modal" class="btn btn-theme">Yes</button>
-        			<button type="button"  data-dismiss="modal" class="btn btn-inverse">No</button>
-        		</div>
+          -->
+          <div id="md-delete-goods" class="modal fade" data-header-color="#736086">
+           <div class="modal-header bg-inverse bd-inverse-darken">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
+             class="fa fa-times"></i></button>
+             <h4 class="modal-title"><strong>Delete </strong> goods</h4>
+           </div>
+           <!-- //modal-header-->
+           <div class="modal-body">
+             <h4>Do you want to delete goods: {{newGood.goodsname}}</h4>
+           </div>
+           <!-- //modal-body-->
+           <div class="modal-footer">
+             <button type="button" ng-click="deleteGood()" data-dismiss="modal" class="btn btn-theme">Yes</button>
+             <button type="button"  data-dismiss="modal" class="btn btn-inverse">No</button>
+           </div>
 
-        		<!-- //modal-footer-->
-        	</div>
-        	<!-- //modal-->
+           <!-- //modal-footer-->
+         </div>
+         <!-- //modal-->
 
 
             <!--///////////////////////////////////////////////////////
               /////////////////////   Empty good   /////////////////
              ///////////////////////////////////////////////////////////
-         -->
-         <textarea class="form-control theme" id="smsEmptyGood" rows="5" style="display:none">
-         	You must add at least 1 good to order!
-         </textarea>
+           -->
+           <textarea class="form-control theme" id="smsEmptyGood" rows="5" style="display:none">
+            You must add at least 1 good to order!
+          </textarea>
 
-</div>
-</div>
+        </div>
+      </div>
 
 
 

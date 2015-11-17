@@ -208,12 +208,19 @@ module.exports = function(sequelize, DataTypes) {
       },
 
 
-      postOneOrder: function(newOrder){
+      postOneOrder: function(newOrder){        
+        newOrder.createdate = moment().format();        
         return order.build(newOrder).save();
       },
 
-      putOrder: function (currentOrder) {
-        return currentOrder.save();
+      updateOrder: function (currentOrder,orderid) {
+        return order.update(
+          currentOrder,
+          {
+            where:{
+              'orderid': orderid
+            }
+          })
       },
 
       changeIsPendingOrder: function(orderID, isPending) {
