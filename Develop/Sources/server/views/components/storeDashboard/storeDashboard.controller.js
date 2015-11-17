@@ -243,6 +243,10 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
         console.log(args);
         getDataFromServer();
     });
+    $scope.theShipper = {};
+    setTimeout(function(){
+        $("#informMsg").modal("show");
+    },0);
     // END listen to socket changes
 
 }

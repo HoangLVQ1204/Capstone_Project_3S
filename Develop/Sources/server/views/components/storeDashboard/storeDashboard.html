@@ -608,6 +608,65 @@
                 </div>
             </div>    
     </div>
+    <div id="informMsg" class="modal fade md-slideRight" tabindex="-1"  data-width="500" data-header-color="theme-inverse">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+            <h4 class="modal-title">Shipper confirm code pick up successfully!</h4>
+        </div>
+        <!-- //modal-header-->
+        <div class="modal-body left">
+            <div class="row">
+                <div class="col-md-3" >
+                    <img alt="" ng-src="theShipper.avatar" class="circle" style="width: 100px">
+                </div>
+                <div class="col-md-9">
+                    <h3><strong>Hi</strong>, I'm {{theShipper.fullName}}</h3>
+                    <br/>
+                    <div class="row">
+                        <label class="col-md-4">
+                            <i class="fa fa-caret-right"></i> ShipperID
+                        </label>
+                        <div class="col-md-8">
+                            <strong>{{theShipper.shipperID}}</strong>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-4">
+                            <i class="fa fa-caret-right"></i> Phone
+                        </label>
+                        <div class="col-md-8">
+                            <strong>{{theShipper.phonenumber}}</strong>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-4">
+                            <i class="fa fa-caret-right"></i> Identify Card
+                        </label>
+                        <div class="col-md-8">
+                            <strong>{{theShipper.identifycard}}</strong>
+                        </div>
+                    </div>
+                    <br/>
+                    <span class="label" style="background-color:green;">Confirmed to pick-up your order:</span>
+                    <br/>
+                    <br/>
+                    <div class="row">
+                        <label class="col-md-4">
+                            <i class="fa fa-caret-right"></i> Order
+                        </label>
+                        <div class="col-md-8">
+                            <strong>OD11111{{theShipper.orderid}}</strong>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="align-lg-right">
+                    <button class="btn btn-green" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+        <!-- //modal-body-->
+    </div>
 </div>
 
 
