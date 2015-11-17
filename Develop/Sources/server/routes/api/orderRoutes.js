@@ -21,11 +21,13 @@ module.exports = function (app) {
 
     app.route('/orders/:order_id')
         .get(controller.getOne)
-        .put(controller.put)
         .delete(controller.deleteOrder);
 
     app.route('/orders/putdraff')
         .post(controller.putDraff);
+
+    app.route('/orders/updateExpressOrder')
+        .put(controller.updateExpressOrder)
 
     app.route('/orders/cancel')
         .put(controller.cancelOrder);

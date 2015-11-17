@@ -36,7 +36,6 @@ app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService',
               .then(function(){
                 socketShipper.registerSocket();
                 $state.go('app.tasks');
-                console.log("test1");
                 //$ionicLoading.hide();
               });
           }

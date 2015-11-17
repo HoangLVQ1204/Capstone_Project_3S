@@ -65,8 +65,11 @@ function adminDashboardController($scope,$state,dataService, $http, config, $roo
     $scope.doneList = [];
     $scope.activeList = [];
     $scope.failList = [];
+    $scope.shipperList = [];
     $scope.totalTaskToday = 0;
     $scope.totalDoneToday = 0;
+    //$scope.onlineShipper = $rootScope.onlineShipper;
+    //alert($rootScope.onlineShipper);
 
     getDataFromServer();
 
@@ -100,6 +103,14 @@ function adminDashboardController($scope,$state,dataService, $http, config, $roo
             .success(function (total) {
                 $scope.todayTotal = total;
             })
+
+        var urlBaseAllShipper = config.baseURI + "/api/shipper/getAllShipper";
+        dataService.getDataServer(urlBaseAllShipper)
+            .success(function (shipperList) {
+                $scope.shipperList = shipperList;
+                $scope.totalShipper = shipperList.length;
+            })
+
     }
 
     var dateCompare = function (date1, date2) {
@@ -111,6 +122,7 @@ function adminDashboardController($scope,$state,dataService, $http, config, $roo
 
     $scope.$watch('$viewContentLoaded', function(event) {
         caplet();
+        //$('#progressTask').find('.progress-bar').css({width: ($scope.totalDoneToday/$scope.totalTaskToday) + '%'});
     });
 
     var alertDelete = {
@@ -132,11 +144,28 @@ function adminDashboardController($scope,$state,dataService, $http, config, $roo
 
 
     // START Listen to socket changes
-    //$rootScope.$on("evChange", function(event, args){
-    //    alert(args.message);
-    //    console.log(args);
-    //    getDataFromServer();
-    //});
+    $rootScope.$on("admin:dashboard:getShipperList", function(event, args){
+        //alert(args.message);
+        console.log('args');
+        console.log(args);
+        $rootScope.onlineShipper = 0;
+        args.map(function (shipper) {
+            if (shipper.isConnected) $rootScope.onlineShipper++;
+
+        });
+        //$scope.$apply();
+        //getDataFromServer();
+       // console.log( $scope.onlineShipper);
+        //$scope.onlineShipper = 10;
+    });
+
+    //setTimeout(function () {
+    //
+    //    $scope.onlineShipper = 9;
+    //    $scope.$apply();
+    //    console.log('AAAAA');
+    //
+    //},2000)
     // END listen to socket changes
 
 }

@@ -407,8 +407,8 @@
             <div class="column col-lg-4">
                 <div class=""><br><br><br>
 
-                    <div class="panel">
-                        <div class="panel-heading "><h3><strong>Order </strong> Information </h3></div>
+                    <div class="panel corner-flip">
+                        <div class="panel-heading bg-lightseagreen"><h3><strong>Order </strong> Information </h3></div>
                         <div class="panel-body">
                             <label  class="fullWidth color"><strong>Confirm Code</strong></label>
                             <div class="form-group">
@@ -455,8 +455,8 @@
                         </div>
                         <div class="panel-footer">
                             <div class="form-group">
-                                <label class="control-label col-md-4 align-lg-left"><h5><strong>Total:</strong></h5></label>
-                                <label class="control-label col-md-8 align-lg-right"><h5><strong>{{order.cod-0 + order.overWeightFee-0 + order.fee-0| number}} VND</strong></h5> </label>
+                                <label class="control-label col-md-4 align-lg-left"><h5><strong>Total fee:</strong></h5></label>
+                                <label class="control-label col-md-8 align-lg-right"><h5><strong>{{order.overWeightFee-0 + order.fee-0| number}} VND</strong></h5> </label>
                             </div>
                         </div>
                     </div>

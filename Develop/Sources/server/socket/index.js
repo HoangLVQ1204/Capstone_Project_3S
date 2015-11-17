@@ -494,7 +494,10 @@ module.exports = function(server,app){
                         io.addShipper(shipper, socket);
 
                     io.reply(data.sender, { mapData: io.getDataForShipper(shipper.shipperID) }, 'shipper:register:location');
-                    io.forward(data.sender, 'admin', { shipper: io.getOneShipper(shipper.shipperID) }, 'admin:add:shipper');
+                    io.forward(data.sender, 'admin', {
+                        shipper: io.getOneShipper(shipper.shipperID),
+                        shipperList: io.getAllShippers()
+                    }, 'admin:add:shipper');
 
                     require('./socketShipper')(socket, io);
 
@@ -530,13 +533,12 @@ module.exports = function(server,app){
                         io.updateAdmin(admin, socket);
                     else
                         io.addAdmin(admin, socket);
-                    io.reply(
-                        data.sender,
-                        {
-                            mapData: io.getDataForAdmin(),
-                            shipperData: io.getListConnectedShippers()
-                        },
-                        'admin:register:location');
+
+                    io.reply(data.sender, {
+                        mapData: io.getDataForAdmin(),
+                        shipperList: io.getAllShippers()
+                    }, 'admin:register:location');
+
                     require('./socketAdmin')(socket, io);
 
                 }

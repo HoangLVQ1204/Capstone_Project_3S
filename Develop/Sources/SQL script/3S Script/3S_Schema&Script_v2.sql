@@ -29,7 +29,6 @@ DROP TABLE Role;
 DROP TABLE ward;
 DROP TABLE district;
 DROP TABLE province;
-DROP TABLE notification
 */
 
 

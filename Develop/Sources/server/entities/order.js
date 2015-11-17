@@ -212,8 +212,15 @@ module.exports = function(sequelize, DataTypes) {
         return order.build(newOrder).save();
       },
 
-      putOrder: function (currentOrder) {
-        return currentOrder.save();
+      updateExpressOrder: function (orderID,statusID,isDraff) {
+          return order.update({
+            'statusid': statusID,
+            'isdraff': isDraff
+          },{
+            where: {
+              'orderid': orderID
+            }
+          });
       },
 
       changeIsPendingOrder: function(orderID, isPending) {

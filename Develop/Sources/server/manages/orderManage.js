@@ -141,37 +141,7 @@ module.exports = function (app) {
     };
 
 
-    var getOne = function (req, res, next) {
-        //var listOrders = [];
-        //var statusname = '';
-        //var deliveryaddress = '';
-        //var recipientname = '';
-        //var recipientphone = '';
-        //var completedate = '';
-        //var createdate = '';
-        //var cod = 0;
-        //var fee = 0;
-        //console.log(req.orderRs['orderid']);
-        //var order = {
-        //    orderid : req.orderRs['orderid'],
-        //    deliveryaddress : req.orderRs['deliveryaddress'],
-        //    recipientname : req.orderRs['recipientname'],
-        //    recipientphone : req.orderRs['recipientphone'],
-        //    statusid : req.orderRs['statusid'],
-        //    isdraff : req.orderRs['isdraff'],
-        //    iscancel : req.orderRs['iscancel'],
-        //    ispending : req.orderRs['ispending'],
-        //    cod : req.orderRs['cod'],
-        //    fee : req.orderRs['fee'],
-        //    completedate : req.orderRs['completedate'],
-        //    createdate : req.orderRs['createdate'],
-        //    statusname : req.orderRs['orderstatus'].statusname
-        //};
-        //
-        //var rs =  req.orderRs['goods'];
-        //_.each(rs, function(item) {
-        //    console.log(item.dataValues.goodsid);
-        //});
+    var getOne = function (req, res, next) {        
         res.status(200).json(req.orderRs);
     };
 
@@ -343,26 +313,14 @@ module.exports = function (app) {
            
     
 
-    var put = function (req, res, next) {
-        var order = {};
-        var update = req.body;
-
-        order.orderid = update.orderid;
-        order.storeid = update.storeid;
-        order.ordertypeid = update.ordertypeid;
-        order.pickupaddress = update.pickupaddress;
-        order.deliveryaddress = update.deliveryaddress;
-        order.pickupdate = update.pickupdate;        
-        order.recipientphone = update.recipientphone;
-        order.recipientname = update.recipientname;
-
-        return db.order.putOrder(order)
-            .then(function(save){
-                if(save){
-                    res.status(201).json(order);
-                }else {
-                    next( new Error('Cannot save user'));
-                }
+    var updateExpressOrder = function (req, res, next) {
+        var order = req.body.order;
+        return db.order.updateExpressOrder(order.orderId,order.statusId, order.isDraff)
+            .then(function (rs) {
+                console.log(rs);
+                res.status(201).json(rs);
+            }, function (err) {
+                next(err);
             })
     };
 
@@ -393,11 +351,6 @@ module.exports = function (app) {
 
     var cancelOrder = function (req, res, next) {
         db.order.cancelOrder( req.orderRs.orderid);
-            //.then(function(){
-            //    res.sendStatus(200).json();
-            //}, function(err) {
-            //    next(err);
-            //});
     };
 
     var getOrderList = function (req, res, next) {
@@ -432,7 +385,7 @@ module.exports = function (app) {
         getOne: getOne,
         postOne: post,
         params: params,
-        put : put,
+        updateExpressOrder : updateExpressOrder,
         deleteOrder : deleteOrder,
         putDraff : putDraff,
         cancelOrder: cancelOrder,
