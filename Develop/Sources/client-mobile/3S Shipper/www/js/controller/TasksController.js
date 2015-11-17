@@ -3,7 +3,8 @@
  */
 app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPopup', function($scope, dataFactory, $ionicLoading, $ionicPopup) {
 
-  console.log('reload data at TaskController');
+  console.log('Reload Data TaskController');
+  var haveIssue = false;
   getAllTaskBeIssued();
   getAllTaskCancel();
 
@@ -16,11 +17,12 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
   };
 
   //START Show IonicLoading
-  $scope.isBackdropShowing = false;
-  $scope.show = function(){
+  $scope.showLoading = function(){
     $ionicLoading.show({
+      scope: $scope,
       templateUrl: 'loading.html',
-      scope: $scope
+      noBackdrop: false
+      //delay: 200
     });
   };
   //END Show IonicLoading
@@ -32,8 +34,9 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
       template: des.content
     });
     alertPopup.then(function(res) {
+      //Cause:Pending
       if (des.id === 1) {
-        $scope.show();
+        $scope.showLoading();
       } else {
         $ionicLoading.hide();
       }
@@ -47,7 +50,7 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
    * To check to show 'continue screen'
    * */
   function getAllTaskBeIssued() {
-    //get task be an issue
+    //Get task be an issue
     var urlTaskBase = config.hostServer + "api/shipper/getTaskBeIssuePending";
     dataFactory.getDataServer(urlTaskBase)
       .success(function(rs){
@@ -56,8 +59,9 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
             $scope.issueId = property;
           }
           if (typeof $scope.issueId !== "undefined") {
+            haveIssue = true;
             //show ionicLoading
-            $scope.show();
+            $scope.showLoading();
           }
         } else {
           //hide ionicLoading
@@ -74,7 +78,7 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
    * ChangePending of order
    * */
   $scope.changeIsPending = function (issueId) {
-      //Change ispending of Task
+    //Change ispending of Task
     var data = {'issueId': issueId};
       var urlBase = config.hostServer + "api/changeIsPendingOrder";
         dataFactory.putDataServer(urlBase, data)
@@ -85,7 +89,7 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
         .error(function (error) {
           console.log('Unable to load customer data: ' + error);
         });
-    }
+    };
 
   /*
    * By QuyenNV - 23/10/2015
@@ -94,11 +98,14 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
    * So status of task also 'Inactive' and 'Active'
    * */
   function getAllTaskCancel() {
-    $ionicLoading.show({
-      //duration: 500,
-      noBackdrop: false,
-      template: '<ion-spinner icon="bubbles" class="spinner-balanced"/>'
-    });
+    //Show ionicLoading without IssuePending
+    console.log("TaskBeIssued:102: " + haveIssue);
+    if (!haveIssue) {
+      $ionicLoading.show({
+        noBackdrop: false,
+        template: '<ion-spinner icon="bubbles" class="spinner-balanced"/>'
+      });
+    }
     var urlBaseCancel = config.hostServer + "api/getAllTaskCancel";
     dataFactory.getDataServer(urlBaseCancel)
       .success(function (rs) {
@@ -120,7 +127,10 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
     dataFactory.getDataServer(urlBase)
       .success(function (rs) {
         formatData(rs);
-        $ionicLoading.hide();
+        //Hide IonicLoading without Issue Pending
+        if (!haveIssue) {
+          $ionicLoading.hide();
+        }
       })
       .error(function (error) {
         console.log('Unable to load customer data: ' + error);
