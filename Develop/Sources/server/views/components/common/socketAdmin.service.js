@@ -71,7 +71,7 @@ function socketAdmin(socketService,authService,mapService, $rootScope){
     });
 
     socketService.on('admin:issue', function(data) {
-        console.log('admin:issue', data.msg.issue.issueid);
+        console.log('admin:issue', data.msg);
         $rootScope.$emit("admin:issue:newIssue", data.msg);
     });
     

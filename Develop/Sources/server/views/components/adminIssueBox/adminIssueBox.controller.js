@@ -56,12 +56,12 @@ function adminIssueBoxController($scope,$state, $http, $filter, config, $rootSco
 
     // START Listen to socket changes
     $rootScope.$on("admin:issue:newIssue", function(event, args){
-        //alert(args.message);
-        getDataFromSever();
-        //$scope.$apply();
-        //getDataFromServer();
-        // console.log( $scope.onlineShipper);
-        //$scope.onlineShipper = 10;
+        $http.get(config.baseURI + "/api/getAllIssue").success(function(response){
+            $scope.issueList = response;
+            $scope.issueList.sort( $scope.sortByDate);
+            //$scope.displayedOrderCollection = [].concat($scope.orderList);
+            //console.log($scope.issueList)
+        })
     });
 }
 
