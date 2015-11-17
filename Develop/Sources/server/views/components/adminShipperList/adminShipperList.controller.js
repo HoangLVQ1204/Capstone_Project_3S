@@ -2,7 +2,7 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminShipperListController($scope,$state, $http, $filter, config, $stateParams) {
+function adminShipperListController($scope,$state, $http, $filter, config, $stateParams, $rootScope) {
 
     //$scope.topShipper = $stateParams.newShipper; //getting fooVal
     //console.log($scope.topShipper);
@@ -31,9 +31,13 @@ function adminShipperListController($scope,$state, $http, $filter, config, $stat
 
     $http.get(config.baseURI + "/api/shipper/getAllShipper").success(function(response){
         $scope.shipperList= response;
-        if ($scope.topShipper) putToTop($scope.topShipper);
+        $scope.shipperList.map(function (shipper) {
+            shipper['workingStatus'] = 'Offline';
+            if (shipper.userstatus == 3)  shipper['workingStatus'] = 'Block';
+        })
+        //if ($scope.topShipper) putToTop($scope.topShipper);
         $scope.displayedCollection = [].concat($scope.shipperList);
-        //console.log(response);
+        console.log(response);
     })
 
     //----------------------------------
@@ -56,8 +60,20 @@ function adminShipperListController($scope,$state, $http, $filter, config, $stat
 
     });
 
-
+    // START Listen to socket changes
+    $rootScope.$on("admin:dashboard:getShipperList", function(event, args){
+        //alert(args.message);
+        console.log(args);
+        //$scope.onlineShipper = 0;
+        args.map(function (shipper) {
+            var result = $.grep($scope.shipperList, function(e){ return e.username == shipper.shipperID; });
+            if (shipper.isConnected) result[0]['workingStatus'] = 'Online';
+            else result[0]['workingStatus'] = 'Offline';
+        })
+        //getDataFromServer();
+    });
+    // END listen to socket changes
 }
 
-adminShipperListController.$inject = ['$scope','$state', '$http', '$filter', 'config', '$stateParams'];
+adminShipperListController.$inject = ['$scope','$state', '$http', '$filter', 'config', '$stateParams', '$rootScope'];
 angular.module('app').controller('adminShipperListController',adminShipperListController);
