@@ -5,7 +5,7 @@
 function storeDashboardController($scope,$state,dataService, $http, config, $rootScope){
 
     //Option for drop down list
-    $scope.searchOptionsInactive = [
+    $scope.searchOptionsInProcess = [
         {
             option: 'All',
             value: ''
@@ -40,7 +40,7 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
         }
 
     ];
-    $scope.searchOptionsActive = [
+    $scope.searchOptionsDone = [
         {
             option: 'All',
             value: ''
@@ -66,7 +66,7 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
             value: 'recipientphone'
         }
     ];
-    $scope.searchOptionsDone = [
+    $scope.searchOptionsDraff = [
         {
             option: 'All',
             value: ''
