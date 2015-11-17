@@ -202,14 +202,15 @@ angular.module('app', [
         libraries: 'geometry,visualization,drawing,places'
     })
 
-}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper, config,socketService, notificationService){
-
+}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper,socketService, notificationService){
+    //$state.go('home');
     // Notification component
+    $rootScope.onlineShipper = 0;
     $rootScope.numberNewNoti = notificationService.getNumberNewNotifications();
     $rootScope.readNewNoti = function() {
 
     };
-    
+
     $rootScope.notify = function(notification) {
         $rootScope.numberNewNoti += 1;
         notificationService.setNumberNewNotifications($rootScope.numberNewNoti);
