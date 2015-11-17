@@ -341,7 +341,7 @@ module.exports = function (app) {
         //Instance new Issue
         var newIssue = _.cloneDeep(req.body[0].issue);
         newIssue.isresolved = false;
-        newIssue.resolvetype = 1;
+        newIssue.resolvetype = null;
         newIssue.createddate = new Date();
         var orders = _.cloneDeep(req.body[0].orders);
         var categoryissue = _.cloneDeep(req.body[0].categoryissue);
