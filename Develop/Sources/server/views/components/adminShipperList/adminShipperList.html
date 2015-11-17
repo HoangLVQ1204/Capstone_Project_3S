@@ -77,9 +77,9 @@
                                         <td>{{x.profile.phonenumber}}</td>
 
                                         <td class="center">
-                                            <span class="label bg-success" ng-show="x.workingstatusid == 1">{{x.workingstatus.statusname}}</span>
-                                            <span class="label label-default" ng-show="x.workingstatusid == 2">{{x.workingstatus.statusname}}</span>
-                                            <span class="label bg-danger" ng-show="x.workingstatusid == 3">{{x.workingstatus.statusname}}</span>
+                                            <span class="label bg-success" ng-show="x.workingStatus == 'Online'">{{x.workingStatus}}</span>
+                                            <span class="label label-default" ng-show="x.workingStatus == 'Offline'">{{x.workingStatus}}</span>
+                                            <span class="label bg-danger" ng-show="x.workingStatus == 'Block'">{{x.workingStatus}}</span>
                                         </td>
 
                                         <td class="center"> {{x.profile.dob|date:"dd/MM/yyyy"}}</td>

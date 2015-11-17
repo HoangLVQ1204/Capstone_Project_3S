@@ -696,7 +696,6 @@ module.exports = function (app) {
                         listTasks.push(task['tasks'][0].taskid);
                     })
                 }
-                console.log('test', listTasks);
                 res.status(200).json(listTasks);
             }, function (err) {
                 next(err);

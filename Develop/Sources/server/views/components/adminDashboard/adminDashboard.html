@@ -6,11 +6,11 @@
                         <div class="widget-tile">
                             <section>
                                 <h5><strong>AVAILABLE</strong> SHIPPER </h5>
-                                <h2>37</h2>
+                                <h2>{{$root.onlineShipper}}</h2>
                                 <div class="progress progress-xs progress-white progress-over-tile">
                                     <div class="progress-bar progress-bar-white" aria-valuetransitiongoal="8590" aria-valuemax="10000"></div>
                                 </div>
-                                <label class="progress-label label-white"> <strong>29 shippers is busy now</strong> </label>
+                                <label class="progress-label label-white"> <strong>{{totalShipper - $root.onlineShipper}} shippers is offline now</strong> </label>
                             </section>
                             <div class="hold-icon"><i class="fa fa-truck"></i></div>
                         </div>
@@ -23,8 +23,8 @@
                             <section>
                                 <h5><strong>TASK</strong> TODAY</h5>
                                 <h2>{{totalTaskToday}}</h2>
-                                <div class="progress progress-xs progress-white progress-over-tile">
-                                    <div class="progress-bar progress-bar-white" aria-valuenow="{{totalDoneToday}}" aria-valuemax="{{totalTaskToday}}" style="width: 33%;"></div>
+                                <div class="progress progress-xs progress-white progress-over-tile" >
+                                    <div id="progressTask" class="progress-bar progress-bar-white" style="width: 33%;"></div>
                                 </div>
                                 <label class="progress-label label-white">{{totalDoneToday}} tasks have been done today</label>
                             </section>
