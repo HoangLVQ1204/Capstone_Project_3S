@@ -28,8 +28,8 @@ module.exports = function (app) {
     app.route('/api/createTask')
         .post(controller.createTask);
 
-    app.route('/api/countActiveTaskOfShipper/:shipperid?')//link api: api/countActiveTaskOfShipper?shipperid=SP000001
-        .get(controller.countActiveTaskOfShipper);
+    app.route('/api/countProcessingTaskOfShipper/:shipperid?')//link api: api/countActiveTaskOfShipper?shipperid=SP000001
+        .get(controller.countProcessingTaskOfShipper);
 
 
 }

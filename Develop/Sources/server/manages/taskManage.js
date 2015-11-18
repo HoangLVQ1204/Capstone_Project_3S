@@ -73,10 +73,10 @@ module.exports = function (app) {
                 })
     };
 
-    var countActiveTaskOfShipper = function(req,res,next){
+    var countProcessingTaskOfShipper = function(req,res,next){
         var shipperid = req.query.shipperid;
         console.log(shipperid)
-        return db.task.countActiveTaskOfShipper(shipperid)
+        return db.task.countProcessingTaskOfShipper(shipperid)
                 .then(function(count) {
                     //console.log(newTask.taskid);
                     res.status(200).json(count);
@@ -140,7 +140,7 @@ module.exports = function (app) {
         updateTaskState: updateTaskState,
         updateTaskNoShipper: updateTaskNoShipper,
         createTask: createTask,
-        countActiveTaskOfShipper: countActiveTaskOfShipper,
+        countProcessingTaskOfShipper: countProcessingTaskOfShipper,
         updateTaskStateOfIssue: updateTaskStateOfIssue,
         updateStateOfStoreCancelIssue: updateStateOfStoreCancelIssue
     }
