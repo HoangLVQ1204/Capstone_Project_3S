@@ -167,7 +167,7 @@ angular.module('app', [
         })
 
         .state('store.orderdetail',{
-             url: '/orderdetail',
+             url: '/orderdetail?orderid',
              template: '<store-order-detail-layout></store-order-detail-layout>',
              controller: function($scope, $rootScope, mapService, authService){
                  var mode = "all";
@@ -202,17 +202,18 @@ angular.module('app', [
         libraries: 'geometry,visualization,drawing,places'
     })
 
-}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper, config,socketService, notificationService){
-
+}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper,socketService, notificationService){
+    //$state.go('home');
     // Notification component
     notificationService.getTotalUnreadNotificationsServer()
     .then(function() {
         $rootScope.numberUnreadNoti = notificationService.getTotalUnreadNotifications();
     })
+    $rootScope.onlineShipper = 0;
     $rootScope.readNewNoti = function() {
 
     };
-    
+
     $rootScope.notify = function(notification) {
         $rootScope.numberUnreadNoti += 1;
         notificationService.setTotalUnreadNotifications($rootScope.numberUnreadNoti);
@@ -247,7 +248,7 @@ angular.module('app', [
 
             if(authService.isRightRole(config.role.store)){
                 socketStore.registerSocket();
-                $state.go("store.dashboard");
+                //$state.go("store.dashboard");
 
             }
 

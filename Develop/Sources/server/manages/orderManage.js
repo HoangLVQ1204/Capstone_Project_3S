@@ -141,37 +141,7 @@ module.exports = function (app) {
     };
 
 
-    var getOne = function (req, res, next) {
-        //var listOrders = [];
-        //var statusname = '';
-        //var deliveryaddress = '';
-        //var recipientname = '';
-        //var recipientphone = '';
-        //var completedate = '';
-        //var createdate = '';
-        //var cod = 0;
-        //var fee = 0;
-        //console.log(req.orderRs['orderid']);
-        //var order = {
-        //    orderid : req.orderRs['orderid'],
-        //    deliveryaddress : req.orderRs['deliveryaddress'],
-        //    recipientname : req.orderRs['recipientname'],
-        //    recipientphone : req.orderRs['recipientphone'],
-        //    statusid : req.orderRs['statusid'],
-        //    isdraff : req.orderRs['isdraff'],
-        //    iscancel : req.orderRs['iscancel'],
-        //    ispending : req.orderRs['ispending'],
-        //    cod : req.orderRs['cod'],
-        //    fee : req.orderRs['fee'],
-        //    completedate : req.orderRs['completedate'],
-        //    createdate : req.orderRs['createdate'],
-        //    statusname : req.orderRs['orderstatus'].statusname
-        //};
-        //
-        //var rs =  req.orderRs['goods'];
-        //_.each(rs, function(item) {
-        //    console.log(item.dataValues.goodsid);
-        //});
+    var getOne = function (req, res, next) {        
         res.status(200).json(req.orderRs);
     };
 
@@ -426,6 +396,19 @@ module.exports = function (app) {
         });
     };
 
+    deleteGoods =  function(req, res, next){
+        var goodsid = req.query.goodsid;
+        var storeid = req.user.stores[0].storeid;
+        db.goods.checkGoodsBelongStore(goodsid, storeid, db.order).then(function(goods){
+            db.goods.deleteGoodsByID(goodsid).then(function(){
+                return res.status(200).json("Delete goods successfully!");
+            },function(){
+                return res.status(400).json("Delete goods fail!");
+            })
+        },function(er){
+            return res.status(400).json("Delete goods fail!");
+        })
+    };
 
     return {
         getAllOrder: getAllOrder,
@@ -437,6 +420,7 @@ module.exports = function (app) {
         putDraff : putDraff,
         cancelOrder: cancelOrder,
         getOrderList: getOrderList,
-        getTodayTotal: getTodayTotal
+        getTodayTotal: getTodayTotal,
+        deleteGoods: deleteGoods
     }
 }

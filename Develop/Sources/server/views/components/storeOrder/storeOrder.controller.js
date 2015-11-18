@@ -346,16 +346,16 @@ function storeOrderController($scope, dataService, config, socketService, socket
         var listInDistrictId =["001","002","003","005","006","007","008","009"];
         if(totalWeight > 4000 ){
             if(listInDistrictId.indexOf(districtId)>-1){
-                console.log("=============IN=======",districtId);
+               // console.log("=============IN=======",districtId);
                 overWeightFee = (totalWeight - 4000)*2*2;
             }else {
-                console.log("=============out=======",districtId);
+                //console.log("=============out=======",districtId);
                 overWeightFee = (totalWeight - 4000)*2*2.5;
             }
             
         }
-        console.log("=============totalWeight=======",totalWeight);
-        console.log("=============overWeightFee=======",overWeightFee);
+        //console.log("=============totalWeight=======",totalWeight);
+        //console.log("=============overWeightFee=======",overWeightFee);
         return overWeightFee;        
     }
 
@@ -444,6 +444,7 @@ function storeOrderController($scope, dataService, config, socketService, socket
         $scope.selectedWard = $scope.listWard[0];
 
         updateDeliveryAdd();
+        
     }
     $scope.updateWard= function(){
 
@@ -453,7 +454,7 @@ function storeOrderController($scope, dataService, config, socketService, socket
         $scope.selectedWard = $scope.listWard[0];
         updateDeliveryAdd();
         $scope.order.fee = calculateFee($scope.selectedDistrict.districtid,$scope.order.ordertypeid);
-        
+        $scope.order.overWeightFee = calculateOverWeightFee($scope.selectedDistrict.districtid,$scope.goods);
      }
     $scope.updateDeliveryAdd = function(){
         updateDeliveryAdd();

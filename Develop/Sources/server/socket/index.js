@@ -423,6 +423,7 @@ module.exports = function(server,app){
 
 
 
+
     io.addOrder = function(orderID, storeID, shipperID) {
         io.orders[orderID] = {
             shipperID: shipperID,
@@ -430,6 +431,10 @@ module.exports = function(server,app){
             status: 'Picking up',
             isPending: false
         };
+    };
+
+    io.removeOrder = function(orderID) {
+        delete io.orders[orderID];
     };
 
     io.getOrdersOfShipper = function(shipperID) {
@@ -467,14 +472,23 @@ module.exports = function(server,app){
     io.addToRoom = function(socket, roomID) {
         socket.join(roomID, function() {
             console.log(socket.id, 'join to room', roomID);
-            console.log('Room ' + roomID, io.nsps['/'].adapter.rooms[roomID]);            
+            console.log('Room ' + roomID+ ":::::: ");// + io.sockets.clients(roomID));
+            var clients_in_the_room = io.sockets.adapter.rooms[roomID];
+            for (var clientId in clients_in_the_room ) {
+                console.log('client: %s', clientId); //Seeing is believing
+                //var client_socket = io.sockets.connected[clientId];//Do whatever you want with this
+            }
         });
     };
 
-    var i = 1;
-    io.test = function(){
-        i++;
-        return i;
+    io.leaveRoom = function(socket, roomID) {
+        socket.leave(roomID);
+    };
+
+    io.findSocketIdByShipperId = function(shipperid){
+        var socket =  io.shippers[shipperid];
+        if(socket) return socket.socketID;
+        return null;
     };
 
     io
@@ -517,7 +531,10 @@ module.exports = function(server,app){
                         io.addShipper(shipper, socket);
 
                     io.reply(data.sender, { mapData: io.getDataForShipper(shipper.shipperID) }, 'shipper:register:location');
-                    io.forward(data.sender, ['admin', { room: shipper.shipperID }], { shipper: io.getOneShipper(shipper.shipperID) }, ['admin:add:shipper', 'store:add:shipper']);
+                    io.forward(data.sender, ['admin', { room: shipper.shipperID }], {
+                        shipper: io.getOneShipper(shipper.shipperID),
+                        shipperList: io.getAllShippers()
+                    }, ['admin:add:shipper', 'store:add:shipper']);
 
                     require('./socketShipper')(socket, io);
 
@@ -554,7 +571,10 @@ module.exports = function(server,app){
                     else
                         io.addAdmin(admin, socket);
 
-                    io.reply(data.sender, { mapData: io.getDataForAdmin() }, 'admin:register:location');
+                    io.reply(data.sender, {
+                        mapData: io.getDataForAdmin(),
+                        shipperList: io.getAllShippers()
+                    }, 'admin:register:location');
                     require('./socketAdmin')(socket, io);
 
                 }
