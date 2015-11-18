@@ -235,6 +235,9 @@ angular.module('app', [
             console.log('click globalNoti');
         });
         //$rootScope.$apply();
+        setTimeout(function () {
+            $rootScope.$apply();
+        }, 2000);
     };
 //he he
 

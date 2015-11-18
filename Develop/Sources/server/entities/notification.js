@@ -40,10 +40,10 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     classMethods: {
       associate: function(db) {
-        notification.belongsTo(db.user, {
-          foreignKey: 'username',
-          constraints: false
-        });
+        // notification.belongsTo(db.user, {
+        //   foreignKey: 'username',
+        //   constraints: false
+        // });
       },
 
       getTotalNumberOfNotifications: function(username) {

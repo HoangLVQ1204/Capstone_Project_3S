@@ -351,6 +351,7 @@ module.exports = function (app) {
         newIssue.isresolved = false;
         newIssue.resolvetype = null;
         newIssue.createddate = new Date();
+        newIssue.sender = req.user.username;
         var orders = _.cloneDeep(req.body[0].orders);
         var categoryissue = _.cloneDeep(req.body[0].categoryissue);
         db.issue.createNewIssue(newIssue)
@@ -382,18 +383,71 @@ module.exports = function (app) {
                 };
 
                 db.user.getUserByRole(3)
-                .then(function(usernames) {
-                    console.log(usernames);    
+                .then(function(admins) {
+                    admins = admins.map(function(e) {
+                        return e.toJSON();
+                    })
+                    console.log('shipperController:390', admins);    
                     // insert to notification
+                    var promises = admins.map(function(e) {
+                        var data = _.clone(msgToAdmin, true);
+                        data.username = e.username;
+                        console.log('data', data);
+                        return db.notification.addNotification(data);
+                    });
 
-                    return db.order.getStoresOfOrder(orders)
+                    return Promise.all(promises);
+                })
+                .then(function(data) {
+                    console.log('shipperController:401', data.length);
+                    return db.order.getStoresOfOrder(orders);  
                 })
                 .then(function(storeIDs) {
-                    console.log(storeIDs);
-                    // insert to notification
+                    storeIDs = storeIDs.map(function(e) {
+                        return e.toJSON();
+                    });
+                    storeIDs = _.uniq(storeIDs, 'storeid');
+                    console.log('shipperController:399', storeIDs);
 
+                    // insert to notification
+                    var promises = storeIDs.map(function(e) {
+                        var data = _.clone(msgToStore, true);
+                        data.username = e.storeid;
+                        console.log('data', data);
+                        return db.notification.addNotification(data);
+
+                    });
+
+                    return Promise.all(promises);
+                    
+                })
+                .then(function(data) {
+                    console.log('shipperController:423', data.length);
+                    console.log('send notification to store and admin');
                     // send socket
-                });
+                    var sender = {
+                        type: 'shipper',
+                        clientID: req.user.username
+                    };
+                    server.socket.forward(
+                        sender,
+                        'admin',
+                        {
+                            notification: msgToAdmin
+                        },
+                        'admin:notification:issue'
+                    );
+                    server.socket.forward(
+                        sender,
+                        {
+                            room: req.user.username
+                        },
+                        {
+                            notification: msgToStore
+                        },
+                        'store:notification:issue'
+                    );
+                })
 
                 
 
