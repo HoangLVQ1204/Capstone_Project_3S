@@ -221,13 +221,13 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
         var fee = 0;
         var listInDistrictId =["001","002","003","005","006","007","008","009"];
         if(listInDistrictId.indexOf(districtId)> -1){
-            if(deliveryType == "Normal"){
+            if(deliveryType == 1){
                 fee = 10000;
             }else {
                 fee = 20000;
             }                
         }else {
-            if(deliveryType == "Normal"){
+            if(deliveryType == 1){
                 fee = 20000;
             }else {
                 fee = 30000;
