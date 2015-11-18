@@ -17,7 +17,7 @@ function socketAdmin(socketService,authService,mapService, $rootScope){
 
         mapService.setMapData(data.msg.mapData)
         .then(function() {
-                console.log('register', data);
+                //console.log('register', data);
             });
 
         $rootScope.onlineShipper = 0;
@@ -29,7 +29,7 @@ function socketAdmin(socketService,authService,mapService, $rootScope){
     });
 
     socketService.on('admin:add:shipper', function(data) {   
-        console.log('admin:add:shipper', data);          
+       // console.log('admin:add:shipper', data);
         mapService.addShipper(data.msg.shipper);
         $rootScope.$emit("admin:dashboard:getShipperList", data.msg.shipperList);
     });
@@ -66,11 +66,13 @@ function socketAdmin(socketService,authService,mapService, $rootScope){
         var orders = data.msg.orders;
         orders.forEach(function(e) {
             mapService.updateOrder(e.orderID, e.orderInfo);
+
         });
     });
 
     socketService.on('admin:issue', function(data) {
-        console.log('admin:issue', data.msg.issue.issueid);
+        console.log('admin:issue', data.msg);
+        $rootScope.$emit("admin:issue:newIssue", data.msg);
     });
     
     api.getCurrentUser = function() {

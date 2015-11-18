@@ -9,7 +9,10 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
     var smsData = {verticalEdge: 'right',
         horizontalEdge: 'bottom'};
 
+    $scope.resolveTypeValue = ['continue', 'change shipper'];
+
     $scope.issue = [];
+
     $http.get(config.baseURI + "/api/getIssueContent?issueid=" + $scope.issueid).success(function(response){
         $scope.issue = response;
 
@@ -17,14 +20,18 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
         //console.log($scope.issueList)
     })
 
+
     $scope.updateResolve = function () {
-        $http.put(config.baseURI + "/api/updateResolveIssue?issueid=" + $scope.issueid).success(function(response){
+        if ($scope.resolveType == 1) $scope.issue.resolvetype = 1;
+        else $scope.issue.resolvetype = 2;
+        $http.put(config.baseURI + "/api/updateResolveIssue?issueid=" + $scope.issueid, $scope.issue).success(function(response){
             //$scope.issue = response;
             $scope.issue.isresolved = true;
             var result = $.grep($scope.$parent.issueList, function(e){ return e.issueid == $scope.issueid; });
-            if (result.length == 1)
-               result[0].isresolved = true;
+            if (result.length == 1) {
+                        result[0].isresolved = true;
 
+                    }
             $scope.$parent.issueList.sort( $scope.$parent.sortByDate);
             smsData.theme="theme-inverse";
             $.notific8($("#sms-success").val(), smsData);

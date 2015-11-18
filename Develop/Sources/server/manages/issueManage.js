@@ -27,8 +27,9 @@ module.exports = function (app) {
 
     var updateResolveIssue = function (req, res, next) {
         var id = req.query.issueid;
+        var updateIssue = req.body;
        // console.log(id);
-        return db.issue.updateResolveIssue(id)
+        return db.issue.updateResolveIssue(id, updateIssue.resolvetype)
             .then(function (issue) {
                 res.status(200).json(issue);
             }, function (err) {

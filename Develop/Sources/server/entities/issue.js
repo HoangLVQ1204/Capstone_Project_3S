@@ -111,9 +111,10 @@ module.exports = function(sequelize, DataTypes) {
         })
       },
 
-      updateResolveIssue: function (issueid) {
+      updateResolveIssue: function (issueid, type) {
         return issue.update({
-              'isresolved': true
+              'isresolved': true,
+              'resolvetype': type
             },{
               where: {
                 'issueid': issueid

@@ -94,6 +94,13 @@
 
     {
       "url": "/orders/:orderid",
+       "role": [2]
+    },
+    
+    {
+      "url": "/api/store/deleteGoods",
       "role": [2]
     }
+      
+    
 ]

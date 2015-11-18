@@ -2,7 +2,7 @@
  * Created by khanhkc on 9/22/15.
  */
 
-function storeOrderDetailController($scope,$stateParams,dataService, $http, config){    
+function storeOrderDetailController($scope,$stateParams,dataService, $http, config, $rootScope){
   
   $scope.orderid = $stateParams.orderid;
   $scope.disabled = true;
@@ -38,10 +38,7 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
     $("#editGoodModal").submit(function(e){
       e.preventDefault();
       if($(this).parsley( 'validate' )){
-        editGood();
-        $scope.order.overweightfee = calculateOverWeightFee($scope.data.selectedDistrict.districtid,$scope.listgoods);
-        $scope.$apply(); 
-        $('#md-edit-good').modal('hide');
+        editGood();       
       }
     });
 
@@ -70,6 +67,7 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
             .success(function (rs) {               
                $scope.order = rs;
                $scope.listgoods = rs.goods;
+               console.log("===========listGoods===========",$scope.listgoods);
                var confirmationcode = rs.confirmationcodes;
                for(var i = 0; i < confirmationcode.length;i++){
                   if(confirmationcode[i].typeid ==2){
@@ -102,9 +100,18 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
           order: $scope.order,
           listgoods: $scope.listgoods,
         }        
-        dataService.putDataServer(urlBase,data);
-        $scope.disabled = true; 
-        $scope.$apply();
+        dataService.putDataServer(urlBase,data)
+         .then(function(sc){
+            $scope.disabled = true;             
+          },function(er){
+            var err = {
+              type:'issue',
+              title: 'Error',
+              content: "Can't update this order! Try again!"
+            };
+            $rootScope.notify(err);
+          });  
+        
     }
 
     $scope.newGood = {};
@@ -132,15 +139,44 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
     }
 
     function addGood(){
-        $scope.good.goodID = bigestGoodId;
-        $scope.listgoods.push($scope.good);
-        $scope.$apply();
-        bigestGoodId++;
+        var urlBase = config.baseURI + '/api/store/addGoods';
+        $scope.good.orderid = $scope.orderid;
+        var data = $scope.good;
+        //console.log("==========data==============",data);
+        dataService.postDataServer(urlBase,data)
+          .then(function(sc){
+            console.log("==============sc===========",sc.data);
+            $scope.good.goodsid = sc.data;
+            $scope.good.goodID = bigestGoodId;
+            $scope.listgoods.push($scope.good);           
+            bigestGoodId++;
+            $scope.order.overweightfee = calculateOverWeightFee($scope.data.selectedDistrict.districtid,$scope.listgoods);
+            $('#md-edit-good').modal('hide');
+          },function(er){
+            var err = {
+              type:'issue',
+              title: 'Error',
+              content: "Can't add this good! Try again!"
+            };
+            $rootScope.notify(err);
+          });        
+       
+       
         //console.log("=======goods[]=sau khi add====",$scope.goods);
     }
 
-    $scope.deleteGood = function(){
-        $scope.listgoods.splice(index,1);
+    $scope.deleteGoods = function(){
+        var urlDeleteGoods = config.baseURI + 'api/store/deleteGoods?goodsid=' + $scope.newGood.goodsid;
+        dataService.deleteDataServer(urlDeleteGoods).then(function(sc){
+            $scope.listgoods.splice(index,1);
+        },function(er){
+            var err = {
+                type: 'issue',
+                title: 'Error',
+                content: "Can't delete this good! Try again!"
+            };
+            $rootScope.notify(err);
+        });
     };
 
     function caculatateWeight(listGoods){
@@ -274,7 +310,7 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
     }
 
 }
-storeOrderDetailController.$inject = ['$scope','$stateParams','dataService','$http','config'];
+storeOrderDetailController.$inject = ['$scope','$stateParams','dataService','$http','config','$rootScope'];
 
 angular.module('app').controller('storeOrderDetailController',storeOrderDetailController);
 

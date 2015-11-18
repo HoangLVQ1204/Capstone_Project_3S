@@ -37,8 +37,8 @@
                         <!--</div>-->
                         <div class="btn-group  pull-right">
                             <button type="button" class="btn btn-theme btn-transparent active" title="Resolve"><i class="fa fa-check"></i></button>
-                            <button type="button" class="btn btn-theme btn-transparent" ng-class="issue.isresolved ? 'active' : ''" ng-click="showConfirm($event,'continue')">Continue</button>
-                            <button type="button" class="btn btn-theme btn-transparent" ng-click="showConfirm($event,'change shipper')">Change shipper</button>
+                            <button type="button" class="btn btn-theme btn-transparent" ng-class="(issue.resolvetype==1) ? 'active' : ''" ng-click="showConfirm($event,1)">Continue</button>
+                            <button type="button" class="btn btn-theme btn-transparent" ng-class="(issue.resolvetype==2) ? 'active' : ''" ng-click="showConfirm($event,2)">Change shipper</button>
 
                         </div>
                     </div>
@@ -106,7 +106,7 @@
         <!-- //modal-header-->
         <div class="modal-body align-xs-center">
             <form name="myForm">
-                <h5><strong>Are you sure to resolve this issue by {{resolveType}} options???</strong></h5><br>
+                <h5><strong>Are you sure to resolve this issue by {{resolveTypeValue[resolveType-1]}} options???</strong></h5><br>
 
                 <button type="button" class="btn btn-success btn-transparent" ng-click="updateResolve()"><i class="fa fa-check-circle"></i> Yes</button>
                 <button type="button" class="btn btn-danger btn-transparent" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i> No</button>

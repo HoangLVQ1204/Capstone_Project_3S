@@ -331,8 +331,8 @@ WITH (OIDS=FALSE)
 -- ----------------------------
 -- Records of issue
 -- ----------------------------
-INSERT INTO "public"."issue" VALUES ('1', '1', 'Tắc đường quá, em chưa đi tiếp được', 't', '1', '2015-11-11');
-INSERT INTO "public"."issue" VALUES ('2', '2', 'Em bị hỏng xe, đang vá xăm', 't', '1', '2015-11-11');
+INSERT INTO "public"."issue" (typeid, description, isresolved, resolvetype, createddate) VALUES ( '1', 'Tắc đường quá, em chưa đi tiếp được', 't', '1', '2015-11-11');
+INSERT INTO "public"."issue" (typeid, description, isresolved, resolvetype, createddate) VALUES ('2', 'Em bị hỏng xe, đang vá xăm', 't', '1', '2015-11-11');
 
 -- ----------------------------
 -- Table structure for issuecategory

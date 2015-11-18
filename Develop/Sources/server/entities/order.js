@@ -94,6 +94,14 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     freezeTableName: true,
     timestamps: false,
+    instanceMethods: {
+      updateOrderStatus: function (nextStatus, completeDate) {
+        return this.update({
+          statusid: nextStatus,
+          completedate: completeDate
+        })
+      }
+    },
     classMethods: {
       associate: function(db) {
         order.belongsTo(db.orderstatus, {

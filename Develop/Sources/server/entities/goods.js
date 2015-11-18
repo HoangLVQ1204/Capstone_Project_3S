@@ -52,6 +52,9 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     classMethods: {
       associate: function(db) {
+        goods.belongsTo(db.order, {
+          foreignKey: 'orderid'
+        });
       },
       postOneGood: function(newGood){
         return goods.build(
@@ -70,7 +73,7 @@ module.exports = function(sequelize, DataTypes) {
       },
 
       deleteGood: function (orderid) {
-        goods.destroy({
+        return goods.destroy({
           where: {
             orderid: orderid
           }
@@ -86,6 +89,34 @@ module.exports = function(sequelize, DataTypes) {
             }
           })
       },
+
+      putOrder: function (currentOrder) {
+        return currentOrder.save();
+      },
+
+      // HuyTDH check gooods belongs to order of store
+      checkGoodsBelongStore: function(goodsid, storeid, orderModel){
+        return goods.findOne({
+          where: {
+            goodsid: goodsid
+          },
+          include:{
+            model: orderModel,
+            where: {
+              storeid: storeid
+            }
+          }
+        })
+      },
+
+      // HuyTDH 18-11-2015: delete goods by goodsid
+      deleteGoodsByID: function (goodsid) {
+        return goods.destroy({
+          where: {
+            goodsid: goodsid
+          }
+        });
+      }
     }
   });
   return goods;
