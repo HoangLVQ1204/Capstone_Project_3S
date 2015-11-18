@@ -247,10 +247,8 @@ module.exports = function (app) {
                         db.confirmationcode.checkCode(key, data.confirmcode, orderObj.statusid)
                             .then(function (codeObj) {
                             if (codeObj) {
-                                orderObj.update({
-                                    statusid: nextStatus,
-                                    completedate: completeDate
-                                }).then(function (rs) {
+                                orderObj.updateOrderStatus(nextStatus, completeDate)
+                                    .then(function (rs) {
                                     if(orderObj.statusid == 2){
                                         db.profile.getProfileUser(shipperid).then(function(profile){
                                             msg['profile'] = profile;
@@ -266,12 +264,16 @@ module.exports = function (app) {
                                     });
                                     if(oldStatus == taskBegin.statusid){
                                         Task.updateTaskStatus(2, taskid, shipperid).then(function (ok) {
+                                            addStoreToShipperRoom(orderObj.storeid, shipperid);
+                                            addOrderIntoSocket(orderObj.orderid, orderObj.storeid, shipperid);
                                             return res.status(200).json("Your task was active!");
                                         },function(er){
                                             return res.status(400).json("Sorry! Something went wrong!");
                                         });
                                     }else if(nextStatus == taskDone.statusid){
                                         Task.updateTaskStatus(3,taskid,shipperid).then(function(ok){
+                                            removeStoreFromShipperRoom(orderObj.storeid, shipperid);
+                                            removeOrderInSocket(orderObj.orderid);
                                             return res.status(200).json("Your task was done!");
                                         },function(er){
                                             return res.status(400).json("Sorry! Something went wrong!");
@@ -289,10 +291,8 @@ module.exports = function (app) {
                             return res.status(400).json("Wrong Code!");
                         });
                     } else {
-                        orderObj.update({
-                            statusid: nextStatus,
-                            completedate: completeDate
-                        }).then(function (rs) {
+                        orderObj.updateOrderStatus(nextStatus, completeDate)
+                            .then(function (rs) {
                             server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
                             db.managestore.getUsersByStoreID(orderObj.storeid).then(function(rs){
                                 var manager = '';
@@ -304,12 +304,16 @@ module.exports = function (app) {
                             var taskDone = statusList[statusList.length - 1];
                             if(oldStatus == taskBegin.statusid){
                                 Task.updateTaskStatus(2,taskid,shipperid).then(function(ok){
+                                    addStoreToShipperRoom(orderObj.storeid, shipperid);
+                                    addOrderIntoSocket(orderObj.orderid, orderObj.storeid, shipperid);
                                     return res.status(200).json("Your task was active!");
                                 },function(er){
                                     return res.status(400).json("Sorry! Something went wrong!");
                                 });
                             }else if(nextStatus == taskDone.statusid){
                                 Task.updateTaskStatus(3,taskid,shipperid).then(function(ok){
+                                    removeStoreFromShipperRoom(orderObj.storeid, shipperid);
+                                    removeOrderInSocket(orderObj.orderid);
                                     return res.status(200).json("Your task was done!");
                                 },function(er){
                                     return res.status(400).json("Sorry! Something went wrong!");
@@ -327,6 +331,9 @@ module.exports = function (app) {
             }, function () {
                 return res.status(400).json("Can't find this order!");
             });
+        }
+        else{
+            return res.status(400).json("Can't go to next step");
         }
     };
 
@@ -446,7 +453,7 @@ module.exports = function (app) {
             }, function(err) {
                 next(err);
             })
-    }
+    };
 
     var indexInStoreList = function(storeID, listStore){
         return -1;
@@ -533,7 +540,7 @@ module.exports = function (app) {
             })
     };
 
-    var  getAllOrderToAssignTask = function (req, res, next) {
+    var getAllOrderToAssignTask = function (req, res, next) {
         var orderList=[];
         var promise=[];
         return db.order.getAllOrderToAssignTask(db.orderstatus, db.task, db.taskstatus)
@@ -757,40 +764,22 @@ module.exports = function (app) {
     //// END change status of shipper
 
     var testSk = function(req, res, next){
-        var receiver = {
-            type: 'store',
-            clientID: 'STR003'
-        };
-        ////var msg = {
-        ////    shipper: "sphuy",
-        ////    order: 'order1',
-        ////    content: 'Change order status'
-        ////};
-        var msg = {
-            type: "info",
-            title: "Test",
-            content: "This is test",
-            url: "http://localhost:3000/#/store/dashboard",
-            isread: false,
-            username: 'ST000003',
-            createddate: new Date()
-        };
+        //var receiver = {
+        //    type: 'store',
+        //    clientID: 'STR003'
+        //};
+        //var msg = {
+        //    type: "info",
+        //    title: "Test",
+        //    content: "This is test",
+        //    url: "http://localhost:3000/#/store/dashboard",
+        //    isread: false,
+        //    username: 'ST000003',
+        //    createddate: new Date()
+        //};
         //server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
-        //var rs = server.socket.stores;
-        //db.managestore.getUsersByStoreID('STR0003').then(function(rs){
-        //    if(rs.length>0)
-        //    res.status(200).json(rs);
-        //    else res.status(200).json("OKKK");
-        //});
-        var shipperid = 'SP000001';
-        var ORDERID = 'OD013124';
-        db.profile.getProfileUser(shipperid).then(function(profile){
-            msg['profile'] = profile;
-            msg['order'] = ORDERID;
-            server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
-            res.status(200).json(profile);
-        });
-        //res.status(200).json(rs);
+        //var rs = server.socket.findSocketIdByShipperId('SP000001');
+        //return res.status(200).json(rs);
         //var noti = {
         //    type: "info",
         //    title: "Test",
@@ -800,11 +789,24 @@ module.exports = function (app) {
         //    username: 'ST000003',
         //    createddate: new Date()
         //};
-        //db.notification.addNotification(noti).then(function(rs){
-        //    res.status(200).json(rs);
-        //},function(er){
-        //    res.status(400).json(er);
-        //})
+        //var rs = db.goods.checkGoodsBelongStore(1, 'STR002', db.order); //.then(function(goods){
+        //if(rs) res.status(200).json('OKK');
+        //else res.status(400).json('!OKS');
+            //},function(er){
+            //res.status(400).json({'F':er});
+            //});
+        //{
+        //    res.status(200).json('OK');
+        //}else{
+        //    res.status(400).json('FALSE');
+        //}
+        var storeid = 'STR001';
+        var shipperid = 'SP000001';
+        var orderid = 'OD025421';
+        addStoreToShipperRoom(storeid,shipperid);
+        addOrderIntoSocket(orderid, storeid, shipperid);
+        var rs = server.socket.orders;
+        res.status(200).json(rs);
     };
 
     //function create new shipperid
@@ -849,6 +851,41 @@ module.exports = function (app) {
                 });
 
     };
+
+    //// START AREA OF HELPER FUNCTIONS (PRIVATE)
+    var addStoreToShipperRoom = function(storeid, shipperid){
+        var roomID = server.socket.findSocketIdByShipperId(shipperid);
+        var store = {
+            clientID: storeid,
+            type: 'store'
+        };
+        var socketStore = server.socket.receiverSocket(store);
+        if(socketStore && roomID){
+            server.socket.addToRoom(socketStore,roomID);
+        }
+    };
+
+    var removeStoreFromShipperRoom = function(storeid, shipperid){
+        var roomID = server.socket.findSocketIdByShipperId(shipperid);
+        var store = {
+            clientID: storeid,
+            type: 'store'
+        };
+        var socketStore = server.socket.receiverSocket(store);
+        if(socketStore){
+            server.socket.leaveRoom(socketStore,roomID);
+        }
+    };
+
+    var addOrderIntoSocket = function(orderID, storeID, shipperID){
+        server.socket.addOrder(orderID, storeID, shipperID);
+    };
+
+    var removeOrderInSocket = function(orderID){
+        server.socket.removeOrder(orderID);
+    };
+
+    //// END AREA OF PRIVATE FUNCTION
 
 
 
