@@ -279,7 +279,7 @@ module.exports = function (sequelize, DataTypes) {
             },
             
             deleteTask: function (currtask) {
-                return task.destroy({ force: true },
+                return task.destroy(
                     {where: {'taskid': currtask.taskid}});
             }
         }

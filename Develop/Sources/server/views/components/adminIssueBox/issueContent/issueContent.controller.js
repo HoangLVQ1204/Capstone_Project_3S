@@ -40,8 +40,12 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
 
             $scope.issue.resolvetype = $scope.resolveType;
 
-            if ($scope.issue.resolvetype == 1 || $scope.issue.resolvetype == 2)//pending issue
+            if ($scope.issue.resolvetype == 2)//pending issue
                 resolveIssue();
+
+            if ($scope.issue.resolvetype == 1){//return iss ue
+                resolveContinueIssue();
+            }
 
             if ($scope.issue.resolvetype == 3){//return issue
                 resolveReturnIssue();
@@ -150,6 +154,25 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
 
     }
 
+    //function resolve continue issue
+    function resolveContinueIssue(){
+        //console.log($scope.issue);
+        $scope.issue.orderissues.map(function (issue) {
+            issue.order.tasks[0].statusid = 2;//fail task
+            //issue.order.statusid= 2;//cancel order
+            //issue.order.fee= parseInt(issue.order.fee) * 0.1;//cancel order
+        })
+        //console.log($scope.issue.orderissues);
+        $http.put(config.baseURI + "/api/updateStateOfStoreCancelIssue", $scope.issue).then(function success(response){
+            resolveIssue();
+        },function (error) {
+            smsData.theme="danger";
+            //data.sticky="true";
+            $.notific8($("#sms-fail").val(), smsData);
+            console.log(error)
+        })
+
+    }
 
     //----------------------------------
     //FUNCTION LOAD SCRIPT
