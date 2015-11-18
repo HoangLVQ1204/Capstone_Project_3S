@@ -16,9 +16,9 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
 
     $http.get(config.baseURI + "/api/getIssueContent?issueid=" + $scope.issueid).success(function(response){
         $scope.issue = response;
-
+        $scope.issue.orderissues.sort(dateSort);
+        $scope.issue.orderissues.splice(2,$scope.issue.orderissues.length-1);
         //$scope.displayedOrderCollection = [].concat($scope.orderList);
-
     })
 
 
@@ -185,6 +185,16 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
         caplet();
 
     });
+
+    var dateSort =  function(x, y){
+        if (x.taskdate > y.taskdate) {
+            return -1;
+        }
+        if (x.taskdate < y.taskdate) {
+            return 1;
+        }
+        return 0;
+    };
 
 }
 
