@@ -42,7 +42,7 @@ module.exports = function(server,app){
     var io = require('socket.io')(server);
     var socketioJwt = require("socketio-jwt");
     var config      = require('../config/config');
-
+    var controllerStore = require('../manages/storeController')(app);
     /*
         io.admins[adminID] = {            
             socketID,
@@ -544,6 +544,16 @@ module.exports = function(server,app){
                 }
             })
         });
+
+        //io.updateListStore = function(){
+        //    controllerStore.getAllStores()
+        //        //.then(function(rs){
+        //        //
+        //        //})
+        //}
+        //
+        //io.updateListStore();
+
     return {
         io: io
     }

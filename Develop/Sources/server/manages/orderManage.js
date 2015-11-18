@@ -315,7 +315,11 @@ module.exports = function (app) {
 
     var updateExpressOrder = function (req, res, next) {
         var order = req.body.order;
-        return db.order.updateExpressOrder(order.orderId,order.statusId, order.isDraff)
+        console.log(order);
+        return db.order.updateExpressOrder({
+            statusid : order.statusId,
+            isdraff: order.isDraff
+        },order.orderId)
             .then(function (rs) {
                 console.log(rs);
                 res.status(201).json(rs);

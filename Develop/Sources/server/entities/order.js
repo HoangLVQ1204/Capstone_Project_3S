@@ -212,11 +212,9 @@ module.exports = function(sequelize, DataTypes) {
         return order.build(newOrder).save();
       },
 
-      updateExpressOrder: function (orderID,statusID,isDraff) {
-          return order.update({
-            'statusid': statusID,
-            'isdraff': isDraff
-          },{
+      updateExpressOrder: function (currentOrder, orderID) {
+          return order.update(
+              currentOrder,{
             where: {
               'orderid': orderID
             }

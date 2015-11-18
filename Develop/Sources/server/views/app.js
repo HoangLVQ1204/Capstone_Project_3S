@@ -57,12 +57,25 @@ angular.module('app', [
         .state('admin.dashboard',{
             url: '/dashboard',
             template: '<admin-layout></admin-layout>',
+            controller: function($scope, $rootScope, mapService, authService){
+                var mode = "all";
+                $scope.shippers = mapService.getShipperMarkers(mode);
+                $scope.stores = mapService.getStoreMarkers(mode);
+                $scope.customers = mapService.getCustomerMarkers(mode);
+                $scope.orders = mapService.getOrders(mode);
+                $scope.zoom = 11;
+            },
             access: config.role.admin
         })
 
         .state('admin.storeList',{
             url: '/storeList',
-            template: '<admin-store-list></admin-store-list>',
+            template: '<admin-store-list-layout></admin-store-list-layout>',
+            controller: function($scope, $rootScope, mapService){
+                var mode = "all";
+                $scope.stores = mapService.getStoreMarkers(mode);
+                $scope.zoom = 11;
+            },
             access: config.role.admin
         })
 
@@ -86,7 +99,12 @@ angular.module('app', [
 
         .state('admin.shipperList',{
             url: '/shipperList',
-            template: '<admin-shipper-list></admin-shipper-list>',
+            template: '<admin-shipper-list-layout></admin-shipper-list-layout>',
+            controller: function($scope, $rootScope, mapService){
+                var mode = "all";
+                $scope.shippers = mapService.getShipperMarkers(mode);
+                $scope.zoom = 11;
+            },
             access: config.role.admin
         })
 

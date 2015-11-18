@@ -16,7 +16,8 @@ angular.module('app')
                 customerMarkers: '=',
                 orders: '=',
                 circleRadius: '=',
-                center: '='
+                center: '=',
+                zoom: '='
             }
         }
     });

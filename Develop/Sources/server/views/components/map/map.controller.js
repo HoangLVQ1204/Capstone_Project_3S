@@ -125,6 +125,9 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
         longitude: 105.526180
     }
 
+    var initZoom = 16;
+
+    $scope.zoom = $scope.zoom || initZoom;
     $scope.center = $scope.center || initCenter;
 
     $scope.shipperControl = {};
@@ -182,7 +185,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
          */
         $scope.map = {
             center: $scope.center,
-            zoom: 16,
+            zoom: $scope.zoom,
             control: {},
             dragging: true
         }

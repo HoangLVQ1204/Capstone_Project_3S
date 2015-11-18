@@ -25,7 +25,7 @@ api.getDistanceFromOneToMany = function(origin, destinations) {
 		if (index > 0) destinationsString += '|';
 		destinationsString += dest.latitude + ',' + dest.longitude;		
 	});
-	console.log("TTTTTTTTTTT", destinationsString);
+
 	var request = {
         origins: originString,
         destinations: destinationsString,
