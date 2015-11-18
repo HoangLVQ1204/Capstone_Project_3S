@@ -96,12 +96,11 @@ module.exports = function(sequelize, DataTypes) {
               attributes: ['pickupaddress','deliveryaddress', 'statusid','orderid','fee','storeid'],
               include:[{
                 model: task,
-                limit: 1,
-                order: '"taskdate" DESC',
                 include: {
                   model: taskstatus,
                   attributes: ['statusname']
-                }
+                },
+
               },{
                 model: orderstatus,
                 attributes: ['statusname']
