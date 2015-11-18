@@ -106,7 +106,7 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
         if ($scope.issue.typeid == 4){
             $scope.issue.orderissues.map(function (issue) {
                 issue.order.tasks[0].statusid = 5;//fail task
-                issue.order.statusid= 7;//cancel order
+                issue.order.statusid= 8;//cancel order
                 issue.order.orderstatus.statusname= 'Cancel';//cancel order
             })
             //console.log($scope.issue.orderissues);
