@@ -28,6 +28,10 @@ module.exports = function(sequelize, DataTypes) {
     createddate: {
       type: DataTypes.DATE,
       allowNull: true
+    },
+    sender: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {
     freezeTableName: true,
@@ -89,7 +93,7 @@ module.exports = function(sequelize, DataTypes) {
             model: orderissue, attributes: ['orderid'],
             include: {
               model: order,
-              attributes: ['pickupaddress','deliveryaddress'],
+              attributes: ['pickupaddress','deliveryaddress', 'statusid','orderid','fee','storeid'],
               include:[{
                 model: task,
                 include: {
@@ -111,9 +115,10 @@ module.exports = function(sequelize, DataTypes) {
         })
       },
 
-      updateResolveIssue: function (issueid) {
+      updateResolveIssue: function (issueid, type) {
         return issue.update({
-              'isresolved': true
+              'isresolved': true,
+              'resolvetype': type
             },{
               where: {
                 'issueid': issueid

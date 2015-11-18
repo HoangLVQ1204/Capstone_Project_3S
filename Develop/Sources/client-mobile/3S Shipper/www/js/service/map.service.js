@@ -174,10 +174,15 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     };
 
     api.addShipper = function(shipper) {
-        if (this.containShipper(shipper)) return Promise.resolve();
+        var d = $q.defer();
+        if (this.containShipper(shipper)) {
+          d.resolve();
+          return d.promise;
+        }
         initShipper(shipper, api);
         shipperMarkers.push(shipper);
-        return Promise.resolve();
+        d.resolve();
+        return d.promise;
     };
 
     api.updateOrderOfShipper = function(shipperID, orderID) {

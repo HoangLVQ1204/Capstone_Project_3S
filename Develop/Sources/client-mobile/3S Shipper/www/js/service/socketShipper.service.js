@@ -229,12 +229,14 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
             //     console.log('stop watch');
             //     api.stopWatchCurrentPosition(watchID);
             // }, 10000);
+          }, function(err){
+            console.log(":Fail " + err);
           });
       },function(err){
-        console.log(":FailGetUser");
+        console.log(":FailGetUser " + err);
       })
       .catch(function(err){
-        console.log(err);
+        console.log(":Failllll " + err);
       });
   };
 
@@ -262,10 +264,10 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
         //],
         issue: {
          issueid: issueid
-        },
-        mssg1: " Shipper: SP09245 đã send issue ID 4567, Admin vui long confirm",
-        mssg2: " Info: ORDER 12345 hiện tại pendding. "
-      },
+        }
+        //mssg1: " Shipper: SP09245 đã send issue ID 4567, Admin vui long confirm",
+        //mssg2: " Info: ORDER 12345 hiện tại pendding. "
+  },
       'shipper:sendissue'
     );
   };

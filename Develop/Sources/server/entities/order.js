@@ -1,5 +1,5 @@
 /* jshint indent: 2 */
-
+var moment         = require('moment');
 module.exports = function(sequelize, DataTypes) {
   var order =  sequelize.define('order', {
     orderid: {
@@ -71,6 +71,18 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.BIGINT,
       allowNull: true
     },
+    deliveryprovinceid: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    deliverydistrictid: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    deliverywardid: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     pickupaddresscoordination: {
       type: DataTypes.TEXT,
       allowNull: true
@@ -82,6 +94,14 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     freezeTableName: true,
     timestamps: false,
+    instanceMethods: {
+      updateOrderStatus: function (nextStatus, completeDate) {
+        return this.update({
+          statusid: nextStatus,
+          completedate: completeDate
+        })
+      }
+    },
     classMethods: {
       associate: function(db) {
         order.belongsTo(db.orderstatus, {
@@ -196,12 +216,19 @@ module.exports = function(sequelize, DataTypes) {
       },
 
 
-      postOneOrder: function(newOrder){
+      postOneOrder: function(newOrder){        
+        newOrder.createdate = moment().format();        
         return order.build(newOrder).save();
       },
 
-      putOrder: function (currentOrder) {
-        return currentOrder.save();
+      updateOrder: function (currentOrder,orderid) {
+        return order.update(
+          currentOrder,
+          {
+            where:{
+              'orderid': orderid
+            }
+          })
       },
 
       changeIsPendingOrder: function(orderID, isPending) {
@@ -382,6 +409,50 @@ module.exports = function(sequelize, DataTypes) {
           ]
         })
       },
+
+      //// HoangNK - get total delivery and cod of day
+      getTodayTotalDelivery: function () {
+        //console.log( moment().format('DD/MM/YYYY'));
+        return order.sum('fee',{
+          where: {
+            completedate: moment().format(),
+            statusid: [7,8]
+          }
+        })
+      },
+
+      getTodayTotalCoD: function () {
+        //console.log( moment().format('DD/MM/YYYY'));
+        return order.sum('cod',{
+          where: {
+            completedate: moment().format(),
+            statusid: [7,8]
+          }
+        })
+      },
+
+      updateOrderStatus: function (newOrder) {//change status of order
+        return order.update(
+            {'statusid': newOrder.statusid },
+            {
+              where: {
+                'orderid': newOrder.orderid
+              }
+            })
+      },
+
+      updateOrderAfterStoreCancel: function (newOrder) {//change status of order
+        return order.update(
+            {'statusid': newOrder.statusid,
+              'fee': newOrder.fee
+            },
+            {
+              where: {
+                'orderid': newOrder.orderid
+              }
+            })
+      }
+
     }
   });
   return order;

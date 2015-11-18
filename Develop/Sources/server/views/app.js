@@ -17,7 +17,7 @@ angular.module('app', [
         admin: 3
     },
 
-    baseURI: "http://localhost:3000"
+    baseURI: ""
 
 }).config(function($stateProvider,$urlRouterProvider,$httpProvider,jwtInterceptorProvider,uiGmapGoogleMapApiProvider,config){
 
@@ -56,7 +56,7 @@ angular.module('app', [
 
         .state('admin.dashboard',{
             url: '/dashboard',
-            template: '<h1>Dashboard Page đang trong quá trình xây dựng !!!!</h1>',
+            template: '<admin-layout></admin-layout>',
             access: config.role.admin
         })
 
@@ -167,7 +167,7 @@ angular.module('app', [
         })
 
         .state('store.orderdetail',{
-             url: '/orderdetail',
+             url: '/orderdetail?orderid',
              template: '<store-order-detail-layout></store-order-detail-layout>',
              controller: function($scope, $rootScope, mapService, authService){
                  var mode = "all";
@@ -202,17 +202,21 @@ angular.module('app', [
         libraries: 'geometry,visualization,drawing,places'
     })
 
-}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper, config,socketService, notificationService){
-
+}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper,socketService, notificationService){
+    //$state.go('home');
     // Notification component
-    $rootScope.numberNewNoti = notificationService.getNumberNewNotifications();
+    notificationService.getTotalUnreadNotificationsServer()
+    .then(function() {
+        $rootScope.numberUnreadNoti = notificationService.getTotalUnreadNotifications();
+    })
+    $rootScope.onlineShipper = 0;
     $rootScope.readNewNoti = function() {
 
     };
-    
+
     $rootScope.notify = function(notification) {
-        $rootScope.numberNewNoti += 1;
-        notificationService.setNumberNewNotifications($rootScope.numberNewNoti);
+        $rootScope.numberUnreadNoti += 1;
+        notificationService.setTotalUnreadNotifications($rootScope.numberUnreadNoti);
         //notificationService.addNotification(notification);
         var data = {
             life: 3000,
@@ -230,9 +234,9 @@ angular.module('app', [
         $('.globalNoti').on('click', function() {
             console.log('click globalNoti');
         });
-        $rootScope.$apply();
+        //$rootScope.$apply();
     };
-
+//he he
 
     if(authService.isLogged()){
         socketService.authenSocket()
@@ -244,7 +248,7 @@ angular.module('app', [
 
             if(authService.isRightRole(config.role.store)){
                 socketStore.registerSocket();
-                $state.go("store.dashboard");
+                //$state.go("store.dashboard");
 
             }
 

@@ -17,7 +17,7 @@ module.exports = function(socket, io) {
             io.updateOrder(e.orderID, e.orderInfo);
         });
         console.log('after disconnect', orders);
-        io.removeShipper(shipper.shipperID);
+        io.disconnectShipper(shipper.shipperID);
         io.forward(
         {
             type: 'shipper',
@@ -25,7 +25,8 @@ module.exports = function(socket, io) {
         },
         [ { room: shipper.shipperID }, 'admin' ],
         {
-            shipper: shipper
+            shipper: shipper,
+            shipperList: io.getAllShippers()
         },
         [ 'store:delete:shipper', 'admin:delete:shipper' ]);
 
@@ -42,6 +43,7 @@ module.exports = function(socket, io) {
     });
 
     socket.on('shipper:disconnect', function() {        
+        console.log('check disconnect', socket.disconnect);
     });
     
     socket.on('shipper:choose:express', function(data) {

@@ -2,7 +2,7 @@
  * Created by khanhkc on 9/22/15.
  */
 
-function storeOrderController($scope, $state, dataService, config) {
+function storeOrderController($scope, dataService, config, socketService, socketStore) {
     getStoreName();
     getProvince ();
     $scope.order={
@@ -42,45 +42,6 @@ function storeOrderController($scope, $state, dataService, config) {
 
             $('#validate-wizard').bootstrapWizard({
                 tabClass: "nav-wizard",
-                ////////////////////////////////////////////////
-                /////////////Validate when click submit/////////
-                ////////////////////////////////////////////////
-                /*
-                 onNext: function (tab, navigation, index) {
-                 console.log(index);
-                 if (index == 3)
-                 {
-                 var tab = $('#step' + index);
-
-                 var valid = true;
-                 //if (!valid) onTabShow()
-                 valid = $('#step1').parsley('validate') && valid;
-                 valid = $('#step2').parsley('validate') && valid;
-                 valid = $('#step3').parsley('validate') && valid;
-                 console.log(valid);
-                 if (!valid) {
-                 //onTabShow(tab, navigation, i);
-                 // $('#step' + i).addClass('active');
-                 // $('#step3').removeClass('active');
-                 // tab.prevAll().addClass('completed');
-                 //    tab.nextAll().removeClass('completed');
-                 //    if (tab.hasClass("active")) {
-                 //        tab.removeClass('completed');
-                 //    }
-                 return false;
-                 }else{
-                 postCompleteOrder ();
-                 }
-
-
-
-                 // Set the name for the next tab
-                 $('#step4 h3').find("span").html($('#fullname').val());
-
-                 }
-                 }, */
-                ////Validate when click submit/////
-
                 onNext: function(tab, navigation, index) {
                     if(index==1){
                         var content=$('#step'+index);
@@ -242,6 +203,115 @@ function storeOrderController($scope, $state, dataService, config) {
         dataService.postDataServer(urlBase,data);
 
     };
+
+    function loading(){
+        var overlay=$('<div class="load-overlay"><div><div class="c1"></div><div class="c2"></div><div class="c3"></div><div class="c4"></div></div><span>Finding Shipper...</span><button class="btn btn-theme-inverse">Cancel</button></div>');
+        $("body").append(overlay);
+        overlay.css('opacity',3).fadeIn("slow");
+    }
+
+    function unloading(){
+        $("body").find(".load-overlay").fadeOut("slow",function(){ $(this).remove() });
+    }
+
+    var flag = false;
+
+    $scope.listRightShippers = [];
+
+    socketService.on('store:find:shipper', function(data) {
+
+        var shipper = data.msg.shipper;
+        if(!shipper){
+            flag = true;
+        }else{
+            $scope.listRightShippers.push(shipper);
+        }
+    });
+
+    function findExpressShipper(){
+        socketStore.findShipper();
+        loading();
+        var s = 0;
+        $scope.listRightShippers = [];
+        var loopFindShipper = setInterval(function(){
+            if($scope.listRightShippers.length != 0){
+                $scope.rightShipper = $scope.listRightShippers[0];
+                $scope.$apply();
+                unloading();
+                $("#listAcceptedShipper").modal("show");
+                clearInterval(loopFindShipper);
+                return;
+            }
+            s = s + 1;
+
+            if(s == 60 || flag){
+                unloading();
+                $scope.rightShipper = {
+                    avatar: "assets/img/notfound.png"
+                };
+                $scope.$apply();
+                $("#listAcceptedShipper_Fail").modal("show");
+                clearInterval(loopFindShipper);
+                flag = false;
+            }
+        },1000);
+    }
+
+    $scope.createExpressOrder = function(){
+        var urlBaseOrder = config.baseURI + '/orders';
+        var urlBaseTask = config.baseURI + '/api/createTask';
+
+        $scope.order.isdraff = false;
+        var dataOrder = {
+            order: $scope.order,
+            goods: $scope.goods
+        }
+
+        dataService.postDataServer(urlBaseOrder,dataOrder)
+            .then(function(res){
+                var orderID = res.data.orderid;
+
+                console.log("---DATA ORDER ID---");
+                console.log(orderID);
+                console.log("---DATA ORDER ID---");
+
+                var dataTask = {
+                    orderid: orderID,
+                    shipperid: $scope.rightShipper.shipperID,
+                    adminid: null,
+                    statusid: 2,
+                    typeid: 3
+                }
+                dataService.postDataServer(urlBaseTask,dataTask)
+                    .then(function(res){
+                        if(res.status != 500){
+                            var temp = {
+                                type: 'info',
+                                title: 'EXPRESS ORDER: SUCCESS',
+                                content: 'ORDER ID: '+orderID+ 'created successfully',
+                                url: '/#/notiListdemo',
+                                isread: false,
+                                createddate: new Date()
+                            };
+                            $rootScope.notify(temp);
+                        }else{
+                            var temp = {
+                                type: 'issue',
+                                title: 'EXPRESS ORDER: FAIL',
+                                content: 'ORDER ID: '+orderID+ 'created fail! Please try again late!',
+                                url: '/#/notiListdemo',
+                                isread: false,
+                                createddate: new Date()
+                            };
+                            $rootScope.notify(temp);
+                        }
+                    })
+            })
+
+
+    }
+
+
     function postCompleteOrder (){
         var urlBase = config.baseURI + '/orders';
         $scope.order.isdraff = false;
@@ -251,13 +321,15 @@ function storeOrderController($scope, $state, dataService, config) {
             selectedDistrict: $scope.selectedDistrict.districtid
         };
         //console.log("==============data=========",data);
-        dataService.postDataServer(urlBase,data).then(function(rs){
-            console.log("OK",rs);
-        },function(er){
-            console.log("!OK",er);
-        });
 
-    }          
+
+        if($scope.order.ordertypeid == 1){
+            dataService.postDataServer(urlBase,data);
+        }else if($scope.order.ordertypeid == 2){
+            findExpressShipper();
+        }
+    }
+
     function caculatateWeight(listGoods){
         var totalWeight = 0;
         for(var i = 0; i <listGoods.length;i++){
@@ -274,16 +346,16 @@ function storeOrderController($scope, $state, dataService, config) {
         var listInDistrictId =["001","002","003","005","006","007","008","009"];
         if(totalWeight > 4000 ){
             if(listInDistrictId.indexOf(districtId)>-1){
-                console.log("=============IN=======",districtId);
+               // console.log("=============IN=======",districtId);
                 overWeightFee = (totalWeight - 4000)*2*2;
             }else {
-                console.log("=============out=======",districtId);
+                //console.log("=============out=======",districtId);
                 overWeightFee = (totalWeight - 4000)*2*2.5;
             }
             
         }
-        console.log("=============totalWeight=======",totalWeight);
-        console.log("=============overWeightFee=======",overWeightFee);
+        //console.log("=============totalWeight=======",totalWeight);
+        //console.log("=============overWeightFee=======",overWeightFee);
         return overWeightFee;        
     }
 
@@ -362,8 +434,7 @@ function storeOrderController($scope, $state, dataService, config) {
             });
     }
 
-        $scope.updateDistrict= function(){
-
+    $scope.updateDistrict= function(){
         $scope.selectedProvince;
         $scope.listDistrict = $scope.selectedProvince.districts;
         $scope.selectedDistrict = $scope.listDistrict[0];
@@ -373,8 +444,9 @@ function storeOrderController($scope, $state, dataService, config) {
         $scope.selectedWard = $scope.listWard[0];
 
         updateDeliveryAdd();
+        
     }
-     $scope.updateWard= function(){
+    $scope.updateWard= function(){
 
         $scope.selectedDistrict;
         //console.log("========district========", $scope.selectedDistrict);
@@ -382,16 +454,15 @@ function storeOrderController($scope, $state, dataService, config) {
         $scope.selectedWard = $scope.listWard[0];
         updateDeliveryAdd();
         $scope.order.fee = calculateFee($scope.selectedDistrict.districtid,$scope.order.ordertypeid);
-        
+        $scope.order.overWeightFee = calculateOverWeightFee($scope.selectedDistrict.districtid,$scope.goods);
      }
-     $scope.updateDeliveryAdd = function(){
+    $scope.updateDeliveryAdd = function(){
         updateDeliveryAdd();
      }
 
-     function updateDeliveryAdd(){
+    function updateDeliveryAdd(){
         $scope.order.deliveryaddress = $scope.houseNumber + ", " + $scope.selectedWard.name + ", " + $scope.selectedDistrict.name + ", " + $scope.selectedProvince.name;        
-     } 
-
+     }
     function alertEmptyGood() {
         var data = new Object();
         data.verticalEdge = 'right';
@@ -401,10 +472,9 @@ function storeOrderController($scope, $state, dataService, config) {
     }
 
 
-
 }
 
 
-storeOrderController.$inject = ['$scope', '$state', 'dataService', 'config'];
+storeOrderController.$inject = ['$scope', 'dataService', 'config','socketService','socketStore'];
 angular.module('app').controller('storeOrderController', storeOrderController);
 

@@ -63,8 +63,7 @@ module.exports = function (app) {
     }
 
     var createTask = function(req,res,next){
-        var taskData = req.body.task;
-        console.log(taskData);
+        var taskData = req.body;
         return db.task.createTaskForShipper(taskData)
                 .then(function(newTask) {
                     console.log(newTask.taskid);
@@ -72,7 +71,67 @@ module.exports = function (app) {
                 }, function(err) {
                     next(err);
                 })
-    }
+    };
+
+    var countActiveTaskOfShipper = function(req,res,next){
+        var shipperid = req.query.shipperid;
+        console.log(shipperid)
+        return db.task.countActiveTaskOfShipper(shipperid)
+                .then(function(count) {
+                    //console.log(newTask.taskid);
+                    res.status(200).json(count);
+                }, function(err) {
+                    next(err);
+                })
+    };
+
+    var updateTaskStateOfIssue = function (req, res, next) {
+        var issue = req.body;
+        var promise = [];
+        issue.orderissues.map(function (orderissue) {
+            //console.log(orderissue.order);
+            promise.push(db.task.updateTaskStatusAndType(orderissue.order.tasks[0])
+                .then(function (task) {
+                    db.order.updateOrderStatus(orderissue.order)
+                        .then(function (order) {
+
+                        }, function (err) {
+                            next(err);
+                        })
+                }, function (err) {
+                    next(err);
+                }));
+        });
+        return Promise.all(promise).then(function () {
+            res.status(201).json('OK');
+        }, function (err) {
+            next(err);
+        })
+    };
+
+    var updateStateOfStoreCancelIssue = function (req, res, next) {
+        var issue = req.body;
+        var promise = [];
+        issue.orderissues.map(function (orderissue) {
+            //console.log(orderissue.order);
+            promise.push(db.task.deleteTask(orderissue.order.tasks[0])
+                .then(function (task) {
+                    db.order.updateOrderAfterStoreCancel(orderissue.order)
+                        .then(function (order) {
+
+                        }, function (err) {
+                            next(err);
+                        })
+                }, function (err) {
+                    next(err);
+                }));
+        });
+        return Promise.all(promise).then(function () {
+            res.status(201).json('OK');
+        }, function (err) {
+            next(err);
+        })
+    };
 
     return {
         getAllTask: getAllTask,
@@ -80,6 +139,9 @@ module.exports = function (app) {
         getAllTaskStatus: getAllTaskStatus,
         updateTaskState: updateTaskState,
         updateTaskNoShipper: updateTaskNoShipper,
-        createTask: createTask
+        createTask: createTask,
+        countActiveTaskOfShipper: countActiveTaskOfShipper,
+        updateTaskStateOfIssue: updateTaskStateOfIssue,
+        updateStateOfStoreCancelIssue: updateStateOfStoreCancelIssue
     }
 }
