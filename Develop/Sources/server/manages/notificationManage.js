@@ -15,6 +15,14 @@ module.exports = function (app) {
         });
     };
 
+    var getTotalUnread = function(req, res, next) {
+        var username = req.user.username;
+        db.notification.getTotalUnreadNotifications(username)
+        .then(function(c) {
+            res.status(200).json(c);
+        });
+    };
+
     var get = function(req, res, next) {
         console.log('notificationManage GET');
         var username = req.user.username;
@@ -50,6 +58,7 @@ module.exports = function (app) {
 
     return {
         getTotal: getTotal,
+        getTotalUnread: getTotalUnread,
         get: get,
         post: post,
         put: put

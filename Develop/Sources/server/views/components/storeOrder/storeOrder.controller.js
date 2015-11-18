@@ -286,7 +286,7 @@ function storeOrderController($scope, dataService, config, socketService, socket
                     .then(function(res){
                         if(res.status != 500){
                             var temp = {
-                                type: '',
+                                type: 'info',
                                 title: 'EXPRESS ORDER: SUCCESS',
                                 content: 'ORDER ID: '+orderID+ 'created successfully',
                                 url: '/#/notiListdemo',

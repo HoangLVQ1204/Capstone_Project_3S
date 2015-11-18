@@ -58,7 +58,7 @@ CREATE SEQUENCE "public"."confirmationcode_codeid_seq"
  MAXVALUE 9223372036854775807
  START 56
  CACHE 1;
-SELECT setval('"public"."confirmationcode_codeid_seq"', 56, true);
+
 
 -- ----------------------------
 -- Sequence structure for generalledger_ledgerid_seq
@@ -81,7 +81,7 @@ CREATE SEQUENCE "public"."goods_goodsid_seq"
  MAXVALUE 9223372036854775807
  START 20
  CACHE 1;
-SELECT setval('"public"."goods_goodsid_seq"', 20, true);
+
 
 -- ----------------------------
 -- Sequence structure for issue_issueid_seq
@@ -91,9 +91,9 @@ CREATE SEQUENCE "public"."issue_issueid_seq"
  INCREMENT 1
  MINVALUE 1
  MAXVALUE 9223372036854775807
- START 2
+ START 1
  CACHE 1;
-SELECT setval('"public"."issue_issueid_seq"', 2, true);
+
 
 -- ----------------------------
 -- Sequence structure for notification_notificationid_seq
@@ -105,7 +105,7 @@ CREATE SEQUENCE "public"."notification_notificationid_seq"
  MAXVALUE 9223372036854775807
  START 16
  CACHE 1;
-SELECT setval('"public"."notification_notificationid_seq"', 16, true);
+
 
 -- ----------------------------
 -- Sequence structure for task_taskid_seq
@@ -1054,7 +1054,7 @@ CREATE TABLE "public"."issue" (
 "isresolved" bool,
 "resolvetype" int4,
 "createddate" timestamptz(6),
-"shipperID" varchar(20) COLLATE "default" NOT NULL
+"sender" varchar(20) COLLATE "default" NOT NULL
 )
 WITH (OIDS=FALSE)
 
@@ -1063,9 +1063,8 @@ WITH (OIDS=FALSE)
 -- ----------------------------
 -- Records of issue
 -- ----------------------------
-INSERT INTO "public"."issue" VALUES ('1', '1', 'Tắc đường quá, em chưa đi tiếp được', 't', '1', '2015-11-11 00:00:00+07', 'SP000001');
-INSERT INTO "public"."issue" VALUES ('2', '2', 'Em bị hỏng xe, đang vá xăm', 't', '1', '2015-11-11 00:00:00+07', 'SP000002');
-
+INSERT INTO "public"."issue" (typeid, description, isresolved, resolvetype, createddate, sender) VALUES ('1', 'Tắc đường quá, em chưa đi tiếp được', 't', '1', '2015-11-11', 'SP000001');
+INSERT INTO "public"."issue" (typeid, description, isresolved, resolvetype, createddate, sender) VALUES ('2', 'Em bị hỏng xe, đang vá xăm', 't', '1', '2015-11-11', 'SP000001');
 -- ----------------------------
 -- Table structure for issuecategory
 -- ----------------------------
@@ -12945,6 +12944,7 @@ ALTER TABLE "public"."goods" ADD FOREIGN KEY ("orderid") REFERENCES "public"."or
 -- Foreign Key structure for table "public"."issue"
 -- ----------------------------
 ALTER TABLE "public"."issue" ADD FOREIGN KEY ("typeid") REFERENCES "public"."issuetype" ("typeid") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "public"."issue" ADD FOREIGN KEY ("sender") REFERENCES "public"."user" ("username") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- ----------------------------
 -- Foreign Key structure for table "public"."issuetype"

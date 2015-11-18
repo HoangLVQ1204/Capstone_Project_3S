@@ -237,7 +237,7 @@ module.exports = function (sequelize, DataTypes) {
               return task.findAll();
             },
 
-            updateTaskState: function (newTask) {
+            updateTaskState: function (newTask) {//especially for task list
                 return task.update(
                     {'statusid': newTask.selectedStatus.statusid, 'typeid': newTask.selectedType.typeid },
                     {
@@ -258,7 +258,30 @@ module.exports = function (sequelize, DataTypes) {
                     })
             },
 
+            countActiveTaskOfShipper: function (shipperid) {
+                return task.count(
+                    {
+                        where: {
+                            'statusid': 2,
+                            'shipperid': shipperid
+                        }
+                    })
+            },
 
+            updateTaskStatusAndType: function (newTask) {//for task
+                return task.update(
+                    {'statusid': newTask.statusid, 'typeid': newTask.typeid },
+                    {
+                        where: {
+                            'taskid': newTask.taskid
+                        }
+                    })
+            },
+            
+            deleteTask: function (currtask) {
+                return task.destroy({ force: true },
+                    {where: {'taskid': currtask.taskid}});
+            }
         }
     });
     return task;
