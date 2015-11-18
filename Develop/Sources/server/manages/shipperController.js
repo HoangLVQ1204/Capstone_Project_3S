@@ -223,8 +223,13 @@ module.exports = function (app) {
                         createddate: new Date()
                     };
 
+                    var customer = {
+                        order: [orderObj.orderid],
+                        geoText: orderObj.deliveryaddress
+                    };
                     // DATA TO RESPONSE CLIENT
                     var oldStatus = orderObj.statusid;
+                    var pickUpStatusID = 2;
                     var nextStatus = 0;
                     var isRequireCode = false;
                     // :TODO Need to check is canceled
@@ -249,12 +254,14 @@ module.exports = function (app) {
                             if (codeObj) {
                                 orderObj.updateOrderStatus(nextStatus, completeDate)
                                     .then(function (rs) {
-                                    if(orderObj.statusid == 2){
+                                    if(oldStatus == pickUpStatusID){
                                         db.profile.getProfileUser(shipperid).then(function(profile){
                                             msg['profile'] = profile;
                                             msg['order'] = orderObj.orderid;
                                             server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
                                         });
+                                    }else {
+                                        server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
                                     }
                                     db.managestore.getUsersByStoreID(orderObj.storeid).then(function(rs){
                                         var manager = '';
@@ -263,17 +270,19 @@ module.exports = function (app) {
                                         db.notification.addNotification(msg);
                                     });
                                     if(oldStatus == taskBegin.statusid){
-                                        Task.updateTaskStatus(2, taskid, shipperid).then(function (ok) {
-                                            addStoreToShipperRoom(orderObj.storeid, shipperid);
-                                            addOrderIntoSocket(orderObj.orderid, orderObj.storeid, shipperid);
+                                        Task.updateTaskStatus(nextStatus, taskid, shipperid).then(function (ok) {
+                                            //addStoreToShipperRoom(orderObj.storeid, shipperid);
+                                            //addOrderIntoSocket(orderObj.orderid, orderObj.storeid, shipperid);
+                                            server.socket.startTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
                                             return res.status(200).json("Your task was active!");
                                         },function(er){
                                             return res.status(400).json("Sorry! Something went wrong!");
                                         });
                                     }else if(nextStatus == taskDone.statusid){
-                                        Task.updateTaskStatus(3,taskid,shipperid).then(function(ok){
-                                            removeStoreFromShipperRoom(orderObj.storeid, shipperid);
-                                            removeOrderInSocket(orderObj.orderid);
+                                        Task.updateTaskStatus(nextStatus,taskid,shipperid).then(function(ok){
+                                            //removeStoreFromShipperRoom(orderObj.storeid, shipperid);
+                                            //removeOrderInSocket(orderObj.orderid);
+                                            server.socket.finishTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
                                             return res.status(200).json("Your task was done!");
                                         },function(er){
                                             return res.status(400).json("Sorry! Something went wrong!");
@@ -300,20 +309,20 @@ module.exports = function (app) {
                                 msg['username'] = manager;
                                 db.notification.addNotification(msg);
                             });
-                            var taskBegin = statusList[0];
-                            var taskDone = statusList[statusList.length - 1];
                             if(oldStatus == taskBegin.statusid){
-                                Task.updateTaskStatus(2,taskid,shipperid).then(function(ok){
-                                    addStoreToShipperRoom(orderObj.storeid, shipperid);
-                                    addOrderIntoSocket(orderObj.orderid, orderObj.storeid, shipperid);
+                                Task.updateTaskStatus(nextStatus,taskid,shipperid).then(function(ok){
+                                    //addStoreToShipperRoom(orderObj.storeid, shipperid);
+                                    //addOrderIntoSocket(orderObj.orderid, orderObj.storeid, shipperid);
+                                    server.socket.startTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
                                     return res.status(200).json("Your task was active!");
                                 },function(er){
                                     return res.status(400).json("Sorry! Something went wrong!");
                                 });
                             }else if(nextStatus == taskDone.statusid){
-                                Task.updateTaskStatus(3,taskid,shipperid).then(function(ok){
-                                    removeStoreFromShipperRoom(orderObj.storeid, shipperid);
-                                    removeOrderInSocket(orderObj.orderid);
+                                Task.updateTaskStatus(nextStatus,taskid,shipperid).then(function(ok){
+                                    //removeStoreFromShipperRoom(orderObj.storeid, shipperid);
+                                    //removeOrderInSocket(orderObj.orderid);
+                                    server.socket.finishTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
                                     return res.status(200).json("Your task was done!");
                                 },function(er){
                                     return res.status(400).json("Sorry! Something went wrong!");
@@ -764,49 +773,38 @@ module.exports = function (app) {
     //// END change status of shipper
 
     var testSk = function(req, res, next){
-        //var receiver = {
-        //    type: 'store',
-        //    clientID: 'STR003'
-        //};
-        //var msg = {
-        //    type: "info",
-        //    title: "Test",
-        //    content: "This is test",
-        //    url: "http://localhost:3000/#/store/dashboard",
-        //    isread: false,
-        //    username: 'ST000003',
-        //    createddate: new Date()
-        //};
-        //server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
-        //var rs = server.socket.findSocketIdByShipperId('SP000001');
-        //return res.status(200).json(rs);
-        //var noti = {
-        //    type: "info",
-        //    title: "Test",
-        //    content: "This is test",
-        //    url: "#",
-        //    isread: false,
-        //    username: 'ST000003',
-        //    createddate: new Date()
-        //};
-        //var rs = db.goods.checkGoodsBelongStore(1, 'STR002', db.order); //.then(function(goods){
-        //if(rs) res.status(200).json('OKK');
-        //else res.status(400).json('!OKS');
-            //},function(er){
-            //res.status(400).json({'F':er});
-            //});
-        //{
-        //    res.status(200).json('OK');
-        //}else{
-        //    res.status(400).json('FALSE');
-        //}
-        var storeid = 'STR001';
+        //var storeid = 'STR001';
+        //var storeid2 = 'STR003';
         var shipperid = 'SP000001';
-        var orderid = 'OD025421';
-        addStoreToShipperRoom(storeid,shipperid);
-        addOrderIntoSocket(orderid, storeid, shipperid);
-        var rs = server.socket.orders;
-        res.status(200).json(rs);
+        //var orderid = 'OD025421';
+        //addStoreToShipperRoom(storeid,shipperid);
+        //addStoreToShipperRoom(storeid2,shipperid);
+        //addOrderIntoSocket(orderid, storeid, shipperid);
+        //var roomID = server.socket.findSocketIdByShipperId(shipperid);
+        var receiver = {
+            type: 'room',
+            room: shipperid
+        };
+        var msg = {
+            type: "info",
+            title: "Test Room",
+            content: "You're in room "+ shipperid,
+            url: "http://localhost:3000/#/store/dashboard",
+            isread: false,
+            username: 'ST000003',
+            createddate: new Date()
+        };
+        server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
+        var cs = server.socket.customers;
+        var sp = server.socket.shippers;
+        var st = server.socket.stores;
+        var od = server.socket.orders;
+        return res.status(200).json({
+            "cs": cs,
+            "sp": sp,
+            "st": st,
+            "od": od
+        });
     };
 
     //function create new shipperid
