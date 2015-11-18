@@ -48,7 +48,8 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
             }
 
             if ($scope.issue.resolvetype == 4){//return issue
-                resolveStoreIssue();
+               if($scope.issue.orderissues[0].order.statusid == 1 || $scope.issue.orderissues[0].order.statusid == 2) resolveStoreIssue();
+                else resolveReturnIssue();
             }
         })
     }
@@ -135,10 +136,10 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
             $scope.issue.orderissues.map(function (issue) {
                 //issue.order.tasks[0].statusid = 5;//fail task
                 issue.order.statusid= 7;//cancel order
-                issue.order.orderstatus.statusname= 'Cancel';//cancel order
+                issue.order.fee= parseInt(issue.order.fee) * 0.1;//cancel order
             })
             //console.log($scope.issue.orderissues);
-            $http.put(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue).then(function success(response){
+            $http.put(config.baseURI + "/api/updateStateOfStoreCancelIssue", $scope.issue).then(function success(response){
                 resolveIssue();
             },function (error) {
                 smsData.theme="danger";
