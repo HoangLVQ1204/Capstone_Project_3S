@@ -2,7 +2,7 @@
  * Created by khanhkc on 9/22/15.
  */
 
-function storeOrderDetailController($scope,$stateParams,dataService, $http, config){    
+function storeOrderDetailController($scope,$stateParams,dataService, $http, config, $rootScope){
   
   $scope.orderid = $stateParams.orderid;
   $scope.disabled = true;
@@ -130,8 +130,18 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
         console.log("=======goods[]=sau khi add====",$scope.goods);
     }
 
-    $scope.deleteGood = function(){
-        $scope.listgoods.splice(index,1);
+    $scope.deleteGoods = function(){
+        var urlDeleteGoods = config.baseURI + 'api/store/deleteGoods?goodsid=' + $scope.newGood.goodsid;
+        dataService.deleteDataServer(urlDeleteGoods).then(function(sc){
+            $scope.listgoods.splice(index,1);
+        },function(er){
+            var err = {
+                type: 'issue',
+                title: 'Error',
+                content: "Can't delete this good! Try again!"
+            };
+            $rootScope.notify(err);
+        });
     };
 
     function caculatateWeight(listGoods){
@@ -265,7 +275,7 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
     }
 
 }
-storeOrderDetailController.$inject = ['$scope','$stateParams','dataService','$http','config'];
+storeOrderDetailController.$inject = ['$scope','$stateParams','dataService','$http','config','$rootScope'];
 
 angular.module('app').controller('storeOrderDetailController',storeOrderDetailController);
 

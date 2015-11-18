@@ -396,6 +396,19 @@ module.exports = function (app) {
         });
     };
 
+    deleteGoods =  function(req, res, next){
+        var goodsid = req.query.goodsid;
+        var storeid = req.user.stores[0].storeid;
+        db.goods.checkGoodsBelongStore(goodsid, storeid, db.order).then(function(goods){
+            db.goods.deleteGoodsByID(goodsid).then(function(){
+                return res.status(200).json("Delete goods successfully!");
+            },function(){
+                return res.status(400).json("Delete goods fail!");
+            })
+        },function(er){
+            return res.status(400).json("Delete goods fail!");
+        })
+    };
 
     return {
         getAllOrder: getAllOrder,
@@ -407,6 +420,7 @@ module.exports = function (app) {
         putDraff : putDraff,
         cancelOrder: cancelOrder,
         getOrderList: getOrderList,
-        getTodayTotal: getTodayTotal
+        getTodayTotal: getTodayTotal,
+        deleteGoods: deleteGoods
     }
 }
