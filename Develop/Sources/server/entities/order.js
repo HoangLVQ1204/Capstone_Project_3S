@@ -424,6 +424,27 @@ module.exports = function(sequelize, DataTypes) {
         })
       },
 
+      updateOrderStatus: function (newOrder) {//change status of order
+        return order.update(
+            {'statusid': newOrder.statusid },
+            {
+              where: {
+                'orderid': newOrder.orderid
+              }
+            })
+      },
+
+      updateOrderAfterStoreCancel: function (newOrder) {//change status of order
+        return order.update(
+            {'statusid': newOrder.statusid,
+              'fee': newOrder.fee
+            },
+            {
+              where: {
+                'orderid': newOrder.orderid
+              }
+            })
+      }
 
     }
   });
