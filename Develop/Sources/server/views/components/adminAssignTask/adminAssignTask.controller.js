@@ -96,7 +96,7 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
                     }
                     if (task.statusid == 1) {
                         task['taskstatus'] = new Object();
-                        task['taskstatus']['statusname'] = 'NotActive';
+                        task['taskstatus']['statusname'] = 'Inactive';
                         i++;
                     }
                 }
@@ -126,7 +126,7 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
                 order['adminid'] = currentUser.username;
                 order['statusid'] = 1;
                 //order['taskstatus'] = new Object();
-                //order['taskstatus']['statusname'] = 'NotActive';
+                //order['taskstatus']['statusname'] = 'Inactive';
                 if (order.order.orderstatus == 1 ) order['typeid'] = 1
                   else order['typeid'] = 2;
                 order['taskdate'] = new Date(Date.now());
@@ -156,7 +156,7 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
             $scope.taskNoShipper.push(task.taskid);
             $scope.orderList.unshift(task);
 
-            //console.log($scope.orderList);
+            console.log($scope.orderList);
 
         }
     }
