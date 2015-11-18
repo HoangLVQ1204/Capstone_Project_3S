@@ -94,6 +94,14 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     freezeTableName: true,
     timestamps: false,
+    instanceMethods: {
+      updateOrderStatus: function (nextStatus, completeDate) {
+        return this.update({
+          statusid: nextStatus,
+          completedate: completeDate
+        })
+      }
+    },
     classMethods: {
       associate: function(db) {
         order.belongsTo(db.orderstatus, {
@@ -421,6 +429,27 @@ module.exports = function(sequelize, DataTypes) {
         })
       },
 
+      updateOrderStatus: function (newOrder) {//change status of order
+        return order.update(
+            {'statusid': newOrder.statusid },
+            {
+              where: {
+                'orderid': newOrder.orderid
+              }
+            })
+      },
+
+      updateOrderAfterStoreCancel: function (newOrder) {//change status of order
+        return order.update(
+            {'statusid': newOrder.statusid,
+              'fee': newOrder.fee
+            },
+            {
+              where: {
+                'orderid': newOrder.orderid
+              }
+            })
+      }
 
     }
   });

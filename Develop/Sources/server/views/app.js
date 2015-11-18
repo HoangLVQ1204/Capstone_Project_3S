@@ -263,7 +263,7 @@ angular.module('app', [
 
             if(authService.isRightRole(config.role.store)){
                 socketStore.registerSocket();
-                $state.go("store.dashboard");
+                //$state.go("store.dashboard");
 
             }
 

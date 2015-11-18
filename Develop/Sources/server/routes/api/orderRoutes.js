@@ -32,4 +32,7 @@ module.exports = function (app) {
     app.route('/orders/cancel')
         .put(controller.cancelOrder);
 
+    app.route('/api/store/deleteGoods')
+        .delete(checkAll, controller.deleteGoods);
+
 };
