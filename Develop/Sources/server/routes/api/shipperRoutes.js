@@ -24,7 +24,7 @@ module.exports = function (app) {
 
     app.get('/api/shipper/getAllOrderToAssignTask', shipperCtrl.getAllOrderToAssignTask);
 
-    app.post('/api/issue', shipperCtrl.createIssue);
+    app.post('/api/issue', checkAll, shipperCtrl.createIssue);
 
     app.put('/api/changeIsPendingOrder', checkAll, shipperCtrl.changeIsPending);
 

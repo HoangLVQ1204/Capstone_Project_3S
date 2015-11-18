@@ -17,6 +17,10 @@
       "role": [1]
     },
     {
+      "url": "/api/issue",
+      "role": [1]
+    },
+    {
       "url": "/store/dashboard",
       "role": [1,2]
     },

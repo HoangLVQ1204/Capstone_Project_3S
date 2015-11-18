@@ -345,16 +345,40 @@ module.exports = function (app) {
      * create Issue @quyennv
      */
     var createIssue = function (req, res, next) {
+
+        var task = db.task;
         //Instance new Issue
         var newIssue = _.cloneDeep(req.body[0].issue);
+        var shipperID = req.user.username;
         newIssue.isresolved = false;
         newIssue.resolvetype = null;
         newIssue.createddate = new Date();
+        newIssue.sender =  shipperID;
+        console.log("ShipperID: " + newIssue.shipperID);
         var orders = _.cloneDeep(req.body[0].orders);
+        console.log("spControll:357:" + orders);
         var categoryissue = _.cloneDeep(req.body[0].categoryissue);
+        console.log("spControll:359:" + categoryissue);
         db.issue.createNewIssue(newIssue)
             .then(function(issue) {
-                //Insert into orderissue
+                //UPDATE task status of task to 'Processing'
+                //Case: Pending
+                var newStatus = 4;
+                if (_.parseInt(categoryissue) === 1) {
+                    task.getTaskOfShipperByOrder(shipperID, 'pending', [])
+                        .then(function(task){
+                            console.log("spController:367:" + task.dataValues);
+                            if(_.isEmpty(task) == false) {
+                                //update task to processing
+                                task.updateTaskStatus(newStatus, task.dataValues.taskid, shipperID);
+                            }
+                        }, function (err) {
+                            next(err);
+                        });
+                } else {
+                //TODO
+                }
+                //INSERT into orderissue
                 var newOrderIssue = {};
                 newOrderIssue.issueid = issue.issueid;
                 var isPending = true;
