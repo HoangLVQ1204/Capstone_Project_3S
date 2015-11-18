@@ -141,7 +141,7 @@ module.exports = function(sequelize, DataTypes) {
             where: {
               shipperid: shipperid,
               //taskdate: taskdate,
-              statusid: [1, 2]
+              statusid: [1, 2, 4]
             }
           }]
         });
@@ -322,13 +322,15 @@ module.exports = function(sequelize, DataTypes) {
         return order.findAll({
           attributes: ['orderid', 'ispending'],
           where: {'ispending': true},
+          limit: 1,
+          order: '"createddate" DESC',
           include: [{
             model: orderissue,
             attributes: ['issueid'],
             include: [{
               model: issue,
               attributes: ['typeid', 'isresolved'],
-              where: {isresolved: false},
+              //where: {isresolved: false},
               include: [{
                 model: issuetype,
                 attributes: ['categoryid'],

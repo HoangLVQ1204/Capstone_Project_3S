@@ -261,7 +261,7 @@ module.exports = function (sequelize, DataTypes) {
             getTaskOfShipperByOrder: function(shipperid, type, orderids) {
                 if (type == "pending") {
                     return task.findAll({
-                        attributes: ['taskid'],
+                        //attributes: ['taskid'],
                         where:{
                             shipperid: shipperid,
                             statusid: 2
@@ -270,7 +270,7 @@ module.exports = function (sequelize, DataTypes) {
                 } else {
                     //cancel
                     return task.findAll({
-                        attributes: ['taskid'],
+                        //attributes: ['taskid'],
                         where:{
                             shipperid: shipperid,
                             statusid: [1, 2],

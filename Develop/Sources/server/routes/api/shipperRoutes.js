@@ -18,7 +18,7 @@ module.exports = function (app) {
 
     app.get('/api/shipper/getAllShipper', shipperCtrl.getAllShipper);
 
-    app.get('/api/shipper/getTaskBeIssuePending', checkAll,  shipperCtrl.getTaskBeIssuePending);
+    app.get('/api/shipper/getTaskBeIssuePending', checkAll, shipperCtrl.getTaskBeIssuePending);
 
     app.get('/api/shipper/getAllShipperWithTask', shipperCtrl.getAllShipperWithTask);
 
@@ -27,8 +27,6 @@ module.exports = function (app) {
     app.post('/api/issue', checkAll, shipperCtrl.createIssue);
 
     app.put('/api/changeIsPendingOrder', checkAll, shipperCtrl.changeIsPending);
-
-    app.get('/api/getAllTaskCancel', checkAll,  shipperCtrl.getAllTaskCancel);
 
     app.route('/api/shipper/history')
         .get(checkAll, shipperCtrl.getHistory);
