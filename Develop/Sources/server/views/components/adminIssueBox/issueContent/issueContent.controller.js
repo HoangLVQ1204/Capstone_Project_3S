@@ -25,7 +25,7 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
     $scope.updateResolve = function () {
         var promise=[];
         if ($scope.resolveType == 2){
-            promise.push($http.get(config.baseURI + "/api/countActiveTaskOfShipper?shipperid=" + $scope.issue.orderissues[0].order.tasks[0].shipperid).success(function(response){
+            promise.push($http.get(config.baseURI + "/api/countProcessingTaskOfShipper?shipperid=" + $scope.issue.orderissues[0].order.tasks[0].shipperid).success(function(response){
                 $scope.activeTask = response;
             }))
         }
@@ -37,7 +37,8 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
                 //data.sticky="true";
                 $.notific8($("#sms-fail-assign").val(), smsData);
                 //console.log(error)
-                return;}
+                return;
+            }
 
             $scope.issue.resolvetype = $scope.resolveType;
 
