@@ -28,6 +28,10 @@ module.exports = function(sequelize, DataTypes) {
     createddate: {
       type: DataTypes.DATE,
       allowNull: true
+    },
+    shipperID: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {
     freezeTableName: true,

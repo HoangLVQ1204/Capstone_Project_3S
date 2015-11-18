@@ -3,7 +3,7 @@
  */
 app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoading', 'socketShipper', function ($scope, $ionicPopup, dataFactory, $ionicLoading, socketShipper) {
 
-    console.log('get and save message sharing at IssueController');
+    console.log('IssueController');
     getAllTaskOfShipper();
 
 /*
@@ -147,7 +147,7 @@ $scope.listReasons = [
    * By QuyenNV - 1/11/2015
    * ChangePending of order
    * */
-  $scope.changeIsPendingOrder = function (issueId) {
+  $scope.changeIsPendingOrderIssue = function (issueId) {
     //Change ispending of Task
     var data = {'issueId': issueId};
     var urlBase = config.hostServer + "api/changeIsPendingOrder";
@@ -226,7 +226,6 @@ $scope.listReasons = [
           'issue': newIssue,
           'categoryissue': issue.category.categoryID
         });
-        console.log('data', data);
         var urlCreateBase = config.hostServer + 'api/issue';
         dataFactory.postDataServer(urlCreateBase, data)
           .success(function (rs) {
@@ -238,7 +237,6 @@ $scope.listReasons = [
               title: 'Success',
               content: 'Your Issue is sent to Admin'
             }).then(function(res) {
-              //console.log('RS', rs);
               //Pass to function changeIsPendingOrder
               $scope.issueId = rs[0].issueid;
               //Show ionic Loading
