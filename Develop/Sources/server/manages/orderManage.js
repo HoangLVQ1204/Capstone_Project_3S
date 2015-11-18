@@ -1,28 +1,28 @@
 /**
  * Created by Cao Khanh on 21/10/2015.
  */
-var _ = require('lodash');
-var config = require('../config/config');
+ var _ = require('lodash');
+ var config = require('../config/config');
 
-module.exports = function (app) {
+ module.exports = function (app) {
     var db = app.get('models');
 
-    var params = function (req, res, next, order_id) {
+    var params = function (req, res, next, orderid) {
         var OrderStatus = db.orderstatus;
         var goods = db.goods;
         var confirmCode = db.confirmationcode;
-        return db.order.storeGetOneOrder(OrderStatus,goods,confirmCode,order_id)
-            .then(function (order) {
-                if (order) {
-                    req.orderRs = order;
-                    next();
-                } else {
-                    next(new Error('No order with id'));
-                }
+        return db.order.storeGetOneOrder(OrderStatus,goods,confirmCode,orderid)
+        .then(function (order) {
+            if (order) {
+                req.orderRs = order;
+                next();
+            } else {
+                next(new Error('No order with id'));
+            }
 
-            }, function (err) {
-                next(err);
-            });
+        }, function (err) {
+            next(err);
+        });
 
     };
 
@@ -34,76 +34,76 @@ module.exports = function (app) {
         var order = db.order;
         var ordertype = db.ordertype;
         return order.storeGetAllOrders(orderStatus,ordertype, storeId)
-            .then(function (orders) {
-                var listOrders = [];
-                var statusname = '';
-                var createDate = '';
-                var completedate ='';
-                var ledgerid ='';
-                _.each(orders, function(order){
-                    if(order['orderstatus'] == null){
-                        statusname = '';
-                    } else {
-                        statusname = order['orderstatus'].dataValues.statusname;
-                    }
-                    if(order.dataValues.createdate == null){
-                        createDate = '';
-                    }else {
-                        createDate = order.dataValues.createdate;
-                    }
-                    if(order.dataValues.completedate == null){
-                        completedate = '';
-                    }else {
-                        completedate = order.dataValues.completedate;
-                    }
-                    if(order.dataValues.ledgerid == null){
-                        ledgerid = '';
-                    }else {
-                        ledgerid = order.dataValues.ledgerid;
-                    }
-                    listOrders.push({
-                        'orderid': order.dataValues.orderid,
-                        'statusname': statusname,
-                        'deliveryaddress': order.dataValues.deliveryaddress,
-                        'recipientname' : order.dataValues.recipientname,
-                        'recipientphone' : order.dataValues.recipientphone,
-                        'isdraff': order.dataValues.isdraff,                        
-                        'ispending': order.dataValues.ispending,
-                        'cod': order.dataValues.cod,
-                        'fee' : order.dataValues.fee,
-                        'createdate' : createDate,
-                        'completedate' : completedate,
-                        'ordertype': order['ordertype'].dataValues.typename,
-                        'ledgerid': ledgerid
+        .then(function (orders) {
+            var listOrders = [];
+            var statusname = '';
+            var createDate = '';
+            var completedate ='';
+            var ledgerid ='';
+            _.each(orders, function(order){
+                if(order['orderstatus'] == null){
+                    statusname = '';
+                } else {
+                    statusname = order['orderstatus'].dataValues.statusname;
+                }
+                if(order.dataValues.createdate == null){
+                    createDate = '';
+                }else {
+                    createDate = order.dataValues.createdate;
+                }
+                if(order.dataValues.completedate == null){
+                    completedate = '';
+                }else {
+                    completedate = order.dataValues.completedate;
+                }
+                if(order.dataValues.ledgerid == null){
+                    ledgerid = '';
+                }else {
+                    ledgerid = order.dataValues.ledgerid;
+                }
+                listOrders.push({
+                    'orderid': order.dataValues.orderid,
+                    'statusname': statusname,
+                    'deliveryaddress': order.dataValues.deliveryaddress,
+                    'recipientname' : order.dataValues.recipientname,
+                    'recipientphone' : order.dataValues.recipientphone,
+                    'isdraff': order.dataValues.isdraff,                        
+                    'ispending': order.dataValues.ispending,
+                    'cod': order.dataValues.cod,
+                    'fee' : order.dataValues.fee,
+                    'createdate' : createDate,
+                    'completedate' : completedate,
+                    'ordertype': order['ordertype'].dataValues.typename,
+                    'ledgerid': ledgerid
 
-                    })
-                });
-                var totalNewOrder = 0;
-                var totalNewCod =0;
-                var totalNewFee = 0;
-                var todayOrder =0;
-                var todayCod = 0;
-                var todayFee = 0;
-                var group = {};
-                group['Total'] = group['Total'] || [];
-                group['Draff'] = group['Draff'] || [];
-                group['Done'] = group['Done'] || [];
-                group['Inprocess'] = group['Inprocess'] || [];
-                _.each(listOrders, function(item) {
-                    if(item.ledgerid == ''){
+                })
+            });
+            var totalNewOrder = 0;
+            var totalNewCod =0;
+            var totalNewFee = 0;
+            var todayOrder =0;
+            var todayCod = 0;
+            var todayFee = 0;
+            var group = {};
+            group['Total'] = group['Total'] || [];
+            group['Draff'] = group['Draff'] || [];
+            group['Done'] = group['Done'] || [];
+            group['Inprocess'] = group['Inprocess'] || [];
+            _.each(listOrders, function(item) {
+                if(item.ledgerid == ''){
 
-                        if(item['isdraff']) {
+                    if(item['isdraff']) {
                         group['Draff'].push(item);
-                        }else if(_.isEqual(item['statusname'],'Done')|| _.isEqual(item['statusname'],'Canceled') ){
-                            group['Done'].push(item);
-                            totalNewCod = totalNewCod + parseInt(item.cod);
-                            totalNewFee = totalNewFee + parseInt(item.fee);
-                        }else {
-                            group['Inprocess'].push(item);
-                        }                        
-                        totalNewOrder++;
+                    }else if(_.isEqual(item['statusname'],'Done')|| _.isEqual(item['statusname'],'Canceled') ){
+                        group['Done'].push(item);
+                        totalNewCod = totalNewCod + parseInt(item.cod);
+                        totalNewFee = totalNewFee + parseInt(item.fee);
+                    }else {
+                        group['Inprocess'].push(item);
+                    }                        
+                    totalNewOrder++;
 
-                        if(!_.isEqual(item['createdate'],'' && !item['isdraff'])){
+                    if(!_.isEqual(item['createdate'],'' && !item['isdraff'])){
                         var date = new Date(item['createdate']);
                         date.setHours(0,0,0,0);
                         var today = new Date();
@@ -123,94 +123,95 @@ module.exports = function (app) {
                         }
 
                     }
-                    }
+                }
 
-                });
+            });
 
-                group['Total'].push(totalNewCod);
-                group['Total'].push(totalNewFee);
-                group['Total'].push(todayOrder);
-                group['Total'].push(todayCod);
-                group['Total'].push(todayFee);
-                group['Total'].push(totalNewOrder);
+            group['Total'].push(totalNewCod);
+            group['Total'].push(totalNewFee);
+            group['Total'].push(todayOrder);
+            group['Total'].push(todayCod);
+            group['Total'].push(todayFee);
+            group['Total'].push(totalNewOrder);
 
-                res.status(200).json(group);
+            res.status(200).json(group);
             }, function (err) {
                 next(err);
             })
-    };
+};
 
 
-    var getOne = function (req, res, next) {        
-        res.status(200).json(req.orderRs);
-    };
+var getOne = function (req, res, next) {        
+    res.status(200).json(req.orderRs);
+};
+
+var calculateShipFee = function(district, innerCity,ordertypeid){
+    if(innerCity.indexOf(district)> -1){
+        if(ordertypeid == '1'){
+            fee = 10000;
+        }else {
+            fee = 20000;
+        }                
+    }else {
+        if(ordertypeid == '1'){
+            fee = 20000;
+        }else {
+            fee = 30000;
+        }       
+    }
+    return fee;
+}; 
+    /*
+         * By KhanhKC - 14/11/2015
+         * This function is used to caculate over weight fee of order       
+         */
+         var calculateOverWeightFee = function (district, innerCity, listgoods){
+            var totalWeight = 0;
+            var overWeightFee = 0;
+            for(var i = 0; i <listgoods.length;i++){
+                totalWeight = totalWeight + listgoods[i].weight*listgoods[i].amount;
+            }                  
+            if(totalWeight > 4000 ){
+            //console.log("===========totalWeight=======", totalWeight);
+            if(innerCity.indexOf(district)> -1){
+                overWeightFee = (totalWeight - 4000)*2*2;
+                //console.log("=============In=========",district);
+            }else {
+                overWeightFee = (totalWeight - 4000)*2*2.5;
+                //console.log("=============Out=========",district);
+            }
+            
+        }
+        return overWeightFee;
+    }
 
     var post = function (req, res, next) {
         var newOrder = {};
-
+        console.log("==========req.body==============")
         /*
          * By HuyTDH - 09/10/2015
          * This function is used to create ID for order       
          */
-        var str = "000000" + parseInt(Math.random()*1000000);
-        var formatStr = str.substr(str.length - 6);
-        var newOrderID = "OD" + formatStr;
-        newOrder.orderid = newOrderID;
-        ////////
+         var str = "000000" + parseInt(Math.random()*1000000);
+         var formatStr = str.substr(str.length - 6);
+         var newOrderID = "OD" + formatStr;
+         newOrder.orderid = newOrderID;
+        
 
         /*
          * By KhanhKC - 14/11/2015
          * This function is used to caculate Ship fee       
          */
-         var fee = 0;
-         var district = req.body.selectedDistrict;
+         
+         var district = req.body.order.deliverydistrictid;
          var innerCity = config.fileterLocation.in;
-
-         if(innerCity.indexOf(district)> -1){
-            if(req.body.order.ordertypeid == '1'){
-                fee = 10000;
-            }else {
-                fee = 20000;
-            }                
-        }else {
-            if(req.body.order.ordertypeid == '1'){
-                fee = 20000;
-            }else {
-                fee = 30000;
-            }       
-        }
-        ///////
-
-        /*
-         * By KhanhKC - 14/11/2015
-         * This function is used to caculate total weight of order       
-        */
-        var totalWeight = 0;
-        for(var i = 0; i <req.body.goods.length;i++){
-            totalWeight = totalWeight + req.body.goods[i].weight*req.body.goods[i].amount;
-        }
-        ///////
-
-        /*
-         * By KhanhKC - 14/11/2015
-         * This function is used to caculate over weight fee of order       
-        */
-        var overWeightFee = 0;        
-        if(totalWeight > 4000 ){
-            console.log("===========totalWeight=======", totalWeight);
-            if(innerCity.indexOf(district)> -1){
-                overWeightFee = (totalWeight - 4000)*2*2;
-                console.log("=============In=========",district);
-            }else {
-                overWeightFee = (totalWeight - 4000)*2*2.5;
-                console.log("=============Out=========",district);
-            }
-            
-        }
-        ///////
+         var ordertypeid = req.body.order.ordertypeid;
+         var fee = calculateShipFee (district, innerCity,ordertypeid);         
+         var overWeightFee =calculateOverWeightFee (district, innerCity,req.body.goods)
+        
         //console.log("=============fee===============",fee);        
-        console.log("=============overWeightFee=======",overWeightFee);
-        console.log("=============req.body===============",req.body);
+        //console.log("=============overWeightFee=======",overWeightFee);
+        //console.log("=============req.body===============",req.body);
         newOrder.storeid = req.body.order.storeid;
         newOrder.ordertypeid = req.body.order.ordertypeid;
         newOrder.pickupaddress = req.body.order.pickupaddress;
@@ -220,36 +221,39 @@ module.exports = function (app) {
         newOrder.statusid = req.body.order.statusid;
         newOrder.ispending = 'false';
         newOrder.isdraff = req.body.order.isdraff;        
-        newOrder.createdate = new Date(); 
+        newOrder.createdate = new Date();         
         newOrder.fee = fee; 
         newOrder.overweightfee = overWeightFee;
+        newOrder.deliveryprovinceid = req.body.order.deliveryprovinceid;
+        newOrder.deliverydistrictid = req.body.order.deliverydistrictid;
+        newOrder.deliverywardid = req.body.order.deliverywardid;
         newOrder.cod = parseInt(req.body.order.cod)?parseInt(req.body.order.cod):0;
         //console.log("==============11===============");
-               
+
         var code1 = {
-        'codecontent' : parseInt(req.body.order.gatheringCode),
-        'typeid' : 2,
-        'orderid' : newOrder.orderid        
-       };
-       var code2 = {
-        'codecontent' : parseInt(req.body.order.deliverCode),
-        'typeid' : 6,
-        'orderid' : newOrder.orderid
-       };       
-       
-       var code3 = {
-        'codecontent' : parseInt(req.body.order.inStockCode),
-        'typeid' : 3,
-        'orderid' : newOrder.orderid
-       };
-       var code4 = {
-        'codecontent' : parseInt(req.body.order.returnStoreCode),
-        'typeid' : 5,
-        'orderid' : newOrder.orderid
-       };
+            'codecontent' : parseInt(req.body.order.gatheringCode),
+            'typeid' : 2,
+            'orderid' : newOrder.orderid        
+        };
+        var code2 = {
+            'codecontent' : parseInt(req.body.order.deliverCode),
+            'typeid' : 6,
+            'orderid' : newOrder.orderid
+        };       
+
+        var code3 = {
+            'codecontent' : parseInt(req.body.order.inStockCode),
+            'typeid' : 3,
+            'orderid' : newOrder.orderid
+        };
+        var code4 = {
+            'codecontent' : parseInt(req.body.order.returnStoreCode),
+            'typeid' : 5,
+            'orderid' : newOrder.orderid
+        };
        //console.log("==============22==============");
-        db.order.postOneOrder(newOrder)
-            .then(function (order) {
+       db.order.postOneOrder(newOrder)
+       .then(function (order) {
                 //return res.status(200).json(order);
                 //console.log("==============33==============");
                 db.confirmationcode.postOneCode(code1);
@@ -294,7 +298,7 @@ module.exports = function (app) {
                     }                    
                     console.log("===========good=======",good);
                     db.goods.postOneGood(good).then(function(goodsObj){
-                        
+
                     });
                     //console.log("==============55==============");
                 }
@@ -309,118 +313,182 @@ module.exports = function (app) {
             //}, function(err){
             //    next(err);
             //})
-        };
-           
-    
+};
 
-    var put = function (req, res, next) {
-        var order = {};
-        var update = req.body;
 
-        order.orderid = update.orderid;
-        order.storeid = update.storeid;
-        order.ordertypeid = update.ordertypeid;
-        order.pickupaddress = update.pickupaddress;
-        order.deliveryaddress = update.deliveryaddress;
-        order.pickupdate = update.pickupdate;        
-        order.recipientphone = update.recipientphone;
-        order.recipientname = update.recipientname;
 
-        return db.order.putOrder(order)
-            .then(function(save){
-                if(save){
+var updateOrder = function (req, res, next) {
+    var district = req.body.selectedDistrict;
+    var innerCity = config.fileterLocation.in;
+    var order = {}; 
+    var updateOrder = req.body.order;
+    var listupdateGoods = req.body.listgoods;
+    var clStoreid = req.user.stores[0].storeid;        
+    order.ordertypeid = updateOrder.ordertypeid;
+    order.recipientname = updateOrder.recipientname;
+    order.recipientphone = updateOrder.recipientphone;
+    order.deliveryaddress = updateOrder.deliveryaddress;
+    order.deliveryprovinceid = updateOrder.deliveryprovinceid;
+    order.deliverydistrictid = updateOrder.deliverydistrictid;
+    order.deliverywardid = updateOrder.deliverywardid;
+    order.ordertypeid = updateOrder.ordertypeid;
+    order.fee = calculateShipFee (district, innerCity,updateOrder.ordertypeid);
+    order.overweightfee = calculateOverWeightFee (district, innerCity, listupdateGoods);
+    db.order.getOneOrder(updateOrder.orderid)
+    .then(function(orderRs){
+        if(orderRs.storeid == clStoreid){
+            for(var i =0; i <listupdateGoods.length;i++){
+                var updateGoods = listupdateGoods[i];
+                var newGoods = {
+                    goodsname: updateGoods.goodsname,
+                    weight: updateGoods.weight,
+                    lengthsize: updateGoods.lengthsize,
+                    widthsize: updateGoods.widthsize,
+                    heightsize: updateGoods.heightsize,
+                    description: updateGoods.description
+                }
+                db.goods.updateGoods(newGoods,updateGoods.goodsid)                        
+            }
+            db.order.updateOrder(order,updateOrder.orderid)
+            .then(function(rs){                            
+                if(rs){
                     res.status(201).json(order);
                 }else {
                     next( new Error('Cannot save user'));
                 }
             })
-    };
+        }else {
+            next(err);
+        }
+    })
+};
 
-    var deleteOrder = function (req, res, next) {
-        req.orderRs = req.orderRs.toJSON();
-        var deleteGoods = db.goods.deleteGood(req.orderRs.orderid);
-        var deleteCode = db.confirmationcode.deleteConfirmCode(req.orderRs.orderid);
-        Promise.all([deleteCode,deleteGoods]).then(function(){
-            db.order.deleteDraffOrder(req.orderRs.orderid)
-                .then(function() {
-                    res.status(200).json("DELETED!");
-                }, function(err) {
-                    next(new Error("Delete draft fail!"));
-                });
-        },function(){
+var deleteOrder = function (req, res, next) {
+    req.orderRs = req.orderRs.toJSON();
+    var deleteGoods = db.goods.deleteGood(req.orderRs.orderid);
+    var deleteCode = db.confirmationcode.deleteConfirmCode(req.orderRs.orderid);
+    Promise.all([deleteCode,deleteGoods]).then(function(){
+        db.order.deleteDraffOrder(req.orderRs.orderid)
+        .then(function() {
+            res.status(200).json("DELETED!");
+        }, function(err) {
             next(new Error("Delete draft fail!"));
         });
-    };
+    },function(){
+        next(new Error("Delete draft fail!"));
+    });
+};
 
-    var putDraff = function(req, res, next){
-        db.order.submitDraffOrder(req.body.orderid)
-        .then(function(){
-            res.sendStatus(200);
-        }, function(err) {
-            next(err);
-        });
-    };
+var putDraff = function(req, res, next){
+    db.order.submitDraffOrder(req.body.orderid)
+    .then(function(){
+        res.sendStatus(200);
+    }, function(err) {
+        next(err);
+    });
+};
 
-    var cancelOrder = function (req, res, next) {
-        db.order.cancelOrder( req.orderRs.orderid);
+var cancelOrder = function (req, res, next) {
+    db.order.cancelOrder( req.orderRs.orderid);
             //.then(function(){
             //    res.sendStatus(200).json();
             //}, function(err) {
             //    next(err);
             //});
-    };
+};
 
-    var getOrderList = function (req, res, next) {
-        db.order.getAllOrder(db.orderstatus, db.ordertype, db.store)
-        .then(function(list){
-            res.status(200).json(list);
+var getOrderList = function (req, res, next) {
+    db.order.getAllOrder(db.orderstatus, db.ordertype, db.store)
+    .then(function(list){
+        res.status(200).json(list);
+    }, function(err) {
+        next(err);
+    });
+};
+
+var getTodayTotal = function (req, res, next) {
+    var total = new Object();
+    db.order.getTodayTotalDelivery()
+    .then(function(fee){
+        db.order.getTodayTotalCoD()
+        .then(function(cod){
+            total['fee'] = fee;
+            total['cod'] = cod;
+            res.status(200).json(total);
         }, function(err) {
             next(err);
-        });
-    };
+        })
+    }, function(err) {
+        next(err);
+    });
+};
 
-    var getTodayTotal = function (req, res, next) {
-        var total = new Object();
-        db.order.getTodayTotalDelivery()
-        .then(function(fee){
-                db.order.getTodayTotalCoD()
-                    .then(function(cod){
-                        total['fee'] = fee;
-                        total['cod'] = cod;
-                        res.status(200).json(total);
-                    }, function(err) {
-                        next(err);
-                    })
-        }, function(err) {
-            next(err);
-        });
-    };
+deleteGoods =  function(req, res, next){
+    var goodsid = req.query.goodsid;
+    var storeid = req.user.stores[0].storeid;
+    db.goods.checkGoodsBelongStore(goodsid, storeid, db.order).then(function(goods){
+        db.goods.deleteGoodsByID(goodsid).then(function(){
+            return res.status(200).json("Delete goods successfully!");
+        },function(){
+            return res.status(400).json("Delete goods fail!");
+        })
+    },function(er){
+        return res.status(400).json("Delete goods fail!");
+    })
+};
 
-    deleteGoods =  function(req, res, next){
+addGoods = function(req, res, next){
+    var newGoods = req.body;
+        //console.log("=============req.body==============",newGoods);
+        db.goods.postOneGood(newGoods)
+        .then(function(rs){
+            console.log("============rs===============",rs.goodsid);
+            return res.status(200).json(rs.goodsid);
+
+        }, function(){
+            return res.status(400).json("Add goods fail!");
+        })
+    };
+    updateGoods = function(req, res, next){
         var goodsid = req.query.goodsid;
         var storeid = req.user.stores[0].storeid;
+        var updateGoods = req.body;
+        console.log("=============req.body==============",updateGoods);
+        var newGoods = {
+            goodsname: updateGoods.goodsname,
+            weight: updateGoods.weight,
+            lengthsize: updateGoods.lengthsize,
+            widthsize: updateGoods.widthsize,
+            heightsize: updateGoods.heightsize,
+            description: updateGoods.description
+        }
         db.goods.checkGoodsBelongStore(goodsid, storeid, db.order).then(function(goods){
-            db.goods.deleteGoodsByID(goodsid).then(function(){
-                return res.status(200).json("Delete goods successfully!");
-            },function(){
-                return res.status(400).json("Delete goods fail!");
+            db.goods.updateGoods(newGoods,updateGoods.goodsid)       
+            .then(function(){                
+                return res.status(200).json("Update goods successfully!");
+            }, function(){
+                return res.status(400).json("Add goods fail!");
             })
         },function(er){
             return res.status(400).json("Delete goods fail!");
         })
+        
     };
+    
 
     return {
         getAllOrder: getAllOrder,
         getOne: getOne,
         postOne: post,
         params: params,
-        put : put,
+        updateOrder : updateOrder,
         deleteOrder : deleteOrder,
         putDraff : putDraff,
         cancelOrder: cancelOrder,
         getOrderList: getOrderList,
         getTodayTotal: getTodayTotal,
-        deleteGoods: deleteGoods
+        deleteGoods: deleteGoods,
+        addGoods: addGoods,
+        updateGoods : updateGoods
     }
 }

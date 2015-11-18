@@ -220,8 +220,10 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
                 console.log('mouseover', model.order);                
                 console.log('mouseover storeMarkers', $scope.storeMarkers);
                 console.log('mouseover customerMarkers', $scope.customerMarkers);
-                var content = '<div>' + 
-                        '<h5>' + model.shipperID + '</h5>' +
+                console.log('avatar', model);
+                var content = '<div style="width: 140px; height: 100px"><div>' + 
+                        '<img style="display:inline; float: left" src="' + model.avatar + '" alt="avatar shipper" width="50px"></img>' +
+                        '<strong>' + model.shipperID + '</strong></div>' +
                         '<ul>';
 
                 model.order.forEach(function(order) {
@@ -229,7 +231,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
                 });     
 
                 content += '</ul>' +
-                        'Status: <span>' + model.status + '</span>' +
+                        // 'Status: <span>' + model.status + '</span>' +
                         '</div>';
                 $scope.openInfo(gMarker, content);
 

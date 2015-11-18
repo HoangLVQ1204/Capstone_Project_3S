@@ -92,6 +92,15 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
 
+      getUserByRole: function(role) {
+        return user.findAll({
+          attributes: ['username'],
+          where: {
+            userrole: role
+          }
+        });
+      },
+
       addNewUser: function(newUser){
         return user.build(newUser).save();
       },

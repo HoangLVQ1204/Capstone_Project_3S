@@ -9,6 +9,7 @@ var server = require('../server');
 module.exports = function (app) {
 
     var db = app.get('models');
+    // var server = app.get('io');
 
     /*
      * Get all task of Shipper @quyennv
@@ -223,8 +224,13 @@ module.exports = function (app) {
                         createddate: new Date()
                     };
 
+                    var customer = {
+                        order: [orderObj.orderid],
+                        geoText: orderObj.deliveryaddress
+                    };
                     // DATA TO RESPONSE CLIENT
                     var oldStatus = orderObj.statusid;
+                    var pickUpStatusID = 2;
                     var nextStatus = 0;
                     var isRequireCode = false;
                     // :TODO Need to check is canceled
@@ -249,12 +255,14 @@ module.exports = function (app) {
                             if (codeObj) {
                                 orderObj.updateOrderStatus(nextStatus, completeDate)
                                     .then(function (rs) {
-                                    if(orderObj.statusid == 2){
+                                    if(oldStatus == pickUpStatusID){
                                         db.profile.getProfileUser(shipperid).then(function(profile){
                                             msg['profile'] = profile;
                                             msg['order'] = orderObj.orderid;
                                             server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
                                         });
+                                    }else {
+                                        server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
                                     }
                                     db.managestore.getUsersByStoreID(orderObj.storeid).then(function(rs){
                                         var manager = '';
@@ -263,17 +271,19 @@ module.exports = function (app) {
                                         db.notification.addNotification(msg);
                                     });
                                     if(oldStatus == taskBegin.statusid){
-                                        Task.updateTaskStatus(2, taskid, shipperid).then(function (ok) {
-                                            addStoreToShipperRoom(orderObj.storeid, shipperid);
-                                            addOrderIntoSocket(orderObj.orderid, orderObj.storeid, shipperid);
+                                        Task.updateTaskStatus(nextStatus, taskid, shipperid).then(function (ok) {
+                                            //addStoreToShipperRoom(orderObj.storeid, shipperid);
+                                            //addOrderIntoSocket(orderObj.orderid, orderObj.storeid, shipperid);
+                                            server.socket.startTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
                                             return res.status(200).json("Your task was active!");
                                         },function(er){
                                             return res.status(400).json("Sorry! Something went wrong!");
                                         });
                                     }else if(nextStatus == taskDone.statusid){
-                                        Task.updateTaskStatus(3,taskid,shipperid).then(function(ok){
-                                            removeStoreFromShipperRoom(orderObj.storeid, shipperid);
-                                            removeOrderInSocket(orderObj.orderid);
+                                        Task.updateTaskStatus(nextStatus,taskid,shipperid).then(function(ok){
+                                            //removeStoreFromShipperRoom(orderObj.storeid, shipperid);
+                                            //removeOrderInSocket(orderObj.orderid);
+                                            server.socket.finishTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
                                             return res.status(200).json("Your task was done!");
                                         },function(er){
                                             return res.status(400).json("Sorry! Something went wrong!");
@@ -300,20 +310,20 @@ module.exports = function (app) {
                                 msg['username'] = manager;
                                 db.notification.addNotification(msg);
                             });
-                            var taskBegin = statusList[0];
-                            var taskDone = statusList[statusList.length - 1];
                             if(oldStatus == taskBegin.statusid){
-                                Task.updateTaskStatus(2,taskid,shipperid).then(function(ok){
-                                    addStoreToShipperRoom(orderObj.storeid, shipperid);
-                                    addOrderIntoSocket(orderObj.orderid, orderObj.storeid, shipperid);
+                                Task.updateTaskStatus(nextStatus,taskid,shipperid).then(function(ok){
+                                    //addStoreToShipperRoom(orderObj.storeid, shipperid);
+                                    //addOrderIntoSocket(orderObj.orderid, orderObj.storeid, shipperid);
+                                    server.socket.startTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
                                     return res.status(200).json("Your task was active!");
                                 },function(er){
                                     return res.status(400).json("Sorry! Something went wrong!");
                                 });
                             }else if(nextStatus == taskDone.statusid){
-                                Task.updateTaskStatus(3,taskid,shipperid).then(function(ok){
-                                    removeStoreFromShipperRoom(orderObj.storeid, shipperid);
-                                    removeOrderInSocket(orderObj.orderid);
+                                Task.updateTaskStatus(nextStatus,taskid,shipperid).then(function(ok){
+                                    //removeStoreFromShipperRoom(orderObj.storeid, shipperid);
+                                    //removeOrderInSocket(orderObj.orderid);
+                                    server.socket.finishTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
                                     return res.status(200).json("Your task was done!");
                                 },function(er){
                                     return res.status(400).json("Sorry! Something went wrong!");
@@ -350,10 +360,106 @@ module.exports = function (app) {
         newIssue.isresolved = false;
         newIssue.resolvetype = null;
         newIssue.createddate = new Date();
+        newIssue.sender = req.user.username;
         var orders = _.cloneDeep(req.body[0].orders);
         var categoryissue = _.cloneDeep(req.body[0].categoryissue);
         db.issue.createNewIssue(newIssue)
             .then(function(issue) {
+                // Send socket and insert notification
+                // Lay cac storeID to orderID
+                // Lay adminID
+                // Sinh ra cac notification and insert vao bang
+                var receiver = [
+                    { room: req.user.username },
+                    'admin'
+                ];
+
+                var msgToAdmin = {
+                    type: 'Issue',
+                    title: 'Shipper send Issue',
+                    content: 'Shipper had problems',
+                    url: '#/admin/issueBox?issueid=' + issue.dataValues.issueid,
+                    isread: false,            
+                    createddate: new Date()
+                };
+                var msgToStore = {
+                    type: 'Info',
+                    title: 'Shipper send isue',
+                    content: 'Shipper had problems',
+                    url: '#/store/dashboard',
+                    isread: false,
+                    createddate: new Date()
+                };
+
+                db.user.getUserByRole(3)
+                .then(function(admins) {
+                    admins = admins.map(function(e) {
+                        return e.toJSON();
+                    })
+                    console.log('shipperController:390', admins);    
+                    // insert to notification
+                    var promises = admins.map(function(e) {
+                        var data = _.clone(msgToAdmin, true);
+                        data.username = e.username;
+                        console.log('data', data);
+                        return db.notification.addNotification(data);
+                    });
+
+                    return Promise.all(promises);
+                })
+                .then(function(data) {
+                    console.log('shipperController:401', data.length);
+                    return db.order.getStoresOfOrder(orders);  
+                })
+                .then(function(storeIDs) {
+                    storeIDs = storeIDs.map(function(e) {
+                        return e.toJSON();
+                    });
+                    storeIDs = _.uniq(storeIDs, 'storeid');
+                    console.log('shipperController:399', storeIDs);
+
+                    // insert to notification
+                    var promises = storeIDs.map(function(e) {
+                        var data = _.clone(msgToStore, true);
+                        data.username = e.storeid;
+                        console.log('data', data);
+                        return db.notification.addNotification(data);
+
+                    });
+
+                    return Promise.all(promises);
+                    
+                })
+                .then(function(data) {
+                    console.log('shipperController:423', data.length);
+                    console.log('send notification to store and admin');
+                    // send socket
+                    var sender = {
+                        type: 'shipper',
+                        clientID: req.user.username
+                    };
+                    server.socket.forward(
+                        sender,
+                        'admin',
+                        {
+                            notification: msgToAdmin
+                        },
+                        'admin:notification:issue'
+                    );
+                    server.socket.forward(
+                        sender,
+                        {
+                            room: req.user.username
+                        },
+                        {
+                            notification: msgToStore
+                        },
+                        'store:notification:issue'
+                    );
+                })
+
+                
+
                 //Insert into orderissue
                 var newOrderIssue = {};
                 newOrderIssue.issueid = issue.issueid;
@@ -764,49 +870,38 @@ module.exports = function (app) {
     //// END change status of shipper
 
     var testSk = function(req, res, next){
-        //var receiver = {
-        //    type: 'store',
-        //    clientID: 'STR003'
-        //};
-        //var msg = {
-        //    type: "info",
-        //    title: "Test",
-        //    content: "This is test",
-        //    url: "http://localhost:3000/#/store/dashboard",
-        //    isread: false,
-        //    username: 'ST000003',
-        //    createddate: new Date()
-        //};
-        //server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
-        //var rs = server.socket.findSocketIdByShipperId('SP000001');
-        //return res.status(200).json(rs);
-        //var noti = {
-        //    type: "info",
-        //    title: "Test",
-        //    content: "This is test",
-        //    url: "#",
-        //    isread: false,
-        //    username: 'ST000003',
-        //    createddate: new Date()
-        //};
-        //var rs = db.goods.checkGoodsBelongStore(1, 'STR002', db.order); //.then(function(goods){
-        //if(rs) res.status(200).json('OKK');
-        //else res.status(400).json('!OKS');
-            //},function(er){
-            //res.status(400).json({'F':er});
-            //});
-        //{
-        //    res.status(200).json('OK');
-        //}else{
-        //    res.status(400).json('FALSE');
-        //}
-        var storeid = 'STR001';
+        //var storeid = 'STR001';
+        //var storeid2 = 'STR003';
         var shipperid = 'SP000001';
-        var orderid = 'OD025421';
-        addStoreToShipperRoom(storeid,shipperid);
-        addOrderIntoSocket(orderid, storeid, shipperid);
-        var rs = server.socket.orders;
-        res.status(200).json(rs);
+        //var orderid = 'OD025421';
+        //addStoreToShipperRoom(storeid,shipperid);
+        //addStoreToShipperRoom(storeid2,shipperid);
+        //addOrderIntoSocket(orderid, storeid, shipperid);
+        //var roomID = server.socket.findSocketIdByShipperId(shipperid);
+        var receiver = {
+            type: 'room',
+            room: shipperid
+        };
+        var msg = {
+            type: "info",
+            title: "Test Room",
+            content: "You're in room "+ shipperid,
+            url: "http://localhost:3000/#/store/dashboard",
+            isread: false,
+            username: 'ST000003',
+            createddate: new Date()
+        };
+        server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
+        var cs = server.socket.customers;
+        var sp = server.socket.shippers;
+        var st = server.socket.stores;
+        var od = server.socket.orders;
+        return res.status(200).json({
+            "cs": cs,
+            "sp": sp,
+            "st": st,
+            "od": od
+        });
     };
 
     //function create new shipperid
