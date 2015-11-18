@@ -2,9 +2,10 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function issueContentController($scope,$stateParams, $http, authService,config, $rootScope) {
+function issueContentController($scope,$stateParams, $http, authService,config, $rootScope ,socketAdmin) {
     //$rootScope.$state = $state;
     //$rootScope.$stateParams = $stateParams;
+
     $scope.issueid = $stateParams.issueid; //getting fooVal
     var smsData = {verticalEdge: 'right',
         horizontalEdge: 'bottom'};
@@ -61,6 +62,7 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
     //console.log(authService.getCurrentInfoUser());
     $scope.showConfirm = function (event, resolveType){
         //alert(1);
+        socketAdmin.issueMessage($scope.issue, 'Order has Issue');
         if ($scope.issue.isresolved) return;
         $scope.resolveType = resolveType;
         event.preventDefault();
@@ -163,7 +165,7 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
             //issue.order.fee= parseInt(issue.order.fee) * 0.1;//cancel order
         })
         //console.log($scope.issue.orderissues);
-        $http.put(config.baseURI + "/api/updateStateOfStoreCancelIssue", $scope.issue).then(function success(response){
+        $http.put(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue).then(function success(response){
             resolveIssue();
         },function (error) {
             smsData.theme="danger";
@@ -185,5 +187,5 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
 
 }
 
-issueContentController.$inject = ['$scope','$stateParams', '$http', 'authService','config','$rootScope'];
+issueContentController.$inject = ['$scope','$stateParams', '$http', 'authService','config','$rootScope', 'socketAdmin'];
 angular.module('app').controller('issueContentController',issueContentController);
