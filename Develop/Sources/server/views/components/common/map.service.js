@@ -21,6 +21,7 @@ function initShipper(shipperMarker, api) {
     if (!shipperMarker.order)  
         shipperMarker.order = [];
     shipperMarker.icon = icons.shipperIcon;
+    shipperMarker.avatar = "assets/avatar/shipper/SP000002.jpg";
 }
 
 function initStore(storeMarker, api) {    
@@ -179,17 +180,28 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         return !!find;
     }
 
-    api.addShipper = function(shipper) {    
+    api.addShipper = function(inputShipper) {    
+        var shipper = _.clone(inputShipper, true);
         if (this.containShipper(shipper)) return Promise.resolve();
         initShipper(shipper, api);
         shipperMarkers.push(shipper);
+        console.log('addShipper', shipper);
         return Promise.resolve();
+    };
+
+    api.shipperContainOrderID = function(shipper, orderID) {
+        var find = _.find(shipper.order, function(e) {
+            return e == orderID;
+        });
+        return !!find;
     };
 
     api.updateOrderOfShipper = function(shipperID, orderID) {
         for (var i = 0; i < shipperMarkers.length; ++i) {
             if (shipperMarkers[i].shipperID === shipperID) {
-                shipperMarkers[i].order.push(orderID);
+                if (!api.shipperContainOrderID(shipperMarkers[i], orderID)) {
+                    shipperMarkers[i].order.push(orderID);
+                }                
                 return;
             }            
         }
@@ -242,7 +254,8 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         }
     };
 
-    api.addStore = function(store) {        
+    api.addStore = function(inputStore) {        
+        var store = _.clone(inputStore, true);
         if (this.containStore(store)) return Promise.resolve();        
         return initStore(store, api)
         .then(function() {
@@ -253,10 +266,19 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         });
     };
 
+    api.storeContainOrderID = function(store, orderID) {
+        var find = _.find(store.order, function(e) {
+            return e == orderID;
+        });
+        return !!find;
+    };
+
     api.updateOrderOfStore = function(storeID, orderID) {
         for (var i = 0; i < storeMarkers.length; ++i) {
             if (storeMarkers[i].storeID === storeID) {
-                storeMarkers[i].order.push(orderID);
+                if (!api.storeContainOrderID(storeMarkers[i], orderID)) {
+                    storeMarkers[i].order.push(orderID);    
+                }
                 return;
             }            
         }
@@ -319,7 +341,8 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         // return sampleData[mode].customer;
     }        
 
-    api.addCustomer = function(customer) {                
+    api.addCustomer = function(inputCustomer) {                
+        var customer = _.clone(inputCustomer, true);
         return initCustomer(customer, orders, api)
         .then(function() {
             customerMarkers.push(customer);
@@ -354,6 +377,7 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         .then(function() {
             api.updateOrderOfShipper(shipper.shipperID, orderID);
             api.updateOrderOfStore(store.storeID, orderID);
+            console.log('addOrder to map');
         });
     };   
 

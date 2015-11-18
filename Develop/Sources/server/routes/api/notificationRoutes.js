@@ -10,6 +10,9 @@ module.exports = function (app) {
     app.route('/api/notifications/total')
         .get(checkAll, controller.getTotal);
 
+    app.route('/api/notifications/unread')
+        .get(checkAll, controller.getTotalUnread);
+
     app.route('/api/notifications')
         .get(checkAll, controller.get)
         .post(checkAll, controller.post);

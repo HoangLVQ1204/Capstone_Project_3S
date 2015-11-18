@@ -235,10 +235,9 @@ module.exports = function(app) {
     };
 
     var getAllStores = function(){
-        console.log(db);
-        //return db.store.getAllStores().then(function(rs){
-        //    return rs;
-        //})
+        return db.store.getAllStores().then(function(rs){
+            return rs;
+        })
     }
 
        return {

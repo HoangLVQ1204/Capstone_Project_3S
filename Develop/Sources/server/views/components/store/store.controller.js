@@ -62,6 +62,9 @@ function storeController($scope,$state,socketService,socketStore,dataService,aut
         var loopFindShipper = setInterval(function(){
             if($scope.listRightShippers.length != 0){
                 $scope.rightShipper = $scope.listRightShippers[0];
+                // console.log('rightShipper', $scope.rightShipper);
+                // Found right shipper
+                socketStore.selectShipper($scope.rightShipper, {}, 'order_1');
                 $scope.$apply();
                 unloading();
                 $("#listAcceptedShipper").modal("show");
@@ -99,29 +102,20 @@ function storeController($scope,$state,socketService,socketStore,dataService,aut
             });
         caplet();
 
-        // Test notification
-        // var temp = {
-        //     type: 'issue',
-        //     title: 'big issue',
-        //     content: 'This is big issue',
-        //     url: '/notidemo',
-        //     createddate: 'date 1'
-        // };
-        // $rootScope.notify(temp);
     });
 
-    // Test notification
-    //setTimeout(function() {
-    //    var temp = {
-    //        type: 'issue',
-    //        title: 'issue 1',
-    //        content: 'This is very big issue number 1',
-    //        url: '/#/notiListdemo',
-    //        isread: false,
-    //        createddate: new Date()
-    //    };
-    //    $rootScope.notify(temp);
-    //}, 1000);
+
+    setTimeout(function() {
+        var temp = {
+            type: 'issue',
+            title: 'issue 1',
+            content: 'This is very big issue number 1',
+            url: '/#/notiListdemo',
+            isread: false,
+            createddate: new Date()
+        };
+        $rootScope.notify(temp);
+    }, 1000);
 }
 
 storeController.$inject = ['$scope','$state','socketService','socketStore','dataService','authService','config','$rootScope'];

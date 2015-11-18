@@ -304,6 +304,7 @@ function storeOrderController($scope,$rootScope, dataService, config, socketServ
                                     });
                             }
                         }, 3000);
+
                     })
             })
 

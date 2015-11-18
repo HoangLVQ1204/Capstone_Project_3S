@@ -28,7 +28,7 @@ angular.module('app', [
     $stateProvider
 
         .state('home',{
-            url: '/home',
+            url: '',
             template: '<h1>Home Page đang trong quá trình xây dựng !!!!</h1>',
         })
 
@@ -46,6 +46,7 @@ angular.module('app', [
             url: '/error',
             templateUrl: '/components/404/error.html'
         })
+
 
         .state('admin',{
             abstract: true,
@@ -154,6 +155,7 @@ angular.module('app', [
             access: config.role.admin
         })
 
+
         .state('store',{
             abstract: true,
             url: '/store',
@@ -221,17 +223,20 @@ angular.module('app', [
     })
 
 }).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper,socketService, notificationService){
-    //$state.go('home');
-    // Notification component
+
+    notificationService.getTotalUnreadNotificationsServer()
+    .then(function() {
+        $rootScope.numberUnreadNoti = notificationService.getTotalUnreadNotifications();
+    })
+
     $rootScope.onlineShipper = 0;
-    $rootScope.numberNewNoti = notificationService.getNumberNewNotifications();
     $rootScope.readNewNoti = function() {
 
     };
 
     $rootScope.notify = function(notification) {
-        $rootScope.numberNewNoti += 1;
-        notificationService.setNumberNewNotifications($rootScope.numberNewNoti);
+        $rootScope.numberUnreadNoti += 1;
+        notificationService.setTotalUnreadNotifications($rootScope.numberUnreadNoti);
         //notificationService.addNotification(notification);
         var data = {
             life: 3000,
@@ -251,33 +256,25 @@ angular.module('app', [
         });
         //$rootScope.$apply();
     };
-//he he
+
 
     if(authService.isLogged()){
         socketService.authenSocket()
         .then(function() {
             if(authService.isRightRole(config.role.admin)){
                 socketAdmin.registerSocket();
-                $state.go("admin.dashboard");
             }
 
             if(authService.isRightRole(config.role.store)){
                 socketStore.registerSocket();
-                //$state.go("store.dashboard");
-
             }
 
              if(authService.isRightRole(config.role.shipper)){
                  socketShipper.registerSocket();
-                 $state.go("mapdemo");
-
              }
-        })        
-
+        })
     }else{
-
         $state.go("login");
-
     }
 
     $rootScope.$on('$stateChangeStart', function(event, toState, fromState, toParams) {
@@ -316,7 +313,7 @@ angular.module('app', [
     });
 
     $rootScope.$on('$stateChangeSuccess', function(e, toState){
-        // console.log(toState.name.indexOf("store"));
+
         if (toState.name == "login" || toState.name == "home" || toState.name == "error" || toState.name == "register"){
             $rootScope.styleBody = "full-lg";
         }else if(toState.name.indexOf("store") == 0){

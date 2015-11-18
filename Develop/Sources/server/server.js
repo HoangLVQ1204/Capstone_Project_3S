@@ -10,7 +10,7 @@ var cors           = require('cors'); // Allow Cross-Origin Resource Sharing (to
 
 var app = express();
 var server = require('http').createServer(app);
-var socket = require('./socket')(server,app);
+
 
 
 // setup middleware
@@ -23,6 +23,7 @@ app.use(bodyParser.json());
 app.use(methodOverride());
 app.use(cors());
 
+var socket = require('./socket')(server,app);
 
 // setup routes
 require('./routes')(app);

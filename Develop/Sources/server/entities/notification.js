@@ -54,6 +54,15 @@ module.exports = function(sequelize, DataTypes) {
         });        
       },
 
+      getTotalUnreadNotifications: function(username) {
+        return notification.count({
+          where: {
+            username: username,
+            isread: false
+          }
+        });        
+      },
+
       getNotifications: function(username, offset, limit) {
         return notification.findAll({
           attributes: ['notificationid', 'type', 'title', 'content', 'url', 'isread', 'createddate'],
@@ -62,7 +71,7 @@ module.exports = function(sequelize, DataTypes) {
           },
           offset: offset,
           limit: limit,
-          order: 'notificationid DESC'
+          order: 'createddate DESC'
         });
       },
 
