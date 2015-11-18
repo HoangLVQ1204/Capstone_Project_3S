@@ -12960,8 +12960,8 @@ ALTER TABLE "public"."managestore" ADD FOREIGN KEY ("managerid") REFERENCES "pub
 -- ----------------------------
 -- Foreign Key structure for table "public"."notification"
 -- ----------------------------
-ALTER TABLE "public"."notification" ADD FOREIGN KEY ("username") REFERENCES "public"."user" ("username") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
+-- ALTER TABLE "public"."notification" ADD FOREIGN KEY ("username") REFERENCES "public"."user" ("username") ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ALTER TABLE "public"."notification" ADD FOREIGN KEY ("username") REFERENCES "public"."store" ("storeid") ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ----------------------------
 -- Foreign Key structure for table "public"."order"
 -- ----------------------------

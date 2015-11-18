@@ -205,15 +205,18 @@ angular.module('app', [
 }).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper,socketService, notificationService){
     //$state.go('home');
     // Notification component
+    notificationService.getTotalUnreadNotificationsServer()
+    .then(function() {
+        $rootScope.numberUnreadNoti = notificationService.getTotalUnreadNotifications();
+    })
     $rootScope.onlineShipper = 0;
-    $rootScope.numberNewNoti = notificationService.getNumberNewNotifications();
     $rootScope.readNewNoti = function() {
 
     };
 
     $rootScope.notify = function(notification) {
-        $rootScope.numberNewNoti += 1;
-        notificationService.setNumberNewNotifications($rootScope.numberNewNoti);
+        $rootScope.numberUnreadNoti += 1;
+        notificationService.setTotalUnreadNotifications($rootScope.numberUnreadNoti);
         //notificationService.addNotification(notification);
         var data = {
             life: 3000,
@@ -232,6 +235,9 @@ angular.module('app', [
             console.log('click globalNoti');
         });
         //$rootScope.$apply();
+        setTimeout(function () {
+            $rootScope.$apply();
+        }, 2000);
     };
 //he he
 

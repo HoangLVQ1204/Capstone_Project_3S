@@ -147,6 +147,15 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
 
+      getStoresOfOrder: function(orderIDs) {
+        return order.findAll({
+          attributes: ['storeid'],
+          where: {
+            orderid: orderIDs
+          }
+        });
+      },
+
       getOrderDetailById: function (taskID, shipperID, orderStatusModel, goodsModel, taskModel) {
         return order.findOne({
           attributes:{ exclude: ['ledgerid', 'createdate', 'isdraff', 'pickupaddresscoordination', 'deliveryaddresscoordination']},

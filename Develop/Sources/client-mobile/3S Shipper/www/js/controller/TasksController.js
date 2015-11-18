@@ -86,6 +86,7 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
       var urlBase = config.hostServer + "api/changeIsPendingOrder";
         dataFactory.putDataServer(urlBase, data)
         .success(function (rs) {
+          console.log('success changeIsPending');
           $ionicLoading.hide();
           $scope.showAlert(rs);
         })
