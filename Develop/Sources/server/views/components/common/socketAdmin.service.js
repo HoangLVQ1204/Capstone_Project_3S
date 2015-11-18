@@ -77,6 +77,7 @@ function socketAdmin(socketService,authService,mapService, $rootScope){
 
     socketService.on('admin:notification:issue', function(data) {
         console.log('admin:notification:issue', data);
+        $rootScope.$emit("admin:issue:newIssue", data.msg);
     });
     
     api.getCurrentUser = function() {
