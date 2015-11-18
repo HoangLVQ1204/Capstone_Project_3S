@@ -286,7 +286,7 @@ function storeOrderController($scope, dataService, config, socketService, socket
                     .then(function(res){
                         if(res.status != 500){
                             var temp = {
-                                type: '',
+                                type: 'info',
                                 title: 'EXPRESS ORDER: SUCCESS',
                                 content: 'ORDER ID: '+orderID+ 'created successfully',
                                 url: '/#/notiListdemo',
@@ -314,11 +314,13 @@ function storeOrderController($scope, dataService, config, socketService, socket
 
     function postCompleteOrder (){
         var urlBase = config.baseURI + '/orders';
+        $scope.order.deliveryprovinceid = $scope.selectedProvince.provinceid;
+        $scope.order.deliverydistrictid = $scope.selectedDistrict.districtid;
+        $scope.order.deliverywardid = $scope.selectedWard.wardid;
         $scope.order.isdraff = false;
         var data = {
             order: $scope.order,
-            goods : $scope.goods,
-            selectedDistrict: $scope.selectedDistrict.districtid
+            goods : $scope.goods,            
         };
         //console.log("==============data=========",data);
 

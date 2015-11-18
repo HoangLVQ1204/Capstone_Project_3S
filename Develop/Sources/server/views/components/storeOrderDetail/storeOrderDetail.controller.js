@@ -15,7 +15,7 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
   getOrderFromServer();
   getStoreName();
   getProvince ();
-  $scope.changeToEn = function(){
+  $scope.changeToEn = function(){   
     $scope.disabled = false;    
   };
   $scope.changeToDis = function(){
@@ -28,31 +28,25 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
     $("#addGoodModal").submit(function(e){
       e.preventDefault();
       if($(this).parsley( 'validate' )){
-        addGood();
-        $scope.order.overweightfee = calculateOverWeightFee($scope.data.selectedDistrict.districtid,$scope.listgoods);
-        $scope.$apply();                                    
-        $('#md-add-good').modal('hide');
+        addGood();        
       }
     });
 
     $("#editGoodModal").submit(function(e){
       e.preventDefault();
       if($(this).parsley( 'validate' )){
-        editGood();
-        $scope.order.overweightfee = calculateOverWeightFee($scope.data.selectedDistrict.districtid,$scope.listgoods);
-        $scope.$apply(); 
-        $('#md-edit-good').modal('hide');
+        editGood();       
       }
     });
 
     $("#edit-order-form").submit(function(e){
       e.preventDefault();
-      if($(this).parsley( 'validate' )){ 
-
-      }
       if($scope.listgoods.length==0){
         alertEmptyGood();        
+      }else if($(this).parsley( 'validate' )){
+        updateOrderToServer();
       }
+      
 
     });
 
@@ -70,6 +64,7 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
             .success(function (rs) {               
                $scope.order = rs;
                $scope.listgoods = rs.goods;
+               console.log("===========ordr===========",$scope.order);
                var confirmationcode = rs.confirmationcodes;
                for(var i = 0; i < confirmationcode.length;i++){
                   if(confirmationcode[i].typeid ==2){
@@ -85,7 +80,7 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
                } else {
                   $scope.deliveryType = "Express";
                }
-               console.log("==============rs===========",rs);
+               //console.log("==============rs===========",rs);
                calculateOverWeightFee($scope.order.deliverydistrictid,$scope.listgoods);
             })
             .error(function (error) {
@@ -94,8 +89,26 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
     };
 
     function updateOrderToServer(){
-        var urlBase = config.baseURI + '/order/' + $scope.orderid;
+        var urlBase = config.baseURI + '/orders/' + $scope.orderid;
+        $scope.order.deliveryprovinceid  = $scope.data.selectedProvince.provinceid;
+        $scope.order.deliverydistrictid = $scope.data.selectedDistrict.districtid;
+        $scope.order.deliverywardid = $scope.data.selectedWard.wardid;
+        var data = {
+          order: $scope.order,
+          listgoods: $scope.listgoods,
+        }        
         dataService.putDataServer(urlBase,data)
+         .then(function(sc){
+            $scope.disabled = true;             
+          },function(er){
+            var err = {
+              type:'issue',
+              title: 'Error',
+              content: "Can't update this order! Try again!"
+            };
+            $rootScope.notify(err);
+          });  
+        
     }
 
     $scope.newGood = {};
@@ -104,8 +117,7 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
         $scope.newGood = (JSON.parse(JSON.stringify(good)));
         index = index;
         console.log("=======goods[]=khi click edit====",good);
-        console.log("========newGood=======", $scope.newGood);
-        console.log("=============index=============", index);
+       
     };
 
     $scope.refreshGood = function(){
@@ -113,21 +125,53 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
     }
 
     function editGood () {
+      var urlBase = config.baseURI + '/api/store/goods?goodsid=' + $scope.newGood.goodsid;                
+      var data = $scope.newGood;                              
+      dataService.putDataServer(urlBase,data)
+      .then(function(){
         for(var i = 0; i < $scope.listgoods.length;i++){
-            if( $scope.listgoods[i].goodsid === $scope.newGood.goodsid){
-                console.log("=============trugn nhau===========");
-                $scope.listgoods[i] = $scope.newGood;
-            }
-        }
-        $scope.$apply();
+          if( $scope.listgoods[i].goodsid == $scope.newGood.goodsid){ 
+            $scope.listgoods[i] = $scope.newGood; 
+          }
+        }                                       
+        $scope.order.overweightfee = calculateOverWeightFee($scope.data.selectedDistrict.districtid,$scope.listgoods);
+        $('#md-edit-good').modal('hide');
+      },function(er){
+        var err = {
+          type:'issue',
+          title: 'Error',
+          content: "Can't update this good! Try again!"
+        };
+        $rootScope.notify(err);
+      });  
+
     }
 
     function addGood(){
-        $scope.good.goodID = bigestGoodId;
-        $scope.listgoods.push($scope.good);
-        $scope.$apply();
-        bigestGoodId++;
-        console.log("=======goods[]=sau khi add====",$scope.goods);
+        var urlBase = config.baseURI + '/api/store/addGoods';
+        $scope.good.orderid = $scope.orderid;
+        var data = $scope.good;
+        //console.log("==========data==============",data);
+        dataService.postDataServer(urlBase,data)
+          .then(function(sc){
+            //console.log("==============sc===========",sc.data);
+            $scope.good.goodsid = sc.data;
+            $scope.good.goodID = bigestGoodId;
+            $scope.listgoods.push($scope.good);           
+            bigestGoodId++;
+            $scope.order.overweightfee = calculateOverWeightFee($scope.data.selectedDistrict.districtid,$scope.listgoods);
+            $('#md-add-good').modal('hide');
+          },function(er){
+            var err = {
+              type:'issue',
+              title: 'Error',
+              content: "Can't add this good! Try again!"
+            };
+            $rootScope.notify(err);
+          });        
+       
+       
+        //console.log("=======goods[]=sau khi add====",$scope.goods);
     }
 
     $scope.deleteGoods = function(){
@@ -149,7 +193,7 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
         for(var i = 0; i <listGoods.length;i++){
             totalWeight = totalWeight + listGoods[i].weight*listGoods[i].amount;
         }
-        console.log("=============totalWeight=======",totalWeight);
+        //console.log("=============totalWeight=======",totalWeight);
         return totalWeight;
 
     }
@@ -160,16 +204,16 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
         var listInDistrictId =["001","002","003","005","006","007","008","009"];
         if(totalWeight > 4000 ){
             if(listInDistrictId.indexOf(districtId)>-1){
-                console.log("=============IN=======",districtId);
+                //console.log("=============IN=======",districtId);
                 overWeightFee = (totalWeight - 4000)*2*2;
             }else {
-                console.log("=============out=======",districtId);
+                //console.log("=============out=======",districtId);
                 overWeightFee = (totalWeight - 4000)*2*2.5;
             }
             
         }
-         console.log("=============totalWeight=======",totalWeight);
-         console.log("=============overWeightFee=======",overWeightFee);
+         //console.log("=============totalWeight=======",totalWeight);
+         //console.log("=============overWeightFee=======",overWeightFee);
          return overWeightFee;        
     }
 
@@ -177,13 +221,13 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
         var fee = 0;
         var listInDistrictId =["001","002","003","005","006","007","008","009"];
         if(listInDistrictId.indexOf(districtId)> -1){
-            if(deliveryType == '1'){
+            if(deliveryType == 1){
                 fee = 10000;
             }else {
                 fee = 20000;
             }                
         }else {
-            if(deliveryType == '1'){
+            if(deliveryType == 1){
                 fee = 20000;
             }else {
                 fee = 30000;
@@ -195,9 +239,10 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
         return fee;
     }
 
-    $scope.updateFee = function(){
-        $scope.order.fee = calculateFee($scope.data.selectedDistrict,$scope.order.ordertypeid);
-    }
+    // $scope.updateFee = function(){
+    //     $scope.order.fee = calculateFee($scope.data.selectedDistrict.districtid,$scope.order.ordertypeid);
+    //     $scope.order.overweightfee = calculateOverWeightFee($scope.data.selectedDistrict.districtid,$scope.listgoods);      
+    // }
 
     function getStoreName(){
         var urlBase = config.baseURI + '/api/getAllStoreName';
@@ -225,7 +270,7 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
                 $scope.data.selectedProvince = $scope.listProvince[0];
 
                 $scope.listDistrict = $scope.data.selectedProvince.districts;
-                for(var i=0; i<  $scope.listDistrict.length;i++){
+                for(var i=0; i< $scope.listDistrict.length;i++){
                     if($scope.listDistrict[i].districtid == $scope.order.deliverydistrictid){
                         $scope.data.selectedDistrict = $scope.listDistrict[i];
                     }

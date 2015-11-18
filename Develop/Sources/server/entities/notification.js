@@ -40,16 +40,25 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     classMethods: {
       associate: function(db) {
-        notification.belongsTo(db.user, {
-          foreignKey: 'username',
-          constraints: false
-        });
+        // notification.belongsTo(db.user, {
+        //   foreignKey: 'username',
+        //   constraints: false
+        // });
       },
 
       getTotalNumberOfNotifications: function(username) {
         return notification.count({
           where: {
             username: username
+          }
+        });        
+      },
+
+      getTotalUnreadNotifications: function(username) {
+        return notification.count({
+          where: {
+            username: username,
+            isread: false
           }
         });        
       },
@@ -62,7 +71,7 @@ module.exports = function(sequelize, DataTypes) {
           },
           offset: offset,
           limit: limit,
-          order: 'notificationid DESC'
+          order: 'createddate DESC'
         });
       },
 

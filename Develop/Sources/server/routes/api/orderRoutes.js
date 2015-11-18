@@ -6,7 +6,7 @@ module.exports = function (app) {
     var authManage = require('./../../manages/authManage')(app);
     var checkAll = [authManage.checkToken(),authManage.checkRole()];
 
-    app.param('order_id', controller.params);
+    app.param('orderid', controller.params);
 
     app.route('/api/getAllOrder')
         .get(controller.getOrderList);
@@ -19,9 +19,9 @@ module.exports = function (app) {
         .post(controller.postOne);
 
 
-    app.route('/orders/:order_id')
+    app.route('/orders/:orderid')
         .get(controller.getOne)
-        .put(controller.put)
+        .put(checkAll,controller.updateOrder)
         .delete(controller.deleteOrder);
 
     app.route('/orders/putdraff')
@@ -32,5 +32,12 @@ module.exports = function (app) {
 
     app.route('/api/store/deleteGoods')
         .delete(checkAll, controller.deleteGoods);
+
+    app.route('/api/store/addGoods')
+        .post(controller.addGoods);
+
+    app.route('/api/store/goods')
+        .put(checkAll, controller.updateGoods);
+
 
 };

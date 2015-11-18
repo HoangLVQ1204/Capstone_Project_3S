@@ -9,6 +9,7 @@ var server = require('../server');
 module.exports = function (app) {
 
     var db = app.get('models');
+    // var server = app.get('io');
 
     /*
      * Get all task of Shipper @quyennv
@@ -359,10 +360,106 @@ module.exports = function (app) {
         newIssue.isresolved = false;
         newIssue.resolvetype = null;
         newIssue.createddate = new Date();
+        newIssue.sender = req.user.username;
         var orders = _.cloneDeep(req.body[0].orders);
         var categoryissue = _.cloneDeep(req.body[0].categoryissue);
         db.issue.createNewIssue(newIssue)
             .then(function(issue) {
+                // Send socket and insert notification
+                // Lay cac storeID to orderID
+                // Lay adminID
+                // Sinh ra cac notification and insert vao bang
+                var receiver = [
+                    { room: req.user.username },
+                    'admin'
+                ];
+
+                var msgToAdmin = {
+                    type: 'Issue',
+                    title: 'Shipper send Issue',
+                    content: 'Shipper had problems',
+                    url: '#/admin/issueBox?issueid=' + issue.dataValues.issueid,
+                    isread: false,            
+                    createddate: new Date()
+                };
+                var msgToStore = {
+                    type: 'Info',
+                    title: 'Shipper send isue',
+                    content: 'Shipper had problems',
+                    url: '#/store/dashboard',
+                    isread: false,
+                    createddate: new Date()
+                };
+
+                db.user.getUserByRole(3)
+                .then(function(admins) {
+                    admins = admins.map(function(e) {
+                        return e.toJSON();
+                    })
+                    console.log('shipperController:390', admins);    
+                    // insert to notification
+                    var promises = admins.map(function(e) {
+                        var data = _.clone(msgToAdmin, true);
+                        data.username = e.username;
+                        console.log('data', data);
+                        return db.notification.addNotification(data);
+                    });
+
+                    return Promise.all(promises);
+                })
+                .then(function(data) {
+                    console.log('shipperController:401', data.length);
+                    return db.order.getStoresOfOrder(orders);  
+                })
+                .then(function(storeIDs) {
+                    storeIDs = storeIDs.map(function(e) {
+                        return e.toJSON();
+                    });
+                    storeIDs = _.uniq(storeIDs, 'storeid');
+                    console.log('shipperController:399', storeIDs);
+
+                    // insert to notification
+                    var promises = storeIDs.map(function(e) {
+                        var data = _.clone(msgToStore, true);
+                        data.username = e.storeid;
+                        console.log('data', data);
+                        return db.notification.addNotification(data);
+
+                    });
+
+                    return Promise.all(promises);
+                    
+                })
+                .then(function(data) {
+                    console.log('shipperController:423', data.length);
+                    console.log('send notification to store and admin');
+                    // send socket
+                    var sender = {
+                        type: 'shipper',
+                        clientID: req.user.username
+                    };
+                    server.socket.forward(
+                        sender,
+                        'admin',
+                        {
+                            notification: msgToAdmin
+                        },
+                        'admin:notification:issue'
+                    );
+                    server.socket.forward(
+                        sender,
+                        {
+                            room: req.user.username
+                        },
+                        {
+                            notification: msgToStore
+                        },
+                        'store:notification:issue'
+                    );
+                })
+
+                
+
                 //Insert into orderissue
                 var newOrderIssue = {};
                 newOrderIssue.issueid = issue.issueid;

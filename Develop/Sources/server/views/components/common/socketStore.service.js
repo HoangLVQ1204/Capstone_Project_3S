@@ -29,6 +29,14 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
         mapService.updateShipper(shipper);
     });
 
+    socketService.on('store:add:order', function(data) {                
+        var msg = data.msg;
+        mapService.addOrder(msg.orderID, msg.store, msg.shipper, msg.customer)
+        .then(function() {
+            console.log('store add order', data);
+        })
+    });
+
     socketService.on('store:delete:shipper', function(data) {
         console.log('delete shipper', data);
         var shipper = data.msg.shipper;
@@ -50,6 +58,10 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
         $rootScope.notify(data.msg);
         data['message'] = data.msg.content;
 
+    });
+
+    socketService.on('store:notification:issue', function(data) {
+        console.log('store:notification:issue', data);
     });
 
     api.getCurrentUser = function() {
@@ -95,7 +107,7 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
         'store:find:shipper');
     };
 
-    api.selectShipper = function(shipper, customer) {
+    api.selectShipper = function(shipper, customer, orderID) {
         /*
             customer = {
                 geoText
@@ -108,8 +120,9 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
         // TODO: update DB to get orderID
 
         // Fake data
-        var orderID = 'order_1';
+        // var orderID = 'order_1';
         customer.geoText = "Cát Linh,Ba Đình,Hà Nội,Việt Nam";
+        // Check exception for latitude and longitude not exist
         customer.order = [orderID];
 
         mapService.addShipper(shipper)
