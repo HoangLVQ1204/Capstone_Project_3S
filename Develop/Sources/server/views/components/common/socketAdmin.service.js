@@ -109,6 +109,31 @@ function socketAdmin(socketService,authService,mapService, $rootScope){
         'client:register');
     };
 
+    api.issueMessage = function (issue, msg) {
+        //var shipperList = [];
+        var orderList = [];
+
+        issue.orderissues.map(function (orderissue) {
+            var order = new Object();
+            order['storeid'] = orderissue.order.storeid;
+            order['orderid'] = orderissue.order.orderid;
+            orderList.push(order);
+        })
+        var user = api.getCurrentUser();
+        socketService.sendPacket(
+            {
+                type: 'admin',
+                clientID: user.adminID
+            },
+            'server',
+            {
+                orderList: orderList,
+                shipperid: issue.orderissues[0].order.tasks[0].shipperid,
+                msg: msg
+            },
+            'admin:messageIssue');
+    };
+
 
 
     return api;

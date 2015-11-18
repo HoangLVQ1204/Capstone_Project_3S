@@ -170,6 +170,11 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
             });
     };
 
+    socketService.on('shipper:issue:message', function(data) {
+       console.log('shipper:issue:message', data)
+        //alert(1);
+    });
+
     return api;
 }
 
