@@ -36,4 +36,8 @@ module.exports = function (app) {
     app.route('/api/store/addGoods')
         .post(controller.addGoods);
 
+    app.route('/api/store/goods')
+        .put(checkAll, controller.updateGoods);
+
+
 };

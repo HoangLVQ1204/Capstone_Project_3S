@@ -3,9 +3,9 @@
 		<h2><strong>Order</strong> Detail</h2>
 	</header>
 
-	<div class="column panel-body">
-		<div></div>		
-		<div class="column">
+	<div class="panel-body">
+			
+		<div >
 			<div>	       
         <div class="row bg-lightseagreen">
           <div>
@@ -13,30 +13,35 @@
           <label class="control-label col-md-6 color-white align-lg-right"><h4>Order status: <strong>{{order.orderstatus.statusname}}</strong></h4></label>
           <label class="control-label col-md-6 color-white align-lg-left"><h4>Delivery type: <strong>{{deliveryType}}</strong></h4></label>
         </div>
-         
-          <div class="form-group col-md-3">
-           <label class="color-white align-lg-right ">Code for cusotmer: {{codeForCustomer}}</label>
+          <section>
+            <div class="form-group col-md-3">
+           <label class=" fullWidth color-inverse  align-lg-center "><h5><strong>Code for customer</strong></h5></label>
+           <label class=" fullWidth color-inverse  align-lg-center "><h5><strong>{{codeForCustomer}}</strong></h5></label>
           </div>
 
-         <div class="form-group col-md-2">
-           <label class="control-label color-white  align-lg-center">Code for shipper: {{codeForShipper}}</label>
+         <div class="form-group col-md-2">           
+           <label class=" fullWidth color-inverse  align-lg-center "><h5><strong>Code for shipper</strong></h5></label>
+           <label class=" fullWidth color-inverse  align-lg-center "><h5><strong>{{codeForShipper}}</strong></h5></label>
            
          </div>
        
-        <div class="form-group col-md-2">
-         <label class="control-label color-white align-lg-center">Cash on delivery: {{order.cod|number}} VND</label>
+        <div class="form-group col-md-2">         
+         <label class=" fullWidth color-inverse  align-lg-center "><h5><strong>Cash on delivery</strong></h5></label>
+         <label class=" fullWidth color-inverse  align-lg-center "><h5><strong>{{order.cod|number}} VND</strong></h5></label>
          
        </div>
 
        <div class="form-group col-md-2">
-         <label class="control-label color-white  align-lg-center">Ship fee: {{order.fee|number}} VND</label>
-         
+         <label class=" fullWidth color-inverse  align-lg-center "><h5><strong>Ship fee</strong></h5></label>
+         <label class=" fullWidth color-inverse  align-lg-center "><h5><strong>{{order.fee|number}} VND</strong></h5></label>
        </div>  
     
       <div class="form-group col-md-3">
-       <label class="control-label color-white  align-lg-left">Over weight fee: {{order.overweightfee|number}} VND</label>
-      
+      <label class=" fullWidth color-inverse  align-lg-center "><h5><strong>Over weight fee</strong></h5></label>
+      <label class=" fullWidth color-inverse  align-lg-center "><h5><strong>{{order.overweightfee|number}} VND</strong></h5></label>
      </div>
+          </section>
+          
    <!-- </div> -->
  </div>
 </div>
@@ -78,7 +83,7 @@
   ng-options="x.name for x in listDistrict track by x.districtid"
   ng-model="data.selectedDistrict" ng-change="updateWard()"> </select>
 </div>
-<h5>{{selectedDistrictxxx.name}}</h5>
+{{selectedDistrictxxx.name}}
 <div class="col-md-4">
   <label class="control-label">Ward</label>
   <select parsley-required="true" class="form-control"
@@ -86,7 +91,7 @@
   ng-model="data.selectedWard" ng-change="updateDeliveryAdd()">
 </select>
 </div>
-<h5>{{selectedWard.name}}</h5>
+{{selectedWard.name}}
 
 </div>
 <div class="form-group" ng-if="!disabled">
@@ -128,29 +133,14 @@
   parsley-trigger="keyup" rows="1"
   placeholder="Enter customer address" disabled></textarea>
 </div>
-<div ng-if="!disabled" class="form-group row">
-  <div class="col-md-6"><label class="fullWidth color"><strong>Delivery type</strong></label> </div>
-  <div class="col-md-6"><label class="fullWidth color"><strong>Cash on delivery</strong></label></div>   
-
-  <div class="col-md-3">
-    <div data-color="red">
-      <input  ng-model="deliveryType" ng-change="updateFee()" type="radio" name="ordertype" value="Express" />
-      <label>Express</label>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div  data-color="red">
-      <input ng-model="deliveryType" ng-change="updateFee()" type="radio" name="ordertype" value="Normal" />
-      <label>Normal</label>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <input ng-model="order.cod" type="text" class="form-control"
+<div ng-if="!disabled" class="form-group">
+  <label class="control-label">Cash on delivery</label>
+   <input ng-model="order.cod" type="text" class="form-control"
     parsley-type="number"
     parsley-min="0" parsley-max="10000000"
     placeholder="Unit: Vietnam dong">
-  </div>
 </div>
+
 </div>
 </div>
 
@@ -202,7 +192,7 @@
 </table>
 <hr>
 <div class="form-group">
-  <button ng-if="disabled" type="button" ng-click="changeToEn()" class="btn btn-theme"> Edit Order</button>
+  <button ng-disabled="order.statusid!=1" ng-if="disabled" type="button" ng-click="changeToEn()" class="btn btn-theme"> Edit Order</button>
   <button ng-if="!disabled" type="submit" class="btn btn-theme"> Update Order</button>
 </div>
 </form>
