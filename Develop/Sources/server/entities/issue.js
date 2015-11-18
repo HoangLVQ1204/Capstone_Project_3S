@@ -89,7 +89,7 @@ module.exports = function(sequelize, DataTypes) {
             model: orderissue, attributes: ['orderid'],
             include: {
               model: order,
-              attributes: ['pickupaddress','deliveryaddress'],
+              attributes: ['pickupaddress','deliveryaddress', 'statusid','orderid','fee','storeid'],
               include:[{
                 model: task,
                 include: {
