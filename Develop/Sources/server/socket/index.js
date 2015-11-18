@@ -79,7 +79,7 @@ module.exports = function(server,app){
             order: [],
             socketID,
             latitude,
-            longitude            
+            longitude
         }
     */
     io.stores = {};
@@ -482,7 +482,15 @@ module.exports = function(server,app){
     };
 
     io.leaveRoom = function(socket, roomID) {
-        socket.leave(roomID);
+        socket.leave(roomID, function() {
+            console.log(socket.id, 'leave room', roomID);
+            console.log('Room ' + roomID+ ":::::: ");// + io.sockets.clients(roomID));
+            var clients_in_the_room = io.sockets.adapter.rooms[roomID];
+            for (var clientId in clients_in_the_room ) {
+                console.log('client: %s', clientId); //Seeing is believing
+                //var client_socket = io.sockets.connected[clientId];//Do whatever you want with this
+            } 
+        });
     };
 
     io.findSocketIdByShipperId = function(shipperid){

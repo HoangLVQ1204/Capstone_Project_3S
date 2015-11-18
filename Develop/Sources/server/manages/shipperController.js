@@ -9,6 +9,7 @@ var server = require('../server');
 module.exports = function (app) {
 
     var db = app.get('models');
+    // var server = app.get('io');
 
     /*
      * Get all task of Shipper @quyennv
@@ -354,6 +355,48 @@ module.exports = function (app) {
         var categoryissue = _.cloneDeep(req.body[0].categoryissue);
         db.issue.createNewIssue(newIssue)
             .then(function(issue) {
+                // Send socket and insert notification
+                // Lay cac storeID to orderID
+                // Lay adminID
+                // Sinh ra cac notification and insert vao bang
+                var receiver = [
+                    { room: req.user.username },
+                    'admin'
+                ];
+
+                var msgToAdmin = {
+                    type: 'Issue',
+                    title: 'Shipper send Issue',
+                    content: 'Shipper had problems',
+                    url: '#/admin/issueBox?issueid=' + issue.dataValues.issueid,
+                    isread: false,            
+                    createddate: new Date()
+                };
+                var msgToStore = {
+                    type: 'Info',
+                    title: 'Shipper send isue',
+                    content: 'Shipper had problems',
+                    url: '#/store/dashboard',
+                    isread: false,
+                    createddate: new Date()
+                };
+
+                db.user.getUserByRole(3)
+                .then(function(usernames) {
+                    console.log(usernames);    
+                    // insert to notification
+
+                    return db.order.getStoresOfOrder(orders)
+                })
+                .then(function(storeIDs) {
+                    console.log(storeIDs);
+                    // insert to notification
+
+                    // send socket
+                });
+
+                
+
                 //Insert into orderissue
                 var newOrderIssue = {};
                 newOrderIssue.issueid = issue.issueid;
