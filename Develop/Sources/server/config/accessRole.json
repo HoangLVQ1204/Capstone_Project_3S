@@ -17,6 +17,10 @@
       "role": [1]
     },
     {
+      "url": "/api/issue",
+      "role": [1]
+    },
+    {
       "url": "/store/dashboard",
       "role": [1,2]
     },
@@ -98,7 +102,19 @@
     },
 
     {
+      "url": "/orders/:orderid",
+       "role": [2]
+    },
+    
+    {
       "url": "/api/store/deleteGoods",
       "role": [2]
+    },
+
+    {
+      "url": "/api/store/goods",
+      "role": [2]
     }
+      
+    
 ]

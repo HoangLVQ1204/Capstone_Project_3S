@@ -33,7 +33,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
     var listOrderInactive = [];
     if (undefined !== rs['Pickup'] && rs['Pickup'].length) {
       rs['Pickup'].forEach(function(item) {
-        //statusid = 2, Active status of task
+        //statusid = 2, Active status of Task
         if (item.isPending == false && item.statusid == 2) {
           $scope.listOrderActive.push({
             'val': item.orderid,
@@ -117,8 +117,7 @@ $scope.listReasons = [
   ];
   $scope.cancelReasons = [
     {typeID: '4', categoryID: '2', typeName: 'Goods is broken' },
-    {typeID: '5', categoryID: '2', typeName: 'Cannot contact with customer' },
-    {typeID: '7', categoryID: '2', typeName: 'Other' }
+    {typeID: '5', categoryID: '2', typeName: 'Cannot contact with customer' }
   ];
 
   //Item lable display
@@ -232,7 +231,7 @@ $scope.listReasons = [
             //socket
             //TODO Send (listOrders)
             //rs[0].issueid;
-            socketShipper.sendInfoOfIssue(rs[0].issueid);
+            //socketShipper.sendInfoOfIssue(rs[0].issueid);
             $ionicPopup.alert({
               title: 'Success',
               content: 'Your Issue is sent to Admin'

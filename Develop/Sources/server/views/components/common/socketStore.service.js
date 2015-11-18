@@ -59,6 +59,10 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
 
     });
 
+    socketService.on('store:notification:issue', function(data) {
+        console.log('store:notification:issue', data);
+    });
+
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();
         var dataStore = {

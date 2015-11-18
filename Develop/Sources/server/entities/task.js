@@ -258,6 +258,28 @@ module.exports = function (sequelize, DataTypes) {
                     })
             },
 
+            getTaskOfShipperByOrder: function(shipperid, type, orderids) {
+                if (type == "pending") {
+                    return task.findAll({
+                        //attributes: ['taskid'],
+                        where:{
+                            shipperid: shipperid,
+                            statusid: 2
+                        }
+                    })
+                } else {
+                    //cancel
+                    return task.findAll({
+                        //attributes: ['taskid'],
+                        where:{
+                            shipperid: shipperid,
+                            statusid: [1, 2],
+                            orderid: orderids
+                        }
+                    })
+                }
+            },
+
             countActiveTaskOfShipper: function (shipperid) {
                 return task.count(
                     {
@@ -279,7 +301,7 @@ module.exports = function (sequelize, DataTypes) {
             },
             
             deleteTask: function (currtask) {
-                return task.destroy({ force: true },
+                return task.destroy(
                     {where: {'taskid': currtask.taskid}});
             }
         }

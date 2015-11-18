@@ -313,6 +313,9 @@ function storeOrderController($scope,$rootScope, dataService, config, socketServ
 
     $scope.createNormalOrder = function(){
         var urlBase = config.baseURI + '/orders';
+        $scope.order.deliveryprovinceid = $scope.selectedProvince.provinceid;
+        $scope.order.deliverydistrictid = $scope.selectedDistrict.districtid;
+        $scope.order.deliverywardid = $scope.selectedWard.wardid;
         $scope.order.isdraff = false;
 
         var data = {
@@ -331,8 +334,7 @@ function storeOrderController($scope,$rootScope, dataService, config, socketServ
 
         var data = {
             order: $scope.order,
-            goods : $scope.goods,
-            selectedDistrict: $scope.selectedDistrict.districtid
+            goods : $scope.goods,            
         };
 
         dataService.postDataServer(urlBase,data)
