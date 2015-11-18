@@ -437,7 +437,7 @@ module.exports = function(sequelize, DataTypes) {
 
       updateOrderStatus: function (newOrder) {//change status of order
         return order.update(
-            {'statusid': newOrder.statusid },
+            {'statusid': newOrder.statusid, 'ispending': newOrder.ispending},
             {
               where: {
                 'orderid': newOrder.orderid

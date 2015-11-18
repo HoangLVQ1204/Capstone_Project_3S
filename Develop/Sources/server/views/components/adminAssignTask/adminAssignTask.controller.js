@@ -86,17 +86,22 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
             //data.sticky="true";
             $.notific8($("#sms-success").val(), data);
             $scope.tasksList.map(function (shipper) {
-                shipper.tasks.map(function (task) {
-                    if (task.statusid == 4 && task.shipperid != task.prevshipperid && task.prevshipperid!=null) {
+                var i= 0, n=shipper.tasks.length;
+                while(i<n) {
+                    var task = shipper.tasks[i];
+                    if (task.statusid == 4 && task.shipperid != task.prevshipperid && task.prevshipperid != null) {
                         var indexTask = shipper.tasks.indexOf(task);
                         shipper.tasks.splice(indexTask, 1);
+                        n--;
                     }
-                    if (task.statusid == 1){
+                    if (task.statusid == 1) {
                         task['taskstatus'] = new Object();
                         task['taskstatus']['statusname'] = 'NotActive';
+                        i++;
                     }
+                }
                 })
-            })
+
                 //$http.put(config.baseURI + "/api/updateTaskNoShipper", $scope.taskNoShipper);
 
         }, function (error) {
@@ -151,7 +156,7 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
             $scope.taskNoShipper.push(task.taskid);
             $scope.orderList.unshift(task);
 
-            console.log($scope.orderList);
+            //console.log($scope.orderList);
 
         }
     }
