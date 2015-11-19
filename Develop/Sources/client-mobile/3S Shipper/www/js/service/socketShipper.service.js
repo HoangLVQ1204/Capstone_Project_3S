@@ -139,6 +139,15 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
       });
   });
 
+  socketService.on('shipper:accept:order', function(data) {
+    console.log('accept order', data);
+    
+  });
+
+  socketService.on('shipper:reject:order', function(data) {
+    console.log('reject order', data);
+  });
+
   api.getCurrentUser = function() {
     var currentUser = authService.getCurrentInfoUser();
 

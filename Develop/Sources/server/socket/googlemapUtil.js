@@ -104,17 +104,21 @@ api.getClosestShippers = function(store, shippers, filter) {
 */
 api.getLatLng = function(geoText) {
     var d = Q.defer();
-    geocoder.geocode({
+    gmAPI.geocode({
         address: geoText
-    }, function(results, status) {
-        if (status === maps.GeocoderStatus.OK) {                    
-            d.resolve({
-                latitude: results[0].geometry.location.lat(),
-                longitude: results[0].geometry.location.lng()
-            });
-        } else {
-            d.reject('Geocode was not successful for the following reason: ' + status);            
-        }
+    }, function(err, result) {
+        if (err) {
+			d.reject(err);			
+		} else {
+			if (response.status === 'OK') {
+				d.resolve({
+	                latitude: result[0].geometry.location.lat(),
+	                longitude: result[0].geometry.location.lng()
+	            });
+			} else {			
+				d.reject(response.status + ': ' + response.error_message);
+			}
+		}
     });
 
     return d.promise;
