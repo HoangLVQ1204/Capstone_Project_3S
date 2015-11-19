@@ -259,7 +259,6 @@ angular.module('app', [
         var data = {
             life: 5000,
             horizontal: 'bottom',
-            vertical: 'right',
             horizontalEdge: 'bottom',
             verticalEdge: 'right',
             theme: (notification.type === 'issue' ? 'danger' : 'success')
@@ -282,12 +281,12 @@ angular.module('app', [
     if(authService.isLogged()){
         socketService.authenSocket()
         .then(function() {
-            if(authService.isRightRole(config.role.admin)){
-                socketAdmin.registerSocket();
-                //$state.go("admin.dashboard");
-            }
-
+                if(authService.isRightRole(config.role.admin)){
+                    socketAdmin.registerSocket();
+                    //$state.go("admin.dashboard");
                 }
+
+
 
                 if(authService.isRightRole(config.role.store)){
                     socketStore.registerSocket();
