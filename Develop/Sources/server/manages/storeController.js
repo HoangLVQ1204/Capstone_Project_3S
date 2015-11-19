@@ -234,6 +234,30 @@ module.exports = function(app) {
 
     };
 
+    //function create new shipperid
+    var createStoreID = function(req, res, next){
+        var isExisted = false;
+        do
+        {
+            var str = "000000" + parseInt(Math.random()*1000000);
+            var formatStr = str.substr(str.length - 6);
+            var newShipperID = "SP" + formatStr;
+            //console.log(newShipperID);
+            db.user.findUserByUsername(newShipperID)
+                .then(function(shipper){
+                    console.log(newShipperID, shipper);
+                    if(!shipper){
+                        //console.log('AAA');
+                        isExisted = true;
+                        res.status(200).json(newShipperID);
+                    }
+                },function(err){
+                    //console.log(newShipperID, shipper);
+                    res.status(400).json("Can not get new shipperid");
+                });
+        } while (isExisted);
+    };
+
        return {
             get: get,
             getOne: getOne,
