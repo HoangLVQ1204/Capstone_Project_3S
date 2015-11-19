@@ -219,7 +219,7 @@ angular.module('app', [
         notificationService.setTotalUnreadNotifications($rootScope.numberUnreadNoti);
         //notificationService.addNotification(notification);
         var data = {
-            life: 3000,
+            life: 5000,
             horizontal: 'bottom',
             vertical: 'right',
             horizontalEdge: 'bottom',
@@ -246,7 +246,7 @@ angular.module('app', [
         .then(function() {
             if(authService.isRightRole(config.role.admin)){
                 socketAdmin.registerSocket();
-                $state.go("admin.dashboard");
+                //$state.go("admin.dashboard");
             }
 
             if(authService.isRightRole(config.role.store)){

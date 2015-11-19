@@ -1,7 +1,7 @@
 /**
  * Created by Kaka Hoang Huy on 9/30/2015.
  */
-app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoading', 'socketShipper', function ($scope, $ionicPopup, dataFactory, $ionicLoading, socketShipper) {
+app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoading', '$timeout', function ($scope, $ionicPopup, dataFactory, $ionicLoading, $timeout) {
 
     console.log('IssueController');
     getAllTaskOfShipper();
@@ -33,7 +33,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
     var listOrderInactive = [];
     if (undefined !== rs['Pickup'] && rs['Pickup'].length) {
       rs['Pickup'].forEach(function(item) {
-        //statusid = 2, Active status of task
+        //statusid = 2, Active status of Task
         if (item.isPending == false && item.statusid == 2) {
           $scope.listOrderActive.push({
             'val': item.orderid,
@@ -117,8 +117,7 @@ $scope.listReasons = [
   ];
   $scope.cancelReasons = [
     {typeID: '4', categoryID: '2', typeName: 'Goods is broken' },
-    {typeID: '5', categoryID: '2', typeName: 'Cannot contact with customer' },
-    {typeID: '7', categoryID: '2', typeName: 'Other' }
+    {typeID: '5', categoryID: '2', typeName: 'Cannot contact with customer' }
   ];
 
   //Item lable display
@@ -154,12 +153,16 @@ $scope.listReasons = [
     dataFactory.putDataServer(urlBase, data)
       .success(function (rs) {
         $ionicLoading.hide();
-        $scope.showAlert(rs);
+
+        $timeout(function() {
+          $scope.showAlert(rs);
+        }, 250)
+
       })
       .error(function (error) {
         console.log('Unable to load customer data: ' + error);
       });
-  }
+  };
 
   /*
    * By QuyenNV - 24/10/2015
@@ -232,7 +235,7 @@ $scope.listReasons = [
             //socket
             //TODO Send (listOrders)
             //rs[0].issueid;
-            socketShipper.sendInfoOfIssue(rs[0].issueid);
+            //socketShipper.sendInfoOfIssue(rs[0].issueid);
             $ionicPopup.alert({
               title: 'Success',
               content: 'Your Issue is sent to Admin'
@@ -244,7 +247,9 @@ $scope.listReasons = [
               $scope.show = function(){
                 $ionicLoading.show({
                   templateUrl: 'loading.html',
-                  scope: $scope
+                  scope: $scope,
+                  noBackdrop: false,
+                  delay: 250
                 });
               };
               //1 is Pending

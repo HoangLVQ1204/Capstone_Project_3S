@@ -1,12 +1,12 @@
 /**
  * Created by Nguyen Van Quyen on 10/6/2015.
  */
-app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPopup', function($scope, dataFactory, $ionicLoading, $ionicPopup) {
+app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPopup', '$timeout', function($scope, dataFactory, $ionicLoading, $ionicPopup, $timeout) {
 
   console.log('Reload Data TaskController');
   var haveIssue = false;
   getAllTaskBeIssued();
-  getAllTaskCancel();
+  getListOfTask();
 
   //Select tab for find bestway screen
   $scope.tabSelected = function(tab) {
@@ -21,8 +21,8 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
     $ionicLoading.show({
       scope: $scope,
       templateUrl: 'loading.html',
-      noBackdrop: false
-      //delay: 200
+      noBackdrop: false,
+      delay: 250
     });
   };
   //END Show IonicLoading
@@ -38,6 +38,10 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
       if (des.id === 1) {
         $scope.showLoading();
       } else {
+        //TODO
+        haveIssue = false;
+        console.log("111");
+        getListOfTask();
         $ionicLoading.hide();
       }
     });
@@ -57,8 +61,9 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
         if (rs !== "null" || typeof rs !== "undefined") {
           for ( var property in rs ) {
             $scope.issueId = property;
+            $scope.isResolved = rs[property][0].isresolved;
           }
-          if (typeof $scope.issueId !== "undefined") {
+          if (typeof $scope.issueId !== "undefined" || $scope.isResolved == true) {
             haveIssue = true;
             //show ionicLoading
             $scope.showLoading();
@@ -85,7 +90,9 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
         .success(function (rs) {
           console.log('success changeIsPending');
           $ionicLoading.hide();
-          $scope.showAlert(rs);
+          $timeout(function(){
+            $scope.showAlert(rs);
+          }, 250);
         })
         .error(function (error) {
           console.log('Unable to load customer data: ' + error);
@@ -98,25 +105,25 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
    * this issue not accept(isResolved=false).
    * So status of task also 'Inactive' and 'Active'
    * */
-  function getAllTaskCancel() {
-    //Show ionicLoading without IssuePending
-    console.log("TaskBeIssued:102: " + haveIssue);
-    if (!haveIssue) {
-      $ionicLoading.show({
-        noBackdrop: false,
-        template: '<ion-spinner icon="bubbles" class="spinner-balanced"/>'
-      });
-    }
-    var urlBaseCancel = config.hostServer + "api/getAllTaskCancel";
-    dataFactory.getDataServer(urlBaseCancel)
-      .success(function (rs) {
-        $scope.listTaskIssueCancel = rs;
-        getListOfTask();
-      })
-      .error(function (error) {
-        console.log('Unable to load customer data: ' + error);
-      });
-  }
+  //function getAllTaskCancel() {
+  //  //Show ionicLoading without IssuePending
+  //  console.log("TaskBeIssued:102: " + haveIssue);
+  //  if (!haveIssue) {
+  //    $ionicLoading.show({
+  //      noBackdrop: false,
+  //      template: '<ion-spinner icon="bubbles" class="spinner-balanced"/>'
+  //    });
+  //  }
+  //  var urlBaseCancel = config.hostServer + "api/getAllTaskCancel";
+  //  dataFactory.getDataServer(urlBaseCancel)
+  //    .success(function (rs) {
+  //      $scope.listTaskIssueCancel = rs;
+  //      getListOfTask();
+  //    })
+  //    .error(function (error) {
+  //      console.log('Unable to load customer data: ' + error);
+  //    });
+  //}
 
   /*
    * By QuyenNV - 23/10/2015
@@ -124,6 +131,13 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
    * StatusTasks are 'Inactive' and 'Active'
    * */
   function getListOfTask() {
+    console.log("2222haveIssue", haveIssue);
+    if (!haveIssue) {
+      $ionicLoading.show({
+        noBackdrop: false,
+        template: '<ion-spinner icon="bubbles" class="spinner-balanced"/>'
+      });
+    }
     var urlBase = config.hostServer + "api/tasks";
     dataFactory.getDataServer(urlBase)
       .success(function (rs) {
@@ -185,13 +199,9 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
    * */
    function isIssued(list) {
        list.forEach(function(item) {
-         if (undefined !== $scope.listTaskIssueCancel) {
-           var indexVal = $scope.listTaskIssueCancel.indexOf(item.taskid);
-           if (indexVal >= 0) {
+         //processing
+         if (item.statusid == 4) {
              item['iscancel'] = true;
-           } else {
-             item['iscancel'] = false;
-           }
          } else {
            item['iscancel'] = false;
          }
