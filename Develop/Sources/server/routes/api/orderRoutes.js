@@ -22,7 +22,7 @@ module.exports = function (app) {
     app.route('/orders/:orderid')
         .get(controller.getOne)
         .put(checkAll,controller.updateOrder)
-        .delete(controller.deleteOrder);
+        .delete(checkAll,controller.deleteOrder);
 
     app.route('/orders/putdraff')
         .post(controller.putDraff);
