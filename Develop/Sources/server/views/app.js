@@ -121,6 +121,12 @@ angular.module('app', [
             access: config.role.admin
         })
 
+        .state('admin.addStore',{
+            url: '/addStore',
+            template: '<admin-add-store></admin-add-store>',
+            access: config.role.admin
+        })
+
         .state('admin.issueBox',{
             url: '/issueBox',
             template: '<admin-issue-box></admin-issue-box>',
