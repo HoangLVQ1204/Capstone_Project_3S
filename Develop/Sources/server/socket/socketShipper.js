@@ -47,7 +47,11 @@ module.exports = function(socket, io) {
     });
     
     socket.on('shipper:choose:express', function(data) {
-    	io.forward(data.sender, data.receiver, data.msg, 'store:find:shipper');
+        if (io.pendingShippers[data.msg.shipper.shipperID]) {            
+    	    io.forward(data.sender, data.receiver, data.msg, 'store:find:shipper');
+        } else {
+            console.log('dont exist in pendingShippers');
+        }
     });
 
     socket.on('shipper:update:location', function(data) {
@@ -62,5 +66,11 @@ module.exports = function(socket, io) {
     socket.on('shipper:update:status', function(data) {
         var shipper = io.getOneShipper(data.msg.shipperID);
         io.updateStatusShipper(shipper);
+    });
+
+    socket.on('shipper:reject:order', function(data) {
+        var shipper = data.msg.shipper;
+        console.log('shipper reject order', shipper);
+        io.removePendingShipper(shipper.shipperID);
     });
 }

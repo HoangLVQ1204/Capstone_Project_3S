@@ -60,9 +60,10 @@ api.getClosestShippers = function(store, shippers, filter) {
 	// filter shippers by status
 
 	var validShippers = shippers.filter(function(shipper) {
-		console.log('check validShippers', shipper);
 		return (shipper.isConnected === filter.isConnected && shipper.numTasks < filter.maxTasks);
 	});
+
+	console.log('validShippers', validShippers);
 
 	return api.getDistanceFromOneToMany(store, validShippers)
 	.then(function(results) {
