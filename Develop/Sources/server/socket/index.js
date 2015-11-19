@@ -37,6 +37,10 @@
     BUG: Disable cache in browser
 */
 
+/*
+    Change status 
+*/
+
 var _ = require('lodash');
 
 module.exports = function(server,app){

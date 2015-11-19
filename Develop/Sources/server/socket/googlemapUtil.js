@@ -60,6 +60,7 @@ api.getClosestShippers = function(store, shippers, filter) {
 	// filter shippers by status
 
 	var validShippers = shippers.filter(function(shipper) {
+		console.log('check validShippers', shipper);
 		return (shipper.isConnected === filter.isConnected && shipper.numTasks < filter.maxTasks);
 	});
 
@@ -92,6 +93,31 @@ api.getClosestShippers = function(store, shippers, filter) {
 	.catch(function(err) {
 		console.log('getClosestShippers error', err);
 	});
+};
+
+/*
+	Input: geoText (String)
+	Output: Promise({
+		latitude: double
+		longitude: double
+	})
+*/
+api.getLatLng = function(geoText) {
+    var d = Q.defer();
+    geocoder.geocode({
+        address: geoText
+    }, function(results, status) {
+        if (status === maps.GeocoderStatus.OK) {                    
+            d.resolve({
+                latitude: results[0].geometry.location.lat(),
+                longitude: results[0].geometry.location.lng()
+            });
+        } else {
+            d.reject('Geocode was not successful for the following reason: ' + status);            
+        }
+    });
+
+    return d.promise;
 };
 
 module.exports = api;           
