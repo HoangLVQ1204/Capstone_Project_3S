@@ -234,6 +234,17 @@ module.exports = function(app) {
 
     };
 
+    var storeGetStoreDetail = function(req,res,next){
+        var storeid = req.user.stores[0].storeid
+        db.store.getStoreDetail(storeid, db.managestore, db.user, db.profile)
+            .then(function (store) {
+                res.status(200).json(store);
+            }, function () {
+                next(new Error("Can not find store name!"))
+            });
+
+    };
+
        return {
             get: get,
             getOne: getOne,
@@ -250,7 +261,8 @@ module.exports = function(app) {
             updateLedgerForOrder: updateLedgerForOrder,
             getAllStoreName: getStoreName,
             getStoreDetail: getStoreDetail,
-            getAllInactiveStore: getAllInactiveStore
+            getAllInactiveStore: getAllInactiveStore,
+            storeGetStoreDetail: storeGetStoreDetail
     }
 }
 
