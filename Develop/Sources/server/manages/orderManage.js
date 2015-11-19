@@ -94,7 +94,7 @@
 
                     if(item['isdraff']) {
                         group['Draff'].push(item);
-                    }else if(_.isEqual(item['statusname'],'Done')|| _.isEqual(item['statusname'],'Canceled') ){
+                    }else if(_.isEqual(item['statusname'],'Done')|| _.isEqual(item['statusname'],'Cancel') ){
                         group['Done'].push(item);
                         totalNewCod = totalNewCod + parseInt(item.cod);
                         totalNewFee = totalNewFee + parseInt(item.fee);
@@ -187,7 +187,6 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
 
     var post = function (req, res, next) {
         var newOrder = {};
-        console.log("==========req.body==============")
         /*
          * By HuyTDH - 09/10/2015
          * This function is used to create ID for order       
