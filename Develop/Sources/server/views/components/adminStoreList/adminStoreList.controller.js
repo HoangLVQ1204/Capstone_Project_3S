@@ -38,6 +38,7 @@ function adminStoreListController($scope,$state, $http, authService, config) {
     //get List to display
     $http.get(config.baseURI + "/api/store/getAllLedger").success(function(response){
         $scope.storeList = response;
+        $scope.storeList.sort(dateSort);
     }).then(function () {
         $http.get(config.baseURI + "/api/store/getTotalCoD").success(function(response){
             $scope.currentCoD= response;
@@ -49,7 +50,9 @@ function adminStoreListController($scope,$state, $http, authService, config) {
             //==//console.log(response);
             var i=0;
             $scope.storeList.map(function (store) {
+                if ($scope.currentCoD.length > 0)
                 store.currentCoD =  $scope.currentCoD[i].totalCoD;
+                if ($scope.currentFee.length > 0)
                 store.currentFee =  $scope.currentFee[i].totalFee;
                 if (store.generalledgers.length > 0)
                 store.generalledgers[0].balance =  parseInt(store.generalledgers[0].balance);
@@ -277,7 +280,15 @@ function adminStoreListController($scope,$state, $http, authService, config) {
     //$('#daterange').find().on('click.daterangepicker', function(ev, picker) {
     //    alert(1);
     //});
-
+    var dateSort =  function(x, y){
+        if (x.registereddate > y.registereddate) {
+            return -1;
+        }
+        if (x.registereddate < y.registereddate) {
+            return 1;
+        }
+        return 0;
+    };
 
 
 

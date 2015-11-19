@@ -729,7 +729,19 @@ module.exports = function (app) {
 
     var getAllShipperWithTask = function (req, res, next) {
         var shipperList;
-        return db.user.getAllShipperWithTask(db.task, db.profile, db.order, db.orderstatus, db.tasktype, db.taskstatus)
+        return db.user.getAllShipperWithTask(db.task, db.profile, db.order, db.orderstatus, db.tasktype, db.taskstatus, false)
+            .then(function(shipper) {
+                //console.log("--------------Data Task Shipper -------------------");
+                //console.log(shipper);
+                res.status(200).json(shipper);
+            }, function(err) {
+                next(err);
+            })
+    };
+
+    var getAllShipperWithTaskForProcessing = function (req, res, next) {
+        var shipperList;
+        return db.user.getAllShipperWithTask(db.task, db.profile, db.order, db.orderstatus, db.tasktype, db.taskstatus, true)
             .then(function(shipper) {
                 //console.log("--------------Data Task Shipper -------------------");
                 //console.log(shipper);
@@ -994,6 +1006,7 @@ module.exports = function (app) {
         getTaskBeIssuePending: getTaskBeIssuePending,
         testSk: testSk,
         createShipperID: createShipperID,
+        getAllShipperWithTaskForProcessing: getAllShipperWithTaskForProcessing
 
 
     }

@@ -86,6 +86,12 @@ angular.module('app', [
             access: config.role.admin
         })
 
+        .state('admin.assignTaskProcessing',{
+            url: '/assignTaskProcessing?shipperid',
+            template: '<admin-assign-task-processing></admin-assign-task-processing>',
+            access: config.role.admin
+        })
+
         .state('admin.transactionHistory',{
             url: '/transactionHistory',
             template: '<admin-transaction-history></admin-transaction-history>',

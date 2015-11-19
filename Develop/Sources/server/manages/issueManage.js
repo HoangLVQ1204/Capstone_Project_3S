@@ -48,11 +48,23 @@ module.exports = function (app) {
             })
     };
 
+    var getUserGetIssue = function (req, res, next) {
+        var log = req.body;
+        console.log(log);
+        return db.issue.getUserGetIssue()
+            .then(function (list) {
+                res.status(200).json(list);
+            }, function (err) {
+                next(err);
+            })
+    };
+
 
     return {
         getAllIssue: getAllIssue,
         getIssueDetail: getIssueDetail,
         updateResolveIssue: updateResolveIssue,
-        postBannedLog: postBannedLog
+        postBannedLog: postBannedLog,
+        getUserGetIssue: getUserGetIssue
     }
 }

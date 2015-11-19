@@ -35,10 +35,14 @@ module.exports = function(app) {
     //
     var postNewStore = function(req, res, next) {
         var newStore = req.body;
-        return gmapUtil.getLatLng(newStore.address).then(function (map) {
-            newStore['latitude'] = map.latitude;
-            newStore['longitude'] = map.longitude;
+        console.log(newStore.address);
+        //return
+         gmapUtil.getLatLng(newStore.address).then(function (map) {
+            newStore['latitude'] = map.latitude+"";
+            newStore['longitude'] = map.longitude+"";
+            console.log('MAP', newStore)
         }, function(err) {
+             //console.log('AAAAA', err);
             next(err);
         }).then(function () {
             db.store.postOneStore(newStore)
@@ -300,7 +304,7 @@ module.exports = function(app) {
 
     var postNewManageStore = function(req, res, next) {
         var newManageStore = req.body;
-
+        console.log(newManageStore);
         // newUser.Token = newUser.storeid;
         return db.managestore.addNewManageStore(newManageStore)
             .then(function(newManageStore) {

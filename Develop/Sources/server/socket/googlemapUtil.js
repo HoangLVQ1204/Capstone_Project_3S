@@ -8,7 +8,7 @@ var GoogleMapsAPI = require('googlemaps');
 
 var config = {
 	// key: 'AIzaSyALajTCGOGkS_TZBAXyUkjtWdSk5t4TIyY',	// Server key
-	key: 'AIzaSyBeZoB6x9vE6s3okxnACQ2H_cprqfiI6aE',
+	key: 'AIzaSyCGFowrKhTz9GskvfzAGR6_rGFbsaCorOw',
 	secure: true
 };
 
@@ -105,16 +105,16 @@ api.getClosestShippers = function(store, shippers, filter) {
 api.getLatLng = function(geoText) {
     var d = Q.defer();
     gmAPI.geocode({
-        address: geoText,
-        language: 'en'
+        address: geoText
     }, function(err, response) {
         if (err) {
 			d.reject(err);			
 		} else {
 			if (response.status === 'OK') {
+				//console.log('getlatlng', response.results[0].geometry);
 				d.resolve({
-	                latitude: response.results[0].geometry.location.lat(),
-	                longitude: response.results[0].geometry.location.lng()
+	                latitude: response.results[0].geometry.location.lat,
+	                longitude: response.results[0].geometry.location.lng
 	            });
 			} else {			
 				d.reject(response.status + ': ' + response.error_message);

@@ -32,13 +32,16 @@ function adminAddStoreController($scope,$state, $http, $filter, config) {
         $scope.newStoreOwner.account.userrole = 2;
         $scope.newStoreOwner.account.userstatus = 2;
         $scope.newStoreOwner.profile.dob = new Date($scope.newStoreOwner.profile.dob);
+        $scope.newStore.registereddate = new Date();
         var promises= [];
         var managestore = new Object();
         managestore['storeid'] = $scope.newStore.storeid;
         managestore['managerid'] = $scope.newStoreOwner.account.username;
         promises.push($http.post(config.baseURI + "/api/user/addNewUser", $scope.newStoreOwner));
         promises.push($http.post(config.baseURI + "/api/store", $scope.newStore));
-        promises.push($http.post(config.baseURI + "/api/store/addManageStore", managestore));
+        Promise.all(promises).then(function () {
+            promises.push($http.post(config.baseURI + "/api/store/addManageStore", managestore));
+        })
        //console.log(valid);
         Promise.all(promises).then(function () {
             smsData.theme="theme-inverse";
