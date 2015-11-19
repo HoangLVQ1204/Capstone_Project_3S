@@ -1,13 +1,13 @@
 /**
  * Created by Nguyen Van Quyen on 10/6/2015.
  */
-app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPopup', function($scope, dataFactory, $ionicLoading, $ionicPopup) {
+app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPopup', '$timeout', function($scope, dataFactory, $ionicLoading, $ionicPopup, $timeout) {
 
   console.log('Reload Data TaskController');
   var haveIssue = false;
   getAllTaskBeIssued();
   getListOfTask();
-  
+
   //Select tab for find bestway screen
   $scope.tabSelected = function(tab) {
     $scope.tabParam = tab;
@@ -21,8 +21,8 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
     $ionicLoading.show({
       scope: $scope,
       templateUrl: 'loading.html',
-      noBackdrop: false
-      //delay: 200
+      noBackdrop: false,
+      delay: 250
     });
   };
   //END Show IonicLoading
@@ -88,7 +88,10 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
         .success(function (rs) {
           console.log('success changeIsPending');
           $ionicLoading.hide();
-          $scope.showAlert(rs);
+          $timeout(function(){
+            $scope.showAlert(rs);
+          }, 250);
+          //$scope.showAlert(rs);
         })
         .error(function (error) {
           console.log('Unable to load customer data: ' + error);
