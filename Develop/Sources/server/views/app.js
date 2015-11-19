@@ -252,7 +252,7 @@ angular.module('app', [
         libraries: 'geometry,visualization,drawing,places'
     })
 
-}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper,socketService, notificationService){
+}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper,socketService, notificationService, dataService){
 
     notificationService.getTotalUnreadNotificationsServer()
     .then(function() {
@@ -288,6 +288,130 @@ angular.module('app', [
             $rootScope.$apply();
         }, 2000);
     };
+
+    // combo functions for express order
+    $rootScope.createExpressOrder = function(order, goods){
+        var urlBaseOrder = config.baseURI + '/orders';
+        var urlBaseTask = config.baseURI + '/api/createTask';
+
+        order.isdraff = false;
+        var dataOrder = {
+            order: order,
+            goods: goods
+        }
+
+        dataService.postDataServer(urlBaseOrder,dataOrder)
+            .then(function(res){
+                var orderID = res.data.orderid;
+
+                console.log("---DATA ORDER ID---");
+                console.log(orderID);
+                console.log("---DATA ORDER ID---");
+
+                var dataTask = {
+                    orderid: orderID,
+                    shipperid: $rootScope.rightShipper.shipperID,
+                    adminid: null,
+                    statusid: 2,
+                    typeid: 3
+                }
+                dataService.postDataServer(urlBaseTask,dataTask)
+                    .then(function(res){
+                        if(res.status != 500){
+                            var temp = {
+                                type: 'info',
+                                title: 'EXPRESS ORDER: SUCCESS',
+                                content: 'ORDER ID: '+orderID+ 'created successfully',
+                                url: '/#/notiListdemo',
+                                isread: false,
+                                createddate: new Date()
+                            };
+                            $rootScope.notify(temp);
+                        }else{
+                            var temp = {
+                                type: 'issue',
+                                title: 'EXPRESS ORDER: FAIL',
+                                content: 'ORDER ID: '+orderID+ 'created fail! Please try again late!',
+                                url: '/#/notiListdemo',
+                                isread: false,
+                                createddate: new Date()
+                            };
+                            $rootScope.notify(temp);
+                        }
+                    })
+            });
+    };
+
+    function loading(){
+        var overlay=$('<div class="load-overlay"><div><div class="c1"></div><div class="c2"></div><div class="c3"></div><div class="c4"></div></div><span>Finding Shipper...</span><button class="btn btn-theme-inverse">Cancel</button></div>');
+        $("body").append(overlay);
+        overlay.css('opacity',3).fadeIn("slow");
+    }
+
+    function unloading(){
+        $("body").find(".load-overlay").fadeOut("slow",function(){ $(this).remove() });
+    }
+
+    $rootScope.flag = false;
+
+    $rootScope.listRightShippers = [];
+
+    socketService.on('store:find:shipper', function(data) {
+
+        var shipper = data.msg.shipper;
+        if(!shipper){
+            $rootScope.flag = true;
+        }else{
+            $rootScope.listRightShippers.push(shipper);
+        }
+    });
+
+    $rootScope.findExpressShipper = function() {
+        socketStore.findShipper();
+        loading();
+        var s = 0;
+        $rootScope.listRightShippers = [];
+        $rootScope.loopFindShipper = setInterval(function(){            
+            if($rootScope.listRightShippers.length != 0){
+                $rootScope.rightShipper = $rootScope.listRightShippers[0];
+                $rootScope.$apply();
+                unloading();
+                $("#listAcceptedShipper").modal("show");
+
+                // createExpressOrder + select rightShipper
+                socketStore.selectShipper($rootScope.rightShipper, {}, 'order_1');
+
+                clearInterval($rootScope.loopFindShipper);
+                return;
+            }
+            s = s + 1;
+
+            if(s == 60 || $rootScope.flag){
+                unloading();
+                $rootScope.rightShipper = {
+                    avatar: "assets/img/notfound.png"
+                };
+                $rootScope.$apply();
+                $("#listAcceptedShipper_Fail").modal("show");
+                clearInterval($rootScope.loopFindShipper);
+                $rootScope.flag = false;
+            }
+        },1000);
+    };
+
+    $rootScope.cancelExpress = function() {
+        unloading();
+        $rootScope.rightShipper = {
+            avatar: "assets/img/notfound.png"
+        };
+        $rootScope.$apply();
+        $("#listAcceptedShipper_Fail").modal("show");
+        clearInterval($rootScope.loopFindShipper);
+        $rootScope.flag = false;
+        socketStore.cancelExpress();
+    };
+
+    // END - combo functions
 
 
     if(authService.isLogged()){
