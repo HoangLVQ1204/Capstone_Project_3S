@@ -38,7 +38,6 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
     });
 
     socketService.on('store:delete:shipper', function(data) {
-        console.log('delete shipper', data);
         var shipper = data.msg.shipper;
         mapService.deleteShipper(shipper.shipperID);
     });
