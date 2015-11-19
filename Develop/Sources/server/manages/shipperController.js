@@ -4,12 +4,12 @@
 
 var _ = require('lodash');
 var configConstant = require('../config/configConstant');
-var server = require('../server');
+// var server = require('../server');
 
 module.exports = function (app) {
 
     var db = app.get('models');
-    // var server = app.get('io');
+    var server = app.get('io');
 
     /*
      * Get all task of Shipper @quyennv
@@ -354,6 +354,7 @@ module.exports = function (app) {
         newIssue.sender = req.user.username;
         var orders = _.cloneDeep(req.body[0].orders);
         var categoryissue = _.cloneDeep(req.body[0].categoryissue);
+        console.log('shipperController:357 -- newIssue', newIssue);
         db.issue.createNewIssue(newIssue)
             .then(function(issue) {
                 // Send socket and insert notification
@@ -447,11 +448,11 @@ module.exports = function (app) {
                         },
                         'store:notification:issue'
                     );
-                })
+                });
 
                 
 
-                //Insert into orderissue
+                // Insert into orderissue
                 var newOrderIssue = {};
                 newOrderIssue.issueid = issue.issueid;
                 var isPending = true;

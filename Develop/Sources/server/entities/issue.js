@@ -10,8 +10,8 @@ module.exports = function(sequelize, DataTypes) {
     },
     typeid: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true
+      allowNull: false
+      // primaryKey: true
     },
     description: {
       type: DataTypes.TEXT,
@@ -49,7 +49,7 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
       createNewIssue: function(newIssue){
-        return issue.build({typeid: newIssue.typeid, description: newIssue.description, isresolved: newIssue.isresolved, resolvetype: newIssue.resolvetype, createddate: newIssue.createddate, sender: newIssue.sender}).save();
+        return issue.create({typeid: newIssue.typeid, description: newIssue.description, isresolved: newIssue.isresolved, resolvetype: newIssue.resolvetype, createddate: newIssue.createddate, sender: newIssue.sender});
       },
       preChangeIsPending: function(task, order, issuetype, orderissue, shipperId, issueId){
         return issue.findAll({
