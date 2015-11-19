@@ -106,14 +106,14 @@ api.getLatLng = function(geoText) {
     var d = Q.defer();
     gmAPI.geocode({
         address: geoText
-    }, function(err, result) {
+    }, function(err, response) {
         if (err) {
 			d.reject(err);			
 		} else {
 			if (response.status === 'OK') {
 				d.resolve({
-	                latitude: result[0].geometry.location.lat(),
-	                longitude: result[0].geometry.location.lng()
+	                latitude: response.results[0].geometry.location.lat(),
+	                longitude: response.results[0].geometry.location.lng()
 	            });
 			} else {			
 				d.reject(response.status + ': ' + response.error_message);
