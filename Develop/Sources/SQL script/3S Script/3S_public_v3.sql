@@ -1108,6 +1108,7 @@ INSERT INTO "public"."issuetype" VALUES ('4', '2', 'Goods is broken');
 INSERT INTO "public"."issuetype" VALUES ('5', '2', 'Cannot contact with customer');
 INSERT INTO "public"."issuetype" VALUES ('6', '1', 'Other');
 INSERT INTO "public"."issuetype" VALUES ('7', '3', 'Request to cancel');
+INSERT INTO "public"."issuetype" VALUES ('8', '1', 'Shipper disconnected');
 
 -- ----------------------------
 -- Table structure for managestore

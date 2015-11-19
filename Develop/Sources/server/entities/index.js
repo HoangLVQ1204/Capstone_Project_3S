@@ -14,7 +14,7 @@ var globber     = require('../util/globber');
 
 
 var sequelize = new Sequelize(config.db.url, {
-	// logging: false
+	 logging: false
 });
 
 var db = {};
