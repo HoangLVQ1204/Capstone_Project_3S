@@ -1080,9 +1080,10 @@ WITH (OIDS=FALSE)
 -- ----------------------------
 -- Records of issuecategory
 -- ----------------------------
-INSERT INTO "public"."issuecategory" VALUES ('1', 'Pending');
-INSERT INTO "public"."issuecategory" VALUES ('2', 'Cancel');
-INSERT INTO "public"."issuecategory" VALUES ('3', 'Store');
+INSERT INTO "public"."issuecategory" VALUES ('1', 'Shipper Pending');
+INSERT INTO "public"."issuecategory" VALUES ('2', 'Shipper Cancel');
+INSERT INTO "public"."issuecategory" VALUES ('3', 'Store Cancel');
+
 
 -- ----------------------------
 -- Table structure for issuetype
