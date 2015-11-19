@@ -1,7 +1,7 @@
 /**
  * Created by Kaka Hoang Huy on 9/30/2015.
  */
-app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoading', 'socketShipper', function ($scope, $ionicPopup, dataFactory, $ionicLoading, socketShipper) {
+app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoading', '$timeout', function ($scope, $ionicPopup, dataFactory, $ionicLoading, $timeout) {
 
     console.log('IssueController');
     getAllTaskOfShipper();
@@ -153,12 +153,16 @@ $scope.listReasons = [
     dataFactory.putDataServer(urlBase, data)
       .success(function (rs) {
         $ionicLoading.hide();
-        $scope.showAlert(rs);
+
+        $timeout(function() {
+          $scope.showAlert(rs);
+        }, 250)
+
       })
       .error(function (error) {
         console.log('Unable to load customer data: ' + error);
       });
-  }
+  };
 
   /*
    * By QuyenNV - 24/10/2015
@@ -243,7 +247,9 @@ $scope.listReasons = [
               $scope.show = function(){
                 $ionicLoading.show({
                   templateUrl: 'loading.html',
-                  scope: $scope
+                  scope: $scope,
+                  noBackdrop: false,
+                  delay: 250
                 });
               };
               //1 is Pending

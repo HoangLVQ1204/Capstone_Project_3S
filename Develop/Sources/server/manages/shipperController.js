@@ -4,12 +4,12 @@
 
 var _ = require('lodash');
 var configConstant = require('../config/configConstant');
-var server = require('../server');
+// var server = require('../server');
 
 module.exports = function (app) {
 
     var db = app.get('models');
-    // var server = app.get('io');
+    var server = app.get('io');
 
     /*
      * Get all task of Shipper @quyennv
@@ -271,7 +271,7 @@ module.exports = function (app) {
                                         db.notification.addNotification(msg);
                                     });
                                     if(oldStatus == taskBegin.statusid){
-                                        Task.updateTaskStatus(nextStatus, taskid, shipperid).then(function (ok) {
+                                        Task.updateTaskStatus(2, taskid, shipperid).then(function (ok) {
                                             //addStoreToShipperRoom(orderObj.storeid, shipperid);
                                             //addOrderIntoSocket(orderObj.orderid, orderObj.storeid, shipperid);
                                             server.socket.startTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
@@ -280,7 +280,7 @@ module.exports = function (app) {
                                             return res.status(400).json("Sorry! Something went wrong!");
                                         });
                                     }else if(nextStatus == taskDone.statusid){
-                                        Task.updateTaskStatus(nextStatus,taskid,shipperid).then(function(ok){
+                                        Task.updateTaskStatus(3,taskid,shipperid).then(function(ok){
                                             //removeStoreFromShipperRoom(orderObj.storeid, shipperid);
                                             //removeOrderInSocket(orderObj.orderid);
                                             server.socket.finishTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
@@ -366,6 +366,7 @@ module.exports = function (app) {
         newIssue.sender =  shipperID;
         var orders = _.cloneDeep(req.body[0].orders);
         var categoryissue = _.cloneDeep(req.body[0].categoryissue);
+        console.log('shipperController:357 -- newIssue', newIssue);
         db.issue.createNewIssue(newIssue)
             .then(function(issue) {
 
@@ -422,8 +423,8 @@ module.exports = function (app) {
 
                 var msgToAdmin = {
                     type: 'Issue',
-                    title: 'Shipper send Issue',
-                    content: 'Shipper had problems',
+                    title: 'Issue',
+                    content: 'Shipper ' + shipperID + ' had sent an issue',
                     url: '#/admin/issueBox?issueid=' + issue.dataValues.issueid,
                     isread: false,            
                     createddate: new Date()
@@ -502,9 +503,22 @@ module.exports = function (app) {
                         },
                         'store:notification:issue'
                     );
-                })
+                });
 
                 //Respon data
+
+                // Insert into orderissue
+                var newOrderIssue = {};
+                newOrderIssue.issueid = issue.issueid;
+                var isPending = true;
+                _.each(orders, function(orderID) {
+                    newOrderIssue.orderid = orderID;
+                    db.orderissue.createOrderIssue(newOrderIssue);
+                    if (_.parseInt(categoryissue) === 1) {
+                        //Change isPending
+                        db.order.changeIsPendingOrder(orderID, isPending);
+                    }
+                });
                 var group = [];
                 group.push({
                     'issueid': issue.dataValues.issueid,

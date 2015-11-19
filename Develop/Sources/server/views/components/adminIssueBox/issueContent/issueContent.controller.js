@@ -131,7 +131,7 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
                 promise.push($http.put(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue));
             });
 
-            Proise.all(promise).then(function success(response){
+            Promise.all(promise).then(function success(response){
                 resolveIssue();
             },function (error) {
                 smsData.theme="danger";

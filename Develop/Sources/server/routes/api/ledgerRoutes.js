@@ -3,11 +3,16 @@
  */
 module.exports = function (app) {
     var controller = require('./../../manages/ledgerManage')(app);
+    var authManage = require('./../../manages/authManage')(app);
+    var checkAll = [authManage.checkToken(),authManage.checkRole()];
 
     app.route('/api/ledgerList')
         .get(controller.getAllLedger);
 
     app.route('/api/getLedgerOfStore/:storeid/:perioddate')
         .get(controller.getLedgerOfStore)
+
+    app.route('/api/store/getAllLedgerList')
+        .get(checkAll,controller.storeGetAllLedger)
 
 }

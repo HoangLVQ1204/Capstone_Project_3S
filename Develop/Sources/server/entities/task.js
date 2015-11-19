@@ -69,7 +69,7 @@ module.exports = function (sequelize, DataTypes) {
                     where: {
                         shipperid: shipperid,
                         statusid: {
-                            $in: [3, 4]
+                            $in: [3, 5]
                         }
                     },
                     include: [

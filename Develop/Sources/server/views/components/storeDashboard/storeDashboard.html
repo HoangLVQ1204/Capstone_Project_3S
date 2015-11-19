@@ -161,7 +161,16 @@
                                                     <td>{{x.deliveryaddress}}</td>
                                                     <td width="10%">{{x.createdate | date: 'MM/dd/yyyy'}}</td>
                                                     <td width="8%">{{x.ordertype}}</td>
-                                                    <td width="9%"> {{x.statusname}}</td>
+
+                                                    <td width="9%">
+                                                        <span ng-if="x.statusname == 'Waiting'" class="label label-warning">{{x.statusname}}</span>
+                                                        <span ng-if="x.statusname =='Canceling'" class="label label-danger">{{x.statusname}} </span>    
+                                                        <span ng-if="x.statusname =='Delivering'" class="label label-success">{{x.statusname}} </span>
+                                                        <span ng-if="x.statusname =='Picking up'" class="label label-default">{{x.statusname}} </span>
+                                                        <span ng-if="x.statusname =='Bring to stock'" class="label label-default">{{x.statusname}} </span>
+                                                        <span ng-if="x.statusname =='In stock'" class="label label-default">{{x.statusname}} </span>
+                                                        
+                                                    </td>
                                                     <td width="10%">
                                                         <span class=" tooltip-area">
                                                     <a class="btn btn-default btn-sm"

@@ -15,7 +15,9 @@ var socket = require('./socket')(server,app);
 
 // setup middleware
 app.set('models', models);
-// app.set('io', socket.io);
+app.set('io', {
+    socket: socket.io
+});
 app.use(express.static(path.resolve('views')));
 app.use('/libs', express.static(path.resolve('node_modules')));
 app.use(morgan('dev'));
@@ -49,4 +51,4 @@ app.get('models').sequelize.sync().then(function () {
     });
 });
 
-exports.socket = socket.io;
+// exports.socket = socket.io;
