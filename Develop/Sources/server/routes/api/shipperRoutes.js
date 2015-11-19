@@ -14,8 +14,6 @@ module.exports = function (app) {
 
     app.post('/api/shipper/updateTaskForShipper', shipperCtrl.updateTaskForShipper);
 
-    app.post('/api/shipper/addNewShipper', shipperCtrl.addNewUser);
-
     app.get('/api/shipper/getAllShipper', shipperCtrl.getAllShipper);
 
     app.get('/api/shipper/getTaskBeIssuePending', checkAll, shipperCtrl.getTaskBeIssuePending);

@@ -50,6 +50,9 @@ module.exports = function(sequelize, DataTypes) {
                         storeid: storeID
                     }
                 })
+            },
+            addNewManageStore: function(newManageStore){
+                return managestore.build(newManageStore).save();
             }
         }
       }

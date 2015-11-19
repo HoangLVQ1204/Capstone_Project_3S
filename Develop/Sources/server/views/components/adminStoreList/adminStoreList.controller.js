@@ -51,7 +51,9 @@ function adminStoreListController($scope,$state, $http, authService, config) {
             $scope.storeList.map(function (store) {
                 store.currentCoD =  $scope.currentCoD[i].totalCoD;
                 store.currentFee =  $scope.currentFee[i].totalFee;
+                if (store.generalledgers.length > 0)
                 store.generalledgers[0].balance =  parseInt(store.generalledgers[0].balance);
+
                 //console.log(store);
                 i++;
                 return store;

@@ -7,36 +7,49 @@ function adminAddStoreController($scope,$state, $http, $filter, config) {
     $scope.shipperList = [];
     var smsData = {verticalEdge: 'right',
         horizontalEdge: 'bottom'};
-    $scope.newShipper = new Object();
-    $scope.newShipper.account = new Object();
-    $scope.newShipper.profile = new Object();
-    //$scope.newShipper.profile.dob = null;
+    $scope.newStoreOwner = new Object();
+    $scope.newStoreOwner.account = new Object();
+    $scope.newStoreOwner.profile = new Object();
+    $scope.newStoreOwner.profile.avatar = "assets/avatar/store_ower/Default.png";
+    $scope.newStore = new Object();
+    $scope.newStore.avatar = "assets/avatar/store/Default.jpg";
+    //$scope.newStoreOwner.profile.dob = null;
 
-    $http.get(config.baseURI + "/api/shipper/getNewShipperID").success(function(response){
-        $scope.newShipper.account.username = response;
-        $scope.newShipper.profile.username = response;
+    $http.get(config.baseURI + "/api/store/getNewStoreOwnerID").success(function(response){
+        $scope.newStoreOwner.account.username = response;
+        $scope.newStoreOwner.profile.username = response;
         //console.log(response);
     })
 
-    $scope.createShipper = function () {
-       var valid = $('#formID').parsley( 'validate' );
-        if (!valid) return;
-        $scope.newShipper.account.userrole = 1;
-        $scope.newShipper.account.userstatus = 2;
-        $scope.newShipper.profile.dob = new Date($scope.newShipper.profile.dob);
+    $http.get(config.baseURI + "/api/store/getNewStoreID").success(function(response){
+        $scope.newStore.storeid = response;
+        //console.log(response);
+    })
 
-        $http.post(config.baseURI + "/api/shipper/addNewShipper", $scope.newShipper).success(function(response){
+    $scope.createStore = function () {
+       var valid = $('#formStore').parsley( 'validate' );
+        if (!valid) return;
+        $scope.newStoreOwner.account.userrole = 2;
+        $scope.newStoreOwner.account.userstatus = 2;
+        $scope.newStoreOwner.profile.dob = new Date($scope.newStoreOwner.profile.dob);
+        var promises= [];
+        var managestore = new Object();
+        managestore['storeid'] = $scope.newStore.storeid;
+        managestore['managerid'] = $scope.newStoreOwner.account.username;
+        promises.push($http.post(config.baseURI + "/api/user/addNewUser", $scope.newStoreOwner));
+        promises.push($http.post(config.baseURI + "/api/store", $scope.newStore));
+        promises.push($http.post(config.baseURI + "/api/store/addManageStore", managestore));
+       //console.log(valid);
+        Promise.all(promises).then(function () {
             smsData.theme="theme-inverse";
             $.notific8($("#sms-success").val(), smsData);
-            $state.go('admin.shipperList', {newShipper: $scope.newShipper.account});
-            //console.log(response);
+            $state.go('admin.storeList');
         },function (error) {
             smsData.theme="danger";
             //data.sticky="true";
             $.notific8($("#sms-fail").val(), smsData);
             console.log(error)
         })
-       //console.log(valid);
     }
     //----------------------------------
     //FUNCTION LOAD SCRIPT
@@ -78,7 +91,7 @@ function adminAddStoreController($scope,$state, $http, $filter, config) {
                 $('#step4 h3').find("span").html($('#fullname').val());
             },
             onTabClick: function(tab, navigation, index) {
-                $.notific8('Please click <strong>next button</strong> to wizard next step!! ',{ life:5000, theme:"danger" ,heading:" Wizard Tip :); "});
+                $.notific8('Please click <strong>next button</strong> to go to next step!! ',{ life:5000, theme:"danger" ,heading:" Error :); "});
                 return false;
             },
             onTabShow: function(tab, navigation, index) {

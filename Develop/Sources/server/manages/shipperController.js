@@ -933,24 +933,6 @@ module.exports = function (app) {
         } while (isExisted);
     };
 
-    //function add new Shipper to system
-    var addNewUser = function(req, res, next){
-        var user = req.body;
-            db.user.addNewUser(user.account)
-                .then(function(){
-                    db.profile.addNewProfile(user.profile)
-                        .then(function(profile){
-                            res.status(201).json(profile);
-                        },function(err){
-                            //console.log(newShipperID, shipper);
-                            res.status(400).json("Can not add new profile");
-                        });
-                },function(err){
-                    //console.log(newShipperID, shipper);
-                    res.status(400).json("Can not add new user");
-                });
-
-    };
 
     //// START AREA OF HELPER FUNCTIONS (PRIVATE)
     var addStoreToShipperRoom = function(storeid, shipperid){
@@ -1012,7 +994,7 @@ module.exports = function (app) {
         getTaskBeIssuePending: getTaskBeIssuePending,
         testSk: testSk,
         createShipperID: createShipperID,
-        addNewUser: addNewUser
+
 
     }
 }
