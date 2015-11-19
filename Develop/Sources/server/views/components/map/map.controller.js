@@ -223,7 +223,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
                 console.log('mouseover', model.order);                
                 console.log('mouseover storeMarkers', $scope.storeMarkers);
                 console.log('mouseover customerMarkers', $scope.customerMarkers);
-                console.log('avatar', model);
+                // console.log('avatar', model);
                 var content = '<div style="width: 140px; height: 100px"><div>' + 
                         '<img style="display:inline; float: left" src="' + model.avatar + '" alt="avatar shipper" width="50px"></img>' +
                         '<strong>' + model.shipperID + '</strong></div>' +
@@ -248,7 +248,9 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
         };    
         $scope.storeEvents = {
             mouseover: function(gMarker, eventName, model, mouseEvent) {                                 
-                console.log('mouseover', model.order);
+                console.log('mouseover', model);                
+                console.log('mouseover storeMarkers', $scope.shipperMarkers);
+                console.log('mouseover customerMarkers', $scope.customerMarkers);
                 var content = '<div>' + 
                         '<strong>' + model.geoText + '</strong>' +
                         '<ul>';
@@ -271,6 +273,9 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
         };    
         $scope.customerEvents = {
             mouseover: function(gMarker, eventName, model, mouseEvent) {                                 
+                console.log('mouseover', model.order);                
+                console.log('mouseover storeMarkers', $scope.storeMarkers);
+                console.log('mouseover customerMarkers', $scope.shipperMarkers);
                 var content = '<div>' + 
                         '<strong>' + model.geoText + '</strong>' +
                         '<ul>';

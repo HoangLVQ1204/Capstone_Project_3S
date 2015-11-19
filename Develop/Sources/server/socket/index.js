@@ -124,6 +124,8 @@ module.exports = function(server,app){
     */
     io.orders = {};
 
+    
+
 
     // Returns socket by receiver type
     io.receiverSocket = function(receiver) {
