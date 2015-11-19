@@ -38,7 +38,6 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
     });
 
     socketService.on('store:delete:shipper', function(data) {
-        console.log('delete shipper', data);
         var shipper = data.msg.shipper;
         mapService.deleteShipper(shipper.shipperID);
     });
@@ -155,6 +154,10 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
                 'store:choose:shipper');
             });            
         });        
+    };
+
+    api.announceShipper = function() {
+        console.log('announceShipper');
     };
 
     return api;        

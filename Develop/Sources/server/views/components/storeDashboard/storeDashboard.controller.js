@@ -239,8 +239,6 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
 
     // START Listen to socket changes
     $rootScope.$on("evChange", function(event, data){
-        //alert(args.message);
-        console.dir(data);
         getDataFromServer();
         //SHOW INFORMATION OF THE SHIPPER WHO PICKED ORDER
         if(data.msg.profile) {

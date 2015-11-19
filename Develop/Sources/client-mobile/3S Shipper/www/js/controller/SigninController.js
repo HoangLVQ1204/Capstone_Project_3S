@@ -41,6 +41,7 @@ app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService',
           }
         })
         .catch(function(error){
+          console.log('SigninController:44 error', error);
           $ionicLoading.hide();
           showError({
             message: 'Username or Password is invalid'

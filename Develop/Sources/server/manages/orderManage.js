@@ -363,6 +363,21 @@ var updateOrder = function (req, res, next) {
     })
 };
 
+ var updateExpressOrder = function (req, res, next) {
+     var order = req.body.order;
+     console.log(order);
+     return db.order.updateExpressOrder({
+         statusid : order.statusId,
+         isdraff: order.isDraff
+     },order.orderId)
+         .then(function (rs) {
+             console.log(rs);
+             res.status(201).json(rs);
+         }, function (err) {
+             next(err);
+         })
+ };
+
 var deleteOrder = function (req, res, next) {
     req.orderRs = req.orderRs.toJSON();
     var deleteGoods = db.goods.deleteGood(req.orderRs.orderid);
@@ -474,6 +489,17 @@ addGoods = function(req, res, next){
         })
         
     };
+ 
+    var storeGetOrderList = function (req, res, next) {
+        var storeId = req.user.stores[0].storeid;
+        var orderStatus = db.orderstatus;
+        db.order.storeGetAllOrders(db.orderstatus, db.ordertype,storeId)
+        .then(function(list){
+            res.status(200).json(list);
+        }, function(err) {
+            next(err);
+        });
+    };
     
 
     return {
@@ -481,6 +507,7 @@ addGoods = function(req, res, next){
         getOne: getOne,
         postOne: post,
         params: params,
+        updateExpressOrder : updateExpressOrder,
         updateOrder : updateOrder,
         deleteOrder : deleteOrder,
         putDraff : putDraff,
@@ -489,6 +516,7 @@ addGoods = function(req, res, next){
         getTodayTotal: getTodayTotal,
         deleteGoods: deleteGoods,
         addGoods: addGoods,
-        updateGoods : updateGoods
+        updateGoods : updateGoods,
+        storeGetOrderList : storeGetOrderList
     }
 }

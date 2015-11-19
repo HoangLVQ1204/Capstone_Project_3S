@@ -27,6 +27,9 @@ module.exports = function (app) {
     app.route('/orders/putdraff')
         .post(controller.putDraff);
 
+    app.route('/orders/updateExpressOrder')
+        .put(controller.updateExpressOrder)
+
     app.route('/orders/cancel')
         .put(controller.cancelOrder);
 
@@ -38,6 +41,9 @@ module.exports = function (app) {
 
     app.route('/api/store/goods')
         .put(checkAll, controller.updateGoods);
+
+    app.route('/api/store/getAllOrder')
+        .get(checkAll, controller.storeGetOrderList);
 
 
 };

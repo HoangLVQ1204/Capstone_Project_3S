@@ -114,7 +114,33 @@
     {
       "url": "/api/store/goods",
       "role": [2]
+    },
+
+    {
+      "url": "/store/transactionHistory",
+      "role": [2]
+    },
+
+    {
+      "url": "/store/orderList",
+      "role": [2]
+    },
+
+    {
+      "url": "/api/store/getAllOrder",
+      "role": [2]
+    },
+    
+    {
+      "url": "/api/store/getLedgerList",
+      "role": [2]
+    },
+
+    {
+      "url": "/api/storeDetail",
+      "role": [2]
     }
+    
       
     
 ]
