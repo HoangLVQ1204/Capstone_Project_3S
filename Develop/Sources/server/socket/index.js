@@ -647,7 +647,6 @@ module.exports = function(server,app){
             console.log("--HAVE CONNECTION--");
             var dataToken = socket.decoded_token;
             socket.on("client:register",function(data){
-
                 if(dataToken.userrole == 1){
 
                     console.log("---This is Data Shipper---");
@@ -683,7 +682,7 @@ module.exports = function(server,app){
                         shipperList: io.getAllShippers()
                     }, ['admin:add:shipper', 'store:add:shipper']);
 
-                    require('./socketShipper')(socket, io);
+                    require('./socketShipper')(socket, io, app);
 
                 }
 

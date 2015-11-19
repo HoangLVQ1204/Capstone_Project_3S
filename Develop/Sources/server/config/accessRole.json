@@ -132,12 +132,17 @@
     },
     
     {
-      "url": "/api/store/getLedgerList",
+      "url": "/api/store/ledger/getLedgerList",
       "role": [2]
     },
 
     {
       "url": "/api/storeDetail",
+      "role": [2]
+    },
+
+    {
+      "url": "/store/orders/cancel",
       "role": [2]
     }
     
