@@ -16,9 +16,11 @@
                   <div>
                     <h2>{{order.orderid}}</h2>
                     <!--Inactive-->
-                    <p ng-show="{{order.statusid == 1}}" class="statusPd label">Inactive</p>
+                    <p ng-show="{{order.statusid == 1}}" class="statusWt label">Inactive</p>
                     <!--Actived-->
                     <p ng-show="{{order.statusid == 2}}" class="statusDn label">Actived</p>
+                    <!--Processing-->
+                    <p ng-show="{{order.statusid == 4}}" class="statusPd label">Processing</p>
                     <div class="tasklocate">
                       <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
                       <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
@@ -44,9 +46,11 @@
                   <div>
                     <h2>{{order.orderid}}</h2>
                     <!--Inactive-->
-                    <p ng-show="{{order.statusid == 1}}" class="statusPd label">Inactive</p>
+                    <p ng-show="{{order.statusid == 1}}" class="statusWt label">Inactive</p>
                     <!--Actived-->
                     <p ng-show="{{order.statusid == 2}}" class="statusDn label">Actived</p>
+                    <!--Processing-->
+                    <p ng-show="{{order.statusid == 4}}" class="statusPd label">Processing</p>
                     <div class="tasklocate">
                       <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
                       <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
@@ -72,9 +76,11 @@
                   <div>
                     <h2>{{order.orderid}}</h2>
                     <!--Inactive-->
-                    <p ng-show="{{order.statusid == 1}}" class="statusPd label">Inactive</p>
+                    <p ng-show="{{order.statusid == 1}}" class="statusWt label">Inactive</p>
                     <!--Actived-->
                     <p ng-show="{{order.statusid == 2}}" class="statusDn label">Actived</p>
+                    <!--Processing-->
+                    <p ng-show="{{order.statusid == 4}}" class="statusPd label">Processing</p>
                     <div class="tasklocate">
                       <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
                       <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
@@ -100,9 +106,11 @@
                   <div>
                     <h2>{{order.orderid}}</h2>
                     <!--Inactive-->
-                    <p ng-show="{{order.statusid == 1}}" class="statusPd label">Inactive</p>
+                    <p ng-show="{{order.statusid == 1}}" class="statusWt label">Inactive</p>
                     <!--Actived-->
                     <p ng-show="{{order.statusid == 2}}" class="statusDn label">Actived</p>
+                    <!--Processing-->
+                    <p ng-show="{{order.statusid == 4}}" class="statusPd label">Processing</p>
                     <div class="tasklocate">
                       <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
                       <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>

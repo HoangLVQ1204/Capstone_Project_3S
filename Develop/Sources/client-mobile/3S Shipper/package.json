@@ -4,6 +4,8 @@
   "description": "3S Shipper: An Ionic project",
   "dependencies": {
     "angular-google-maps": "^2.2.1",
+    "angular-jwt": "0.0.9",
+    "angular-simple-logger": "^0.1.5",
     "gulp": "^3.5.6",
     "gulp-concat": "^2.2.0",
     "gulp-minify-css": "^0.3.0",
