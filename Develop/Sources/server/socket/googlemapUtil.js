@@ -105,7 +105,8 @@ api.getClosestShippers = function(store, shippers, filter) {
 api.getLatLng = function(geoText) {
     var d = Q.defer();
     gmAPI.geocode({
-        address: geoText
+        address: geoText,
+        language: 'vn'
     }, function(err, response) {
         if (err) {
 			d.reject(err);			
