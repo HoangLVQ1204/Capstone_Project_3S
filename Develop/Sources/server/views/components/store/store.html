@@ -25,7 +25,7 @@
                         <em><strong>Hi</strong>, {{inforUser.name}} </em> <i class="dropdown-icon fa fa-angle-down"></i>
                     </a>
                     <ul class="dropdown-menu pull-right icon-right arrow">
-                        <li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
+                        <li><a ui-sref="store.storeProfile"><i class="fa fa-user"></i> Profile</a></li>
                         <li class="divider"></li>
                         <li><a href="#" ng-click="signOut()"><i class="fa fa-sign-out"></i> Signout </a></li>
                     </ul>
@@ -67,7 +67,7 @@
                 <!-- //avatar-detail-->
 
                 <div class="avatar-link btn-group btn-group-justified">
-                    <a class="btn" href="profile.html"  title="Portfolio"><i class="fa fa-briefcase"></i></a>
+                    <a class="btn" ui-sref="store.storeProfile"  title="Portfolio"><i class="fa fa-briefcase"></i></a>
                     <a class="btn"  data-toggle="modal" href="#md-notification" title="Notification">
                         <i class="fa fa-bell-o"></i><em class="green"></em>
                     </a>
@@ -89,7 +89,7 @@
 
             <div class="widget-collapse dark">
                 <header>
-                    <a  href="#collapseSetting" target="_self"><i class="fa fa-book"></i> Payment</a>
+                    <a  ui-sref="store.transactionHistory"><i class="fa fa-book"></i> Payment</a>
                 </header>
             </div>
 
