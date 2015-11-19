@@ -106,7 +106,7 @@ api.getLatLng = function(geoText) {
     var d = Q.defer();
     gmAPI.geocode({
         address: geoText,
-        language: 'vn'
+        language: 'en'
     }, function(err, response) {
         if (err) {
 			d.reject(err);			
