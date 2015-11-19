@@ -50,7 +50,7 @@ module.exports = function(server,app){
     var io = require('socket.io')(server);
     var socketioJwt = require("socketio-jwt");
     var config      = require('../config/config');
-
+    var controllerStore = require('../manages/storeController')(app);
     /*
         io.admins[adminID] = {            
             socketID,
@@ -87,7 +87,6 @@ module.exports = function(server,app){
         }
     */
     io.stores = {};
-
     /*
         io.shippers[shipperID] = {
             order: [],
@@ -170,7 +169,7 @@ module.exports = function(server,app){
     */
     io.forward = function(sender, receiver, msg, eventName, callback) {
         var data = {
-            sender: sender,            
+            sender: sender,
             msg: msg
         };
 
@@ -334,7 +333,7 @@ module.exports = function(server,app){
             order: [],
             latitude: store.latitude,
             longitude: store.longitude,
-            socketID: socket.id
+            socketID: (!!socket ? socket.id : null)
         };            
     };
 
@@ -348,8 +347,6 @@ module.exports = function(server,app){
             longitude: store.longitude
         };
     };
-
-
 
     io.containShipper = function(shipperID) {
         return !!io.shippers[shipperID];
@@ -373,6 +370,14 @@ module.exports = function(server,app){
         io.shippers[shipper.shipperID].isConnected = true;
         io.shippers[shipper.shipperID].numTasks = io.countNumTasksByShipperID(shipper.shipperID);
     };
+
+    io.getListConnectedShippers = function(){
+        var listRightShippers = [{
+            SPID : 'SP000001',
+            isConnected: true
+        }]
+        return listRightShippers;
+    }
 
     io.updateStatusShipper = function(shipper) {
         io.shippers[shipper.shipperID].isConnected = false;
@@ -444,9 +449,6 @@ module.exports = function(server,app){
         return shipperInfos;
     };
 
-
-
-
     io.addOrder = function(orderID, storeID, shipperID) {
         io.orders[orderID] = {
             shipperID: shipperID,
@@ -516,6 +518,25 @@ module.exports = function(server,app){
             }
         });
     };
+
+
+    io.updateListStore = function(){
+        controllerStore.getAllStores()
+            .then(function(rs){
+                rs = rs.map(function(e) {
+                    return e.toJSON();
+                })
+                rs.forEach(function(item){
+                    io.addStore({
+                        storeID: item.storeid,
+                        latitude: item.latitude,
+                        longitude: item.longitude
+                    })
+                })
+            })
+    }
+
+    //io.updateListStore();
 
     io.leaveRoom = function(socket, roomID) {
         socket.leave(roomID, function() {
@@ -660,11 +681,14 @@ module.exports = function(server,app){
                         mapData: io.getDataForAdmin(),
                         shipperList: io.getAllShippers()
                     }, 'admin:register:location');
+
                     require('./socketAdmin')(socket, io);
 
                 }
             })
         });
+
+
     return {
         io: io
     }

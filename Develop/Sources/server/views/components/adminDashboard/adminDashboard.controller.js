@@ -29,29 +29,7 @@ function adminDashboardController($scope,$state,dataService, $http, config, $roo
 
     ];
 
-    //$scope.searchOptionsIssue= [
-    //    {
-    //        option: 'All',
-    //        value: ''
-    //    },
-    //    {
-    //        option: 'Order ID',
-    //        value: 'orderid'
-    //    },{
-    //        option: 'Delivery Address',
-    //        value: 'deliveryaddress'
-    //    },
-    //    {
-    //        option: 'Cusotmer',
-    //        value: 'recipientname'
-    //    },
-    //    {
-    //        option: 'Customer Phone',
-    //        value: 'recipientphone'
-    //    }
-    //];
 
-    //
     $scope.selectedInactive =$scope.searchOptionsInactive[0];
     $scope.selectedDone=$scope.searchOptionsInactive[0];
     $scope.selectedActive=$scope.searchOptionsInactive[0];

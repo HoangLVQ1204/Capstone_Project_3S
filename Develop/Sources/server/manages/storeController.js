@@ -242,7 +242,29 @@ module.exports = function(app) {
             }, function () {
                 next(new Error("Can not find store name!"))
             });
-
+	};
+    //function create new shipperid
+    var createStoreID = function(req, res, next){
+        var isExisted = false;
+        do
+        {
+            var str = "000000" + parseInt(Math.random()*1000000);
+            var formatStr = str.substr(str.length - 6);
+            var newShipperID = "SP" + formatStr;
+            //console.log(newShipperID);
+            db.user.findUserByUsername(newShipperID)
+                .then(function(shipper){
+                    console.log(newShipperID, shipper);
+                    if(!shipper){
+                        //console.log('AAA');
+                        isExisted = true;
+                        res.status(200).json(newShipperID);
+                    }
+                },function(err){
+                    //console.log(newShipperID, shipper);
+                    res.status(400).json("Can not get new shipperid");
+                });
+        } while (isExisted);
     };
 
        return {
@@ -265,38 +287,3 @@ module.exports = function(app) {
             storeGetStoreDetail: storeGetStoreDetail
     }
 }
-
-
-/*
-{
-  "GET /users": {
-    "desc": "returns all users",
-    "response": "200 application/json",
-    "data": [{}, {}, {}]
-  },
-
-  "GET /users/:id": {
-    "desc": "returns one user respresented by its id",
-    "response": "200 application/json",
-    "data": {}
-  },
-
-  "POST /users": {
-    "desc": "create and returns a new user uisng the posted object as the user",
-    "response": "201 application/json",
-    "data": {}
-  },
-
-  "PUT /users/:id": {
-    "desc": "updates and returns the matching user with the posted update object",
-    "response": "200 application/json",
-    "data": {}
-  },
-
-  "DELETE /users/:id": {
-    "desc": "deletes and returns the matching user",
-    "response": "200 application/json",
-    "data": {}
-  }
-}
-*/
