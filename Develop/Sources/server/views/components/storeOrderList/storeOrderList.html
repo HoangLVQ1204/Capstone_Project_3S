@@ -54,12 +54,12 @@
                                         <div class="col-sm-2 pull-right">
                                             <!--<select  class="selectpicker form-control show-menu-arrow" ng-repeat="option in searchOptions">-->
                                             <!--&lt;!&ndash;<option data-icon="fa fa-user" id="predicate" ng-model="selectedPredicate" ng-options="option in predicates"></option>&ndash;&gt;<option ng-repeat="options in searchOptions" value="{{options.option}}">{{options.option}}</option>-->
-                                            <!--
+                                            
                                             <!--</select>-->
                                             <select
                                                     class="form-control"
                                                     ng-options="options.option for options in searchOptions" ng-model="selected">
-                                            </      >
+                                            </select>
                                         </div>
                                     </div>
                                     <thead>
@@ -114,7 +114,7 @@
             <td width="10%">
                 <span class=" tooltip-area">
                     <a class="btn btn-default btn-sm"
-                    title="View detail"><i class="fa fa-eye " ui-sref="store.orderdetail({orderid: x.orderid})"></i></a>
+                    title="View detail" ui-sref="store.orderdetail({orderid: x.orderid})"><i class="fa fa-eye "></i></a>
                     <a ng-disabled ="x.orderstatus.statusname == 'Canceling' || x.orderstatus.statusname == 'Cancel' || x.orderstatus.statusname == 'Done'" ng-click="setOrder(x)" data-toggle="modal"
                     data-target="#md-cancel-order" class="btn btn-default btn-sm"
                     title="Cancel"><i class="fa fa-times"></i></a>
