@@ -132,7 +132,7 @@
     },
     
     {
-      "url": "/api/store/getLedgerList",
+      "url": "/api/store/ledger/getLedgerList",
       "role": [2]
     },
 

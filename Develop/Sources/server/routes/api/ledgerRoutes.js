@@ -12,7 +12,7 @@ module.exports = function (app) {
     app.route('/api/getLedgerOfStore/:storeid/:perioddate')
         .get(controller.getLedgerOfStore)
 
-    app.route('/api/store/getAllLedgerList')
+    app.route('/api/store/ledger/getLedgerList')
         .get(checkAll,controller.storeGetAllLedger)
 
 }

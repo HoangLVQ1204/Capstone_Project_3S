@@ -34,6 +34,7 @@ module.exports = function (app) {
     };
 
     var storeGetAllLedger = function (req, res, next) {
+        console.log("============req===========",req.user.stores[0].storeid);
         var storeId = req.user.stores[0].storeid;
         db.generalledger.storeGetAllLedger(storeId)
         .then(function(list){
