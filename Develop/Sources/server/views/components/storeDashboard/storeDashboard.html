@@ -174,7 +174,8 @@
                                                     <td width="10%">
                                                         <span class=" tooltip-area">
                                                     <a class="btn btn-default btn-sm"
-                                                       title="View detail"><i class="fa fa-eye " ui-sref="store.orderdetail({orderid: x.orderid})"></i></a>
+                                                       title="View detail" ui-sref="store.orderdetail({orderid: x.orderid})"><i class="fa fa-eye "></i></a>
+
                                                     <a ng-disabled ="x.statusname == 'Canceling'" ng-click="setOrder(x)" data-toggle="modal"
                                                        data-target="#md-cancel-order" class="btn btn-default btn-sm"
                                                        title="Cancel"><i class="fa fa-times"></i></a>
@@ -223,9 +224,9 @@
                                 </div>
                                 <!-- //modal-body-->
                                 <div class="modal-footer">
-                                    <button type="submit" data-theme="success"
+                                    <button type="button" data-theme="success"
                                             data-horizontal="top" class="btn btn-theme notifiCancel"
-                                            data-dismiss="modal">Yes
+                                            data-dismiss="modal" ng-click="cancerOrder()">Yes
                                     </button>
                                     <!-- data-sticky="true" (Ghim notify)-->
                                     <button type="button" data-dismiss="modal" class="btn btn-inverse">No</button>
@@ -310,10 +311,10 @@
                                                     <th st-sort="completedate" st-skip-natural="true"
                                                         class="text-center sortable">Completion Date
                                                     </th>
-
-                                                    <!--<th st-sort="statusname" st-skip-natural="true"-->
-                                                    <!--class="text-center sortable">Status-->
-                                                    <!--</th>-->
+                                                    <th st-sort="ordertype" st-skip-natural="true"
+                                                        class="text-center sortable">Type
+                                                    </th>
+                                                    
                                                     <!--<th class="text-center">Option </th>-->
 
                                                 </tr>
@@ -326,6 +327,8 @@
                                                     <td> {{x.recipientphone}}</td>
                                                     <td>{{x.deliveryaddress}}</td>
                                                     <td>{{x.completedate|date:'MM/dd/yyyy'}}</td>
+                                                    <td>{{x.ordertype}}</td>
+
                                                     <!--<td> {{x.statusname}}</td>-->
                                                     <!-- <td  width="16%>
                                                      <span class="tooltip-area">
@@ -337,7 +340,7 @@
                                                 </tbody>
                                                 <tfoot>
                                                 <tr>
-                                                    <td colspan="5" class="text-right">
+                                                    <td colspan="6" class="text-right">
                                                         <div st-pagination="" st-items-by-page="5"></div>
                                                     </td>
                                                 </tr>

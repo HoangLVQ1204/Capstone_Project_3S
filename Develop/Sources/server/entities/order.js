@@ -460,7 +460,17 @@ module.exports = function(sequelize, DataTypes) {
                 'orderid': newOrder.orderid
               }
             })
-      }
+      },
+
+       updateOrder: function (currentOrder,orderid) {
+        return order.update(
+          currentOrder,
+          {
+            where:{
+              'orderid': orderid
+            }
+          })
+      },
 
     }
   });

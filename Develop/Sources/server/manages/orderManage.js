@@ -404,12 +404,10 @@ var putDraff = function(req, res, next){
 };
 
 var cancelOrder = function (req, res, next) {
-    db.order.cancelOrder( req.orderRs.orderid);
-            //.then(function(){
-            //    res.sendStatus(200).json();
-            //}, function(err) {
-            //    next(err);
-            //});
+    console.log("=======cancerOrderId======", req.body);
+    res.status(200).json({
+        id : "ok"
+    });
 };
 
 var getOrderList = function (req, res, next) {

@@ -156,6 +156,10 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
         });        
     };
 
+    api.announceShipper = function() {
+        console.log('announceShipper');
+    };
+
     return api;        
 };
 

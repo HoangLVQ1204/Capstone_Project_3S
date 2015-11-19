@@ -22,7 +22,7 @@
                                 <table class="table table-striped table-hover table-bordered" st-set-filter="customFilter" st-custom-date="{{selectedDate.value}}" st-predicate="{{selected.value}}" stdate="dateRange" search-watch-model-multiple="search" st-table="displayedCollection" st-safe-src="orderList">
 
 
-                                   <div class="row" >
+                                  <div class="row" >
                                         <div class="col-sm-5 form-group pull-left">
                                             <div class="input-group input-icon">
                                                 <i class="fa fa-calendar ico"></i>
@@ -114,7 +114,7 @@
             <td width="10%">
                 <span class=" tooltip-area">
                     <a class="btn btn-default btn-sm"
-                    title="View detail"><i class="fa fa-eye " ui-sref="store.orderdetail({orderid: x.orderid})"></i></a>
+                    title="View detail" ui-sref="store.orderdetail({orderid: x.orderid})"><i class="fa fa-eye "></i></a>
                     <a ng-disabled ="x.orderstatus.statusname == 'Canceling' || x.orderstatus.statusname == 'Cancel' || x.orderstatus.statusname == 'Done'" ng-click="setOrder(x)" data-toggle="modal"
                     data-target="#md-cancel-order" class="btn btn-default btn-sm"
                     title="Cancel"><i class="fa fa-times"></i></a>

@@ -42,15 +42,14 @@ function storeTransactionHistoryController($scope,$state, $http, $location, conf
             value: 'ledgerid'
         },
         {
-            option: 'Store',
-            value: 'store.name'
-        },{
             option: 'Total',
             value: 'balance'
-        },{
+        },
+        {
             option: 'Delivery',
             value: 'totaldelivery'
-        },{
+        },
+        {
             option: 'Cash on delivery',
             value: 'totalcod'
         }];
@@ -59,8 +58,8 @@ function storeTransactionHistoryController($scope,$state, $http, $location, conf
     $scope.dateRange = '';
     $scope.autoDateRange = '';
 
-    $http.get(config.baseURI + "/api/store/getLedgerList").success(function(response){
-      console.log("============res==========",response);
+    $http.get(config.baseURI + "/api/store/ledger/getLedgerList").success(function(response){
+      //console.log("============res==========",response);
         response.map(function(ledger){
             ledger.balance = parseInt(ledger.balance);
             ledger.totalcod = parseInt(ledger.totalcod);

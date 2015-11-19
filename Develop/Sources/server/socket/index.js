@@ -37,6 +37,10 @@
     BUG: Disable cache in browser
 */
 
+/*
+    Change status 
+*/
+
 var _ = require('lodash');
 
 module.exports = function(server,app){
@@ -119,6 +123,8 @@ module.exports = function(server,app){
         }
     */
     io.orders = {};
+
+    
 
 
     // Returns socket by receiver type
@@ -602,7 +608,6 @@ module.exports = function(server,app){
             console.log("--HAVE CONNECTION--");
             var dataToken = socket.decoded_token;
             socket.on("client:register",function(data){
-
                 if(dataToken.userrole == 1){
 
                     console.log("---This is Data Shipper---");
@@ -638,7 +643,7 @@ module.exports = function(server,app){
                         shipperList: io.getAllShippers()
                     }, ['admin:add:shipper', 'store:add:shipper']);
 
-                    require('./socketShipper')(socket, io);
+                    require('./socketShipper')(socket, io, app);
 
                 }
 
