@@ -423,8 +423,8 @@ module.exports = function (app) {
 
                 var msgToAdmin = {
                     type: 'Issue',
-                    title: 'Shipper send Issue',
-                    content: 'Shipper had problems',
+                    title: 'Issue',
+                    content: 'Shipper ' + shipperID + ' had sent an issue',
                     url: '#/admin/issueBox?issueid=' + issue.dataValues.issueid,
                     isread: false,            
                     createddate: new Date()

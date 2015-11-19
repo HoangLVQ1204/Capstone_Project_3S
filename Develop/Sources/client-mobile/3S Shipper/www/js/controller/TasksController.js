@@ -39,7 +39,9 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
         $scope.showLoading();
       } else {
         //TODO
-        //getListOfTask();
+        haveIssue = false;
+        console.log("111");
+        getListOfTask();
         $ionicLoading.hide();
       }
     });
@@ -91,7 +93,6 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
           $timeout(function(){
             $scope.showAlert(rs);
           }, 250);
-          //$scope.showAlert(rs);
         })
         .error(function (error) {
           console.log('Unable to load customer data: ' + error);
@@ -130,6 +131,7 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
    * StatusTasks are 'Inactive' and 'Active'
    * */
   function getListOfTask() {
+    console.log("2222haveIssue", haveIssue);
     if (!haveIssue) {
       $ionicLoading.show({
         noBackdrop: false,
