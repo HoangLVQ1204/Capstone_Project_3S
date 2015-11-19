@@ -18,7 +18,7 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
         $scope.issue = response;
         $scope.issue.orderissues.map(function (order) {
             order.order.tasks.sort(dateSort);
-            order.order.tasks.splice(2,order.order.tasks.length-1);
+            order.order.tasks.splice(1,order.order.tasks.length-1);
         })
         //$scope.displayedOrderCollection = [].concat($scope.orderList);
     })
@@ -45,17 +45,17 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
             $scope.issue.resolvetype = $scope.resolveType;
 
             if ($scope.issue.resolvetype == 2)//pending issue
-                resolveIssue();
+                resolveChangeShipperIssue();
 
-            if ($scope.issue.resolvetype == 1){//return iss ue
+            if ($scope.issue.resolvetype == 1){//contiunue
                 resolveContinueIssue();
             }
 
-            if ($scope.issue.resolvetype == 3){//return issue
+            if ($scope.issue.resolvetype == 3){//cancel issue fail good
                 resolveReturnIssue();
             }
 
-            if ($scope.issue.resolvetype == 4){//return issue
+            if ($scope.issue.resolvetype == 4){//return issue can't find customer
                if($scope.issue.orderissues[0].order.statusid == 1 || $scope.issue.orderissues[0].order.statusid == 2) resolveStoreIssue();
                 else resolveReturnIssue();
             }
@@ -122,19 +122,22 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
             })
         };
         if ($scope.issue.typeid == 5){
+            var promise = [];
             $scope.issue.orderissues.map(function (issue) {
                 issue.order.tasks[0].statusid = 2;//active task
                 issue.order.tasks[0].typeid = 4;//active task
                 issue.order.statusid= 6;//cancel order
                 issue.order.orderstatus.statusname= 'Canceling';//cancel order
-                $http.put(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue).then(function success(response){
-                    resolveIssue();
-                },function (error) {
-                    smsData.theme="danger";
-                    //data.sticky="true";
-                    $.notific8($("#sms-fail").val(), smsData);
-                    console.log(error)
-                })
+                promise.push($http.put(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue));
+            });
+
+            Proise.all(promise).then(function success(response){
+                resolveIssue();
+            },function (error) {
+                smsData.theme="danger";
+                //data.sticky="true";
+                $.notific8($("#sms-fail").val(), smsData);
+                console.log(error)
             })
         }
     };
@@ -165,6 +168,26 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
         $scope.issue.orderissues.map(function (issue) {
             issue.order.tasks[0].statusid = 2;//fail task
             //issue.order.statusid= 2;//cancel order
+            //issue.order.fee= parseInt(issue.order.fee) * 0.1;//cancel order
+        })
+        //console.log($scope.issue.orderissues);
+        $http.put(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue).then(function success(response){
+            resolveIssue();
+        },function (error) {
+            smsData.theme="danger";
+            //data.sticky="true";
+            $.notific8($("#sms-fail").val(), smsData);
+            console.log(error)
+        })
+
+    }
+
+    //function resolve continue issue
+    function resolveChangeShipperIssue(){
+        //console.log($scope.issue);
+        $scope.issue.orderissues.map(function (issue) {
+            //issue.order.tasks[0].statusid = 2;//fail task
+            issue.order.ispending= false;//cancel order
             //issue.order.fee= parseInt(issue.order.fee) * 0.1;//cancel order
         })
         //console.log($scope.issue.orderissues);
