@@ -1,5 +1,5 @@
 var _ = require('lodash');
-
+var gmapUtil = require('../socket/googlemapUtil');
 module.exports = function(app) {
 
     var db = app.get('models');
@@ -35,15 +35,21 @@ module.exports = function(app) {
     //
     var postNewStore = function(req, res, next) {
         var newStore = req.body;
-        newStore['latitude'] = '1';
-        newStore['longitude'] = '1';
-       // newUser.Token = newUser.storeid;
-        return db.store.postOneStore(newStore)
-            .then(function(store) {
-                res.status(201).json(store);
-            }, function(err) {
-                next(err);
-            });
+        return gmapUtil.getLatLng(newStore.address).then(function (map) {
+            newStore['latitude'] = map.latitude;
+            newStore['longitude'] = map.longitude;
+        }, function(err) {
+            next(err);
+        }).then(function () {
+            db.store.postOneStore(newStore)
+                .then(function(store) {
+                    res.status(201).json(store);
+                }, function(err) {
+                    next(err);
+                });
+        }, function(err) {
+            next(err);
+        })
     };
     //
     var put = function(req, res, next) {
