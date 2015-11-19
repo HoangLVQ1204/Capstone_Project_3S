@@ -94,7 +94,7 @@
       "requiredcode": true
     },
     {
-      "statusid": 5,
+      "statusid": 6,
       "statusname": "Returning",
       "nextAction": "Check code return",
       "requiredcode": true

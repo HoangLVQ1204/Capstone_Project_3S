@@ -271,7 +271,7 @@ module.exports = function (app) {
                                         db.notification.addNotification(msg);
                                     });
                                     if(oldStatus == taskBegin.statusid){
-                                        Task.updateTaskStatus(nextStatus, taskid, shipperid).then(function (ok) {
+                                        Task.updateTaskStatus(2, taskid, shipperid).then(function (ok) {
                                             //addStoreToShipperRoom(orderObj.storeid, shipperid);
                                             //addOrderIntoSocket(orderObj.orderid, orderObj.storeid, shipperid);
                                             server.socket.startTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
@@ -280,7 +280,7 @@ module.exports = function (app) {
                                             return res.status(400).json("Sorry! Something went wrong!");
                                         });
                                     }else if(nextStatus == taskDone.statusid){
-                                        Task.updateTaskStatus(nextStatus,taskid,shipperid).then(function(ok){
+                                        Task.updateTaskStatus(3,taskid,shipperid).then(function(ok){
                                             //removeStoreFromShipperRoom(orderObj.storeid, shipperid);
                                             //removeOrderInSocket(orderObj.orderid);
                                             server.socket.finishTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
