@@ -69,7 +69,7 @@ module.exports = function (sequelize, DataTypes) {
                     where: {
                         shipperid: shipperid,
                         statusid: {
-                            $in: [3, 4]
+                            $in: [3, 5]
                         }
                     },
                     include: [
@@ -280,11 +280,11 @@ module.exports = function (sequelize, DataTypes) {
                 }
             },
 
-            countActiveTaskOfShipper: function (shipperid) {
+            countProcessingTaskOfShipper: function (shipperid) {
                 return task.count(
                     {
                         where: {
-                            'statusid': 2,
+                            'statusid': 4,
                             'shipperid': shipperid
                         }
                     })

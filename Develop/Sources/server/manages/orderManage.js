@@ -489,6 +489,17 @@ addGoods = function(req, res, next){
         })
         
     };
+ 
+    var storeGetOrderList = function (req, res, next) {
+        var storeId = req.user.stores[0].storeid;
+        var orderStatus = db.orderstatus;
+        db.order.storeGetAllOrders(db.orderstatus, db.ordertype,storeId)
+        .then(function(list){
+            res.status(200).json(list);
+        }, function(err) {
+            next(err);
+        });
+    };
     
 
     return {
@@ -505,6 +516,7 @@ addGoods = function(req, res, next){
         getTodayTotal: getTodayTotal,
         deleteGoods: deleteGoods,
         addGoods: addGoods,
-        updateGoods : updateGoods
+        updateGoods : updateGoods,
+        storeGetOrderList : storeGetOrderList
     }
 }

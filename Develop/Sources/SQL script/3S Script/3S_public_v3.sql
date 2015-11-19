@@ -103,7 +103,7 @@ CREATE SEQUENCE "public"."notification_notificationid_seq"
  INCREMENT 1
  MINVALUE 1
  MAXVALUE 9223372036854775807
- START 16
+ START 1
  CACHE 1;
 
 
@@ -115,7 +115,7 @@ CREATE SEQUENCE "public"."task_taskid_seq"
  INCREMENT 1
  MINVALUE 1
  MAXVALUE 9223372036854775807
- START 1
+ START 14
  CACHE 1;
 
 -- ----------------------------
@@ -1149,22 +1149,22 @@ WITH (OIDS=FALSE)
 -- ----------------------------
 -- Records of notification
 -- ----------------------------
-INSERT INTO "public"."notification" VALUES ('1', 'issue', 'big issue', 'This is big issue', 'http://google.com', 'f', 'ST000001', '2015-11-11 00:00:00+07');
-INSERT INTO "public"."notification" VALUES ('2', 'issue', 'small issue', 'This is small issue', '/#/notiListdemo', 'f', 'ST000001', '2015-11-12 00:00:00+07');
-INSERT INTO "public"."notification" VALUES ('3', 'info', 'new info', 'This is info of ST000001', '/#/notiListdemo', 'f', 'ST000001', '2015-11-13 00:00:00+07');
-INSERT INTO "public"."notification" VALUES ('4', 'info', 'new info', 'This is info of AD000001', 'http://facebook.com', 'f', 'AD000001', '2015-11-12 00:00:00+07');
-INSERT INTO "public"."notification" VALUES ('5', 'issue', 'big issue', 'This is big issue', '/#/notiListdemo', 'f', 'ST000001', '2015-11-01 00:00:00+07');
-INSERT INTO "public"."notification" VALUES ('6', 'issue', 'small issue', 'This is small issue', 'http://facebook.com', 'f', 'ST000001', '2015-11-02 00:00:00+07');
-INSERT INTO "public"."notification" VALUES ('7', 'info', 'new info', 'This is info of ST000001', '/#/notiListdemo', 'f', 'ST000001', '2015-11-03 00:00:00+07');
-INSERT INTO "public"."notification" VALUES ('8', 'info', 'new info', 'This is info of AD000001', '/#/notiListdemo', 'f', 'AD000001', '2015-11-02 00:00:00+07');
-INSERT INTO "public"."notification" VALUES ('9', 'issue', 'big issue', 'This is big issue', '/#/notiListdemo', 'f', 'ST000001', '2015-11-07 00:00:00+07');
-INSERT INTO "public"."notification" VALUES ('10', 'issue', 'small issue', 'This is small issue', '/#/notiListdemo', 'f', 'ST000001', '2015-11-06 00:00:00+07');
-INSERT INTO "public"."notification" VALUES ('11', 'info', 'new info', 'This is info of ST000001', '/#/notiListdemo', 'f', 'ST000001', '2015-11-05 00:00:00+07');
-INSERT INTO "public"."notification" VALUES ('12', 'info', 'new info', 'This is info of AD000001', 'http://google.com', 'f', 'AD000001', '2015-11-05 00:00:00+07');
-INSERT INTO "public"."notification" VALUES ('13', 'issue', 'big issue', 'This is big issue', '/#/notiListdemo', 'f', 'ST000001', '2015-10-07 00:00:00+07');
-INSERT INTO "public"."notification" VALUES ('14', 'issue', 'small issue', 'This is small issue', '/#/notiListdemo', 'f', 'ST000001', '2015-10-06 00:00:00+07');
-INSERT INTO "public"."notification" VALUES ('15', 'info', 'new info', 'This is info of ST000001', '/#/notiListdemo', 'f', 'ST000001', '2015-10-06 00:00:00+07');
-INSERT INTO "public"."notification" VALUES ('16', 'info', 'new info', 'This is info of AD000001', '/#/notiListdemo', 'f', 'AD000001', '2015-10-07 00:00:00+07');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread", "username", "createddate") VALUES ('issue', 'big issue', 'This is big issue', 'http://google.com', 'f', 'ST000001', '2015-11-11 00:00:00+07');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread", "username", "createddate") VALUES ('issue', 'small issue', 'This is small issue', '/#/notiListdemo', 'f', 'ST000001', '2015-11-12 00:00:00+07');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread", "username", "createddate") VALUES ('info', 'new info', 'This is info of ST000001', '/#/notiListdemo', 'f', 'ST000001', '2015-11-13 00:00:00+07');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread", "username", "createddate") VALUES ('info', 'new info', 'This is info of AD000001', 'http://facebook.com', 'f', 'AD000001', '2015-11-12 00:00:00+07');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread", "username", "createddate") VALUES ('issue', 'big issue', 'This is big issue', '/#/notiListdemo', 'f', 'ST000001', '2015-11-01 00:00:00+07');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread", "username", "createddate") VALUES ('issue', 'small issue', 'This is small issue', 'http://facebook.com', 'f', 'ST000001', '2015-11-02 00:00:00+07');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread", "username", "createddate") VALUES ('info', 'new info', 'This is info of ST000001', '/#/notiListdemo', 'f', 'ST000001', '2015-11-03 00:00:00+07');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread", "username", "createddate") VALUES ('info', 'new info', 'This is info of AD000001', '/#/notiListdemo', 'f', 'AD000001', '2015-11-02 00:00:00+07');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread", "username", "createddate") VALUES ('issue', 'big issue', 'This is big issue', '/#/notiListdemo', 'f', 'ST000001', '2015-11-07 00:00:00+07');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread", "username", "createddate") VALUES ('issue', 'small issue', 'This is small issue', '/#/notiListdemo', 'f', 'ST000001', '2015-11-06 00:00:00+07');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread", "username", "createddate") VALUES ('info', 'new info', 'This is info of ST000001', '/#/notiListdemo', 'f', 'ST000001', '2015-11-05 00:00:00+07');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread", "username", "createddate") VALUES ('info', 'new info', 'This is info of AD000001', 'http://google.com', 'f', 'AD000001', '2015-11-05 00:00:00+07');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread", "username", "createddate") VALUES ('issue', 'big issue', 'This is big issue', '/#/notiListdemo', 'f', 'ST000001', '2015-10-07 00:00:00+07');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread", "username", "createddate") VALUES ('issue', 'small issue', 'This is small issue', '/#/notiListdemo', 'f', 'ST000001', '2015-10-06 00:00:00+07');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread", "username", "createddate") VALUES ('info', 'new info', 'This is info of ST000001', '/#/notiListdemo', 'f', 'ST000001', '2015-10-06 00:00:00+07');
+INSERT INTO "public"."notification" ("type", "title", "content", "url", "isread", "username", "createddate") VALUES ('info', 'new info', 'This is info of AD000001', '/#/notiListdemo', 'f', 'AD000001', '2015-10-07 00:00:00+07');
 
 -- ----------------------------
 -- Table structure for order
@@ -1516,7 +1516,7 @@ INSERT INTO "public"."task" VALUES ('1', 'OD122222', 'SP000001', 'AD000001', '2'
 INSERT INTO "public"."task" VALUES ('2', 'OD981921', 'SP000001', 'AD000001', '2', '2', '2015-11-10 00:00:00+07');
 INSERT INTO "public"."task" VALUES ('3', 'OD555461', 'SP000001', 'AD000001', '2', '3', '2015-11-11 00:00:00+07');
 INSERT INTO "public"."task" VALUES ('4', 'OD123322', 'SP000002', 'AD000001', '2', '1', '2015-11-09 00:00:00+07');
-INSERT INTO "public"."task" VALUES ('5', 'OD192851', 'SP000002', 'AD000001', '4', '4', '2015-11-11 00:00:00+07');
+INSERT INTO "public"."task" VALUES ('5', 'OD192851', 'SP000002', 'AD000001', '2', '2', '2015-11-11 00:00:00+07');
 INSERT INTO "public"."task" VALUES ('6', 'OD999811', 'SP000002', 'AD000001', '2', '2', '2015-11-09 00:00:00+07');
 INSERT INTO "public"."task" VALUES ('7', 'OD872818', 'SP000001', 'AD000001', '2', '1', '2015-11-09 00:00:00+07');
 INSERT INTO "public"."task" VALUES ('8', 'OD901001', 'SP000001', 'AD000001', '2', '3', '2015-11-11 00:00:00+07');

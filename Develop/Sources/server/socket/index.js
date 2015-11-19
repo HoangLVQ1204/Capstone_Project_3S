@@ -122,7 +122,7 @@ module.exports = function(server,app){
 
 
     // Returns socket by receiver type
-    io.receiverSocket = function(receiver) {        
+    io.receiverSocket = function(receiver) {
         if (receiver === 'admin' || receiver === 'shipper' || receiver === 'store') {
             return io.to(receiver);
         }

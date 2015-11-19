@@ -2,9 +2,10 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function issueContentController($scope,$stateParams, $http, authService,config, $rootScope) {
+function issueContentController($scope,$stateParams, $http, authService,config, $rootScope ,socketAdmin) {
     //$rootScope.$state = $state;
     //$rootScope.$stateParams = $stateParams;
+
     $scope.issueid = $stateParams.issueid; //getting fooVal
     var smsData = {verticalEdge: 'right',
         horizontalEdge: 'bottom'};
@@ -15,16 +16,18 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
 
     $http.get(config.baseURI + "/api/getIssueContent?issueid=" + $scope.issueid).success(function(response){
         $scope.issue = response;
-
+        $scope.issue.orderissues.map(function (order) {
+            order.order.tasks.sort(dateSort);
+            order.order.tasks.splice(1,order.order.tasks.length-1);
+        })
         //$scope.displayedOrderCollection = [].concat($scope.orderList);
-
     })
 
 
     $scope.updateResolve = function () {
         var promise=[];
         if ($scope.resolveType == 2){
-            promise.push($http.get(config.baseURI + "/api/countActiveTaskOfShipper?shipperid=" + $scope.issue.orderissues[0].order.tasks[0].shipperid).success(function(response){
+            promise.push($http.get(config.baseURI + "/api/countProcessingTaskOfShipper?shipperid=" + $scope.issue.orderissues[0].order.tasks[0].shipperid).success(function(response){
                 $scope.activeTask = response;
             }))
         }
@@ -36,22 +39,23 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
                 //data.sticky="true";
                 $.notific8($("#sms-fail-assign").val(), smsData);
                 //console.log(error)
-                return;}
+                return;
+            }
 
             $scope.issue.resolvetype = $scope.resolveType;
 
             if ($scope.issue.resolvetype == 2)//pending issue
-                resolveIssue();
+                resolveChangeShipperIssue();
 
-            if ($scope.issue.resolvetype == 1){//return iss ue
+            if ($scope.issue.resolvetype == 1){//contiunue
                 resolveContinueIssue();
             }
 
-            if ($scope.issue.resolvetype == 3){//return issue
+            if ($scope.issue.resolvetype == 3){//cancel issue fail good
                 resolveReturnIssue();
             }
 
-            if ($scope.issue.resolvetype == 4){//return issue
+            if ($scope.issue.resolvetype == 4){//return issue can't find customer
                if($scope.issue.orderissues[0].order.statusid == 1 || $scope.issue.orderissues[0].order.statusid == 2) resolveStoreIssue();
                 else resolveReturnIssue();
             }
@@ -61,6 +65,7 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
     //console.log(authService.getCurrentInfoUser());
     $scope.showConfirm = function (event, resolveType){
         //alert(1);
+        socketAdmin.issueMessage($scope.issue, 'Order has Issue');
         if ($scope.issue.isresolved) return;
         $scope.resolveType = resolveType;
         event.preventDefault();
@@ -103,7 +108,7 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
         if ($scope.issue.typeid == 4){
             $scope.issue.orderissues.map(function (issue) {
                 issue.order.tasks[0].statusid = 5;//fail task
-                issue.order.statusid= 7;//cancel order
+                issue.order.statusid= 8;//cancel order
                 issue.order.orderstatus.statusname= 'Cancel';//cancel order
             })
             //console.log($scope.issue.orderissues);
@@ -117,19 +122,22 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
             })
         };
         if ($scope.issue.typeid == 5){
+            var promise = [];
             $scope.issue.orderissues.map(function (issue) {
                 issue.order.tasks[0].statusid = 2;//active task
                 issue.order.tasks[0].typeid = 4;//active task
                 issue.order.statusid= 6;//cancel order
                 issue.order.orderstatus.statusname= 'Canceling';//cancel order
-                $http.put(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue).then(function success(response){
-                    resolveIssue();
-                },function (error) {
-                    smsData.theme="danger";
-                    //data.sticky="true";
-                    $.notific8($("#sms-fail").val(), smsData);
-                    console.log(error)
-                })
+                promise.push($http.put(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue));
+            });
+
+            Promise.all(promise).then(function success(response){
+                resolveIssue();
+            },function (error) {
+                smsData.theme="danger";
+                //data.sticky="true";
+                $.notific8($("#sms-fail").val(), smsData);
+                console.log(error)
             })
         }
     };
@@ -163,7 +171,27 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
             //issue.order.fee= parseInt(issue.order.fee) * 0.1;//cancel order
         })
         //console.log($scope.issue.orderissues);
-        $http.put(config.baseURI + "/api/updateStateOfStoreCancelIssue", $scope.issue).then(function success(response){
+        $http.put(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue).then(function success(response){
+            resolveIssue();
+        },function (error) {
+            smsData.theme="danger";
+            //data.sticky="true";
+            $.notific8($("#sms-fail").val(), smsData);
+            console.log(error)
+        })
+
+    }
+
+    //function resolve continue issue
+    function resolveChangeShipperIssue(){
+        //console.log($scope.issue);
+        $scope.issue.orderissues.map(function (issue) {
+            //issue.order.tasks[0].statusid = 2;//fail task
+            issue.order.ispending= false;//cancel order
+            //issue.order.fee= parseInt(issue.order.fee) * 0.1;//cancel order
+        })
+        //console.log($scope.issue.orderissues);
+        $http.put(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue).then(function success(response){
             resolveIssue();
         },function (error) {
             smsData.theme="danger";
@@ -183,7 +211,17 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
 
     });
 
+    var dateSort =  function(x, y){
+        if (x.taskdate > y.taskdate) {
+            return -1;
+        }
+        if (x.taskdate < y.taskdate) {
+            return 1;
+        }
+        return 0;
+    };
+
 }
 
-issueContentController.$inject = ['$scope','$stateParams', '$http', 'authService','config','$rootScope'];
+issueContentController.$inject = ['$scope','$stateParams', '$http', 'authService','config','$rootScope', 'socketAdmin'];
 angular.module('app').controller('issueContentController',issueContentController);

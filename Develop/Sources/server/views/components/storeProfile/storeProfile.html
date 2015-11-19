@@ -1,0 +1,287 @@
+<div>
+
+    <div class="nav-collapse" style="margin-left: 0px;">
+
+
+        <!-- //breadcrumb-->
+
+        <div id="">
+
+            <div class="row panel">
+                <div id="overview">
+                    <div class="row">
+                        <div class="col-sm-11">
+                            <section class="profile-cover">
+                                <div class="profile-avatar">
+                                    <div>
+                                        <img alt="" src="assets/img/avatar5.png" class="circle">
+                                        <span>{{store.managestores[0].user.profile.name}}</span>
+                                    </div>
+                                    <a class="btn btn-theme" title="Add friends"><i class="fa fa-plus"></i> friends</a>
+                                    <a class="btn btn-theme-inverse" ><i class="fa fa-comments"></i> messages</a>
+                                </div>
+                                <div class="profile-status">
+                                    <a class="btn"> 14,548 <small>Sales</small></a>
+                                    <a class="btn"> 254 <small> Follower</small></a>
+                                </div>
+                            </section>
+                        </div>
+                        <!-- //content > row > col-sm-9 -->
+
+                        <!--<div class="col-sm-3">-->
+                            <!--<section class="profile-about">-->
+                                <!--<h3>About</h3>-->
+                                <!--<hr>-->
+                                <!--<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque non leo convallis nibh tristique commodo.</p>-->
+                            <!--</section>-->
+                        <!--</div>-->
+                        <!-- //content > row > col-lg-3 -->
+                    </div>
+                    <!-- //row-->
+                </div>
+                <br>
+                <div class="col-lg-8">
+
+                    <div class="row">
+
+                        <div class="col-md-4 align-lg-center">
+                            <img alt="" src={{store.avatar}} class="circle" style="max-width:120px; border:5px #edece5 solid; margin:25px 0;">
+
+                            <div class="form-group">
+                                <!--<h5>{{shipper.profile.name}}</h5>-->
+                                <!--<h5>{{shipper.profile.dob|date:'dd/MM/yyyy'}}</h5>-->
+                                <button type="button" class="btn btn-theme"> Choose picture...</button>
+                            </div>
+
+                        </div>
+                        <div class="col-md-8 ">
+                            <br>
+                            <h2><strong>{{store.name}}</strong></h2>
+                            <hr>
+                             <textarea class="form-control" id="sms-success"  rows="5" style="display:none">
+																	 <i class="fa fa-check-circle"></i> Update successfully<br>
+																	New information was updated...
+																</textarea>
+                         <textarea class="form-control" id="sms-fail"  rows="5" style="display:none">
+																	 <i class="fa fa-exclamation-triangle"></i> Update fail<br>
+																	There is an error to update new information.....
+																</textarea>
+                            <form id="formID" data-parsley-validate>
+
+                                <div class="form-group row" >
+                                    <div class="col-md-6">
+                                        <label class="control-label">StoreID</label>
+                                        <input type="text" class="form-control" ng-model="store.storeid" disabled>
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" >Name</label>
+                                    <input disabled type="text" class="form-control" ng-model="store.name" required placeholder="Shipper's full name..">
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" >Email Address</label>
+                                    <input disabled type="text" class="form-control" ng-model="store.email" parsley-type="email" required placeholder="Email...">
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label class="control-label">Registered Date</label>
+                                        <input disabled class="form-control" disabled value="{{store.registereddate|date:'dd/MM/yyyy'}}" parsley-americandate="true" required placeholder="Date of birth..">
+
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="control-label">Phone number</label>
+                                        <input disabled type="text" class="form-control" ng-model="store.phonenumber" parsley-type="digits" parsley-rangelength="[10,11]" required placeholder="Phone number..">
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Address</label>
+                                    <input disabled class="form-control" ng-model="store.address" placeholder="Address.." required>
+                                </div>
+                                <hr>
+                                <div class="form-group">
+                                    <button disabled type="button" class="btn btn-theme" ng-click="update()"> Update</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /row-->
+                    </div>
+                    <!-- /#tab4-->
+
+
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="widget-rating row">
+                        <div class="col-xs-12">
+                            <div class="well corner-flip flip-gray flip-bg-white bg-palevioletred-darken">
+                                <div class="row">
+                                    <div class="col-xs-12 col-md-6 text-center">
+                                        <h1 class="rating-num"> 4.7</h1>
+                                        <div class="rating">
+                                            <span class="glyphicon glyphicon-star"></span>
+                                            <span class="glyphicon glyphicon-star"> </span>
+                                            <span class="glyphicon glyphicon-star"></span>
+                                            <span class="glyphicon glyphicon-star"> </span>
+                                            <span class="glyphicon glyphicon-star-empty"></span>
+                                        </div>
+                                        <div> <span class="glyphicon glyphicon-user"></span>20,408 total </div>
+                                    </div>
+                                    <div class="col-xs-12 col-md-6">
+                                        <div class="row rating-desc">
+                                            <div class="col-xs-3 col-md-3 text-right"><label class="progress-label"> <span class="glyphicon glyphicon-star"></span>5</label></div>
+                                            <div class="col-xs-8 col-md-9">
+                                                <div class="progress progress-stripes progress-sm progress-dark">
+                                                    <div class="progress-bar bg-warning" aria-valuetransitiongoal="85"></div>
+                                                </div>
+                                            </div>
+                                            <!-- end 5 -->
+                                            <div class="col-xs-3 col-md-3 text-right"><label class="progress-label"> <span class="glyphicon glyphicon-star"></span>4</label></div>
+                                            <div class="col-xs-8 col-md-9">
+                                                <div class="progress progress-sm progress-dark">
+                                                    <div class="progress-bar bg-warning" aria-valuetransitiongoal="45"></div>
+                                                </div>
+                                            </div>
+                                            <!-- end 4 -->
+                                            <div class="col-xs-3 col-md-3 text-right"><label class="progress-label"> <span class="glyphicon glyphicon-star"></span>3</label></div>
+                                            <div class="col-xs-8 col-md-9">
+                                                <div class="progress progress-sm progress-dark">
+                                                    <div class="progress-bar bg-warning" aria-valuetransitiongoal="57"></div>
+                                                </div>
+                                            </div>
+                                            <!-- end 3 -->
+                                            <div class="col-xs-3 col-md-3 text-right"><label class="progress-label"> <span class="glyphicon glyphicon-star"></span>2</label></div>
+                                            <div class="col-xs-8 col-md-9">
+                                                <div class="progress progress-sm progress-dark">
+                                                    <div class="progress-bar bg-warning" aria-valuetransitiongoal="24"></div>
+                                                </div>
+                                            </div>
+                                            <!-- end 2 -->
+                                            <div class="col-xs-3 col-md-3 text-right"><label class="progress-label"> <span class="glyphicon glyphicon-star"></span>1</label></div>
+                                            <div class="col-xs-8 col-md-9">
+                                                <div class="progress progress-sm progress-dark last">
+                                                    <div class="progress-bar bg-warning" aria-valuetransitiongoal="12"></div>
+                                                </div>
+                                            </div>
+                                            <!-- end 1 -->
+                                        </div>
+                                        <!-- end row -->
+                                    </div>
+                                    <!-- end xs-12 -->
+                                </div>
+                                <!-- end row -->
+                            </div>
+                            <!-- end well-->
+                        </div>
+                        <!-- end xs-12 -->
+                    </div>
+                    <!-- end widget-rating-->
+                    <h3><strong>FRIENDS</strong> List </h3>
+                    <hr>
+                    <div class="widget-friend">
+                        <ul class="circle">
+                            <li>548 Follower Friends</li>
+                            <li class="online" title="zicdemo"><img alt="" src="assets/img/avatar.png"></li>
+                            <li class="online"><img alt="" src="assets/img/avatar2.png"></li>
+                            <li><img alt="" src="assets/img/avatar3.png"></li>
+                            <li class="online"><img alt="" src="assets/img/avatar4.png"></li>
+                            <li ><img alt="" src="assets/img/avatar5.png"></li>
+                            <li class="busy"><img alt="" src="assets/img/avatar6.png"></li>
+                            <li class="online"><img alt="" src="assets/photos_preview/50/people/1.jpg"></li>
+                            <li class="online"><img alt="" src="assets/photos_preview/50/people/2.jpg"></li>
+                            <li><img alt="" src="assets/photos_preview/50/people/3.jpg"></li>
+                            <li class="online"><img alt="" src="assets/photos_preview/50/people/4.jpg"></li>
+                            <li ><img alt="" src="assets/photos_preview/50/people/5.jpg"></li>
+                            <li class="busy"><img alt="" src="assets/photos_preview/50/people/6.jpg"></li>
+                            <li><img alt="" src="assets/photos_preview/50/people/7.jpg"></li>
+                            <li class="online"><img alt="" src="assets/photos_preview/50/people/8.jpg"></li>
+                            <li><a href="#"><i class="fa fa-plus"></i></a></li>
+                        </ul>
+                    </div>
+                    <hr>
+                    <div class="tooltip-area">
+                        <a class="btn btn-inverse" title="more friends" href="#menu-right"><i class="fa fa-book"></i></a>
+                        <button class="btn btn-inverse" title="unfriends"><i class="fa fa-trash-o"></i></button>
+                    </div>
+                </div>
+            </div>
+            <!-- //content > row-->
+
+        </div>
+        <!-- //content-->
+
+
+    </div>
+
+    <!--////////////////////////////////////////////////////////////////////////-->
+    <!--//////////     MODAL EFFECT DEMO    //////////-->
+    <!--//////////////////////////////////////////////////////////////////////-->
+    <!--&ndash;&gt;-->
+    <div id="md-effect-confirm" class="modal fade" tabindex="-1" data-width="750">
+        <div class="modal-header bg-inverse bd-inverse-darken">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+            <h4 class="modal-title">Confirm payment</h4>
+        </div>
+        <!-- //modal-header-->
+        <div class="modal-body">
+            <form name="myForm" data-parsley-validate>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+
+                        <th width="20%" class="text-left">Store</th>
+                        <th width="15%" class="text-right">Delivery(VND)</th>
+                        <th width="15%" class="text-right">CoD(VND)</th>
+                        <th width="15%" class="text-right">Total(VND)</th>
+                        <th width="35%">Pay</th>
+                        <th class="text-right"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{selectedStore.name}}</td>
+                        <td class="text-right">{{selectedStore.generalledgers[0].totaldelivery }}</td>
+                        <td class="text-right">{{selectedStore.generalledgers[0].totalcod}}</td>
+                        <td class="text-right">{{selectedStore.generalledgers[0].totaldelivery - selectedStore.generalledgers[0].totalcod - payFee}}VND</td>
+
+                        <td class="text-right">
+                            <!--<div class="col-lg-16">-->
+                            <!--<div class="input-icon input-group-sm">-->
+                            <!--<i class="fa fa-search ico"></i>-->
+
+                            <input type="search" id="inputValue" ng-change="checkOK($event)" parsley-type="number" required class="form-control input-group-sm text-right" ng-model="payFee">
+                            <!--</div>-->
+                            <!--</div>-->
+                        </td>
+                        <td  class="text-right">
+                    <span class="tooltip-area">
+                    <a class="btn btn-danger" title="Confirm" ng-click="postLedger(selectedStore)"> <i class="fa fa-check-circle"></i> </a>
+                    </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+        <!-- //modal-body-->
+    </div>
+    <!-- //modal-->
+    <div id="md-effect-block" class="modal fade" tabindex="-1" data-width="400">
+        <div class="modal-header bg-inverse bd-inverse-darken">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+            <h4 class="modal-title">Confirm Block</h4>
+        </div>
+        <!-- //modal-header-->
+        <div class="modal-body align-xs-center">
+            <form name="myForm">
+                <h5><strong>Are you sure to block {{selectedStore.name}}???</strong></h5><br>
+                <button type="button" class="btn btn-success btn-transparent" ng-click="blockStore(selectedStore)"><i class="fa fa-check-circle"></i> Yes</button>
+                <button type="button" class="btn btn-danger btn-transparent" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i> No</button>
+            </form>
+        </div>
+        <!-- //modal-body-->
+    </div>
+</div>

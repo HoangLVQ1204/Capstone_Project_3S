@@ -234,11 +234,16 @@ module.exports = function(app) {
 
     };
 
-    var getAllStores = function(){
-        return db.store.getAllStores().then(function(rs){
-            return rs;
-        })
-    }
+    var storeGetStoreDetail = function(req,res,next){
+        var storeid = req.user.stores[0].storeid
+        db.store.getStoreDetail(storeid, db.managestore, db.user, db.profile)
+            .then(function (store) {
+                res.status(200).json(store);
+            }, function () {
+                next(new Error("Can not find store name!"))
+            });
+
+    };
 
        return {
             get: get,
@@ -257,6 +262,6 @@ module.exports = function(app) {
             getAllStoreName: getStoreName,
             getStoreDetail: getStoreDetail,
             getAllInactiveStore: getAllInactiveStore,
-            getAllStores: getAllStores
+            storeGetStoreDetail: storeGetStoreDetail
     }
 }

@@ -1,7 +1,7 @@
 /**
  * Created by Kaka Hoang Huy on 9/30/2015.
  */
-app.controller('HistoryCtrl', ['$scope', 'dataService', function ($scope, dataFactory) {
+app.controller('HistoryCtrl', ['$scope', 'dataService', '$localstorage', function ($scope, dataFactory, $localstorage) {
   $scope.historyorders = [];
   $scope.totalTask = 0;
   $scope.totalLoaded = 0;
@@ -33,5 +33,12 @@ app.controller('HistoryCtrl', ['$scope', 'dataService', function ($scope, dataFa
       .error(function (error) {
         console.log('Unable to load customer data: ' + error);
       });
+  }
+
+  //testLocal();
+  function testLocal(){
+    $localstorage.set('history','local');
+    var his = $localstorage.get('history','');
+    alert(his);
   }
 }]);

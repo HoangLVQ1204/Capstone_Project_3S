@@ -209,6 +209,24 @@ angular.module('app', [
             access: config.role.store
         })
 
+        .state('store.transactionHistory',{
+            url: '/transactionHistory',
+            template: '<store-transaction-history></store-transaction-history>',
+            access: config.role.store
+        })
+
+        .state('store.orderList',{
+            url: '/orderList',
+            template: '<store-order-list></store-order-list>',
+            access: config.role.store
+        })
+
+        .state('store.storeProfile',{
+            url: '/storeProfile',
+            template: '<store-profile></store-profile>',
+            access: config.role.store
+        })
+
 
     jwtInterceptorProvider.tokenGetter = function(){
         return localStorage.getItem('EHID');
@@ -239,7 +257,7 @@ angular.module('app', [
         notificationService.setTotalUnreadNotifications($rootScope.numberUnreadNoti);
         //notificationService.addNotification(notification);
         var data = {
-            life: 3000,
+            life: 5000,
             horizontal: 'bottom',
             vertical: 'right',
             horizontalEdge: 'bottom',
@@ -263,9 +281,11 @@ angular.module('app', [
 
     if(authService.isLogged()){
         socketService.authenSocket()
-            .then(function() {
-                if(authService.isRightRole(config.role.admin)){
-                    socketAdmin.registerSocket();
+        .then(function() {
+            if(authService.isRightRole(config.role.admin)){
+                socketAdmin.registerSocket();
+                //$state.go("admin.dashboard");
+            }
 
                 }
 
