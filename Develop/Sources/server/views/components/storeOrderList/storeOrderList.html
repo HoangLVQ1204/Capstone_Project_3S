@@ -22,7 +22,7 @@
                                 <table class="table table-striped table-hover table-bordered" st-set-filter="customFilter" st-custom-date="{{selectedDate.value}}" st-predicate="{{selected.value}}" stdate="dateRange" search-watch-model-multiple="search" st-table="displayedCollection" st-safe-src="orderList">
 
 
-                                   <div class="row" >
+                                  <div class="row" >
                                         <div class="col-sm-5 form-group pull-left">
                                             <div class="input-group input-icon">
                                                 <i class="fa fa-calendar ico"></i>
@@ -54,12 +54,12 @@
                                         <div class="col-sm-2 pull-right">
                                             <!--<select  class="selectpicker form-control show-menu-arrow" ng-repeat="option in searchOptions">-->
                                             <!--&lt;!&ndash;<option data-icon="fa fa-user" id="predicate" ng-model="selectedPredicate" ng-options="option in predicates"></option>&ndash;&gt;<option ng-repeat="options in searchOptions" value="{{options.option}}">{{options.option}}</option>-->
-                                            
+                                            <!--
                                             <!--</select>-->
                                             <select
                                                     class="form-control"
                                                     ng-options="options.option for options in searchOptions" ng-model="selected">
-                                            </select>
+                                            </      >
                                         </div>
                                     </div>
                                     <thead>
