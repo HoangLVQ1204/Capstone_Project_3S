@@ -1080,9 +1080,10 @@ WITH (OIDS=FALSE)
 -- ----------------------------
 -- Records of issuecategory
 -- ----------------------------
-INSERT INTO "public"."issuecategory" VALUES ('1', 'Pending');
-INSERT INTO "public"."issuecategory" VALUES ('2', 'Cancel');
-INSERT INTO "public"."issuecategory" VALUES ('3', 'Store');
+INSERT INTO "public"."issuecategory" VALUES ('1', 'Shipper Pending');
+INSERT INTO "public"."issuecategory" VALUES ('2', 'Shipper Cancel');
+INSERT INTO "public"."issuecategory" VALUES ('3', 'Store Cancel');
+
 
 -- ----------------------------
 -- Table structure for issuetype
@@ -1107,6 +1108,7 @@ INSERT INTO "public"."issuetype" VALUES ('4', '2', 'Goods is broken');
 INSERT INTO "public"."issuetype" VALUES ('5', '2', 'Cannot contact with customer');
 INSERT INTO "public"."issuetype" VALUES ('6', '1', 'Other');
 INSERT INTO "public"."issuetype" VALUES ('7', '3', 'Request to cancel');
+INSERT INTO "public"."issuetype" VALUES ('8', '1', 'Shipper disconnected');
 
 -- ----------------------------
 -- Table structure for managestore

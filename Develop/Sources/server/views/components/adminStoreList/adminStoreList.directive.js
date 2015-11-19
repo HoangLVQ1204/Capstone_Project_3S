@@ -3,6 +3,14 @@
  */
 (function (ng) {
     angular.module('app')
+        .directive('adminStoreListLayout',function(){
+            return {
+                templateUrl: '/components/adminStoreList/layout.html',
+                replace: true,
+                restrict: 'E',
+                scope: false
+            }
+        })
         .directive('adminStoreList', function () {
             return {
                 controller: 'adminStoreListController',

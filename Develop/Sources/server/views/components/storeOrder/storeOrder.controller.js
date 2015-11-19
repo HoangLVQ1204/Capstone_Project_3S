@@ -233,7 +233,7 @@ function storeOrderController($scope, dataService, config, socketService, socket
         loading();
         var s = 0;
         $scope.listRightShippers = [];
-        var loopFindShipper = setInterval(function(){
+        var loopFindShipper = setInterval(function(){            
             if($scope.listRightShippers.length != 0){
                 $scope.rightShipper = $scope.listRightShippers[0];
                 $scope.$apply();

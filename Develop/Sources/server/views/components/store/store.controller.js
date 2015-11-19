@@ -20,10 +20,9 @@ function storeController($scope,$state,socketService,socketStore,dataService,aut
     }
 
     $scope.signOut = function(){
-        console.log("log out");
         socketService.disconnect();
         authService.signOut();
-        $state.go("login");
+
     }
 
     function loading(){
@@ -51,7 +50,10 @@ function storeController($scope,$state,socketService,socketStore,dataService,aut
     });
 
     $scope.test = function(){
-
+        //$("#listAcceptedShipper").modal("show");
+        //setTimeout(function(){
+        //    $("#listAcceptedShipper").modal("hide");
+        //},3000);
         socketStore.findShipper();
         loading();
         var s = 0;
@@ -99,41 +101,20 @@ function storeController($scope,$state,socketService,socketStore,dataService,aut
             });
         caplet();
 
-        // Test notification
-        // var temp = {
-        //     type: 'issue',
-        //     title: 'big issue',
-        //     content: 'This is big issue',
-        //     url: '/notidemo',
-        //     createddate: 'date 1'
-        // };
-        // $rootScope.notify(temp);
     });
 
-    // Test notification
-    setTimeout(function() {        
-        var temp = {
-            type: 'issue',
-            title: 'issue 1',
-            content: 'This is very big issue number 1',
-            url: '/#/notiListdemo',
-            isread: false,
-            createddate: new Date()
-        };
-        $rootScope.notify(temp);
-    }, 1000);
 
-    // setTimeout(function() {        
-    //     var temp = {
-    //         type: 'info',
-    //         title: 'info 2',
-    //         content: 'This is very big info number 2',
-    //         url: '/#/notiListdemo',
-    //         isread: false,
-    //         createddate: new Date()
-    //     };
-    //     $rootScope.notify(temp);
-    // }, 3000);
+    //setTimeout(function() {
+    //    var temp = {
+    //        type: 'issue',
+    //        title: 'issue 1',
+    //        content: 'This is very big issue number 1',
+    //        url: '/#/notiListdemo',
+    //        isread: false,
+    //        createddate: new Date()
+    //    };
+    //    $rootScope.notify(temp);
+    //}, 1000);
 }
 
 storeController.$inject = ['$scope','$state','socketService','socketStore','dataService','authService','config','$rootScope'];

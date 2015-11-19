@@ -30,6 +30,9 @@ module.exports = function (app) {
     app.route('/store/orders/cancel')
         .post(checkAll,controller.cancelOrder);
 
+    app.route('/orders/updateExpressOrder')
+        .put(controller.updateExpressOrder)    
+
     app.route('/api/store/deleteGoods')
         .delete(checkAll, controller.deleteGoods);
 
