@@ -267,7 +267,14 @@ module.exports = function(app) {
         } while (isExisted);
     };
 
-       return {
+    var getAllStores = function(){
+        return db.store.getAllStores().then(function(rs){
+            return rs;
+        })
+    }
+
+
+    return {
             get: get,
             getOne: getOne,
             post: post,
@@ -284,6 +291,7 @@ module.exports = function(app) {
             getAllStoreName: getStoreName,
             getStoreDetail: getStoreDetail,
             getAllInactiveStore: getAllInactiveStore,
-            storeGetStoreDetail: storeGetStoreDetail
+            storeGetStoreDetail: storeGetStoreDetail,
+            getAllStores: getAllStores
     }
 }
