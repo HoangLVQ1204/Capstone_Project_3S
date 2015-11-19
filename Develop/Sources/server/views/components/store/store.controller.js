@@ -20,10 +20,9 @@ function storeController($scope,$state,socketService,socketStore,dataService,aut
     }
 
     $scope.signOut = function(){
-        console.log("log out");
         socketService.disconnect();
         authService.signOut();
-        $state.go("login");
+
     }
 
     function loading(){
@@ -105,17 +104,17 @@ function storeController($scope,$state,socketService,socketStore,dataService,aut
     });
 
 
-    setTimeout(function() {
-        var temp = {
-            type: 'issue',
-            title: 'issue 1',
-            content: 'This is very big issue number 1',
-            url: '/#/notiListdemo',
-            isread: false,
-            createddate: new Date()
-        };
-        $rootScope.notify(temp);
-    }, 1000);
+    //setTimeout(function() {
+    //    var temp = {
+    //        type: 'issue',
+    //        title: 'issue 1',
+    //        content: 'This is very big issue number 1',
+    //        url: '/#/notiListdemo',
+    //        isread: false,
+    //        createddate: new Date()
+    //    };
+    //    $rootScope.notify(temp);
+    //}, 1000);
 }
 
 storeController.$inject = ['$scope','$state','socketService','socketStore','dataService','authService','config','$rootScope'];

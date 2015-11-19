@@ -263,21 +263,22 @@ angular.module('app', [
 
     if(authService.isLogged()){
         socketService.authenSocket()
-        .then(function() {
-            if(authService.isRightRole(config.role.admin)){
-                socketAdmin.registerSocket();
-            }
+            .then(function() {
+                if(authService.isRightRole(config.role.admin)){
+                    socketAdmin.registerSocket();
 
-            if(authService.isRightRole(config.role.store)){
-                socketStore.registerSocket();
-            }
+                }
 
-             if(authService.isRightRole(config.role.shipper)){
-                 socketShipper.registerSocket();
-             }
-        })
-    }else{
-        $state.go("login");
+                if(authService.isRightRole(config.role.store)){
+                    socketStore.registerSocket();
+
+                }
+
+                //if(authService.isRightRole(config.role.shipper)){
+                //    socketShipper.registerSocket();
+                //    $state.go('admin.dashboard');
+                //}
+            })
     }
 
     $rootScope.$on('$stateChangeStart', function(event, toState, fromState, toParams) {
@@ -285,16 +286,14 @@ angular.module('app', [
         if(toState.access){
 
             if(!authService.isLogged()){
-                $state.go("login");
+                $state.go("error");
                 event.preventDefault();
-
             }
 
             if(!authService.isRightRole(toState.access)){
                 console.log("access");
                 $state.go("error");
                 event.preventDefault();
-
             }
 
         }
@@ -303,17 +302,20 @@ angular.module('app', [
 
             if(authService.isLogged()){
                 if(authService.isRightRole(config.role.admin)){
+                    $state.go('admin.dashboard');
                     event.preventDefault();
 
                 }
+
                 if(authService.isRightRole(config.role.store)){
+                    $state.go('store.dashboard');
                     event.preventDefault();
                 }
             }
-
         }
 
     });
+
 
     $rootScope.$on('$stateChangeSuccess', function(e, toState){
 
