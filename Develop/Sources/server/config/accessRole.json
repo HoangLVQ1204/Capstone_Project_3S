@@ -139,6 +139,11 @@
     {
       "url": "/api/storeDetail",
       "role": [2]
+    },
+
+    {
+      "url": "/store/orders/cancel",
+      "role": [2]
     }
     
       
