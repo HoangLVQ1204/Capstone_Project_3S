@@ -74,6 +74,12 @@ function socketAdmin(socketService,authService,mapService, $rootScope){
         console.log('admin:issue', data.msg);
         $rootScope.$emit("admin:issue:newIssue", data.msg);
     });
+
+    socketService.on('admin:notification:issue', function(data) {
+        console.log('admin:notification:issue', data);
+        $rootScope.$emit("admin:issue:newIssue", data.msg);
+        $rootScope.notify(data.msg.notification);
+    });
     
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();        
@@ -103,6 +109,31 @@ function socketAdmin(socketService,authService,mapService, $rootScope){
             admin: user
         },
         'client:register');
+    };
+
+    api.issueMessage = function (issue, msg) {
+        //var shipperList = [];
+        var orderList = [];
+
+        issue.orderissues.map(function (orderissue) {
+            var order = new Object();
+            order['storeid'] = orderissue.order.storeid;
+            order['orderid'] = orderissue.order.orderid;
+            orderList.push(order);
+        })
+        var user = api.getCurrentUser();
+        socketService.sendPacket(
+            {
+                type: 'admin',
+                clientID: user.adminID
+            },
+            'server',
+            {
+                orderList: orderList,
+                shipperid: issue.orderissues[0].order.tasks[0].shipperid,
+                msg: msg
+            },
+            'admin:messageIssue');
     };
 
 

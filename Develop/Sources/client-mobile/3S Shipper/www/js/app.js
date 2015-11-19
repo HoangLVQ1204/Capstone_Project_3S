@@ -26,18 +26,16 @@ var app = angular.module('starter', ['ionic', 'ngCordova','uiGmapgoogle-maps','a
         StatusBar.styleDefault();
       }
     });
-
+    //window.localStorage.removeItem('EHID');
     ////Check Is firt time sign in
     if (authService.isLogged()) {
       socketService.authenSocket()
         .then(function(){
           socketShipper.registerSocket();
           $rootScope.isGrabbing = false;
-          //$location.path('/app/tasks');
           $state.go("app.tasks");
         });
     } else {
-      //$location.path('/sign-in');
       $state.go('sign-in');
     }
 

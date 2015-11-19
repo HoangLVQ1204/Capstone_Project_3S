@@ -141,9 +141,18 @@ module.exports = function(sequelize, DataTypes) {
             where: {
               shipperid: shipperid,
               //taskdate: taskdate,
-              statusid: [1, 2]
+              statusid: [1, 2, 4]
             }
           }]
+        });
+      },
+
+      getStoresOfOrder: function(orderIDs) {
+        return order.findAll({
+          attributes: ['storeid'],
+          where: {
+            orderid: orderIDs
+          }
         });
       },
 
@@ -216,19 +225,12 @@ module.exports = function(sequelize, DataTypes) {
       },
 
 
-      postOneOrder: function(newOrder){        
-        newOrder.createdate = moment().format();        
+      postOneOrder: function(newOrder){
         return order.build(newOrder).save();
       },
 
-      updateOrder: function (currentOrder,orderid) {
-        return order.update(
-          currentOrder,
-          {
-            where:{
-              'orderid': orderid
-            }
-          })
+      putOrder: function (currentOrder) {
+        return currentOrder.save();
       },
 
       changeIsPendingOrder: function(orderID, isPending) {
@@ -329,13 +331,15 @@ module.exports = function(sequelize, DataTypes) {
         return order.findAll({
           attributes: ['orderid', 'ispending'],
           where: {'ispending': true},
+          limit: 1,
+          order: '"createddate" DESC',
           include: [{
             model: orderissue,
             attributes: ['issueid'],
             include: [{
               model: issue,
               attributes: ['typeid', 'isresolved'],
-              where: {isresolved: false},
+              //where: {isresolved: false},
               include: [{
                 model: issuetype,
                 attributes: ['categoryid'],
@@ -433,7 +437,7 @@ module.exports = function(sequelize, DataTypes) {
 
       updateOrderStatus: function (newOrder) {//change status of order
         return order.update(
-            {'statusid': newOrder.statusid },
+            {'statusid': newOrder.statusid, 'ispending': newOrder.ispending},
             {
               where: {
                 'orderid': newOrder.orderid

@@ -78,66 +78,66 @@
 
                 })
             });
-var totalNewOrder = 0;
-var totalNewCod =0;
-var totalNewFee = 0;
-var todayOrder =0;
-var todayCod = 0;
-var todayFee = 0;
-var group = {};
-group['Total'] = group['Total'] || [];
-group['Draff'] = group['Draff'] || [];
-group['Done'] = group['Done'] || [];
-group['Inprocess'] = group['Inprocess'] || [];
-_.each(listOrders, function(item) {
-    if(item.ledgerid == ''){
+            var totalNewOrder = 0;
+            var totalNewCod =0;
+            var totalNewFee = 0;
+            var todayOrder =0;
+            var todayCod = 0;
+            var todayFee = 0;
+            var group = {};
+            group['Total'] = group['Total'] || [];
+            group['Draff'] = group['Draff'] || [];
+            group['Done'] = group['Done'] || [];
+            group['Inprocess'] = group['Inprocess'] || [];
+            _.each(listOrders, function(item) {
+                if(item.ledgerid == ''){
 
-        if(item['isdraff']) {
-            group['Draff'].push(item);
-        }else if(_.isEqual(item['statusname'],'Done')|| _.isEqual(item['statusname'],'Canceled') ){
-            group['Done'].push(item);
-            totalNewCod = totalNewCod + parseInt(item.cod);
-            totalNewFee = totalNewFee + parseInt(item.fee);
-        }else {
-            group['Inprocess'].push(item);
-        }                        
-        totalNewOrder++;
+                    if(item['isdraff']) {
+                        group['Draff'].push(item);
+                    }else if(_.isEqual(item['statusname'],'Done')|| _.isEqual(item['statusname'],'Canceled') ){
+                        group['Done'].push(item);
+                        totalNewCod = totalNewCod + parseInt(item.cod);
+                        totalNewFee = totalNewFee + parseInt(item.fee);
+                    }else {
+                        group['Inprocess'].push(item);
+                    }                        
+                    totalNewOrder++;
 
-        if(!_.isEqual(item['createdate'],'' && !item['isdraff'])){
-            var date = new Date(item['createdate']);
-            date.setHours(0,0,0,0);
-            var today = new Date();
-            today.setHours(0,0,0,0);
-            if(date.valueOf() === today.valueOf())
-                todayOrder ++;
-        }
+                    if(!_.isEqual(item['createdate'],'' && !item['isdraff'])){
+                        var date = new Date(item['createdate']);
+                        date.setHours(0,0,0,0);
+                        var today = new Date();
+                        today.setHours(0,0,0,0);
+                        if(date.valueOf() === today.valueOf())
+                            todayOrder ++;
+                    }
 
-        if(!_.isEqual(item['completedate'],'')){
-            var date = new Date(item['completedate']);
-            date.setHours(0,0,0,0);
-            var today = new Date();
-            today.setHours(0,0,0,0);
-            if(date.valueOf() === today.valueOf()){
-                todayCod = todayCod + parseInt(item.cod);
-                todayFee = todayFee + parseInt(item.fee);
-            }
+                    if(!_.isEqual(item['completedate'],'')){
+                        var date = new Date(item['completedate']);
+                        date.setHours(0,0,0,0);
+                        var today = new Date();
+                        today.setHours(0,0,0,0);
+                        if(date.valueOf() === today.valueOf()){
+                            todayCod = todayCod + parseInt(item.cod);
+                            todayFee = todayFee + parseInt(item.fee);
+                        }
 
-        }
-    }
+                    }
+                }
 
-});
+            });
 
-group['Total'].push(totalNewCod);
-group['Total'].push(totalNewFee);
-group['Total'].push(todayOrder);
-group['Total'].push(todayCod);
-group['Total'].push(todayFee);
-group['Total'].push(totalNewOrder);
+            group['Total'].push(totalNewCod);
+            group['Total'].push(totalNewFee);
+            group['Total'].push(todayOrder);
+            group['Total'].push(todayCod);
+            group['Total'].push(todayFee);
+            group['Total'].push(totalNewOrder);
 
-res.status(200).json(group);
-}, function (err) {
-    next(err);
-})
+            res.status(200).json(group);
+            }, function (err) {
+                next(err);
+            })
 };
 
 
@@ -187,7 +187,7 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
 
     var post = function (req, res, next) {
         var newOrder = {};
-
+        console.log("==========req.body==============")
         /*
          * By HuyTDH - 09/10/2015
          * This function is used to create ID for order       
@@ -196,58 +196,19 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
          var formatStr = str.substr(str.length - 6);
          var newOrderID = "OD" + formatStr;
          newOrder.orderid = newOrderID;
-        ////////
+        
 
         /*
          * By KhanhKC - 14/11/2015
          * This function is used to caculate Ship fee       
          */
-         var fee = 0;
-         var district = req.body.selectedDistrict;
+         
+         var district = req.body.order.deliverydistrictid;
          var innerCity = config.fileterLocation.in;
-
-         if(innerCity.indexOf(district)> -1){
-            if(req.body.order.ordertypeid == '1'){
-                fee = 10000;
-            }else {
-                fee = 20000;
-            }                
-        }else {
-            if(req.body.order.ordertypeid == '1'){
-                fee = 20000;
-            }else {
-                fee = 30000;
-            }       
-        }
-        ///////
-
-        /*
-         * By KhanhKC - 14/11/2015
-         * This function is used to caculate total weight of order       
-         */
-         var totalWeight = 0;
-         for(var i = 0; i <req.body.goods.length;i++){
-            totalWeight = totalWeight + req.body.goods[i].weight*req.body.goods[i].amount;
-        }
-        ///////
-
-        /*
-         * By KhanhKC - 14/11/2015
-         * This function is used to caculate over weight fee of order       
-         */
-         var overWeightFee = 0;        
-         if(totalWeight > 4000 ){
-            console.log("===========totalWeight=======", totalWeight);
-            if(innerCity.indexOf(district)> -1){
-                overWeightFee = (totalWeight - 4000)*2*2;
-                //console.log("=============In=========",district);
-            }else {
-                overWeightFee = (totalWeight - 4000)*2*2.5;
-                //console.log("=============Out=========",district);
-            }
-            
-        }
-        ///////
+         var ordertypeid = req.body.order.ordertypeid;
+         var fee = calculateShipFee (district, innerCity,ordertypeid);         
+         var overWeightFee =calculateOverWeightFee (district, innerCity,req.body.goods)
+        
         //console.log("=============fee===============",fee);        
         //console.log("=============overWeightFee=======",overWeightFee);
         //console.log("=============req.body===============",req.body);
@@ -263,6 +224,9 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
         newOrder.createdate = new Date();         
         newOrder.fee = fee; 
         newOrder.overweightfee = overWeightFee;
+        newOrder.deliveryprovinceid = req.body.order.deliveryprovinceid;
+        newOrder.deliverydistrictid = req.body.order.deliverydistrictid;
+        newOrder.deliverywardid = req.body.order.deliverywardid;
         newOrder.cod = parseInt(req.body.order.cod)?parseInt(req.body.order.cod):0;
         //console.log("==============11===============");
 
@@ -510,6 +474,17 @@ addGoods = function(req, res, next){
         })
         
     };
+ 
+    var storeGetOrderList = function (req, res, next) {
+        var storeId = req.user.stores[0].storeid;
+        var orderStatus = db.orderstatus;
+        db.order.storeGetAllOrders(db.orderstatus, db.ordertype,storeId)
+        .then(function(list){
+            res.status(200).json(list);
+        }, function(err) {
+            next(err);
+        });
+    };
     
 
     return {
@@ -525,6 +500,7 @@ addGoods = function(req, res, next){
         getTodayTotal: getTodayTotal,
         deleteGoods: deleteGoods,
         addGoods: addGoods,
-        updateGoods : updateGoods
+        updateGoods : updateGoods,
+        storeGetOrderList : storeGetOrderList
     }
 }

@@ -45,4 +45,7 @@ module.exports = function(app){
 
 	app.route('/api/storeDetail/:storeid')
 		.get(controller.getStoreDetail);
+
+	app.route('/api/storeDetail')
+		.get(checkAll,controller.storeGetStoreDetail);
 };

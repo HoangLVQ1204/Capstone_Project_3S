@@ -142,6 +142,13 @@ module.exports = function(sequelize, DataTypes) {
             'storeid': storeid
           }
         })
+      },
+      storeGetAllLedger: function (storeid) {
+        return generalledger.findAll({
+          where: {
+            'storeid': storeid
+          }
+        })
       }
   }
 });

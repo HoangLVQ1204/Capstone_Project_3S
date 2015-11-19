@@ -33,8 +33,19 @@ module.exports = function (app) {
             })
     };
 
+    var storeGetAllLedger = function (req, res, next) {
+        var storeId = req.user.stores[0].storeid;
+        db.generalledger.storeGetAllLedger(storeId)
+        .then(function(list){
+            res.status(200).json(list);
+        }, function(err) {
+            next(err);
+        });
+    };
+
     return {
         getAllLedger: getAllLedger,
-        getLedgerOfStore: getLedgerOfStore
+        getLedgerOfStore: getLedgerOfStore,
+        storeGetAllLedger : storeGetAllLedger
     }
 }
