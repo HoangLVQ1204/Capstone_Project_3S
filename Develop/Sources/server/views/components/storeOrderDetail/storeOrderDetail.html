@@ -1,112 +1,103 @@
-<div class="panel">
-	<header class= "panel-heading">
-		<h2><strong>Order</strong> Detail</h2>
+<div class="col-md-12">
+  <div class="panel">
+  <header class= "panel-heading bg-inverse">
+    <h2><strong>Order</strong> Detail</h2>
     <label class="color">Detail information of order</label>
-	</header>
+  </header>
 
-	<div class="panel-body">
-			
-		<div >
-			<div>	       
-        <div class="row bg-lightseagreen">
-          <div>
-          <label class="control-label col-md-12 color-white align-lg-center"><h4>Order id: <strong>{{order.orderid}}</strong></h4></label>
-          <label class="control-label col-md-6 color-white align-lg-right"><h4>Order status: <strong>{{order.orderstatus.statusname}}</strong></h4></label>
-          <label class="control-label col-md-6 color-white align-lg-left"><h4>Delivery type: <strong>{{deliveryType}}</strong></h4></label>
-        </div>
-          <section>
-            <div class="form-group col-md-3">
-           <label class=" fullWidth color-inverse  align-lg-center "><h5><strong>Code for customer</strong></h5></label>
-           <label class=" fullWidth color-inverse  align-lg-center "><h5><strong>{{codeForCustomer}}</strong></h5></label>
-          </div>
-
-         <div class="form-group col-md-2">           
-           <label class=" fullWidth color-inverse  align-lg-center "><h5><strong>Code for shipper</strong></h5></label>
-           <label class=" fullWidth color-inverse  align-lg-center "><h5><strong>{{codeForShipper}}</strong></h5></label>
-           
-         </div>
-       
-        <div class="form-group col-md-2">         
-         <label class=" fullWidth color-inverse  align-lg-center "><h5><strong>Cash on delivery</strong></h5></label>
-         <label class=" fullWidth color-inverse  align-lg-center "><h5><strong>{{order.cod|number}} VND</strong></h5></label>
-         
-       </div>
-
-       <div class="form-group col-md-2">
-         <label class=" fullWidth color-inverse  align-lg-center "><h5><strong>Ship fee</strong></h5></label>
-         <label class=" fullWidth color-inverse  align-lg-center "><h5><strong>{{order.fee|number}} VND</strong></h5></label>
-       </div>  
-    
-      <div class="form-group col-md-3">
-      <label class=" fullWidth color-inverse  align-lg-center "><h5><strong>Over weight fee</strong></h5></label>
-      <label class=" fullWidth color-inverse  align-lg-center "><h5><strong>{{order.overweightfee|number}} VND</strong></h5></label>
-     </div>
-          </section>
-          
-   <!-- </div> -->
- </div>
-</div>
-
-
-<form id="edit-order-form">
-  <div class="row">
-   <div class="col-md-7" >						
-    <br>
-    <h3><strong>Delivery</strong> Info</h3>
+  <div class="panel-body">
     <hr>
-
-    <div class="form-group row">
-     <div class="col-md-6">
-      <label class="control-label">Full name</label>
-      <input type="text" name="fullname" ng-disabled="disabled" ng-model="order.recipientname"
-      class="form-control"
-      placeholder="Your customer name" parsley-required="true">
+    <div class="row">      
+      <div class="col-md-4">
+        <section>
+          <div class="col-md-6"><h4>Order id: </h4></div>
+          <div><h4>{{order.orderid}}</h4></div> 
+          <div class="col-md-6"><h4>Order status:</h4></div>
+          <div><h4>{{order.orderstatus.statusname}}</h4></div> 
+          <div class="col-md-6"><h4>Delivery type:</h4></div>
+          <div><h4>{{deliveryType}}</h4></div>  
+        </section>
+      </div>
+      <div class="col-md-4">
+        <section>
+          <div class="col-md-7"><h4>Cash on delivery:</h4></div>
+          <div><h4>{{order.cod|number}} VND</h4></div> 
+          <div class="col-md-7"><h4>Ship fee:</h4></div>
+          <div><h4>{{order.fee|number}} VND</h4></div> 
+          <div class="col-md-7"><h4>Over weight fee:</h4></div>
+          <div><h4>{{order.overweightfee|number}} VND</h4></div>  
+        </section>
+      </div>
+      <div class="col-md-4">
+        <section>
+          <div class="col-md-8"><h4>Code for customer:</h4></div>
+          <div><h4>{{codeForCustomer}}</h4></div> 
+          <div class="col-md-8"><h4>Code for shipper:</h4></div>
+          <div><h4>{{codeForShipper}}</h4></div> 
+        </section>
+      </div>      
     </div>
-    <div class="col-md-6">
-      <label class="control-label">Phone</label>
-      <input ng-model="order.recipientphone" ng-disabled="disabled" type="text" class="form-control"
-      parsley-type="phone"  parsley-required="true"
-      placeholder="(XXX) XXXX XXX">
+    <hr>
+    <div>
+      <form id="edit-order-form">
+        <div class="row">
+         <div class="col-md-7" >            
+          <br>
+          <h3><strong>Delivery</strong> Info</h3>
+          <hr>
+
+          <div class="form-group row">
+           <div class="col-md-6">
+            <label class="control-label">Full name</label>
+            <input type="text" name="fullname" ng-disabled="disabled" ng-model="order.recipientname"
+            class="form-control"
+            placeholder="Your customer name" parsley-required="true">
+          </div>
+          <div class="col-md-6">
+            <label class="control-label">Phone</label>
+            <input ng-model="order.recipientphone" ng-disabled="disabled" type="text" class="form-control"
+            parsley-type="phone"  parsley-required="true"
+            placeholder="(XXX) XXXX XXX">
+          </div>
+        </div>        
+        <div class="form-group row" ng-if="!disabled">
+         <div class="col-md-4">
+          <label class="control-label">Province</label>
+          <select parsley-required="true" class="form-control"
+          ng-options="x.name for x in listProvince track by x.provinceid"
+          ng-model="data.selectedProvince" ng-change="updateDistrict()">
+
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="control-label">District</label>
+        <select parsley-required="true" class="form-control"
+        ng-options="x.name for x in listDistrict track by x.districtid"
+        ng-model="data.selectedDistrict" ng-change="updateWard()"> </select>
+      </div>
+      {{selectedDistrictxxx.name}}
+      <div class="col-md-4">
+        <label class="control-label">Ward</label>
+        <select parsley-required="true" class="form-control"
+        ng-options="x.name for x in listWard track by x.wardid"
+        ng-model="data.selectedWard" ng-change="updateDeliveryAdd()">
+      </select>
     </div>
-  </div>				
-  <div class="form-group row" ng-if="!disabled">
-   <div class="col-md-4">
-    <label class="control-label">Province</label>
-    <select parsley-required="true" class="form-control"
-    ng-options="x.name for x in listProvince track by x.provinceid"
-    ng-model="data.selectedProvince" ng-change="updateDistrict()">
+    {{selectedWard.name}}
 
-  </select>
-</div>
-<div class="col-md-4">
-  <label class="control-label">District</label>
-  <select parsley-required="true" class="form-control"
-  ng-options="x.name for x in listDistrict track by x.districtid"
-  ng-model="data.selectedDistrict" ng-change="updateWard()"> </select>
-</div>
-{{selectedDistrictxxx.name}}
-<div class="col-md-4">
-  <label class="control-label">Ward</label>
-  <select parsley-required="true" class="form-control"
-  ng-options="x.name for x in listWard track by x.wardid"
-  ng-model="data.selectedWard" ng-change="updateDeliveryAdd()">
-</select>
-</div>
-{{selectedWard.name}}
-
-</div>
-<div class="form-group" ng-if="!disabled">
- <label class="control-label">Address</label>
- <textarea ng-model="order.deliveryaddress" class="form-control"
- parsley-trigger="keyup" rows="1"
- placeholder="Number Street (Eg: 40 Duy Tân)" ng-disabled="disabled" ng-change="updateDeliveryAdd()" required></textarea>
-</div>
-<div class="form-group">
- <label class="control-label">Address</label>
- <textarea  class="form-control"
- parsley-trigger="keyup" rows="1"
- disabled>{{order.deliveryaddress+ ', ' + data.selectedWard.name + ', ' +data.selectedDistrict.name + ', ' + data.selectedProvince.name + ', Việt Nam'}}</textarea>
-</div>
+  </div>
+  <div class="form-group" ng-if="!disabled">
+   <label class="control-label">Address</label>
+   <textarea ng-model="order.deliveryaddress" class="form-control"
+   parsley-trigger="keyup" rows="1"
+   placeholder="Number Street (Eg: 40 Duy Tân)" ng-disabled="disabled" ng-change="updateDeliveryAdd()" required></textarea>
+ </div>
+ <div class="form-group">
+   <label class="control-label">Address</label>
+   <textarea  class="form-control"
+   parsley-trigger="keyup" rows="1"
+   disabled>{{order.deliveryaddress+ ', ' + data.selectedWard.name + ', ' +data.selectedDistrict.name + ', ' + data.selectedProvince.name + ', Việt Nam'}}</textarea>
+ </div>
 
 </div>
 <div class="col-md-5">
@@ -136,10 +127,10 @@
 </div>
 <div ng-if="!disabled" class="form-group">
   <label class="control-label">Cash on delivery</label>
-   <input ng-model="order.cod" type="text" class="form-control"
-    parsley-type="number"
-    parsley-min="0" parsley-max="10000000"
-    placeholder="Unit: Vietnam dong">
+  <input ng-model="order.cod" type="text" class="form-control"
+  parsley-type="number"
+  parsley-min="0" parsley-max="10000000"
+  placeholder="Unit: Vietnam dong">
 </div>
 
 </div>
@@ -198,9 +189,9 @@
 </div>
 </form>
 
-</div>	
-			<!--
-			////////////////////////////////////////////////////////////////////////////
+</div>  
+      <!--
+      ////////////////////////////////////////////////////////////////////////////
             //////////     MODAL ADD GOODS   //////////
             /////////////////////////////////////////////////////////////////////////
           -->
@@ -338,21 +329,21 @@
             /////////////////////////////////////////////////////////////////////////
           -->
 
-        <div id="md-delete-goods" class="modal fade" data-header-color="#736086">
-        	<div class="modal-header bg-inverse bd-inverse-darken">
-        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
-        			class="fa fa-times"></i></button>
-        			<h4 class="modal-title"><strong>Delete </strong> goods</h4>
-        		</div>
-        		<!-- //modal-header-->
-        		<div class="modal-body">
-        			<h4>Do you want to delete goods: {{newGood.goodsname}}</h4>
-        		</div>
-        		<!-- //modal-body-->
-        		<div class="modal-footer">
-        			<button type="button" ng-click="deleteGoods()" data-dismiss="modal" class="btn btn-theme">Yes</button>
-        			<button type="button"  data-dismiss="modal" class="btn btn-inverse">No</button>
-        		</div>
+          <div id="md-delete-goods" class="modal fade" data-header-color="#736086">
+           <div class="modal-header bg-inverse bd-inverse-darken">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
+             class="fa fa-times"></i></button>
+             <h4 class="modal-title"><strong>Delete </strong> goods</h4>
+           </div>
+           <!-- //modal-header-->
+           <div class="modal-body">
+             <h4>Do you want to delete goods: {{newGood.goodsname}}</h4>
+           </div>
+           <!-- //modal-body-->
+           <div class="modal-footer">
+             <button type="button" ng-click="deleteGoods()" data-dismiss="modal" class="btn btn-theme">Yes</button>
+             <button type="button"  data-dismiss="modal" class="btn btn-inverse">No</button>
+           </div>
 
 
            <!-- //modal-footer-->
@@ -370,6 +361,8 @@
 
         </div>
       </div>
+</div>
+
 
 
 

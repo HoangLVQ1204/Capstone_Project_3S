@@ -319,6 +319,23 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
         $.notific8($("#smsEmptyGood").val(), data);       
     }
 
+    // START Listen to socket changes
+    $rootScope.$on("evChange", function(event, data){
+      console.log("===============OK======");
+        getOrderFromServer();
+        //SHOW INFORMATION OF THE SHIPPER WHO PICKED ORDER
+        if(data.msg.profile) {
+            $scope.theShipper = data.msg.profile;
+            $scope.thePickedOrder = data.msg.order;
+            console.dir($scope.theShipper);
+            $("#informMsg").modal("show");
+            setTimeout(function () {
+                $("#informMsg").modal("hide");
+            }, 3000);
+        }
+        //END SHOW INFORMATION OF SHIPPER
+    });
+
 }
 storeOrderDetailController.$inject = ['$scope','$stateParams','dataService','$http','config','$rootScope'];
 
