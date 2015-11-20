@@ -711,7 +711,7 @@ module.exports = function (app) {
                         orderList.push(order);
                     }
                     else {
-                        if (item.statusid == 4 && item.tasks.length==1) {
+                        if (item.statusid == 4 && item.tasks.length==1 && item.tasks[0].statusid == 3) {
                             orderList.push(order);
                         }
                         if (item.tasks[item.tasks.length-1].shipperid == null) {

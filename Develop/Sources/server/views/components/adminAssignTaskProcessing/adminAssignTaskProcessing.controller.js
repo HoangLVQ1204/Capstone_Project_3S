@@ -100,13 +100,13 @@ function adminAssignTaskProcessingController($scope,$state, $http, authService, 
                 while(i<n) {
                     var task = shipper.tasks[i];
                     var oldTask = $.grep($scope.oldTasks, function(e){ return e.taskid ==  task.taskid;});
-                    console.log(oldTask)
+                    //console.log(oldTask)
                     if (task.statusid == 4 && oldTask.length > 0 && task.shipperid!=oldTask[0].shipperid) {
                         var indexTask = shipper.tasks.indexOf(task);
                         shipper.tasks.splice(indexTask, 1);
                         n--;
                     }
-                    else if (task.statusid == 1) {
+                    else if (task.statusid == 1 || task.statusid == null) {
                         task['taskstatus'] = new Object();
                         task['taskstatus']['statusname'] = 'Inactive';
                         i++;
@@ -130,7 +130,7 @@ function adminAssignTaskProcessingController($scope,$state, $http, authService, 
         //console.log(order)
         if ($scope.pickedShipper == null) return;
 
-        if (order.statusid == 4 && $scope.pickedShipper.hasIssue){
+        if ($scope.pickedShipper.hasIssue){
             var data = new Object();
             data.verticalEdge='right';
             data.horizontalEdge='bottom';
@@ -245,7 +245,7 @@ function adminAssignTaskProcessingController($scope,$state, $http, authService, 
     //----------------------------------
     //FUNCTION move order away shipper has issue
     //-----------------------------------
-    $scope.go = function(path){
+    $scope.goInbox = function(){
         var issue = $.grep($scope.listUserHasIssue, function(e){ return e.sender ==  $scope.originShipperID;});
         //console.log(issue[0])
         $state.go('admin.issueBox.content',{issueid: issue[0].issueid});
