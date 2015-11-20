@@ -29,15 +29,14 @@
                                                 <input type="text"  class="form-control" daterange id="daterange" name="daterange" ng-model="dateRange"/>
                                                 <span class="input-group-btn">
                                                     <div class="btn-group">
-                                                        <button type="button" class="btn btn-default">
-                                                            <i class="fa fa-times" ng-click="dateRange=''"></i>
+                                                        <button ng-click="dateRange=''" type="button" class="btn btn-default"> <i class="fa fa-times"></i>
                                                         </button>
                                                     </div><!-- //btn-group-->
                                                     <div class="btn-group">
                                                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> {{selectedDate.option}} <span class="caret"></span> </button>
                                                         <ul class="dropdown-menu align-xs-left" role="menu">
-                                                            <li><a href="" ng-click="selectedDate = dateOptions[0]">Pickup Date</a></li>
-                                                            <li><a href="" ng-click="selectedDate = dateOptions[1]">Delivery Date</a></li>
+                                                            <li><a href="" ng-click="selectedDate = dateOptions[0]">Create Date</a></li>
+                                                            <li><a href="" ng-click="selectedDate = dateOptions[1]">Complete Date</a></li>
                                                         </ul>
                                                     </div>
                                                 </span>
@@ -79,6 +78,9 @@
                                             <th st-sort="createdate" st-skip-natural="true"
                                                 class="text-center sortable">Create Date
                                             </th>
+                                            <th st-sort="completedate" st-skip-natural="true"
+                                                class="text-center sortable">Complete Date
+                                            </th>
                                             <th st-sort="ordertype" st-skip-natural="true"
                                                 class="text-center sortable">Type
                                             </th>
@@ -97,6 +99,7 @@
             <td width="13%"> {{x.recipientphone}}</td>
             <td>{{x.deliveryaddress}}</td>
             <td width="10%">{{x.createdate | date: 'MM/dd/yyyy'}}</td>
+            <td width="10%">{{x.completedate | date: 'MM/dd/yyyy'}}</td>
             <td width="8%">{{x.ordertype.typename}}</td>
 
             <td width="9%">

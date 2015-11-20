@@ -56,7 +56,7 @@
                         </div>
                         <div class="col-md-8 ">
                             <br>
-                            <h2><strong>{{store.name}}</strong></h2>
+                            <h2><strong>Store</strong> Information</h2>
                             <hr>
                              <textarea class="form-control" id="sms-success"  rows="5" style="display:none">
 																	 <i class="fa fa-check-circle"></i> Update successfully<br>
@@ -78,6 +78,44 @@
                                 <div class="form-group">
                                     <label class="control-label" >Name</label>
                                     <input disabled type="text" class="form-control" ng-model="store.name" required placeholder="Shipper's full name..">
+                                </div>                                
+
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label class="control-label">Registered Date</label>
+                                        <input disabled class="form-control" disabled value="{{store.registereddate|date:'dd/MM/yyyy'}}" parsley-americandate="true" required placeholder="Date of birth..">
+
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="control-label">Phone number</label>
+                                        <input disabled type="text" class="form-control" ng-model="store.phonenumber" parsley-type="digits" parsley-rangelength="[10,11]" required placeholder="Phone number..">
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Address</label>
+                                    <input disabled class="form-control" ng-model="store.address" placeholder="Address.." required>
+                                </div>
+                                <hr>                                
+                            </form>
+
+                              <br>
+                            <h2><strong>User</strong> Information</h2>
+                            <hr>
+                            
+                            <form id="formID2" data-parsley-validate>
+
+                                <div class="form-group row" >
+                                    <!-- <div class="col-md-6">
+                                        <label class="control-label">StoreID</label>
+                                        <input type="text" class="form-control" ng-model="store.storeid" disabled>
+                                    </div> -->
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" >Name</label>
+                                    <input disabled type="text" class="form-control" ng-model="" required placeholder="Shipper's full name..">
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label" >Email Address</label>
