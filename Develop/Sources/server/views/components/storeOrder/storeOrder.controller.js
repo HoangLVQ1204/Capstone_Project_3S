@@ -204,112 +204,111 @@ function storeOrderController($scope, dataService, config, socketService, socket
 
     };
 
-    function loading(){
-        var overlay=$('<div class="load-overlay"><div><div class="c1"></div><div class="c2"></div><div class="c3"></div><div class="c4"></div></div><span>Finding Shipper...</span><button class="btn btn-theme-inverse">Cancel</button></div>');
-        $("body").append(overlay);
-        overlay.css('opacity',3).fadeIn("slow");
-    }
+    // function loading(){
+    //     var overlay=$('<div class="load-overlay"><div><div class="c1"></div><div class="c2"></div><div class="c3"></div><div class="c4"></div></div><span>Finding Shipper...</span><button class="btn btn-theme-inverse">Cancel</button></div>');
+    //     $("body").append(overlay);
+    //     overlay.css('opacity',3).fadeIn("slow");
+    // }
 
-    function unloading(){
-        $("body").find(".load-overlay").fadeOut("slow",function(){ $(this).remove() });
-    }
+    // function unloading(){
+    //     $("body").find(".load-overlay").fadeOut("slow",function(){ $(this).remove() });
+    // }
 
-    var flag = false;
+    // var flag = false;
 
-    $scope.listRightShippers = [];
+    // $scope.listRightShippers = [];
 
-    socketService.on('store:find:shipper', function(data) {
+    // socketService.on('store:find:shipper', function(data) {
 
-        var shipper = data.msg.shipper;
-        if(!shipper){
-            flag = true;
-        }else{
-            $scope.listRightShippers.push(shipper);
-        }
-    });
+    //     var shipper = data.msg.shipper;
+    //     if(!shipper){
+    //         flag = true;
+    //     }else{
+    //         $scope.listRightShippers.push(shipper);
+    //     }
+    // });
 
-    function findExpressShipper(){
-        socketStore.findShipper();
-        loading();
-        var s = 0;
-        $scope.listRightShippers = [];
-        var loopFindShipper = setInterval(function(){
-            if($scope.listRightShippers.length != 0){
-                $scope.rightShipper = $scope.listRightShippers[0];
-                $scope.$apply();
-                unloading();
-                $("#listAcceptedShipper").modal("show");
-                clearInterval(loopFindShipper);
-                return;
-            }
-            s = s + 1;
+    // function findExpressShipper(){
+    //     socketStore.findShipper();
+    //     loading();
+    //     var s = 0;
+    //     $scope.listRightShippers = [];
+    //     var loopFindShipper = setInterval(function(){            
+    //         if($scope.listRightShippers.length != 0){
+    //             $scope.rightShipper = $scope.listRightShippers[0];
+    //             $scope.$apply();
+    //             unloading();
+    //             $("#listAcceptedShipper").modal("show");
+    //             // createExpressOrder
+    //             clearInterval(loopFindShipper);
+    //             return;
+    //         }
+    //         s = s + 1;
 
-            if(s == 60 || flag){
-                unloading();
-                $scope.rightShipper = {
-                    avatar: "assets/img/notfound.png"
-                };
-                $scope.$apply();
-                $("#listAcceptedShipper_Fail").modal("show");
-                clearInterval(loopFindShipper);
-                flag = false;
-            }
-        },1000);
-    }
+    //         if(s == 60 || flag){
+    //             unloading();
+    //             $scope.rightShipper = {
+    //                 avatar: "assets/img/notfound.png"
+    //             };
+    //             $scope.$apply();
+    //             $("#listAcceptedShipper_Fail").modal("show");
+    //             clearInterval(loopFindShipper);
+    //             flag = false;
+    //         }
+    //     },1000);
+    // }
 
-    $scope.createExpressOrder = function(){
-        var urlBaseOrder = config.baseURI + '/orders';
-        var urlBaseTask = config.baseURI + '/api/createTask';
+    // $scope.createExpressOrder = function(order, goods){
+    //     var urlBaseOrder = config.baseURI + '/orders';
+    //     var urlBaseTask = config.baseURI + '/api/createTask';
 
-        $scope.order.isdraff = false;
-        var dataOrder = {
-            order: $scope.order,
-            goods: $scope.goods
-        }
+    //     order.isdraff = false;
+    //     var dataOrder = {
+    //         order: order,
+    //         goods: goods
+    //     }
 
-        dataService.postDataServer(urlBaseOrder,dataOrder)
-            .then(function(res){
-                var orderID = res.data.orderid;
+    //     dataService.postDataServer(urlBaseOrder,dataOrder)
+    //         .then(function(res){
+    //             var orderID = res.data.orderid;
 
-                console.log("---DATA ORDER ID---");
-                console.log(orderID);
-                console.log("---DATA ORDER ID---");
+    //             console.log("---DATA ORDER ID---");
+    //             console.log(orderID);
+    //             console.log("---DATA ORDER ID---");
 
-                var dataTask = {
-                    orderid: orderID,
-                    shipperid: $scope.rightShipper.shipperID,
-                    adminid: null,
-                    statusid: 2,
-                    typeid: 3
-                }
-                dataService.postDataServer(urlBaseTask,dataTask)
-                    .then(function(res){
-                        if(res.status != 500){
-                            var temp = {
-                                type: 'info',
-                                title: 'EXPRESS ORDER: SUCCESS',
-                                content: 'ORDER ID: '+orderID+ 'created successfully',
-                                url: '/#/notiListdemo',
-                                isread: false,
-                                createddate: new Date()
-                            };
-                            $rootScope.notify(temp);
-                        }else{
-                            var temp = {
-                                type: 'issue',
-                                title: 'EXPRESS ORDER: FAIL',
-                                content: 'ORDER ID: '+orderID+ 'created fail! Please try again late!',
-                                url: '/#/notiListdemo',
-                                isread: false,
-                                createddate: new Date()
-                            };
-                            $rootScope.notify(temp);
-                        }
-                    })
-            })
-
-
-    }
+    //             var dataTask = {
+    //                 orderid: orderID,
+    //                 shipperid: $rootScope.rightShipper.shipperID,
+    //                 adminid: null,
+    //                 statusid: 2,
+    //                 typeid: 3
+    //             }
+    //             dataService.postDataServer(urlBaseTask,dataTask)
+    //                 .then(function(res){
+    //                     if(res.status != 500){
+    //                         var temp = {
+    //                             type: 'info',
+    //                             title: 'EXPRESS ORDER: SUCCESS',
+    //                             content: 'ORDER ID: '+orderID+ 'created successfully',
+    //                             url: '/#/notiListdemo',
+    //                             isread: false,
+    //                             createddate: new Date()
+    //                         };
+    //                         $rootScope.notify(temp);
+    //                     }else{
+    //                         var temp = {
+    //                             type: 'issue',
+    //                             title: 'EXPRESS ORDER: FAIL',
+    //                             content: 'ORDER ID: '+orderID+ 'created fail! Please try again late!',
+    //                             url: '/#/notiListdemo',
+    //                             isread: false,
+    //                             createddate: new Date()
+    //                         };
+    //                         $rootScope.notify(temp);
+    //                     }
+    //                 })
+    //         })
+    // };
 
 
     function postCompleteOrder (){

@@ -75,12 +75,23 @@ function socketAdmin(socketService,authService,mapService, $rootScope){
         $rootScope.$emit("admin:issue:newIssue", data.msg);
     });
 
-    socketService.on('admin:notification:issue', function(data) {
-        console.log('admin:notification:issue', data);
+    socketService.on('admin:issue:notification', function(data) {
+        console.log('admin:issue:notification', data);
         $rootScope.$emit("admin:issue:newIssue", data.msg);
         $rootScope.notify(data.msg.notification);
     });
-    
+
+    socketService.on('admin::issue:disconnected', function(data) {
+        console.log("admin:issue:disconnected: ", data);
+        $rootScope.$emit("admin:issue:newIssue", data.msg);
+        $rootScope.notify(data.msg);
+    });
+    //admin::issue:cancelorder
+    socketService.on('admin::issue:cancelorder', function(data) {
+        console.log("admin::issue:cancelorder", data);
+        $rootScope.$emit("admin:issue:newIssue", data.msg);
+        $rootScope.notify(data.msg);
+    });
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();        
         // TODO: Change later

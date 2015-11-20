@@ -18,7 +18,7 @@
                 restrict: 'A',
                 require: '^stTable',
                 scope: {
-                    searchWatchModel: '=',
+                    searchWatchModelMultiple: '=',
                     stdate:'=',
                     //stCustomDate: '='
                 },
@@ -26,7 +26,7 @@
                     //var inputBefore = ng.element(inputs[0]);
                     //var inputAfter = ng.element(inputs[1]);
                     var query = {};
-                    scope.$watch('searchWatchModel', function (val) {
+                    scope.$watch('searchWatchModelMultiple', function (val) {
                         //console.log(ctrl);
                         //console.log($('#daterange').daterangepicker());
                         ctrl.search(val, attr.stPredicate);

@@ -39,13 +39,14 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
         '</div>' +
         '</div>' +
         '<div class="popup-buttons">' +
-        '<a href="#" ng-click="hide()" class="button btn-default-cus" >Cancel</a>' +
+        '<a href="#" ng-click="stop(true)" class="button btn-default-cus" >Cancel</a>' +
         '<a ng-click="grabExpressOrder()" class="button btn-success-cus btn-default-cus">Grab</a>' +
         '</div>' +
         '</div>',
         scope: $rootScope
       });
     };
+
     $rootScope.hide = function(){
       $rootScope.isGrabbing = false;
       console.log("hide");
@@ -61,14 +62,29 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
         $rootScope.counter--;
         mytimeout = $timeout($rootScope.onTimeout, 1000);
         if ($rootScope.counter == 0) {
-          $rootScope.stop();
+          $rootScope.stop(true);
         }
       };
       var mytimeout = $timeout($rootScope.onTimeout, 1000);
 
-      $rootScope.stop = function () {
+      $rootScope.stop = function (sendSocket) {
         $timeout.cancel(mytimeout);
         $rootScope.hide();
+        if (sendSocket) {
+          var currentUser = authService.getCurrentInfoUser();
+          socketService.sendPacket(
+            {
+              type: 'shipper',
+              clientID: currentUser.username
+            },
+            'server',
+            {
+              shipper: {
+                shipperID: currentUser.username
+              }
+            },
+            'shipper:reject:order');
+        }        
       };
       $rootScope.show();
     }else{
@@ -103,7 +119,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
                   shipper: user
                 },
                 'shipper:choose:express');
-                $rootScope.hide();
+                $rootScope.stop();
             });
         })
         .catch(function(err) {
@@ -137,6 +153,12 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
         console.log('shipper add order', data);
         // console.log('after add order', mapService.getStoreMarkers(), mapService.getCustomerMarkers(), mapService.getOrders());
       });
+  });
+
+  socketService.on('shipper:remove:express', function(data) {
+    console.log('remove express', data);
+    $rootScope.stop();
+    alert('Store ' + data.msg.store.storeID + ' found a shipper');
   });
 
   api.getCurrentUser = function() {

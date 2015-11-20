@@ -3,9 +3,10 @@
 
 var _ = require('lodash');
 
-module.exports = function(socket, io) {    
+module.exports = function(socket, io, app) {
     io.addToRoom(socket, 'shipper');
-    
+    var issueManage = require('../manages/issueManage')(app);
+
     // Add shipper:disconnect for shipper to disconnect by himself
     socket.on('disconnect', function() {
         console.log('Shipper', socket.id, 'disconnect');
@@ -17,6 +18,9 @@ module.exports = function(socket, io) {
             io.updateOrder(e.orderID, e.orderInfo);
         });
         console.log('after disconnect', orders);
+        //Create Issue Disconnected
+        issueManage.createNewIssue(shipper.shipperID);
+
         io.disconnectShipper(shipper.shipperID);
         io.forward(
         {
@@ -47,21 +51,31 @@ module.exports = function(socket, io) {
     });
     
     socket.on('shipper:choose:express', function(data) {
-    	io.forward(data.sender, data.receiver, data.msg, 'store:find:shipper');
+        if (io.pendingShippers[data.msg.shipper.shipperID]) {            
+    	    io.forward(data.sender, data.receiver, data.msg, 'store:find:shipper');
+        } else {
+            console.log('dont exist in pendingShippers');
+        }
     });
 
     socket.on('shipper:update:location', function(data) {
         console.log('update loc', data);
         io.forward(data.sender, data.receiver, data.msg, ['admin:update:shipper', 'store:update:shipper']);
     });
+
     socket.on('shipper:sendissue', function(data) {
-        console.log('socketShipper recieve socket send issue', data);
-        console.log('quyen', data.receiver);
         io.forward(data.sender, data.receiver, data.msg, 'admin:issue');
     });
+
     socket.on('shipper:update:status', function(data) {
         var shipper = io.getOneShipper(data.msg.shipperID);
         io.updateStatusShipper(shipper);
-        console.log(shipper);
+        data.disconnect();
+    });
+
+    socket.on('shipper:reject:order', function(data) {
+        var shipper = data.msg.shipper;
+        console.log('shipper reject order', shipper);
+        io.removePendingShipper(shipper.shipperID);
     });
 }

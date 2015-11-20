@@ -233,8 +233,13 @@ module.exports = function(sequelize, DataTypes) {
         return order.build(newOrder).save();
       },
 
-      putOrder: function (currentOrder) {
-        return currentOrder.save();
+      updateExpressOrder: function (currentOrder, orderID) {
+          return order.update(
+              currentOrder,{
+            where: {
+              'orderid': orderID
+            }
+          });
       },
 
       changeIsPendingOrder: function(orderID, isPending) {
@@ -326,6 +331,9 @@ module.exports = function(sequelize, DataTypes) {
               include:{
                 model: taskstatus,
                 attributes: ['statusname']
+              },
+              where: {
+                'statusid': {$ne: 5}
               }
             }]
         })
@@ -459,7 +467,17 @@ module.exports = function(sequelize, DataTypes) {
                 'orderid': newOrder.orderid
               }
             })
-      }
+      },
+
+       updateOrder: function (currentOrder,orderid) {
+        return order.update(
+          currentOrder,
+          {
+            where:{
+              'orderid': orderid
+            }
+          })
+      },
 
     }
   });

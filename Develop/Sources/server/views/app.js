@@ -28,7 +28,7 @@ angular.module('app', [
     $stateProvider
 
         .state('home',{
-            url: '/home',
+            url: '',
             template: '<h1>Home Page đang trong quá trình xây dựng !!!!</h1>',
         })
 
@@ -47,6 +47,7 @@ angular.module('app', [
             templateUrl: '/components/404/error.html'
         })
 
+
         .state('admin',{
             abstract: true,
             url: '/admin',
@@ -57,18 +58,37 @@ angular.module('app', [
         .state('admin.dashboard',{
             url: '/dashboard',
             template: '<admin-layout></admin-layout>',
+            controller: function($scope, $rootScope, mapService, authService){
+                var mode = "all";
+                $scope.shippers = mapService.getShipperMarkers(mode);
+                $scope.stores = mapService.getStoreMarkers(mode);
+                $scope.customers = mapService.getCustomerMarkers(mode);
+                $scope.orders = mapService.getOrders(mode);
+                $scope.zoom = 11;
+            },
             access: config.role.admin
         })
 
         .state('admin.storeList',{
             url: '/storeList',
-            template: '<admin-store-list></admin-store-list>',
+            template: '<admin-store-list-layout></admin-store-list-layout>',
+            controller: function($scope, $rootScope, mapService){
+                var mode = "all";
+                $scope.stores = mapService.getStoreMarkers(mode);
+                $scope.zoom = 11;
+            },
             access: config.role.admin
         })
 
         .state('admin.assignTask',{
             url: '/assignTask',
             template: '<admin-assign-task></admin-assign-task>',
+            access: config.role.admin
+        })
+
+        .state('admin.assignTaskProcessing',{
+            url: '/assignTaskProcessing?shipperid',
+            template: '<admin-assign-task-processing></admin-assign-task-processing>',
             access: config.role.admin
         })
 
@@ -86,7 +106,12 @@ angular.module('app', [
 
         .state('admin.shipperList',{
             url: '/shipperList',
-            template: '<admin-shipper-list></admin-shipper-list>',
+            template: '<admin-shipper-list-layout></admin-shipper-list-layout>',
+            controller: function($scope, $rootScope, mapService){
+                var mode = "all";
+                $scope.shippers = mapService.getShipperMarkers(mode);
+                $scope.zoom = 11;
+            },
             access: config.role.admin
         })
 
@@ -99,6 +124,12 @@ angular.module('app', [
         .state('admin.addShipper',{
             url: '/addShipper',
             template: '<admin-add-shipper></admin-add-shipper>',
+            access: config.role.admin
+        })
+
+        .state('admin.addStore',{
+            url: '/addStore',
+            template: '<admin-add-store></admin-add-store>',
             access: config.role.admin
         })
 
@@ -135,6 +166,7 @@ angular.module('app', [
             //parent: 'admin.issueBox',
             access: config.role.admin
         })
+
 
         .state('store',{
             abstract: true,
@@ -220,13 +252,13 @@ angular.module('app', [
         libraries: 'geometry,visualization,drawing,places'
     })
 
-}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper,socketService, notificationService){
-    //$state.go('home');
-    // Notification component
+}).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper,socketService, notificationService, dataService){
+
     notificationService.getTotalUnreadNotificationsServer()
     .then(function() {
         $rootScope.numberUnreadNoti = notificationService.getTotalUnreadNotifications();
     })
+
     $rootScope.onlineShipper = 0;
     $rootScope.readNewNoti = function() {
 
@@ -239,7 +271,6 @@ angular.module('app', [
         var data = {
             life: 5000,
             horizontal: 'bottom',
-            vertical: 'right',
             horizontalEdge: 'bottom',
             verticalEdge: 'right',
             theme: (notification.type === 'issue' ? 'danger' : 'success')
@@ -257,33 +288,152 @@ angular.module('app', [
             $rootScope.$apply();
         }, 2000);
     };
-//he he
+
+    // combo functions for express order
+    $rootScope.createExpressOrder = function(order, goods){
+        var urlBaseOrder = config.baseURI + '/orders';
+        var urlBaseTask = config.baseURI + '/api/createTask';
+
+        order.isdraff = false;
+        var dataOrder = {
+            order: order,
+            goods: goods
+        }
+
+        dataService.postDataServer(urlBaseOrder,dataOrder)
+            .then(function(res){
+                var orderID = res.data.orderid;
+
+                console.log("---DATA ORDER ID---");
+                console.log(orderID);
+                console.log("---DATA ORDER ID---");
+
+                var dataTask = {
+                    orderid: orderID,
+                    shipperid: $rootScope.rightShipper.shipperID,
+                    adminid: null,
+                    statusid: 2,
+                    typeid: 3
+                }
+                dataService.postDataServer(urlBaseTask,dataTask)
+                    .then(function(res){
+                        if(res.status != 500){
+                            var temp = {
+                                type: 'info',
+                                title: 'EXPRESS ORDER: SUCCESS',
+                                content: 'ORDER ID: '+orderID+ 'created successfully',
+                                url: '/#/notiListdemo',
+                                isread: false,
+                                createddate: new Date()
+                            };
+                            $rootScope.notify(temp);
+                        }else{
+                            var temp = {
+                                type: 'issue',
+                                title: 'EXPRESS ORDER: FAIL',
+                                content: 'ORDER ID: '+orderID+ 'created fail! Please try again late!',
+                                url: '/#/notiListdemo',
+                                isread: false,
+                                createddate: new Date()
+                            };
+                            $rootScope.notify(temp);
+                        }
+                    })
+            });
+    };
+
+    function loading(){
+        var overlay=$('<div class="load-overlay"><div><div class="c1"></div><div class="c2"></div><div class="c3"></div><div class="c4"></div></div><span>Finding Shipper...</span><button class="btn btn-theme-inverse">Cancel</button></div>');
+        $("body").append(overlay);
+        overlay.css('opacity',3).fadeIn("slow");
+    }
+
+    function unloading(){
+        $("body").find(".load-overlay").fadeOut("slow",function(){ $(this).remove() });
+    }
+
+    $rootScope.flag = false;
+
+    $rootScope.listRightShippers = [];
+
+    socketService.on('store:find:shipper', function(data) {
+
+        var shipper = data.msg.shipper;
+        if(!shipper){
+            $rootScope.flag = true;
+        }else{
+            $rootScope.listRightShippers.push(shipper);
+        }
+    });
+
+    $rootScope.findExpressShipper = function() {
+        socketStore.findShipper();
+        loading();
+        var s = 0;
+        $rootScope.listRightShippers = [];
+        $rootScope.loopFindShipper = setInterval(function(){            
+            if($rootScope.listRightShippers.length != 0){
+                $rootScope.rightShipper = $rootScope.listRightShippers[0];
+                $rootScope.$apply();
+                unloading();
+                $("#listAcceptedShipper").modal("show");
+
+                // createExpressOrder + select rightShipper
+                socketStore.selectShipper($rootScope.rightShipper, {}, 'order_1');
+
+                clearInterval($rootScope.loopFindShipper);
+                return;
+            }
+            s = s + 1;
+
+            if(s == 60 || $rootScope.flag){
+                unloading();
+                $rootScope.rightShipper = {
+                    avatar: "assets/img/notfound.png"
+                };
+                $rootScope.$apply();
+                $("#listAcceptedShipper_Fail").modal("show");
+                clearInterval($rootScope.loopFindShipper);
+                $rootScope.flag = false;
+            }
+        },1000);
+    };
+
+    $rootScope.cancelExpress = function() {
+        unloading();
+        $rootScope.rightShipper = {
+            avatar: "assets/img/notfound.png"
+        };
+        $rootScope.$apply();
+        $("#listAcceptedShipper_Fail").modal("show");
+        clearInterval($rootScope.loopFindShipper);
+        $rootScope.flag = false;
+        socketStore.cancelExpress();
+    };
+
+    // END - combo functions
+
 
     if(authService.isLogged()){
         socketService.authenSocket()
         .then(function() {
-            if(authService.isRightRole(config.role.admin)){
-                socketAdmin.registerSocket();
-                //$state.go("admin.dashboard");
-            }
+                if(authService.isRightRole(config.role.admin)){
+                    socketAdmin.registerSocket();
+                    //$state.go("admin.dashboard");
+                }
 
-            if(authService.isRightRole(config.role.store)){
-                socketStore.registerSocket();
-                //$state.go("store.dashboard");
 
-            }
 
-             if(authService.isRightRole(config.role.shipper)){
-                 socketShipper.registerSocket();
-                 $state.go("mapdemo");
+                if(authService.isRightRole(config.role.store)){
+                    socketStore.registerSocket();
 
-             }
-        })        
+                }
 
-    }else{
-
-        $state.go("login");
-
+                //if(authService.isRightRole(config.role.shipper)){
+                //    socketShipper.registerSocket();
+                //    $state.go('admin.dashboard');
+                //}
+            })
     }
 
     $rootScope.$on('$stateChangeStart', function(event, toState, fromState, toParams) {
@@ -291,16 +441,14 @@ angular.module('app', [
         if(toState.access){
 
             if(!authService.isLogged()){
-                $state.go("login");
+                $state.go("error");
                 event.preventDefault();
-
             }
 
             if(!authService.isRightRole(toState.access)){
                 console.log("access");
                 $state.go("error");
                 event.preventDefault();
-
             }
 
         }
@@ -309,20 +457,23 @@ angular.module('app', [
 
             if(authService.isLogged()){
                 if(authService.isRightRole(config.role.admin)){
+                    $state.go('admin.dashboard');
                     event.preventDefault();
 
                 }
+
                 if(authService.isRightRole(config.role.store)){
+                    $state.go('store.dashboard');
                     event.preventDefault();
                 }
             }
-
         }
 
     });
 
+
     $rootScope.$on('$stateChangeSuccess', function(e, toState){
-        // console.log(toState.name.indexOf("store"));
+
         if (toState.name == "login" || toState.name == "home" || toState.name == "error" || toState.name == "register"){
             $rootScope.styleBody = "full-lg";
         }else if(toState.name.indexOf("store") == 0){

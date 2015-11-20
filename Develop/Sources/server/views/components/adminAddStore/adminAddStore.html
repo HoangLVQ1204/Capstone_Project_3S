@@ -1,0 +1,192 @@
+<div>
+
+    <div class="nav-collapse" style="margin-left: 0px;">
+
+        <ol class="breadcrumb">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Library</a></li>
+            <li class="active">Data</li>
+        </ol>
+        <!-- //breadcrumb-->
+
+        <div id="content">
+            <div class="row panel">
+                <header class="panel-heading">
+                    <h2><strong>Add </strong>New Store </h2>
+                    <label class="color">New Store</label>
+                </header>
+                <textarea class="form-control" id="sms-success"  rows="5" style="display:none">
+																	 <i class="fa fa-check-circle"></i> Create successfully<br>
+																	New Store was added to Karry Well..
+																</textarea>
+                <textarea class="form-control" id="sms-fail"  rows="5" style="display:none">
+																	 <i class="fa fa-exclamation-triangle"></i> Create fail<br>
+																	There is an error to add new Store.....
+																</textarea>
+                <form id="validate-wizard" class="wizard-step">
+                    <ul>
+                        <li><a href="#step1" data-toggle="tab">1</a></li>
+                        <li><a href="#step2" data-toggle="tab">2</a></li>
+                    </ul>
+                    <div class="progress progress-stripes progress-sm" style="margin:0">
+                        <div class="progress-bar" data-color="theme"></div>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane fade" id="step1" parsley-validate parsley-bind>
+                            <div>
+                                <div class="row">
+                                    <h3 class="align-lg-center"><strong>STORE OWNER'S</strong> Info</h3>
+                                    <hr>
+                                    <div class="col-md-4 align-lg-center">
+                                        <img alt="" src="{{newStoreOwner.profile.avatar}}" class="circle" style="max-width:120px; border:5px #edece5 solid; margin:25px 0;">
+
+                                        <div class="form-group">
+                                            <button type="button" class="btn btn-theme"> Choose picture...</button>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-8">
+                                        <br>
+
+
+                                        <form id="formID" data-parsley-validate>
+
+                                            <div class="form-group row" >
+                                                <div class="col-md-6">
+                                                    <label class="control-label">Store Owner Username</label>
+                                                    <input type="text" class="form-control" ng-model="newStoreOwner.account.username" disabled>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="control-label">Indentity Card</label>
+                                                    <input type="text" class="form-control" ng-model="newStoreOwner.profile.identitycard" required parsley-rangelength="[9,9]" parsley-type="digits" placeholder="Indentity card..">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" >Name</label>
+                                                <input type="text" class="form-control" ng-model="newStoreOwner.profile.name" required placeholder="Store owner's full name..">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" >Email Address</label>
+                                                <input type="text" class="form-control" ng-model="newStoreOwner.profile.email" parsley-type="email" required placeholder="Email...">
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <div class="col-md-6">
+                                                    <label class="control-label">Date of birth</label>
+                                                    <input class="form-control"  value="10/24/1984" single-date-picker-store ng-model="newStoreOwner.profile.dob" parsley-americandate="true" required placeholder="Date of birth..">
+
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <label class="control-label">Phone number</label>
+                                                    <input type="text" class="form-control" ng-model="newStoreOwner.profile.phonenumber" parsley-type="digits" parsley-rangelength="[10,11]" required placeholder="Phone number..">
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label">Address</label>
+                                                <input class="form-control" ng-model="newStoreOwner.profile.address" placeholder="Address.." required>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                    <!-- /row-->
+                                </div>
+                                <!-- /#tab4-->
+
+
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="step2" parsley-validate parsley-bind>
+                            <div>
+
+                                <div class="row">
+                                    <h3 class="align-lg-center"><strong>STORE'S</strong> Info</h3>
+                                    <hr>
+                                    <div class="col-md-4 align-lg-center">
+                                        <img alt="" src="{{newStore.avatar}}" class="circle" style="max-width:120px; border:5px #edece5 solid; margin:25px 0;">
+
+                                        <div class="form-group">
+                                            <button type="button" class="btn btn-theme"> Choose picture...</button>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-8">
+                                        <br>
+
+                                        <form id="formStore" data-parsley-validate>
+
+                                            <div class="form-group row" >
+                                                <div class="col-md-6">
+                                                    <label class="control-label">StoreID</label>
+                                                    <input type="text" class="form-control" ng-model="newStore.storeid" disabled>
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" >Name</label>
+                                                <input type="text" class="form-control" ng-model="newStore.name" required placeholder="Store's name..">
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <div class="col-md-6">
+                                                    <label class="control-label" >Email Address</label>
+                                                    <input type="text" class="form-control" ng-model="newStore.email" parsley-type="email" required placeholder="Email...">
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <label class="control-label">Phone number</label>
+                                                    <input type="text" class="form-control" ng-model="newStore.phonenumber" parsley-type="digits" parsley-rangelength="[10,11]" required placeholder="Phone number..">
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label">Address</label>
+                                                <input class="form-control" ng-model="newStore.address" placeholder="Address.." required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label">Description</label>
+                                                <textarea class="form-control" rows="3" data-height="auto" ng-model="newStore.description" placeholder="Description about store.." required></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <button type="button" ng-click="createStore()" class="btn btn-theme"> Create</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <!-- /row-->
+                                </div>
+                                <!-- /#tab4-->
+
+
+                            </div>
+                        </div>
+                        <hr>
+                        <footer class="row">
+                            <div class="col-sm-4 pull-right align-lg-right">
+                                <section class="wizard">
+                                    <button type="button"  class="btn btn-inverse previous"><i class="fa fa-angle-left"></i> Previous</button>
+                                    <button type="button"  class="btn btn-theme next">Next <i class="fa fa-angle-right"></i></button>
+                                </section>
+                            </div>
+                            <div class="col-sm-8 "><div class="wizard-status">Create step : <span></span></div></div>
+                        </footer>
+                    </div>
+                </form>
+
+
+            </div>
+            <!-- //content > row-->
+
+        </div>
+        <!-- //content-->
+
+
+    </div>
+
+    <!--////////////////////////////////////////////////////////////////////////-->
+    <!--//////////     MODAL EFFECT DEMO    //////////-->
+    <!--//////////////////////////////////////////////////////////////////////-->
+    <!--&ndash;&gt;-->
+
+</div>

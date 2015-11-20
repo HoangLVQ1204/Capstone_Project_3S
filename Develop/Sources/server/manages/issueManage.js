@@ -3,6 +3,7 @@ var _ = require('lodash');
 
 module.exports = function (app) {
     var db = app.get('models');
+    var server = app.get('io');
 
     var getAllIssue = function (req, res, next) {
 
@@ -48,11 +49,139 @@ module.exports = function (app) {
             })
     };
 
+    var createNewIssue = function(shipperID) {
+        //Create issue
+        var listOrders = [];
+        var issueDisconnect = {
+            typeid: 8,
+            description: 'Shipper ' + shipperID + ' disconnected',
+            isresolved: false,
+            resolvetype: null,
+            createddate: new Date(),
+            sender: shipperID
+        };
+        //Check Task of shipper is disconnected
+        db.order.getAllTaskOfShipper(db.task, shipperID)
+            .then(function (tasks) {
+                if (_.isEmpty(tasks) == false) {
+                    _.each(tasks, function(task){
+                        listOrders.push(task.orderid);
+                    })
+                    console.log("issueManage:70: ", listOrders);
+                    //Add new issue
+                    db.issue.createNewIssue(issueDisconnect)
+                    .then(function(issue){
+                        //Add new notification
+                        var msgDisconnectToAdmin = {
+                            type: 'Issue',
+                            title: 'Issue',
+                            content: 'Shipper ' + shipperID + ' is diconnected',
+                            url: '#/admin/issueBox/content?issueid=' + issue.dataValues.issueid,
+                            isread: false,
+                            createddate: new Date()
+                        };
+                        var msgDisconnectToStore = {
+                            type: 'Info',
+                            title: 'Warning',
+                            content: 'Some orders is in status Warning. We are repairing !',
+                            url: '#/store/dashboard',
+                            isread: false,
+                            createddate: new Date()
+                        };
+                        //Get admin
+                        db.user.getUserByRole(3)
+                            .then(function(admins){
+                                admins = admins.map(function(e) {
+                                    return e.toJSON();
+                                });
+                                //insert notification to user admin
+                                var promises = admins.map(function(e){
+                                    var newData = _.clone(msgDisconnectToAdmin, true);
+                                    newData.username = e.username;
+                                    return db.notification.addNotification(newData);
+                                });
+
+                                return Promise.all(promises);
+                            })
+                            .then(function(data) {
+                                console.log('shipperController:401', data.length);
+                                return db.order.getStoresOfOrder(listOrders);
+                            })
+                            .then(function(storeIDs){
+                                storeIDs = _.uniq(storeIDs, 'storeid');
+                                console.log('isssueManage:112', storeIDs);
+                                storeIDs = storeIDs.map(function(e){
+                                    return e.storeid;
+                                });
+                                return db.managestore.getOwnerOfStore(storeIDs);
+                            })
+                            .then(function(ownerStores) {
+                                ownerStores = ownerStores.map(function (e) {
+                                    return e.toJSON();
+                                });
+                                console.log('issManage:119', ownerStores);
+
+                                //insert to notification to store
+                                var promises = ownerStores.map(function (e) {
+                                    var data = _.clone(msgDisconnectToStore, true);
+                                    data.username = e.managerid;
+                                    console.log('data', data);
+                                    return db.notification.addNotification(data);
+                                });
+
+                                return Promise.all(promises);
+                            })
+                            .then(function (data) {
+                                console.log('issueManage:135', data.length);
+                                console.log('send notification disconnect to store and admin');
+                                //send socket
+                                var sender = {
+                                    type: 'shipper',
+                                    clientID: shipperID
+                                };
+                                server.socket.forward(
+                                    sender,
+                                    'admin',
+                                    msgDisconnectToAdmin,
+                                    'admin::issue:disconnected'
+                                );
+                                server.socket.forward(
+                                    sender,
+                                    {
+                                        type: 'room',
+                                        room: shipperID
+                                    },
+                                    msgDisconnectToStore,
+                                    'store::issue:disconnected'
+                                );
+                            });
+                    });
+                } else {
+                    //Do nothing
+                }
+            }, function(err){
+                console.log('Insert new issue get anerror');
+            });
+	};
+
+    var getUserGetIssue = function (req, res, next) {
+        var log = req.body;
+        console.log(log);
+        return db.issue.getUserGetIssue()
+            .then(function (list) {
+                res.status(200).json(list);
+            }, function (err) {
+                next(err);
+            })
+    };
+
 
     return {
         getAllIssue: getAllIssue,
         getIssueDetail: getIssueDetail,
         updateResolveIssue: updateResolveIssue,
-        postBannedLog: postBannedLog
+        postBannedLog: postBannedLog,
+        createNewIssue: createNewIssue,
+        getUserGetIssue: getUserGetIssue
     }
 }

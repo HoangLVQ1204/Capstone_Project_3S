@@ -86,7 +86,8 @@
                                         <td>{{x.name}}</td>
                                         <td>{{x.address}}</td>
                                         <td class="center">
-                                            <a href="" ng-click="showTransactionHistory(x, true)">{{x.generalledgers[0].balance}}</a>
+                                            <a ng-show="x.generalledgers.length!=0" href="" ng-click="showTransactionHistory(x, true)">{{x.generalledgers[0].balance}}</a>
+                                            <a ng-show="x.generalledgers.length==0" href="" ng-click="showTransactionHistory(x, true)">0</a>
                                         </td>
                                         <td class="center">
                                             <a href="" ng-click="showTransactionHistory(x, false)">
@@ -94,7 +95,7 @@
                                             </a>
                                         </td>
                                         <!--<td class="center"> {{x.registereddate|date:"dd/MM/yyyy"}}</td>-->
-                                        <td>
+                                        <td width="25%">
 
                                         <span class="tooltip-area">
                                         <a class="btn btn-default btn-sm" title="Edit"><i class="fa fa-edit (alias)"></i></a>

@@ -1,5 +1,5 @@
 var _ = require('lodash');
-
+var gmapUtil = require('../socket/googlemapUtil');
 module.exports = function(app) {
 
     var db = app.get('models');
@@ -33,15 +33,27 @@ module.exports = function(app) {
         res.status(200).json(req.store.toJSON());
     };
     //
-    var post = function(req, res, next) {
-        var newUser = req.body;
-       // newUser.Token = newUser.storeid;
-        return db.store.postOneStore(newStore)
-            .then(function(store) {
-                res.status(201).json(store);
-            }, function(err) {
-                next(err);
-            });
+    var postNewStore = function(req, res, next) {
+        var newStore = req.body;
+        console.log(newStore.address);
+        //return
+         gmapUtil.getLatLng(newStore.address).then(function (map) {
+            newStore['latitude'] = map.latitude+"";
+            newStore['longitude'] = map.longitude+"";
+            console.log('MAP', newStore)
+        }, function(err) {
+             //console.log('AAAAA', err);
+            next(err);
+        }).then(function () {
+            db.store.postOneStore(newStore)
+                .then(function(store) {
+                    res.status(201).json(store);
+                }, function(err) {
+                    next(err);
+                });
+        }, function(err) {
+            next(err);
+        })
     };
     //
     var put = function(req, res, next) {
@@ -242,13 +254,76 @@ module.exports = function(app) {
             }, function () {
                 next(new Error("Can not find store name!"))
             });
-
+	};
+    //function create new shipperid
+    var createStoreOwnerID = function(req, res, next){
+        var isExisted = false;
+        do
+        {
+            var str = "000000" + parseInt(Math.random()*1000000);
+            var formatStr = str.substr(str.length - 6);
+            var newStoreOwnerID = "ST" + formatStr;
+            //console.log(newShipperID);
+            db.user.findUserByUsername(newStoreOwnerID)
+                .then(function(storeowner){
+                    //console.log(newShipperID, shipper);
+                    if(!storeowner){
+                        //console.log('AAA');
+                        isExisted = true;
+                        res.status(200).json(newStoreOwnerID);
+                    }
+                },function(err){
+                    //console.log(newShipperID, shipper);
+                    res.status(400).json("Can not get new shipperid");
+                });
+        } while (isExisted);
     };
+
+    var createStoreID = function(req, res, next){
+        var isExisted = false;
+        do
+        {
+            var str = "000" + parseInt(Math.random()*1000000);
+            var formatStr = str.substr(str.length - 3);
+            var newStoreID = "STR" + formatStr;
+            //console.log(newShipperID);
+            db.store.getOneStore(newStoreID)
+                .then(function(store){
+                    //console.log(newShipperID, shipper);
+                    if(!store){
+                        //console.log('AAA');
+                        isExisted = true;
+                        res.status(200).json(newStoreID);
+                    }
+                },function(err){
+                    //console.log(newShipperID, shipper);
+                    res.status(400).json("Can not get new storeid");
+                });
+        } while (isExisted);
+    };
+
+    var postNewManageStore = function(req, res, next) {
+        var newManageStore = req.body;
+        console.log(newManageStore);
+        // newUser.Token = newUser.storeid;
+        return db.managestore.addNewManageStore(newManageStore)
+            .then(function(newManageStore) {
+                res.status(201).json(newManageStore);
+            }, function(err) {
+                next(err);
+            });
+    };
+
+    var getAllStores = function(){
+        return db.store.getAllStores().then(function(rs){
+            return rs;
+        })
+    }
 
        return {
             get: get,
             getOne: getOne,
-            post: post,
+            postNewStore: postNewStore,
             put: put,
             del: del,
             params: params,
@@ -262,41 +337,11 @@ module.exports = function(app) {
             getAllStoreName: getStoreName,
             getStoreDetail: getStoreDetail,
             getAllInactiveStore: getAllInactiveStore,
-            storeGetStoreDetail: storeGetStoreDetail
+            storeGetStoreDetail: storeGetStoreDetail,
+            createStoreOwnerID: createStoreOwnerID,
+            createStoreID: createStoreID,
+            postNewManageStore: postNewManageStore,
+            getAllStores: getAllStores
+
     }
 }
-
-
-/*
-{
-  "GET /users": {
-    "desc": "returns all users",
-    "response": "200 application/json",
-    "data": [{}, {}, {}]
-  },
-
-  "GET /users/:id": {
-    "desc": "returns one user respresented by its id",
-    "response": "200 application/json",
-    "data": {}
-  },
-
-  "POST /users": {
-    "desc": "create and returns a new user uisng the posted object as the user",
-    "response": "201 application/json",
-    "data": {}
-  },
-
-  "PUT /users/:id": {
-    "desc": "updates and returns the matching user with the posted update object",
-    "response": "200 application/json",
-    "data": {}
-  },
-
-  "DELETE /users/:id": {
-    "desc": "deletes and returns the matching user",
-    "response": "200 application/json",
-    "data": {}
-  }
-}
-*/
