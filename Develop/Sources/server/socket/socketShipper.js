@@ -5,6 +5,7 @@ var _ = require('lodash');
 
 module.exports = function(socket, io, app) {
     io.addToRoom(socket, 'shipper');
+
     var issueManage = require('../manages/issueManage')(app);
 
     // Add shipper:disconnect for shipper to disconnect by himself
@@ -70,7 +71,7 @@ module.exports = function(socket, io, app) {
     socket.on('shipper:update:status', function(data) {
         var shipper = io.getOneShipper(data.msg.shipperID);
         io.updateStatusShipper(shipper);
-        data.disconnect();
+
     });
 
     socket.on('shipper:reject:order', function(data) {
