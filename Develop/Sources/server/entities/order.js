@@ -185,7 +185,7 @@ module.exports = function(sequelize, DataTypes) {
       //KhanhKC
       storeGetAllOrders: function (oderstatusModel,ordertypeModel, store_id) {
         return order.findAll({
-          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','ispending','cod','fee','completedate','createdate','ledgerid'],
+          attributes: ['orderid','recipientname','recipientphone','statusid','isdraff','ispending','cod','fee','completedate','deliveryaddress','createdate','ledgerid'],
           where: {storeid:store_id },
           include: [
             {'model': oderstatusModel,
