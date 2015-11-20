@@ -128,7 +128,7 @@ module.exports = function (app) {
         getIssueDetail: getIssueDetail,
         updateResolveIssue: updateResolveIssue,
         postBannedLog: postBannedLog,
-        createNewIssue: createNewIssue
+        createNewIssue: createNewIssue,
         getUserGetIssue: getUserGetIssue
     }
 }

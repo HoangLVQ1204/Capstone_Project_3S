@@ -314,6 +314,12 @@ module.exports = function(app) {
             });
     };
 
+    var getAllStores = function(){
+        return db.store.getAllStores().then(function(rs){
+            return rs;
+        })
+    }
+
        return {
             get: get,
             getOne: getOne,
@@ -334,6 +340,8 @@ module.exports = function(app) {
             storeGetStoreDetail: storeGetStoreDetail,
             createStoreOwnerID: createStoreOwnerID,
             createStoreID: createStoreID,
-            postNewManageStore: postNewManageStore
+            postNewManageStore: postNewManageStore,
+            getAllStores: getAllStores
+
     }
 }
