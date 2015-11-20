@@ -5,6 +5,7 @@
 
 var gmapUtil = require('./googlemapUtil');
 var config   = require('../config/config');
+var _ = require('lodash');
 
 module.exports = function(socket, io) {
 	io.addToRoom(socket, 'store');
@@ -14,8 +15,11 @@ module.exports = function(socket, io) {
     });
 
     socket.on('store:find:shipper', function(data) {
-
+        console.log('socketStore:18 pendingShippers', io.pendingShippers);
         var numShippers = io.getAllShippers();
+        var numShippers = numShippers.filter(function(shipper) {
+            return !io.pendingShippers[shipper.shipperID];
+        });
 
         if(numShippers.length != 0){
             gmapUtil.getClosestShippers(data.msg.store, numShippers, config.filter)
@@ -31,6 +35,7 @@ module.exports = function(socket, io) {
                     }else{
                         results.forEach(function(e) {
                             console.log("---SUCCESS: FINDED SHIPPERS---");
+                            io.pendingShippers[e.shipperID] = data.msg.store;
                             io.forward(
                                 data.sender,
                                 {
@@ -66,6 +71,14 @@ module.exports = function(socket, io) {
         }
     });
 
+    socket.on('store:remove:express', function(data) {
+        var shipperMsg = {
+            store: _.clone(data.msg.store, true)
+        };        
+        io.notifyPendingShippers(data.msg.store.storeID, '', data.sender, shipperMsg);
+        io.removePendingShippersOfStore(data.msg.store.storeID);
+    });
+
     socket.on('store:choose:shipper', function(data) {
         console.log('choose shipper', data);
         var sender = data.sender;
@@ -79,7 +92,14 @@ module.exports = function(socket, io) {
 
         io.forward(data.sender, data.receiver, data.msg, 'shipper:add:order');
         io.forward(data.sender, 'admin', data.msg, 'admin:add:order');
-        //io.forward(data.sender, )
+        // notify other shippers
+        var shipperMsg = {
+            store: _.clone(msg.store, true)
+        };        
+        console.log('socketStore:90 pendingShippers', io.pendingShippers);
+        io.notifyPendingShippers(msg.store.storeID, msg.shipper.shipperID, data.sender, shipperMsg);
+        io.removePendingShippersOfStore(msg.store.storeID);
+        console.log('pendingShippers', io.pendingShippers);
         io.addToRoom(socket, msg.shipper.shipperID);    
 
         console.log('total data:shippers', io.shippers);    

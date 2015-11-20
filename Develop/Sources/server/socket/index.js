@@ -38,7 +38,9 @@
 */
 
 /*
-    Change status 
+    Filter pending shippers
+    Accept order right away in store
+    draft thi goi lai
 */
 
 var _ = require('lodash');
@@ -124,7 +126,44 @@ module.exports = function(server,app){
     */
     io.orders = {};
 
-    
+    /*
+        io.pendingShippers[shipperID] = {
+            storeID,
+            .....
+        }
+    */
+    io.pendingShippers = {};
+
+    io.addPendingShipper = function(shipperID, store) {
+        io.pendingShippers[shipperID] = store;
+    };
+
+    io.removePendingShipper = function(shipperID) {
+        delete io.pendingShippers[shipperID];
+    };
+
+    io.removePendingShippersOfStore = function(storeID) {
+        for (shipperID in io.pendingShippers) {
+            if (io.pendingShippers[shipperID].storeID === storeID) {
+                io.removePendingShipper(shipperID);
+            }
+        }
+    };
+
+    io.notifyPendingShippers = function(storeID, avoidedShipperID, sender, msg) {
+        for (shipperID in io.pendingShippers) {
+            if (shipperID !== avoidedShipperID && io.pendingShippers[shipperID].storeID == storeID) {
+                io.forward(
+                    sender,
+                    {
+                        type: 'shipper',
+                        clientID: shipperID
+                    },
+                    msg,
+                    'shipper:remove:express');
+            }
+        }
+    };
 
 
     // Returns socket by receiver type
@@ -688,6 +727,24 @@ module.exports = function(server,app){
                 }
             })
         });
+
+    io.updateListStore = function(){
+        controllerStore.getAllStores().then(function(rs){
+            rs = rs.map(function(e){
+                return e.toJSON();
+            });
+            console.log(rs);
+            rs.forEach(function(e){
+                io.addStore({
+                    storeID: e.storeid,
+                    latitude: e.latitude,
+                    longitude: e.longitude
+                });
+            });
+        });
+    }
+
+    io.updateListStore();
 
 
     return {

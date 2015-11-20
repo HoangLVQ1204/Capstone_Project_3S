@@ -162,6 +162,17 @@ module.exports = function (app) {
             }, function(err){
                 console.log('Insert new issue get anerror');
             });
+	};
+
+    var getUserGetIssue = function (req, res, next) {
+        var log = req.body;
+        console.log(log);
+        return db.issue.getUserGetIssue()
+            .then(function (list) {
+                res.status(200).json(list);
+            }, function (err) {
+                next(err);
+            })
     };
 
 
@@ -170,6 +181,7 @@ module.exports = function (app) {
         getIssueDetail: getIssueDetail,
         updateResolveIssue: updateResolveIssue,
         postBannedLog: postBannedLog,
-        createNewIssue: createNewIssue
+        createNewIssue: createNewIssue,
+        getUserGetIssue: getUserGetIssue
     }
 }

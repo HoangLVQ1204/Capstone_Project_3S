@@ -163,10 +163,19 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
         });        
     };
 
-    api.announceShipper = function() {
-        console.log('announceShipper');
-    };
-
+    api.cancelExpress = function() {
+        var user = api.getCurrentUser();
+        socketService.sendPacket(
+        {
+            type: 'store',
+            clientID: user.storeID
+        },
+        'server',
+        {
+            store: user
+        },
+        'store:remove:express');
+    }
     return api;        
 };
 

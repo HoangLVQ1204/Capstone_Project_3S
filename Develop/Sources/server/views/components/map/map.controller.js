@@ -121,8 +121,8 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
     $scope.circleRadius = $scope.circleRadius || 1000000000;
 
     var initCenter = {
-        latitude: 21.013419,
-        longitude: 105.526180
+        latitude: 21.028141,
+        longitude: 105.834045
     }
 
     var initZoom = 16;
