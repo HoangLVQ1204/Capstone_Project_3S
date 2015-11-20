@@ -5,9 +5,11 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
 
 
     $scope.tasksList = [];//all task of shipper
+    $scope.tasksList = [];//all task of shipper
     $scope.shipperList = [];
     $scope.orderList = [];
     $scope.taskList = [];
+    $scope.oldTasks = [];//old Task
     $scope.taskNoShipper = [];
     $scope.pickedShipper = null;
     var currentUser = authService.getCurrentInfoUser();
@@ -56,6 +58,7 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
     }).then(function () {
         $http.get(config.baseURI + "/api/shipper/getAllShipperWithTask").success(function(response){
             $scope.tasksList = response;
+            getOldTask();
             $scope.shipperList.map(function (shipper) {
                 var result = $.grep($scope.tasksList, function(e){ return e.username == shipper.username; });
                 shipper['tasks'] = [];
@@ -66,6 +69,17 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
             //console.log($scope.displayedShipperCollection)
             //console.log(1);
 
+        }).then(function () {
+            $http.get(config.baseURI + "/api/getUserGetIssue").success(function(response){
+                $scope.listUserHasIssue = response;
+                $scope.tasksList.map(function (shipper) {
+                    var shipperHasIssue = $.grep($scope.listUserHasIssue, function(e){ return e.sender == shipper.username;});
+                    if (shipperHasIssue.length > 0) shipper['hasIssue'] = true;
+                    else shipper['hasIssue'] = false;
+                });
+                //console.log( $scope.tasksList);
+            });
+            //$scope.moveAllProcessingTask($scope.originShipperID);
         })
     })
 
@@ -76,9 +90,7 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
         //console.log($scope.orderList);
     });
 
-    $http.get(config.baseURI + "/api/getUserGetIssue").success(function(response){
-        $scope.listUserHasIssue = response;
-    })
+
 
 
     $scope.assignTask = function () {
@@ -91,9 +103,12 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
             $.notific8($("#sms-success").val(), data);
             $scope.tasksList.map(function (shipper) {
                 var i= 0, n=shipper.tasks.length;
+
                 while(i<n) {
                     var task = shipper.tasks[i];
-                    if (task.statusid == 4) {
+                    var oldTask = $.grep($scope.oldTasks, function(e){ return e.taskid ==  task.taskid;});
+                    //console.log(oldTask)
+                    if (task.statusid == 4 && oldTask.length > 0 && task.shipperid!=oldTask[0].shipperid) {
                         var indexTask = shipper.tasks.indexOf(task);
                         shipper.tasks.splice(indexTask, 1);
                         n--;
@@ -102,9 +117,10 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
                         task['taskstatus'] = new Object();
                         task['taskstatus']['statusname'] = 'Inactive';
                         i++;
-                    }
+                    } else i++;
                 }
-                })
+            })
+            getOldTask();
 
                 //$http.put(config.baseURI + "/api/updateTaskNoShipper", $scope.taskNoShipper);
 
@@ -121,8 +137,8 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
     $scope.pickOrder = function (order) {
         //console.log(order)
         if ($scope.pickedShipper == null) return;
-        var shipperHasIssue = $.grep($scope.listUserHasIssue, function(e){ return e.sender == $scope.pickedShipper.username; });
-        if (order.statusid == 4 && shipperHasIssue.length>0){
+
+        if ($scope.pickedShipper.hasIssue){
             var data = new Object();
             data.verticalEdge='right';
             data.horizontalEdge='bottom';
@@ -187,6 +203,77 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
         }
         //console.log(shipper);
         //console.log(shipper);
+    }
+
+    //----------------------------------
+    //FUNCTION move processing task away shipper has issue
+    //-----------------------------------
+    $scope.moveAllProcessingTask = function(shipperid){
+        var originShipper = $.grep($scope.tasksList, function(e){ return e.username ==  shipperid;});
+        $scope.orderList = $scope.orderList.concat(originShipper[0].tasks.slice(0,originShipper[0].tasks.length));
+        originShipper[0].tasks.splice(0,originShipper[0].tasks.length);
+        //originShipper[0].tasks = [];
+        $scope.orderList.map(function (shipper) {
+            shipper.shipperid = null;
+        })
+        //console.log(originShipper[0].tasks);
+        //console.log($scope.orderList);
+    }
+
+    //----------------------------------
+    //FUNCTION move order away shipper has issue
+    //-----------------------------------
+    $scope.moveAllOrderToShipper = function(shipperid){
+        if ($scope.pickedShipper == null) return;
+
+        if ($scope.pickedShipper.hasIssue){
+            var data = new Object();
+            data.verticalEdge='right';
+            data.horizontalEdge='bottom';
+            data.theme="danger";
+            //data.sticky="true";
+            $.notific8($("#sms-fail-assign").val(), data);
+            return;
+        }
+        //var originShipper = $.grep($scope.tasksList, function(e){ return e.username ==  shipperid;});
+        for(i=0;i<$scope.orderList.length;i++)
+        {
+            $scope.orderList[i].shipperid = $scope.pickedShipper.username;
+            $scope.pickedShipper.tasks.push($scope.orderList[i]);
+            //console.log($scope.orderList[i]);
+        }
+        //$scope.$parent.$apply();
+        $scope.orderList.splice(0,$scope.orderList.length);
+        //$scope.orderList = [];
+        //console.log(originShipper[0].tasks);
+        console.log($scope.tasksList);
+    }
+
+    //----------------------------------
+    //FUNCTION move order away shipper has issue
+    //-----------------------------------
+    $scope.goInbox = function(){
+        var issue = $.grep($scope.listUserHasIssue, function(e){ return e.sender ==  $scope.originShipperID;});
+        //console.log(issue[0])
+        $state.go('admin.issueBox.content',{issueid: issue[0].issueid});
+    }
+
+    //----------------------------------
+    //FUNCTION move order away shipper has issue
+    //-----------------------------------
+    function getOldTask(){
+        $scope.oldTasks = [];
+        $scope.tasksList.map(function (shipper) {
+            shipper.tasks.map(function (oldtask) {
+                if (oldtask.statusid != null){
+                    var task = new Object();
+                    task['shipperid'] = shipper.username;
+                    task['taskid'] = oldtask.taskid;
+                    $scope.oldTasks.push(task);
+                }
+            })
+
+        })
     }
     //----------------------------------
     //FUNCTION LOAD SCRIPT
