@@ -54,6 +54,14 @@ module.exports = function(sequelize, DataTypes) {
             addNewManageStore: function(newManageStore){
                 console.log('En', newManageStore)
                 return managestore.build(newManageStore).save();
+            },
+            getOwnerOfStore: function(storeIDs) {
+                return managestore.findAll({
+                    attributes: ['managerid'],
+                    where: {
+                        storeid: storeIDs
+                    }
+                });
             }
         }
       }

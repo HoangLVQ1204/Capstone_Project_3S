@@ -437,8 +437,8 @@ a.logo {
 }
 
 body.leftMenu {
-  background: url(../img/logo_white_icon.png) no-repeat;
-  background-position: 11px 10px;
+  background: url(../img/karrywell.png) no-repeat;
+  background-position: 11px -4px;
   background-color: #262a33;
 }
 body.leftMenu:after {

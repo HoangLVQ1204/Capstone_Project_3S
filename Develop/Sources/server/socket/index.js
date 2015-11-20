@@ -728,6 +728,24 @@ module.exports = function(server,app){
             })
         });
 
+    io.updateListStore = function(){
+        controllerStore.getAllStores().then(function(rs){
+            rs = rs.map(function(e){
+                return e.toJSON();
+            });
+            console.log(rs);
+            rs.forEach(function(e){
+                io.addStore({
+                    storeID: e.storeid,
+                    latitude: e.latitude,
+                    longitude: e.longitude
+                });
+            });
+        });
+    }
+
+    io.updateListStore();
+
 
     return {
         io: io
