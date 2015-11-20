@@ -38,26 +38,32 @@ module.exports  = function(app){
      * (3) : admin
      *
      * */
-    var checkRole = function(){
-        return function(req,res,next){
-
-            var currentRoute        = req.route.path;
-            var currentRole         = req.user.userrole;
-            var currentAccessRoles  = [];
-            config.pathAccessRole.forEach(function(item){
-
-                if(item.url == currentRoute){
-                    currentAccessRoles = item.role;
-                    return;
+    var checkRole = function () {
+        return function (req, res, next) {
+            var tokenTime = req.user.time
+            var username = req.user.username
+            db.user.checkTokenTime(username, tokenTime).then(function (tk) {
+                if (tk) {
+                    var currentRoute = req.route.path;
+                    var currentRole = req.user.userrole;
+                    var currentAccessRoles = [];
+                    config.pathAccessRole.forEach(function (item) {
+                        if (item.url == currentRoute) {
+                            currentAccessRoles = item.role;
+                            return;
+                        }
+                    });
+                    if (currentAccessRoles.indexOf(currentRole) != -1) {
+                        next();
+                    } else {
+                        res.status(401).send('Your permission is denied')
+                    }
+                } else {
+                    res.status(401).send('Your account was log in at another place!')
                 }
-            });
-
-            if(currentAccessRoles.indexOf(currentRole) != -1){
-                next();
-            }else{
-                console.log("err");
-                res.status(401).send('Your permission is denied');
-            }
+            }, function () {
+                res.status(401).send('Your account was log in at another place!')
+            })
         }
     }
 
@@ -88,7 +94,8 @@ module.exports  = function(app){
                         if(!user.authenticate(passWord)){
                             res.status(401).send('Wrong password');
                         }else{
-
+                            var loginTime = new Date()
+                            db.user.updateLoginTime(user.username, loginTime)
                             if(user.userrole == 2 ){
                                 db.managestore.getStoresOfUser(user.username,db.store)
                                     .then(function(listStore){
