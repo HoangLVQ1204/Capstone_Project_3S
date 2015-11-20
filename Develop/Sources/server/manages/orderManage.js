@@ -6,6 +6,7 @@
 
  module.exports = function (app) {
     var db = app.get('models');
+    var server = app.get('io');
 
     var params = function (req, res, next, orderid) {
         var OrderStatus = db.orderstatus;
@@ -404,10 +405,65 @@ var putDraff = function(req, res, next){
 };
 
 var cancelOrder = function (req, res, next) {
-    console.log("=======cancerOrderId======", req.body);
-    res.status(200).json({
-        id : "ok"
-    });
+    console.log("=======cancerOrderId======", req.body.orderid);
+    var ownerStoreUser = req.user.username;
+    var storeID = req.user.stores[0].storeid;
+
+    var issueCancel = {
+        typeid: 7,
+        description: 'Store ' + storeID +  ' request cancel',
+        isresolved: false,
+        resolvetype: null,
+        createddate: new Date(),
+        sender: ownerStoreUser
+    };
+    console.log("STRID:419", storeID);
+    //Add new issue
+    db.issue.createNewIssue(issueCancel)
+    .then(function(issue){
+        //Add notification
+        var msgRequestCancel = {
+            type: 'Info',
+            title: 'Info',
+            content: 'Store ' + storeID + ' requested cancel an order',
+            url: '#/admin/issueBox/content?issueid=' + issue.dataValues.issueid,
+            isread: false,
+            createddate: new Date()
+        };
+
+        //get Admin
+        db.user.getUserByRole(3)
+        .then(function(admins){
+            admins = admins.map(function(e) {
+                return e.toJSON();
+            });
+            //insert notification to admin
+            var promises = admins.map(function(e){
+                var newData = _.clone(msgRequestCancel, true);
+                newData.username = e.username;
+                return db.notification.addNotification(newData);
+            });
+
+            return Promise.all(promises);
+        })
+        .then(function(data){
+            console.log('orderManage:449', data.length);
+            console.log('send notification disconnect to store and admin');
+            //send socket
+            var sender = {
+                type: 'store',
+                clientID: storeID
+            };
+            server.socket.forward(
+                sender,
+                'admin',
+                msgRequestCancel,
+                'admin::issue:cancelorder'
+            );
+        })
+    }, function(err){
+        next(err);
+    })
 };
 
 var getOrderList = function (req, res, next) {

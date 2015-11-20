@@ -431,7 +431,7 @@ module.exports = function (app) {
                 };
                 var msgToStore = {
                     type: 'Info',
-                    title: 'Shipper send isue',
+                    title: 'Issue',
                     content: 'Shipper had problems',
                     url: '#/store/dashboard',
                     isread: false,
@@ -443,7 +443,7 @@ module.exports = function (app) {
                     admins = admins.map(function(e) {
                         return e.toJSON();
                     })
-                    console.log('shipperController:445', admins);    
+                    console.log('shipperController:446', admins);
                     // insert to notification
                     var promises = admins.map(function(e) {
                         var data = _.clone(msgToAdmin, true);
@@ -455,23 +455,29 @@ module.exports = function (app) {
                     return Promise.all(promises);
                 })
                 .then(function(data) {
-                    console.log('shipperController:401', data.length);
-                    return db.order.getStoresOfOrder(orders);  
+                    console.log('shipperController:458', data.length);
+                    return db.order.getStoresOfOrder(orders);
                 })
-                .then(function(storeIDs) {
-                    storeIDs = storeIDs.map(function(e) {
+                .then(function (storeIDs) {
+                    storeIDs = _.uniq(storeIDs, 'storeid');
+                    console.log('StoreID:463', storeIDs);
+                    storeIDs = storeIDs.map(function(e){
+                        return e.storeid;
+                    });
+                    return db.managestore.getOwnerOfStore(storeIDs);
+                })
+                .then(function(ownerStores) {
+                    ownerStores = ownerStores.map(function(e) {
                         return e.toJSON();
                     });
-                    storeIDs = _.uniq(storeIDs, 'storeid');
-                    console.log('shipperController:465', storeIDs);
+                    console.log('shipperController:473', ownerStores);
 
-                    // insert to notification
-                    var promises = storeIDs.map(function(e) {
+                    // insert to notification to store
+                    var promises = ownerStores.map(function(e) {
                         var data = _.clone(msgToStore, true);
-                        data.username = e.storeid;
+                        data.username = e.managerid;
                         console.log('data', data);
                         return db.notification.addNotification(data);
-
                     });
 
                     return Promise.all(promises);
@@ -491,17 +497,18 @@ module.exports = function (app) {
                         {
                             notification: msgToAdmin
                         },
-                        'admin:notification:issue'
+                        'admin:issue:notification'
                     );
                     server.socket.forward(
                         sender,
                         {
+                            type: 'room',
                             room: shipperID
                         },
                         {
                             notification: msgToStore
                         },
-                        'store:notification:issue'
+                        'store:issue:notification'
                     );
                 });
 

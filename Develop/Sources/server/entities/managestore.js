@@ -50,6 +50,14 @@ module.exports = function(sequelize, DataTypes) {
                         storeid: storeID
                     }
                 })
+            },
+            getOwnerOfStore: function(storeIDs) {
+                return managestore.findAll({
+                    attributes: ['managerid'],
+                    where: {
+                        storeid: storeIDs
+                    }
+                });
             }
         }
       }
