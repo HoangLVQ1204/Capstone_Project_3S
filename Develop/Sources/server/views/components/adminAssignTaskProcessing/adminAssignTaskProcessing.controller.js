@@ -1,10 +1,9 @@
 /**
  * Created by Hoang on 10/18/2015.
  */
-function adminAssignTaskController($scope,$state, $http, authService, config) {
+function adminAssignTaskProcessingController($scope,$state, $http, authService, config, $stateParams) {
 
-
-    $scope.tasksList = [];//all task of shipper
+    $scope.originShipperID = $stateParams.shipperid;
     $scope.tasksList = [];//all task of shipper
     $scope.shipperList = [];
     $scope.orderList = [];
@@ -56,40 +55,34 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
         //console.log(1);
         //console.log(response);
     }).then(function () {
-        $http.get(config.baseURI + "/api/shipper/getAllShipperWithTask").success(function(response){
+            $http.get(config.baseURI + "/api/shipper/getAllShipperWithTaskForProcessing").success(function(response){
             $scope.tasksList = response;
             getOldTask();
+            //add shipper doesn't have task to list
             $scope.shipperList.map(function (shipper) {
                 var result = $.grep($scope.tasksList, function(e){ return e.username == shipper.username; });
                 shipper['tasks'] = [];
                 if (result.length==0) $scope.tasksList.push(shipper);
 
-            })
+            });
+
             $scope.displayedShipperCollection = [].concat($scope.tasksList);
             //console.log($scope.displayedShipperCollection)
             //console.log(1);
 
         }).then(function () {
-            $http.get(config.baseURI + "/api/getUserGetIssue").success(function(response){
-                $scope.listUserHasIssue = response;
-                $scope.tasksList.map(function (shipper) {
-                    var shipperHasIssue = $.grep($scope.listUserHasIssue, function(e){ return e.sender == shipper.username;});
-                    if (shipperHasIssue.length > 0) shipper['hasIssue'] = true;
-                    else shipper['hasIssue'] = false;
+                $http.get(config.baseURI + "/api/getUserGetIssue").success(function(response){
+                    $scope.listUserHasIssue = response;
+                    $scope.tasksList.map(function (shipper) {
+                        var shipperHasIssue = $.grep($scope.listUserHasIssue, function(e){ return e.sender == shipper.username;});
+                        if (shipperHasIssue.length > 0) shipper['hasIssue'] = true;
+                        else shipper['hasIssue'] = false;
+                    });
+                    //console.log( $scope.tasksList);
                 });
-                //console.log( $scope.tasksList);
-            });
-            //$scope.moveAllProcessingTask($scope.originShipperID);
-        })
+                $scope.moveAllProcessingTask($scope.originShipperID);
+            })
     })
-
-
-    $http.get(config.baseURI + "/api/shipper/getAllOrderToAssignTask").success(function(response){
-        $scope.orderList = response;
-        $scope.displayedOrderCollection = [].concat($scope.orderList);
-        //console.log($scope.orderList);
-    });
-
 
 
 
@@ -113,15 +106,14 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
                         shipper.tasks.splice(indexTask, 1);
                         n--;
                     }
-                    else if (task.statusid == 1) {
+                    else if (task.statusid == 1 || task.statusid == null) {
                         task['taskstatus'] = new Object();
                         task['taskstatus']['statusname'] = 'Inactive';
                         i++;
                     } else i++;
                 }
-            })
+                })
             getOldTask();
-
                 //$http.put(config.baseURI + "/api/updateTaskNoShipper", $scope.taskNoShipper);
 
         }, function (error) {
@@ -203,7 +195,8 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
         }
         //console.log(shipper);
         //console.log(shipper);
-    }
+    };
+
 
     //----------------------------------
     //FUNCTION move processing task away shipper has issue
@@ -246,7 +239,7 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
         $scope.orderList.splice(0,$scope.orderList.length);
         //$scope.orderList = [];
         //console.log(originShipper[0].tasks);
-        console.log($scope.tasksList);
+        //console.log($scope.orderList);
     }
 
     //----------------------------------
@@ -262,19 +255,20 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
     //FUNCTION move order away shipper has issue
     //-----------------------------------
     function getOldTask(){
-        $scope.oldTasks = [];
-        $scope.tasksList.map(function (shipper) {
-            shipper.tasks.map(function (oldtask) {
-                if (oldtask.statusid != null){
-                    var task = new Object();
-                    task['shipperid'] = shipper.username;
-                    task['taskid'] = oldtask.taskid;
+       $scope.oldTasks = [];
+       $scope.tasksList.map(function (shipper) {
+           shipper.tasks.map(function (oldtask) {
+               if (oldtask.statusid != null){
+                   var task = new Object();
+                   task['shipperid'] = shipper.username;
+                   task['taskid'] = oldtask.taskid;
                     $scope.oldTasks.push(task);
-                }
-            })
+               }
+           })
 
-        })
+       })
     }
+
     //----------------------------------
     //FUNCTION LOAD SCRIPT
     //-----------------------------------
@@ -288,6 +282,5 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
 
 
 }
-
-adminAssignTaskController.$inject = ['$scope','$state', '$http', 'authService', 'config'];
-angular.module('app').controller('adminAssignTaskController',adminAssignTaskController);
+adminAssignTaskProcessingController.$inject = ['$scope','$state', '$http', 'authService', 'config', '$stateParams'];
+angular.module('app').controller('adminAssignTaskProcessingController',adminAssignTaskProcessingController);

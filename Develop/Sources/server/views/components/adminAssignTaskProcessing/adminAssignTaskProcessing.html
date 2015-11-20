@@ -79,7 +79,7 @@
                                     <tbody align="center" >
 
                                     <tr class="odd gradeX" ng-repeat= "x in displayedShipperCollection" cs-select="x" select-mode="single" ng-model="$parent.isPicked" select-action="pickShipper(x)">
-                                        <td class="text-left">{{x.username}}
+                                        <td class="text-center">{{x.username}}
                                             <br ng-show="x.hasIssue"><label class="color-danger" ng-show="x.hasIssue">Issue</label>
                                         </td>
                                         <td>{{x.profile.name}}</td>
@@ -118,7 +118,7 @@
 
                                     <table class="table table-bordered table-hover" st-table="displayedTaskCollection" st-safe-src="taskList">
 
-                                        <div class="row form-group" style="margin-top: 18px">
+                                        <div class="row">
 
                                             <div class="col-sm-4 form-group pull-left">
 
@@ -166,19 +166,14 @@
 
                                         </div>
                                         <hr>
-                                        <div class="row form-group" >
-
-                                            <!--<div class="col-sm-4 form-group pull-left">-->
-
-                                            <!--<div class="input-icon">-->
-                                            <!--<i class="fa fa-calendar ico"></i>-->
-                                            <!--<input type="text" daterange class="form-control" name="daterange" id="daterange" ng-model="dateRange" />-->
-                                            <!--</div>-->
+                                        <div class="row" >
 
                                             <div class="col-sm-4 form-group pull-left">
-                                                <button type="button" class="btn btn-theme" ng-click="moveAllOrderToShipper(pickedShipper.username)"><i class="fa fa-arrow-left"></i></button>
-                                                <!--<button type="button" class="btn btn-theme">IssueBox</button>-->
+                                                    <button type="button" class="btn btn-theme" ng-click="moveAllOrderToShipper(pickedShipper.username)"><i class="fa fa-arrow-left"></i></button>
+                                                    <!--<button type="button" class="btn btn-theme">IssueBox</button>-->
                                             </div>
+
+
                                             <!--</div>&lt;!&ndash; //form-group&ndash;&gt;-->
                                             <div class="col-sm-4 pull-right">
                                                 <div class="input-icon"> <i class="fa fa-search ico"></i>
@@ -193,6 +188,7 @@
                                                 <!--&lt;!&ndash;<option data-icon="fa fa-user" id="predicate" ng-model="selectedPredicate" ng-options="option in predicates"></option>&ndash;&gt;-->
                                                 <!--<option ng-repeat="options in searchOptions" value="{{options.option}}">{{options.option}}</option>-->
                                                 <!--</select>-->
+
                                                 <select
                                                         class="form-control"
                                                         ng-options="options.option for options in searchOrderOptions" ng-model="selectedOrder">
@@ -214,7 +210,9 @@
                                         <tbody align="center" >
 
                                         <tr class="odd gradeX"  ng-repeat= "x in displayedOrderCollection" >
-                                            <td>{{x.order.orderid}}<br ng-show="x.statusid==4"><label class="color-danger" ng-show="x.statusid==4">Processing</label></td>
+                                            <td>{{x.order.orderid}}
+                                                <br ng-show="x.statusid==4"><label class="color-danger" ng-show="x.statusid==4">Processing</label>
+                                            </td>
                                             <td>{{x.order.deliveryaddress}}</td>
                                             <td cs-select-checkbox="x" id="{{x.order.orderid}}" select-action="pickOrder(x)" select-mode="multiple" shipper-row="$parent.isPicked">{{x.order.pickupaddress}}</td>
                                             <td>{{x.order.orderstatus.statusname}}</td>

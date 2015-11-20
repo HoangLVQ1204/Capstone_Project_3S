@@ -59,8 +59,15 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
 
     });
 
-    socketService.on('store:notification:issue', function(data) {
-        console.log('store:notification:issue', data);
+    socketService.on('store:issue:notification', function(data) {
+        console.log('store:issue:notification', data);
+        $rootScope.$emit("evChange", data.msg);
+        $rootScope.notify(data.msg);
+    });
+    socketService.on('store::issue:disconnected', function(data) {
+        console.log("store:issue:disconnected: ", data);
+        $rootScope.$emit("evChange", data.msg);
+        $rootScope.notify(data.msg);
     });
 
     socketService.on('store:issue:message', function(data) {
@@ -156,10 +163,19 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
         });        
     };
 
-    api.announceShipper = function() {
-        console.log('announceShipper');
-    };
-
+    api.cancelExpress = function() {
+        var user = api.getCurrentUser();
+        socketService.sendPacket(
+        {
+            type: 'store',
+            clientID: user.storeID
+        },
+        'server',
+        {
+            store: user
+        },
+        'store:remove:express');
+    }
     return api;        
 };
 

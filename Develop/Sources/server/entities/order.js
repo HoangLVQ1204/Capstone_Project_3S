@@ -327,6 +327,9 @@ module.exports = function(sequelize, DataTypes) {
               include:{
                 model: taskstatus,
                 attributes: ['statusname']
+              },
+              where: {
+                'statusid': {$ne: 5}
               }
             }]
         })

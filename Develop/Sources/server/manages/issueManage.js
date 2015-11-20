@@ -51,6 +51,7 @@ module.exports = function (app) {
 
     var createNewIssue = function(shipperID) {
         //Create issue
+        var listOrders = [];
         var issueDisconnect = {
             typeid: 8,
             description: 'Shipper ' + shipperID + ' disconnected',
@@ -63,6 +64,10 @@ module.exports = function (app) {
         db.order.getAllTaskOfShipper(db.task, shipperID)
             .then(function (tasks) {
                 if (_.isEmpty(tasks) == false) {
+                    _.each(tasks, function(task){
+                        listOrders.push(task.orderid);
+                    })
+                    console.log("issueManage:70: ", listOrders);
                     //Add new issue
                     db.issue.createNewIssue(issueDisconnect)
                     .then(function(issue){
@@ -70,8 +75,16 @@ module.exports = function (app) {
                         var msgDisconnectToAdmin = {
                             type: 'Issue',
                             title: 'Issue',
-                            content: 'Shipper ' + shipperID + ' had sent an issue',
+                            content: 'Shipper ' + shipperID + ' is diconnected',
                             url: '#/admin/issueBox/content?issueid=' + issue.dataValues.issueid,
+                            isread: false,
+                            createddate: new Date()
+                        };
+                        var msgDisconnectToStore = {
+                            type: 'Info',
+                            title: 'Warning',
+                            content: 'Some orders is in status Warning. We are repairing !',
+                            url: '#/store/dashboard',
                             isread: false,
                             createddate: new Date()
                         };
@@ -81,6 +94,7 @@ module.exports = function (app) {
                                 admins = admins.map(function(e) {
                                     return e.toJSON();
                                 });
+                                //insert notification to user admin
                                 var promises = admins.map(function(e){
                                     var newData = _.clone(msgDisconnectToAdmin, true);
                                     newData.username = e.username;
@@ -89,7 +103,37 @@ module.exports = function (app) {
 
                                 return Promise.all(promises);
                             })
-                            .then(function(data){
+                            .then(function(data) {
+                                console.log('shipperController:401', data.length);
+                                return db.order.getStoresOfOrder(listOrders);
+                            })
+                            .then(function(storeIDs){
+                                storeIDs = _.uniq(storeIDs, 'storeid');
+                                console.log('isssueManage:112', storeIDs);
+                                storeIDs = storeIDs.map(function(e){
+                                    return e.storeid;
+                                });
+                                return db.managestore.getOwnerOfStore(storeIDs);
+                            })
+                            .then(function(ownerStores) {
+                                ownerStores = ownerStores.map(function (e) {
+                                    return e.toJSON();
+                                });
+                                console.log('issManage:119', ownerStores);
+
+                                //insert to notification to store
+                                var promises = ownerStores.map(function (e) {
+                                    var data = _.clone(msgDisconnectToStore, true);
+                                    data.username = e.managerid;
+                                    console.log('data', data);
+                                    return db.notification.addNotification(data);
+                                });
+
+                                return Promise.all(promises);
+                            })
+                            .then(function (data) {
+                                console.log('issueManage:135', data.length);
+                                console.log('send notification disconnect to store and admin');
                                 //send socket
                                 var sender = {
                                     type: 'shipper',
@@ -101,6 +145,15 @@ module.exports = function (app) {
                                     msgDisconnectToAdmin,
                                     'admin::issue:disconnected'
                                 );
+                                server.socket.forward(
+                                    sender,
+                                    {
+                                        type: 'room',
+                                        room: shipperID
+                                    },
+                                    msgDisconnectToStore,
+                                    'store::issue:disconnected'
+                                );
                             });
                     });
                 } else {
@@ -109,6 +162,17 @@ module.exports = function (app) {
             }, function(err){
                 console.log('Insert new issue get anerror');
             });
+	};
+
+    var getUserGetIssue = function (req, res, next) {
+        var log = req.body;
+        console.log(log);
+        return db.issue.getUserGetIssue()
+            .then(function (list) {
+                res.status(200).json(list);
+            }, function (err) {
+                next(err);
+            })
     };
 
 
@@ -117,6 +181,7 @@ module.exports = function (app) {
         getIssueDetail: getIssueDetail,
         updateResolveIssue: updateResolveIssue,
         postBannedLog: postBannedLog,
-        createNewIssue: createNewIssue
+        createNewIssue: createNewIssue,
+        getUserGetIssue: getUserGetIssue
     }
 }

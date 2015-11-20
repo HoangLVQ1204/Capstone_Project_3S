@@ -7,6 +7,9 @@ module.exports = function (app) {
     app.route('/api/getAllIssue')
         .get(controller.getAllIssue);
 
+    app.route('/api/getUserGetIssue')
+        .get(controller.getUserGetIssue);
+
     app.route('/api/getIssueContent/:issueid?')
         .get(controller.getIssueDetail);
 

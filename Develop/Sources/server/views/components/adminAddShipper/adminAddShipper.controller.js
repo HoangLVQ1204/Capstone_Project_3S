@@ -25,7 +25,7 @@ function adminAddShipperController($scope,$state, $http, $filter, config) {
         $scope.newShipper.account.userstatus = 2;
         $scope.newShipper.profile.dob = new Date($scope.newShipper.profile.dob);
 
-        $http.post(config.baseURI + "/api/shipper/addNewShipper", $scope.newShipper).success(function(response){
+        $http.post(config.baseURI + "/api/user/addNewUser", $scope.newShipper).success(function(response){
             smsData.theme="theme-inverse";
             $.notific8($("#sms-success").val(), smsData);
             $state.go('admin.shipperList', {newShipper: $scope.newShipper.account});

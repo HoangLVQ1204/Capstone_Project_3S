@@ -120,7 +120,10 @@ module.exports = function(sequelize, DataTypes) {
         }})
       },
 
-      getAllShipperWithTask: function(task, profile, order, orderstatus, tasktype, taskstatus) {
+      getAllShipperWithTask: function(task, profile, order, orderstatus, tasktype, taskstatus, processing) {
+        //neu processing = true thi chi lay loai processing
+        var isProcessing = 1;
+        if (processing) isProcessing = 4;
         return user.findAll({
           include:[{
             model: task,
@@ -141,7 +144,7 @@ module.exports = function(sequelize, DataTypes) {
                 //required: false,
                 attributes: ['statusname'],
                 where:{
-                  statusid: [1,4]
+                  statusid: [isProcessing,4]
                 }
               },
 

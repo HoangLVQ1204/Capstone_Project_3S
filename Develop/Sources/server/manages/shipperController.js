@@ -431,7 +431,7 @@ module.exports = function (app) {
                 };
                 var msgToStore = {
                     type: 'Info',
-                    title: 'Shipper send isue',
+                    title: 'Issue',
                     content: 'Shipper had problems',
                     url: '#/store/dashboard',
                     isread: false,
@@ -443,7 +443,7 @@ module.exports = function (app) {
                     admins = admins.map(function(e) {
                         return e.toJSON();
                     })
-                    console.log('shipperController:445', admins);    
+                    console.log('shipperController:446', admins);
                     // insert to notification
                     var promises = admins.map(function(e) {
                         var data = _.clone(msgToAdmin, true);
@@ -455,23 +455,29 @@ module.exports = function (app) {
                     return Promise.all(promises);
                 })
                 .then(function(data) {
-                    console.log('shipperController:401', data.length);
-                    return db.order.getStoresOfOrder(orders);  
+                    console.log('shipperController:458', data.length);
+                    return db.order.getStoresOfOrder(orders);
                 })
-                .then(function(storeIDs) {
-                    storeIDs = storeIDs.map(function(e) {
+                .then(function (storeIDs) {
+                    storeIDs = _.uniq(storeIDs, 'storeid');
+                    console.log('StoreID:463', storeIDs);
+                    storeIDs = storeIDs.map(function(e){
+                        return e.storeid;
+                    });
+                    return db.managestore.getOwnerOfStore(storeIDs);
+                })
+                .then(function(ownerStores) {
+                    ownerStores = ownerStores.map(function(e) {
                         return e.toJSON();
                     });
-                    storeIDs = _.uniq(storeIDs, 'storeid');
-                    console.log('shipperController:465', storeIDs);
+                    console.log('shipperController:473', ownerStores);
 
-                    // insert to notification
-                    var promises = storeIDs.map(function(e) {
+                    // insert to notification to store
+                    var promises = ownerStores.map(function(e) {
                         var data = _.clone(msgToStore, true);
-                        data.username = e.storeid;
+                        data.username = e.managerid;
                         console.log('data', data);
                         return db.notification.addNotification(data);
-
                     });
 
                     return Promise.all(promises);
@@ -491,17 +497,18 @@ module.exports = function (app) {
                         {
                             notification: msgToAdmin
                         },
-                        'admin:notification:issue'
+                        'admin:issue:notification'
                     );
                     server.socket.forward(
                         sender,
                         {
+                            type: 'room',
                             room: shipperID
                         },
                         {
                             notification: msgToStore
                         },
-                        'store:notification:issue'
+                        'store:issue:notification'
                     );
                 });
 
@@ -704,7 +711,7 @@ module.exports = function (app) {
                         orderList.push(order);
                     }
                     else {
-                        if (item.statusid == 4 && item.tasks.length==1) {
+                        if (item.statusid == 4 && item.tasks.length==1 && item.tasks[0].statusid == 3) {
                             orderList.push(order);
                         }
                         if (item.tasks[item.tasks.length-1].shipperid == null) {
@@ -729,7 +736,19 @@ module.exports = function (app) {
 
     var getAllShipperWithTask = function (req, res, next) {
         var shipperList;
-        return db.user.getAllShipperWithTask(db.task, db.profile, db.order, db.orderstatus, db.tasktype, db.taskstatus)
+        return db.user.getAllShipperWithTask(db.task, db.profile, db.order, db.orderstatus, db.tasktype, db.taskstatus, false)
+            .then(function(shipper) {
+                //console.log("--------------Data Task Shipper -------------------");
+                //console.log(shipper);
+                res.status(200).json(shipper);
+            }, function(err) {
+                next(err);
+            })
+    };
+
+    var getAllShipperWithTaskForProcessing = function (req, res, next) {
+        var shipperList;
+        return db.user.getAllShipperWithTask(db.task, db.profile, db.order, db.orderstatus, db.tasktype, db.taskstatus, true)
             .then(function(shipper) {
                 //console.log("--------------Data Task Shipper -------------------");
                 //console.log(shipper);
@@ -933,24 +952,6 @@ module.exports = function (app) {
         } while (isExisted);
     };
 
-    //function add new Shipper to system
-    var addNewUser = function(req, res, next){
-        var user = req.body;
-            db.user.addNewUser(user.account)
-                .then(function(){
-                    db.profile.addNewProfile(user.profile)
-                        .then(function(profile){
-                            res.status(201).json(profile);
-                        },function(err){
-                            //console.log(newShipperID, shipper);
-                            res.status(400).json("Can not add new profile");
-                        });
-                },function(err){
-                    //console.log(newShipperID, shipper);
-                    res.status(400).json("Can not add new user");
-                });
-
-    };
 
     //// START AREA OF HELPER FUNCTIONS (PRIVATE)
     var addStoreToShipperRoom = function(storeid, shipperid){
@@ -1012,7 +1013,8 @@ module.exports = function (app) {
         getTaskBeIssuePending: getTaskBeIssuePending,
         testSk: testSk,
         createShipperID: createShipperID,
-        addNewUser: addNewUser
+        getAllShipperWithTaskForProcessing: getAllShipperWithTaskForProcessing
+
 
     }
 }
