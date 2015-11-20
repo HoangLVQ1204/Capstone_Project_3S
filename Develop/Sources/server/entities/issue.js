@@ -125,7 +125,16 @@ module.exports = function(sequelize, DataTypes) {
                 'issueid': issueid
               }
             })
-        }
+        },
+
+      getUserGetIssue: function () {
+        return issue.findAll(
+            { attributes: ['sender','issueid'],
+              where: {
+                'isresolved': false
+          }
+        })
+      }
     }
   });
   return issue;

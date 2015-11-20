@@ -13,6 +13,12 @@ module.exports = function(app){
 	app.route('/api/store/getLatestAutoAccountDate')
 		.get(controller.getLatestAutoAccountDate);
 
+	app.route('/api/store/getNewStoreOwnerID')
+		.get(controller.createStoreOwnerID);
+
+	app.route('/api/store/getNewStoreID')
+		.get(controller.createStoreID);
+
 	app.route('/api/store/postNewLedger')
 		.post(controller.postNewLedger);
 
@@ -22,9 +28,12 @@ module.exports = function(app){
 	app.route('/api/store/getTotalCoD')
 		.get(controller.getTotalCoD);
 
+	app.route('/api/store/addManageStore')
+		.post(controller.postNewManageStore);
+
     app.route('/api/store')
     	.get(controller.get)
-    	.post(controller.post);
+    	.post(controller.postNewStore);
 
     app.route('/api/store/:storeid')
     	.get(controller.getOne)

@@ -74,8 +74,8 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
         
     });
 
-    socketService.on('shipper:reject:order', function(data) {
-        console.log('reject order', data);
+    socketService.on('shipper:remove:express', function(data) {
+        console.log('remove express', data);
     });
 
     api.getCurrentUser = function() {

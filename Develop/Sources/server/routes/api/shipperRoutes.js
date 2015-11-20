@@ -14,13 +14,13 @@ module.exports = function (app) {
 
     app.post('/api/shipper/updateTaskForShipper', shipperCtrl.updateTaskForShipper);
 
-    app.post('/api/shipper/addNewShipper', shipperCtrl.addNewUser);
-
     app.get('/api/shipper/getAllShipper', shipperCtrl.getAllShipper);
 
     app.get('/api/shipper/getTaskBeIssuePending', checkAll, shipperCtrl.getTaskBeIssuePending);
 
     app.get('/api/shipper/getAllShipperWithTask', shipperCtrl.getAllShipperWithTask);
+
+    app.get('/api/shipper/getAllShipperWithTaskForProcessing', shipperCtrl.getAllShipperWithTaskForProcessing);
 
     app.get('/api/shipper/getAllOrderToAssignTask', shipperCtrl.getAllOrderToAssignTask);
 
