@@ -1,209 +1,215 @@
 <div id="content">
 
-			<div class="row">
-				<div class="col-md-8">
-					<section class="panel">
-						<header class="panel-heading no-borders bg-inverse">
-														<h2><strong>Order</strong> by month </h2>
-														
-												</header>
-						<div class="tabbable">
-							<ul class="nav nav-tabs chart-change">
-								<li><a href="javascript:void(0)" data-change-type="bars" data-for-id="#stack-chart"><i class="fa fa-bar-chart-o"></i> &nbsp; Bars Chart</a></li>
-								<li class="active"><a href="javascript:void(0)" data-change-type="lines" data-for-id="#stack-chart"><i class="fa fa-qrcode"></i> &nbsp; Line chart</a></li>
-								<li class="pull-right"><select class="form-control">
-															<option>Domino</option>
-															<option>Shop tre tho</option>
-															<option>KFC</option>
-                                                        </select></li>
-							</ul>
-							<div class="tab-content">
-								<div class="tab-pane fade in active">
-									<div class="widget-chart chart-dark">
-										<table id="stack-chart" data-stack="true" class="flot-chart" data-type="lines"  data-yaxis-max="3000" data-tool-tip="show" data-width="100%" data-height="300px"  data-bar-width="0.5" data-tick-color="rgba(0,0,0,0.05)">
-											<thead>
-												<tr>
-													<th></th>
-													<th class="color-theme-inverse">Test</th>
-													<th class="color-warning">Page View</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<th>JAN</th>
-													<td>250</td>
-													<td>295</td>
-												</tr>
-												<tr>
-													<th>FEB</th>
-													<td>145</td>
-													<td>425</td>
-												</tr>
-												<tr>
-													<th>MAR</th>
-													<td>758</td>
-													<td>986</td>
-												</tr>
-												<tr>
-													<th>APR</th>
-													<td>475</td>
-													<td>548</td>
-												</tr>
-												<tr>
-													<th>MAY</th>
-													<td>452</td>
-													<td>441</td>
-												</tr>
-												<tr>
-													<th>JUN</th>
-													<td>112</td>
-													<td>257</td>
-												</tr>
-												<tr>
-													<th>JUL</th>
-													<td>857</td>
-													<td>546</td>
-												</tr>
-												<tr>
-													<th>AUG</th>
-													<td>200</td>
-													<td>125</td>
-												</tr>
-												<tr>
-													<th>SEP</th>
-													<td>55</td>
-													<td>147</td>
-												</tr>
-												<tr>
-													<th>OCT</th>
-													<td>1900</td>
-													<td>315</td>
-												</tr>
-												<tr>
-													<th>NOV</th>
-													<td>578</td>
-													<td>425</td>
-												</tr>
-												<tr>
-													<th>DEC</th>
-													<td>1900</td>
-													<td>865</td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-								<div class="label-sparkline align-lg-center">
-									<ul>
-										<li><span data-color="theme-inverse"></span>Express </li>
-										<li><span data-color="warning"></span>Normal</li>
-									</ul>
-								</div>
+	<div class="row">
+		<div class="col-md-8">
+			<section class="panel">
+				<header class="panel-heading no-borders bg-inverse">
+					<h2><strong>Order</strong> by month </h2>
+
+				</header>
+				<div class="tabbable">
+					<ul class="nav nav-tabs chart-change">
+						<li class="active"><a ui-seft="#sectionA" data-change-type="bars" data-for-id="#stack-chart1"><i class="fa fa-bar-chart-o"></i> &nbsp; Express / Nomal</a></li>
+
+						<li><a ui-seft="#sectionB" data-change-type="bars" data-for-id="#stack-chart2"><i class="fa fa-qrcode"></i> &nbsp; Complete / Cancel</a></li>
+						<li class="pull-right"><select class="form-control">
+							<option>2013</option>
+							<option>2014</option>
+							<option>2015</option>
+						</select></li>
+						<li class="pull-right"><select class="form-control">
+							<option>Domino</option>
+							<option>Shop tre tho</option>
+							<option>KFC</option>
+						</select></li>
+					</ul>
+					<div class="tab-content">
+						<div id="sectionA" class="tab-pane fade in active">
+							<div class="widget-chart chart-dark">
+								<table id="stack-chart" data-stack="true" class="flot-chart" data-type="lines"  data-yaxis-max="3000" data-tool-tip="show" data-width="100%" data-height="300px"  data-bar-width="0.5" data-tick-color="rgba(0,0,0,0.05)">
+									<thead>
+										<tr>
+											<th></th>
+											<th class="color-theme-inverse">Test</th>
+											<th class="color-warning">Page View</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<th>JAN</th>
+											<td>250</td>
+											<td>295</td>
+										</tr>
+										<tr>
+											<th>FEB</th>
+											<td>145</td>
+											<td>425</td>
+										</tr>
+										<tr>
+											<th>MAR</th>
+											<td>758</td>
+											<td>986</td>
+										</tr>
+										<tr>
+											<th>APR</th>
+											<td>475</td>
+											<td>548</td>
+										</tr>
+										<tr>
+											<th>MAY</th>
+											<td>452</td>
+											<td>441</td>
+										</tr>
+										<tr>
+											<th>JUN</th>
+											<td>112</td>
+											<td>257</td>
+										</tr>
+										<tr>
+											<th>JUL</th>
+											<td>857</td>
+											<td>546</td>
+										</tr>
+										<tr>
+											<th>AUG</th>
+											<td>200</td>
+											<td>125</td>
+										</tr>
+										<tr>
+											<th>SEP</th>
+											<td>55</td>
+											<td>147</td>
+										</tr>
+										<tr>
+											<th>OCT</th>
+											<td>1900</td>
+											<td>315</td>
+										</tr>
+										<tr>
+											<th>NOV</th>
+											<td>578</td>
+											<td>425</td>
+										</tr>
+										<tr>
+											<th>DEC</th>
+											<td>1900</td>
+											<td>865</td>
+										</tr>
+									</tbody>
+								</table>
 							</div>
 						</div>
-					</section>
-					
-					<section class="panel bg-inverse">
-						<header class="panel-heading no-borders ">
-														<h2><strong>Order</strong> by month </h2>
-														
-												</header>
-						<div class="tabbable">
-							<ul class="nav nav-tabs chart-change">
-								<li><a href="javascript:void(0)" data-change-type="bars" data-for-id="#stack-chart-2"><i class="fa fa-bar-chart-o"></i> &nbsp; Bars Chart</a></li>
-								<li class="active"><a href="javascript:void(0)" data-change-type="lines" data-for-id="#stack-chart-2"><i class="fa fa-qrcode"></i> &nbsp; Order by month</a></li>
-								<li class="pull-right"><select class="form-control">
-															<option>2013</option>
-															<option>2014</option>
-															<option>2015</option>
-                                                        </select></li>
+						<div class="label-sparkline align-lg-center">
+							<ul>
+								<li><span data-color="theme-inverse"></span>Express </li>
+								<li><span data-color="warning"></span>Normal</li>
 							</ul>
-							<div class="tab-content">
-								<div class="tab-pane fade in active">
-									<div class="widget-chart chart-dark">
-										<table id="stack-chart-2" data-stack="true" class="flot-chart" data-type="lines"  data-yaxis-max="3000" data-tool-tip="show" data-width="100%" data-height="300px"  data-bar-width="0.5" data-tick-color="rgba(0,0,0,0.05)">
-											<thead>
-												<tr>
-													<th></th>
-													<th class="color-theme-inverse">Test</th>
-													<th class="color-warning">Page View</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<th>JAN</th>
-													<td>250</td>
-													<td>295</td>
-												</tr>
-												<tr>
-													<th>FEB</th>
-													<td>145</td>
-													<td>425</td>
-												</tr>
-												<tr>
-													<th>MAR</th>
-													<td>758</td>
-													<td>986</td>
-												</tr>
-												<tr>
-													<th>APR</th>
-													<td>475</td>
-													<td>548</td>
-												</tr>
-												<tr>
-													<th>MAY</th>
-													<td>452</td>
-													<td>441</td>
-												</tr>
-												<tr>
-													<th>JUN</th>
-													<td>112</td>
-													<td>257</td>
-												</tr>
-												<tr>
-													<th>JUL</th>
-													<td>857</td>
-													<td>546</td>
-												</tr>
-												<tr>
-													<th>AUG</th>
-													<td>200</td>
-													<td>125</td>
-												</tr>
-												<tr>
-													<th>SEP</th>
-													<td>55</td>
-													<td>147</td>
-												</tr>
-												<tr>
-													<th>OCT</th>
-													<td>1900</td>
-													<td>315</td>
-												</tr>
-												<tr>
-													<th>NOV</th>
-													<td>578</td>
-													<td>425</td>
-												</tr>
-												<tr>
-													<th>DEC</th>
-													<td>1900</td>
-													<td>865</td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-								<div class="label-sparkline align-lg-center">
-									<ul>
-										<li><span data-color="theme-inverse"></span>Express </li>
-										<li><span data-color="warning"></span>Normal</li>
-									</ul>
-								</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="panel bg-inverse">
+				<header class="panel-heading no-borders ">
+					<h2><strong>Order</strong> by month </h2>
+
+				</header>
+				<div class="tabbable">
+					<ul class="nav nav-tabs chart-change">
+						<li><a href="javascript:void(0)" data-change-type="bars" data-for-id="#stack-chart-2"><i class="fa fa-bar-chart-o"></i> &nbsp; Bars Chart</a></li>
+						<li class="active"><a href="javascript:void(0)" data-change-type="lines" data-for-id="#stack-chart-2"><i class="fa fa-qrcode"></i> &nbsp; Order by month</a></li>
+						<li class="pull-right"><select class="form-control">
+							<option>2013</option>
+							<option>2014</option>
+							<option>2015</option>
+						</select></li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane fade in active">
+							<div class="widget-chart chart-dark">
+								<table id="stack-chart-2" data-stack="true" class="flot-chart" data-type="lines"  data-yaxis-max="3000" data-tool-tip="show" data-width="100%" data-height="300px"  data-bar-width="0.5" data-tick-color="rgba(0,0,0,0.05)">
+									<thead>
+										<tr>
+											<th></th>
+											<th class="color-theme-inverse">Test</th>
+											<th class="color-warning">Page View</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<th>JAN</th>
+											<td>250</td>
+											<td>295</td>
+										</tr>
+										<tr>
+											<th>FEB</th>
+											<td>145</td>
+											<td>425</td>
+										</tr>
+										<tr>
+											<th>MAR</th>
+											<td>758</td>
+											<td>986</td>
+										</tr>
+										<tr>
+											<th>APR</th>
+											<td>475</td>
+											<td>548</td>
+										</tr>
+										<tr>
+											<th>MAY</th>
+											<td>452</td>
+											<td>441</td>
+										</tr>
+										<tr>
+											<th>JUN</th>
+											<td>112</td>
+											<td>257</td>
+										</tr>
+										<tr>
+											<th>JUL</th>
+											<td>857</td>
+											<td>546</td>
+										</tr>
+										<tr>
+											<th>AUG</th>
+											<td>200</td>
+											<td>125</td>
+										</tr>
+										<tr>
+											<th>SEP</th>
+											<td>55</td>
+											<td>147</td>
+										</tr>
+										<tr>
+											<th>OCT</th>
+											<td>1900</td>
+											<td>315</td>
+										</tr>
+										<tr>
+											<th>NOV</th>
+											<td>578</td>
+											<td>425</td>
+										</tr>
+										<tr>
+											<th>DEC</th>
+											<td>1900</td>
+											<td>865</td>
+										</tr>
+									</tbody>
+								</table>
 							</div>
 						</div>
-					</section>
-					
+						<div class="label-sparkline align-lg-center">
+							<ul>
+								<li><span data-color="theme-inverse"></span>Express </li>
+								<li><span data-color="warning"></span>Normal</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</section>
+
 					<!-- <section class="panel">
 						<div class="panel-body">
 							<div class="table-responsive">
@@ -440,11 +446,11 @@
 							</footer>
 						</div>
 					</section>
-					 -->
+				-->
 
-					
-				</div>
+
 			</div>
-			<!-- //content > row-->
-			
 		</div>
+		<!-- //content > row-->
+
+	</div>
