@@ -100,6 +100,10 @@ module.exports = function(sequelize, DataTypes) {
           statusid: nextStatus,
           completedate: completeDate
         })
+      },
+      getOrderAddress: function(){
+        // :TODO change to real address
+        return this.deliveryaddress + ', fake ward ' + ', fake district' + ',fake province'
       }
     },
     classMethods: {
