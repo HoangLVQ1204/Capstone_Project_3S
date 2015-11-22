@@ -36,7 +36,7 @@
     <div class="modal-body left">
         <div class="row">
             <div class="col-md-3" >
-                <img alt="" ng-src="{{rightShipper.avatar}}" class="circle" style="width: 100px">
+                <img alt="" ng-src="{{$root.rightShipper.avatar}}" class="circle" style="width: 100px">
             </div>
             <div class="col-md-9" style="margin-top: 20px">
                 <h4><strong>Sorry!</strong> Now all shippers are busy</h4>
@@ -56,7 +56,7 @@
     <div class="modal-body left">
         <div class="row">
             <div class="col-md-3" >
-                <img alt="" ng-src="{{rightShipper.avatar}}" class="circle" style="width: 100px">
+                <img alt="" ng-src="{{$root.rightShipper.avatar}}" class="circle" style="width: 100px">
             </div>
             <div class="col-md-9">
                 <h3><strong>Hi</strong>, I'm {{$root.rightShipper.fullName}}</h3>
@@ -95,10 +95,6 @@
                 </div>
             </div>
             <hr>
-            <div class="align-lg-right">
-                <button class="btn btn-theme" ng-click="createExpressOrder()">Accept</button>
-                <button class="btn btn-inverse" data-dismiss="modal" ng-click="createDraffOrder()">Cancel</button>
-            </div>
         </div>
     </div>
     <!-- //modal-body-->

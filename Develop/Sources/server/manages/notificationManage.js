@@ -30,6 +30,10 @@ module.exports = function (app) {
         var limit = req.query.limit;
         db.notification.getNotifications(username, offset, limit)
         .then(function(items) {
+            items = items.map(function(e) {
+                return e.toJSON();
+            });
+            console.log('items', items);
             res.status(200).json(items);
         });
     };
