@@ -129,9 +129,9 @@
 
                                                 <tr class="odd gradeX" ng-repeat="x in displayedInactiveList">
                                                     <td>{{x.taskid}}</td>
-                                                    <td>{{x.shipperid}}</td>
+                                                    <td><a ui-sref="admin.userDetail({username: x.shipperid})">{{x.shipperid}}</a></td>
                                                     <td>{{x.orderid}}</td>
-                                                    <td class="center"> {{x.order.storeid}}</td>
+                                                    <td class="center"><a ui-sref="admin.storeDetail({storeid: x.order.storeid})"> {{x.order.storeid}}</a></td>
                                                     <td class="center"> {{x.order.orderstatus.statusname}}</td>
 
                                                     <td class="center">

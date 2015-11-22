@@ -2,50 +2,54 @@
 
     <div class="nav-collapse" style="margin-left: 0px;">
 
-
+        <ol class="breadcrumb">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Library</a></li>
+            <li class="active">Data</li>
+        </ol>
         <!-- //breadcrumb-->
 
         <div id="">
 
             <div class="row panel">
-                <div id="overview">
-                    <div class="row">
-                        <div class="col-sm-11">
-                            <section class="profile-cover">
-                                <div class="profile-avatar">
-                                    <div>
-                                        <img alt="" src="assets/img/avatar5.png" class="circle">
-                                        <span>{{user.username}}</span>
-                                    </div>
-                                    <a class="btn btn-theme" title="Add friends"><i class="fa fa-plus"></i> friends</a>
-                                    <a class="btn btn-theme-inverse" ><i class="fa fa-comments"></i> messages</a>
-                                </div>
-                                <div class="profile-status">
-                                    <a class="btn"> 14,548 <small>Sales</small></a>
-                                    <a class="btn"> 254 <small> Follower</small></a>
-                                </div>
-                            </section>
-                        </div>
-                        <!-- //content > row > col-sm-9 -->
-
-                        <!--<div class="col-sm-3">-->
-                            <!--<section class="profile-about">-->
-                                <!--<h3>About</h3>-->
-                                <!--<hr>-->
-                                <!--<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque non leo convallis nibh tristique commodo.</p>-->
+                <!--<div id="overview">-->
+                    <!--<div class="row">-->
+                        <!--<div class="col-sm-11">-->
+                            <!--<section class="profile-cover">-->
+                                <!--<div class="profile-avatar">-->
+                                    <!--<div>-->
+                                        <!--<img alt="" src="assets/img/avatar5.png" class="circle">-->
+                                        <!--<span>{{user.username}}</span>-->
+                                    <!--</div>-->
+                                    <!--<a class="btn btn-theme" title="Add friends"><i class="fa fa-plus"></i> friends</a>-->
+                                    <!--<a class="btn btn-theme-inverse" ><i class="fa fa-comments"></i> messages</a>-->
+                                <!--</div>-->
+                                <!--<div class="profile-status">-->
+                                    <!--<a class="btn"> 14,548 <small>Sales</small></a>-->
+                                    <!--<a class="btn"> 254 <small> Follower</small></a>-->
+                                <!--</div>-->
                             <!--</section>-->
                         <!--</div>-->
-                        <!-- //content > row > col-lg-3 -->
-                    </div>
-                    <!-- //row-->
-                </div>
+                        <!--&lt;!&ndash; //content > row > col-sm-9 &ndash;&gt;-->
+
+                        <!--&lt;!&ndash;<div class="col-sm-3">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<section class="profile-about">&ndash;&gt;-->
+                                <!--&lt;!&ndash;<h3>About</h3>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<hr>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque non leo convallis nibh tristique commodo.</p>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</section>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                        <!--&lt;!&ndash; //content > row > col-lg-3 &ndash;&gt;-->
+                    <!--</div>-->
+                    <!--&lt;!&ndash; //row&ndash;&gt;-->
+                <!--</div>-->
                 <br>
-                <div class="col-lg-8">
+                <div>
 
                     <div class="row">
 
                         <div class="col-md-4 align-lg-center">
-                            <img alt="" src="assets/img/avatar.png" class="circle" style="max-width:120px; border:5px #edece5 solid; margin:25px 0;">
+                            <img alt="" src="{{user.profile.avatar}}" class="circle" style="max-width:120px; border:5px #edece5 solid; margin:25px 0;">
 
                             <div class="form-group">
                                 <!--<h5>{{user.profile.name}}</h5>-->
@@ -117,99 +121,7 @@
 
                 </div>
 
-                <div class="col-lg-4">
-                    <div class="widget-rating row">
-                        <div class="col-xs-12">
-                            <div class="well corner-flip flip-gray flip-bg-white bg-palevioletred-darken">
-                                <div class="row">
-                                    <div class="col-xs-12 col-md-6 text-center">
-                                        <h1 class="rating-num"> 4.7</h1>
-                                        <div class="rating">
-                                            <span class="glyphicon glyphicon-star"></span>
-                                            <span class="glyphicon glyphicon-star"> </span>
-                                            <span class="glyphicon glyphicon-star"></span>
-                                            <span class="glyphicon glyphicon-star"> </span>
-                                            <span class="glyphicon glyphicon-star-empty"></span>
-                                        </div>
-                                        <div> <span class="glyphicon glyphicon-user"></span>20,408 total </div>
-                                    </div>
-                                    <div class="col-xs-12 col-md-6">
-                                        <div class="row rating-desc">
-                                            <div class="col-xs-3 col-md-3 text-right"><label class="progress-label"> <span class="glyphicon glyphicon-star"></span>5</label></div>
-                                            <div class="col-xs-8 col-md-9">
-                                                <div class="progress progress-stripes progress-sm progress-dark">
-                                                    <div class="progress-bar bg-warning" aria-valuetransitiongoal="85"></div>
-                                                </div>
-                                            </div>
-                                            <!-- end 5 -->
-                                            <div class="col-xs-3 col-md-3 text-right"><label class="progress-label"> <span class="glyphicon glyphicon-star"></span>4</label></div>
-                                            <div class="col-xs-8 col-md-9">
-                                                <div class="progress progress-sm progress-dark">
-                                                    <div class="progress-bar bg-warning" aria-valuetransitiongoal="45"></div>
-                                                </div>
-                                            </div>
-                                            <!-- end 4 -->
-                                            <div class="col-xs-3 col-md-3 text-right"><label class="progress-label"> <span class="glyphicon glyphicon-star"></span>3</label></div>
-                                            <div class="col-xs-8 col-md-9">
-                                                <div class="progress progress-sm progress-dark">
-                                                    <div class="progress-bar bg-warning" aria-valuetransitiongoal="57"></div>
-                                                </div>
-                                            </div>
-                                            <!-- end 3 -->
-                                            <div class="col-xs-3 col-md-3 text-right"><label class="progress-label"> <span class="glyphicon glyphicon-star"></span>2</label></div>
-                                            <div class="col-xs-8 col-md-9">
-                                                <div class="progress progress-sm progress-dark">
-                                                    <div class="progress-bar bg-warning" aria-valuetransitiongoal="24"></div>
-                                                </div>
-                                            </div>
-                                            <!-- end 2 -->
-                                            <div class="col-xs-3 col-md-3 text-right"><label class="progress-label"> <span class="glyphicon glyphicon-star"></span>1</label></div>
-                                            <div class="col-xs-8 col-md-9">
-                                                <div class="progress progress-sm progress-dark last">
-                                                    <div class="progress-bar bg-warning" aria-valuetransitiongoal="12"></div>
-                                                </div>
-                                            </div>
-                                            <!-- end 1 -->
-                                        </div>
-                                        <!-- end row -->
-                                    </div>
-                                    <!-- end xs-12 -->
-                                </div>
-                                <!-- end row -->
-                            </div>
-                            <!-- end well-->
-                        </div>
-                        <!-- end xs-12 -->
-                    </div>
-                    <!-- end widget-rating-->
-                    <h3><strong>FRIENDS</strong> List </h3>
-                    <hr>
-                    <div class="widget-friend">
-                        <ul class="circle">
-                            <li>548 Follower Friends</li>
-                            <li class="online" title="zicdemo"><img alt="" src="assets/img/avatar.png"></li>
-                            <li class="online"><img alt="" src="assets/img/avatar2.png"></li>
-                            <li><img alt="" src="assets/img/avatar3.png"></li>
-                            <li class="online"><img alt="" src="assets/img/avatar4.png"></li>
-                            <li ><img alt="" src="assets/img/avatar5.png"></li>
-                            <li class="busy"><img alt="" src="assets/img/avatar6.png"></li>
-                            <li class="online"><img alt="" src="assets/photos_preview/50/people/1.jpg"></li>
-                            <li class="online"><img alt="" src="assets/photos_preview/50/people/2.jpg"></li>
-                            <li><img alt="" src="assets/photos_preview/50/people/3.jpg"></li>
-                            <li class="online"><img alt="" src="assets/photos_preview/50/people/4.jpg"></li>
-                            <li ><img alt="" src="assets/photos_preview/50/people/5.jpg"></li>
-                            <li class="busy"><img alt="" src="assets/photos_preview/50/people/6.jpg"></li>
-                            <li><img alt="" src="assets/photos_preview/50/people/7.jpg"></li>
-                            <li class="online"><img alt="" src="assets/photos_preview/50/people/8.jpg"></li>
-                            <li><a href="#"><i class="fa fa-plus"></i></a></li>
-                        </ul>
-                    </div>
-                    <hr>
-                    <div class="tooltip-area">
-                        <a class="btn btn-inverse" title="more friends" href="#menu-right"><i class="fa fa-book"></i></a>
-                        <button class="btn btn-inverse" title="unfriends"><i class="fa fa-trash-o"></i></button>
-                    </div>
-                </div>
+
             </div>
             <!-- //content > row-->
 
