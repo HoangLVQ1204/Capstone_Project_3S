@@ -407,8 +407,11 @@ angular.module('app', [
                 .then(function(orderID) {
                     console.log('app:398 createExpressOrder', orderID);
                     if (orderID) {
+                        // TODO: Add geoText of customer
                         var customer = {};
                         socketStore.selectShipper($rootScope.rightShipper, customer, orderID);
+                    } else {
+                        socketStore.cancelExpress();
                     }
                 })
                 return;

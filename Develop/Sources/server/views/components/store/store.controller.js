@@ -26,7 +26,8 @@ function storeController($scope,$state,socketService,socketStore,dataService,aut
     }
 
     $scope.test = function(){
-        $rootScope.findExpressShipper();
+        // $rootScope.findExpressShipper();
+        alert('WTH are u testing??? Use Make An Order, please!!');
     };
 
     $scope.$watch('$viewContentLoaded', function(event) {
