@@ -1,13 +1,24 @@
 /**
  * Created by Nguyen Van Quyen on 10/6/2015.
  */
-app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPopup', '$timeout', function($scope, dataFactory, $ionicLoading, $ionicPopup, $timeout) {
+app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoading', '$ionicPopup', '$timeout', function($rootScope, $scope, dataFactory, $ionicLoading, $ionicPopup, $timeout) {
 
   console.log('Reload Data TaskController');
   var haveIssue = false;
   getAllTaskBeIssued();
   getListOfTask();
 
+  $rootScope.$on("shipper:express:order:success", function(event, args) {
+    var alertPopup = $ionicPopup.alert({
+      title: 'Information',
+      template: 'You just grab an a new order'
+    });
+    alertPopup.then(function(res) {
+      console.log('You got it');
+      //reload data
+      getListOfTask();
+    });
+  });
   //Select tab for find bestway screen
   $scope.tabSelected = function(tab) {
     $scope.tabParam = tab;

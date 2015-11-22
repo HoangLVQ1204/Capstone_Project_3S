@@ -84,7 +84,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
               }
             },
             'shipper:reject:order');
-        }        
+        }
       };
       $rootScope.show();
     }else{
@@ -153,6 +153,8 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
         console.log('shipper add order', data);
         // console.log('after add order', mapService.getStoreMarkers(), mapService.getCustomerMarkers(), mapService.getOrders());
       });
+
+    $rootScope.$emit('shipper:express:order:success', msg);
   });
 
   socketService.on('shipper:remove:express', function(data) {
