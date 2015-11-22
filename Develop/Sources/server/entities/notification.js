@@ -71,8 +71,17 @@ module.exports = function(sequelize, DataTypes) {
           },
           offset: offset,
           limit: limit,
-          order: 'createddate DESC'
+          order: [
+            ['createddate', 'DESC']
+          ]
         });
+        // return sequelize.query('SELECT * FROM notification WHERE username = :username ORDER BY createddate DESC OFFSET :offset LIMIT :limit',
+        //   { 
+        //     replacements: { 
+        //       username: username,
+        //       offset: offset,
+        //       limit: limit
+        //   }, type: sequelize.QueryTypes.SELECT });
       },
 
       getOne: function(id) {

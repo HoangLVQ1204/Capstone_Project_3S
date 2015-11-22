@@ -6,8 +6,15 @@ angular.module('app').factory('dataService', ['$http', function ($http) {
 
   var dataFactory = {};
 
-  dataFactory.getDataServer = function (urlBase) {
-    return $http.get(urlBase);
+  dataFactory.getDataServer = function (urlBase, params) {
+    // console.log('dataFactory:10', urlBase, params);
+    return $http.get(urlBase, {
+      dataType: "json",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      params: params
+    });
   };
 
   dataFactory.postDataServer = function (urlBase, data) {
