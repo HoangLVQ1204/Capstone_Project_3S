@@ -19,10 +19,15 @@ function socketAdmin(socketService,authService,mapService, $rootScope){
         .then(function() {
                 //console.log('register', data);
             });
-
+        console.log("---DATA SHIPPER---");
+        console.log(data.msg.shipperList);
+        console.log("---DATA SHIPPER---");
         $rootScope.onlineShipper = 0;
-        //$rootScope.$apply();
+
         data.msg.shipperList.map(function (shipper) {
+
+
+
             if (shipper.isConnected) $rootScope.onlineShipper++;
         });
 
