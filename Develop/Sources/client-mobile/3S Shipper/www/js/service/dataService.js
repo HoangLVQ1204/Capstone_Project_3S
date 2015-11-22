@@ -2,7 +2,7 @@
  * Created by Kaka Hoang Huy on 10/18/2015.
  */
 
-app.factory('dataService', ['$http', function ($http) {
+app.factory('dataService', ['$http', '$state', function ($http, $state) {
 
   var dataFactory = {};
 
@@ -21,6 +21,12 @@ app.factory('dataService', ['$http', function ($http) {
   dataFactory.deleteDataServer = function (urlBase) {
     return $http.delete(urlBase);
   };
+
+  var tag = 'EHID'
+  dataFactory.signOutWhenTokenFail = function () {
+    window.localStorage.removeItem(tag);
+    $state.go("sign-in");
+  }
 
   return dataFactory;
 }]);
