@@ -142,7 +142,6 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
    * StatusTasks are 'Inactive' and 'Active'
    * */
   function getListOfTask() {
-    console.log("2222haveIssue", haveIssue);
     if (!haveIssue) {
       $ionicLoading.show({
         noBackdrop: false,
