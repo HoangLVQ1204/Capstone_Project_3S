@@ -411,7 +411,7 @@ module.exports = function(server,app){
     }
 
     io.updateNumTasksByShipperID = function(shipperID){
-        io.shippers[shipper.shipperID].numTasks = io.countNumTasksByShipperID(shipper.shipperID);
+        io.shippers[shipperID].numTasks = io.countNumTasksByShipperID(shipperID);
     }
 
     io.updateShipper = function(shipper, socket) {
