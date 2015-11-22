@@ -711,7 +711,7 @@ module.exports = function (app) {
                         orderList.push(order);
                     }
                     else {
-                        if (item.statusid == 4 && item.tasks.length==1) {
+                        if (item.statusid == 4 && item.tasks.length==1 && item.tasks[0].statusid == 3) {
                             orderList.push(order);
                         }
                         if (item.tasks[item.tasks.length-1].shipperid == null) {
@@ -894,6 +894,7 @@ module.exports = function (app) {
     //// END change status of shipper
 
     var testSk = function(req, res, next){
+        /*
         //var storeid = 'STR001';
         //var storeid2 = 'STR003';
         var shipperid = 'SP000001';
@@ -925,6 +926,32 @@ module.exports = function (app) {
             "sp": sp,
             "st": st,
             "od": od
+        });
+        */
+        db.order.findAll({
+            attributes: [
+                ['storeid', 'store'],
+                [
+                    db.sequelize.fn('date_part',
+                        'month',
+                        db.sequelize.col('createdate')
+                    ),
+                    'Month'
+                ],
+                [
+                    db.sequelize.fn('count',
+                        db.sequelize.col('orderid')
+                    ),
+                    'count'
+                ]
+            ],
+            group: ['storeid','"Month"']
+        }).then(function(rows) {
+            console.log(rows);
+            return res.status(200).json(rows)
+        },function(er){
+            console.log(er);
+            return res.status(400).json(er)
         });
     };
 

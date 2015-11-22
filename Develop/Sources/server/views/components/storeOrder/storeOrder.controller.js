@@ -2,7 +2,7 @@
  * Created by khanhkc on 9/22/15.
  */
 
-function storeOrderController($scope, dataService, config, socketService, socketStore) {
+function storeOrderController($scope, dataService, config, socketService, socketStore,$rootScope) {
     getStoreName();
     getProvince ();
     $scope.order={
@@ -69,7 +69,7 @@ function storeOrderController($scope, dataService, config, socketService, socket
                     }
                     if(index==3){
                         // console.log(content) ;
-                        postCompleteOrder ();
+                        $scope.postCompleteOrder();
                     }
 
 
@@ -311,7 +311,7 @@ function storeOrderController($scope, dataService, config, socketService, socket
     // };
 
 
-    function postCompleteOrder (){
+    $scope.postCompleteOrder = function() {
         var urlBase = config.baseURI + '/orders';
         $scope.order.deliveryprovinceid = $scope.selectedProvince.provinceid;
         $scope.order.deliverydistrictid = $scope.selectedDistrict.districtid;
@@ -327,7 +327,7 @@ function storeOrderController($scope, dataService, config, socketService, socket
         if($scope.order.ordertypeid == 1){
             dataService.postDataServer(urlBase,data);
         }else if($scope.order.ordertypeid == 2){
-            findExpressShipper();
+            $rootScope.findExpressShipper(data.order, data.goods);
         }
     }
 
@@ -476,6 +476,6 @@ function storeOrderController($scope, dataService, config, socketService, socket
 }
 
 
-storeOrderController.$inject = ['$scope', 'dataService', 'config','socketService','socketStore'];
+storeOrderController.$inject = ['$scope', 'dataService', 'config','socketService','socketStore','$rootScope'];
 angular.module('app').controller('storeOrderController', storeOrderController);
 

@@ -138,6 +138,16 @@ module.exports = function(server,app){
         io.pendingShippers[shipperID] = store;
     };
 
+    io.getNumberPendingShippersOfStore = function(storeID) {
+        var count = 0;
+        for (shipperID in io.pendingShippers) {
+            if (io.pendingShippers[shipperID].storeID == storeID) {
+                ++count;
+            }
+        }
+        return count;
+    };
+
     io.removePendingShipper = function(shipperID) {
         delete io.pendingShippers[shipperID];
     };
