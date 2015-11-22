@@ -199,7 +199,7 @@ module.exports = function(sequelize, DataTypes) {
           where: {
             'username': username,
             'logintime': {
-              $lt: tokenTime
+              $lte: tokenTime
             }
           }
         })

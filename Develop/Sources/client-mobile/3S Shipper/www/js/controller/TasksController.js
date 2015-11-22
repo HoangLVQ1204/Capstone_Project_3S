@@ -150,16 +150,18 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
     }
     var urlBase = config.hostServer + "api/tasks";
     dataFactory.getDataServer(urlBase)
-      .success(function (rs) {
+      .then(function (res) {
+        rs = res.data;
         formatData(rs);
         //Hide IonicLoading without Issue Pending
         if (!haveIssue) {
           $ionicLoading.hide();
         }
-      })
-      .error(function (error) {
+      },function (error) {
         console.log('Unable to load customer data: ' + error);
-      });
+        $ionicLoading.hide();
+        if(error.status == 401) dataFactory.signOutWhenTokenFail()
+      })
   }
 
   /*

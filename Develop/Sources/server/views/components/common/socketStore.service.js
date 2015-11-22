@@ -22,6 +22,11 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
         });
     });
 
+    socketService.on('store:add:shipper', function(data) {   
+       // console.log('admin:add:shipper', data);
+        mapService.addShipper(data.msg.shipper);
+        $rootScope.$emit("store:dashboard:getShipperList", data.msg.shipperList);
+    });
 
     socketService.on('store:update:shipper', function(data) {
         console.log('store:update:shipper', data);

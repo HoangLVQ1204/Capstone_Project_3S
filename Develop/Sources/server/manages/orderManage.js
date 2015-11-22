@@ -201,14 +201,14 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
 
         /*
          * By KhanhKC - 14/11/2015
-         * This function is used to caculate Ship fee       
+         * This function is used to calculate Shipping fee
          */
          
          var district = req.body.order.deliverydistrictid;
          var innerCity = config.fileterLocation.in;
          var ordertypeid = req.body.order.ordertypeid;
          var fee = calculateShipFee (district, innerCity,ordertypeid);         
-         var overWeightFee =calculateOverWeightFee (district, innerCity,req.body.goods)
+         var overWeightFee = calculateOverWeightFee (district, innerCity,req.body.goods)
         
         //console.log("=============fee===============",fee);        
         //console.log("=============overWeightFee=======",overWeightFee);
