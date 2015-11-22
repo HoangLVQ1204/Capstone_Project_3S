@@ -102,6 +102,7 @@ function notificationService($q,$http, config, dataService){
 
     api.readNotification = function(index) {
         if (listNotifications[index].isread) return;
+        totalUnreadNotifications -= 1;
         listNotifications[index].isread = true;
         var urlBase = config.baseURI + '/api/notifications/' + listNotifications[index].notificationid;     
         dataService.putDataServer(urlBase, listNotifications[index])

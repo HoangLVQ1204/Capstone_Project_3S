@@ -52,8 +52,20 @@ module.exports = function(socket, io, app) {
     });
     
     socket.on('shipper:choose:express', function(data) {
-        if (io.pendingShippers[data.msg.shipper.shipperID]) {            
-    	    io.forward(data.sender, data.receiver, data.msg, 'store:find:shipper');
+        if (io.pendingShippers[data.msg.shipper.shipperID]) {
+            io.forward(data.sender, data.receiver, data.msg, 'store:find:shipper');
+            
+            // notify other shippers
+            // var storeID = data.receiver.clientID;
+            // var shipperMsg = {
+            //     store: {
+            //         storeID: storeID
+            //     }
+            // };        
+            // console.log('socketStore:90 pendingShippers', io.pendingShippers);
+            // io.notifyPendingShippers(storeID, data.msg.shipper.shipperID, data.receiver, shipperMsg);
+            // io.removePendingShippersOfStore(storeID);
+            // console.log('pendingShippers', io.pendingShippers);    	    
         } else {
             console.log('dont exist in pendingShippers');
         }
@@ -77,6 +89,18 @@ module.exports = function(socket, io, app) {
     socket.on('shipper:reject:order', function(data) {
         var shipper = data.msg.shipper;
         console.log('shipper reject order', shipper);
-        io.removePendingShipper(shipper.shipperID);
+        var storeID = io.pendingShippers[shipper.shipperID].storeID;
+        io.removePendingShipper(shipper.shipperID);        
+        if (io.getNumberPendingShippersOfStore(storeID) == 0) {
+            io.reply(
+                {
+                    type: 'store',
+                    clientID: storeID
+                },
+                {
+                    shipper: false
+                },
+                'store:find:shipper');
+        }
     });
 }

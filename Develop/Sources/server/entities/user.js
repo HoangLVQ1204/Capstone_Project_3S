@@ -21,6 +21,10 @@ module.exports = function(sequelize, DataTypes) {
     userstatus: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    logintime: {
+      type: DataTypes.DATE,
+      allowNull: true
     }
   }, {
     freezeTableName: true,
@@ -146,7 +150,7 @@ module.exports = function(sequelize, DataTypes) {
                 where:{
                   statusid: [isProcessing,4]
                 }
-              },
+              }
 
             ]
           },{model: profile}],
@@ -180,6 +184,26 @@ module.exports = function(sequelize, DataTypes) {
       //    }
       //  });
       //},
+
+      updateLoginTime: function(username, loginTime) {
+        return user.update({
+          'logintime': loginTime
+        },{where: {
+          'username': username
+        }})
+      },
+
+      checkTokenTime: function (username, tokenTime) {
+        console.log(tokenTime,"+++++++++++++++++++++++++++++__________________________++")
+        return user.findOne({
+          where: {
+            'username': username,
+            'logintime': {
+              $lt: tokenTime
+            }
+          }
+        })
+      }
   }
 
   });
