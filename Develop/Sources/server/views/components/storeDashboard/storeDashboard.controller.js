@@ -262,6 +262,21 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
     $scope.hostServer = config.hostServer;
     // END listen to socket changes
 
+    // START Listen to socket changes
+    $rootScope.$on("store:dashboard:getShipperList", function(event, args){
+        //alert(args.message);
+        console.log('args');
+        console.log(args);
+        $rootScope.onlineShipper = 0;
+        args.map(function (shipper) {
+            if (shipper.isConnected) $rootScope.onlineShipper++;
+
+        });
+        //$scope.$apply();
+        //getDataFromServer();
+       // console.log( $scope.onlineShipper);
+        //$scope.onlineShipper = 10;
+    });
 }
 
 

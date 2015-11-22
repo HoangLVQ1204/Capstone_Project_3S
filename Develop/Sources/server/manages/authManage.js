@@ -40,8 +40,9 @@ module.exports  = function(app){
      * */
     var checkRole = function () {
         return function (req, res, next) {
-            var tokenTime = req.user.time
-            var username = req.user.username
+            var tokenTime = req.user.time;
+            var username = req.user.username;
+            console.log('authManage:45 checkRole', tokenTime, username);
             db.user.checkTokenTime(username, tokenTime).then(function (tk) {
                 if (tk) {
                     var currentRoute = req.route.path;
