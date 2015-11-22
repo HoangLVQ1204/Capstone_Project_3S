@@ -15,12 +15,13 @@ app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService',
       noBackdrop: false,
       template: '<ion-spinner icon="bubbles" class="spinner-balanced"/>'
     });
-    if(typeof $scope.user === "undefined" ||  $scope.user.username === "" || $scope.user.password === "") {
+    if(typeof $scope.user === "undefined" ||  typeof $scope.user.username === "undefined" || typeof $scope.user.password === "undefined") {
       $ionicLoading.hide();
       showError({
         message: 'Username and Password cannot be blank'
       });
     } else {
+      console.log(1111);
       authService.signIn($scope.user)
         .then(function(res){
           authService.saveToken(res.data.token);
