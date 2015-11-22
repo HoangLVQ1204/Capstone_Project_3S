@@ -151,6 +151,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
     mapService.addOrder(msg.orderID, msg.store, msg.shipper, msg.customer)
       .then(function() {
         console.log('shipper add order', data);
+        alert('You have one express order from store ' + msg.store.storeID);
         // console.log('after add order', mapService.getStoreMarkers(), mapService.getCustomerMarkers(), mapService.getOrders());
       });
 
