@@ -2,7 +2,7 @@
  * Created by hoanglvq on 9/22/15.
  */
 
-function storeController($scope,$state,socketService,socketStore,dataService,authService,config,$rootScope){
+function storeController($scope,$state,socketService,socketStore,dataService,authService,config,$rootScope,notificationService){
 
     authService.getProfileUser()
         .then(function(res){
@@ -59,8 +59,13 @@ function storeController($scope,$state,socketService,socketStore,dataService,aut
     //    };
     //    $rootScope.notify(temp);
     //}, 1000);
+
+    notificationService.getTotalUnreadNotificationsServer()
+    .then(function() {
+        $rootScope.numberUnreadNoti = notificationService.getTotalUnreadNotifications();
+    });
 }
 
-storeController.$inject = ['$scope','$state','socketService','socketStore','dataService','authService','config','$rootScope'];
+storeController.$inject = ['$scope','$state','socketService','socketStore','dataService','authService','config','$rootScope','notificationService'];
 angular.module('app').controller('storeController',storeController);
 

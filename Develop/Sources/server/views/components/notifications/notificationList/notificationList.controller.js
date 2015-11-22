@@ -64,7 +64,6 @@ function notificationListController($scope, config, dataService, notificationSer
 
 	$scope.readNotification = function(index) {
 		notificationService.readNotification(index);
-
 	};
 }
 

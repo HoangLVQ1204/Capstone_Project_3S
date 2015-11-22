@@ -158,7 +158,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
   socketService.on('shipper:remove:express', function(data) {
     console.log('remove express', data);
     $rootScope.stop();
-    alert('Store ' + data.msg.store.storeID + ' found a shipper');
+    alert('Store ' + data.msg.store.storeID + ' has found a shipper or canceled order');
   });
 
   api.getCurrentUser = function() {
