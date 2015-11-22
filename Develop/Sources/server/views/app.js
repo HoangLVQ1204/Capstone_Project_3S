@@ -295,6 +295,7 @@ angular.module('app', [
         var urlBaseTask = config.baseURI + '/api/createTask';
 
         order.isdraff = isDraft;
+        order.statusid = 2;
         var dataOrder = {
             order: order,
             goods: goods
