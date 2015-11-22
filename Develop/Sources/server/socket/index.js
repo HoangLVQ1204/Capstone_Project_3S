@@ -661,8 +661,8 @@ module.exports = function(server,app){
             rs.forEach(function(e){
                 io.addStore({
                     storeID: e.storeid,
-                    latitude: e.latitude,
-                    longitude: e.longitude
+                    latitude: parseFloat(e.latitude),
+                    longitude: parseFloat(e.longitude)
                 });
             });
         });
@@ -677,8 +677,8 @@ module.exports = function(server,app){
             rs.forEach(function(e){
                 io.addShipper({
                     shipperID: e.username,
-                    latitude: e.latitude,
-                    longitude: e.longitude,
+                    latitude: parseFloat(e.latitude),
+                    longitude: parseFloat(e.longitude),
                     isConnected: false
                 });
             });
@@ -750,6 +750,10 @@ module.exports = function(server,app){
                         io.updateStore(store, socket);
                     } else
                         io.addStore(store, socket);
+
+                    console.log("---DATA STORE---");
+                    console.log(io.getOneStore(store.storeID));
+                    console.log("---DATA STORE---");
 
                     io.reply(data.sender, { mapData: io.getDataForStore(store.storeID) }, 'store:register:location');
                     io.forward(data.sender, 'admin', { store: io.getOneStore(store.storeID) }, 'admin:add:store');
