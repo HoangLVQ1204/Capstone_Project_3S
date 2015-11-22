@@ -29,7 +29,11 @@ module.exports = function(sequelize, DataTypes) {
     freezeTableName: true,
     timestamps: false,
     classMethods:{
-      associate: function(db) { 
+      associate: function(db) {
+        ward.belongsTo(db.district, {
+          foreignKey: 'districtid',
+          constraints: false
+        });
       },
       getAllWard: function() {
         return ward.findAll({});

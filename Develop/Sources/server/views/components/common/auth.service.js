@@ -13,7 +13,7 @@ angular.module('app')
 
         var signIn = function(data){
             return $http({
-                data,
+                data: data,
                 url: config.baseURI + '/auth/signin',
                 method: 'POST'
             })

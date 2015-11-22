@@ -30,7 +30,12 @@ module.exports = function(sequelize, DataTypes) {
         district.hasMany(db.ward, {
           foreignKey: 'districtid',
           constraints: false
-        });    
+        })
+
+        district.belongsTo(db.province, {
+          foreignKey: 'provinceid',
+          constraints: false
+        });
 
       },
       getAllDistrict: function() {

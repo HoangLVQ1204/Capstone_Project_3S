@@ -89,9 +89,11 @@ module.exports = function(socket, io) {
         io.updateOrderOfShipper(msg.shipper.shipperID, msg.orderID);
         io.updateOrderOfStore(msg.store.storeID, msg.orderID);
         io.addCustomer(msg.customer);
+        io.updateNumTasksByShipperID(msg.shipper.shipperID);
 
         io.forward(data.sender, data.receiver, data.msg, 'shipper:add:order');
         io.forward(data.sender, 'admin', data.msg, 'admin:add:order');
+        
         // notify other shippers
         var shipperMsg = {
             store: _.clone(msg.store, true)
@@ -100,6 +102,7 @@ module.exports = function(socket, io) {
         io.notifyPendingShippers(msg.store.storeID, msg.shipper.shipperID, data.sender, shipperMsg);
         io.removePendingShippersOfStore(msg.store.storeID);
         console.log('pendingShippers', io.pendingShippers);
+
         io.addToRoom(socket, msg.shipper.shipperID);    
 
         console.log('total data:shippers', io.shippers);    

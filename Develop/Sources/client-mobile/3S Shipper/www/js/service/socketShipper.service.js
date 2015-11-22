@@ -84,7 +84,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
               }
             },
             'shipper:reject:order');
-        }        
+        }
       };
       $rootScope.show();
     }else{
@@ -151,14 +151,17 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
     mapService.addOrder(msg.orderID, msg.store, msg.shipper, msg.customer)
       .then(function() {
         console.log('shipper add order', data);
+        // alert('You have one express order from store ' + msg.store.storeID);
         // console.log('after add order', mapService.getStoreMarkers(), mapService.getCustomerMarkers(), mapService.getOrders());
       });
+
+    $rootScope.$emit('shipper:express:order:success', msg);
   });
 
   socketService.on('shipper:remove:express', function(data) {
     console.log('remove express', data);
     $rootScope.stop();
-    alert('Store ' + data.msg.store.storeID + ' found a shipper');
+    alert('Store ' + data.msg.store.storeID + ' has found a shipper or canceled order');
   });
 
   api.getCurrentUser = function() {

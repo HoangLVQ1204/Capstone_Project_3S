@@ -46,10 +46,13 @@ function notificationListController($scope, config, dataService, notificationSer
 		// console.log('diffTime', time);
 		var now = new Date();
 		var date = new Date(time);
-		var diff = Math.abs(now.getTime() - date.getTime());	// in milliseconds
+		var diff = Math.abs(now - date);	// in milliseconds		
 		var days = Math.floor(diff / (1000 * 3600 * 24));
+		diff %= (1000 * 3600 * 24);
 		var hours = Math.floor(diff / (1000 * 3600));
-		var minutes = Math.floor(diff / 1000);
+		diff %= (1000 * 3600);
+		var minutes = Math.floor(diff / (1000 * 60));
+		// console.log('passedTime', diff, days, hours, minutes);
 		if (days === 0) {
 			if (hours === 0) {
 				return minutes + ' minute' + (minutes > 1 ? 's' : '');
@@ -64,7 +67,6 @@ function notificationListController($scope, config, dataService, notificationSer
 
 	$scope.readNotification = function(index) {
 		notificationService.readNotification(index);
-
 	};
 }
 

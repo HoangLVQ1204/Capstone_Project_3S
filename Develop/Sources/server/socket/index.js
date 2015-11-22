@@ -138,6 +138,16 @@ module.exports = function(server,app){
         io.pendingShippers[shipperID] = store;
     };
 
+    io.getNumberPendingShippersOfStore = function(storeID) {
+        var count = 0;
+        for (shipperID in io.pendingShippers) {
+            if (io.pendingShippers[shipperID].storeID == storeID) {
+                ++count;
+            }
+        }
+        return count;
+    };
+
     io.removePendingShipper = function(shipperID) {
         delete io.pendingShippers[shipperID];
     };
@@ -401,7 +411,7 @@ module.exports = function(server,app){
     }
 
     io.updateNumTasksByShipperID = function(shipperID){
-        io.shippers[shipper.shipperID].numTasks = io.countNumTasksByShipperID(shipper.shipperID);
+        io.shippers[shipperID].numTasks = io.countNumTasksByShipperID(shipperID);
     }
 
     io.updateShipper = function(shipper, socket) {

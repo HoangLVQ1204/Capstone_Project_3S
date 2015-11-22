@@ -124,7 +124,8 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
     function getDataFromServer() {
         var urlBase = config.baseURI + '/orders';
         dataService.getDataServer(urlBase)
-            .success(function (rs) {
+            .then(function (res) {
+                var rs = res.data;
                 $scope.orderToday = rs['Total'][2];
                 $scope.totalCod = rs['Total'][0];
                 $scope.todayCod = rs['Total'][3];
@@ -144,10 +145,16 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
                 $scope.listDraff =  $scope.ordersDraff;
 
 
+            },function(error){
+                console.log(error);
+                if(error.status == 401){
+                    dataService.signOutWhenTokenFail()
+                }
+
             })
-            .error(function (error) {
-                console.log('Unable to load customer data: ' + error);
-            });
+            //.error(function (error) {
+            //
+            //});
     }
     $scope.Order = {};
 
