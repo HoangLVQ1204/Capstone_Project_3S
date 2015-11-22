@@ -215,7 +215,7 @@ module.exports = function (app) {
                     };
 
                     var msg = {
-                        type: 'Info',
+                        type: 'info',
                         title: 'Shipper changed order status',
                         content: shipperid + ' changed status of order ' + orderObj.orderid,
                         url: '#/store/dashboard',
@@ -928,9 +928,18 @@ module.exports = function (app) {
             "od": od
         });
         */
+
+        /*
         db.order.findAll({
             attributes: [
                 ['storeid', 'store'],
+                [
+                    db.sequelize.fn('date_part',
+                        'year',
+                        db.sequelize.col('createdate')
+                    ),
+                    'Year'
+                ],
                 [
                     db.sequelize.fn('date_part',
                         'month',
@@ -938,6 +947,7 @@ module.exports = function (app) {
                     ),
                     'Month'
                 ],
+                ['ordertypeid', 'type'],
                 [
                     db.sequelize.fn('count',
                         db.sequelize.col('orderid')
@@ -945,7 +955,8 @@ module.exports = function (app) {
                     'count'
                 ]
             ],
-            group: ['storeid','"Month"']
+            group: ['storeid','Year','Month', 'type'],
+            order: ['store','Month']
         }).then(function(rows) {
             console.log(rows);
             return res.status(200).json(rows)
@@ -953,6 +964,21 @@ module.exports = function (app) {
             console.log(er);
             return res.status(400).json(er)
         });
+        */
+        db.order.findOne().then(function(rs){
+            var a = 'dd'
+            a = rs.getOrderAddress(db.ward, db.district, db.province)
+            //    .then(function(rss){
+            //    return res.status(200).json(rss)
+            //}, function(err){
+            //    console.log(err)
+            //    return res.status(400).json(err)
+            //})
+            return res.status(200).json(a)
+        }, function(er){
+            console.log(er)
+            return res.status(400).json(er)
+        })
     };
 
     //function create new shipperid
