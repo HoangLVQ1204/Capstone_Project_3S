@@ -52,6 +52,7 @@ module.exports = function (app) {
     var createNewIssue = function(shipperID) {
         //Create issue
         var listOrders = [];
+        var newIssueID = null;
         var issueDisconnect = {
             typeid: 8,
             description: 'Shipper ' + shipperID + ' disconnected',
@@ -67,10 +68,11 @@ module.exports = function (app) {
                     _.each(tasks, function(task){
                         listOrders.push(task.orderid);
                     })
-                    console.log("issueManage:70: ", listOrders);
+                    console.log("issueManage:71: ", listOrders);
                     //Add new issue
                     db.issue.createNewIssue(issueDisconnect)
                     .then(function(issue){
+                        newIssueID = issue.dataValues.issueid;
                         //Add new notification
                         var msgDisconnectToAdmin = {
                             type: 'Issue',
@@ -88,73 +90,100 @@ module.exports = function (app) {
                             isread: false,
                             createddate: new Date()
                         };
-                        //Get admin
-                        db.user.getUserByRole(3)
-                            .then(function(admins){
-                                admins = admins.map(function(e) {
-                                    return e.toJSON();
-                                });
-                                //insert notification to user admin
-                                var promises = admins.map(function(e){
-                                    var newData = _.clone(msgDisconnectToAdmin, true);
-                                    newData.username = e.username;
-                                    return db.notification.addNotification(newData);
-                                });
-
-                                return Promise.all(promises);
-                            })
-                            .then(function(data) {
-                                console.log('shipperController:401', data.length);
-                                return db.order.getStoresOfOrder(listOrders);
-                            })
-                            .then(function(storeIDs){
-                                storeIDs = _.uniq(storeIDs, 'storeid');
-                                console.log('isssueManage:112', storeIDs);
-                                storeIDs = storeIDs.map(function(e){
-                                    return e.storeid;
-                                });
-                                return db.managestore.getOwnerOfStore(storeIDs);
-                            })
-                            .then(function(ownerStores) {
-                                ownerStores = ownerStores.map(function (e) {
-                                    return e.toJSON();
-                                });
-                                console.log('issManage:119', ownerStores);
-
-                                //insert to notification to store
-                                var promises = ownerStores.map(function (e) {
-                                    var data = _.clone(msgDisconnectToStore, true);
-                                    data.username = e.managerid;
-                                    console.log('data', data);
-                                    return db.notification.addNotification(data);
-                                });
-
-                                return Promise.all(promises);
-                            })
-                            .then(function (data) {
-                                console.log('issueManage:135', data.length);
-                                console.log('send notification disconnect to store and admin');
-                                //send socket
-                                var sender = {
-                                    type: 'shipper',
-                                    clientID: shipperID
-                                };
-                                server.socket.forward(
-                                    sender,
-                                    'admin',
-                                    msgDisconnectToAdmin,
-                                    'admin::issue:disconnected'
-                                );
-                                server.socket.forward(
-                                    sender,
-                                    {
-                                        type: 'room',
-                                        room: shipperID
-                                    },
-                                    msgDisconnectToStore,
-                                    'store::issue:disconnected'
-                                );
+                            // update task status to 'Processing'
+                        db.task.getTaskOfShipperByOrder(shipperID, 'pending', [])
+                        .then(function(items){
+                            var promises = items.map(function(e){
+                                //update task to processing
+                                return db.task.updateTaskStatus(4, e.dataValues.taskid, shipperID);
                             });
+                            return Promise.all(promises);
+                        })
+                        .then(function(data){
+                            console.log("TaskStatus:101: ", data.length);
+                            //INSERT to order issue
+                            var newOrderIssue = {};
+                            newOrderIssue.issueid = newIssueID;
+                            var promises = listOrders.map(function(orderID){
+                                newOrderIssue.orderid = orderID;
+                                db.orderissue.createOrderIssue(newOrderIssue);
+                                //Change isPending
+                                db.order.changeIsPendingOrder(orderID, true);
+                            });
+
+                            return Promise.all(promises);
+                        })
+                        .then(function(data){
+                            console.log("changeISPEndingOrder:117: ", data.length);
+                            //get Admin
+                            return db.user.getUserByRole(3);
+                        })
+                        .then(function(admins){
+                            console.log("admins:110: ", admins);
+                            admins = admins.map(function(e) {
+                                return e.toJSON();
+                            });
+                            //insert notification to user admin
+                            var promises = admins.map(function(e){
+                                var newData = _.clone(msgDisconnectToAdmin, true);
+                                newData.username = e.username;
+                                return db.notification.addNotification(newData);
+                            });
+
+                            return Promise.all(promises);
+                        })
+                        .then(function(data) {
+                            console.log('shipperController:401', data.length);
+                            return db.order.getStoresOfOrder(listOrders);
+                        })
+                        .then(function(storeIDs){
+                            storeIDs = _.uniq(storeIDs, 'storeid');
+                            console.log('isssueManage:112', storeIDs);
+                            storeIDs = storeIDs.map(function(e){
+                                return e.storeid;
+                            });
+                            return db.managestore.getOwnerOfStore(storeIDs);
+                        })
+                        .then(function(ownerStores) {
+                            ownerStores = ownerStores.map(function (e) {
+                                return e.toJSON();
+                            });
+                            console.log('issueManage:119', ownerStores);
+
+                            //insert to notification to store
+                            var promises = ownerStores.map(function (e) {
+                                var data = _.clone(msgDisconnectToStore, true);
+                                data.username = e.managerid;
+                                console.log('data', data);
+                                return db.notification.addNotification(data);
+                            });
+
+                            return Promise.all(promises);
+                        })
+                        .then(function (data) {
+                            console.log('issueManage:135', data.length);
+                            console.log('send notification disconnect to store and admin');
+                            //send socket
+                            var sender = {
+                                type: 'shipper',
+                                clientID: shipperID
+                            };
+                            server.socket.forward(
+                                sender,
+                                'admin',
+                                msgDisconnectToAdmin,
+                                'admin::issue:disconnected'
+                            );
+                            server.socket.forward(
+                                sender,
+                                {
+                                    type: 'room',
+                                    room: shipperID
+                                },
+                                msgDisconnectToStore,
+                                'store::issue:disconnected'
+                            );
+                        });
                     });
                 }
             }, function(err){
