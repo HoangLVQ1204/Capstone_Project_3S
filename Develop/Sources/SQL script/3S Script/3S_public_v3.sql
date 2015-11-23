@@ -1587,6 +1587,7 @@ WITH (OIDS=FALSE)
 -- ----------------------------
 -- Records of user
 -- ----------------------------
+
 INSERT INTO "public"."user" VALUES ('AD000001', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '3', '2', '2015-11-09 00:00:00+07');
 INSERT INTO "public"."user" VALUES ('SP000001', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '1', '2', '2015-11-09 00:00:00+07');
 INSERT INTO "public"."user" VALUES ('SP000002', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '1', '2', '2015-11-09 00:00:00+07');
