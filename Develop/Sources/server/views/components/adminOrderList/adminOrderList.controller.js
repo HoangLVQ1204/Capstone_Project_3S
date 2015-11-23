@@ -47,12 +47,12 @@ function adminOrderListController($scope,$state, $http, $filter, config) {
     $http.get(config.baseURI + "/api/getAllOrder").success(function(response){
         $scope.orderList = response;
         $scope.orderList.sort(function (a,b) {
-            if (a.deliverydate < b.deliverydate) return -1;
-            if (a.deliverydate > b.deliverydate) return 1;
+            if (a.completedate < b.completedate) return -1;
+            if (a.completedate > b.completedate) return 1;
             return 0;
         });
         $scope.displayedCollection = [].concat($scope.orderList);
-        //console.log(response);
+        console.log(response);
     })
 
     //----------------------------------

@@ -15,16 +15,17 @@ app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService',
       noBackdrop: false,
       template: '<ion-spinner icon="bubbles" class="spinner-balanced"/>'
     });
-    if(typeof $scope.user === "undefined" ||  $scope.user.username === "" || $scope.user.password === "") {
+    if(typeof $scope.user === "undefined" ||  typeof $scope.user.username === "undefined" || typeof $scope.user.password === "undefined") {
       $ionicLoading.hide();
       showError({
         message: 'Username and Password cannot be blank'
       });
     } else {
+      console.log(1111);
       authService.signIn($scope.user)
         .then(function(res){
           authService.saveToken(res.data.token);
-          //check role
+          //check role !shipper
           if (!authService.isRightRole(roles.shipper)) {
             $ionicLoading.hide();
             authService.signOut();
@@ -41,6 +42,7 @@ app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService',
           }
         })
         .catch(function(error){
+          console.log('SigninController:44 error', error);
           $ionicLoading.hide();
           showError({
             message: 'Username or Password is invalid'
@@ -59,6 +61,7 @@ app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService',
     });
     socketShipper.updateStatusShipper();
     authService.signOut();
+    socketService.disconnect();
     $state.go('sign-in');
   }
 

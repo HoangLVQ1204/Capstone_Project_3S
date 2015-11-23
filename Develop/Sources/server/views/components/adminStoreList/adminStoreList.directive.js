@@ -3,6 +3,14 @@
  */
 (function (ng) {
     angular.module('app')
+        .directive('adminStoreListLayout',function(){
+            return {
+                templateUrl: '/components/adminStoreList/layout.html',
+                replace: true,
+                restrict: 'E',
+                scope: false
+            }
+        })
         .directive('adminStoreList', function () {
             return {
                 controller: 'adminStoreListController',
@@ -73,7 +81,7 @@
 
                     element.on('apply.daterangepicker', function(ev, picker) {
                         element.val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-                        //$scope.dateRange = $('#daterange').val();
+                        //alert(1);
                         scope.$apply(function(){
                             scope.dateRange = element.val();
                         });

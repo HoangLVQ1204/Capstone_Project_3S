@@ -23,7 +23,7 @@
                                 <li><a href="" id="nexttab" class="change" data-change="next"><i class="fa fa-chevron-right"></i></a></li>
                                 <li class="active"><a href="#tab1" data-toggle="tab" target="ui-self">Custom Payment</a></li>
                                 <li><a href="#tab2" data-toggle="tab" target="ui-self">Auto Payment</a></li>
-                                <li class="pull-right"><button class="btn btn-default" ng-click="go('/admin/storeList')">Confirm Payment</button></li>
+                                
 
                             </ul>
                             <div class="tab-content row">
@@ -44,7 +44,7 @@
                                         <div class="col-sm-4 form-group pull-left">
                                             <div class="input-group input-icon">
                                                 <i class="fa fa-calendar ico"></i>
-                                                <input type="text"  class="form-control" daterange ng-model="dateRange"/>
+                                                <input type="text"  class="form-control" daterange ng-model="dateRange" placeholder="Paydate"/>
                                                 <span class="input-group-btn">
                                                     <div class="btn-group">
                                                         <button type="button" class="btn btn-default">
@@ -78,7 +78,6 @@
                                     <thead>
                                     <tr>
                                         <th width="2%" st-sort="ledgerid" class="text-center sortable">LedgerID</th>
-                                        <th st-sort="store.name" class="text-center sortable">Store's name</th>
                                         <th st-sort="lastbalance" class="text-center sortable">Last Balance(VND)</th>
                                         <th st-sort="amount" class="text-center sortable">Amount(VND)</th>
                                         <th st-sort="balance" class="text-center sortable">Balance(VND)</th>
@@ -93,7 +92,6 @@
 
                                     <tr class="odd gradeX" ng-repeat= "x in displayedLedgerCollection">
                                         <td>{{x.ledgerid}}</td>
-                                        <td class="text-left">{{x.store.name}}</td>
                                         <td>{{x.lastbalance = x.amount + x.balance}}</td>
                                         <td>{{x.amount}}</td>
                                         <td class="center"> {{x.balance}}</td>
@@ -127,11 +125,11 @@
                                             <div id='aaa' class="col-sm-4 form-group pull-left">
                                                 <div class="input-group input-icon">
                                                     <i class="fa fa-calendar ico"></i>
-                                                    <input type="text"  class="form-control" daterange ng-model="autoDateRange"/>
+                                                    <input type="text"  class="form-control" daterange-auto ng-model="autoDateRange"/>
                                                 <span class="input-group-btn">
                                                     <div class="btn-group">
                                                         <button type="button" class="btn btn-default">
-                                                            <i class="fa fa-times" ng-click="dateRange=''"></i>
+                                                            <i class="fa fa-times" ng-click="autoDateRange=''"></i>
                                                         </button>
                                                     </div><!-- //btn-group-->
                                                 </span>
@@ -162,7 +160,6 @@
                                         <thead>
                                         <tr>
                                             <th width="2%" st-sort="ledgerid" class="text-center sortable">LedgerID</th>
-                                            <th st-sort="store.name" class="text-center sortable">Store's name</th>
                                             <th st-sort="balance" class="text-center sortable">Total(VND)</th>
                                             <th st-sort="totaldelivery" class="text-center sortable">Delivery(VND)</th>
                                             <th st-sort="totalcod" class="text-center sortable">CoD(VND)</th>
@@ -173,7 +170,6 @@
 
                                         <tr class="odd gradeX" ng-repeat= "x in displayedAutoCollection">
                                             <td>{{x.ledgerid}}</td>
-                                            <td class="text-left">{{x.store.name}}</td>
                                             <td class="center"> {{x.balance}}</td>
                                             <td class="center"> {{x.totaldelivery}}</td>
                                             <td class="center"> {{x.totalcod}}</td>

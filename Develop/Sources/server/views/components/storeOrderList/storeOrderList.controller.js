@@ -32,12 +32,12 @@ function storeOrderListController($scope,$state, $http, $filter, config) {
         }];
     $scope.dateOptions = [
         {
-            option: 'Pickup Date',
-            value: 'pickupdate'
+            option: 'Create date',
+            value: 'createdate'
         },
         {
-            option: 'Delivery Date',
-            value: 'deliverydate'
+            option: 'Complete Date',
+            value: 'completedate'
         }];
     $scope.selected = $scope.searchOptions[0];
     $scope.selectedDate = $scope.dateOptions[0];
@@ -47,12 +47,12 @@ function storeOrderListController($scope,$state, $http, $filter, config) {
         console.log("=============response===========",response);
         $scope.orderList = response;
         $scope.orderList.sort(function (a,b) {
-            if (a.deliverydate < b.deliverydate) return -1;
-            if (a.deliverydate > b.deliverydate) return 1;
+            if (a.completedate < b.completedate) return -1;
+            if (a.completedate > b.completedate) return 1;
             return 0;
         });
         $scope.displayedCollection = [].concat($scope.orderList);
-        //console.log(response);
+        
     })
 
     //----------------------------------

@@ -6,6 +6,7 @@
 
  module.exports = function (app) {
     var db = app.get('models');
+    var server = app.get('io');
 
     var params = function (req, res, next, orderid) {
         var OrderStatus = db.orderstatus;
@@ -29,7 +30,7 @@
     var getAllOrder = function (req, res, next) {
 
         var storeId = req.user.stores[0].storeid;
-        //console.log("================storeId====================",storeId);
+        console.log("================storeId====================",storeId);
         var orderStatus = db.orderstatus;
         var order = db.order;
         var ordertype = db.ordertype;
@@ -94,7 +95,7 @@
 
                     if(item['isdraff']) {
                         group['Draff'].push(item);
-                    }else if(_.isEqual(item['statusname'],'Done')|| _.isEqual(item['statusname'],'Canceled') ){
+                    }else if(_.isEqual(item['statusname'],'Done')|| _.isEqual(item['statusname'],'Cancel') ){
                         group['Done'].push(item);
                         totalNewCod = totalNewCod + parseInt(item.cod);
                         totalNewFee = totalNewFee + parseInt(item.fee);
@@ -184,10 +185,15 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
         }
         return overWeightFee;
     }
-
+    var GenerateRandomCode = function(length){
+        var code = "";
+        var chars = "123456789";
+        for( var i=0; i < length; i++ )
+            code += chars.charAt(Math.floor(Math.random() * chars.length));
+        return code;
+    }
     var post = function (req, res, next) {
         var newOrder = {};
-        console.log("==========req.body==============")
         /*
          * By HuyTDH - 09/10/2015
          * This function is used to create ID for order       
@@ -200,14 +206,14 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
 
         /*
          * By KhanhKC - 14/11/2015
-         * This function is used to caculate Ship fee       
+         * This function is used to calculate Shipping fee
          */
          
          var district = req.body.order.deliverydistrictid;
          var innerCity = config.fileterLocation.in;
          var ordertypeid = req.body.order.ordertypeid;
          var fee = calculateShipFee (district, innerCity,ordertypeid);         
-         var overWeightFee =calculateOverWeightFee (district, innerCity,req.body.goods)
+         var overWeightFee = calculateOverWeightFee (district, innerCity,req.body.goods)
         
         //console.log("=============fee===============",fee);        
         //console.log("=============overWeightFee=======",overWeightFee);
@@ -242,15 +248,20 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
         };       
 
         var code3 = {
-            'codecontent' : parseInt(req.body.order.inStockCode),
+            'codecontent' : GenerateRandomCode(6),
             'typeid' : 3,
             'orderid' : newOrder.orderid
-        };
+        };        
         var code4 = {
-            'codecontent' : parseInt(req.body.order.returnStoreCode),
+            'codecontent' : GenerateRandomCode(6),
             'typeid' : 5,
             'orderid' : newOrder.orderid
         };
+        // var code5 = {
+        //     'codecontent' : GenerateRandomCode(6),
+        //     'typeid' : 5,
+        //     'orderid' : newOrder.orderid
+        // };
        //console.log("==============22==============");
        db.order.postOneOrder(newOrder)
        .then(function (order) {
@@ -363,6 +374,21 @@ var updateOrder = function (req, res, next) {
     })
 };
 
+ var updateExpressOrder = function (req, res, next) {
+     var order = req.body.order;
+     console.log(order);
+     return db.order.updateExpressOrder({
+         statusid : order.statusId,
+         isdraff: order.isDraff
+     },order.orderId)
+         .then(function (rs) {
+             console.log(rs);
+             res.status(201).json(rs);
+         }, function (err) {
+             next(err);
+         })
+ };
+
 var deleteOrder = function (req, res, next) {
     req.orderRs = req.orderRs.toJSON();
     var deleteGoods = db.goods.deleteGood(req.orderRs.orderid);
@@ -389,12 +415,65 @@ var putDraff = function(req, res, next){
 };
 
 var cancelOrder = function (req, res, next) {
-    db.order.cancelOrder( req.orderRs.orderid);
-            //.then(function(){
-            //    res.sendStatus(200).json();
-            //}, function(err) {
-            //    next(err);
-            //});
+    console.log("=======cancerOrderId======", req.body.orderid);
+    var ownerStoreUser = req.user.username;
+    var storeID = req.user.stores[0].storeid;
+
+    var issueCancel = {
+        typeid: 7,
+        description: 'Store ' + storeID +  ' request cancel',
+        isresolved: false,
+        resolvetype: null,
+        createddate: new Date(),
+        sender: ownerStoreUser
+    };
+    console.log("STRID:419", storeID);
+    //Add new issue
+    db.issue.createNewIssue(issueCancel)
+    .then(function(issue){
+        //Add notification
+        var msgRequestCancel = {
+            type: 'Info',
+            title: 'Info',
+            content: 'Store ' + storeID + ' requested cancel an order',
+            url: '#/admin/issueBox/content?issueid=' + issue.dataValues.issueid,
+            isread: false,
+            createddate: new Date()
+        };
+
+        //get Admin
+        db.user.getUserByRole(3)
+        .then(function(admins){
+            admins = admins.map(function(e) {
+                return e.toJSON();
+            });
+            //insert notification to admin
+            var promises = admins.map(function(e){
+                var newData = _.clone(msgRequestCancel, true);
+                newData.username = e.username;
+                return db.notification.addNotification(newData);
+            });
+
+            return Promise.all(promises);
+        })
+        .then(function(data){
+            console.log('orderManage:449', data.length);
+            console.log('send notification disconnect to store and admin');
+            //send socket
+            var sender = {
+                type: 'store',
+                clientID: storeID
+            };
+            server.socket.forward(
+                sender,
+                'admin',
+                msgRequestCancel,
+                'admin::issue:cancelorder'
+            );
+        })
+    }, function(err){
+        next(err);
+    })
 };
 
 var getOrderList = function (req, res, next) {
@@ -485,6 +564,19 @@ addGoods = function(req, res, next){
             next(err);
         });
     };
+
+    var countOrder = function (req, res, next){
+        console.log("==========,stoerid=========",req.query.storeid);
+        console.log("==========,year=========",req.query.year);
+        var storeid = req.query.storeid;
+
+        db.order.countOrder(storeid)
+            .then(function(listRs){
+                res.status(200).json(listRs);
+            },function(err){
+                next(err);
+            })
+    }
     
 
     return {
@@ -492,6 +584,7 @@ addGoods = function(req, res, next){
         getOne: getOne,
         postOne: post,
         params: params,
+        updateExpressOrder : updateExpressOrder,
         updateOrder : updateOrder,
         deleteOrder : deleteOrder,
         putDraff : putDraff,
@@ -501,6 +594,7 @@ addGoods = function(req, res, next){
         deleteGoods: deleteGoods,
         addGoods: addGoods,
         updateGoods : updateGoods,
-        storeGetOrderList : storeGetOrderList
+        storeGetOrderList : storeGetOrderList,
+        countOrder : countOrder
     }
 }

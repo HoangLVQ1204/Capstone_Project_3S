@@ -1,0 +1,247 @@
+<div>
+
+    <div class="nav-collapse" style="margin-left: 0px;">
+
+        <ol class="breadcrumb">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Library</a></li>
+            <li class="active">Data</li>
+        </ol>
+        <!-- //breadcrumb-->
+
+        <div id="content">
+            <div class="row">
+                <div class="col-lg-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            <h2><strong>Assign </strong>Task </h2>
+                            <label class="color">Assign Task for Shipper in {{dateNow|date:"dd/MM/yyyy"}}</label>
+                        </header>
+                        <textarea class="form-control" id="sms-success"  rows="5" style="display:none">
+																	 <i class="fa fa-check-circle"></i> Assign successfully<br>
+																	Tasks was updated for shipper.
+																</textarea>
+                         <textarea class="form-control" id="sms-fail"  rows="5" style="display:none">
+																	 <i class="fa fa-exclamation-triangle"></i> Assign fail<br>
+																	There is an error to update information.....
+																</textarea>
+                        <textarea class="form-control" id="sms-fail-assign"  rows="5" style="display:none">
+																	 <i class="fa fa-exclamation-triangle"></i> Assign fail<br>
+																	This shipper is having issue, can't assign task.....
+																</textarea>
+                        <div class="panel-body row">
+                            <div class="col-lg-3">
+
+                            <form>
+                                <table class="table table-bordered" st-set-filter="customFilter" st-predicate="{{selectedShipper.value}}" search-watch-model="search" st-table="displayedShipperCollection" st-safe-src="tasksList">
+                                    <h3>Shipper</h3>
+                                    <hr>
+                                    <div class="row form-group" >
+
+                                        <!--<div class="col-sm-4 form-group pull-left">-->
+
+                                            <!--<div class="input-icon">-->
+                                                <!--<i class="fa fa-calendar ico"></i>-->
+                                                <!--<input type="text" daterange class="form-control" name="daterange" id="daterange" ng-model="dateRange" />-->
+                                            <!--</div>-->
+
+
+                                        <!--</div>&lt;!&ndash; //form-group&ndash;&gt;-->
+                                        <div class="col-sm-6 pull-right">
+                                            <div class="input-icon"> <i class="fa fa-search ico"></i>
+                                            <input type="search" class="form-control" placeholder="Search" ng-model="search">
+                                            </div>
+
+
+                                        </div>
+
+                                        <div class="col-sm-6 pull-right">
+                                            <!--<select  class="selectpicker form-control show-menu-arrow" ng-repeat="option in searchOptions">-->
+                                            <!--&lt;!&ndash;<option data-icon="fa fa-user" id="predicate" ng-model="selectedPredicate" ng-options="option in predicates"></option>&ndash;&gt;-->
+                                            <!--<option ng-repeat="options in searchOptions" value="{{options.option}}">{{options.option}}</option>-->
+                                            <!--</select>-->
+                                            <select
+                                                    class="form-control"
+                                                    ng-options="options.option for options in searchShipperOptions" ng-model="selectedShipper">
+
+                                            </select>
+
+                                        </div>
+
+                                    </div>
+                                    <thead>
+                                    <tr>
+                                        <th st-sort="username" class="text-center sortable">ShipperID</th>
+                                        <th st-sort="profile.name" class="text-center sortable">Shipper's name</th>
+
+                                    </tr>
+                                    </thead>
+                                    <tbody align="center" >
+
+                                    <tr class="odd gradeX" ng-repeat= "x in displayedShipperCollection" cs-select="x" select-mode="single" ng-model="$parent.isPicked" select-action="pickShipper(x)">
+                                        <td class="text-center"><a ui-sref="admin.userDetail({username: x.username})"> {{x.username}}</a>
+                                            <br ng-show="x.hasIssue"><label class="color-danger" ng-show="x.hasIssue">Issue</label>
+                                        </td>
+                                        <td>{{x.profile.name}}</td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="3" class="text-right">
+                                            <div st-pagination="" st-items-by-page="10"></div>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </form>
+                            </div>
+                            <!--<div class="col-xs-1">-->
+                                <!--<i class="fa fa-exclamation-triangle"></i>-->
+                            <!--</div>-->
+                            <div class="col-lg-3">
+                                <div class="row">
+                                    <h3>Task</h3>
+                                    <hr></div>
+                                <div class="pull-right">
+                                    <button type="button" class="btn btn-theme" ng-click="assignTask()">Assign</button>
+                                    <button type="button" class="btn btn-theme" ng-click="moveAllProcessingTask(pickedShipper.username)"><i class="fa fa-arrow-right"></i></button>
+                                    <!--<button type="button" class="btn btn-theme">IssueBox</button>-->
+                                </div>
+                                <div class="pull-left">
+
+                                    <button type="button" class="btn btn-theme" ng-click="goInbox()"><i class="fa fa-inbox"></i></button>
+
+                                    <!--<button type="button" class="btn btn-theme">IssueBox</button>-->
+                                </div>
+
+                                <form>
+
+                                    <table class="table table-bordered table-hover" st-table="displayedTaskCollection" st-safe-src="taskList">
+
+                                        <div class="row">
+
+                                            <div class="col-sm-4 form-group pull-left">
+
+                                            <!--</div>&lt;!&ndash; //form-group&ndash;&gt;-->
+
+
+
+                                            </div>
+
+
+                                        </div>
+
+                                        <thead>
+                                        <tr>
+                                            <th st-sort="order.orderid" class="text-center sortable">OrderID</th>
+                                            <th st-sort="order.orderstatus.statusname" class="text-center sortable">Order Status</th>
+                                            <th st-sort="taskstatus.statusname">Task Status</th>
+
+                                        </tr>
+                                        </thead>
+                                        <tbody align="center" >
+
+                                        <tr class="odd gradeX" ng-repeat= "x in displayedTaskCollection">
+                                            <td class="text-left">{{x.order.orderid}}</td>
+                                            <td cs-select-checkbox="x"  select-action="pickTask(x)" select-mode="multiple">{{x.order.orderstatus.statusname}}</td>
+                                            <td>{{x.taskstatus.statusname}}</td>
+                                        </tr>
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <td colspan="3" class="text-right">
+                                                <div st-pagination="" st-items-by-page="10"></div>
+                                            </td>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </form>
+                            </div>
+
+                            <div class="col-lg-6 pull-right">
+                                <form >
+                                    <table class="table table-bordered table-hover" st-set-filter="customFilter" st-predicate="{{selectedOrder.value}}" search-watch-model="searchOrder" st-table="displayedOrderCollection" st-safe-src="orderList">
+                                        <div class="row">
+                                        <h3>Order to assign</h3>
+
+                                        </div>
+                                        <hr>
+                                        <div class="row" >
+
+                                            <div class="col-sm-4 form-group pull-left">
+                                                    <button type="button" class="btn btn-theme" ng-click="moveAllOrderToShipper(pickedShipper.username)"><i class="fa fa-arrow-left"></i></button>
+                                                    <!--<button type="button" class="btn btn-theme">IssueBox</button>-->
+                                            </div>
+
+
+                                            <!--</div>&lt;!&ndash; //form-group&ndash;&gt;-->
+                                            <div class="col-sm-4 pull-right">
+                                                <div class="input-icon"> <i class="fa fa-search ico"></i>
+                                                    <input type="search" class="form-control" placeholder="Search" ng-model="searchOrder">
+                                                </div>
+
+
+                                            </div>
+
+                                            <div class="col-sm-4 pull-right">
+                                                <!--<select  class="selectpicker form-control show-menu-arrow" ng-repeat="option in searchOptions">-->
+                                                <!--&lt;!&ndash;<option data-icon="fa fa-user" id="predicate" ng-model="selectedPredicate" ng-options="option in predicates"></option>&ndash;&gt;-->
+                                                <!--<option ng-repeat="options in searchOptions" value="{{options.option}}">{{options.option}}</option>-->
+                                                <!--</select>-->
+
+                                                <select
+                                                        class="form-control"
+                                                        ng-options="options.option for options in searchOrderOptions" ng-model="selectedOrder">
+
+                                                </select>
+
+                                            </div>
+
+                                        </div>
+                                        <thead>
+                                        <tr>
+                                            <th st-sort="order.orderid" class="text-center sortable">OrderID</th>
+                                            <th st-sort="order.pickupaddress" class="text-center sortable">PickUp</th>
+                                            <th st-sort="order.deliveryaddress" class="text-center">Deliver</th>
+                                            <th st-sort="order.orderstatus.statusname" class="text-center">Status</th>
+
+                                        </tr>
+                                        </thead>
+                                        <tbody align="center" >
+
+                                        <tr class="odd gradeX"  ng-repeat= "x in displayedOrderCollection" >
+                                            <td>{{x.order.orderid}}
+                                                <br ng-show="x.statusid==4"><label class="color-danger" ng-show="x.statusid==4">Processing</label>
+                                            </td>
+                                            <td>{{x.order.deliveryaddress}}</td>
+                                            <td cs-select-checkbox="x" id="{{x.order.orderid}}" select-action="pickOrder(x)" select-mode="multiple" shipper-row="$parent.isPicked">{{x.order.pickupaddress}}</td>
+                                            <td>{{x.order.orderstatus.statusname}}</td>
+
+                                        </tr>
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <td colspan="5" class="text-right">
+                                                <div st-pagination="" st-items-by-page="10"></div>
+                                            </td>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </form>
+                            </div>
+                        </div>
+
+                    </section>
+                </div>
+
+            </div>
+            <!-- //content > row-->
+
+        </div>
+        <!-- //content-->
+
+
+    </div>
+
+
+</div>

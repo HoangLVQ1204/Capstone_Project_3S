@@ -21,6 +21,10 @@ module.exports = function(sequelize, DataTypes) {
     userstatus: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    logintime: {
+      type: DataTypes.DATE,
+      allowNull: true
     }
   }, {
     freezeTableName: true,
@@ -110,7 +114,6 @@ module.exports = function(sequelize, DataTypes) {
       },
 
       putUser: function(currentUser) {
-        //console.log(currentUser)
         return user.update({
           'password': currentUser.password,
           'userrole': currentUser.userrole,
@@ -120,7 +123,10 @@ module.exports = function(sequelize, DataTypes) {
         }})
       },
 
-      getAllShipperWithTask: function(task, profile, order, orderstatus, tasktype, taskstatus) {
+      getAllShipperWithTask: function(task, profile, order, orderstatus, tasktype, taskstatus, processing) {
+        //neu processing = true thi chi lay loai processing
+        var isProcessing = 1;
+        if (processing) isProcessing = 4;
         return user.findAll({
           include:[{
             model: task,
@@ -141,9 +147,9 @@ module.exports = function(sequelize, DataTypes) {
                 //required: false,
                 attributes: ['statusname'],
                 where:{
-                  statusid: [1,4]
+                  statusid: [isProcessing,4]
                 }
-              },
+              }
 
             ]
           },{model: profile}],
@@ -177,6 +183,26 @@ module.exports = function(sequelize, DataTypes) {
       //    }
       //  });
       //},
+
+      updateLoginTime: function(username, loginTime) {
+        return user.update({
+          'logintime': loginTime
+        },{where: {
+          'username': username
+        }})
+      },
+
+      checkTokenTime: function (username, tokenTime) {
+        console.log(tokenTime,"+++++++++++++++++++++++++++++__________________________++")
+        return user.findOne({
+          where: {
+            'username': username,
+            'logintime': {
+              $lte: tokenTime
+            }
+          }
+        })
+      }
   }
 
   });

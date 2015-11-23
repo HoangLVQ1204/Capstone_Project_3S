@@ -87,27 +87,7 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
             value: 'recipientphone'
         }
     ];
-    //$scope.searchOptionsIssue= [
-    //    {
-    //        option: 'All',
-    //        value: ''
-    //    },
-    //    {
-    //        option: 'Order ID',
-    //        value: 'orderid'
-    //    },{
-    //        option: 'Delivery Address',
-    //        value: 'deliveryaddress'
-    //    },
-    //    {
-    //        option: 'Cusotmer',
-    //        value: 'recipientname'
-    //    },
-    //    {
-    //        option: 'Customer Phone',
-    //        value: 'recipientphone'
-    //    }
-    //];
+    
 
     //
     $scope.selectedInprocess =$scope.searchOptionsInProcess[0];
@@ -124,7 +104,8 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
     function getDataFromServer() {
         var urlBase = config.baseURI + '/orders';
         dataService.getDataServer(urlBase)
-            .success(function (rs) {
+            .then(function (res) {
+                var rs = res.data;
                 $scope.orderToday = rs['Total'][2];
                 $scope.totalCod = rs['Total'][0];
                 $scope.todayCod = rs['Total'][3];
@@ -144,10 +125,16 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
                 $scope.listDraff =  $scope.ordersDraff;
 
 
+            },function(error){
+                console.log(error);
+                if(error.status == 401){
+                    dataService.signOutWhenTokenFail()
+                }
+
             })
-            .error(function (error) {
-                console.log('Unable to load customer data: ' + error);
-            });
+            //.error(function (error) {
+            //
+            //});
     }
     $scope.Order = {};
 
@@ -166,19 +153,17 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
     };
 
     //cancel in process order
-    // $scope.cancerOrder = function(){
-    //     if($scope.Order.statusname == 'Delivering' || $scope.Order.statusname == 'In stock' || $scope.Order.statusname == 'Bring to stock'){
-    //         var urlBase = config.baseURI + '/orders/cancel';
-    //         var cancelOrderId = $scope.Order.orderid;
-    //         console.log(cancelOrderId);
-    //         dataService.putDataServer(urlBase,cancelOrderId);
-    //     }
-    //     var index =  $scope.displayedCollectionInprocess.indexOf( $scope.Order);
-    //     if (index !== -1) {
-    //         $scope.displayedCollectionInprocess.splice(index, 1);
-    //         $scope.orderInprocess.splice(index, 1);
-    //     }
-    // };
+    $scope.cancerOrder = function(){
+        var urlBase = config.baseURI + '/store/orders/cancel';
+            dataService.postDataServer(urlBase,{
+                orderid : $scope.Order.orderid
+            });        
+        // var index =  $scope.displayedCollectionInprocess.indexOf( $scope.Order);
+        // if (index !== -1) {
+        //     $scope.displayedCollectionInprocess.splice(index, 1);
+        //     $scope.orderInprocess.splice(index, 1);
+        // }
+    };
 
     //delete Draff order
     $scope.deleteDraffOrder = function () {
@@ -239,8 +224,7 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
 
     // START Listen to socket changes
     $rootScope.$on("evChange", function(event, data){
-        //alert(args.message);
-        console.dir(data);
+        console.log("AAA");
         getDataFromServer();
         //SHOW INFORMATION OF THE SHIPPER WHO PICKED ORDER
         if(data.msg.profile) {
@@ -259,6 +243,21 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
     $scope.hostServer = config.hostServer;
     // END listen to socket changes
 
+    // START Listen to socket changes
+    $rootScope.$on("store:dashboard:getShipperList", function(event, args){
+        //alert(args.message);
+        console.log('args');
+        console.log(args);
+        $rootScope.onlineShipper = 0;
+        args.map(function (shipper) {
+            if (shipper.isConnected) $rootScope.onlineShipper++;
+
+        });
+        //$scope.$apply();
+        //getDataFromServer();
+       // console.log( $scope.onlineShipper);
+        //$scope.onlineShipper = 10;
+    });
 }
 
 

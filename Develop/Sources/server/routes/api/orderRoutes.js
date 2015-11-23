@@ -22,13 +22,16 @@ module.exports = function (app) {
     app.route('/orders/:orderid')
         .get(controller.getOne)
         .put(checkAll,controller.updateOrder)
-        .delete(controller.deleteOrder);
+        .delete(checkAll,controller.deleteOrder);
 
     app.route('/orders/putdraff')
         .post(controller.putDraff);
 
-    app.route('/orders/cancel')
-        .put(controller.cancelOrder);
+    app.route('/store/orders/cancel')
+        .post(checkAll,controller.cancelOrder);
+
+    app.route('/orders/updateExpressOrder')
+        .put(controller.updateExpressOrder)    
 
     app.route('/api/store/deleteGoods')
         .delete(checkAll, controller.deleteGoods);
@@ -41,6 +44,10 @@ module.exports = function (app) {
 
     app.route('/api/store/getAllOrder')
         .get(checkAll, controller.storeGetOrderList);
+
+    app.route('/api/admin/order/countOrder')
+        .get(checkAll, controller.countOrder);
+
 
 
 };

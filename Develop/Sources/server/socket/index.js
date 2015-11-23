@@ -37,6 +37,12 @@
     BUG: Disable cache in browser
 */
 
+/*
+    Filter pending shippers
+    Accept order right away in store
+    draft thi goi lai
+*/
+
 var _ = require('lodash');
 
 module.exports = function(server,app){
@@ -46,6 +52,8 @@ module.exports = function(server,app){
     var io = require('socket.io')(server);
     var socketioJwt = require("socketio-jwt");
     var config      = require('../config/config');
+    var controllerStore = require('../manages/storeManage')(app);
+    var controllerShipper = require('../manages/shipperManage')(app);
 
     /*
         io.admins[adminID] = {            
@@ -83,7 +91,6 @@ module.exports = function(server,app){
         }
     */
     io.stores = {};
-
     /*
         io.shippers[shipperID] = {
             order: [],
@@ -120,6 +127,55 @@ module.exports = function(server,app){
         }
     */
     io.orders = {};
+
+    /*
+        io.pendingShippers[shipperID] = {
+            storeID,
+            .....
+        }
+    */
+    io.pendingShippers = {};
+
+    io.addPendingShipper = function(shipperID, store) {
+        io.pendingShippers[shipperID] = store;
+    };
+
+    io.getNumberPendingShippersOfStore = function(storeID) {
+        var count = 0;
+        for (shipperID in io.pendingShippers) {
+            if (io.pendingShippers[shipperID].storeID == storeID) {
+                ++count;
+            }
+        }
+        return count;
+    };
+
+    io.removePendingShipper = function(shipperID) {
+        delete io.pendingShippers[shipperID];
+    };
+
+    io.removePendingShippersOfStore = function(storeID) {
+        for (shipperID in io.pendingShippers) {
+            if (io.pendingShippers[shipperID].storeID === storeID) {
+                io.removePendingShipper(shipperID);
+            }
+        }
+    };
+
+    io.notifyPendingShippers = function(storeID, avoidedShipperID, sender, msg) {
+        for (shipperID in io.pendingShippers) {
+            if (shipperID !== avoidedShipperID && io.pendingShippers[shipperID].storeID == storeID) {
+                io.forward(
+                    sender,
+                    {
+                        type: 'shipper',
+                        clientID: shipperID
+                    },
+                    msg,
+                    'shipper:remove:express');
+            }
+        }
+    };
 
 
     // Returns socket by receiver type
@@ -166,7 +222,7 @@ module.exports = function(server,app){
     */
     io.forward = function(sender, receiver, msg, eventName, callback) {
         var data = {
-            sender: sender,            
+            sender: sender,
             msg: msg
         };
 
@@ -330,7 +386,7 @@ module.exports = function(server,app){
             order: [],
             latitude: store.latitude,
             longitude: store.longitude,
-            socketID: socket.id
+            socketID: (!!socket ? socket.id : null)
         };            
     };
 
@@ -345,8 +401,6 @@ module.exports = function(server,app){
         };
     };
 
-
-
     io.containShipper = function(shipperID) {
         return !!io.shippers[shipperID];
     };
@@ -359,7 +413,7 @@ module.exports = function(server,app){
     }
 
     io.updateNumTasksByShipperID = function(shipperID){
-        io.shippers[shipper.shipperID].numTasks = io.countNumTasksByShipperID(shipper.shipperID);
+        io.shippers[shipperID].numTasks = io.countNumTasksByShipperID(shipperID);
     }
 
     io.updateShipper = function(shipper, socket) {
@@ -369,6 +423,14 @@ module.exports = function(server,app){
         io.shippers[shipper.shipperID].isConnected = true;
         io.shippers[shipper.shipperID].numTasks = io.countNumTasksByShipperID(shipper.shipperID);
     };
+
+    io.getListConnectedShippers = function(){
+        var listRightShippers = [{
+            SPID : 'SP000001',
+            isConnected: true
+        }]
+        return listRightShippers;
+    }
 
     io.updateStatusShipper = function(shipper) {
         io.shippers[shipper.shipperID].isConnected = false;
@@ -393,8 +455,8 @@ module.exports = function(server,app){
             order: io.getOrderIDsOfShipper(shipper.shipperID),
             latitude: shipper.latitude,
             longitude: shipper.longitude,
-            socketID: socket.id,
-            isConnected: true,
+            socketID: (!!socket ? socket.id : null),
+            isConnected: (io.shippers.length == 0 ? true : false),
             numTasks: io.countNumTasksByShipperID(shipper.shipperID)
         };              
     };
@@ -439,9 +501,6 @@ module.exports = function(server,app){
 
         return shipperInfos;
     };
-
-
-
 
     io.addOrder = function(orderID, storeID, shipperID) {
         io.orders[orderID] = {
@@ -513,6 +572,25 @@ module.exports = function(server,app){
         });
     };
 
+
+    io.updateListStore = function(){
+        controllerStore.getAllStores()
+            .then(function(rs){
+                rs = rs.map(function(e) {
+                    return e.toJSON();
+                })
+                rs.forEach(function(item){
+                    io.addStore({
+                        storeID: item.storeid,
+                        latitude: item.latitude,
+                        longitude: item.longitude
+                    })
+                })
+            })
+    }
+
+    //io.updateListStore();
+
     io.leaveRoom = function(socket, roomID) {
         socket.leave(roomID, function() {
             console.log(socket.id, 'leave room', roomID);
@@ -570,7 +648,47 @@ module.exports = function(server,app){
             io.leaveRoom(socketStore,roomID);
         }
     };
+
     // END - Update information of socket when shipper finished a task
+
+
+    io.updateListStore = function(){
+        controllerStore.getAllStores().then(function(rs){
+            rs = rs.map(function(e){
+                return e.toJSON();
+            });
+            //console.log(rs);
+            rs.forEach(function(e){
+                io.addStore({
+                    storeID: e.storeid,
+                    latitude: parseFloat(e.latitude),
+                    longitude: parseFloat(e.longitude)
+                });
+            });
+        });
+    }
+
+    io.updateListShipper = function(){
+        controllerShipper.getAllShippers().then(function(rs){
+            rs = rs.map(function(e){
+                return e.toJSON();
+            });
+            console.log(rs);
+            rs.forEach(function(e){
+                io.addShipper({
+                    shipperID: e.username,
+                    latitude: parseFloat(e.latitude),
+                    longitude: parseFloat(e.longitude),
+                    isConnected: false
+                });
+            });
+        });
+    }
+
+    io.updateListStore();
+    io.updateListShipper();
+
+
 
     io
         .on('connect', socketioJwt.authorize({
@@ -581,7 +699,6 @@ module.exports = function(server,app){
             console.log("--HAVE CONNECTION--");
             var dataToken = socket.decoded_token;
             socket.on("client:register",function(data){
-
                 if(dataToken.userrole == 1){
 
                     console.log("---This is Data Shipper---");
@@ -617,7 +734,7 @@ module.exports = function(server,app){
                         shipperList: io.getAllShippers()
                     }, ['admin:add:shipper', 'store:add:shipper']);
 
-                    require('./socketShipper')(socket, io);
+                    require('./socketShipper')(socket, io, app);
 
                 }
 
@@ -633,6 +750,10 @@ module.exports = function(server,app){
                         io.updateStore(store, socket);
                     } else
                         io.addStore(store, socket);
+
+                    console.log("---DATA STORE---");
+                    console.log(io.getOneStore(store.storeID));
+                    console.log("---DATA STORE---");
 
                     io.reply(data.sender, { mapData: io.getDataForStore(store.storeID) }, 'store:register:location');
                     io.forward(data.sender, 'admin', { store: io.getOneStore(store.storeID) }, 'admin:add:store');
@@ -656,11 +777,13 @@ module.exports = function(server,app){
                         mapData: io.getDataForAdmin(),
                         shipperList: io.getAllShippers()
                     }, 'admin:register:location');
+
                     require('./socketAdmin')(socket, io);
 
                 }
             })
         });
+
     return {
         io: io
     }

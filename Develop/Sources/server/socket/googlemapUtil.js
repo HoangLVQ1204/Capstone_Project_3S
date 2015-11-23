@@ -8,7 +8,7 @@ var GoogleMapsAPI = require('googlemaps');
 
 var config = {
 	// key: 'AIzaSyALajTCGOGkS_TZBAXyUkjtWdSk5t4TIyY',	// Server key
-	key: 'AIzaSyBeZoB6x9vE6s3okxnACQ2H_cprqfiI6aE',
+	key: 'AIzaSyCGFowrKhTz9GskvfzAGR6_rGFbsaCorOw',
 	secure: true
 };
 
@@ -25,7 +25,7 @@ api.getDistanceFromOneToMany = function(origin, destinations) {
 		if (index > 0) destinationsString += '|';
 		destinationsString += dest.latitude + ',' + dest.longitude;		
 	});
-	console.log("TTTTTTTTTTT", destinationsString);
+
 	var request = {
         origins: originString,
         destinations: destinationsString,
@@ -63,6 +63,8 @@ api.getClosestShippers = function(store, shippers, filter) {
 		return (shipper.isConnected === filter.isConnected && shipper.numTasks < filter.maxTasks);
 	});
 
+	console.log('validShippers', validShippers);
+
 	return api.getDistanceFromOneToMany(store, validShippers)
 	.then(function(results) {
 		// filter by radius
@@ -92,6 +94,36 @@ api.getClosestShippers = function(store, shippers, filter) {
 	.catch(function(err) {
 		console.log('getClosestShippers error', err);
 	});
+};
+
+/*
+	Input: geoText (String)
+	Output: Promise({
+		latitude: double
+		longitude: double
+	})
+*/
+api.getLatLng = function(geoText) {
+    var d = Q.defer();
+    gmAPI.geocode({
+        address: geoText
+    }, function(err, response) {
+        if (err) {
+			d.reject(err);			
+		} else {
+			if (response.status === 'OK') {
+				//console.log('getlatlng', response.results[0].geometry);
+				d.resolve({
+	                latitude: response.results[0].geometry.location.lat,
+	                longitude: response.results[0].geometry.location.lng
+	            });
+			} else {			
+				d.reject(response.status + ': ' + response.error_message);
+			}
+		}
+    });
+
+    return d.promise;
 };
 
 module.exports = api;           

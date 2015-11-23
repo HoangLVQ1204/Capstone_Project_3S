@@ -25,6 +25,10 @@
 																	 <i class="fa fa-exclamation-triangle"></i> Assign fail<br>
 																	There is an error to update information.....
 																</textarea>
+                        <textarea class="form-control" id="sms-fail-assign"  rows="5" style="display:none">
+																	 <i class="fa fa-exclamation-triangle"></i> Assign fail<br>
+																	This shipper is having issue, can't assign task.....
+																</textarea>
                         <div class="panel-body row">
                             <div class="col-lg-3">
 
@@ -75,7 +79,9 @@
                                     <tbody align="center" >
 
                                     <tr class="odd gradeX" ng-repeat= "x in displayedShipperCollection" cs-select="x" select-mode="single" ng-model="$parent.isPicked" select-action="pickShipper(x)">
-                                        <td class="text-left">{{x.username}}</td>
+                                        <td class="text-left"><a ui-sref="admin.userDetail({username: x.username})">{{x.username}}</a>
+                                            <br ng-show="x.hasIssue"><label class="color-danger" ng-show="x.hasIssue">Issue</label>
+                                        </td>
                                         <td>{{x.profile.name}}</td>
                                     </tr>
                                     </tbody>
@@ -97,7 +103,15 @@
                                     <h3>Task</h3>
                                     <hr></div>
                                 <div class="pull-right">
-                                    <button type="submit" class="btn btn-theme" ng-click="assignTask()">Assign</button>
+                                    <button type="button" class="btn btn-theme" ng-click="assignTask()">Assign</button>
+                                    <button type="button" class="btn btn-theme" ng-click="moveAllProcessingTask(pickedShipper.username)"><i class="fa fa-arrow-right"></i></button>
+                                    <!--<button type="button" class="btn btn-theme">IssueBox</button>-->
+                                </div>
+                                <div class="pull-left">
+
+                                    <button type="button" class="btn btn-theme" ng-click="goInbox()"><i class="fa fa-inbox"></i></button>
+
+                                    <!--<button type="button" class="btn btn-theme">IssueBox</button>-->
                                 </div>
 
                                 <form>
@@ -161,7 +175,10 @@
                                             <!--<input type="text" daterange class="form-control" name="daterange" id="daterange" ng-model="dateRange" />-->
                                             <!--</div>-->
 
-
+                                            <div class="col-sm-4 form-group pull-left">
+                                                <button type="button" class="btn btn-theme" ng-click="moveAllOrderToShipper(pickedShipper.username)"><i class="fa fa-arrow-left"></i></button>
+                                                <!--<button type="button" class="btn btn-theme">IssueBox</button>-->
+                                            </div>
                                             <!--</div>&lt;!&ndash; //form-group&ndash;&gt;-->
                                             <div class="col-sm-4 pull-right">
                                                 <div class="input-icon"> <i class="fa fa-search ico"></i>

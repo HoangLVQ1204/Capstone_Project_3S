@@ -100,6 +100,34 @@ module.exports = function(sequelize, DataTypes) {
           statusid: nextStatus,
           completedate: completeDate
         })
+      },
+      getOrderAddress: function(modelWard, modelDistrict, modelProvince){
+        // :TODO change to real address
+        return this.deliveryaddress + ', fake ward ' + ', fake district' + ', fake province'
+        /*
+        modelWard.findOne({
+          attributes: [['name','ward']],
+          where: {
+            wardid: this.deliverywardid
+          },
+          include: {
+            attributes: ['name'],
+            model: modelDistrict,
+            include: {
+              attributes: ['name'],
+              model: modelProvince
+            }
+          }
+        }).then(function(rs){
+          rs = rs.toJSON()
+          if(!rs) return 'aa'
+          //this.deliveryaddress
+          return 'ff'
+          //this.deliveryaddress + rs.ward + rs.district.name + rs.district.province.name
+        }, function(er){
+          return 'ss'
+        })
+        */
       }
     },
     classMethods: {
@@ -185,7 +213,7 @@ module.exports = function(sequelize, DataTypes) {
       //KhanhKC
       storeGetAllOrders: function (oderstatusModel,ordertypeModel, store_id) {
         return order.findAll({
-          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','ispending','cod','fee','completedate','createdate','ledgerid'],
+          attributes: ['orderid','recipientname','recipientphone','statusid','isdraff','ispending','cod','fee','completedate','deliveryaddress','createdate','ledgerid'],
           where: {storeid:store_id },
           include: [
             {'model': oderstatusModel,
@@ -229,8 +257,13 @@ module.exports = function(sequelize, DataTypes) {
         return order.build(newOrder).save();
       },
 
-      putOrder: function (currentOrder) {
-        return currentOrder.save();
+      updateExpressOrder: function (currentOrder, orderID) {
+          return order.update(
+              currentOrder,{
+            where: {
+              'orderid': orderID
+            }
+          });
       },
 
       changeIsPendingOrder: function(orderID, isPending) {
@@ -322,6 +355,9 @@ module.exports = function(sequelize, DataTypes) {
               include:{
                 model: taskstatus,
                 attributes: ['statusname']
+              },
+              where: {
+                'statusid': {$ne: 5}
               }
             }]
         })
@@ -455,6 +491,64 @@ module.exports = function(sequelize, DataTypes) {
                 'orderid': newOrder.orderid
               }
             })
+      },
+
+       updateOrder: function (currentOrder,orderid) {
+        return order.update(
+          currentOrder,
+          {
+            where:{
+              'orderid': orderid
+            }
+          })
+      },
+
+      countOrder: function(storeid){
+        if(storeid == 'all'){
+          return order.findAll({
+            attributes: [
+                               
+                [
+                    sequelize.fn('date_part',
+                        'month',
+                        sequelize.col('createdate')
+                    ),
+                    'Month'
+                ],
+                [
+                    sequelize.fn('count',
+                        sequelize.col('orderid')
+                    ),
+                    'count'
+                ] 
+            ],            
+            group: ['"Month"']
+        })
+        } else {
+          return order.findAll({
+            attributes: [
+                               
+                [
+                    sequelize.fn('date_part',
+                        'month',
+                        sequelize.col('createdate')
+                    ),
+                    'Month'
+                ],
+                [
+                    sequelize.fn('count',
+                        sequelize.col('orderid')
+                    ),
+                    'count'
+                ] 
+            ],
+            where:{
+              'storeid' : storeid
+            },
+            group: ['"Month"']
+        })
+        }
+        
       }
 
     }

@@ -12,6 +12,7 @@ var issueRoutes = require('./api/issueRoutes');
 var provinceRoutes = require('./api/provinceRoutes');
 var notificationRoutes = require('./api/notificationRoutes');
 var storeRoutes = require('./api/storeRoutes');
+var reportRoutes = require('./api/reportRoutes');
 module.exports = function (app) {
     loginRoutes(app);
     userRoutes(app);
@@ -23,5 +24,6 @@ module.exports = function (app) {
     issueRoutes(app);
     provinceRoutes(app);   
     notificationRoutes(app);
+    reportRoutes(app);
 }
 

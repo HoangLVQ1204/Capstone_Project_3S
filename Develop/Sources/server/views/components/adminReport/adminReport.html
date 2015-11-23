@@ -1,0 +1,320 @@
+<div id="content">
+
+	<div class="row">
+		<div class="col-md-8">
+			<section class="panel">
+				<header class="panel-heading no-borders bg-inverse">
+					<h2><strong>Order</strong> by month </h2>
+					<br>
+				</header>
+				<div class="tabbable">
+					<ul class="nav nav-tabs">
+						<li class="active"><a data-toggle="tab" href="#sectionA" target="ui-seft"><i class="fa fa-bar-chart-o"></i> &nbsp; Express / Nomal</a></li>
+
+						<li><a data-toggle="tab" href="#sectionB" target="ui-seft"><i class="fa fa-qrcode"></i> &nbsp; Complete / Cancel</a></li>
+
+						<li class="pull-right">
+							<select class="form-control" ng-option ="x in listYear">
+							</select>
+						</li>
+
+						<li class="pull-right">
+							<select class="form-control" ng-option ="x in listStore">
+							</select>
+						</li>
+					</ul>
+					<div class="tab-content">
+						<div id="sectionA" class="tab-pane in active">
+							<div class="widget-chart chart-dark">
+								<table id="stack-chart" data-stack="true" class="flot-chart" data-type="lines"  data-yaxis-max="3000" data-tool-tip="show" data-width="100%" data-height="300px"  data-bar-width="0.5" data-tick-color="rgba(0,0,0,0.05)">
+									<thead>
+										<tr>
+											<th></th>
+											<th class="color-theme-inverse">Express</th>
+											<th class="color-warning">Normal</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="x in listOrderOfMonth">
+											<th>{{x.Month}}</th>
+											<td>{{x.expressOrder}}</td>
+											<td>{{x.normalOrder}}</td>
+										</tr>
+										
+									</tbody>
+								</table>
+							</div>
+							<div class="label-sparkline align-lg-center">
+								<ul>
+									<li><span data-color="theme-inverse"></span>Express </li>
+									<li><span data-color="warning"></span>Normal</li>
+								</ul>
+							</div>
+						</div>
+						<div id="sectionB" class="tab-pane in active">
+							<div class="widget-chart chart-dark">
+								<table id="stack-chart" data-stack="true" class="flot-chart" data-type="lines"  data-yaxis-max="3000" data-tool-tip="show" data-width="100%" data-height="300px"  data-bar-width="0.5" data-tick-color="rgba(0,0,0,0.05)">
+									<thead>
+										<tr>
+											<th></th>
+											<th class="color-theme-inverse">Complete</th>
+											<th class="color-theme">Cancel</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="x in lis">
+											<th>x</th>
+											<td>250</td>
+											<td>295</td>
+										</tr>
+										
+									</tbody>
+								</table>
+							</div>
+							<div class="label-sparkline align-lg-center">
+								<ul>
+									<li><span data-color="theme-inverse"></span>Complete </li>
+									<li><span data-color="theme"></span>Cancel</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			<section class="panel">
+				<header class="panel-heading no-borders bg-inverse">
+					<h2><strong>Finance</strong> by month </h2>
+					<br>
+				</header>
+				<ul class="nav">						
+					<li class="pull-right"><select class="form-control">
+						<option>2013</option>
+						<option>2014</option>
+						<option>2015</option>
+					</select></li>
+
+					<li class="pull-right"><select class="form-control">
+						<option>Domino</option>
+						<option>Shop tre tho</option>
+						<option>KFC</option>
+					</select></li>
+				</ul>
+
+					<div class="tabbable">
+						<div class="widget-chart chart-dark">
+					<table class="flot-chart" data-type="lines" data-tool-tip="show" data-width="100%" data-height="220px">
+						<thead>
+							<tr>
+								<th></th>
+								<th class="color-theme-inverse">COD</th>
+								<th class="color-theme">Ship fee</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th>JAN</th>
+								<td>4295</td>
+								<td>295</td>
+							</tr>
+							<tr>
+								<th>FEB</th>
+								<td>5145</td>
+								<td>3145</td>
+							</tr>
+							<tr>
+								<th>MAR</th>
+								<td>1015</td>
+								<td>1515</td>
+							</tr>
+							<tr>
+								<th>APR</th>
+								<td>2500</td>
+								<td>4578</td>
+							</tr>
+							<tr>
+								<th>MAY</th>
+								<td>0</td>
+								<td>4041</td>
+							</tr>
+							<tr>
+								<th>JUN</th>
+								<td>15700</td>
+								<td>12090</td>
+							</tr>
+							<tr>
+								<th>JUL</th>
+								<td>2315</td>
+								<td>4235</td>
+							</tr>
+							<tr>
+								<th>AUG</th>
+								<td>200</td>
+								<td>1215</td>
+							</tr>
+							<tr>
+								<th>SEP</th>
+								<td>5605</td>
+								<td>2315</td>
+							</tr>
+							<tr>
+								<th>OCT</th>
+								<td>1900</td>
+								<td>5315</td>
+							</tr>
+							<tr>
+								<th>NOV</th>
+								<td>1900</td>
+								<td>2015</td>
+							</tr>
+							<tr>
+								<th>DEC</th>
+								<td>1900</td>
+								<td>315</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="label-sparkline align-lg-center">
+						<ul>
+							<li><span data-color="theme-inverse"></span>COD </li>
+							<li><span data-color="theme"></span>Ship fee</li>
+						</ul>
+					</div>
+				</div>
+					</div>
+				
+			</section>
+
+					<section class="panel">
+						<div class="panel-body">
+							<div class="table-responsive">
+								<table class="table table-striped table-hover" data-provide="data-table">
+									<thead>
+										<tr>
+											<th> Photo </th>
+											<th> Fullname </th>
+											<th> Username </th>
+											<th> Status </th>
+											<th>  View</th>
+										</tr>
+									</thead>
+									<tbody align="center">
+										<tr >
+											<td><img src="assets/img/avatar.png" alt="" class="img-circle avatar-mini"></td>
+											<td> Mark Nilson </td>
+											<td> makr124 </td>
+											<td><span class="label label-sm bg-theme-inverse"> Approved </span></td>
+											<td><a class="btn btn-inverse btn-sm" href="#"><i class="fa fa-pencil"></a></td>
+										</tr>										
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</section>
+				</div>
+				<div class="col-md-4">
+					<section class="panel corner-flip">						
+						<div class="widget-chart">
+							<h3><strong>Over</strong> view</h3>
+							<br>
+							<ol>
+								<li><a ui-sref="admin.orderList"><i class="fa fa-money"></i>Order <span class="pull-right">17,485</span></a></li>
+								<li><a href="">Fee <span class="pull-right">11,452</span></a></li>		
+								<li><a ui-sref="admin.shipperList">Shipper <span class="pull-right">9,875</span></a></li>
+								<li><a ui-sref="admin.storeList">Store <span class="pull-right">9,214</span></a></li>	
+							</ol>
+						</div>
+					</section>
+					<section class="panel corner-flip">
+						<header class="panel-heading no-borders">
+							<!-- <h2><strong>pie</strong> Chart </h2> -->
+							<label class="color">Percentage <strong>order by stores </strong></label>
+						</header>												
+						<div class="widget-chart">
+							<div class="label-flot-custom-title"><span>Order by sotre</span></div>
+							<table id="example_pieDonut" class="flot-chart" data-type="pie" data-inner-radius="0.7" data-pie-style="shadow" data-tool-tip="show" data-width="100%" data-height="220px" >
+								<thead>
+									<tr>
+										<th></th>
+										<th style="color : #3db9af;">KFC</th>
+										<th style="color : #DC4D79;">Domino</th>
+										<th style="color : #BD3B47;">Lotte</th>
+										<th style="color : #DD4444;">FptShop</th>
+										<th style="color : #FD9C35;">Pho 365</th>
+										<th style="color : #FEC42C;">Cellphones</th>
+										<th style="color : #D4DF5A;">Hoangha Mobile</th>
+										<th style="color : #575757;">Shop tre tho</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th></th>
+										<td>44</td>
+										<td>8</td>
+										<td>8</td>
+										<td>8</td>
+										<td>8</td>
+										<td>8</td>
+										<td>8</td>
+										<td>8</td>
+									</tr>
+								</tbody>
+							</table>
+						</div><!-- // widget-chart -->
+
+						<div class="align-lg-center">
+							<div class="label-flot-custom" data-flot-id="#example_pieDonut"></div>
+						</div>
+
+					</section>
+					<section class="panel corner-flip">
+						<header class="panel-heading no-borders">
+							<!-- <h2><strong>pie</strong> Chart </h2> -->
+							<div class="form-group">
+							<label class="col-md-7 color">Percentage <strong>task by shipper </strong></label>
+							<select class="col-md-5"></select></div>
+							
+						</header>												
+						<div class="widget-chart">
+							<div class="label-flot-custom-title"><span>Task by shipper</span></div>
+							<table id="example_pieDonut_2" class="flot-chart" data-type="pie" data-inner-radius="0.7" data-pie-style="shadow" data-tool-tip="show" data-width="100%" data-height="220px" >
+								<thead>
+									<tr>
+										<th></th>
+										<th style="color : #3db9af;">Khanh</th>
+										<th style="color : #DC4D79;">Hoang</th>
+										<th style="color : #BD3B47;">Quyen</th>
+										<th style="color : #DD4444;">Hoang</th>
+										<th style="color : #FD9C35;">Huy</th>
+										<th style="color : #FEC42C;">Other</th>
+										
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th></th>
+										<td>40</td>
+										<td>20</td>
+										<td>15</td>
+										<td>15</td>
+										<td>5</td>
+										<td>5</td>
+										
+									</tr>
+								</tbody>
+							</table>
+						</div><!-- // widget-chart -->
+
+						<div class="align-lg-center">
+							<div class="label-flot-custom" data-flot-id="#example_pieDonut_2"></div>
+						</div>
+
+					</section>
+					
+					
+
+
+			</div>
+		</div>
+		<!-- //content > row-->
+
+	</div>

@@ -2,7 +2,7 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function issueContentController($scope,$stateParams, $http, authService,config, $rootScope ,socketAdmin) {
+function issueContentController($scope,$stateParams, $http, authService,config, $rootScope ,socketAdmin, $state) {
     //$rootScope.$state = $state;
     //$rootScope.$stateParams = $stateParams;
 
@@ -26,38 +26,39 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
 
     $scope.updateResolve = function () {
         var promise=[];
-        if ($scope.resolveType == 2){
+
             promise.push($http.get(config.baseURI + "/api/countProcessingTaskOfShipper?shipperid=" + $scope.issue.orderissues[0].order.tasks[0].shipperid).success(function(response){
                 $scope.activeTask = response;
             }))
-        }
+
         //if (promise)
         Promise.all(promise).then(function () {
             //alert($scope.resolveType);
-            if ($scope.activeTask>0) {
+            if ($scope.activeTask>0 && $scope.resolveType == 2) {
                 smsData.theme="danger";
                 //data.sticky="true";
                 $.notific8($("#sms-fail-assign").val(), smsData);
                 //console.log(error)
                 return;
-            }
+            }else {
 
-            $scope.issue.resolvetype = $scope.resolveType;
+                $scope.issue.resolvetype = $scope.resolveType;
 
-            if ($scope.issue.resolvetype == 2)//pending issue
-                resolveChangeShipperIssue();
+                if ($scope.issue.resolvetype == 2)//pending issue
+                    resolveChangeShipperIssue();
 
-            if ($scope.issue.resolvetype == 1){//contiunue
-                resolveContinueIssue();
-            }
+                if ($scope.issue.resolvetype == 1) {//contiunue
+                    resolveContinueIssue();
+                }
 
-            if ($scope.issue.resolvetype == 3){//cancel issue fail good
-                resolveReturnIssue();
-            }
+                if ($scope.issue.resolvetype == 3) {//cancel issue fail good
+                    resolveReturnIssue();
+                }
 
-            if ($scope.issue.resolvetype == 4){//return issue can't find customer
-               if($scope.issue.orderissues[0].order.statusid == 1 || $scope.issue.orderissues[0].order.statusid == 2) resolveStoreIssue();
-                else resolveReturnIssue();
+                if ($scope.issue.resolvetype == 4) {//return issue can't find customer
+                    if ($scope.issue.orderissues[0].order.statusid == 1 || $scope.issue.orderissues[0].order.statusid == 2) resolveStoreIssue();
+                    else resolveReturnIssue();
+                }
             }
         })
     }
@@ -65,7 +66,7 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
     //console.log(authService.getCurrentInfoUser());
     $scope.showConfirm = function (event, resolveType){
         //alert(1);
-        socketAdmin.issueMessage($scope.issue, 'Order has Issue');
+        //socketAdmin.issueMessage($scope.issue, 'Order has Issue');
         if ($scope.issue.isresolved) return;
         $scope.resolveType = resolveType;
         event.preventDefault();
@@ -201,6 +202,14 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
         })
 
     }
+    
+    //function redirect to assign task page
+    $scope.goToProcessing = function () {
+        //alert(1);
+        $("#md-effect-block").attr('class','modal fade').addClass(smsData.effect).modal('hide');
+
+        $state.go('admin.assignTaskProcessing',{shipperid: $scope.issue.sender});
+    }
 
     //----------------------------------
     //FUNCTION LOAD SCRIPT
@@ -223,5 +232,5 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
 
 }
 
-issueContentController.$inject = ['$scope','$stateParams', '$http', 'authService','config','$rootScope', 'socketAdmin'];
+issueContentController.$inject = ['$scope','$stateParams', '$http', 'authService','config','$rootScope', 'socketAdmin','$state'];
 angular.module('app').controller('issueContentController',issueContentController);

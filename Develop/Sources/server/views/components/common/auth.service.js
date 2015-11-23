@@ -13,7 +13,7 @@ angular.module('app')
 
         var signIn = function(data){
             return $http({
-                data,
+                data: data,
                 url: config.baseURI + '/auth/signin',
                 method: 'POST'
             })
@@ -21,7 +21,7 @@ angular.module('app')
 
         var signOut = function(){
             window.localStorage.removeItem(tag);
-            // $state.go("login");
+            $state.go("login");
         }
 
         var isLogged = function(){

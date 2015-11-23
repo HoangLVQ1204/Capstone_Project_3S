@@ -14,10 +14,10 @@
 
                 <form id="validate-wizard" class="wizard-step">
                     <ul>
-                        <li><a href="#step1" data-toggle="tab">1</a></li>
-                        <li><a href="#step2" data-toggle="tab">2</a></li>
-                        <li><a href="#step3" data-toggle="tab">3</a></li>
-                        <li><a href="#step4" data-toggle="tab">4</a></li>
+                        <li><a href="#step1" target="ui-seft" data-toggle="tab">1</a></li>
+                        <li><a href="#step2" target="ui-seft" data-toggle="tab">2</a></li>
+                        <li><a href="#step3" target="ui-seft" data-toggle="tab">3</a></li>
+                        <li><a href="#step4" target="ui-seft" data-toggle="tab">4</a></li>
                     </ul>
                     <div class="progress progress-stripes progress-sm" style="margin:0">
                         <div class="progress-bar" data-color="theme"></div>
@@ -224,9 +224,12 @@
                                 </div>
                             </footer>
                         </div>
-
                         <div class="tab-pane fade" id="step4">
                             <h3 class="center">Thank You for order</h3><br>
+                            <hr>
+                            <footer>
+                                <button type="button" ng-click="reloadRoute()" class=" btn btn-theme">Create new order</button>
+                            </footer>
                         </div>
 
                     </div>
@@ -382,8 +385,8 @@
                 </div>
                 <!-- //modal-body-->
                 <div class="modal-footer">
-                    <button type="button" ng-click="deleteGood()" data-dismiss="modal" class="btn btn-theme">Yes</button>
-                    <button type="button"  data-dismiss="modal" class="btn btn-inverse">No</button>
+                    <button type="button" ng-click="deleteGood()" data-dismiss="modal" class="btn btn-theme"><i class="fa fa-check-circle"></i>Yes</button>
+                    <button type="button"  data-dismiss="modal" class="btn btn-inverse"><i class="fa fa-times"></i>No</button>
                 </div>
 
                 <!-- //modal-footer-->
@@ -472,82 +475,6 @@
 
     </div>
     <!-- //main-->
-</div>
-<div id="listAcceptedShipper_Fail" class="modal fade md-slideRight" tabindex="-1"  data-width="500" data-header-color="theme-inverse">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
-        <h4 class="modal-title">Not find a shipper</h4>
-    </div>
-    <!-- //modal-header-->
-    <div class="modal-body left">
-        <div class="row">
-            <div class="col-md-3" >
-                <img alt="" ng-src="{{rightShipper.avatar}}" class="circle" style="width: 100px">
-            </div>
-            <div class="col-md-9" style="margin-top: 20px">
-                <h4><strong>Sorry!</strong> Now all shippers are busy</h4>
-                <br>
-                <h5>Please try again later!</h5>
-            </div>
-        </div>
-    </div>
-    <!-- //modal-body-->
-</div>
-<div id="listAcceptedShipper" class="modal fade md-slideRight" tabindex="-1"  data-width="500" data-header-color="theme-inverse">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
-        <h4 class="modal-title">Yeah! Finded a shipper</h4>
-    </div>
-    <!-- //modal-header-->
-    <div class="modal-body left">
-        <div class="row">
-            <div class="col-md-3" >
-                <img alt="" ng-src="{{rightShipper.avatar}}" class="circle" style="width: 100px">
-            </div>
-            <div class="col-md-9">
-                <h3><strong>Hi</strong>, I'm {{rightShipper.fullName}}</h3>
-                <br>
-                <div class="row">
-                    <label class="col-md-3">
-                        <i class="fa fa-caret-right"></i>ShipperID
-                    </label>
-                    <div class="col-md-9">
-                        <strong>{{rightShipper.shipperID}}</strong>
-                    </div>
-                </div>
-                <div class="row">
-                    <label class="col-md-3">
-                        <i class="fa fa-caret-right"></i>Phone
-                    </label>
-                    <div class="col-md-9">
-                        <strong>{{rightShipper.phonenumber}}</strong>
-                    </div>
-                </div>
-                <div class="row">
-                    <label class="col-md-3">
-                        <i class="fa fa-caret-right"></i>Distance
-                    </label>
-                    <div class="col-md-9">
-                        <strong>{{rightShipper.distanceText}}</strong>
-                    </div>
-                </div>
-                <div class="row">
-                    <label class="col-md-3">
-                        <i class="fa fa-caret-right"></i>Duration
-                    </label>
-                    <div class="col-md-9">
-                        <strong>{{rightShipper.durationText}}</strong>
-                    </div>
-                </div>
-            </div>
-            <hr>
-            <div class="align-lg-right">
-                <button class="btn btn-theme" ng-click="createExpressOrder()">Accept</button>
-                <button class="btn btn-inverse" data-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
-    <!-- //modal-body-->
 </div>
 </body>
 </html>

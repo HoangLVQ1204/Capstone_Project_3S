@@ -74,6 +74,10 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
         
     });
 
+    socketService.on('shipper:remove:express', function(data) {
+        console.log('remove express', data);
+    });
+
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();
         console.log('api.getCurrentUser', currentUser);

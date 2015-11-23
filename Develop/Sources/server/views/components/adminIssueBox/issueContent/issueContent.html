@@ -27,7 +27,7 @@
 																</textarea>
                 <textarea class="form-control" id="sms-fail-assign"  rows="5" style="display:none">
 																	 <i class="fa fa-exclamation-triangle"></i> Update fail<br>
-																	You must assign task of {{issue.orderissues[0].order.tasks[0].shipperid}} for other shipper.....
+																	You must go to assign task page to assign task of {{issue.orderissues[0].order.tasks[0].shipperid}} for other shipper.....
 																</textarea>
                 <div class="panel-tools fully color bg-lightseagreen-darken" align="right">
                     <ul class="tooltip-area">
@@ -132,9 +132,10 @@
                 <p ng-show="issue.typeid==7 && issue.orderissues[0].order.statusid > 2">- Order status change to Cancelling<br>-Task type of shipper change to Return</p>
                 <p ng-show="issue.typeid==7 && issue.orderissues[0].order.statusid < 3">- Order status change to Cancel<br>-Delete task of shipper</p>
                 <hr>
+
                 <button type="button" class="btn btn-danger" ng-click="updateResolve()"><i class="fa fa-check-circle"></i> Yes</button>
                 <button type="button" class="btn btn-inverse" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i> No</button>
-
+                <button ng-show="resolveType==2" type="button" class="btn btn-danger" ng-click="goToProcessing()"><i class="fa  fa-mail-forward"></i> AssignTask</button>
             </form>
         </div>
         <!-- //modal-body-->

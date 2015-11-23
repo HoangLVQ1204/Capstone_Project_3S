@@ -10,28 +10,30 @@ var cors           = require('cors'); // Allow Cross-Origin Resource Sharing (to
 
 var app = express();
 var server = require('http').createServer(app);
-var socket = require('./socket')(server,app);
+
 
 
 // setup middleware
 app.set('models', models);
-app.set('io', {
-    socket: socket.io
-});
+
 app.use(express.static(path.resolve('views')));
 app.use('/libs', express.static(path.resolve('node_modules')));
 app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(methodOverride());
 app.use(cors());
 
-
+var socket = require('./socket')(server,app);
+app.set('io', {
+    socket: socket.io
+});
 // setup routes
 require('./routes')(app);
 //
 var schedule       = require('./config/ledgerSchedule')(app);
 schedule.autoPayment();
+
 // setup global error handler
 app.use(function (err, req, res, next) {
     console.log(err.name);

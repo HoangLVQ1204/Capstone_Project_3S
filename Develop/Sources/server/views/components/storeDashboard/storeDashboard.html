@@ -91,41 +91,40 @@
                                                    st-table="displayedCollectionInprocess"
                                                    st-safe-src="orderInprocess">
 
-                                                <div class="row">
-
-                                                    <div class="col-md-3 form-group pull-left">
-                                                        <div class=" input-icon">
+                                                   <div class="row">
+                                                    <div class="col-sm-4 form-group pull-left">
+                                                        <div class="input-group input-icon">
                                                             <i class="fa fa-calendar ico"></i>
-                                                            <input type="text" daterange class="form-control" name="daterange" id="daterange"
-                                                                   ng-model="dateRange" placeholder="Create Date"/>
+                                                            <input type="text"  class="form-control" daterange id="daterange" name="daterange" ng-model="dateRange" placeholder="Create Date"/>
+                                                            <span class="input-group-btn">
+                                                                <div class="btn-group">
+                                                                    <button ng-click="dateRange=''" type="button" class="btn btn-default"> <i class="fa fa-times"></i>
+                                                                    </button>
+                                                                </div><!-- //btn-group-->
+                                                            </span>
                                                         </div>
                                                     </div>
-                                                    <!--  <button type="button" class="btn btn-default">
-                                                        <i class="fa fa-times" ng-click="dateRange=''"></i>
-                                                    </button> -->
-                                                    
+                                                   
                                                     <div class="col-md-4 pull-right">
                                                         <div class="input-icon"><i class="fa fa-search ico"></i>
 
                                                             <input type="search" class="form-control"
-                                                                   placeholder="Search" ng-model="searchInprocess">
+                                                            placeholder="Search" ng-model="searchInprocess">
                                                         </div>
 
 
                                                     </div>
 
-                                                    <div class="col-md-4 pull-right">
+                                                    <div class="col-md-3 pull-right">
                                                         <select
-                                                                class="form-control"
-                                                                ng-options="options.option for options in searchOptionsInProcess"
-                                                                ng-model="selectedInprocess">
-
-                                                        </select>
-
-                                                    </div>
-
+                                                        class="form-control"
+                                                        ng-options="options.option for options in searchOptionsInProcess"
+                                                        ng-model="selectedInprocess">
+                                                    </select>
                                                 </div>
-                                                <thead>
+
+                                            </div>
+                                            <thead>
                                                 <tr>
                                                     <th st-sort="orderid" st-skip-natural="true"
                                                         class="text-center sortable">Order ID
@@ -174,7 +173,8 @@
                                                     <td width="10%">
                                                         <span class=" tooltip-area">
                                                     <a class="btn btn-default btn-sm"
-                                                       title="View detail"><i class="fa fa-eye " ui-sref="store.orderdetail({orderid: x.orderid})"></i></a>
+                                                       title="View detail" ui-sref="store.orderdetail({orderid: x.orderid})"><i class="fa fa-eye "></i></a>
+
                                                     <a ng-disabled ="x.statusname == 'Canceling'" ng-click="setOrder(x)" data-toggle="modal"
                                                        data-target="#md-cancel-order" class="btn btn-default btn-sm"
                                                        title="Cancel"><i class="fa fa-times"></i></a>
@@ -223,12 +223,12 @@
                                 </div>
                                 <!-- //modal-body-->
                                 <div class="modal-footer">
-                                    <button type="submit" data-theme="success"
+                                    <button type="button" data-theme="success"
                                             data-horizontal="top" class="btn btn-theme notifiCancel"
-                                            data-dismiss="modal">Yes
+                                            data-dismiss="modal" ng-click="cancerOrder()"><i class="fa fa-check-circle"></i>Yes
                                     </button>
                                     <!-- data-sticky="true" (Ghim notify)-->
-                                    <button type="button" data-dismiss="modal" class="btn btn-inverse">No</button>
+                                    <button type="button" data-dismiss="modal" class="btn btn-inverse"><i class="fa fa-times"></i>No</button>
                                 </div>
                                 <!--///////////////////////////////////////////////////////
                                 /////////////////////   SUCCESS ALERT   /////////////////
@@ -260,39 +260,38 @@
                                                    st-safe-src="orderDone">
 
                                                 <div class="row">
-
-                                                    <div class="col-md-4 form-group pull-left">
-
-                                                        <div class=" input-icon">
+                                                    <div class="col-sm-4 form-group pull-left">
+                                                        <div class="input-group input-icon">
                                                             <i class="fa fa-calendar ico"></i>
-                                                            <input type="text" daterangedone class="form-control"
-                                                                   name="daterange" id="dateRangeDone"
-                                                                   ng-model="dateRangeDone" placeholder="Completion date"/>
+                                                            <input type="text"  class="form-control" daterangedone id="dateRangeDone" name="daterange" ng-model="dateRangeDone" placeholder="Done Date"/>
+                                                            <span class="input-group-btn">
+                                                                <div class="btn-group">
+                                                                    <button ng-click="dateRangeDone=''" type="button" class="btn btn-default"> <i class="fa fa-times"></i>
+                                                                    </button>
+                                                                </div><!-- //btn-group-->
+                                                            </span>
                                                         </div>
-
-
                                                     </div>
-                                                    <!-- //form-group-->
+                                                   
                                                     <div class="col-md-4 pull-right">
                                                         <div class="input-icon"><i class="fa fa-search ico"></i>
 
                                                             <input type="search" class="form-control"
-                                                                   placeholder="Search" ng-model="searchDone">
+                                                            placeholder="Search" ng-model="searchDone">
                                                         </div>
 
+
                                                     </div>
 
-                                                    <div class="col-sm-4 pull-right">
+                                                    <div class="col-md-3 pull-right">
                                                         <select
-                                                                class="form-control"
-                                                                ng-options="options.option for options in searchOptionsDone"
-                                                                ng-model="selectedDone">
-
-                                                        </select>
-
-                                                    </div>
-
+                                                        class="form-control"
+                                                        ng-options="options.option for options in searchOptionsDone"
+                                                        ng-model="selectedDone">
+                                                    </select>
                                                 </div>
+
+                                            </div>
                                                 <thead>
                                                 <tr>
                                                     <th st-sort="orderid" st-skip-natural="true"
@@ -310,10 +309,13 @@
                                                     <th st-sort="completedate" st-skip-natural="true"
                                                         class="text-center sortable">Completion Date
                                                     </th>
-
-                                                    <!--<th st-sort="statusname" st-skip-natural="true"-->
-                                                    <!--class="text-center sortable">Status-->
-                                                    <!--</th>-->
+                                                    <th st-sort="ordertype" st-skip-natural="true"
+                                                        class="text-center sortable">Type
+                                                    </th>
+                                                    <th st-sort="statusname" st-skip-natural="true"
+                                                        class="text-center sortable">Status
+                                                    </th>
+                                                    
                                                     <!--<th class="text-center">Option </th>-->
 
                                                 </tr>
@@ -326,7 +328,13 @@
                                                     <td> {{x.recipientphone}}</td>
                                                     <td>{{x.deliveryaddress}}</td>
                                                     <td>{{x.completedate|date:'MM/dd/yyyy'}}</td>
-                                                    <!--<td> {{x.statusname}}</td>-->
+                                                    <td>{{x.ordertype}}</td>
+
+                                                    <td>                                                       
+                                                        <span ng-if="x.statusname =='Cancel'" class="label label-danger">{{x.statusname}} </span>
+                                                        <span ng-if="x.statusname =='Done'" class="label label-success">{{x.statusname}} </span>
+                                                        
+                                                    </td>
                                                     <!-- <td  width="16%>
                                                      <span class="tooltip-area">
                                                      <a href="" class="btn btn-default btn-sm" title="Submit"><i class="fa fa-cloud-avatar"></i></a>
@@ -337,7 +345,7 @@
                                                 </tbody>
                                                 <tfoot>
                                                 <tr>
-                                                    <td colspan="5" class="text-right">
+                                                    <td colspan="7" class="text-right">
                                                         <div st-pagination="" st-items-by-page="5"></div>
                                                     </td>
                                                 </tr>
@@ -368,37 +376,38 @@
                                                    st-safe-src="ordersDraff">
 
                                                 <div class="row">
-
-                                                    <div class="col-md-4 form-group pull-left">
-                                                    <div class=" input-icon">
-                                                    <i class="fa fa-calendar ico"></i>
-                                                    <input type="text" daterangedraff class="form-control"
-                                                    name="daterange" id="daterangeDraff"
-                                                    ng-model="dateRangeDraff"  placeholder="Create date"/>
+                                                    <div class="col-sm-4 form-group pull-left">
+                                                        <div class="input-group input-icon">
+                                                            <i class="fa fa-calendar ico"></i>
+                                                            <input type="text"  class="form-control" daterangedraff id="daterangeDraff" name="daterange" ng-model="dateRangeDraff" placeholder="Create Date"/>
+                                                            <span class="input-group-btn">
+                                                                <div class="btn-group">
+                                                                    <button ng-click="dateRangeDraff=''" type="button" class="btn btn-default"> <i class="fa fa-times"></i>
+                                                                    </button>
+                                                                </div><!-- //btn-group-->
+                                                            </span>
+                                                        </div>
                                                     </div>
-                                                    </div>
-
-                                                    <div class="col-md-4  form-group pull-right">
+                                                   
+                                                    <div class="col-md-4 pull-right">
                                                         <div class="input-icon"><i class="fa fa-search ico"></i>
 
                                                             <input type="search" class="form-control"
-                                                                   placeholder="Search" ng-model="searchDraff">
+                                                            placeholder="Search" ng-model="searchDraff">
                                                         </div>
 
 
                                                     </div>
 
-                                                    <div class="col-sm-4 pull-right">
+                                                    <div class="col-md-3 pull-right">
                                                         <select
-                                                                class="form-control"
-                                                                ng-options="options.option for options in searchOptionsDraff"
-                                                                ng-model="selectedDraff">
-
-                                                        </select>
-
-                                                    </div>
-
+                                                        class="form-control"
+                                                        ng-options="options.option for options in searchOptionsDraff"
+                                                        ng-model="selectedDraff">
+                                                    </select>
                                                 </div>
+
+                                            </div>
                                                 <thead>
                                                 <tr>
                                                     <th st-sort="orderid" st-skip-natural="true"
@@ -479,9 +488,9 @@
                                 <!-- //modal-body-->
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-theme" data-dismiss="modal"
-                                            ng-click="deleteDraffOrder()">Yes
+                                            ng-click="deleteDraffOrder()"><i class="fa fa-check-circle"></i>Yes
                                     </button>
-                                    <button type="button" data-dismiss="modal" class="btn btn-inverse">No</button>
+                                    <button type="button" data-dismiss="modal" class="btn btn-inverse"><i class="fa fa-times"></i>No</button>
                                 </div>
                                 <!-- //modal-footer-->
                             </div>
@@ -500,117 +509,6 @@
                                 <textarea class="form-control theme" id="smsDeleteFail" rows="5" style="display:none">
                                     Order <strong>{{Order.orderid}}</strong> can not delete successfully!
                                 </textarea>
-
-
-                            <!--Draff Order-->
-
-
-
-                            <!--&lt;!&ndash;/////////////////////////////////////////////////////////////////-->
-                            <!--////////////............. ISSUE ORDER..........///////////////////-->
-                            <!--//////////////////////////////////////////////////////////////////&ndash;&gt;-->
-                            <!--<div id="sectionD" class="tab-pane fade">-->
-                                <!--<section class="panel">-->
-                                    <!--<header class="panel-heading">-->
-                                        <!--<h3><strong>Issue</strong> Order </h3>-->
-                                    <!--</header>-->
-                                    <!--<div class="panel-body">-->
-                                        <!--<form>-->
-                                            <!--<table class="table table-striped table-hover table-bordered"-->
-                                                   <!--st-set-filter="customFilter" st-custom-date="deliverydate"-->
-                                                   <!--st-predicate="{{selectedIssue.value}}" stdate="dateRangeIssue"-->
-                                                   <!--search-watch-model="searchIssue" st-table="displayedCollectionIssue"-->
-                                                   <!--st-safe-src="orderIssue">-->
-
-                                                <!--<div class="row">-->
-
-                                                    <!--&lt;!&ndash;Gio han ngay tim kiem&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;<div class="col-md-4 form-group pull-left">&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;<div class=" input-icon">&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;<i class="fa fa-calendar ico"></i>&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;<input type="text" daterange class="form-control"&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;name="daterange" id="daterange4"&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;ng-model="dateRange"/>&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-
-                                                    <!--<div class="col-md-4 form-group pull-right">-->
-                                                        <!--<div class="input-icon"><i class="fa fa-search ico"></i>-->
-
-                                                            <!--<input type="search" class="form-control"-->
-                                                                   <!--placeholder="Search" ng-model="searchIssue">-->
-                                                        <!--</div>-->
-
-
-                                                    <!--</div>-->
-
-                                                    <!--<div class="col-sm-4 pull-right">-->
-                                                        <!--<select-->
-                                                                <!--class="form-control"-->
-                                                                <!--ng-options="options.option for options in searchOptionsIssue"-->
-                                                                <!--ng-model="selectedIssue">-->
-
-                                                        <!--</select>-->
-
-                                                    <!--</div>-->
-
-                                                <!--</div>-->
-                                                <!--<thead>-->
-                                                <!--<tr>-->
-                                                    <!--<th st-sort="orderid" st-skip-natural="true"-->
-                                                        <!--class="text-center sortable">Order ID-->
-                                                    <!--</th>-->
-                                                    <!--<th st-sort="deliveryaddress" st-skip-natural="true"-->
-                                                        <!--class="text-center sortable">Delivery Address-->
-                                                    <!--</th>-->
-                                                    <!--<th st-sort="recipientname" st-skip-natural="true"-->
-                                                        <!--class="text-center sortable">Customer-->
-                                                    <!--</th>-->
-                                                    <!--<th st-sort="recipientphone" st-skip-natural="true"-->
-                                                        <!--class="text-center sortable">Customer Phone-->
-                                                    <!--</th>-->
-                                                    <!--<th st-sort="statusname" st-skip-natural="true"-->
-                                                        <!--class="text-center sortable">Status-->
-                                                    <!--</th>-->
-                                                    <!--&lt;!&ndash;<th width="16%" class="text-center">Option</th>&ndash;&gt;-->
-
-                                                <!--</tr>-->
-                                                <!--</thead>-->
-                                                <!--<tbody align="center">-->
-
-                                                <!--<tr class="odd gradeX" ng-repeat="x in displayedCollectionIssue">-->
-                                                    <!--<td>{{x.orderid}}</td>-->
-                                                    <!--<td>{{x.deliveryaddress}}</td>-->
-                                                    <!--<td>{{x.recipientname}}</td>-->
-                                                    <!--<td> {{x.recipientphone}}</td>-->
-                                                    <!--<td> {{x.statusname}}</td>-->
-                                                    <!--&lt;!&ndash;-->
-                                                    <!--<td>-->
-                                                        <!--<span class="tooltip-area">-->
-                                                        <!--<a href="" class="btn btn-default btn-sm" title="Edit"><i-->
-                                                                <!--class="fa fa-edit (alias)"></i></a>-->
-                                                        <!--<a href="" class="btn btn-default btn-sm" title="Cancel"><i-->
-                                                                <!--class="fa fa-times"></i></a>-->
-                                                        <!--</span>-->
-                                                    <!--</td>-->
-                                                    <!--&ndash;&gt;-->
-                                                <!--</tr>-->
-                                                <!--</tbody>-->
-                                                <!--<tfoot>-->
-                                                <!--<tr>-->
-                                                    <!--<td colspan="5" class="text-right">-->
-                                                        <!--<div st-pagination="" st-items-by-page="5"></div>-->
-                                                    <!--</td>-->
-                                                <!--</tr>-->
-                                                <!--</tfoot>-->
-                                            <!--</table>-->
-
-                                        <!--</form>-->
-                                    <!--</div>-->
-                                <!--</section>-->
-                            <!--</div>-->
-                            <!-- -->
                         </div>
                     </div>
 
