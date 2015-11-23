@@ -18,7 +18,7 @@ module.exports = function (app) {
     var getIssueDetail = function (req, res, next) {
         var id = req.query.issueid;
        // console.log(id);
-        return db.issue.getIssueDetail(db.orderissue, db.issuetype, db.issuecategory, id, db.order, db.task, db.orderstatus, db.taskstatus)
+        return db.issue.getIssueDetail(db.orderissue, db.issuetype, db.issuecategory, id, db.order, db.task, db.orderstatus, db.taskstatus, db.profile)
             .then(function (issue) {
                 res.status(200).json(issue);
             }, function (err) {
@@ -40,10 +40,13 @@ module.exports = function (app) {
 
     var postBannedLog = function (req, res, next) {
         var log = req.body;
-        console.log(log);
+        //console.log(log);
         return db.bannedhistorylog.postNewLog(log)
-            .then(function (log) {
-                res.status(201).json(log);
+            .then(function () {
+                db.user.updateUserStatus(log.storeid, log.userStatus)
+                    .then(function () {
+                        res.status(201).json('OK');
+                    });
             }, function (err) {
                 next(err);
             })

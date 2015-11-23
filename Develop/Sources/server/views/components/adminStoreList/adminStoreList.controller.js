@@ -20,10 +20,8 @@ function adminStoreListController($scope,$state, $http, authService, config) {
         },{
             option: 'Address',
             value: 'address'
-        },{
-            option: 'Payment',
-            value: 'payment'
-        }];
+        }
+        ];
     $scope.selected =$scope.searchOptions[0];
     $scope.dateRange = '';
 
@@ -85,7 +83,7 @@ function adminStoreListController($scope,$state, $http, authService, config) {
         $("#inputValue").val(0);
         $scope.isValid = $('#inputValue').parsley( 'validate' );
 
-        console.log($('#inputValue'));
+        //console.log($('#inputValue'));
     };
 
     $scope.blockConfirm = function (event, store){
@@ -108,20 +106,28 @@ function adminStoreListController($scope,$state, $http, authService, config) {
     //FUNCTION BLOCK A STORE
     //-----------------------------------
     $scope.blockStore = function (store){
-        //alert(1);
+        //console.log(store);
         var valid = $('#blockReason').parsley( 'validate' );
         if (!valid) return;
         var bannedLog = new Object();
         bannedLog['adminid'] = currentUser.username;
-        bannedLog['storeid'] = store.storeid;
+        bannedLog['storeid'] = store.managestores[0].managerid;
         bannedLog['bannedtime'] = new Date(Date.now());
         bannedLog['reason'] = $scope.reason;
 
-        if (store.ban[0]!=null && store.ban[0].type == 1) bannedLog['type'] = 2
-        else bannedLog['type'] = 1;
-        console.log(bannedLog);
+        if (store.managestores[0].user.userstatus == 2)
+            {
+                bannedLog['type'] = 1;
+                bannedLog['userStatus'] = 3;
+            }
+        else {
+            bannedLog['type'] = 2;
+            bannedLog['userStatus'] = 2;
+        }
+        //console.log(bannedLog);
         $http.post(config.baseURI + "/api/log/postBannedLog", bannedLog).then(function success(response){
             //console.log(store);bal
+            store.managestores[0].user.userstatus =  bannedLog['userStatus'];
             smsData.theme="theme-inverse";
             $.notific8($("#sms-success").val(), smsData);
             $("#md-effect-block").attr('class','modal fade').addClass(smsData.effect).modal('hide');
