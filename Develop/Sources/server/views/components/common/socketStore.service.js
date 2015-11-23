@@ -23,9 +23,7 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
     });
 
     socketService.on('store:add:shipper', function(data) {   
-       // console.log('admin:add:shipper', data);
         mapService.addShipper(data.msg.shipper);
-        $rootScope.$emit("store:dashboard:getShipperList", data.msg.shipperList);
     });
 
     socketService.on('store:update:shipper', function(data) {
@@ -57,26 +55,20 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
     });
 
     socketService.on('shipper:change:order:status', function(data) {
-        console.log(data);
-        $rootScope.$emit("evChange", data);
+        $rootScope.$emit("updateStatusOrder", data);
         $rootScope.notify(data.msg);
         data['message'] = data.msg.content;
-
     });
 
-    socketService.on('store:issue:notification', function(data) {
-        console.log('store:issue:notification', data);
-        $rootScope.$emit("evChange", data.msg);
+    socketService.on('store:issue:pending', function(data) {
+        console.log('store:issue:pending', data);
+        $rootScope.$emit("updatePenddingOrder", data.msg);
         $rootScope.notify(data.msg);
     });
-    socketService.on('store::issue:disconnected', function(data) {
-        console.log("store:issue:disconnected: ", data);
-        $rootScope.$emit("evChange", data.msg);
-        $rootScope.notify(data.msg);
-    });
+
     socketService.on('store::issue:continue', function(data) {
         console.log("store:isue:continue: ", data);
-        $rootScope.$emit("evChange", data.msg);
+         $rootScope.$emit("updatePenddingOrder", data.msg);
         $rootScope.notify(data.msg);
     });
 
