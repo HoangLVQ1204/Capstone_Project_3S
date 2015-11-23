@@ -62,10 +62,11 @@
                 }else {
                     ledgerid = order.dataValues.ledgerid;
                 }
+                var fullDeliveryAddress = order.getCustomerAddress();
+                console.log("====================",fullDeliveryAddress);          
                 listOrders.push({
                     'orderid': order.dataValues.orderid,
                     'statusname': statusname,
-                    'deliveryaddress': order.dataValues.deliveryaddress,
                     'recipientname' : order.dataValues.recipientname,
                     'recipientphone' : order.dataValues.recipientphone,
                     'isdraff': order.dataValues.isdraff,                        
@@ -75,7 +76,8 @@
                     'createdate' : createDate,
                     'completedate' : completedate,
                     'ordertype': order['ordertype'].dataValues.typename,
-                    'ledgerid': ledgerid
+                    'ledgerid': ledgerid,
+                    'fullDeliveryAddress': fullDeliveryAddress
 
                 })
             });
@@ -313,8 +315,9 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
                     });
                     //console.log("==============55==============");
                 }
-
-                return res.status(200).json(order);
+                var response = order.toJSON();
+                response.customerAddress = order.getCustomerAddress();
+                return res.status(200).json(response);
 
             });
             // .then(function (order) {
@@ -379,7 +382,7 @@ var updateOrder = function (req, res, next) {
      console.log(order);
      return db.order.updateExpressOrder({
          statusid : order.statusId,
-         isdraff: order.isDraff
+         isdraff: order.isDraff,
      },order.orderId)
          .then(function (rs) {
              console.log(rs);
@@ -557,8 +560,14 @@ addGoods = function(req, res, next){
     var storeGetOrderList = function (req, res, next) {
         var storeId = req.user.stores[0].storeid;
         var orderStatus = db.orderstatus;
+        var listOrder=[];
         db.order.storeGetAllOrders(db.orderstatus, db.ordertype,storeId)
         .then(function(list){
+             _.each(list, function(order){
+                var fullDeliveryAddress = order.getCustomerAddress();
+                order.fullDeliveryAddress = fullDeliveryAddress;
+                // listOrder.push(order);
+             })
             res.status(200).json(list);
         }, function(err) {
             next(err);

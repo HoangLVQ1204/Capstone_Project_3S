@@ -166,9 +166,10 @@ module.exports = function (app) {
         var OrderStatus = db.orderstatus;
         var Goods = db.goods;
         var Task = db.task;
+        var Store = db.store;
         var shipper = _.cloneDeep(req.user);
         var shipperid = shipper.username;
-        Order.getOrderDetailById(detailtaskid, shipperid, OrderStatus, Goods, Task)
+        Order.getOrderDetailById(detailtaskid, shipperid, OrderStatus, Goods, Task, Store)
             .then(function (rs) {
                 if (rs) {
                     rs = rs.toJSON();
@@ -505,9 +506,7 @@ module.exports = function (app) {
                             type: 'room',
                             room: shipperID
                         },
-                        {
-                            notification: msgToStore
-                        },
+                        msgToStore,
                         'store:issue:notification'
                     );
                 });
@@ -593,7 +592,7 @@ module.exports = function (app) {
                         }
                     });
                     if (listOrdersAsignToOther.length > 0) {
-                        //TODO:
+                        //TODO: Assign to other shipper. Current shipper cannot update order
                         //_.each(listOrdersFail, function(orderID) {
                         //    //Change isPending
                         //    db.order.changeIsPendingOrder(orderID, false);
@@ -601,12 +600,64 @@ module.exports = function (app) {
                         res.status(200).json(resMess[1]);
                     }
                     if (listOrdersOfCurrentShip.length > 0) {
+                        var msgToStore = {
+                            type: 'info',
+                            title: 'Issue',
+                            content: 'Shipper continued order of your store',
+                            url: '#/store/dashboard',
+                            isread: false,
+                            createddate: new Date()
+                        };
                         //change isPending of Order
                         _.each(listOrdersOfCurrentShip, function(orderID) {
                             //Change isPending
                             db.order.changeIsPendingOrder(orderID, false);
                         });
-                        res.status(200).json(resMess[2]);
+                        //add new notification
+                        db.order.getStoresOfOrder(listOrdersOfCurrentShip)
+                        .then(function(storeIDs){
+                            storeIDs = _.uniq(storeIDs, 'storeid');
+                            console.log("storeID:613", storeIDs);
+                            storeIDs = storeIDs.map(function(e){
+                                return e.storeid;
+                            });
+                            return db.managestore.getOwnerOfStore(storeIDs);
+                            })
+                        .then(function(ownerStores){
+                            ownerStores = ownerStores.map(function(e) {
+                                return e.toJSON();
+                            });
+                            console.log('shipperController:623', ownerStores);
+                            //insert to notification
+                            var promises = ownerStores.map(function(e) {
+                                var data = _.clone(msgToStore, true);
+                                data.username = e.managerid;
+                                console.log('data', data);
+                                return db.notification.addNotification(data);
+                            });
+                            return Promise.all(promises);
+                        })
+                        .then(function (data) {
+                            console.log('shipperController:642', data.length);
+                            console.log('send notification continue to store');
+                            // send socket
+                            var sender = {
+                                type: 'shipper',
+                                clientID: shipperid
+                            };
+                            server.socket.forward(
+                                sender,
+                                {
+                                    type: 'room',
+                                    room: shipperid
+                                },
+                                msgToStore,
+                                'store:issue:continue'
+                            );
+
+                            //res mesage continue
+                            res.status(200).json(resMess[2]);
+                        });
                     }
                 }
             }, function(err) {
@@ -967,14 +1018,8 @@ module.exports = function (app) {
         */
         db.order.findOne().then(function(rs){
             var a = 'dd'
-            a = rs.getOrderAddress(db.ward, db.district, db.province)
-            //    .then(function(rss){
-            //    return res.status(200).json(rss)
-            //}, function(err){
-            //    console.log(err)
-            //    return res.status(400).json(err)
-            //})
-            return res.status(200).json(a)
+            a = rs.getCustomerAddress()
+            return res.status(200).json(a);
         }, function(er){
             console.log(er)
             return res.status(400).json(er)

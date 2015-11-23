@@ -5678,7 +5678,7 @@ input, button, select, textarea {
   align-items: center;
   position: relative;
   overflow: hidden;
-  padding: 6px 0 5px 16px; }
+  padding: 5px 0 5px 0px; }
   .item-input input {
     -webkit-border-radius: 0;
     border-radius: 0;

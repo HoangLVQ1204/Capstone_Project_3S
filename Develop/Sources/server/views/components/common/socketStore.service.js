@@ -74,6 +74,12 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
         $rootScope.$emit("evChange", data.msg);
         $rootScope.notify(data.msg);
     });
+    socketService.on('store::issue:continue', function(data) {
+        console.log("store:isue:continue: ", data);
+        $rootScope.$emit("evChange", data.msg);
+        $rootScope.notify(data.msg);
+    });
+
 
     socketService.on('store:issue:message', function(data) {
         console.log('store:issue:message', data)
@@ -137,7 +143,7 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
 
         // Fake data
         // var orderID = 'order_1';
-        customer.geoText = "Cát Linh,Ba Đình,Hà Nội,Việt Nam";
+        // customer.geoText = "Cát Linh,Ba Đình,Hà Nội,Việt Nam";
         // Check exception for latitude and longitude not exist
         customer.order = [orderID];
 
