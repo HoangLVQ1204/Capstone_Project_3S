@@ -72,7 +72,7 @@
                                             <th st-sort="recipientphone" st-skip-natural="true"
                                                 class="text-center sortable">Customer Phone
                                             </th>
-                                            <th st-sort="deliveryaddress" st-skip-natural="true"
+                                            <th st-sort="fullDeliveryAddress" st-skip-natural="true"
                                                 class="text-center sortable">Delivery Address
                                             </th> 
                                             <th st-sort="createdate" st-skip-natural="true"
@@ -97,7 +97,7 @@
             <td width="8%">{{x.orderid}}<br ng-if="x.ispending"><label class="color-danger" ng-if="x.ispending">Pending</label></td>
             <td width="18%">{{x.recipientname}}</td>
             <td width="13%"> {{x.recipientphone}}</td>
-            <td>{{x.deliveryaddress}}</td>
+            <td>{{x.fullDeliveryAddress}}</td>
             <td width="10%">{{x.createdate | date: 'MM/dd/yyyy'}}</td>
             <td width="10%">{{x.completedate | date: 'MM/dd/yyyy'}}</td>
             <td width="8%">{{x.ordertype.typename}}</td>

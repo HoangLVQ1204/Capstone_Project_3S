@@ -224,8 +224,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
                 console.log('mouseover storeMarkers', $scope.storeMarkers);
                 console.log('mouseover customerMarkers', $scope.customerMarkers);
                 // console.log('avatar', model);
-                var content = '<div style="width: 140px; height: 100px"><div>' + 
-                        '<img style="display:inline; float: left" src="' + model.avatar + '" alt="avatar shipper" width="50px"></img>' +
+                var content = '<div>' + 
                         '<strong>' + model.shipperID + '</strong></div>' +
                         '<ul>';
 

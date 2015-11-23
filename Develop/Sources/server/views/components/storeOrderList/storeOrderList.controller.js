@@ -24,7 +24,7 @@ function storeOrderListController($scope,$state, $http, $filter, config) {
         },
         {
             option: 'Delivery Address',
-            value: 'deliveryaddress'
+            value: 'fullDeliveryAddress'
         },
         {
             option: 'Status',
