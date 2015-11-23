@@ -62,7 +62,7 @@
                 }else {
                     ledgerid = order.dataValues.ledgerid;
                 }
-                var fullDeliveryAddress = order.getOrderAddress();
+                var fullDeliveryAddress = order.getCustomerAddress();
                 console.log("====================",fullDeliveryAddress);          
                 listOrders.push({
                     'orderid': order.dataValues.orderid,
@@ -315,8 +315,9 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
                     });
                     //console.log("==============55==============");
                 }
-
-                return res.status(200).json(order);
+                var response = order.toJSON();
+                response.customerAddress = order.getCustomerAddress();
+                return res.status(200).json(response);
 
             });
             // .then(function (order) {
@@ -563,7 +564,7 @@ addGoods = function(req, res, next){
         db.order.storeGetAllOrders(db.orderstatus, db.ordertype,storeId)
         .then(function(list){
              _.each(list, function(order){
-                var fullDeliveryAddress = order.getOrderAddress();
+                var fullDeliveryAddress = order.getCustomerAddress();
                 order.fullDeliveryAddress = fullDeliveryAddress;
                 // listOrder.push(order);
              })

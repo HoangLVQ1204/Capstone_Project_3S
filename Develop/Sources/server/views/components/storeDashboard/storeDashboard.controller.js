@@ -258,9 +258,12 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
         //$scope.onlineShipper = 10;
     });
 
-    $scope.findShipperAgain = function(orderID) {
-        console.log('findShipperAgain', orderID);
-        $rootScope.findExpressShipper({orderID: orderID}, {}, true);
+    $scope.findShipperAgain = function(order) {
+        console.log('findShipperAgain', order);
+        $rootScope.findExpressShipper({
+            orderID: order.orderid, 
+            customerAddress: order.fullDeliveryAddress
+        }, {}, true);
     };
 }
 
