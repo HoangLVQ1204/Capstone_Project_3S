@@ -12930,7 +12930,7 @@ ALTER TABLE "public"."workingstatus" ADD PRIMARY KEY ("statusid");
 -- Foreign Key structure for table "public"."bannedhistorylog"
 -- ----------------------------
 ALTER TABLE "public"."bannedhistorylog" ADD FOREIGN KEY ("adminid") REFERENCES "public"."user" ("username") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "public"."bannedhistorylog" ADD FOREIGN KEY ("storeid") REFERENCES "public"."store" ("storeid") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "public"."bannedhistorylog" ADD FOREIGN KEY ("storeid") REFERENCES "public"."user" ("username") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "public"."bannedhistorylog" ADD FOREIGN KEY ("shipperid") REFERENCES "public"."user" ("username") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- ----------------------------

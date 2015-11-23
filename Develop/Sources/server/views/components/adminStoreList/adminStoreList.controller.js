@@ -36,7 +36,7 @@ function adminStoreListController($scope,$state, $http, authService, config) {
     //get List to display
     $http.get(config.baseURI + "/api/store/getAllLedger").success(function(response){
         $scope.storeList = response;
-        $scope.storeList.sort(dateSort);
+        $scope.storeList.sort(dateSort)
     }).then(function () {
         $http.get(config.baseURI + "/api/store/getTotalCoD").success(function(response){
             $scope.currentCoD= response;
@@ -48,10 +48,13 @@ function adminStoreListController($scope,$state, $http, authService, config) {
             //==//console.log(response);
             var i=0;
             $scope.storeList.map(function (store) {
+                var resultCoD = $.grep($scope.currentCoD, function(e){ return e.storeid == store.storeid; });
                 if ($scope.currentCoD.length > 0)
-                store.currentCoD =  $scope.currentCoD[i].totalCoD;
+                    store.currentCoD =  resultCoD[0].totalCoD;
+
+                var resultFee = $.grep($scope.currentFee, function(e){ return e.storeid == store.storeid; });
                 if ($scope.currentFee.length > 0)
-                store.currentFee =  $scope.currentFee[i].totalFee;
+                store.currentFee =  resultFee[0].totalFee;
                 if (store.generalledgers.length > 0)
                 store.generalledgers[0].balance =  parseInt(store.generalledgers[0].balance);
 
@@ -59,6 +62,7 @@ function adminStoreListController($scope,$state, $http, authService, config) {
                 i++;
                 return store;
             })
+            //console.log($scope.storeList);
         })
 
     })
@@ -91,7 +95,7 @@ function adminStoreListController($scope,$state, $http, authService, config) {
         $scope.reason = "";
         $scope.selectedStore = store;
         //console.log(store);
-        if (store.ban[0]!=null && store.ban[0].type == 1) $scope.blocktext = 'unblock'
+        if (store.managestores[0].user.userstatus == 3) $scope.blocktext = 'unblock'
            else $scope.blocktext = 'block';
         event.preventDefault();
         //$scope.getLatestLedgerOfStore(storeid);
@@ -291,6 +295,13 @@ function adminStoreListController($scope,$state, $http, authService, config) {
             return -1;
         }
         if (x.registereddate < y.registereddate) {
+            return 1;
+        }
+
+        if (x.storeid < y.storeid) {
+            return -1;
+        }
+        if (x.storeid > y.storeid) {
             return 1;
         }
         return 0;

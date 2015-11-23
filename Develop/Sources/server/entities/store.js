@@ -122,7 +122,7 @@ module.exports = function(sequelize, DataTypes) {
                             model: user,
                             attributes: ['userstatus'],
                             where: {
-                                'userstatus': [2,3]
+                                //'userstatus': [2,3]
                             }
                         }
                     }],
