@@ -1018,13 +1018,7 @@ module.exports = function (app) {
         db.order.findOne().then(function(rs){
             var a = 'dd'
             a = rs.getCustomerAddress()
-            //    .then(function(rss){
-            //    return res.status(200).json(rss)
-            //}, function(err){
-            //    console.log(err)
-            //    return res.status(400).json(err)
-            //})
-            return res.status(200).json(a)
+            return res.status(200).json(a);
         }, function(er){
             console.log(er)
             return res.status(400).json(er)
