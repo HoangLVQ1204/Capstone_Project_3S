@@ -445,7 +445,7 @@ angular.module('app', [
         },1000);
     };
 
-    $rootScope.cancelExpress = function() {
+    $rootScope.cancelExpress = function(order, goods) {
         unloading();
         $rootScope.rightShipper = {
             avatar: "assets/img/notfound.png"
