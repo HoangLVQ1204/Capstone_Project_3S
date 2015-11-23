@@ -266,38 +266,6 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
   };
 
   /*
-  * io: Send Issue
-  * @author: quyennv
-  * */
-  api.sendInfoOfIssue = function(issueid){
-    console.log('send issue', issueid);
-    var currentShipper = authService.getCurrentInfoUser();
-    console.log('shipper', currentShipper);
-    socketService.sendPacket(
-      {
-        type: 'shipper',
-        clientID: currentShipper.username
-      },
-      //'store',
-      'admin',
-      {
-        //orders: [
-        //  {
-        //    orderid: 'ss',
-        //    status: 'ss'
-        //  }
-        //],
-        issue: {
-         issueid: issueid
-        }
-        //mssg1: " Shipper: SP09245 đã send issue ID 4567, Admin vui long confirm",
-        //mssg2: " Info: ORDER 12345 hiện tại pendding. "
-  },
-      'shipper:sendissue'
-    );
-  };
-
-  /*
    * io: Change status of shipper when shipper logout
    * @author: quyennv
    * */

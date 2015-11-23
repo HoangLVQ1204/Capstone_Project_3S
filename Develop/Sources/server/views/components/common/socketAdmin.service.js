@@ -71,11 +71,6 @@ function socketAdmin(socketService,authService,mapService, $rootScope){
         });
     });
 
-    socketService.on('admin:issue', function(data) {
-        console.log('admin:issue', data.msg);
-        $rootScope.$emit("admin:issue:newIssue", data.msg);
-    });
-
     socketService.on('admin:issue:notification', function(data) {
         console.log('admin:issue:notification', data);
         $rootScope.$emit("admin:issue:newIssue", data.msg);
