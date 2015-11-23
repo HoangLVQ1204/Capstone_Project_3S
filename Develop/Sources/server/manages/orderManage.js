@@ -62,10 +62,11 @@
                 }else {
                     ledgerid = order.dataValues.ledgerid;
                 }
+                var fullDeliveryAddress = order.getOrderAddress();
+                console.log("====================",fullDeliveryAddress);          
                 listOrders.push({
                     'orderid': order.dataValues.orderid,
                     'statusname': statusname,
-                    'deliveryaddress': order.dataValues.deliveryaddress,
                     'recipientname' : order.dataValues.recipientname,
                     'recipientphone' : order.dataValues.recipientphone,
                     'isdraff': order.dataValues.isdraff,                        
@@ -75,7 +76,8 @@
                     'createdate' : createDate,
                     'completedate' : completedate,
                     'ordertype': order['ordertype'].dataValues.typename,
-                    'ledgerid': ledgerid
+                    'ledgerid': ledgerid,
+                    'fullDeliveryAddress': fullDeliveryAddress
 
                 })
             });

@@ -101,7 +101,7 @@ module.exports = function(sequelize, DataTypes) {
           completedate: completeDate
         })
       },
-      getOrderAddress: function(modelWard, modelDistrict, modelProvince){
+      getOrderAddress: function(){
         // :TODO change to real address
         return this.deliveryaddress + ', fake ward ' + ', fake district' + ', fake province'
         /*

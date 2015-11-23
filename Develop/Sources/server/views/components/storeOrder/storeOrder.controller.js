@@ -29,8 +29,8 @@ function storeOrderController($state,$scope, dataService, config, socketService,
     };
     var bigestGoodId = 0;
     $scope.good={};
-    $scope.goods =[];
-    $scope.houseNumber="";
+    $scope.goods =[];   
+    $scope.fulldeliveryaddress='';
 
 
     $scope.$watch('$viewContentLoaded', function (event) {
@@ -467,7 +467,7 @@ function storeOrderController($state,$scope, dataService, config, socketService,
      }
 
     function updateDeliveryAdd(){
-        $scope.order.deliveryaddress = $scope.houseNumber + ", " + $scope.selectedWard.name + ", " + $scope.selectedDistrict.name + ", " + $scope.selectedProvince.name;        
+        $scope.fulldeliveryaddress = $scope.order.deliveryaddress + ", " + $scope.selectedWard.name + ", " + $scope.selectedDistrict.name + ", " + $scope.selectedProvince.name;        
      }
     function alertEmptyGood() {
         var data = new Object();

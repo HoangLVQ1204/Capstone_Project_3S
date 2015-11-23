@@ -68,7 +68,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="control-label">Address</label>
-                                    <textarea ng-model="houseNumber" class="form-control"
+                                    <textarea ng-model="order.deliveryaddress" class="form-control"
                                               parsley-trigger="keyup" rows="1"
                                               placeholder="Number Street (Eg: 40 Duy Tân)" ng-change="updateDeliveryAdd()" required></textarea>
                             </div>
@@ -427,7 +427,7 @@
                             <div class="form-group">                                
                                 <label  class="control-label col-md-7 align-lg-left"><i class="fa fa-user"></i> {{order.recipientname}}</label>
                                 <label  class="control-label col-md-5 align-lg-right"><i class="fa fa-phone"></i> {{order.recipientphone}}</label> 
-                                 <label  class="control-label col-md-12"><i class="fa fa-home"></i> {{order.deliveryaddress}}</label>
+                                 <label  class="control-label col-md-12"><i class="fa fa-home"></i> {{fulldeliveryaddress}}</label>
                             </div>   
 
 
