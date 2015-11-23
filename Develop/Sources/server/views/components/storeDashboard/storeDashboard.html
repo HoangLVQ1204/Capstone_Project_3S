@@ -442,8 +442,11 @@
                                                     <!--<td> {{x.statusname}}</td>-->
                                                     <td width="16%">
                                                         <span class=" tooltip-area">
-                                                    <a class="btn btn-default btn-sm" title="Edit"><i
-                                                            class="fa fa-edit (alias)"></i></a>
+
+                                                    <a class="btn btn-default btn-sm"
+                                                       title="Submit"><i class="fa fa-cloud-upload "></i></a>
+                                                    <a class="btn btn-default btn-sm"
+                                                       title="View detail" ui-sref="store.orderdetail({orderid: x.orderid})"><i class="fa fa-eye "></i></a>
                                                     <a ng-click="setOrder(x)" href="" data-toggle="modal"
                                                        data-target="#md-delete-order" class="btn btn-default btn-sm"
                                                        title="Delete"><i class="fa fa-trash-o"></i></a>
