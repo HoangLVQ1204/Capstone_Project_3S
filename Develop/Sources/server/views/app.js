@@ -298,9 +298,59 @@ angular.module('app', [
     };
 
     // combo functions for express order
-    $rootScope.createExpressOrder = function(order, goods, isDraft){
-        var urlBaseOrder = config.baseURI + '/orders';
+    $rootScope.updateExpressOrder = function(orderID, isDraff, statusId) {
+        var urlBase = config.baseURI + '/orders/updateExpressOrder';                            
+        var order = {};
+        order.isDraff = isDraff;
+        order.orderId = orderID;
+        order.statusId = statusId;
+        // console.log('app:345', order);
+        return dataService.putDataServer(urlBase, {order: order})
+            .then(function(res) {
+                // console.log(res);
+                return null;
+            });
+    };
+
+    $rootScope.createExpressTask = function(orderID, shipperID) {
         var urlBaseTask = config.baseURI + '/api/createTask';
+        var dataTask = {
+            orderid: orderID,
+            shipperid: shipperID,
+            adminid: null,
+            statusid: 2,
+            typeid: 3
+        }
+        return dataService.postDataServer(urlBaseTask,dataTask)
+            .then(function(res){
+                if(res.status != 500){
+                    var temp = {
+                        type: 'info',
+                        title: 'EXPRESS ORDER: SUCCESS',
+                        content: 'ORDER ID: '+orderID+ 'created successfully',
+                        url: '/#/notiListdemo',
+                        isread: false,
+                        createddate: new Date()
+                    };
+                    $rootScope.notify(temp);
+                    return orderID;
+                }else{
+                    var temp = {
+                        type: 'issue',
+                        title: 'EXPRESS ORDER: FAIL',
+                        content: 'ORDER ID: '+orderID+ 'created fail! Please try again late!',
+                        url: '/#/notiListdemo',
+                        isread: false,
+                        createddate: new Date()
+                    };
+                    $rootScope.notify(temp);
+                    return null;
+                }
+            });
+    };
+
+    $rootScope.createExpressOrder = function(order, goods, isDraft){
+        var urlBaseOrder = config.baseURI + '/orders';        
 
         order.isdraff = isDraft;
         if (isDraft) order.statusid = null;
@@ -320,48 +370,7 @@ angular.module('app', [
 
                 if (isDraft) return null;
                 else {
-                    var dataTask = {
-                        orderid: orderID,
-                        shipperid: $rootScope.rightShipper.shipperID,
-                        adminid: null,
-                        statusid: 2,
-                        typeid: 3
-                    }
-                    return dataService.postDataServer(urlBaseTask,dataTask)
-                        .then(function(res){
-                            if(res.status != 500){
-                                var temp = {
-                                    type: 'info',
-                                    title: 'EXPRESS ORDER: SUCCESS',
-                                    content: 'ORDER ID: '+orderID+ 'created successfully',
-                                    url: '/#/notiListdemo',
-                                    isread: false,
-                                    createddate: new Date()
-                                };
-                                $rootScope.notify(temp);
-                                return orderID;
-                            }else{
-                                var temp = {
-                                    type: 'issue',
-                                    title: 'EXPRESS ORDER: FAIL',
-                                    content: 'ORDER ID: '+orderID+ 'created fail! Please try again late!',
-                                    url: '/#/notiListdemo',
-                                    isread: false,
-                                    createddate: new Date()
-                                };
-                                $rootScope.notify(temp);
-
-                                var urlBase = config.baseURI + '/orders/updateExpressOrder';                            
-                                order.isDraff = true;
-                                order.orderId = orderID;
-                                // console.log('app:345', order);
-                                return dataService.putDataServer(urlBase, {order: order})
-                                    .then(function(res) {
-                                        console.log(res);
-                                        return null;
-                                    });
-                            }
-                        });
+                    return $rootScope.createExpressTask(orderID, $rootScope.rightShipper.shipperID);
                 }   
             });
     };
@@ -390,12 +399,12 @@ angular.module('app', [
         }
     });
 
-    $rootScope.findExpressShipper = function(order, goods) {
+    $rootScope.findExpressShipper = function(order, goods, inDatabase) {
         socketStore.findShipper();
         loading();
         $('#btnCancelExpress').on('click', function() {
-            console.log('btnCancelExpress');
-            $rootScope.cancelExpress(order, goods);
+            console.log('btnCancelExpress', order, goods);
+            $rootScope.cancelExpress(order, goods, inDatabase);
         });
 
         var s = 0;
@@ -413,17 +422,34 @@ angular.module('app', [
                 should = false;
 
                 // createExpressOrder + select rightShipper
-                $rootScope.createExpressOrder(order, goods, false)
-                .then(function(orderID) {
-                    console.log('app:398 createExpressOrder', orderID);
-                    if (orderID) {
-                        // TODO: Add geoText of customer
-                        var customer = {};
-                        socketStore.selectShipper($rootScope.rightShipper, customer, orderID);
-                    } else {
-                        socketStore.cancelExpress();
-                    }
-                })
+                if (inDatabase) {
+                    $rootScope.updateExpressOrder(order.orderID, false, 2)
+                    .then(function(orderID) {
+                        return $rootScope.createExpressTask(order.orderID, $rootScope.rightShipper.shipperID);
+                    })
+                    .then(function(orderID) {
+                        console.log('app:398 createExpressOrder', orderID);
+                        if (orderID) {
+                            // TODO: Add geoText of customer
+                            var customer = {};
+                            socketStore.selectShipper($rootScope.rightShipper, customer, orderID);
+                        } else {
+                            socketStore.cancelExpress(order, goods, true);
+                        }
+                    });
+                } else {
+                    $rootScope.createExpressOrder(order, goods, false)
+                    .then(function(orderID) {
+                        console.log('app:398 createExpressOrder', orderID);
+                        if (orderID) {
+                            // TODO: Add geoText of customer
+                            var customer = {};
+                            socketStore.selectShipper($rootScope.rightShipper, customer, orderID);
+                        } else {
+                            socketStore.cancelExpress(order, goods, true);
+                        }
+                    })
+                }
                 return;
             }
             s = s + 1;
@@ -437,15 +463,20 @@ angular.module('app', [
                 $("#listAcceptedShipper_Fail").modal("show");
                 clearInterval($rootScope.loopFindShipper);
                 $rootScope.flag = false;
-                $rootScope.createExpressOrder(order, goods, true)
-                .then(function(orderID) {
-                    console.log('Create draft order');
-                });
+                should = false;
+                if (inDatabase) {
+                    console.log('cannot find shipper, inDatabase');
+                } else {
+                    $rootScope.createExpressOrder(order, goods, true)
+                    .then(function(orderID) {
+                        console.log('Create draft order');
+                    });
+                }        
             }
         },1000);
     };
 
-    $rootScope.cancelExpress = function(order, goods) {
+    $rootScope.cancelExpress = function(order, goods, inDatabase) {
         unloading();
         $rootScope.rightShipper = {
             avatar: "assets/img/notfound.png"
@@ -455,10 +486,17 @@ angular.module('app', [
         clearInterval($rootScope.loopFindShipper);
         $rootScope.flag = false;
         socketStore.cancelExpress();
-        $rootScope.createExpressOrder(order, goods, true)
-        .then(function(orderID) {
-            console.log('Create draft order');
-        });
+        if (inDatabase) {
+            $rootScope.updateExpressOrder(order.orderID, true, null)
+            .then(function() {
+                console.log('cancelExpress updateExpressOrder');
+            })
+        } else {
+            $rootScope.createExpressOrder(order, goods, true)
+            .then(function(orderID) {
+                console.log('Create draft order');
+            });
+        }        
     };
 
     // END - combo functions

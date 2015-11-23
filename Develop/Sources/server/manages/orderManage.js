@@ -381,7 +381,7 @@ var updateOrder = function (req, res, next) {
      console.log(order);
      return db.order.updateExpressOrder({
          statusid : order.statusId,
-         isdraff: order.isDraff
+         isdraff: order.isDraff,
      },order.orderId)
          .then(function (rs) {
              console.log(rs);
