@@ -4,7 +4,7 @@
 
 module.exports = function (app) {
 
-    var shipperCtrl = require('./../../manages/shipperController')(app);
+    var shipperCtrl = require('./../../manages/shipperManage')(app);
     var authManage = require('./../../manages/authManage')(app);
     var checkAll = [authManage.checkToken(),authManage.checkRole()];
 

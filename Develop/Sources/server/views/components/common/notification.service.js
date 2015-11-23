@@ -36,11 +36,13 @@ function notificationService($q,$http, config, dataService){
 
     api.getTotalNumberNotificationsServer = function() {
         var urlBase = config.baseURI + '/api/notifications/total';
+        // console.log('getTotalNumberNotificationsServer', urlBase);
         return dataService.getDataServer(urlBase)
         .then(function(data) {            
             totalNumberNotifications = data.data;
             genPagination();            
         });
+        // return Promise.resolve();
     };
 
     api.getTotalNumberNotifications = function() {
@@ -49,11 +51,13 @@ function notificationService($q,$http, config, dataService){
 
     api.getTotalUnreadNotificationsServer = function() {
         var urlBase = config.baseURI + '/api/notifications/unread';
+        // console.log('getTotalUnreadNotificationsServer', urlBase);
         return dataService.getDataServer(urlBase)
         .then(function(data) {            
             totalUnreadNotifications = data.data;
             genPagination();            
         });
+        // return Promise.resolve();
     };
 
     api.getTotalUnreadNotifications = function() {
@@ -90,10 +94,13 @@ function notificationService($q,$http, config, dataService){
         var offset = currentPage * notificationsPerPage;
         var limit = notificationsPerPage;
         var urlBase = config.baseURI + '/api/notifications?offset=' + offset + '&limit=' + limit;
+        // console.log('getListNotificationsServer', urlBase);    
         return dataService.getDataServer(urlBase)
-        .then(function(data) {            
+        .then(function(data) {        
+            console.log('listNotifications', data.data);    
             listNotifications = data.data;
         });
+        // return Promise.resolve();
     };
 
     api.getListNotifications = function() {
@@ -102,8 +109,10 @@ function notificationService($q,$http, config, dataService){
 
     api.readNotification = function(index) {
         if (listNotifications[index].isread) return;
+        totalUnreadNotifications -= 1;
         listNotifications[index].isread = true;
         var urlBase = config.baseURI + '/api/notifications/' + listNotifications[index].notificationid;     
+        // console.log('readNotification', urlBase);
         dataService.putDataServer(urlBase, listNotifications[index])
         .then(function(data) {
             console.log('readNotification', data);
@@ -113,6 +122,7 @@ function notificationService($q,$http, config, dataService){
     // Move update database to server
     api.addNotification = function(item) {
         var urlBase = config.baseURI + '/api/notifications';
+        // console.log('addNotification', urlBase);
         dataService.postDataServer(urlBase, item)
         .then(function(data) {
             console.log('addNotification', data);

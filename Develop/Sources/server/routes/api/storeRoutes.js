@@ -1,7 +1,7 @@
 
 module.exports = function(app){
 
- 	var controller = require('./../../manages/storeController')(app);
+ 	var controller = require('./../../manages/storeManage')(app);
 	var authManage = require('./../../manages/authManage')(app);
 	var checkAll = [authManage.checkToken(),authManage.checkRole()];
 

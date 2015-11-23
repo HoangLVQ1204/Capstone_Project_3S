@@ -1,13 +1,24 @@
 /**
  * Created by Nguyen Van Quyen on 10/6/2015.
  */
-app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPopup', '$timeout', function($scope, dataFactory, $ionicLoading, $ionicPopup, $timeout) {
+app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoading', '$ionicPopup', '$timeout', function($rootScope, $scope, dataFactory, $ionicLoading, $ionicPopup, $timeout) {
 
   console.log('Reload Data TaskController');
   var haveIssue = false;
   getAllTaskBeIssued();
   getListOfTask();
 
+  $rootScope.$on("shipper:express:order:success", function(event, args) {
+    var alertPopup = $ionicPopup.alert({
+      title: 'Information',
+      template: 'You just grab an a new order'
+    });
+    alertPopup.then(function(res) {
+      console.log('You got it');
+      //reload data
+      getListOfTask();
+    });
+  });
   //Select tab for find bestway screen
   $scope.tabSelected = function(tab) {
     $scope.tabParam = tab;
@@ -57,7 +68,8 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
     //Get task be an issue
     var urlTaskBase = config.hostServer + "api/shipper/getTaskBeIssuePending";
     dataFactory.getDataServer(urlTaskBase)
-      .success(function(rs){
+      .then(function(res){
+        var rs = res.data;
         if (rs !== "null" || typeof rs !== "undefined") {
           for ( var property in rs ) {
             $scope.issueId = property;
@@ -72,9 +84,9 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
           //hide ionicLoading
           $ionicLoading.hide();
         }
-      })
-      .error(function(error) {
+      }, function(error) {
         console.log('Unable to load customer data: ' + error);
+        if(error.status == 401) dataFactory.signOutWhenTokenFail()
       });
   }
 
@@ -87,43 +99,18 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
     var data = {'issueId': issueId};
       var urlBase = config.hostServer + "api/changeIsPendingOrder";
         dataFactory.putDataServer(urlBase, data)
-        .success(function (rs) {
+        .then(function (res) {
+          var rs = res.data;
           console.log('success changeIsPending');
           $ionicLoading.hide();
           $timeout(function(){
             $scope.showAlert(rs);
           }, 250);
-        })
-        .error(function (error) {
-          console.log('Unable to load customer data: ' + error);
-        });
+        }, function (error) {
+            console.log('Unable to load customer data: ' + error);
+            if(error.status == 401) dataFactory.signOutWhenTokenFail()
+          });
     };
-
-  /*
-   * By QuyenNV - 23/10/2015
-   * Get all task have category of issue = cancel and
-   * this issue not accept(isResolved=false).
-   * So status of task also 'Inactive' and 'Active'
-   * */
-  //function getAllTaskCancel() {
-  //  //Show ionicLoading without IssuePending
-  //  console.log("TaskBeIssued:102: " + haveIssue);
-  //  if (!haveIssue) {
-  //    $ionicLoading.show({
-  //      noBackdrop: false,
-  //      template: '<ion-spinner icon="bubbles" class="spinner-balanced"/>'
-  //    });
-  //  }
-  //  var urlBaseCancel = config.hostServer + "api/getAllTaskCancel";
-  //  dataFactory.getDataServer(urlBaseCancel)
-  //    .success(function (rs) {
-  //      $scope.listTaskIssueCancel = rs;
-  //      getListOfTask();
-  //    })
-  //    .error(function (error) {
-  //      console.log('Unable to load customer data: ' + error);
-  //    });
-  //}
 
   /*
    * By QuyenNV - 23/10/2015
@@ -131,7 +118,6 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
    * StatusTasks are 'Inactive' and 'Active'
    * */
   function getListOfTask() {
-    console.log("2222haveIssue", haveIssue);
     if (!haveIssue) {
       $ionicLoading.show({
         noBackdrop: false,
@@ -140,16 +126,18 @@ app.controller('TasksCtrl', ['$scope', 'dataService', '$ionicLoading', '$ionicPo
     }
     var urlBase = config.hostServer + "api/tasks";
     dataFactory.getDataServer(urlBase)
-      .success(function (rs) {
+      .then(function (res) {
+        var rs = res.data;
         formatData(rs);
         //Hide IonicLoading without Issue Pending
         if (!haveIssue) {
           $ionicLoading.hide();
         }
-      })
-      .error(function (error) {
+      },function (error) {
         console.log('Unable to load customer data: ' + error);
-      });
+        $ionicLoading.hide();
+        if(error.status == 401) dataFactory.signOutWhenTokenFail()
+      })
   }
 
   /*

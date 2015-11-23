@@ -14,11 +14,12 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
     //get all tasks of shipper
     var urlBase = config.hostServer + "api/tasks";
     dataFactory.getDataServer(urlBase)
-      .success(function (rs) {
+      .then(function (res) {
+        var rs = res.data;
         formatData(rs);
-      })
-      .error(function (error) {
+      }, function (error) {
         console.log('Unable to load customer data: ' + error);
+        if(error.status == 401) dataFactory.signOutWhenTokenFail();
       });
   }
 
@@ -151,17 +152,18 @@ $scope.listReasons = [
     var data = {'issueId': issueId};
     var urlBase = config.hostServer + "api/changeIsPendingOrder";
     dataFactory.putDataServer(urlBase, data)
-      .success(function (rs) {
+      .then(function (res) {
+        var rs = res.data;
         $ionicLoading.hide();
 
         $timeout(function() {
           $scope.showAlert(rs);
         }, 250)
 
-      })
-      .error(function (error) {
+      }, function (error) {
         console.log('Unable to load customer data: ' + error);
-      });
+        if(error.status == 401) dataFactory.signOutWhenTokenFail();
+      })
   };
 
   /*

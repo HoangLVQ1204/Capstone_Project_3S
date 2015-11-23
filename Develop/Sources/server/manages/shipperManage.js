@@ -215,7 +215,7 @@ module.exports = function (app) {
                     };
 
                     var msg = {
-                        type: 'Info',
+                        type: 'info',
                         title: 'Shipper changed order status',
                         content: shipperid + ' changed status of order ' + orderObj.orderid,
                         url: '#/store/dashboard',
@@ -894,6 +894,7 @@ module.exports = function (app) {
     //// END change status of shipper
 
     var testSk = function(req, res, next){
+        /*
         //var storeid = 'STR001';
         //var storeid2 = 'STR003';
         var shipperid = 'SP000001';
@@ -926,6 +927,58 @@ module.exports = function (app) {
             "st": st,
             "od": od
         });
+        */
+
+        /*
+        db.order.findAll({
+            attributes: [
+                ['storeid', 'store'],
+                [
+                    db.sequelize.fn('date_part',
+                        'year',
+                        db.sequelize.col('createdate')
+                    ),
+                    'Year'
+                ],
+                [
+                    db.sequelize.fn('date_part',
+                        'month',
+                        db.sequelize.col('createdate')
+                    ),
+                    'Month'
+                ],
+                ['ordertypeid', 'type'],
+                [
+                    db.sequelize.fn('count',
+                        db.sequelize.col('orderid')
+                    ),
+                    'count'
+                ]
+            ],
+            group: ['storeid','Year','Month', 'type'],
+            order: ['store','Month']
+        }).then(function(rows) {
+            console.log(rows);
+            return res.status(200).json(rows)
+        },function(er){
+            console.log(er);
+            return res.status(400).json(er)
+        });
+        */
+        db.order.findOne().then(function(rs){
+            var a = 'dd'
+            a = rs.getOrderAddress(db.ward, db.district, db.province)
+            //    .then(function(rss){
+            //    return res.status(200).json(rss)
+            //}, function(err){
+            //    console.log(err)
+            //    return res.status(400).json(err)
+            //})
+            return res.status(200).json(a)
+        }, function(er){
+            console.log(er)
+            return res.status(400).json(er)
+        })
     };
 
     //function create new shipperid
@@ -986,6 +1039,13 @@ module.exports = function (app) {
         server.socket.removeOrder(orderID);
     };
 
+    var getAllShippers = function(){
+        return db.user.getAllUsersHasRole(1, db.profile)
+            .then(function(shipper) {
+                return shipper;
+            });
+    }
+
     //// END AREA OF PRIVATE FUNCTION
 
 
@@ -1009,12 +1069,10 @@ module.exports = function (app) {
         getShipperStatus: getShipperStatus,
         countTaskOfShipper: countTaskOfShipper,
         changeShipperStatus: changeShipperStatus,
-
         getTaskBeIssuePending: getTaskBeIssuePending,
         testSk: testSk,
         createShipperID: createShipperID,
-        getAllShipperWithTaskForProcessing: getAllShipperWithTaskForProcessing
-
-
+        getAllShipperWithTaskForProcessing: getAllShipperWithTaskForProcessing,
+        getAllShippers: getAllShippers
     }
 }
