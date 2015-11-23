@@ -160,7 +160,7 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
 
-      getOrderDetailById: function (taskID, shipperID, orderStatusModel, goodsModel, taskModel) {
+      getOrderDetailById: function (taskID, shipperID, orderStatusModel, goodsModel, taskModel, storeModel) {
         return order.findOne({
           attributes:{ exclude: ['ledgerid', 'createdate', 'isdraff', 'pickupaddresscoordination', 'deliveryaddresscoordination']},
           where: {
@@ -182,6 +182,10 @@ module.exports = function(sequelize, DataTypes) {
                 taskid: taskID,
                 shipperid: shipperID
               }
+            },
+            {
+              model: storeModel,
+              attributes: ['name', 'phonenumber'],
             }
           ]
         });
