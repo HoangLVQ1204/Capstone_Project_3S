@@ -74,6 +74,12 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
         $rootScope.$emit("evChange", data.msg);
         $rootScope.notify(data.msg);
     });
+    socketService.on('store::issue:continue', function(data) {
+        console.log("store:isue:continue: ", data);
+        $rootScope.$emit("evChange", data.msg);
+        $rootScope.notify(data.msg);
+    });
+
 
     socketService.on('store:issue:message', function(data) {
         console.log('store:issue:message', data)
