@@ -38,8 +38,9 @@ function notificationService($q,$http, config, dataService){
         var urlBase = config.baseURI + '/api/notifications/total';
         // console.log('getTotalNumberNotificationsServer', urlBase);
         return dataService.getDataServer(urlBase)
-        .then(function(data) {            
-            totalNumberNotifications = data.data;
+        .then(function(data) {    
+            // console.log('totalNumberNotifications', data.data);        
+            totalNumberNotifications = parseInt(data.data);
             genPagination();            
         });
         // return Promise.resolve();
@@ -97,7 +98,7 @@ function notificationService($q,$http, config, dataService){
         // console.log('getListNotificationsServer', urlBase);    
         return dataService.getDataServer(urlBase)
         .then(function(data) {        
-            console.log('listNotifications', data.data);    
+            // console.log('listNotifications', data.data);    
             listNotifications = data.data;
         });
         // return Promise.resolve();
