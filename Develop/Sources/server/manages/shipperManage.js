@@ -166,9 +166,10 @@ module.exports = function (app) {
         var OrderStatus = db.orderstatus;
         var Goods = db.goods;
         var Task = db.task;
+        var Store = db.store;
         var shipper = _.cloneDeep(req.user);
         var shipperid = shipper.username;
-        Order.getOrderDetailById(detailtaskid, shipperid, OrderStatus, Goods, Task)
+        Order.getOrderDetailById(detailtaskid, shipperid, OrderStatus, Goods, Task, Store)
             .then(function (rs) {
                 if (rs) {
                     rs = rs.toJSON();
