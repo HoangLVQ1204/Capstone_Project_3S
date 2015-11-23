@@ -1017,7 +1017,7 @@ module.exports = function (app) {
         */
         db.order.findOne().then(function(rs){
             var a = 'dd'
-            a = rs.getOrderAddress(db.ward, db.district, db.province)
+            a = rs.getCustomerAddress()
             //    .then(function(rss){
             //    return res.status(200).json(rss)
             //}, function(err){

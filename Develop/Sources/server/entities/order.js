@@ -101,33 +101,9 @@ module.exports = function(sequelize, DataTypes) {
           completedate: completeDate
         })
       },
-      getOrderAddress: function(modelWard, modelDistrict, modelProvince){
-        // :TODO change to real address
-        return this.deliveryaddress + ', fake ward ' + ', fake district' + ', fake province'
-        /*
-        modelWard.findOne({
-          attributes: [['name','ward']],
-          where: {
-            wardid: this.deliverywardid
-          },
-          include: {
-            attributes: ['name'],
-            model: modelDistrict,
-            include: {
-              attributes: ['name'],
-              model: modelProvince
-            }
-          }
-        }).then(function(rs){
-          rs = rs.toJSON()
-          if(!rs) return 'aa'
-          //this.deliveryaddress
-          return 'ff'
-          //this.deliveryaddress + rs.ward + rs.district.name + rs.district.province.name
-        }, function(er){
-          return 'ss'
-        })
-        */
+      getCustomerAddress: function(){
+        var addressList = require("../config/address.json")
+        return this.deliveryaddress + ', ' + addressList.ward[this.deliverywardid] + ', ' + addressList.district[this.deliverydistrictid] + ', ' + addressList.province[this.deliveryprovinceid]
       }
     },
     classMethods: {
