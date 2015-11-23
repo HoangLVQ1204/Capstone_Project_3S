@@ -24,7 +24,7 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
         },
         {
             option: 'Delivery Address',
-            value: 'deliveryaddress'
+            value: 'fullDeliveryAddress'
         },
         // {
         //     option: 'Create Date',
@@ -55,7 +55,7 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
         // },
         {
             option: 'Delivery Address',
-            value: 'deliveryaddress'
+            value: 'fullDeliveryAddress'
         },
         {
             option: 'Cusotmer',
@@ -76,7 +76,7 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
             value: 'orderid'
         },{
             option: 'Delivery Address',
-            value: 'deliveryaddress'
+            value: 'fullDeliveryAddress'
         },
         {
             option: 'Cusotmer',
@@ -106,6 +106,7 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
         dataService.getDataServer(urlBase)
             .then(function (res) {
                 var rs = res.data;
+                console.log("======================",rs);
                 $scope.orderToday = rs['Total'][2];
                 $scope.totalCod = rs['Total'][0];
                 $scope.todayCod = rs['Total'][3];
@@ -113,12 +114,10 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
                 $scope.todayFee = rs['Total'][4];
                 $scope.totalOrder = rs['Total'][5];
                 $scope.ordersDraff = rs['Draff'];
-                //$scope.orderIssue = rs['Issue'];
                 $scope.orderInprocess= rs['Inprocess'];
                 $scope.orderDone= rs['Done'];
 
                 $scope.displayedCollectionDraff = [].concat($scope.ordersDraff);
-               // $scope.displayedCollectionIssue = [].concat($scope.orderIssue);
                 $scope.displayedCollectionInprocess = [].concat($scope.orderInprocess);
                 $scope.displayedCollectionDone = [].concat($scope.orderDone);
 
@@ -258,6 +257,14 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
        // console.log( $scope.onlineShipper);
         //$scope.onlineShipper = 10;
     });
+
+    $scope.findShipperAgain = function(order) {
+        console.log('findShipperAgain', order);
+        $rootScope.findExpressShipper({
+            orderID: order.orderid, 
+            customerAddress: order.fullDeliveryAddress
+        }, {}, true);
+    };
 }
 
 

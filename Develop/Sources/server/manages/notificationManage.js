@@ -26,8 +26,8 @@ module.exports = function (app) {
     var get = function(req, res, next) {
         console.log('notificationManage GET', req.query);
         var username = req.user.username;
-        var offset = parseInt(req.query.offset[0]);
-        var limit = parseInt(req.query.limit[0]);
+        var offset = parseInt(req.query.offset);
+        var limit = parseInt(req.query.limit);
         db.notification.getNotifications(username, offset, limit)
         .then(function(items) {
             items = items.map(function(e) {

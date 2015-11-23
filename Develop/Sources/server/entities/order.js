@@ -101,33 +101,9 @@ module.exports = function(sequelize, DataTypes) {
           completedate: completeDate
         })
       },
-      getOrderAddress: function(modelWard, modelDistrict, modelProvince){
-        // :TODO change to real address
-        return this.deliveryaddress + ', fake ward ' + ', fake district' + ', fake province'
-        /*
-        modelWard.findOne({
-          attributes: [['name','ward']],
-          where: {
-            wardid: this.deliverywardid
-          },
-          include: {
-            attributes: ['name'],
-            model: modelDistrict,
-            include: {
-              attributes: ['name'],
-              model: modelProvince
-            }
-          }
-        }).then(function(rs){
-          rs = rs.toJSON()
-          if(!rs) return 'aa'
-          //this.deliveryaddress
-          return 'ff'
-          //this.deliveryaddress + rs.ward + rs.district.name + rs.district.province.name
-        }, function(er){
-          return 'ss'
-        })
-        */
+      getCustomerAddress: function(){
+        var addressList = require("../config/address.json")
+        return this.deliveryaddress + ', ' + addressList.ward[this.deliverywardid] + ', ' + addressList.district[this.deliverydistrictid] + ', ' + addressList.province[this.deliveryprovinceid]
       }
     },
     classMethods: {
@@ -184,7 +160,7 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
 
-      getOrderDetailById: function (taskID, shipperID, orderStatusModel, goodsModel, taskModel) {
+      getOrderDetailById: function (taskID, shipperID, orderStatusModel, goodsModel, taskModel, storeModel) {
         return order.findOne({
           attributes:{ exclude: ['ledgerid', 'createdate', 'isdraff', 'pickupaddresscoordination', 'deliveryaddresscoordination']},
           where: {
@@ -206,6 +182,10 @@ module.exports = function(sequelize, DataTypes) {
                 taskid: taskID,
                 shipperid: shipperID
               }
+            },
+            {
+              model: storeModel,
+              attributes: ['name', 'phonenumber'],
             }
           ]
         });
@@ -213,7 +193,7 @@ module.exports = function(sequelize, DataTypes) {
       //KhanhKC
       storeGetAllOrders: function (oderstatusModel,ordertypeModel, store_id) {
         return order.findAll({
-          attributes: ['orderid','recipientname','recipientphone','statusid','isdraff','ispending','cod','fee','completedate','deliveryaddress','createdate','ledgerid'],
+          attributes: ['orderid','recipientname','recipientphone','statusid','isdraff','ispending','cod','fee','completedate','deliveryaddress','createdate','ledgerid','deliverywardid','deliverydistrictid','deliveryprovinceid'],
           where: {storeid:store_id },
           include: [
             {'model': oderstatusModel,

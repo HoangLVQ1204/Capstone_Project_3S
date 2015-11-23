@@ -225,6 +225,11 @@ div.fixed {
   font-size: 1.2em;
 }
 
+.format-display {
+  max-width: 140px;
+  min-width: 140px;
+}
+
 /*---END StyleSheet of Profile---*/
 
 /*--START StyleSheet For Order's Detail--*/
