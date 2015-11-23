@@ -166,9 +166,10 @@ module.exports = function (app) {
         var OrderStatus = db.orderstatus;
         var Goods = db.goods;
         var Task = db.task;
+        var Store = db.store;
         var shipper = _.cloneDeep(req.user);
         var shipperid = shipper.username;
-        Order.getOrderDetailById(detailtaskid, shipperid, OrderStatus, Goods, Task)
+        Order.getOrderDetailById(detailtaskid, shipperid, OrderStatus, Goods, Task, Store)
             .then(function (rs) {
                 if (rs) {
                     rs = rs.toJSON();
@@ -1017,14 +1018,8 @@ module.exports = function (app) {
         */
         db.order.findOne().then(function(rs){
             var a = 'dd'
-            a = rs.getOrderAddress(db.ward, db.district, db.province)
-            //    .then(function(rss){
-            //    return res.status(200).json(rss)
-            //}, function(err){
-            //    console.log(err)
-            //    return res.status(400).json(err)
-            //})
-            return res.status(200).json(a)
+            a = rs.getCustomerAddress()
+            return res.status(200).json(a);
         }, function(er){
             console.log(er)
             return res.status(400).json(er)

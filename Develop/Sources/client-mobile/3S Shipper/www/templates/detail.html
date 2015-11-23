@@ -22,47 +22,47 @@
 
           <p class="detail-p">{{order.orderid}}</p>
         </div>
-        <label class="item item-input">
+        <div class="item item-input">
           <span class="input-label">Status:</span>
 
           <p class="detail-p">{{order.orderstatus.status}}</p>
-        </label>
-        <label class="item item-input">
+        </div>
+        <div class="item item-input">
           <span class="input-label">Recipient:</span>
 
           <p class="detail-p">{{order.recipientname}}<br/>{{order.recipientphone}}</p>
-        </label>
-        <label class="item item-input">
+        </div>
+        <div class="item item-input">
           <span class="input-label">Pick-up<br/>Address:</span>
 
-          <p class="detail-p">{{order.pickupaddress}}</p>
-        </label>
-        <label class="item item-input">
+          <p class="detail-p">{{order.store.name}}<br/>{{order.store.phonenumber}}<br/>{{order.pickupaddress}}</p>
+        </div>
+        <div class="item item-input">
           <span class="input-label">Pick-up date:</span>
 
           <p class="detail-p">{{order.pickupdate | date : 'dd-MM-yyyy'}}</p>
-        </label>
-        <label class="item item-input" ng-if="order.tasks[0].typeid != 1">
+        </div>
+        <div class="item item-input" ng-if="order.tasks[0].typeid != 1">
           <span class="input-label">Delivery<br/>Address:</span>
 
           <p class="detail-p">{{order.deliveryaddress}}</p>
-        </label>
-        <label class="item item-input" ng-if="order.tasks[0].typeid != 1">
+        </div>
+        <div class="item item-input" ng-if="order.tasks[0].typeid != 1">
           <span class="input-label">Delivery Date:</span>
 
           <p class="detail-p">{{order.completedate | date : 'dd-MM-yyyy'}}</p>
-        </label>
-        <label class="item item-input">
+        </div>
+        <div class="item item-input">
           <span class="input-label">COD:</span>
 
           <p class="detail-p">{{order.cod | number}} VND</p>
-        </label>
-        <label class="item item-input">
+        </div>
+        <div class="item item-input">
           <span class="input-label">Fee:</span>
 
           <p class="detail-p">{{order.fee | number}} VND</p>
-        </label>
-        <label class="item item-input">
+        </div>
+        <div class="item item-input">
           <span class="input-label">Goods<br/>Information:</span>
           <ul>
             <li ng-repeat="goods in order.goods">
@@ -73,7 +73,7 @@
           </p>
             </li>
             </ul>
-        </label>
+        </div>
       </div>
     </div>
     <button ng-repeat="status in statuslist"
