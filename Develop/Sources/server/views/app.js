@@ -239,6 +239,12 @@ angular.module('app', [
             access: config.role.store
         })
 
+        .state('admin.adminReport',{
+            url: '/adminReport',
+            template: '<admin-report></admin-report>',
+            access: config.role.admin
+        })
+
 
     jwtInterceptorProvider.tokenGetter = function(){
         return localStorage.getItem('EHID');

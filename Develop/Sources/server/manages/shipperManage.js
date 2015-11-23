@@ -1039,6 +1039,13 @@ module.exports = function (app) {
         server.socket.removeOrder(orderID);
     };
 
+    var getAllShippers = function(){
+        return db.user.getAllUsersHasRole(1, db.profile)
+            .then(function(shipper) {
+                return shipper;
+            });
+    }
+
     //// END AREA OF PRIVATE FUNCTION
 
 
@@ -1062,12 +1069,10 @@ module.exports = function (app) {
         getShipperStatus: getShipperStatus,
         countTaskOfShipper: countTaskOfShipper,
         changeShipperStatus: changeShipperStatus,
-
         getTaskBeIssuePending: getTaskBeIssuePending,
         testSk: testSk,
         createShipperID: createShipperID,
-        getAllShipperWithTaskForProcessing: getAllShipperWithTaskForProcessing
-
-
+        getAllShipperWithTaskForProcessing: getAllShipperWithTaskForProcessing,
+        getAllShippers: getAllShippers
     }
 }

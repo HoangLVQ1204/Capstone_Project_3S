@@ -21,8 +21,9 @@ function socketAdmin(socketService,authService,mapService, $rootScope){
             });
 
         $rootScope.onlineShipper = 0;
-        //$rootScope.$apply();
+
         data.msg.shipperList.map(function (shipper) {
+
             if (shipper.isConnected) $rootScope.onlineShipper++;
         });
 

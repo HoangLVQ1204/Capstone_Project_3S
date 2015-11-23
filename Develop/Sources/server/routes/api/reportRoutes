@@ -1,0 +1,11 @@
+
+module.exports = function(app){
+
+ 	var controller = require('./../../manages/userManage')(app);
+	var authManage = require('./../../manages/authManage')(app);
+	var config      = require('../../config/config');
+	var checkAll = [authManage.checkToken(),authManage.checkRole()];
+
+ 	// app.route('/api/admin/report/getOverView')
+		// .get(controller.getOverView);
+}

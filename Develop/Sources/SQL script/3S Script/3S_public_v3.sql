@@ -1192,7 +1192,7 @@ CREATE TABLE "public"."order" (
 "pickupdate" timestamptz(6),
 "createdate" timestamptz(6),
 "completedate" timestamptz(6),
-"recipientphone" varchar(11) COLLATE "default",
+"recipientphone" varchar(15) COLLATE "default",
 "recipientname" varchar(50) COLLATE "default",
 "ledgerid" int4,
 "statusid" int4,
@@ -1598,13 +1598,13 @@ WITH (OIDS=FALSE)
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO "public"."user" VALUES ('AD000001', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '3', '2', '2015-11-11');
-INSERT INTO "public"."user" VALUES ('SP000001', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '1', '2', '2015-11-11');
-INSERT INTO "public"."user" VALUES ('SP000002', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '1', '2', '2015-11-11');
-INSERT INTO "public"."user" VALUES ('ST000001', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '2', '2015-11-11');
-INSERT INTO "public"."user" VALUES ('ST000002', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '2', '2015-11-11');
-INSERT INTO "public"."user" VALUES ('ST000003', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '2', '2015-11-11');
-INSERT INTO "public"."user" VALUES ('ST000004', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '2', '2015-11-11');
+INSERT INTO "public"."user" VALUES ('AD000001', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '3', '2', '2015-11-09 00:00:00+07');
+INSERT INTO "public"."user" VALUES ('SP000001', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '1', '2', '2015-11-09 00:00:00+07');
+INSERT INTO "public"."user" VALUES ('SP000002', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '1', '2', '2015-11-09 00:00:00+07');
+INSERT INTO "public"."user" VALUES ('ST000001', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '2', '2015-11-09 00:00:00+07');
+INSERT INTO "public"."user" VALUES ('ST000002', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '2', '2015-11-09 00:00:00+07');
+INSERT INTO "public"."user" VALUES ('ST000003', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '2', '2015-11-09 00:00:00+07');
+INSERT INTO "public"."user" VALUES ('ST000004', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '2', '2015-11-09 00:00:00+07');
 
 -- ----------------------------
 -- Table structure for userstatus

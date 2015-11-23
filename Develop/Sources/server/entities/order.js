@@ -213,7 +213,7 @@ module.exports = function(sequelize, DataTypes) {
       //KhanhKC
       storeGetAllOrders: function (oderstatusModel,ordertypeModel, store_id) {
         return order.findAll({
-          attributes: ['orderid','deliveryaddress','recipientname','recipientphone','statusid','isdraff','ispending','cod','fee','completedate','createdate','ledgerid'],
+          attributes: ['orderid','recipientname','recipientphone','statusid','isdraff','ispending','cod','fee','completedate','deliveryaddress','createdate','ledgerid'],
           where: {storeid:store_id },
           include: [
             {'model': oderstatusModel,
@@ -502,6 +502,54 @@ module.exports = function(sequelize, DataTypes) {
             }
           })
       },
+
+      countOrder: function(storeid){
+        if(storeid == 'all'){
+          return order.findAll({
+            attributes: [
+                               
+                [
+                    sequelize.fn('date_part',
+                        'month',
+                        sequelize.col('createdate')
+                    ),
+                    'Month'
+                ],
+                [
+                    sequelize.fn('count',
+                        sequelize.col('orderid')
+                    ),
+                    'count'
+                ] 
+            ],            
+            group: ['"Month"']
+        })
+        } else {
+          return order.findAll({
+            attributes: [
+                               
+                [
+                    sequelize.fn('date_part',
+                        'month',
+                        sequelize.col('createdate')
+                    ),
+                    'Month'
+                ],
+                [
+                    sequelize.fn('count',
+                        sequelize.col('orderid')
+                    ),
+                    'count'
+                ] 
+            ],
+            where:{
+              'storeid' : storeid
+            },
+            group: ['"Month"']
+        })
+        }
+        
+      }
 
     }
   });

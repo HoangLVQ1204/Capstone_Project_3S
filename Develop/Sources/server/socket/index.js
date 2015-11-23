@@ -52,7 +52,9 @@ module.exports = function(server,app){
     var io = require('socket.io')(server);
     var socketioJwt = require("socketio-jwt");
     var config      = require('../config/config');
-    var controllerStore = require('../manages/storeController')(app);
+    var controllerStore = require('../manages/storeManage')(app);
+    var controllerShipper = require('../manages/shipperManage')(app);
+
     /*
         io.admins[adminID] = {            
             socketID,
@@ -453,8 +455,8 @@ module.exports = function(server,app){
             order: io.getOrderIDsOfShipper(shipper.shipperID),
             latitude: shipper.latitude,
             longitude: shipper.longitude,
-            socketID: socket.id,
-            isConnected: true,
+            socketID: (!!socket ? socket.id : null),
+            isConnected: (io.shippers.length == 0 ? true : false),
             numTasks: io.countNumTasksByShipperID(shipper.shipperID)
         };              
     };
@@ -646,7 +648,47 @@ module.exports = function(server,app){
             io.leaveRoom(socketStore,roomID);
         }
     };
+
     // END - Update information of socket when shipper finished a task
+
+
+    io.updateListStore = function(){
+        controllerStore.getAllStores().then(function(rs){
+            rs = rs.map(function(e){
+                return e.toJSON();
+            });
+            //console.log(rs);
+            rs.forEach(function(e){
+                io.addStore({
+                    storeID: e.storeid,
+                    latitude: parseFloat(e.latitude),
+                    longitude: parseFloat(e.longitude)
+                });
+            });
+        });
+    }
+
+    io.updateListShipper = function(){
+        controllerShipper.getAllShippers().then(function(rs){
+            rs = rs.map(function(e){
+                return e.toJSON();
+            });
+            console.log(rs);
+            rs.forEach(function(e){
+                io.addShipper({
+                    shipperID: e.username,
+                    latitude: parseFloat(e.latitude),
+                    longitude: parseFloat(e.longitude),
+                    isConnected: false
+                });
+            });
+        });
+    }
+
+    io.updateListStore();
+    io.updateListShipper();
+
+
 
     io
         .on('connect', socketioJwt.authorize({
@@ -709,6 +751,10 @@ module.exports = function(server,app){
                     } else
                         io.addStore(store, socket);
 
+                    console.log("---DATA STORE---");
+                    console.log(io.getOneStore(store.storeID));
+                    console.log("---DATA STORE---");
+
                     io.reply(data.sender, { mapData: io.getDataForStore(store.storeID) }, 'store:register:location');
                     io.forward(data.sender, 'admin', { store: io.getOneStore(store.storeID) }, 'admin:add:store');
 
@@ -737,25 +783,6 @@ module.exports = function(server,app){
                 }
             })
         });
-
-    io.updateListStore = function(){
-        controllerStore.getAllStores().then(function(rs){
-            rs = rs.map(function(e){
-                return e.toJSON();
-            });
-            console.log(rs);
-            rs.forEach(function(e){
-                io.addStore({
-                    storeID: e.storeid,
-                    latitude: e.latitude,
-                    longitude: e.longitude
-                });
-            });
-        });
-    }
-
-    io.updateListStore();
-
 
     return {
         io: io

@@ -19,6 +19,7 @@ module.exports = function(socket, io, app) {
             io.updateOrder(e.orderID, e.orderInfo);
         });
         console.log('after disconnect', orders);
+
         //Create Issue Disconnected
         issueManage.createNewIssue(shipper.shipperID);
 

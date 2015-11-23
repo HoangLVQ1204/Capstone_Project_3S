@@ -156,11 +156,9 @@ module.exports = function (app) {
                                 );
                             });
                     });
-                } else {
-                    //Do nothing
                 }
             }, function(err){
-                console.log('Insert new issue get anerror');
+                console.log('Insert new issue get an error');
             });
 	};
 

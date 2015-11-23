@@ -144,6 +144,16 @@
     {
       "url": "/store/orders/cancel",
       "role": [2]
+    },
+
+    {
+      "url": "/admin/adminReport",
+      "role": [1,2]
+    },
+
+    {
+      "url": "/api/admin/order/countOrder",
+      "role": [3]
     }
     
       

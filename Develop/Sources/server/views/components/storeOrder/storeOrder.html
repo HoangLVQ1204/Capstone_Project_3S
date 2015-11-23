@@ -14,10 +14,10 @@
 
                 <form id="validate-wizard" class="wizard-step">
                     <ul>
-                        <li><a href="#step1" data-toggle="tab">1</a></li>
-                        <li><a href="#step2" data-toggle="tab">2</a></li>
-                        <li><a href="#step3" data-toggle="tab">3</a></li>
-                        <li><a href="#step4" data-toggle="tab">4</a></li>
+                        <li><a href="#step1" target="ui-seft" data-toggle="tab">1</a></li>
+                        <li><a href="#step2" target="ui-seft" data-toggle="tab">2</a></li>
+                        <li><a href="#step3" target="ui-seft" data-toggle="tab">3</a></li>
+                        <li><a href="#step4" target="ui-seft" data-toggle="tab">4</a></li>
                     </ul>
                     <div class="progress progress-stripes progress-sm" style="margin:0">
                         <div class="progress-bar" data-color="theme"></div>
@@ -226,6 +226,10 @@
                         </div>
                         <div class="tab-pane fade" id="step4">
                             <h3 class="center">Thank You for order</h3><br>
+                            <hr>
+                            <footer>
+                                <button type="button" ng-click="reloadRoute()" class=" btn btn-theme">Create new order</button>
+                            </footer>
                         </div>
 
                     </div>
@@ -381,8 +385,8 @@
                 </div>
                 <!-- //modal-body-->
                 <div class="modal-footer">
-                    <button type="button" ng-click="deleteGood()" data-dismiss="modal" class="btn btn-theme">Yes</button>
-                    <button type="button"  data-dismiss="modal" class="btn btn-inverse">No</button>
+                    <button type="button" ng-click="deleteGood()" data-dismiss="modal" class="btn btn-theme"><i class="fa fa-check-circle"></i>Yes</button>
+                    <button type="button"  data-dismiss="modal" class="btn btn-inverse"><i class="fa fa-times"></i>No</button>
                 </div>
 
                 <!-- //modal-footer-->

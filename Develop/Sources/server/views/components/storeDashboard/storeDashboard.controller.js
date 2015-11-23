@@ -87,27 +87,7 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
             value: 'recipientphone'
         }
     ];
-    //$scope.searchOptionsIssue= [
-    //    {
-    //        option: 'All',
-    //        value: ''
-    //    },
-    //    {
-    //        option: 'Order ID',
-    //        value: 'orderid'
-    //    },{
-    //        option: 'Delivery Address',
-    //        value: 'deliveryaddress'
-    //    },
-    //    {
-    //        option: 'Cusotmer',
-    //        value: 'recipientname'
-    //    },
-    //    {
-    //        option: 'Customer Phone',
-    //        value: 'recipientphone'
-    //    }
-    //];
+    
 
     //
     $scope.selectedInprocess =$scope.searchOptionsInProcess[0];
@@ -244,6 +224,7 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
 
     // START Listen to socket changes
     $rootScope.$on("evChange", function(event, data){
+        console.log("AAA");
         getDataFromServer();
         //SHOW INFORMATION OF THE SHIPPER WHO PICKED ORDER
         if(data.msg.profile) {
