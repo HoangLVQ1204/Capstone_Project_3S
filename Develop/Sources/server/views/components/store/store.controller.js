@@ -65,6 +65,10 @@ function storeController($scope,$state,socketService,socketStore,dataService,aut
     .then(function() {
         $rootScope.numberUnreadNoti = notificationService.getTotalUnreadNotifications();
     });
+
+    $scope.makeAnOrder = function() {
+        $state.go('store.order', {}, {reload: true});
+    }
 }
 
 storeController.$inject = ['$scope','$state','socketService','socketStore','dataService','authService','config','$rootScope','notificationService'];
