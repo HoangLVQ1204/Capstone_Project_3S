@@ -228,7 +228,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
         });
 
         content += '</ul>' +
-          'Status: <span>' + model.status + '</span>' +
+          //'Status: <span>' + model.status + '</span>' +
           '</div>';
         $scope.openInfo(gMarker, content);
 

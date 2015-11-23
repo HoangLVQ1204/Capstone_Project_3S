@@ -2,25 +2,36 @@
   <ion-content>
     <div id="content">
       <div id="profile-info">
-        <img id="profile-image" src="{{profile.avatar}}">
+        <img id="profile-image" src="{{profile.avatar}}"/>
+
         <h3 id="profile-name">{{profile.name}}</h3>
       </div>
-      <div class="list" id="listProfile">
-        <div class="item">
-          <p><i class="ion-android-calendar"></i> Date of Birtd: {{profile.dob| date : 'dd-MM-yyyy'}}</p>
-        </div>
-        <div class="item">
-          <p><i class="ion-card"></i> Identity Card: {{profile.identitycard}}</p>
-        </div>
-        <div class="item">
-          <p><i class="ion-android-call"></i> Phone Number: {{profile.phonenumber}}</p>
-        </div>
-        <div class="item">
-          <p><i class="ion-email"></i> Email: {{profile.email}}</p>
-        </div>
-        <div class="item">
-          <p><i class="ion-android-home"></i> Address: {{profile.address}}</p>
-        </div>
+      <div class="list" id="listProfile" style="pointer-events: none;">
+        <label class="item item-input">
+          <i class="ion-android-calendar"></i> <span class="input-label format-display"> Date of Birtd:</span>
+
+          <p class="pull-right">{{profile.dob| date : 'dd-MM-yyyy'}}</p>
+        </label>
+        <label class="item item-input">
+          <i class="ion-card"></i><span class="input-label format-display"> Identity Card:</span>
+
+          <p>{{profile.identitycard}}</p>
+        </label>
+        <label class="item item-input">
+          <i class="ion-android-call"></i> <span class="input-label format-display"> Phone Number:</span>
+
+          <p>{{profile.phonenumber}}</p>
+        </label>
+        <label class="item item-input">
+          <i class="ion-email"></i><span class="input-label format-display">Email:</span>
+
+          <p>{{profile.email}}</p>
+        </label>
+        <label class="item item-input item-text-wrap">
+          <i class="ion-email"></i><span class="input-label format-display"> Address:</span>
+
+          <p>{{profile.address}}</p>
+        </label>
       </div>
     </div>
   </ion-content>
