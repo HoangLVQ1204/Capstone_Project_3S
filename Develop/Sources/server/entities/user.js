@@ -114,7 +114,6 @@ module.exports = function(sequelize, DataTypes) {
       },
 
       putUser: function(currentUser) {
-        //console.log(currentUser)
         return user.update({
           'password': currentUser.password,
           'userrole': currentUser.userrole,
@@ -199,7 +198,7 @@ module.exports = function(sequelize, DataTypes) {
           where: {
             'username': username,
             'logintime': {
-              $lt: tokenTime
+              $lte: tokenTime
             }
           }
         })

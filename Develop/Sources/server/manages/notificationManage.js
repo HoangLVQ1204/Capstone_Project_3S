@@ -24,12 +24,18 @@ module.exports = function (app) {
     };
 
     var get = function(req, res, next) {
-        console.log('notificationManage GET');
+        console.log('notificationManage GET', req.query);
         var username = req.user.username;
-        var offset = req.query.offset;
-        var limit = req.query.limit;
+        var offset = parseInt(req.query.offset[0]);
+        var limit = parseInt(req.query.limit[0]);
         db.notification.getNotifications(username, offset, limit)
         .then(function(items) {
+            items = items.map(function(e) {
+                var temp = e.toJSON();
+                temp.type = temp.type.toLowerCase();
+                return temp;
+            });
+            // console.log('items', items);
             res.status(200).json(items);
         });
     };
