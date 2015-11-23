@@ -505,9 +505,7 @@ module.exports = function (app) {
                             type: 'room',
                             room: shipperID
                         },
-                        {
-                            notification: msgToStore
-                        },
+                        msgToStore,
                         'store:issue:notification'
                     );
                 });
@@ -593,7 +591,7 @@ module.exports = function (app) {
                         }
                     });
                     if (listOrdersAsignToOther.length > 0) {
-                        //TODO:
+                        //TODO: Assign to other shipper. Current shipper cannot update order
                         //_.each(listOrdersFail, function(orderID) {
                         //    //Change isPending
                         //    db.order.changeIsPendingOrder(orderID, false);
@@ -601,12 +599,64 @@ module.exports = function (app) {
                         res.status(200).json(resMess[1]);
                     }
                     if (listOrdersOfCurrentShip.length > 0) {
+                        var msgToStore = {
+                            type: 'info',
+                            title: 'Issue',
+                            content: 'Shipper continued order of your store',
+                            url: '#/store/dashboard',
+                            isread: false,
+                            createddate: new Date()
+                        };
                         //change isPending of Order
                         _.each(listOrdersOfCurrentShip, function(orderID) {
                             //Change isPending
                             db.order.changeIsPendingOrder(orderID, false);
                         });
-                        res.status(200).json(resMess[2]);
+                        //add new notification
+                        db.order.getStoresOfOrder(listOrdersOfCurrentShip)
+                        .then(function(storeIDs){
+                            storeIDs = _.uniq(storeIDs, 'storeid');
+                            console.log("storeID:613", storeIDs);
+                            storeIDs = storeIDs.map(function(e){
+                                return e.storeid;
+                            });
+                            return db.managestore.getOwnerOfStore(storeIDs);
+                            })
+                        .then(function(ownerStores){
+                            ownerStores = ownerStores.map(function(e) {
+                                return e.toJSON();
+                            });
+                            console.log('shipperController:623', ownerStores);
+                            //insert to notification
+                            var promises = ownerStores.map(function(e) {
+                                var data = _.clone(msgToStore, true);
+                                data.username = e.managerid;
+                                console.log('data', data);
+                                return db.notification.addNotification(data);
+                            });
+                            return Promise.all(promises);
+                        })
+                        .then(function (data) {
+                            console.log('shipperController:642', data.length);
+                            console.log('send notification continue to store');
+                            // send socket
+                            var sender = {
+                                type: 'shipper',
+                                clientID: shipperid
+                            };
+                            server.socket.forward(
+                                sender,
+                                {
+                                    type: 'room',
+                                    room: shipperid
+                                },
+                                msgToStore,
+                                'store:issue:continue'
+                            );
+
+                            //res mesage continue
+                            res.status(200).json(resMess[2]);
+                        });
                     }
                 }
             }, function(err) {

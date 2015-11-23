@@ -119,11 +119,22 @@ CREATE SEQUENCE "public"."task_taskid_seq"
  CACHE 1;
 
 -- ----------------------------
+-- Sequence structure for bannedhistorylog_logid_seq
+-- ---------------------------- 
+DROP SEQUENCE IF EXISTS "public"."bannedhistorylog_logid_seq";
+CREATE SEQUENCE "public"."bannedhistorylog_logid_seq"
+ INCREMENT 1
+ MINVALUE 1
+ MAXVALUE 9223372036854775807
+ START 1
+ CACHE 1;
+
+-- ----------------------------
 -- Table structure for bannedhistorylog
 -- ----------------------------
 DROP TABLE IF EXISTS "public"."bannedhistorylog";
 CREATE TABLE "public"."bannedhistorylog" (
-"logid" int4 NOT NULL,
+"logid" int4 DEFAULT nextval('bannedhistorylog_logid_seq'::regclass) NOT NULL,
 "adminid" varchar(20) COLLATE "default",
 "shipperid" varchar(20) COLLATE "default",
 "storeid" varchar(8) COLLATE "default",
@@ -12768,6 +12779,8 @@ ALTER SEQUENCE "public"."generalledger_ledgerid_seq" OWNED BY "generalledger"."l
 ALTER SEQUENCE "public"."goods_goodsid_seq" OWNED BY "goods"."goodsid";
 ALTER SEQUENCE "public"."issue_issueid_seq" OWNED BY "issue"."issueid";
 ALTER SEQUENCE "public"."task_taskid_seq" OWNED BY "task"."taskid";
+ALTER SEQUENCE "public"."bannedhistorylog_logid_seq" OWNED BY "bannedhistorylog"."logid";
+
 
 -- ----------------------------
 -- Primary Key structure for table bannedhistorylog
