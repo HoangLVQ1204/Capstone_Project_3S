@@ -6,7 +6,7 @@
 
 
 
-function notificationService($q,$http, config, dataService){
+function notificationService($q,$http, config, dataService, authService){
 
     var api = {};
 
@@ -122,6 +122,8 @@ function notificationService($q,$http, config, dataService){
 
     // Move update database to server
     api.addNotification = function(item) {
+        var currentUser = authService.getCurrentInfoUser();
+        item.username = currentUser.username;
         var urlBase = config.baseURI + '/api/notifications';
         // console.log('addNotification', urlBase);
         dataService.postDataServer(urlBase, item)
@@ -133,6 +135,6 @@ function notificationService($q,$http, config, dataService){
     return api;
 }
 
-notificationService.$inject = ['$q','$http', 'config', 'dataService'];
+notificationService.$inject = ['$q','$http', 'config', 'dataService', 'authService'];
 
 angular.module('app').factory('notificationService', notificationService);

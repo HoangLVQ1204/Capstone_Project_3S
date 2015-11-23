@@ -270,10 +270,12 @@ angular.module('app', [
 
     };
 
-    $rootScope.notify = function(notification) {
-        $rootScope.numberUnreadNoti += 1;
-        notificationService.setTotalUnreadNotifications($rootScope.numberUnreadNoti);
-        //notificationService.addNotification(notification);
+    $rootScope.notify = function(notification, onlyDisplay) {
+        if (!!onlyDisplay == false) {
+            $rootScope.numberUnreadNoti += 1;
+            notificationService.setTotalUnreadNotifications($rootScope.numberUnreadNoti);
+            notificationService.addNotification(notification);
+        } 
         var data = {
             life: 5000,
             horizontal: 'bottom',
@@ -301,7 +303,8 @@ angular.module('app', [
         var urlBaseTask = config.baseURI + '/api/createTask';
 
         order.isdraff = isDraft;
-        order.statusid = 2;
+        if (isDraft) order.statusid = null;
+        else order.statusid = 2;
         var dataOrder = {
             order: order,
             goods: goods
