@@ -559,8 +559,14 @@ addGoods = function(req, res, next){
     var storeGetOrderList = function (req, res, next) {
         var storeId = req.user.stores[0].storeid;
         var orderStatus = db.orderstatus;
+        var listOrder=[];
         db.order.storeGetAllOrders(db.orderstatus, db.ordertype,storeId)
         .then(function(list){
+             _.each(list, function(order){
+                var fullDeliveryAddress = order.getOrderAddress();
+                order.fullDeliveryAddress = fullDeliveryAddress;
+                // listOrder.push(order);
+             })
             res.status(200).json(list);
         }, function(err) {
             next(err);
