@@ -143,7 +143,7 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
 
         // Fake data
         // var orderID = 'order_1';
-        customer.geoText = "Cát Linh,Ba Đình,Hà Nội,Việt Nam";
+        // customer.geoText = "Cát Linh,Ba Đình,Hà Nội,Việt Nam";
         // Check exception for latitude and longitude not exist
         customer.order = [orderID];
 

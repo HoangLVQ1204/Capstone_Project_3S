@@ -312,10 +312,10 @@ angular.module('app', [
             });
     };
 
-    $rootScope.createExpressTask = function(orderID, shipperID) {
+    $rootScope.createExpressTask = function(order, shipperID) {
         var urlBaseTask = config.baseURI + '/api/createTask';
         var dataTask = {
-            orderid: orderID,
+            orderid: order.orderID,
             shipperid: shipperID,
             adminid: null,
             statusid: 2,
@@ -327,24 +327,26 @@ angular.module('app', [
                     var temp = {
                         type: 'info',
                         title: 'EXPRESS ORDER: SUCCESS',
-                        content: 'ORDER ID: '+orderID+ 'created successfully',
+                        content: 'ORDER ID: '+order.orderID+ 'created successfully',
                         url: '/#/notiListdemo',
                         isread: false,
                         createddate: new Date()
                     };
                     $rootScope.notify(temp);
-                    return orderID;
+                    order.isdraff = false;
+                    return order;
                 }else{
                     var temp = {
                         type: 'issue',
                         title: 'EXPRESS ORDER: FAIL',
-                        content: 'ORDER ID: '+orderID+ 'created fail! Please try again late!',
+                        content: 'ORDER ID: '+order.orderID+ 'created fail! Please try again late!',
                         url: '/#/notiListdemo',
                         isread: false,
                         createddate: new Date()
                     };
                     $rootScope.notify(temp);
-                    return null;
+                    order.isdraff = true;
+                    return order;
                 }
             });
     };
@@ -362,15 +364,18 @@ angular.module('app', [
 
         return dataService.postDataServer(urlBaseOrder,dataOrder)
             .then(function(res){
+                console.log('res.data', res.data);
+                var order = res.data;
                 var orderID = res.data.orderid;
+                order.orderID = orderID;
 
                 console.log("---DATA ORDER ID---");
                 console.log(orderID);
                 console.log("---DATA ORDER ID---");
 
-                if (isDraft) return null;
+                if (isDraft) return order;
                 else {
-                    return $rootScope.createExpressTask(orderID, $rootScope.rightShipper.shipperID);
+                    return $rootScope.createExpressTask(order, $rootScope.rightShipper.shipperID);
                 }   
             });
     };
@@ -424,29 +429,31 @@ angular.module('app', [
                 // createExpressOrder + select rightShipper
                 if (inDatabase) {
                     $rootScope.updateExpressOrder(order.orderID, false, 2)
-                    .then(function(orderID) {
-                        return $rootScope.createExpressTask(order.orderID, $rootScope.rightShipper.shipperID);
+                    .then(function() {
+                        return $rootScope.createExpressTask(order, $rootScope.rightShipper.shipperID);
                     })
-                    .then(function(orderID) {
-                        console.log('app:398 createExpressOrder', orderID);
-                        if (orderID) {
-                            // TODO: Add geoText of customer
-                            var customer = {};
-                            socketStore.selectShipper($rootScope.rightShipper, customer, orderID);
-                        } else {
+                    .then(function(order) {
+                        console.log('app:398 createExpressOrder', order);
+                        if (order.isdraff) {
                             socketStore.cancelExpress(order, goods, true);
+                        } else {
+                            var customer = { geoText: order.customerAddress };
+                            console.log('customer', customer);
+                            socketStore.selectShipper($rootScope.rightShipper, customer, order.orderID);
+                            $state.go('store.dashboard', {}, {reload: true});
                         }
                     });
                 } else {
                     $rootScope.createExpressOrder(order, goods, false)
-                    .then(function(orderID) {
-                        console.log('app:398 createExpressOrder', orderID);
-                        if (orderID) {
-                            // TODO: Add geoText of customer
-                            var customer = {};
-                            socketStore.selectShipper($rootScope.rightShipper, customer, orderID);
-                        } else {
+                    .then(function(order) {
+                        console.log('app:398 createExpressOrder', order);
+                        if (order.isdraff) {
                             socketStore.cancelExpress(order, goods, true);
+                        } else {
+                            var customer = { geoText: order.customerAddress };
+                            console.log('customer', customer);
+                            socketStore.selectShipper($rootScope.rightShipper, customer, order.orderID);
+                            $state.go('store.dashboard', {}, {reload: true});
                         }
                     })
                 }
@@ -468,8 +475,8 @@ angular.module('app', [
                     console.log('cannot find shipper, inDatabase');
                 } else {
                     $rootScope.createExpressOrder(order, goods, true)
-                    .then(function(orderID) {
-                        console.log('Create draft order');
+                    .then(function(order) {
+                        console.log('Create draft order', order);
                     });
                 }        
             }
@@ -493,8 +500,8 @@ angular.module('app', [
             })
         } else {
             $rootScope.createExpressOrder(order, goods, true)
-            .then(function(orderID) {
-                console.log('Create draft order');
+            .then(function(order) {
+                console.log('Create draft order', order);
             });
         }        
     };
