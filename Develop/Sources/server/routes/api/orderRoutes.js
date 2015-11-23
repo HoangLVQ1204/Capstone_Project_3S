@@ -45,5 +45,9 @@ module.exports = function (app) {
     app.route('/api/store/getAllOrder')
         .get(checkAll, controller.storeGetOrderList);
 
+    app.route('/api/admin/order/countOrder')
+        .get(checkAll, controller.countOrder);
+
+
 
 };

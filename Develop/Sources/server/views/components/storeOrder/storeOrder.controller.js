@@ -2,14 +2,16 @@
  * Created by khanhkc on 9/22/15.
  */
 
-function storeOrderController($scope, dataService, config, socketService, socketStore) {
+function storeOrderController($window,$scope, dataService, config, socketService, socketStore) {
     getStoreName();
     getProvince ();
+    $scope.reloadRoute = function() {
+        //$window.location.reload();
+        // $state.reload();
+    }
     $scope.order={
         gatheringCode: GenerateRandomCode(6),
         deliverCode: GenerateRandomCode(6),
-        inStockCode : GenerateRandomCode(6),
-        returnStoreCode : GenerateRandomCode(6),
         storeid: '',
         ordertypeid: "1",
         pickupaddress: '',
@@ -97,6 +99,11 @@ function storeOrderController($scope, dataService, config, socketService, socket
                     $('#validate-wizard').find('.wizard-status span').html($current + " / " + $total);
                 }
             });
+            $('#validate-wizard .finish').click(function() {                
+                alert('Finished!, Starting over!');
+                $('#validate-wizard').find("a[href*='step1']").trigger('click');
+                return true;
+            });
 
             //////////////////////////////////////
             //////// Validate Add Modal///////////
@@ -155,8 +162,7 @@ function storeOrderController($scope, dataService, config, socketService, socket
         //         }
         //     });
         // }
-    });
-
+    });    
     $scope.newGood = {};
     var index;
     $scope.setGood = function(good,index){
@@ -476,6 +482,6 @@ function storeOrderController($scope, dataService, config, socketService, socket
 }
 
 
-storeOrderController.$inject = ['$scope', 'dataService', 'config','socketService','socketStore'];
+storeOrderController.$inject = ['$window','$scope', 'dataService', 'config','socketService','socketStore'];
 angular.module('app').controller('storeOrderController', storeOrderController);
 

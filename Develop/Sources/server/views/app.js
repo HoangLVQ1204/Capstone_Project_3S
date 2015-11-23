@@ -242,7 +242,7 @@ angular.module('app', [
         .state('admin.adminReport',{
             url: '/adminReport',
             template: '<admin-report></admin-report>',
-            access: config.role.store
+            access: config.role.admin
         })
 
 

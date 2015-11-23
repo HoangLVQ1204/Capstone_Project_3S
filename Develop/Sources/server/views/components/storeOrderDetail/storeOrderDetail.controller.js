@@ -71,7 +71,7 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
                     $scope.codeForShipper = confirmationcode[i].codecontent;
                   };
 
-                  if(confirmationcode[i].typeid ==6){
+                  if(confirmationcode[i].typeid ==5){
                     $scope.codeForCustomer = confirmationcode[i].codecontent;
                   }                  
                }

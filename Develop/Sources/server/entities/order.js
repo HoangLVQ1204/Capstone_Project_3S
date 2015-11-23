@@ -479,6 +479,54 @@ module.exports = function(sequelize, DataTypes) {
           })
       },
 
+      countOrder: function(storeid){
+        if(storeid == 'all'){
+          return order.findAll({
+            attributes: [
+                               
+                [
+                    sequelize.fn('date_part',
+                        'month',
+                        sequelize.col('createdate')
+                    ),
+                    'Month'
+                ],
+                [
+                    sequelize.fn('count',
+                        sequelize.col('orderid')
+                    ),
+                    'count'
+                ] 
+            ],            
+            group: ['"Month"']
+        })
+        } else {
+          return order.findAll({
+            attributes: [
+                               
+                [
+                    sequelize.fn('date_part',
+                        'month',
+                        sequelize.col('createdate')
+                    ),
+                    'Month'
+                ],
+                [
+                    sequelize.fn('count',
+                        sequelize.col('orderid')
+                    ),
+                    'count'
+                ] 
+            ],
+            where:{
+              'storeid' : storeid
+            },
+            group: ['"Month"']
+        })
+        }
+        
+      }
+
     }
   });
   return order;

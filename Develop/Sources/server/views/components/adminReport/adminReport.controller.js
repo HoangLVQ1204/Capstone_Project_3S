@@ -2,20 +2,24 @@
  * Created by KhanhKC on 19/11/2015.
  */
 
-function adminReportController($scope,$state, $http, $filter, config, $stateParams) {
-    var smsData = {verticalEdge: 'right',
-        horizontalEdge: 'bottom'};
-    //$scope.newShipper.profile.dob = null;
+function adminReportController($scope,$state, $http,dataService, $filter, config, $stateParams) {
 
-    $http.get(config.baseURI + "/api/storeDetail").success(function(response){
-        $scope.store = response;
-        //$scope.shipper.dob =  new Date($scope.shipper.dob,;
-        console.log(response);
-    })    
+    getDataFromServer();
+    function getDataFromServer() {
+        var urlBase = config.baseURI + '/api/admin/order/countOrder?storeid='+ 'STR001'+'&year='+'2015';
+        dataService.getDataServer(urlBase)
+            .success(function (rs) {
+                console.log("==============rs===============",rs);
+                $scope.listYear;                
+                $scope.listStore;
+                $scope.listOrderOfMonth;
 
-    //----------------------------------
-    //FUNCTION LOAD SCRIPT
-    //-----------------------------------
+            })
+            .error(function (error) {
+                console.log('Unable to load customer data: ' + error);
+            });
+    }
+
     $scope.$watch('$viewContentLoaded', function (event) {
 
         caplet();
@@ -25,5 +29,5 @@ function adminReportController($scope,$state, $http, $filter, config, $statePara
 
 }
 
-adminReportController.$inject = ['$scope','$state', '$http', '$filter', 'config', '$stateParams'];
+adminReportController.$inject = ['$scope','$state', '$http','dataService', '$filter', 'config', '$stateParams'];
 angular.module('app').controller('adminReportController',adminReportController);

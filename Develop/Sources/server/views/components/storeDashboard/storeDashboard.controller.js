@@ -87,27 +87,7 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
             value: 'recipientphone'
         }
     ];
-    //$scope.searchOptionsIssue= [
-    //    {
-    //        option: 'All',
-    //        value: ''
-    //    },
-    //    {
-    //        option: 'Order ID',
-    //        value: 'orderid'
-    //    },{
-    //        option: 'Delivery Address',
-    //        value: 'deliveryaddress'
-    //    },
-    //    {
-    //        option: 'Cusotmer',
-    //        value: 'recipientname'
-    //    },
-    //    {
-    //        option: 'Customer Phone',
-    //        value: 'recipientphone'
-    //    }
-    //];
+    
 
     //
     $scope.selectedInprocess =$scope.searchOptionsInProcess[0];

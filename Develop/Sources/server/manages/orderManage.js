@@ -30,7 +30,7 @@
     var getAllOrder = function (req, res, next) {
 
         var storeId = req.user.stores[0].storeid;
-        //console.log("================storeId====================",storeId);
+        console.log("================storeId====================",storeId);
         var orderStatus = db.orderstatus;
         var order = db.order;
         var ordertype = db.ordertype;
@@ -185,7 +185,13 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
         }
         return overWeightFee;
     }
-
+    var GenerateRandomCode = function(length){
+        var code = "";
+        var chars = "123456789";
+        for( var i=0; i < length; i++ )
+            code += chars.charAt(Math.floor(Math.random() * chars.length));
+        return code;
+    }
     var post = function (req, res, next) {
         var newOrder = {};
         /*
@@ -242,15 +248,20 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
         };       
 
         var code3 = {
-            'codecontent' : parseInt(req.body.order.inStockCode),
+            'codecontent' : GenerateRandomCode(6),
             'typeid' : 3,
             'orderid' : newOrder.orderid
-        };
+        };        
         var code4 = {
-            'codecontent' : parseInt(req.body.order.returnStoreCode),
+            'codecontent' : GenerateRandomCode(6),
             'typeid' : 5,
             'orderid' : newOrder.orderid
         };
+        // var code5 = {
+        //     'codecontent' : GenerateRandomCode(6),
+        //     'typeid' : 5,
+        //     'orderid' : newOrder.orderid
+        // };
        //console.log("==============22==============");
        db.order.postOneOrder(newOrder)
        .then(function (order) {
@@ -553,6 +564,19 @@ addGoods = function(req, res, next){
             next(err);
         });
     };
+
+    var countOrder = function (req, res, next){
+        console.log("==========,stoerid=========",req.query.storeid);
+        console.log("==========,year=========",req.query.year);
+        var storeid = req.query.storeid;
+
+        db.order.countOrder(storeid)
+            .then(function(listRs){
+                res.status(200).json(listRs);
+            },function(err){
+                next(err);
+            })
+    }
     
 
     return {
@@ -570,6 +594,7 @@ addGoods = function(req, res, next){
         deleteGoods: deleteGoods,
         addGoods: addGoods,
         updateGoods : updateGoods,
-        storeGetOrderList : storeGetOrderList
+        storeGetOrderList : storeGetOrderList,
+        countOrder : countOrder
     }
 }
