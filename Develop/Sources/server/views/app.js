@@ -59,7 +59,16 @@ angular.module('app', [
             url: '/dashboard',
             template: '<admin-layout></admin-layout>',
             controller: function($scope, $rootScope, mapService, authService){
-                var mode = "all";
+                var mode = { type: "all" };
+                var count = 0;
+                 var intervalID = setInterval(function() {
+                    if (count == 2) {
+                        clearInterval(intervalID);
+                        $rootScope.$apply();
+                    }
+                    ++count;
+                    mapService.setMode(mode);
+                 }, 1500);
                 $scope.shippers = mapService.getShipperMarkers(mode);
                 $scope.stores = mapService.getStoreMarkers(mode);
                 $scope.customers = mapService.getCustomerMarkers(mode);
@@ -73,7 +82,16 @@ angular.module('app', [
             url: '/storeList',
             template: '<admin-store-list-layout></admin-store-list-layout>',
             controller: function($scope, $rootScope, mapService){
-                var mode = "all";
+                var mode = { type: "all" };
+                var count = 0;
+                 var intervalID = setInterval(function() {
+                    if (count == 2) {
+                        clearInterval(intervalID);
+                        $rootScope.$apply();
+                    }
+                    ++count;
+                    mapService.setMode(mode);
+                 }, 1500);
                 $scope.stores = mapService.getStoreMarkers(mode);
                 $scope.zoom = 11;
             },
@@ -108,7 +126,16 @@ angular.module('app', [
             url: '/shipperList',
             template: '<admin-shipper-list-layout></admin-shipper-list-layout>',
             controller: function($scope, $rootScope, mapService){
-                var mode = "all";
+                var mode = { type: "all" };
+                var count = 0;
+                 var intervalID = setInterval(function() {
+                    if (count == 2) {
+                        clearInterval(intervalID);
+                        $rootScope.$apply();
+                    }
+                    ++count;
+                    mapService.setMode(mode);
+                 }, 1500);
                 $scope.shippers = mapService.getShipperMarkers(mode);
                 $scope.zoom = 11;
             },
@@ -178,7 +205,17 @@ angular.module('app', [
              url: '/dashboard',
              template: '<layout></layout>',
              controller: function($scope, $rootScope, mapService, authService){
-                 var mode = "all";
+                 var mode = { type: "all" };
+                 var count = 0;
+                 var intervalID = setInterval(function() {
+                    if (count == 2) {
+                        clearInterval(intervalID);
+                        $rootScope.$apply();
+                    }
+                    ++count;
+                    mapService.setMode(mode);
+                 }, 1500);
+                // mapService.setMode(mode);
                  $scope.shippers = mapService.getShipperMarkers(mode);
                  $scope.stores = mapService.getStoreMarkers(mode);
                  $scope.customers = mapService.getCustomerMarkers(mode);
@@ -200,12 +237,23 @@ angular.module('app', [
         .state('store.orderdetail',{
              url: '/orderdetail?orderid',
              template: '<store-order-detail-layout></store-order-detail-layout>',
-             controller: function($scope, $rootScope, mapService, authService){
-                 var mode = "all";
+             controller: function($scope, $rootScope, mapService, authService, $stateParams){
+                 var mode = { type: 'orderdetail', orderID: $stateParams.orderid };
+                 var count = 0;
+                 var intervalID = setInterval(function() {
+                    if (count == 2) {
+                        clearInterval(intervalID);
+                        $rootScope.$apply();
+                    }
+                    ++count;
+                    mapService.setMode(mode);
+                 }, 1500);
+                // mapService.setMode(mode);
                  $scope.shippers = mapService.getShipperMarkers(mode);
                  $scope.stores = mapService.getStoreMarkers(mode);
                  $scope.customers = mapService.getCustomerMarkers(mode);
                  $scope.orders = mapService.getOrders(mode);
+                 console.log('controller state', $scope.shippers, $scope.stores, $scope.customers, $scope.orders);
                  $scope.center = {
                      latitude: authService.getCurrentInfoUser().stores[0].latitude,
                      longitude: authService.getCurrentInfoUser().stores[0].longitude
