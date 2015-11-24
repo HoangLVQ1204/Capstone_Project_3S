@@ -10,4 +10,10 @@ module.exports = function(app){
 		// .get(controller.getOverView);
 	app.route('/api/admin/report/orderCount')
 		.get(reportCtrl.getOrderCount)
+
+	app.route('/api/admin/report/moneyCount')
+		.get(reportCtrl.getMoneyCount)
+
+	app.route('/api/admin/report/storeOrderCount')
+		.get(reportCtrl.getCountOrdersDoneOrFail)
 }
