@@ -326,8 +326,8 @@ angular.module('app', [
                 if(res.status != 500){
                     var temp = {
                         type: 'info',
-                        title: 'EXPRESS ORDER: SUCCESS',
-                        content: 'ORDER ID: '+order.orderID+ 'created successfully',
+                        title: 'Info: ',
+                        content: 'Order '+order.orderID+ ' created successfully.',
                         url: '/#/notiListdemo',
                         isread: false,
                         createddate: new Date()
@@ -338,8 +338,8 @@ angular.module('app', [
                 }else{
                     var temp = {
                         type: 'issue',
-                        title: 'EXPRESS ORDER: FAIL',
-                        content: 'ORDER ID: '+order.orderID+ 'created fail! Please try again late!',
+                        title: 'Error: ',
+                        content: 'Order '+order.orderID+ ' created fail.',
                         url: '/#/notiListdemo',
                         isread: false,
                         createddate: new Date()

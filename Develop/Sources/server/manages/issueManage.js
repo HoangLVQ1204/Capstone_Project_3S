@@ -78,15 +78,16 @@ module.exports = function (app) {
                         var msgDisconnectToAdmin = {
                             type: 'Issue',
                             title: 'Issue',
-                            content: 'Shipper ' + shipperID + ' is diconnected',
+                            content: 'Shipper ' + shipperID + ' is disconnected',
                             url: '#/admin/issueBox/content?issueid=' + issue.dataValues.issueid,
                             isread: false,
                             createddate: new Date()
                         };
+
                         var msgDisconnectToStore = {
                             type: 'Info',
                             title: 'Warning',
-                            content: 'Some orders is in status Warning. We are repairing !',
+                            content: 'Some orders are in trouble. We are repairing',
                             url: '#/store/dashboard',
                             isread: false,
                             createddate: new Date()
@@ -97,7 +98,6 @@ module.exports = function (app) {
                                 admins = admins.map(function(e) {
                                     return e.toJSON();
                                 });
-                                //insert notification to user admin
                                 var promises = admins.map(function(e){
                                     var newData = _.clone(msgDisconnectToAdmin, true);
                                     newData.username = e.username;
