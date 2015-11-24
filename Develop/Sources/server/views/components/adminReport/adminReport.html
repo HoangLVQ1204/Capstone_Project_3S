@@ -35,9 +35,9 @@
 									</thead>
 									<tbody>
 										<tr ng-repeat="x in listOrderOfMonth">
-											<th>A</th>
-											<td>12</td>
-											<td>23</td>
+											<th>{{x.name}}</th>
+											<td>{{x.types[0].countNum}}</td>
+											<td>{{x.types[1].countNum}}</td>
 										</tr>
 										<!-- <tr>
 											<th>A</th>
