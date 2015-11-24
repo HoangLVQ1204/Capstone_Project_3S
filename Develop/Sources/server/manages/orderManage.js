@@ -360,7 +360,8 @@ var updateOrder = function (req, res, next) {
                     lengthsize: updateGoods.lengthsize,
                     widthsize: updateGoods.widthsize,
                     heightsize: updateGoods.heightsize,
-                    description: updateGoods.description
+                    description: updateGoods.description,
+                    amount: updateGoods.amount
                 }
                 db.goods.updateGoods(newGoods,updateGoods.goodsid)                        
             }
