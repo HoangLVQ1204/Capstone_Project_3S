@@ -315,8 +315,9 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
                     });
                     //console.log("==============55==============");
                 }
-
-                return res.status(200).json(order);
+                var response = order.toJSON();
+                response.customerAddress = order.getCustomerAddress();
+                return res.status(200).json(response);
 
             });
             // .then(function (order) {
@@ -381,7 +382,7 @@ var updateOrder = function (req, res, next) {
      console.log(order);
      return db.order.updateExpressOrder({
          statusid : order.statusId,
-         isdraff: order.isDraff
+         isdraff: order.isDraff,
      },order.orderId)
          .then(function (rs) {
              console.log(rs);

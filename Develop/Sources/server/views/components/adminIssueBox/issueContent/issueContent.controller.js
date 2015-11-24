@@ -66,7 +66,7 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
     //console.log(authService.getCurrentInfoUser());
     $scope.showConfirm = function (event, resolveType){
         //alert(1);
-        //socketAdmin.issueMessage($scope.issue, 'Order has Issue');
+        socketAdmin.issueMessage($scope.issue, 'Order has Issue');
         if ($scope.issue.isresolved) return;
         $scope.resolveType = resolveType;
         event.preventDefault();

@@ -9,7 +9,7 @@
                     <div class="mail-title">
                         <h2>{{issue.issuetype.typename}}</h2>
                         <section>
-                            <div class="mail-thumbnail"><img alt="" src="assets/img/avatar2.png" class="circle" /></div>
+                            <div class="mail-thumbnail"><img alt="" src="{{issue.profile.avatar}}" class="circle" /></div>
                             <span ng-show="issue.issuetype.categoryid!=3"><strong>From</strong> <em>{{issue.orderissues[0].order.tasks[0].shipperid}}</em></span>
                             <span ng-show="issue.issuetype.categoryid==3"><strong>From</strong> <em>{{issue.orderissues[0].order.storeid}}</em></span>
                             <span>{{issue.issuetype.issuecategory.categoryname}}</span>
@@ -58,8 +58,8 @@
                         </div>
                     </div>
                     <hr>
-                    <p ng-show="issue.issuetype.categoryid!=3">An issue was sent from shipper has id {{issue.orderissues[0].order.tasks[0].shipperid}}:</p>
-                    <p ng-show="issue.issuetype.categoryid==3">An issue was sent from store has id {{issue.orderissues[0].order.storeid}}:</p>
+                    <p ng-show="issue.issuetype.categoryid!=3">An issue was sent from shipper has id <a ui-sref="admin.userDetail({username: issue.orderissues[0].order.tasks[0].shipperid})"> {{issue.orderissues[0].order.tasks[0].shipperid}}</a>:</p>
+                    <p ng-show="issue.issuetype.categoryid==3">An issue was sent from store has id <a ui-sref="admin.storeDetail({storeid: issue.orderissues[0].order.storeid})"> {{issue.orderissues[0].order.storeid}}</a>:</p>
                     <p>
                         <strong>{{issue.description}}</strong>
                       </p>
@@ -80,8 +80,8 @@
                         <tbody>
                         <tr ng-repeat="order in issue.orderissues">
                             <td class="text-center">{{order.orderid}}</td>
-                            <td class="text-center" ng-show="issue.issuetype.categoryid!=3">{{order.order.storeid}}</td>
-                            <td class="text-center" ng-show="issue.issuetype.categoryid==3">{{order.order.tasks[0].shipperid}}</td>
+                            <td class="text-center" ng-show="issue.issuetype.categoryid!=3"><a ui-sref="admin.storeDetail({storeid: order.order.storeid})">{{order.order.storeid}}</a></td>
+                            <td class="text-center" ng-show="issue.issuetype.categoryid==3"><a ui-sref="admin.userDetail({username: order.order.tasks[0].shipperid})">{{order.order.tasks[0].shipperid}}</a></td>
                             <td>{{order.order.pickupaddress}}</td>
                             <td>{{order.order.deliveryaddress}}</td>
                             <td class="text-center">{{order.order.orderstatus.statusname}}</td>
@@ -121,7 +121,7 @@
     <div id="md-effect-block" class="modal fade" tabindex="-1" data-width="400">
         <div class="modal-header bg-inverse bd-inverse-darken">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
-            <h4 class="modal-title">Confirm Block</h4>
+            <h4 class="modal-title">Confirm Dialog</h4>
         </div>
         <!-- //modal-header-->
         <div class="modal-body align-xs-center">
