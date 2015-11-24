@@ -1000,15 +1000,15 @@ WITH (OIDS=FALSE)
 -- ----------------------------
 -- Records of generalledger
 -- ----------------------------
-INSERT INTO "public"."generalledger" VALUES ('1', 'AD000001', 'STR003', null, '30000', '2015-11-07 00:00:00+07', 'auto', '3', '50000', '20000');
-INSERT INTO "public"."generalledger" VALUES ('2', 'AD000001', 'STR001', null, '-50000', '2015-11-07 00:00:00+07', 'auto', '3', '50000', '100000');
-INSERT INTO "public"."generalledger" VALUES ('3', 'AD000001', 'STR003', '20000', '10000', '2015-11-08 00:00:00+07', 'admin tinh', '1', '30000', '20000');
-INSERT INTO "public"."generalledger" VALUES ('4', 'AD000001', 'STR003', '10000', '0', '2015-11-09 00:00:00+07', 'admin tu nhap', '1', '20000', '20000');
-INSERT INTO "public"."generalledger" VALUES ('5', 'AD000001', 'STR001', '-30000', '-20000', '2015-11-08 00:00:00+07', 'admin tu nhap', '2', '50000', '70000');
-INSERT INTO "public"."generalledger" VALUES ('6', 'AD000001', 'STR001', '-20000', '0', '2015-11-09 00:00:00+07', 'abc', '2', '50000', '50000');
-INSERT INTO "public"."generalledger" VALUES ('7', 'AD000001', 'STR004', null, '-130000', '2015-11-07 00:00:00+07', 'auto', '3', '120000', '250000');
-INSERT INTO "public"."generalledger" VALUES ('8', 'AD000001', 'STR004', '-120000', '-10000', '2015-11-08 00:00:00+07', 'admin tra cho cua hang', '2', '120000', '130000');
-INSERT INTO "public"."generalledger" VALUES ('9', 'AD000001', 'STR004', '-10000', '0', '2015-11-09 00:00:00+07', 'admin tra cho store', '2', '120000', '120000');
+INSERT INTO "public"."generalledger" (adminid, storeid, amount, balance, paydate, note, payfrom, totaldelivery, totalcod) VALUES ('AD000001', 'STR003', null, '30000', '2015-11-07 00:00:00+07', 'auto', '3', '50000', '20000');
+INSERT INTO "public"."generalledger" (adminid, storeid, amount, balance, paydate, note, payfrom, totaldelivery, totalcod) VALUES ('AD000001', 'STR001', null, '-50000', '2015-11-07 00:00:00+07', 'auto', '3', '50000', '100000');
+INSERT INTO "public"."generalledger" (adminid, storeid, amount, balance, paydate, note, payfrom, totaldelivery, totalcod) VALUES ('AD000001', 'STR003', '20000', '10000', '2015-11-08 00:00:00+07', 'admin tinh', '1', '30000', '20000');
+INSERT INTO "public"."generalledger" (adminid, storeid, amount, balance, paydate, note, payfrom, totaldelivery, totalcod) VALUES ('AD000001', 'STR003', '10000', '0', '2015-11-09 00:00:00+07', 'admin tu nhap', '1', '20000', '20000');
+INSERT INTO "public"."generalledger" (adminid, storeid, amount, balance, paydate, note, payfrom, totaldelivery, totalcod) VALUES ('AD000001', 'STR001', '-30000', '-20000', '2015-11-08 00:00:00+07', 'admin tu nhap', '2', '50000', '70000');
+INSERT INTO "public"."generalledger" (adminid, storeid, amount, balance, paydate, note, payfrom, totaldelivery, totalcod) VALUES ('AD000001', 'STR001', '-20000', '0', '2015-11-09 00:00:00+07', 'abc', '2', '50000', '50000');
+INSERT INTO "public"."generalledger" (adminid, storeid, amount, balance, paydate, note, payfrom, totaldelivery, totalcod) VALUES ('AD000001', 'STR004', null, '-130000', '2015-11-07 00:00:00+07', 'auto', '3', '120000', '250000');
+INSERT INTO "public"."generalledger" (adminid, storeid, amount, balance, paydate, note, payfrom, totaldelivery, totalcod) VALUES ('AD000001', 'STR004', '-120000', '-10000', '2015-11-08 00:00:00+07', 'admin tra cho cua hang', '2', '120000', '130000');
+INSERT INTO "public"."generalledger" (adminid, storeid, amount, balance, paydate, note, payfrom, totaldelivery, totalcod) VALUES ('AD000001', 'STR004', '-10000', '0', '2015-11-09 00:00:00+07', 'admin tra cho store', '2', '120000', '120000');
 
 -- ----------------------------
 -- Table structure for goods

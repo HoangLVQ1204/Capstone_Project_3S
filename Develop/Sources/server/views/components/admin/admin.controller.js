@@ -3,17 +3,26 @@
  */
 
 function adminController($scope,$state,$http,$q,$rootScope,config,socketService,authService){
+
+
     $scope.getUser = function(){
         console.log("get Users");
         return $http({
-            url: config.baseURI + '/users',
+            url: config.baseURI + '/api/user/:user',
             method: 'GET'
         }).then(function(data){
             $scope.data  = data;
+            console.log('AAAA',$scope.data);
         }).catch(function(error){
             console.log(error);
         });
-    }
+    };
+    //$scope.getUser();
+    authService.getProfileUser().then(function (admin) {
+        $scope.admin = admin.data;
+        console.log($scope.admin);
+    });
+
 
     $scope.signOut = function(){
         console.log("log out");

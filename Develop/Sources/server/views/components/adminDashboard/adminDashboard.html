@@ -39,11 +39,13 @@
                         <div class="widget-tile">
                             <section>
                                 <h5><strong>DElIVERY</strong> SERVICE TODAY </h5>
-                                <h2>{{todayTotal.fee}}VND</h2>
+                                <h2 ng-if="todayTotal.fee != null">{{todayTotal.fee}}VND</h2>
+                                <h2 ng-if="todayTotal.fee == null">0VND</h2>
                                 <div class="progress progress-xs progress-white progress-over-tile">
                                     <div class="progress-bar  progress-bar-white" aria-valuemax="{{todayTotal.cod+todayTotal.fee}}" aria-valuenow="{{todayTotal.cod}}" style="width: 86%;"></div>
                                 </div>
-                                <label class="progress-label label-white"> CoD service today is {{todayTotal.cod}}VND </a> </label>
+                                <label class="progress-label label-white" ng-if="todayTotal.cod != null"> CoD service today is {{todayTotal.cod}}VND </a> </label>
+                                <label class="progress-label label-white" ng-if="todayTotal.cod == null"> CoD service today is 0VND </a> </label>
                             </section>
                             <div class="hold-icon"><i class="fa fa-money"></i></div>
                         </div>
