@@ -220,7 +220,9 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
         // Events for markers        
         $scope.shipperEvents = {
             mouseover: function(gMarker, eventName, model, mouseEvent) {                                 
-                console.log('mouseover', model.order);                
+                model = _.find($scope.shipperMarkers, function(e) {
+                    return e.shipperID == model.shipperID;
+                });
                 console.log('mouseover storeMarkers', $scope.storeMarkers);
                 console.log('mouseover customerMarkers', $scope.customerMarkers);
                 // console.log('avatar', model);
@@ -229,7 +231,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
                         '<ul>';
 
                 model.order.forEach(function(order) {
-                    content += '<li>' + order + '(' + $scope.orders[order].status + ', ' + $scope.orders[order].isPending + ')</li>';
+                    content += '<li>' + order + '(' + $scope.orders[order].status + ($scope.orders[order].isPending ? ' <em>PENDING</em>' : '') + ')</li>';
                 });     
 
                 content += '</ul>' +
@@ -247,15 +249,17 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
         };    
         $scope.storeEvents = {
             mouseover: function(gMarker, eventName, model, mouseEvent) {                                 
-                console.log('mouseover', model);                
-                console.log('mouseover storeMarkers', $scope.shipperMarkers);
+                model = _.find($scope.storeMarkers, function(e) {
+                    return e.storeID == model.storeID;
+                });
+                console.log('mouseover shipperMarkers', $scope.shipperMarkers);
                 console.log('mouseover customerMarkers', $scope.customerMarkers);
                 var content = '<div>' + 
                         '<strong>' + model.geoText + '</strong>' +
                         '<ul>';
 
                 model.order.forEach(function(order) {
-                    content += '<li>' + order + '(' + $scope.orders[order].status + ', ' + $scope.orders[order].isPending + ')</li>';
+                    content += '<li>' + order + '(' + $scope.orders[order].status + ($scope.orders[order].isPending ? ' <em>PENDING</em>' : '') + ')</li>';
                 });     
                                     
                 content += '</ul>' +                        
@@ -272,15 +276,17 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
         };    
         $scope.customerEvents = {
             mouseover: function(gMarker, eventName, model, mouseEvent) {                                 
-                console.log('mouseover', model.order);                
+                model = _.find($scope.customerMarkers, function(e) {
+                    return e.customerID == model.customerID;
+                });
                 console.log('mouseover storeMarkers', $scope.storeMarkers);
-                console.log('mouseover customerMarkers', $scope.shipperMarkers);
+                console.log('mouseover shipperMarkers', $scope.shipperMarkers);
                 var content = '<div>' + 
                         '<strong>' + model.geoText + '</strong>' +
                         '<ul>';
 
                 model.order.forEach(function(order) {
-                    content += '<li>' + order + '(' + $scope.orders[order].status + ', ' + $scope.orders[order].isPending + ')</li>';
+                    content += '<li>' + order + '(' + $scope.orders[order].status + ($scope.orders[order].isPending ? ' <em>PENDING</em>' : '') + ')</li>';
                 });     
                                     
                 content += '</ul>' +                        
