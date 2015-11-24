@@ -93,7 +93,7 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
         $scope.order.deliverywardid = $scope.data.selectedWard.wardid;
         var data = {
           order: $scope.order,
-          listgoods: $scope.listgoods,
+          listgoods: $scope.listgoods
         }   
         dataService.putDataServer(urlBase,data)
          .then(function(sc){
@@ -154,10 +154,9 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
         var urlBase = config.baseURI + '/api/store/addGoods';
         $scope.good.orderid = $scope.orderid;
         var data = $scope.good;
-        //console.log("==========data==============",data);
+
         dataService.postDataServer(urlBase,data)
           .then(function(sc){
-            //console.log("==============sc===========",sc.data);
             $scope.good.goodsid = sc.data;
             $scope.good.goodID = bigestGoodId;
             $scope.listgoods.push($scope.good);           
@@ -171,10 +170,7 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
               content: "Can't add this good! Try again!"
             };
             $rootScope.notify(err);
-          });        
-       
-       
-        //console.log("=======goods[]=sau khi add====",$scope.goods);
+          });
     }
 
     $scope.deleteGoods = function(){
@@ -322,15 +318,25 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
         $.notific8($("#smsEmptyGood").val(), data);       
     }
 
-    // START Listen to socket changes
+    /*
+     by HoangLVQ - 24/11/2015
+     This function is used to listen event which reload status order
+     */
     $rootScope.$on("updateStatusOrder", function(event, data){
         getOrderFromServer();
-        //SHOW INFORMATION OF THE SHIPPER WHO PICKED ORDER
         if(data.msg.profile) {
            $rootScope.displayInfoShipper(data.msg.profile,data.msg.order);
         }
-        //END SHOW INFORMATION OF SHIPPER
     });
+
+    /*
+     by HoangLVQ - 24/11/2015
+     This function is used to listen event which update pendding order
+     */
+    $rootScope.$on("updatePendingOrder", function(event, data){
+        getOrderFromServer();
+    });
+
 
 }
 storeOrderDetailController.$inject = ['$scope','$stateParams','dataService','$http','config','$rootScope'];

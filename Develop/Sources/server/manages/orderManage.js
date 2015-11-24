@@ -521,42 +521,41 @@ deleteGoods =  function(req, res, next){
     })
 };
 
-addGoods = function(req, res, next){
-    var newGoods = req.body;
-        //console.log("=============req.body==============",newGoods);
+    addGoods = function(req, res, next){
+        var newGoods = req.body;
+
         db.goods.postOneGood(newGoods)
         .then(function(rs){
-            console.log("============rs===============",rs.goodsid);
             return res.status(200).json(rs.goodsid);
-
-        }, function(){
-            return res.status(400).json("Add goods fail!");
+        },function(err){
+            console.log(err);
+            next (err);
         })
     };
+
     updateGoods = function(req, res, next){
         var goodsid = req.query.goodsid;
         var storeid = req.user.stores[0].storeid;
         var updateGoods = req.body;
-        console.log("=============req.body==============",updateGoods);
         var newGoods = {
-            goodsname: updateGoods.goodsname,
-            weight: updateGoods.weight,
-            lengthsize: updateGoods.lengthsize,
-            widthsize: updateGoods.widthsize,
-            heightsize: updateGoods.heightsize,
+            goodsname:   updateGoods.goodsname,
+            weight:      parseFloat(updateGoods.weight),
+            lengthsize:  parseFloat(updateGoods.lengthsize),
+            widthsize:   parseFloat(updateGoods.widthsize),
+            heightsize:  parseFloat(updateGoods.heightsize),
             description: updateGoods.description
         }
+
         db.goods.checkGoodsBelongStore(goodsid, storeid, db.order).then(function(goods){
             db.goods.updateGoods(newGoods,updateGoods.goodsid)       
             .then(function(){                
                 return res.status(200).json("Update goods successfully!");
-            }, function(){
-                return res.status(400).json("Add goods fail!");
+            }, function(err){
+                next(err);
             })
         },function(er){
-            return res.status(400).json("Delete goods fail!");
+            next(err);
         })
-        
     };
  
     var storeGetOrderList = function (req, res, next) {
@@ -586,8 +585,6 @@ addGoods = function(req, res, next){
     };
 
     var countOrder = function (req, res, next){
-        console.log("==========,stoerid=========",req.query.storeid);
-        console.log("==========,year=========",req.query.year);
         var storeid = req.query.storeid;
 
         db.order.countOrder(storeid)

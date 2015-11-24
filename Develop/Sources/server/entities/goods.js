@@ -62,10 +62,10 @@ module.exports = function(sequelize, DataTypes) {
             goodsname: newGood.goodsname,
             orderid: newGood.orderid,
             stockid: newGood.stockid,
-            weight: newGood.weight,
-            lengthsize: newGood.lengthsize,
-            widthsize: newGood.widthsize,
-            heightsize: newGood.heightsize,
+            weight: parseFloat(newGood.weight),
+            lengthsize: parseFloat(newGood.lengthsize),
+            widthsize: parseFloat(newGood.widthsize),
+            heightsize: parseFloat(newGood.heightsize),
             description: newGood.description,
             amount: newGood.amount
           }

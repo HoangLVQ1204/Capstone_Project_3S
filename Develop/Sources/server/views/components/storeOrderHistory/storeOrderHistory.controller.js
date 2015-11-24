@@ -69,13 +69,24 @@ function storeOrderHistoryController($rootScope,$scope,dataService,$state, $http
 
     });
 
+    /*
+     by HoangLVQ - 24/11/2015
+     This function is used to listen event which reload status order
+     */
     $rootScope.$on("updateStatusOrder", function(event, data){
         getDataFromServer();
-        //SHOW INFORMATION OF THE SHIPPER WHO PICKED ORDER
         if(data.msg.profile) {
            $rootScope.displayInfoShipper(data.msg.profile,data.msg.order);
         }
-        //END SHOW INFORMATION OF SHIPPER
+    });
+
+
+    /*
+     by HoangLVQ - 24/11/2015
+     This function is used to listen event which update pendding order
+     */
+    $rootScope.$on("updatePendingOrder", function(event, data){
+        getDataFromServer();
     });
 
 
