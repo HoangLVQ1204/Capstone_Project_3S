@@ -332,8 +332,8 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
 
 
 var updateOrder = function (req, res, next) {
-    var district = req.body.selectedDistrict;
-    var innerCity = config.filterLocation.in;
+    var district = req.body.order.deliverydistrictid;
+    var innerCity = config.fileterLocation.in;
     var order = {}; 
     var updateOrder = req.body.order;
     var listupdateGoods = req.body.listgoods;
@@ -347,6 +347,7 @@ var updateOrder = function (req, res, next) {
     order.deliverywardid = updateOrder.deliverywardid;
     order.ordertypeid = updateOrder.ordertypeid;
     order.fee = calculateShipFee (district, innerCity,updateOrder.ordertypeid);
+    order.cod = updateOrder.cod;
     order.overweightfee = calculateOverWeightFee (district, innerCity, listupdateGoods);
     db.order.getOneOrder(updateOrder.orderid)
     .then(function(orderRs){
@@ -359,7 +360,8 @@ var updateOrder = function (req, res, next) {
                     lengthsize: updateGoods.lengthsize,
                     widthsize: updateGoods.widthsize,
                     heightsize: updateGoods.heightsize,
-                    description: updateGoods.description
+                    description: updateGoods.description,
+                    amount: updateGoods.amount
                 }
                 db.goods.updateGoods(newGoods,updateGoods.goodsid)                        
             }

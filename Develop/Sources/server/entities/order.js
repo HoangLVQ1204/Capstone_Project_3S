@@ -532,7 +532,38 @@ module.exports = function(sequelize, DataTypes) {
             group: ['"Month"']
         })
         }
-        
+
+      },
+
+      adminGetAllStatisticOrders: function () {
+        return order.findAll({
+          attributes: [
+            ['storeid', 'store'],
+            [
+              sequelize.fn('date_part',
+                  'year',
+                  sequelize.col('createdate')
+              ),
+              'year'
+            ],
+            [
+              sequelize.fn('date_part',
+                  'month',
+                  sequelize.col('createdate')
+              ),
+              'month'
+            ],
+            ['ordertypeid', 'type'],
+            [
+              sequelize.fn('count',
+                  sequelize.col('orderid')
+              ),
+              'count'
+            ]
+          ],
+          group: ['storeid', 'year', 'month', 'type'],
+          order: ['store', 'month']
+        })
       }
 
     }

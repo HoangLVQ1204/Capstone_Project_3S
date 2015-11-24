@@ -2,7 +2,7 @@
  * Created by KhanhKC on 18/11/2015.
  */
 
-function storeOrderListController($rootScope,$scope,dataService,$state, $http, $filter, config) {
+function storeOrderHistoryController($rootScope,$scope,dataService,$state, $http, $filter, config) {
 
     $scope.orderList = [];
     var smsData = {verticalEdge: 'right',
@@ -81,5 +81,5 @@ function storeOrderListController($rootScope,$scope,dataService,$state, $http, $
 
 }
 
-storeOrderListController.$inject = ['$rootScope','$scope','dataService','$state', '$http', '$filter', 'config'];
-angular.module('app').controller('storeOrderListController',storeOrderListController);
+storeOrderHistoryController.$inject = ['$rootScope','$scope','dataService','$state', '$http', '$filter', 'config'];
+angular.module('app').controller('storeOrderHistoryController',storeOrderHistoryController);
