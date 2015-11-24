@@ -32,8 +32,11 @@ function initStore(storeMarker, api) {
     return api.googlemap.then(function(util) {
         return util.getGeoText(storeMarker.latitude, storeMarker.longitude);        
     })
-    .then(function(geoText) {
+    .then(function(geoText) {        
         storeMarker.geoText = geoText;
+    })
+    .catch(function(err) {
+        console.log('initStore', err);
     });    
 }
 
@@ -63,7 +66,158 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     var customerMarkers = [];
     var orders = {};
 
+    var returnedShipperMarkers = [];
+    var returnedStoreMarkers = [];
+    var returnedCustomerMarkers = [];
+    var returnedOrders = {};
+
+    // { type: 'all' }
+    // { type: 'shipper', shipperID: xxx }
+    // { type: 'store', storeID: xxx }
+    // { type: 'orderdetail', orderID: xxx }
+    var currentMode = { type: 'all' };
+
     var api = {};
+
+    api.setMode = function(mode) {
+        currentMode = mode;
+        api.updateReturnedValues();
+        console.log('api.setMode', returnedStoreMarkers, returnedShipperMarkers);
+    };
+
+    api.getMode = function() {
+        return currentMode;
+    }
+
+    api.updateReturnedShippers = function() {
+        returnedShipperMarkers.splice(0, returnedShipperMarkers.length);
+        if (currentMode.type == 'all') {            
+            shipperMarkers.forEach(function(e) {
+                returnedShipperMarkers.push(_.clone(e, true));
+            });
+        } else if (currentMode.type == 'orderdetail') {
+            for (var k = 0; k < shipperMarkers.length; ++k) {
+                var e = _.clone(shipperMarkers[k], true);
+                e.order = e.order.filter(function(item) {
+                    return item == currentMode.orderID;
+                });
+                if (e.order.length > 0) returnedShipperMarkers.push(e);
+            }
+        } else if (currentMode.type == 'shipper') {            
+            var find = _.find(shipperMarkers, function(e) {
+                return currentMode.shipperID == e.shipperID;
+            });
+            if (find) returnedShipperMarkers.push(_.clone(find, true));
+        } else if (currentMode.type == 'store') {
+            for (var i = 0; i < shipperMarkers.length; ++i) {
+                var e = _.clone(shipperMarkers[i], true);
+                e.order = e.order.filter(function(item) {
+                    return orders[item].storeID == currentMode.storeID;
+                });
+                if (e.order.length > 0) {
+                    returnedShipperMarkers.push(e);
+                }
+            }
+        }
+    };
+
+    api.updateReturnedStores = function() {
+        returnedStoreMarkers.splice(0, returnedStoreMarkers.length);
+        if (currentMode.type == 'all') {            
+            storeMarkers.forEach(function(e) {
+                returnedStoreMarkers.push(_.clone(e, true));
+            });
+        } else if (currentMode.type == 'orderdetail') {
+            for (var k = 0; k < storeMarkers.length; ++k) {
+                var e = _.clone(storeMarkers[k], true);
+                e.order = e.order.filter(function(item) {
+                    return item == currentMode.orderID;
+                });
+                if (e.order.length > 0) returnedStoreMarkers.push(e);
+            }
+        } else if (currentMode.type == 'store') {            
+            var find = _.find(storeMarkers, function(e) {
+                return currentMode.storeID == e.storeID;
+            });
+            if (find) returnedStoreMarkers.push(_.clone(find, true));
+        } else if (currentMode.type == 'shipper') {
+            for (var i = 0; i < storeMarkers.length; ++i) {
+                var e = _.clone(storeMarkers[i], true);
+                e.order = e.order.filter(function(item) {
+                    return orders[item].shipperID == currentMode.shipperID;
+                });
+                if (e.order.length > 0) {
+                    returnedStoreMarkers.push(e);
+                }
+            }
+        }
+    };
+
+    api.updateReturnedCustomers = function() {
+        returnedCustomerMarkers.splice(0, returnedCustomerMarkers.length);
+        if (currentMode.type == 'all') {            
+            customerMarkers.forEach(function(e) {
+                returnedCustomerMarkers.push(_.clone(e, true));
+            });
+        } else if (currentMode.type == 'orderdetail') {
+            for (var k = 0; k < customerMarkers.length; ++k) {
+                var e = _.clone(customerMarkers[k], true);
+                e.order = e.order.filter(function(item) {
+                    return item == currentMode.orderID;
+                });
+                if (e.order.length > 0) returnedCustomerMarkers.push(e);
+            }
+        } else if (currentMode.type == 'shipper') {            
+            for (var i = 0; i < customerMarkers.length; ++i) {
+                var e = _.clone(customerMarkers[i], true);
+                e.order = e.order.filter(function(item) {
+                    return orders[item].shipperID == currentMode.shipperID;
+                });
+                if (e.order.length > 0) {
+                    returnedCustomerMarkers.push(e);
+                }
+            }
+        } else if (currentMode.type == 'store') {
+            for (var i = 0; i < customerMarkers.length; ++i) {
+                var e = _.clone(customerMarkers[i], true);
+                e.order = e.order.filter(function(item) {
+                    return orders[item].storeID == currentMode.storeID;
+                });
+                if (e.order.length > 0) {
+                    returnedCustomerMarkers.push(e);
+                }
+            }
+        }
+    };
+
+    api.updateReturnedOrders = function() {
+        for (var prop in returnedOrders) delete returnedOrders[prop];
+        if (currentMode.type == 'all') {            
+            for (var prop in orders) returnedOrders[prop] = _.clone(orders[prop], true);
+        } else if (currentMode.type == 'orderdetail') {
+            returnedOrders[currentMode.orderID] = _.clone(orders[currentMode.orderID], true);
+        } else if (currentMode.type == 'shipper') {            
+            for (var prop in orders) {
+                if (orders[prop].shipperID == currentMode.shipperID) {
+                    returnedOrders[prop] = _.clone(orders[prop], true);
+                }
+            }
+        } else if (currentMode.type == 'store') {
+            for (var prop in orders) {
+                if (orders[prop].storeID == currentMode.storeID) {
+                    returnedOrders[prop] = _.clone(orders[prop], true);
+                }
+            }
+        }  
+    };
+
+    api.updateReturnedValues = function() {
+        api.updateReturnedShippers();
+        api.updateReturnedStores();
+        api.updateReturnedCustomers();
+        api.updateReturnedOrders();
+    };
+
     api.googlemap = uiGmapGoogleMapApi.then(function(maps){         
 
         var geocoder = new maps.Geocoder;
@@ -168,14 +322,14 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     */
     api.getShipperMarkers = function(mode) {      
         // use $http instead          
-        // shipperMarkers = sampleData[mode].shipper;        
-        return shipperMarkers;
+        // shipperMarkers = sampleData[mode].shipper; 
+        return returnedShipperMarkers;
         // return sampleData[mode].shipper;
     }
 
     api.containShipper = function(shipper) {
         var find = _.find(shipperMarkers, function(shipperMarker) {
-            return shipper.shipperID == shipperMarker.storeID;
+            return shipper.shipperID == shipperMarker.shipperID;
         });
         return !!find;
     }
@@ -186,6 +340,7 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         initShipper(shipper, api);
         shipperMarkers.push(shipper);
         console.log('addShipper', shipper);
+        api.updateReturnedValues();
         return Promise.resolve();
     };
 
@@ -205,6 +360,7 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
                 return;
             }            
         }
+        api.updateReturnedValues();
     };
 
     api.getOneShipper = function(shipperID) {
@@ -221,6 +377,7 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
                 return;
             }            
         }
+        api.updateReturnedValues();
     };
 
     api.deleteShipper = function(shipperID) {
@@ -230,6 +387,7 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
                 return;
             }
         }
+        api.updateReturnedValues();
     };
 
 
@@ -239,8 +397,7 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         Store Markers
     */
     api.getStoreMarkers = function(mode) {
-        return storeMarkers;
-        //return sampleData[mode].store;
+        return returnedStoreMarkers;
     };
 
     api.containStore = function(store) {
@@ -260,6 +417,7 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         return initStore(store, api)
         .then(function() {
             storeMarkers.push(store);
+            api.updateReturnedValues();
         })
         .catch(function(err) {
             alert(err);
@@ -282,6 +440,7 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
                 return;
             }            
         }
+        api.updateReturnedValues();
     };
 
     api.getOneStore = function(storeID) {        
@@ -306,8 +465,8 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         var storePromises = storeMarkers.map(function(storeMarker) {
             return initStore(storeMarker, api);
         });
-
-        var customerPromises = Promise.all(storePromises)
+        // console.log('storePromises', storePromises);
+        return Promise.all(storePromises)
         .then(function() {            
             for (var e in orders) delete orders[e];
             for (var e in mapData.orders) orders[e] = _.clone(mapData.orders[e], true);            
@@ -316,18 +475,18 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
             mapData.customer.forEach(function(e) {
                 customerMarkers.push(_.clone(e, true));
             });            
-            return customerMarkers.map(function(customerMarker) {
+            var customerPromises = customerMarkers.map(function(customerMarker) {
                 return initCustomer(customerMarker, orders, api)                
             });
-        });        
-
-        return Promise.all(customerMarkers)
+            return Promise.all(customerPromises);
+        })
         .then(function() {
             console.log('SET shipper', shipperMarkers);
             console.log('SET store', storeMarkers);
             console.log('SET orders', orders);
-            console.log('SET customer', customerMarkers);
-        });        
+            console.log('SET customer', customerMarkers);    
+            api.setMode({ type: 'all' });    
+        });
     };
 
 
@@ -337,7 +496,7 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     api.getCustomerMarkers = function(mode) {      
         // use $http instead      
         // customerMarkers = sampleData[mode].customer;        
-        return customerMarkers;
+        return returnedCustomerMarkers;
         // return sampleData[mode].customer;
     }        
 
@@ -346,6 +505,7 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         return initCustomer(customer, orders, api)
         .then(function() {
             customerMarkers.push(customer);
+            api.updateReturnedValues();
         })
         .catch(function(err) {
             alert(err);
@@ -360,7 +520,7 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     api.getOrders = function(mode) {      
         // use $http instead      
         // orders = sampleData[mode].orders;
-        return orders;
+        return returnedOrders;
     };       
     
     api.addOrder = function(orderID, store, shipper, customer) {
@@ -376,13 +536,15 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         })
         .then(function() {
             api.updateOrderOfShipper(shipper.shipperID, orderID);
-            api.updateOrderOfStore(store.storeID, orderID);
+            api.updateOrderOfStore(store.storeID, orderID);            
             console.log('addOrder to map');
+            api.updateReturnedValues();
         });
     };   
 
     api.updateOrder = function(orderID, newOrder) {        
         orders[orderID] = _.merge(orders[orderID], newOrder);
+        api.updateReturnedValues();
     };
 
 

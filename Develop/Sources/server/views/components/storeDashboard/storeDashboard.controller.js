@@ -236,10 +236,18 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
         by HoangLVQ - 24/11/2015
         This function is used to listen event which update pendding order
     */    
-     $rootScope.$on("updatePenddingOrder", function(event, data){
+     $rootScope.$on("updatePendingOrder", function(event, data){
         getDataFromServer();
      });
 
+    $scope.findShipperAgain = function(order) {
+        console.log('findShipperAgain', order);
+        $rootScope.findExpressShipper({
+            orderID: order.orderid, 
+            customerAddress: order.fullDeliveryAddress
+        }, {}, true);
+    };
+    
 }
 
 
