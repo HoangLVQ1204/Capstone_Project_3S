@@ -212,7 +212,7 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
          */
          
          var district = req.body.order.deliverydistrictid;
-         var innerCity = config.fileterLocation.in;
+         var innerCity = config.filterLocation.in;
          var ordertypeid = req.body.order.ordertypeid;
          var fee = calculateShipFee (district, innerCity,ordertypeid);         
          var overWeightFee = calculateOverWeightFee (district, innerCity,req.body.goods)
@@ -332,8 +332,8 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
 
 
 var updateOrder = function (req, res, next) {
-    var district = req.body.selectedDistrict;
-    var innerCity = config.fileterLocation.in;
+    var district = req.body.order.deliverydistrictid;
+    var innerCity = config.filterLocation.in;
     var order = {}; 
     var updateOrder = req.body.order;
     var listupdateGoods = req.body.listgoods;
@@ -347,6 +347,7 @@ var updateOrder = function (req, res, next) {
     order.deliverywardid = updateOrder.deliverywardid;
     order.ordertypeid = updateOrder.ordertypeid;
     order.fee = calculateShipFee (district, innerCity,updateOrder.ordertypeid);
+    order.cod = updateOrder.cod;
     order.overweightfee = calculateOverWeightFee (district, innerCity, listupdateGoods);
     db.order.getOneOrder(updateOrder.orderid)
     .then(function(orderRs){
@@ -359,7 +360,8 @@ var updateOrder = function (req, res, next) {
                     lengthsize: updateGoods.lengthsize,
                     widthsize: updateGoods.widthsize,
                     heightsize: updateGoods.heightsize,
-                    description: updateGoods.description
+                    description: updateGoods.description,
+                    amount: updateGoods.amount
                 }
                 db.goods.updateGoods(newGoods,updateGoods.goodsid)                        
             }
@@ -436,8 +438,8 @@ var cancelOrder = function (req, res, next) {
     .then(function(issue){
         //Add notification
         var msgRequestCancel = {
-            type: 'Info',
-            title: 'Info',
+            type: 'Issue',
+            title: 'Issue',
             content: 'Store ' + storeID + ' requested cancel an order',
             url: '#/admin/issueBox/content?issueid=' + issue.dataValues.issueid,
             isread: false,
@@ -563,10 +565,14 @@ addGoods = function(req, res, next){
         var listOrder=[];
         db.order.storeGetAllOrders(db.orderstatus, db.ordertype,storeId)
         .then(function(list){
+            
+            var tempList = [];
 
-            var tempList = list.map(function(order){
-                return order.toJSON();
-            });
+            list.forEach(function(order,index){
+                if(!order.isdraff){
+                    tempList.push(order.toJSON());
+                }
+            })
 
             tempList = tempList.map(function(order, index) {
                 order.fullDeliveryAddress = list[index].getCustomerAddress(); 

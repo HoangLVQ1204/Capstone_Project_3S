@@ -19,7 +19,12 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
         $scope.issue.orderissues.map(function (order) {
             order.order.tasks.sort(dateSort);
             order.order.tasks.splice(1,order.order.tasks.length-1);
-        })
+        });
+        //var result = $.grep($scope.$parent.issueList, function(e){ return e.issueid == $scope.issueid; });
+        //var index = $scope.$parent.issueList.indexOf(result[0]);
+        //$scope.$parent.currentPage = Math.floor(index/$scope.$parent.pageSize);
+        //$scope.$parent.$apply();
+        //alert($scope.$parent.currentPage);
         //$scope.displayedOrderCollection = [].concat($scope.orderList);
     })
 
@@ -66,7 +71,7 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
     //console.log(authService.getCurrentInfoUser());
     $scope.showConfirm = function (event, resolveType){
         //alert(1);
-        socketAdmin.issueMessage($scope.issue, 'Order has Issue');
+
         if ($scope.issue.isresolved) return;
         $scope.resolveType = resolveType;
         event.preventDefault();
@@ -81,7 +86,7 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
 
     //resolve pending issue
     function resolveIssue(){
-        $http.put(config.baseURI + "/api/updateResolveIssue?issueid=" + $scope.issueid, $scope.issue).success(function(response){
+        return $http.put(config.baseURI + "/api/updateResolveIssue?issueid=" + $scope.issueid, $scope.issue).success(function(response){
             //$scope.issue = response;
             $scope.issue.isresolved = true;
             var result = $.grep($scope.$parent.issueList, function(e){ return e.issueid == $scope.issueid; });
@@ -122,7 +127,7 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
                 console.log(error)
             })
         };
-        if ($scope.issue.typeid == 5){
+        if ($scope.issue.typeid == 5 || $scope.issue.typeid == 7){
             var promise = [];
             $scope.issue.orderissues.map(function (issue) {
                 issue.order.tasks[0].statusid = 2;//active task
@@ -133,7 +138,11 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
             });
 
             Promise.all(promise).then(function success(response){
-                resolveIssue();
+                var promises = resolveIssue();
+                promises.then(function () {
+                    socketAdmin.issueMessage($scope.issue)
+                })
+
             },function (error) {
                 smsData.theme="danger";
                 //data.sticky="true";
@@ -153,7 +162,11 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
             })
             //console.log($scope.issue.orderissues);
             $http.put(config.baseURI + "/api/updateStateOfStoreCancelIssue", $scope.issue).then(function success(response){
-                resolveIssue();
+
+                var promise = resolveIssue();
+                promise.then(function () {
+                    socketAdmin.issueMessage($scope.issue)
+                })
             },function (error) {
                 smsData.theme="danger";
                 //data.sticky="true";
@@ -193,7 +206,10 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
         })
         //console.log($scope.issue.orderissues);
         $http.put(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue).then(function success(response){
-            resolveIssue();
+            var promise = resolveIssue();
+            promise.then(function () {
+                socketAdmin.issueMessage($scope.issue)
+            })
         },function (error) {
             smsData.theme="danger";
             //data.sticky="true";

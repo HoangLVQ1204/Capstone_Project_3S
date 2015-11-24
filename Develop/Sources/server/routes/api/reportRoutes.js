@@ -16,4 +16,6 @@ module.exports = function(app){
 
 	app.route('/api/admin/report/storeOrderCount')
 		.get(reportCtrl.getCountOrdersDoneOrFail)
+	app.route('/api/admin/report/overView')
+		.get(reportCtrl.getOverView)
 }
