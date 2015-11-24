@@ -10,30 +10,46 @@
     <div class="row">      
       <div class="col-md-4">
         <section>
-          <div class="col-md-6"><h4>Order id: </h4></div>
-          <div><h4>{{order.orderid}}</h4></div> 
-          <div class="col-md-6"><h4>Order status:</h4></div>
-          <div><h4>{{order.orderstatus.statusname}}</h4></div> 
-          <div class="col-md-6"><h4>Delivery type:</h4></div>
-          <div><h4>{{deliveryType}}</h4></div>  
+          <div class="form-group row">
+            <div class="col-md-6"><h4>Order id: </h4></div>
+            <div class="col-md-6"><h4>{{order.orderid}}</h4></div> 
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6"><h4>Delivery type:</h4></div>
+            <div class="col-md-6"><h4>{{deliveryType}}</h4></div>  
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6"><h4>Order status:</h4></div>
+            <div class="col-md-6"><h4>{{order.orderstatus.statusname}}</h4></div> 
+          </div>
         </section>
       </div>
       <div class="col-md-4">
         <section>
-          <div class="col-md-7"><h4>Cash on delivery:</h4></div>
-          <div><h4>{{order.cod|number}} VND</h4></div> 
-          <div class="col-md-7"><h4>Ship fee:</h4></div>
-          <div><h4>{{order.fee|number}} VND</h4></div> 
-          <div class="col-md-7"><h4>Over weight fee:</h4></div>
-          <div><h4>{{order.overweightfee|number}} VND</h4></div>  
+          <div class="form-group row">
+            <div class="col-md-7"><h4>Cash on delivery:</h4></div>
+            <div class="col-md-5"><h4>{{order.cod|number}} VND</h4></div> 
+          </div>
+           <div class="form-group row">
+            <div class="col-md-7"><h4>Ship fee:</h4></div>
+            <div class="col-md-5"><h4>{{order.fee|number}} VND</h4></div> 
+          </div>  
+          <div class="form-group row">
+            <div class="col-md-7"><h4>Over weight fee:</h4></div>
+            <div class="col-md-5"><h4>{{order.overweightfee|number}} VND</h4></div>  
+          </div>
         </section>
       </div>
       <div class="col-md-4">
         <section>
-          <div class="col-md-8"><h4>Code for customer:</h4></div>
-          <div><h4>{{codeForCustomer}}</h4></div> 
-          <div class="col-md-8"><h4>Code for shipper:</h4></div>
-          <div><h4>{{codeForShipper}}</h4></div> 
+          <div class="form-group row">
+            <div class="col-md-8"><h4>Code for customer:</h4></div>
+            <div class="col-md-4"><h4>{{codeForCustomer}}</h4></div> 
+          </div>
+          <div class="form-group row">
+            <div class="col-md-8"><h4>Code for shipper:</h4></div>
+            <div class="col-md-4"><h4>{{codeForShipper}}</h4></div> 
+          </div>
         </section>
       </div>      
     </div>
@@ -183,7 +199,7 @@
 </table>
 <hr>
 <div class="form-group">
-  <button ng-disabled="order.statusid!=1" ng-if="disabled" type="button" ng-click="changeToEn()" class="btn btn-theme"> Edit Order</button>
+  <button ng-disabled="order.statusid>1" ng-if="disabled" type="button" ng-click="changeToEn()" class="btn btn-theme"> Edit Order</button>
   <button ng-if="!disabled" type="submit" class="btn btn-theme"> Update Order</button>
 </div>
 </form>

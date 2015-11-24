@@ -347,6 +347,7 @@ var updateOrder = function (req, res, next) {
     order.deliverywardid = updateOrder.deliverywardid;
     order.ordertypeid = updateOrder.ordertypeid;
     order.fee = calculateShipFee (district, innerCity,updateOrder.ordertypeid);
+    order.cod = updateOrder.cod;
     order.overweightfee = calculateOverWeightFee (district, innerCity, listupdateGoods);
     db.order.getOneOrder(updateOrder.orderid)
     .then(function(orderRs){
