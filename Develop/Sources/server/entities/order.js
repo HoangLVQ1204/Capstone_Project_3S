@@ -103,6 +103,7 @@ module.exports = function(sequelize, DataTypes) {
       },
       getCustomerAddress: function(){
         var addressList = require("../config/address.json")
+        console.log(this.deliverywardid,"ORDER106")
         return this.deliveryaddress + ', ' + addressList.ward[this.deliverywardid] + ', ' + addressList.district[this.deliverydistrictid] + ', ' + addressList.province[this.deliveryprovinceid]
       }
     },
@@ -193,7 +194,7 @@ module.exports = function(sequelize, DataTypes) {
       //KhanhKC
       storeGetAllOrders: function (oderstatusModel,ordertypeModel, store_id) {
         return order.findAll({
-          attributes: ['orderid','recipientname','recipientphone','statusid','isdraff','ispending','cod','fee','completedate','deliveryaddress','createdate','ledgerid'],
+          attributes: ['orderid','recipientname','recipientphone','statusid','isdraff','ispending','cod','fee','completedate','deliveryaddress','createdate','ledgerid','deliverydistrictid','deliveryprovinceid','deliverywardid'],
           where: {storeid:store_id },
           include: [
             {'model': oderstatusModel,
