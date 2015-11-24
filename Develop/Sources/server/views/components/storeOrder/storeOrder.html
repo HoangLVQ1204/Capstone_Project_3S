@@ -36,8 +36,10 @@
                                 <div class="col-md-6">
                                     <label class="control-label">Phone</label>
                                     <input ng-model="order.recipientphone" type="text" class="form-control"
-                                           parsley-type="phone"  parsley-required="true"
-                                           placeholder="(XXX) XXXX XXX">
+                                           parsley-type="phone" parsley-rangelength="[10,11]"   parsley-required="true"
+                                           placeholder="Phone munber"
+                                           parsley-error-message="This value should be a valid phone number"
+                                           >
                                 </div>
                             </div>
 
