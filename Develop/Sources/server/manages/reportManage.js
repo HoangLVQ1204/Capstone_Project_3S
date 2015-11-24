@@ -33,34 +33,7 @@ module.exports = function (app) {
     // };
 
     var getOrderCount = function(req, res, next){
-        db.order.findAll({
-            attributes: [
-                ['storeid', 'store'],
-                [
-                    db.sequelize.fn('date_part',
-                        'year',
-                        db.sequelize.col('createdate')
-                    ),
-                    'year'
-                ],
-                [
-                    db.sequelize.fn('date_part',
-                        'month',
-                        db.sequelize.col('createdate')
-                    ),
-                    'month'
-                ],
-                ['ordertypeid', 'type'],
-                [
-                    db.sequelize.fn('count',
-                        db.sequelize.col('orderid')
-                    ),
-                    'count'
-                ]
-            ],
-            group: ['storeid','year','month', 'type'],
-            order: ['store','month']
-        }).then(function(rows) {
+        db.order.adminGetAllStatisticOrders().then(function(rows) {
             var rs = {};
             rows.forEach(function(row){
                 row = row.toJSON();
