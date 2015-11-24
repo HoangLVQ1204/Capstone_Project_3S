@@ -32,10 +32,31 @@ module.exports = function (app) {
     //     res.status(200).json(data);
     // };
 
-    
+    var getOrderCount = function(req, res, next){
+        db.order.adminGetAllStatisticOrders().then(function(rows) {
+            var rs = {};
+            rows.forEach(function(row){
+                row = row.toJSON();
+                var count = row['count'];
+                var type = row['type'];
+                var month = row['month'];
+                var year = row['year'];
+                var store = row['store'];
+                if (!rs.hasOwnProperty(store)) rs[store] = {};
+                if (!rs[store].hasOwnProperty(year)) rs[store][year] = {};
+                if (!rs[store][year].hasOwnProperty(month)) rs[store][year][month] = {};
+                rs[store][year][month][type] = parseInt(count)? parseInt(count):0;
+            });
+            return res.status(200).json(rs)
+        },function(er){
+            console.log(er);
+            return res.status(400).json(er)
+        });
+    }
 
     return {
         // getOverView: getOverView,
+        getOrderCount: getOrderCount
         
     }
 }
