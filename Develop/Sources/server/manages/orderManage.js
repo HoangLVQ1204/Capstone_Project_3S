@@ -62,7 +62,7 @@
                 }else {
                     ledgerid = order.dataValues.ledgerid;
                 }
-                var fullDeliveryAddress = order.getOrderAddress();
+                var fullDeliveryAddress = order.getCustomerAddress();
                 console.log("====================",fullDeliveryAddress);          
                 listOrders.push({
                     'orderid': order.dataValues.orderid,
@@ -315,8 +315,9 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
                     });
                     //console.log("==============55==============");
                 }
-
-                return res.status(200).json(order);
+                var response = order.toJSON();
+                response.customerAddress = order.getCustomerAddress();
+                return res.status(200).json(response);
 
             });
             // .then(function (order) {
@@ -381,7 +382,7 @@ var updateOrder = function (req, res, next) {
      console.log(order);
      return db.order.updateExpressOrder({
          statusid : order.statusId,
-         isdraff: order.isDraff
+         isdraff: order.isDraff,
      },order.orderId)
          .then(function (rs) {
              console.log(rs);
@@ -562,12 +563,17 @@ addGoods = function(req, res, next){
         var listOrder=[];
         db.order.storeGetAllOrders(db.orderstatus, db.ordertype,storeId)
         .then(function(list){
-             _.each(list, function(order){
-                var fullDeliveryAddress = order.getOrderAddress();
-                order.fullDeliveryAddress = fullDeliveryAddress;
-                // listOrder.push(order);
-             })
-            res.status(200).json(list);
+
+            var tempList = list.map(function(order){
+                return order.toJSON();
+            });
+
+            tempList = tempList.map(function(order, index) {
+                order.fullDeliveryAddress = list[index].getCustomerAddress(); 
+                return order;    
+            });
+
+            res.status(200).json(tempList);
         }, function(err) {
             next(err);
         });

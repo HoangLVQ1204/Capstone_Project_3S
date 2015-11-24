@@ -75,14 +75,14 @@
                                         <th st-sort="orderstatus.statusname" class="text-center sortable">Status</th>
 
                                         <th class="text-center sortable" st-sort="ordertype.typename">Type</th>
-                                        <th class="text-center">Option</th>
+
                                     </tr>
                                     </thead>
                                     <tbody align="center" >
 
                                     <tr class="odd gradeX" ng-repeat= "x in displayedCollection">
                                         <td>{{x.orderid}}</td>
-                                        <td>{{x.store.name}}</td>
+                                        <td><a ui-sref="admin.storeDetail({storeid:x.storeid})">{{x.store.name}}</a></td>
                                         <td>{{x.pickupaddress}}</td>
                                         <td>{{x.deliveryaddress}}</td>
                                         <td>{{x.pickupdate|date:"dd/MM/yyyy"}}</td>
@@ -93,11 +93,11 @@
                                         </td>
 
                                         <td class="center"> {{x.ordertype.typename}}</td>
-                                        <td>
-                                        <span class="tooltip-area">
-                                        <a class="btn btn-default btn-sm" title="Edit"><i class="fa fa-edit (alias)"></i></a>
-                                        </span>
-                                        </td>
+                                        <!--<td>-->
+                                        <!--<span class="tooltip-area">-->
+                                        <!--<a class="btn btn-default btn-sm" title="Edit"><i class="fa fa-edit (alias)"></i></a>-->
+                                        <!--</span>-->
+                                        <!--</td>-->
                                     </tr>
                                     </tbody>
                                     <tfoot>
@@ -129,7 +129,7 @@
     <div id="md-effect-confirm" class="modal fade" tabindex="-1" data-width="750">
         <div class="modal-header bg-inverse bd-inverse-darken">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
-            <h4 class="modal-title">Confirm payment</h4>
+            <h4 class="modal-title">Confirm Dialog</h4>
         </div>
         <!-- //modal-header-->
         <div class="modal-body">

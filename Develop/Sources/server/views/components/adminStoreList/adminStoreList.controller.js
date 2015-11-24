@@ -20,10 +20,8 @@ function adminStoreListController($scope,$state, $http, authService, config) {
         },{
             option: 'Address',
             value: 'address'
-        },{
-            option: 'Payment',
-            value: 'payment'
-        }];
+        }
+        ];
     $scope.selected =$scope.searchOptions[0];
     $scope.dateRange = '';
 
@@ -38,7 +36,7 @@ function adminStoreListController($scope,$state, $http, authService, config) {
     //get List to display
     $http.get(config.baseURI + "/api/store/getAllLedger").success(function(response){
         $scope.storeList = response;
-        $scope.storeList.sort(dateSort);
+        $scope.storeList.sort(dateSort)
     }).then(function () {
         $http.get(config.baseURI + "/api/store/getTotalCoD").success(function(response){
             $scope.currentCoD= response;
@@ -50,10 +48,13 @@ function adminStoreListController($scope,$state, $http, authService, config) {
             //==//console.log(response);
             var i=0;
             $scope.storeList.map(function (store) {
+                var resultCoD = $.grep($scope.currentCoD, function(e){ return e.storeid == store.storeid; });
                 if ($scope.currentCoD.length > 0)
-                store.currentCoD =  $scope.currentCoD[i].totalCoD;
+                    store.currentCoD =  resultCoD[0].totalCoD;
+
+                var resultFee = $.grep($scope.currentFee, function(e){ return e.storeid == store.storeid; });
                 if ($scope.currentFee.length > 0)
-                store.currentFee =  $scope.currentFee[i].totalFee;
+                store.currentFee =  resultFee[0].totalFee;
                 if (store.generalledgers.length > 0)
                 store.generalledgers[0].balance =  parseInt(store.generalledgers[0].balance);
 
@@ -61,6 +62,7 @@ function adminStoreListController($scope,$state, $http, authService, config) {
                 i++;
                 return store;
             })
+            //console.log($scope.storeList);
         })
 
     })
@@ -85,7 +87,7 @@ function adminStoreListController($scope,$state, $http, authService, config) {
         $("#inputValue").val(0);
         $scope.isValid = $('#inputValue').parsley( 'validate' );
 
-        console.log($('#inputValue'));
+        //console.log($('#inputValue'));
     };
 
     $scope.blockConfirm = function (event, store){
@@ -93,7 +95,7 @@ function adminStoreListController($scope,$state, $http, authService, config) {
         $scope.reason = "";
         $scope.selectedStore = store;
         //console.log(store);
-        if (store.ban[0]!=null && store.ban[0].type == 1) $scope.blocktext = 'unblock'
+        if (store.managestores[0].user.userstatus == 3) $scope.blocktext = 'unblock'
            else $scope.blocktext = 'block';
         event.preventDefault();
         //$scope.getLatestLedgerOfStore(storeid);
@@ -108,20 +110,28 @@ function adminStoreListController($scope,$state, $http, authService, config) {
     //FUNCTION BLOCK A STORE
     //-----------------------------------
     $scope.blockStore = function (store){
-        //alert(1);
+        //console.log(store);
         var valid = $('#blockReason').parsley( 'validate' );
         if (!valid) return;
         var bannedLog = new Object();
         bannedLog['adminid'] = currentUser.username;
-        bannedLog['storeid'] = store.storeid;
+        bannedLog['storeid'] = store.managestores[0].managerid;
         bannedLog['bannedtime'] = new Date(Date.now());
         bannedLog['reason'] = $scope.reason;
 
-        if (store.ban[0]!=null && store.ban[0].type == 1) bannedLog['type'] = 2
-        else bannedLog['type'] = 1;
-        console.log(bannedLog);
+        if (store.managestores[0].user.userstatus == 2)
+            {
+                bannedLog['type'] = 1;
+                bannedLog['userStatus'] = 3;
+            }
+        else {
+            bannedLog['type'] = 2;
+            bannedLog['userStatus'] = 2;
+        }
+        //console.log(bannedLog);
         $http.post(config.baseURI + "/api/log/postBannedLog", bannedLog).then(function success(response){
             //console.log(store);bal
+            store.managestores[0].user.userstatus =  bannedLog['userStatus'];
             smsData.theme="theme-inverse";
             $.notific8($("#sms-success").val(), smsData);
             $("#md-effect-block").attr('class','modal fade').addClass(smsData.effect).modal('hide');
@@ -285,6 +295,13 @@ function adminStoreListController($scope,$state, $http, authService, config) {
             return -1;
         }
         if (x.registereddate < y.registereddate) {
+            return 1;
+        }
+
+        if (x.storeid < y.storeid) {
+            return -1;
+        }
+        if (x.storeid > y.storeid) {
             return 1;
         }
         return 0;

@@ -101,6 +101,7 @@ module.exports = function(app) {
     //function add new Shipper to system
     var addNewUser = function(req, res, next){
         var user = req.body;
+        user['account']['logintime'] = new Date();
         db.user.addNewUser(user.account)
             .then(function(){
                 db.profile.addNewProfile(user.profile)
@@ -108,10 +109,12 @@ module.exports = function(app) {
                         res.status(201).json(profile);
                     },function(err){
                         //console.log(newShipperID, shipper);
+                        console.log(err);
                         res.status(400).json("Can not add new profile");
                     });
             },function(err){
                 //console.log(newShipperID, shipper);
+                console.log(err);
                 res.status(400).json("Can not add new user");
             });
 

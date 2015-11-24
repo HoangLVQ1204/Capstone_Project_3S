@@ -82,7 +82,7 @@
                                     <tbody align="center" >
 
                                     <tr class="odd gradeX" ng-repeat= "x in displayedCollection">
-                                        <td>{{x.storeid}}</td>
+                                        <td><a ui-sref="admin.storeDetail({storeid:x.storeid})">{{x.storeid}}</a></td>
                                         <td>{{x.name}}</td>
                                         <td>{{x.address}}</td>
                                         <td class="center">
@@ -98,10 +98,10 @@
                                         <td width="25%">
 
                                         <span class="tooltip-area">
-                                        <a class="btn btn-default btn-sm" title="Edit"><i class="fa fa-edit (alias)"></i></a>
+                                        <a class="btn btn-default btn-sm" ui-sref="admin.storeDetail({storeid:x.storeid})" title="Edit"><i class="fa fa-edit (alias)"></i></a>
                                         <a class="btn btn-default btn-sm" title="Send Message"><i class="fa fa-envelope"></i></a>
-                                        <a class="btn btn-default btn-sm md-effect" title="Block" ng-click="blockConfirm($event, x)" ng-show="x.ban[0].type!=1"><i class="fa fa-ban"></i></a>
-                                        <a class="btn btn-default btn-sm md-effect" title="Unblock" ng-click="blockConfirm($event, x)" ng-show="x.ban[0].type==1"><i class="glyphicon glyphicon-ok-circle"></i></a>
+                                        <a class="btn btn-default btn-sm md-effect" title="Block" ng-click="blockConfirm($event, x)" ng-show="x.managestores[0].user.userstatus == 2"><i class="fa fa-ban"></i></a>
+                                        <a class="btn btn-default btn-sm md-effect" title="Unblock" ng-click="blockConfirm($event, x)" ng-show="x.managestores[0].user.userstatus != 2"><i class="glyphicon glyphicon-ok-circle"></i></a>
                                         <a class="btn btn-default btn-sm" title="Export"><i class="glyphicon glyphicon-export"></i></i></a>
                                         <a class="btn btn-default btn-sm md-effect" ng-click="showConfirm($event, x)" data-effect="md-flipVer" title="Confirm Payment"><i class="fa fa-check-square-o"></i></i></a>
                                         </span>

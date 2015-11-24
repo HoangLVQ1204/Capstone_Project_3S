@@ -10,7 +10,7 @@ function adminAddShipperController($scope,$state, $http, $filter, config) {
     $scope.newShipper = new Object();
     $scope.newShipper.account = new Object();
     $scope.newShipper.profile = new Object();
-    //$scope.newShipper.profile.dob = null;
+    $scope.newShipper.profile.avatar = "assets/avatar/shipper/Default.png";
 
     $http.get(config.baseURI + "/api/shipper/getNewShipperID").success(function(response){
         $scope.newShipper.account.username = response;

@@ -320,18 +320,11 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
     }
 
     // START Listen to socket changes
-    $rootScope.$on("evChange", function(event, data){
-      console.log("===============OK======");
+    $rootScope.$on("updateStatusOrder", function(event, data){
         getOrderFromServer();
         //SHOW INFORMATION OF THE SHIPPER WHO PICKED ORDER
         if(data.msg.profile) {
-            $scope.theShipper = data.msg.profile;
-            $scope.thePickedOrder = data.msg.order;
-            console.dir($scope.theShipper);
-            $("#informMsg").modal("show");
-            setTimeout(function () {
-                $("#informMsg").modal("hide");
-            }, 3000);
+           $rootScope.displayInfoShipper(data.msg.profile,data.msg.order);
         }
         //END SHOW INFORMATION OF SHIPPER
     });
