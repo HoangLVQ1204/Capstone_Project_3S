@@ -146,7 +146,8 @@ function socketAdmin(socketService,authService,mapService, $rootScope){
             {
                 orderList: orderList,
                 shipperid: issue.orderissues[0].order.tasks[0].shipperid,
-                categoryid: issue.issuetype.categoryid,
+                //categoryid: issue.issuetype.categoryid,
+                typeid: issue.typeid,
                 msg: msgToStore
             },
             'admin:messageIssue');

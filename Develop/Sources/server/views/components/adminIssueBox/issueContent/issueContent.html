@@ -135,7 +135,7 @@
 
                 <button type="button" class="btn btn-danger" ng-click="updateResolve()"><i class="fa fa-check-circle"></i> Yes</button>
                 <button type="button" class="btn btn-inverse" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i> No</button>
-                <button ng-show="resolveType==2" type="button" class="btn btn-danger" ng-click="goToProcessing()"><i class="fa  fa-mail-forward"></i> AssignTask</button>
+                <button ng-show="resolveType==2 && processingTask>0" type="button" class="btn btn-danger" ng-click="goToProcessing()"><i class="fa  fa-mail-forward"></i> AssignTask</button>
             </form>
         </div>
         <!-- //modal-body-->
