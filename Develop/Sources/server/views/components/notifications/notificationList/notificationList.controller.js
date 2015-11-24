@@ -5,7 +5,7 @@
 
 function notificationListController($scope, config, dataService, notificationService, $rootScope){	
 	console.log('notificationListController');
-	$rootScope.numberNewNoti = 0;
+	// $rootScope.numberNewNoti = 0;
 	$scope.pageNumbers = [];
 
 	$scope.listNotifications = [];
@@ -67,6 +67,7 @@ function notificationListController($scope, config, dataService, notificationSer
 
 	$scope.readNotification = function(index) {
 		notificationService.readNotification(index);
+		$rootScope.numberUnreadNoti -= 1;
 	};
 }
 
