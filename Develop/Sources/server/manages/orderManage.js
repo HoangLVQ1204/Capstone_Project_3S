@@ -332,7 +332,7 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
 
 
 var updateOrder = function (req, res, next) {
-    var district = req.body.selectedDistrict;
+    var district = req.body.order.deliverydistrictid;
     var innerCity = config.fileterLocation.in;
     var order = {}; 
     var updateOrder = req.body.order;
