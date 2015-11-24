@@ -637,6 +637,25 @@ module.exports = function(sequelize, DataTypes) {
           group: ['storeid', 'year', 'month', 'status'],
           order: ['store', 'month']
         })
+      },
+
+      adminCountAllOrder:function(){
+        return order.findAll({
+          attributes:[
+            [
+              sequelize.fn('count',
+                  sequelize.col('orderid')
+              ),
+              'totalOrder'
+            ],
+            [
+              sequelize.fn('sum',
+                  sequelize.col('fee')
+              ),
+              'totalFee'
+            ]
+          ]
+        })
       }
 
     }
