@@ -202,7 +202,15 @@ module.exports = function(sequelize, DataTypes) {
             }
           }
         })
-      }
+      },
+
+      updateUserStatus: function(username, status) {//for ban store function
+        return user.update({
+          'userstatus': status
+        },{where: {
+          'username': username
+        }})
+      },
   }
 
   });

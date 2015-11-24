@@ -120,6 +120,7 @@ module.exports = function(app) {
                                 var newFee = new Object();
                                 if (isNaN(total))  newFee.totalFee = 0;
                                 else newFee.totalFee  = total;
+                                newFee.storeid = item.storeid;
                                 fee.push(newFee);
                     }))
                 })
@@ -155,6 +156,7 @@ module.exports = function(app) {
                                 var newFee = new Object();
                                 if (isNaN(total))  newFee.totalCoD = 0;
                                 else newFee.totalCoD  = total;
+                                newFee.storeid = item.storeid;
                                 cod.push(newFee);
                             }))
                         })

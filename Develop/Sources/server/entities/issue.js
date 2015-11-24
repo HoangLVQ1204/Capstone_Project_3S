@@ -47,6 +47,11 @@ module.exports = function(sequelize, DataTypes) {
           foreignKey: 'typeid',
           constraints: false
         });
+
+        issue.belongsTo(db.profile, {
+          foreignKey: 'sender',
+          constraints: false
+        });
       },
       createNewIssue: function(newIssue){
         return issue.create({typeid: newIssue.typeid, description: newIssue.description, isresolved: newIssue.isresolved, resolvetype: newIssue.resolvetype, createddate: newIssue.createddate, sender: newIssue.sender});
@@ -87,7 +92,7 @@ module.exports = function(sequelize, DataTypes) {
         })
       },
 
-      getIssueDetail: function (orderissue, issuetype, issuecategory, issueid, order, task, orderstatus, taskstatus) {
+      getIssueDetail: function (orderissue, issuetype, issuecategory, issueid, order, task, orderstatus, taskstatus, profile) {
         return issue.findOne({
           include: [{
             model: orderissue, attributes: ['orderid'],
@@ -109,6 +114,8 @@ module.exports = function(sequelize, DataTypes) {
           },{
             model: issuetype, attributes: ['categoryid', 'typename'],
             include: {model : issuecategory, attributes: ['categoryname']}
+          },{
+            model: profile, attributes: ['avatar']
           }],
           where: {
             'issueid': issueid

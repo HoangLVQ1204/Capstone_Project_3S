@@ -47,15 +47,15 @@
                                         </div><!-- //form-group-->
 
                                         <div class="col-sm-4 pull-right">
-                                            <div class="input-icon col-sm-8"><i class="fa fa-search ico"></i>
+                                            <div class="input-icon col-sm-12"><i class="fa fa-search ico"></i>
                                                 <input type="search" class="form-control" placeholder="Search" ng-model="search">
                                             </div>
 
-                                            <div class="pull-right ">
-                                                <button type="button" class="btn btn-danger" ng-click="saveTaskState()">
-                                                    <i class="fa fa-save"></i>Save
-                                                </button>
-                                            </div>
+                                            <!--<div class="pull-right ">-->
+                                                <!--<button type="button" class="btn btn-danger" ng-click="saveTaskState()">-->
+                                                    <!--<i class="fa fa-save"></i>Save-->
+                                                <!--</button>-->
+                                            <!--</div>-->
                                         </div>
 
                                         <div class="col-sm-2 pull-right">
@@ -85,16 +85,17 @@
 
                                     <tr class="odd gradeX" ng-repeat= "x in displayedCollection track by ($index)">
                                         <td>{{x.taskid}}</td>
-                                        <td>{{x.shipperid}}</td>
+                                        <td><a ui-sref="admin.userDetail({username: x.shipperid})">{{x.shipperid}}</a></td>
                                         <td>{{x.orderid}}</td>
-                                        <td class="center"> {{x.order.storeid}}</td>
+                                        <td class="center"> <a ui-sref="admin.storeDetail({storeid:x.order.storeid})">{{x.order.storeid}}</a></td>
                                         <td class="center"> {{x.order.orderstatus.statusname}}</td>
                                         <td class="center">
-                                                <select
-                                                        class="form-control"
-                                                        ng-options="options.statusname for options in taskStatusOptions" ng-model="x.selectedStatus">
-                                                    <option value="China" data-content="<span class='label label-success'>China</span>">China</option>
-                                                </select>
+                                                <!--<select-->
+                                                        <!--class="form-control"-->
+                                                        <!--ng-options="options.statusname for options in taskStatusOptions" ng-model="x.selectedStatus">-->
+                                                    <!--<option value="China" data-content="<span class='label label-success'>China</span>">China</option>-->
+                                                <!--</select>-->
+                                            {{x.taskstatus.statusname}}
                                         </td>
                                         <td class="center">
                                                 <!--<select-->
