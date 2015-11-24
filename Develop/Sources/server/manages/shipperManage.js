@@ -507,7 +507,7 @@ module.exports = function (app) {
                             room: shipperID
                         },
                         msgToStore,
-                        'store:issue:notification'
+                        'store:issue:pending'
                     );
                 });
 

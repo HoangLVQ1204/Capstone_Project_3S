@@ -184,7 +184,7 @@ module.exports = function (app) {
                                     room: shipperID
                                 },
                                 msgDisconnectToStore,
-                                'store::issue:disconnected'
+                                'store:issue:pending'
                             );
                         });
                     });

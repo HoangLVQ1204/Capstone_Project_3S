@@ -563,12 +563,17 @@ addGoods = function(req, res, next){
         var listOrder=[];
         db.order.storeGetAllOrders(db.orderstatus, db.ordertype,storeId)
         .then(function(list){
-             _.each(list, function(order){
-                var fullDeliveryAddress = order.getCustomerAddress();
-                order.fullDeliveryAddress = fullDeliveryAddress;
-                // listOrder.push(order);
-             })
-            res.status(200).json(list);
+
+            var tempList = list.map(function(order){
+                return order.toJSON();
+            });
+
+            tempList = tempList.map(function(order, index) {
+                order.fullDeliveryAddress = list[index].getCustomerAddress(); 
+                return order;    
+            });
+
+            res.status(200).json(tempList);
         }, function(err) {
             next(err);
         });

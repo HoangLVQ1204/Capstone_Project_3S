@@ -221,50 +221,25 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
     };
 
 
-    // START Listen to socket changes
-    $rootScope.$on("evChange", function(event, data){
-        console.log("AAA");
+    /*
+        by HoangLVQ - 24/11/2015
+        This function is used to listen event which reload status order
+    */
+    $rootScope.$on("updateStatusOrder", function(event, data){
         getDataFromServer();
-        //SHOW INFORMATION OF THE SHIPPER WHO PICKED ORDER
-        if(data.msg.profile) {
-            $scope.theShipper = data.msg.profile;
-            $scope.thePickedOrder = data.msg.order;
-            console.dir($scope.theShipper);
-            $("#informMsg").modal("show");
-            setTimeout(function () {
-                $("#informMsg").modal("hide");
-            }, 3000);
+        if(data.msg.profile){
+            $rootScope.displayInfoShipper(data.msg.profile,data.msg.order);
         }
-        //END SHOW INFORMATION OF SHIPPER
-    });
-    $scope.theShipper = {};
-    $scope.thePickedOrder = '';
-    $scope.hostServer = config.hostServer;
-    // END listen to socket changes
-
-    // START Listen to socket changes
-    $rootScope.$on("store:dashboard:getShipperList", function(event, args){
-        //alert(args.message);
-        console.log('args');
-        console.log(args);
-        $rootScope.onlineShipper = 0;
-        args.map(function (shipper) {
-            if (shipper.isConnected) $rootScope.onlineShipper++;
-
-        });
-        //$scope.$apply();
-        //getDataFromServer();
-       // console.log( $scope.onlineShipper);
-        //$scope.onlineShipper = 10;
     });
 
-    $scope.findShipperAgain = function(order) {
-        console.log('findShipperAgain', order);
-        $rootScope.findExpressShipper({
-            orderID: order.orderid, 
-            customerAddress: order.fullDeliveryAddress
-        }, {}, true);
-    };
+    /*
+        by HoangLVQ - 24/11/2015
+        This function is used to listen event which update pendding order
+    */    
+     $rootScope.$on("updatePenddingOrder", function(event, data){
+        getDataFromServer();
+     });
+
 }
 
 

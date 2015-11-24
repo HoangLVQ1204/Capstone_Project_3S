@@ -735,7 +735,6 @@ module.exports = function(server,app){
                     }, ['admin:add:shipper', 'store:add:shipper']);
 
                     require('./socketShipper')(socket, io, app);
-
                 }
 
                 if(dataToken.userrole == 2){

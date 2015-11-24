@@ -2,7 +2,7 @@
  * Created by KhanhKC on 18/11/2015.
  */
 
-function storeOrderListController($scope,$state, $http, $filter, config) {
+function storeOrderListController($rootScope,$scope,dataService,$state, $http, $filter, config) {
 
     $scope.orderList = [];
     var smsData = {verticalEdge: 'right',
@@ -43,7 +43,11 @@ function storeOrderListController($scope,$state, $http, $filter, config) {
     $scope.selectedDate = $scope.dateOptions[0];
     $scope.dateRange = '';
 
-    $http.get(config.baseURI + "/api/store/getAllOrder").success(function(response){
+    getDataFromServer();
+    function getDataFromServer() {
+        var urlBase = config.baseURI + '/api/store/getAllOrder';
+        dataService.getDataServer(urlBase)
+        .success(function(response){
         console.log("=============response===========",response);
         $scope.orderList = response;
         $scope.orderList.sort(function (a,b) {
@@ -54,6 +58,7 @@ function storeOrderListController($scope,$state, $http, $filter, config) {
         $scope.displayedCollection = [].concat($scope.orderList);
         
     })
+    }
 
     //----------------------------------
     //FUNCTION LOAD SCRIPT
@@ -62,11 +67,19 @@ function storeOrderListController($scope,$state, $http, $filter, config) {
 
         caplet();
 
+    });
 
+    $rootScope.$on("updateStatusOrder", function(event, data){
+        getDataFromServer();
+        //SHOW INFORMATION OF THE SHIPPER WHO PICKED ORDER
+        if(data.msg.profile) {
+           $rootScope.displayInfoShipper(data.msg.profile,data.msg.order);
+        }
+        //END SHOW INFORMATION OF SHIPPER
     });
 
 
 }
 
-storeOrderListController.$inject = ['$scope','$state', '$http', '$filter', 'config'];
+storeOrderListController.$inject = ['$rootScope','$scope','dataService','$state', '$http', '$filter', 'config'];
 angular.module('app').controller('storeOrderListController',storeOrderListController);
