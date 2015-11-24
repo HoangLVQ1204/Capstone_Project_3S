@@ -24,10 +24,10 @@ module.exports = function(socket, io) {
                     clientID: data.sender
                 },
                 { type: 'store', clientID: order.storeid},
-                {
-                    msg: data.msg.msg
-                },
-                'store:issue:message')
+
+                    data.msg.msg
+                ,
+                'store:issue:cancel')
         })
 
         console.log('Issue', data.msg);
@@ -36,21 +36,13 @@ module.exports = function(socket, io) {
 
     socket.on('admin:message:confirmPayment', function(data) {
 
-            //var msg = new Object();
-            //msg['title'] = data.msg.msg;
-            if (data.msg.categoryid == 1)
-                data.msg.msg['content'] = "Your order " + order.orderid + " has been processed...";
-            if (data.msg.categoryid == 3)
-                data.msg.msg['content'] = "Your cancel request of order " + order.orderid + " has been accepted...";
             io.forward(
                 {
                     type: 'admin',
                     clientID: data.sender
                 },
-                { type: 'store', clientID: order.storeid},
-                {
-                    msg: data.msg.msg
-                },
+                { type: 'store', clientID: data.msg.storeid},
+                  data.msg.msg,
                 'store:message:confirmPayment');
 
         console.log('Payment confirmation', data.msg);

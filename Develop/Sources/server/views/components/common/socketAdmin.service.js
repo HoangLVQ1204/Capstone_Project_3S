@@ -158,7 +158,7 @@ function socketAdmin(socketService,authService,mapService, $rootScope){
         var msgToStore = {
             type: 'info',
             title: 'Info',
-            //content: msg,
+            content: 'A new transaction was added successfully...',
             url: '#/store/transactionHistory',
             //isread: false,
             //createddate: new Date()

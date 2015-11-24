@@ -207,6 +207,7 @@ module.exports = function(app) {
             .then(function(ledger) {
                 res.status(201).json(ledger);
             }, function(err) {
+                console.log(err);
                 next(err);
             });
     };
