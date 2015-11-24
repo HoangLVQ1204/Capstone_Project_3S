@@ -80,7 +80,7 @@ module.exports = function (app) {
                         var msgDisconnectToAdmin = {
                             type: 'Issue',
                             title: 'Issue',
-                            content: 'Shipper ' + shipperID + ' is diconnected',
+                            content: 'Shipper ' + shipperID + ' is disconnected',
                             url: '#/admin/issueBox/content?issueid=' + issue.dataValues.issueid,
                             isread: false,
                             createddate: new Date()
@@ -88,7 +88,7 @@ module.exports = function (app) {
                         var msgDisconnectToStore = {
                             type: 'Info',
                             title: 'Warning',
-                            content: 'Some orders is in status Warning. We are repairing !',
+                            content: 'Some orders are in trouble. We are repairing',
                             url: '#/store/dashboard',
                             isread: false,
                             createddate: new Date()

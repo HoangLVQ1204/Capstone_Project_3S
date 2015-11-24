@@ -212,7 +212,7 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
          */
          
          var district = req.body.order.deliverydistrictid;
-         var innerCity = config.fileterLocation.in;
+         var innerCity = config.filterLocation.in;
          var ordertypeid = req.body.order.ordertypeid;
          var fee = calculateShipFee (district, innerCity,ordertypeid);         
          var overWeightFee = calculateOverWeightFee (district, innerCity,req.body.goods)
@@ -438,8 +438,8 @@ var cancelOrder = function (req, res, next) {
     .then(function(issue){
         //Add notification
         var msgRequestCancel = {
-            type: 'Info',
-            title: 'Info',
+            type: 'Issue',
+            title: 'Issue',
             content: 'Store ' + storeID + ' requested cancel an order',
             url: '#/admin/issueBox/content?issueid=' + issue.dataValues.issueid,
             isread: false,

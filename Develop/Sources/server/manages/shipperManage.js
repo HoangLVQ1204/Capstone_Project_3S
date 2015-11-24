@@ -217,8 +217,8 @@ module.exports = function (app) {
 
                     var msg = {
                         type: 'info',
-                        title: 'Shipper changed order status',
-                        content: shipperid + ' changed status of order ' + orderObj.orderid,
+                        title: 'Info: Change Status Order',
+                        content: orderObj.orderid + " changes status.",
                         url: '#/store/dashboard',
                         isread: false,
                         username: orderObj.storeid,
@@ -424,16 +424,17 @@ module.exports = function (app) {
 
                 var msgToAdmin = {
                     type: 'Issue',
-                    title: 'Issue',
-                    content: 'Shipper ' + shipperID + ' had sent an issue',
+                    title: 'Issue:',
+                    content: 'Shipper ' + shipperID + ' sent an issue.',
                     url: '#/admin/issueBox?issueid=' + issue.dataValues.issueid,
                     isread: false,            
                     createddate: new Date()
                 };
+
                 var msgToStore = {
-                    type: 'Info',
-                    title: 'Issue',
-                    content: 'Shipper had problems',
+                    type: 'Issue',
+                    title: 'Issue:',
+                    content: 'Some orders are in trouble. We are repairing.' ,
                     url: '#/store/dashboard',
                     isread: false,
                     createddate: new Date()
@@ -602,8 +603,8 @@ module.exports = function (app) {
                     if (listOrdersOfCurrentShip.length > 0) {
                         var msgToStore = {
                             type: 'info',
-                            title: 'Issue',
-                            content: 'Shipper continued order of your store',
+                            title: 'Info:',
+                            content: 'Shipper continued your orders!',
                             url: '#/store/dashboard',
                             isread: false,
                             createddate: new Date()
