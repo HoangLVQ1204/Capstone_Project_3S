@@ -2,7 +2,7 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminStoreListController($scope,$state, $http, authService, config) {
+function adminStoreListController($scope,$state, $http, authService, config, socketAdmin) {
 
     $scope.storeList = [];
     $scope.payfrom = '1';
@@ -149,7 +149,9 @@ function adminStoreListController($scope,$state, $http, authService, config) {
         //var data=$(this).data();
     };
 
-    //add new ledger to database
+    //--------------------------
+    //FUNCTION add new ledger to database
+    //--------------------------
     $scope.postLedger = function (store){
         //alert(1);
         //$scope.payFee = 0;
@@ -161,6 +163,7 @@ function adminStoreListController($scope,$state, $http, authService, config) {
         ledger.amount = parseInt($scope.payFee);
         ledger.paydate = Date(Date.now());
         ledger.payfrom = parseInt($scope.payfrom);
+        //ledger.note = 'confirm by';
         if (ledger.payfrom  == 1)
         {
             //ledger.payfrom = 1;
@@ -184,12 +187,12 @@ function adminStoreListController($scope,$state, $http, authService, config) {
                 //store.generalledgers[0].balance = ledger.balance;
             })
         }
-
         $http.post(config.baseURI + "/api/store/postNewLedger", ledger).then(function success(response){
             //$scope.currentCoD= response;
             store.generalledgers[0].totalcod = ledger.totalcod;
             store.generalledgers[0].totaldelivery = ledger.totaldelivery;
             store.generalledgers[0].balance = ledger.balance;
+            socketAdmin.confirmPaymentMessage(store.storeid);
             //console.log(store);
             smsData.theme="theme-inverse";
             $.notific8($("#sms-success").val(), smsData);
@@ -311,5 +314,5 @@ function adminStoreListController($scope,$state, $http, authService, config) {
 
 }
 
-adminStoreListController.$inject = ['$scope','$state', '$http', 'authService','config'];
+adminStoreListController.$inject = ['$scope','$state', '$http', 'authService','config','socketAdmin'];
 angular.module('app').controller('adminStoreListController',adminStoreListController);
