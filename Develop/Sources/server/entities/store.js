@@ -161,7 +161,7 @@ module.exports = function(sequelize, DataTypes) {
                 },
 
 
-          getAllInactiveStore: function(managestore, user, profile) {
+                getAllInactiveStore: function(managestore, user, profile) {
                     return store.findAll({
                         include:[{
                             model: managestore,
@@ -176,6 +176,12 @@ module.exports = function(sequelize, DataTypes) {
                         }]
                     });
                 },
+
+                adminGetAllStoreNameAndStoreiD: function(){
+                    return store.findAll({
+                        attributes: ['storeid','name']                        
+                    });
+                }
         }
     });
     return store;
