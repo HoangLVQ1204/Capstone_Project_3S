@@ -565,10 +565,14 @@ addGoods = function(req, res, next){
         var listOrder=[];
         db.order.storeGetAllOrders(db.orderstatus, db.ordertype,storeId)
         .then(function(list){
+            
+            var tempList = [];
 
-            var tempList = list.map(function(order){
-                return order.toJSON();
-            });
+            list.forEach(function(order,index){
+                if(!order.isdraff){
+                    tempList.push(order.toJSON());
+                }
+            })
 
             tempList = tempList.map(function(order, index) {
                 order.fullDeliveryAddress = list[index].getCustomerAddress(); 
