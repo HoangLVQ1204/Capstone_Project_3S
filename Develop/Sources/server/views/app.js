@@ -62,7 +62,10 @@ angular.module('app', [
                 var mode = { type: "all" };
                 var count = 0;
                  var intervalID = setInterval(function() {
-                    if (count == 2) clearInterval(intervalID);
+                    if (count == 2) {
+                        clearInterval(intervalID);
+                        $rootScope.$apply();
+                    }
                     ++count;
                     mapService.setMode(mode);
                  }, 1500);
@@ -82,7 +85,10 @@ angular.module('app', [
                 var mode = { type: "all" };
                 var count = 0;
                  var intervalID = setInterval(function() {
-                    if (count == 2) clearInterval(intervalID);
+                    if (count == 2) {
+                        clearInterval(intervalID);
+                        $rootScope.$apply();
+                    }
                     ++count;
                     mapService.setMode(mode);
                  }, 1500);
@@ -123,7 +129,10 @@ angular.module('app', [
                 var mode = { type: "all" };
                 var count = 0;
                  var intervalID = setInterval(function() {
-                    if (count == 2) clearInterval(intervalID);
+                    if (count == 2) {
+                        clearInterval(intervalID);
+                        $rootScope.$apply();
+                    }
                     ++count;
                     mapService.setMode(mode);
                  }, 1500);
@@ -199,7 +208,10 @@ angular.module('app', [
                  var mode = { type: "all" };
                  var count = 0;
                  var intervalID = setInterval(function() {
-                    if (count == 2) clearInterval(intervalID);
+                    if (count == 2) {
+                        clearInterval(intervalID);
+                        $rootScope.$apply();
+                    }
                     ++count;
                     mapService.setMode(mode);
                  }, 1500);
@@ -229,7 +241,10 @@ angular.module('app', [
                  var mode = { type: 'orderdetail', orderID: $stateParams.orderid };
                  var count = 0;
                  var intervalID = setInterval(function() {
-                    if (count == 2) clearInterval(intervalID);
+                    if (count == 2) {
+                        clearInterval(intervalID);
+                        $rootScope.$apply();
+                    }
                     ++count;
                     mapService.setMode(mode);
                  }, 1500);

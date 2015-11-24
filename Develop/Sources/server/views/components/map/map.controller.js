@@ -223,6 +223,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
                 model = _.find($scope.shipperMarkers, function(e) {
                     return e.shipperID == model.shipperID;
                 });
+                if (!!model == false) return;
                 console.log('mouseover storeMarkers', $scope.storeMarkers);
                 console.log('mouseover customerMarkers', $scope.customerMarkers);
                 // console.log('avatar', model);
@@ -252,6 +253,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
                 model = _.find($scope.storeMarkers, function(e) {
                     return e.storeID == model.storeID;
                 });
+                if (!!model == false) return;
                 console.log('mouseover shipperMarkers', $scope.shipperMarkers);
                 console.log('mouseover customerMarkers', $scope.customerMarkers);
                 var content = '<div>' + 
@@ -279,6 +281,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
                 model = _.find($scope.customerMarkers, function(e) {
                     return e.customerID == model.customerID;
                 });
+                if (!!model == false) return;
                 console.log('mouseover storeMarkers', $scope.storeMarkers);
                 console.log('mouseover shipperMarkers', $scope.shipperMarkers);
                 var content = '<div>' + 
