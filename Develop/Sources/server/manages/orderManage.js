@@ -333,7 +333,7 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
 
 var updateOrder = function (req, res, next) {
     var district = req.body.order.deliverydistrictid;
-    var innerCity = config.fileterLocation.in;
+    var innerCity = config.filterLocation.in;
     var order = {}; 
     var updateOrder = req.body.order;
     var listupdateGoods = req.body.listgoods;
@@ -565,10 +565,14 @@ addGoods = function(req, res, next){
         var listOrder=[];
         db.order.storeGetAllOrders(db.orderstatus, db.ordertype,storeId)
         .then(function(list){
+            
+            var tempList = [];
 
-            var tempList = list.map(function(order){
-                return order.toJSON();
-            });
+            list.forEach(function(order,index){
+                if(!order.isdraff){
+                    tempList.push(order.toJSON());
+                }
+            })
 
             tempList = tempList.map(function(order, index) {
                 order.fullDeliveryAddress = list[index].getCustomerAddress(); 

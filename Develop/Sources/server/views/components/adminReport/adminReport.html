@@ -51,7 +51,7 @@
 								</ul>
 							</div>
 						</div>
-						<div id="sectionB" class="tab-pane in active">
+						<div id="sectionB" class="tab-pane">
 							<div class="widget-chart chart-dark">
 								<table id="stack-chart" data-stack="true" class="flot-chart" data-type="lines"  data-yaxis-max="3000" data-tool-tip="show" data-width="100%" data-height="300px"  data-bar-width="0.5" data-tick-color="rgba(0,0,0,0.05)">
 									<thead>
@@ -216,11 +216,11 @@
 						<div class="widget-chart">
 							<h3><strong>Over</strong> view</h3>
 							<br>
-							<ol>
-								<li><a ui-sref="admin.orderList"><i class="fa fa-money"></i>Order <span class="pull-right">17,485</span></a></li>
-								<li><a href="">Fee <span class="pull-right">11,452</span></a></li>		
-								<li><a ui-sref="admin.shipperList">Shipper <span class="pull-right">9,875</span></a></li>
-								<li><a ui-sref="admin.storeList">Store <span class="pull-right">9,214</span></a></li>	
+							<ol class="">
+								<li><span class="label bg-theme-inverse"><i class="fa fa-home"></i></span>&nbsp;&nbsp;&nbsp;Store <span class="pull-right">{{totalStore}}</span></li> 
+								<li><span class="label bg-theme-inverse"><i class="fa fa-truck"></i></span>&nbsp;&nbsp;&nbsp;Shipper <span class="pull-right">{{totalShipper}}</span></li>	
+								<li><span class="label bg-theme-inverse"><i class=" fa fa-shopping-cart"></i></span>&nbsp;&nbsp;&nbsp;Order <span class="pull-right">9,875</span></li>
+								<li><span class="label bg-theme-inverse"><i class=" fa fa-money"></i></span>&nbsp;&nbsp;&nbsp;Fee <span class="pull-right">9,214</span></li>	
 							</ol>
 						</div>
 					</section>
