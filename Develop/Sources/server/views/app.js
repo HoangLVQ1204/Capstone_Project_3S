@@ -227,9 +227,9 @@ angular.module('app', [
             access: config.role.store
         })
 
-        .state('store.orderList',{
-            url: '/orderList',
-            template: '<store-order-list></store-order-list>',
+        .state('store.orderHistory',{
+            url: '/orderHistory',
+            template: '<store-order-history></store-order-history>',
             access: config.role.store
         })
 
