@@ -12,8 +12,12 @@ module.exports = function(socket, io) {
 
     socket.on('admin:messageIssue', function(data) {
         data.msg.orderList.map(function (order) {
-            var msg = new Object();
+            //var msg = new Object();
             //msg['title'] = data.msg.msg;
+            if (data.msg.categoryid == 1)
+                data.msg.msg['content'] = "Your order " + order.orderid + " has been processed...";
+            if (data.msg.categoryid == 3)
+                data.msg.msg['content'] = "Your cancel request of order " + order.orderid + " has been accepted...";
             io.forward(
                 {
                     type: 'admin',
@@ -21,23 +25,35 @@ module.exports = function(socket, io) {
                 },
                 { type: 'store', clientID: order.storeid},
                 {
-                    message: data.msg.msg
+                    msg: data.msg.msg
                 },
-                 'store:issue:message')
+                'store:issue:message')
         })
 
-        io.forward(
-            {
-                type: 'admin',
-                clientID: data.sender
-            },
-            { type: 'shipper', clientID: data.msg.shipperid},
-            {
-                message: data.msg.msg
-            },
-             'shipper:issue:message')
-
         console.log('Issue', data.msg);
+
+    });
+
+    socket.on('admin:message:confirmPayment', function(data) {
+
+            //var msg = new Object();
+            //msg['title'] = data.msg.msg;
+            if (data.msg.categoryid == 1)
+                data.msg.msg['content'] = "Your order " + order.orderid + " has been processed...";
+            if (data.msg.categoryid == 3)
+                data.msg.msg['content'] = "Your cancel request of order " + order.orderid + " has been accepted...";
+            io.forward(
+                {
+                    type: 'admin',
+                    clientID: data.sender
+                },
+                { type: 'store', clientID: order.storeid},
+                {
+                    msg: data.msg.msg
+                },
+                'store:message:confirmPayment');
+
+        console.log('Payment confirmation', data.msg);
 
     });
     // socket.on('admin:filter:shipper', function(data) {

@@ -564,6 +564,79 @@ module.exports = function(sequelize, DataTypes) {
           group: ['storeid', 'year', 'month', 'type'],
           order: ['store', 'month']
         })
+      },
+
+      adminGetMoneyStatisticOrders: function () {
+        return order.findAll({
+          attributes: [
+            ['storeid', 'store'],
+            [
+              sequelize.fn('date_part',
+                  'year',
+                  sequelize.col('createdate')
+              ),
+              'year'
+            ],
+            [
+              sequelize.fn('date_part',
+                  'month',
+                  sequelize.col('createdate')
+              ),
+              'month'
+            ],
+            ['ordertypeid', 'type'],
+            [
+              sequelize.fn('sum',
+                  sequelize.col('fee')
+              ),
+              'feeSum'
+            ],
+            [
+              sequelize.fn('sum',
+                  sequelize.col('cod')
+              ),
+              'codSum'
+            ]
+          ],
+          group: ['storeid', 'year', 'month', 'type'],
+          order: ['store', 'month']
+        })
+      },
+
+      adminCountOrdersDoneOrFail: function () {
+        return order.findAll({
+          attributes: [
+            ['storeid', 'store'],
+            [
+              sequelize.fn('date_part',
+                  'year',
+                  sequelize.col('createdate')
+              ),
+              'year'
+            ],
+            [
+              sequelize.fn('date_part',
+                  'month',
+                  sequelize.col('createdate')
+              ),
+              'month'
+            ],
+            ['statusid', 'status'],
+            [
+              sequelize.fn('count',
+                  sequelize.col('orderid')
+              ),
+              'count'
+            ]
+          ],
+          where: {
+            'statusid': {
+              $in: [7, 8]
+            }
+          },
+          group: ['storeid', 'year', 'month', 'status'],
+          order: ['store', 'month']
+        })
       }
 
     }
