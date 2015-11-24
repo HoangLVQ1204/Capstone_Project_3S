@@ -103,8 +103,11 @@ module.exports = function(sequelize, DataTypes) {
       },
       getCustomerAddress: function(){
         var addressList = require("../config/address.json")
-        console.log(this.deliverywardid,"ORDER106")
-        return this.deliveryaddress + ', ' + addressList.ward[this.deliverywardid] + ', ' + addressList.district[this.deliverydistrictid] + ', ' + addressList.province[this.deliveryprovinceid]
+        var address = (this.deliveryaddress) ? this.deliveryaddress : '';
+        var wardText = (this.deliverywardid) ? addressList.ward[this.deliverywardid] : '';
+        var districtText = (this.deliverydistrictid) ? addressList.district[this.deliverydistrictid] : '';
+        var provinceText = (this.deliveryprovinceid) ? addressList.province[this.deliveryprovinceid] : '';
+        return address + ', ' + wardText + ', ' + districtText + ', ' + provinceText;
       }
     },
     classMethods: {
