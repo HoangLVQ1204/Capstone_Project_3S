@@ -657,7 +657,6 @@ module.exports = function(server,app){
             rs = rs.map(function(e){
                 return e.toJSON();
             });
-            //console.log(rs);
             rs.forEach(function(e){
                 io.addStore({
                     storeID: e.storeid,
@@ -673,7 +672,6 @@ module.exports = function(server,app){
             rs = rs.map(function(e){
                 return e.toJSON();
             });
-            console.log(rs);
             rs.forEach(function(e){
                 io.addShipper({
                     shipperID: e.username,
@@ -735,7 +733,6 @@ module.exports = function(server,app){
                     }, ['admin:add:shipper', 'store:add:shipper']);
 
                     require('./socketShipper')(socket, io, app);
-
                 }
 
                 if(dataToken.userrole == 2){

@@ -122,7 +122,7 @@
     },
 
     {
-      "url": "/store/orderList",
+      "url": "/store/orderHistory",
       "role": [2]
     },
 

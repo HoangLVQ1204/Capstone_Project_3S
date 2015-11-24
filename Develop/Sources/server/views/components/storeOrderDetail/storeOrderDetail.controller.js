@@ -64,7 +64,6 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
             .success(function (rs) {               
                $scope.order = rs;
                $scope.listgoods = rs.goods;
-               console.log("===========ordr===========",$scope.order);
                var confirmationcode = rs.confirmationcodes;
                for(var i = 0; i < confirmationcode.length;i++){
                   if(confirmationcode[i].typeid ==2){
@@ -80,7 +79,6 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
                } else {
                   $scope.deliveryType = "Express";
                }
-               //console.log("==============rs===========",rs);
                calculateOverWeightFee($scope.order.deliverydistrictid,$scope.listgoods);
             })
             .error(function (error) {
@@ -96,10 +94,16 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
         var data = {
           order: $scope.order,
           listgoods: $scope.listgoods,
-        }        
+        }   
         dataService.putDataServer(urlBase,data)
          .then(function(sc){
-            $scope.disabled = true;             
+            $scope.disabled = true;
+             var success = {
+              type:'info',
+              title: 'Info',
+              content: "Update successfully!"
+            }; 
+            $rootScope.notify(success);           
           },function(er){
             var err = {
               type:'issue',
@@ -116,8 +120,7 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
     $scope.setGood = function(good,index){        
         $scope.newGood = (JSON.parse(JSON.stringify(good)));
         index = index;
-        console.log("=======goods[]=khi click edit====",good);
-       
+        
     };
 
     $scope.refreshGood = function(){
@@ -320,18 +323,11 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
     }
 
     // START Listen to socket changes
-    $rootScope.$on("evChange", function(event, data){
-      console.log("===============OK======");
+    $rootScope.$on("updateStatusOrder", function(event, data){
         getOrderFromServer();
         //SHOW INFORMATION OF THE SHIPPER WHO PICKED ORDER
         if(data.msg.profile) {
-            $scope.theShipper = data.msg.profile;
-            $scope.thePickedOrder = data.msg.order;
-            console.dir($scope.theShipper);
-            $("#informMsg").modal("show");
-            setTimeout(function () {
-                $("#informMsg").modal("hide");
-            }, 3000);
+           $rootScope.displayInfoShipper(data.msg.profile,data.msg.order);
         }
         //END SHOW INFORMATION OF SHIPPER
     });

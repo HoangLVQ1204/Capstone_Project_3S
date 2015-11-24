@@ -163,7 +163,6 @@ angular.module('app', [
         .state('admin.acceptStore',{
             url: '/acceptStore',
             template: '<admin-accept-store></admin-accept-store>',
-            //parent: 'admin.issueBox',
             access: config.role.admin
         })
 
@@ -227,9 +226,9 @@ angular.module('app', [
             access: config.role.store
         })
 
-        .state('store.orderList',{
-            url: '/orderList',
-            template: '<store-order-list></store-order-list>',
+        .state('store.orderHistory',{
+            url: '/orderHistory',
+            template: '<store-order-history></store-order-history>',
             access: config.role.store
         })
 
@@ -304,15 +303,14 @@ angular.module('app', [
         order.isDraff = isDraff;
         order.orderId = orderID;
         order.statusId = statusId;
-        // console.log('app:345', order);
         return dataService.putDataServer(urlBase, {order: order})
             .then(function(res) {
-                // console.log(res);
                 return null;
             });
     };
 
     $rootScope.createExpressTask = function(order, shipperID) {
+
         var urlBaseTask = config.baseURI + '/api/createTask';
         var dataTask = {
             orderid: order.orderID,
@@ -321,13 +319,14 @@ angular.module('app', [
             statusid: 2,
             typeid: 3
         }
+
         return dataService.postDataServer(urlBaseTask,dataTask)
             .then(function(res){
                 if(res.status != 500){
                     var temp = {
                         type: 'info',
-                        title: 'EXPRESS ORDER: SUCCESS',
-                        content: 'ORDER ID: '+order.orderID+ 'created successfully',
+                        title: 'Info: ',
+                        content: 'Order '+order.orderID+ ' created successfully.',
                         url: '/#/notiListdemo',
                         isread: false,
                         createddate: new Date()
@@ -338,8 +337,8 @@ angular.module('app', [
                 }else{
                     var temp = {
                         type: 'issue',
-                        title: 'EXPRESS ORDER: FAIL',
-                        content: 'ORDER ID: '+order.orderID+ 'created fail! Please try again late!',
+                        title: 'Error: ',
+                        content: 'Order '+order.orderID+ ' created fail.',
                         url: '/#/notiListdemo',
                         isread: false,
                         createddate: new Date()
@@ -508,6 +507,17 @@ angular.module('app', [
 
     // END - combo functions
 
+    $rootScope.displayInfoShipper = function(profileShipper,inforOrder){
+        console.log("displayInfoShipper");
+        $rootScope.inforShipper = {
+            profileShipper : profileShipper,
+            inforOrder: inforOrder
+        }
+        console.log($rootScope.inforShipper);
+        console.log("displayInfoShipper");
+        $("#displayInforShipper").modal("show");
+
+    }
 
     if(authService.isLogged()){
         socketService.authenSocket()

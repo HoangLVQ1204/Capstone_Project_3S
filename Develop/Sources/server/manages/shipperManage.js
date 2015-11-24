@@ -217,8 +217,8 @@ module.exports = function (app) {
 
                     var msg = {
                         type: 'info',
-                        title: 'Shipper changed order status',
-                        content: shipperid + ' changed status of order ' + orderObj.orderid,
+                        title: 'Info: Change Status Order',
+                        content: orderObj.orderid + " changes status.",
                         url: '#/store/dashboard',
                         isread: false,
                         username: orderObj.storeid,
@@ -424,16 +424,17 @@ module.exports = function (app) {
 
                 var msgToAdmin = {
                     type: 'Issue',
-                    title: 'Issue',
-                    content: 'Shipper ' + shipperID + ' had sent an issue',
+                    title: 'Issue:',
+                    content: 'Shipper ' + shipperID + ' sent an issue.',
                     url: '#/admin/issueBox?issueid=' + issue.dataValues.issueid,
                     isread: false,            
                     createddate: new Date()
                 };
+
                 var msgToStore = {
-                    type: 'Info',
-                    title: 'Issue',
-                    content: 'Shipper had problems',
+                    type: 'Issue',
+                    title: 'Issue:',
+                    content: 'Some orders are in trouble. We are repairing.' ,
                     url: '#/store/dashboard',
                     isread: false,
                     createddate: new Date()
@@ -507,7 +508,7 @@ module.exports = function (app) {
                             room: shipperID
                         },
                         msgToStore,
-                        'store:issue:notification'
+                        'store:issue:pending'
                     );
                 });
 
@@ -602,8 +603,8 @@ module.exports = function (app) {
                     if (listOrdersOfCurrentShip.length > 0) {
                         var msgToStore = {
                             type: 'info',
-                            title: 'Issue',
-                            content: 'Shipper continued order of your store',
+                            title: 'Info:',
+                            content: 'Shipper continued your orders!',
                             url: '#/store/dashboard',
                             isread: false,
                             createddate: new Date()
@@ -980,7 +981,7 @@ module.exports = function (app) {
         });
         */
 
-        /*
+        ///*
         db.order.findAll({
             attributes: [
                 ['storeid', 'store'],
@@ -989,14 +990,14 @@ module.exports = function (app) {
                         'year',
                         db.sequelize.col('createdate')
                     ),
-                    'Year'
+                    'year'
                 ],
                 [
                     db.sequelize.fn('date_part',
                         'month',
                         db.sequelize.col('createdate')
                     ),
-                    'Month'
+                    'month'
                 ],
                 ['ordertypeid', 'type'],
                 [
@@ -1006,16 +1007,29 @@ module.exports = function (app) {
                     'count'
                 ]
             ],
-            group: ['storeid','Year','Month', 'type'],
-            order: ['store','Month']
+            group: ['storeid','year','month', 'type'],
+            order: ['store','month']
         }).then(function(rows) {
-            console.log(rows);
-            return res.status(200).json(rows)
+            var rs = {};
+            rows.forEach(function(row){
+                row = row.toJSON();
+                var count = row['count'];
+                var type = row['type'];
+                var month = row['month'];
+                var year = row['year'];
+                var store = row['store'];
+                if (!rs.hasOwnProperty(store)) rs[store] = {};
+                if (!rs[store].hasOwnProperty(year)) rs[store][year] = {};
+                if (!rs[store][year].hasOwnProperty(month)) rs[store][year][month] = {};
+                rs[store][year][month][type] = parseInt(count)? parseInt(count):0;
+            });
+            return res.status(200).json(rs)
         },function(er){
             console.log(er);
             return res.status(400).json(er)
         });
-        */
+           //*/
+        /*
         db.order.findOne().then(function(rs){
             var a = 'dd'
             a = rs.getCustomerAddress()
@@ -1024,6 +1038,7 @@ module.exports = function (app) {
             console.log(er)
             return res.status(400).json(er)
         })
+        */
     };
 
     //function create new shipperid
