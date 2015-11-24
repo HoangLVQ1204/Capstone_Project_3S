@@ -8,6 +8,8 @@ function adminIssueBoxController($scope,$state, $http, $filter, config, $rootSco
 
     function getDataFromSever() {
         $scope.issueList = [];
+        $scope.currentPage = 0;
+        $scope.pageSize = 10;
         $http.get(config.baseURI + "/api/getAllIssue").success(function(response){
             $scope.issueList = response;
             $scope.issueList.sort( $scope.sortByDate);
@@ -23,6 +25,10 @@ function adminIssueBoxController($scope,$state, $http, $filter, config, $rootSco
         })
     }
 
+
+    $scope.numberOfPages=function(){
+        return Math.ceil($scope.issueList.length/$scope.pageSize);
+    }
 
     $scope.sortByDate = function (x, y) {
             if (x.createddate > y.createddate) {

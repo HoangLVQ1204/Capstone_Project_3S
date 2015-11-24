@@ -12,9 +12,16 @@
                 replace: true,
                 restrict: 'E'
             }
-        }).filter('fromNow', function() {
+        })
+        .filter('fromNow', function() {
             return function(date) {
                 return moment(date).fromNow();
+            }
+        })
+        .filter('startFrom', function() {//for page navigation
+            return function(input, start) {
+                start = +start; //parse to int
+                return input.slice(start);
             }
         })
 

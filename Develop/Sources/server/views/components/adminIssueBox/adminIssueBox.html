@@ -44,7 +44,7 @@
                         </div>
                     </header>
 
-                    <ul class="mlist"  ng-repeat="issue in issueList| filter: mailSearch | filter: customFilter">
+                    <ul class="mlist"  ng-repeat="issue in issueList| filter: mailSearch | filter: customFilter | startFrom:currentPage*pageSize | limitTo:pageSize">
                         <li ui-sref-active="mail_active">
                             <a  ng-show="issue.isresolved" class="mail-favourite active"><i class=" glyphicon glyphicon-ok"></i></a>
                             <a  ng-show="!issue.isresolved" class="mail-favourite"><i class=" glyphicon glyphicon-ok"></i></a>
@@ -73,13 +73,16 @@
                     </ul>
                     <footer>
                         <div class="pull-right">
-                            <span class="mail-pagination"></span>
+
+                            <span class="mail-pagination">{{currentPage+1}}/{{numberOfPages()}}</span>
                             <ul class="pagination">
-                                <li><a href="#"><i class="fa fa-angle-left"></i></a></li>
-                                <li><a href="#"><i class="fa fa-angle-right"></i></a></li>
+                                <li><button class="btn btn-default" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1"><i class="fa fa-angle-left"></i></button></li>
+                                <li><button  class="btn btn-default" ng-disabled="currentPage >= issueList.length/pageSize - 1" ng-click="currentPage=currentPage+1"><i class="fa fa-angle-right"></i></button></li>
+
                             </ul>
                         </div>
                     </footer>
+
                 </div>
             </div>
             <!-- //nav-scroller-->
