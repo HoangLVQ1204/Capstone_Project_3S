@@ -30,7 +30,6 @@
     var getAllOrder = function (req, res, next) {
 
         var storeId = req.user.stores[0].storeid;
-        console.log("================storeId====================",storeId);
         var orderStatus = db.orderstatus;
         var order = db.order;
         var ordertype = db.ordertype;
@@ -63,7 +62,6 @@
                     ledgerid = order.dataValues.ledgerid;
                 }
                 var fullDeliveryAddress = order.getCustomerAddress();
-                console.log("====================",fullDeliveryAddress);          
                 listOrders.push({
                     'orderid': order.dataValues.orderid,
                     'statusname': statusname,
@@ -175,14 +173,13 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
                 totalWeight = totalWeight + listgoods[i].weight*listgoods[i].amount;
             }                  
             if(totalWeight > 4000 ){
-            //console.log("===========totalWeight=======", totalWeight);
+            
             if(innerCity.indexOf(district)> -1){
                 overWeightFee = (totalWeight - 4000)*2*2;
-                //console.log("=============In=========",district);
+                
             }else {
                 overWeightFee = (totalWeight - 4000)*2*2.5;
-                //console.log("=============Out=========",district);
-            }
+                }
             
         }
         return overWeightFee;
@@ -217,9 +214,6 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
          var fee = calculateShipFee (district, innerCity,ordertypeid);         
          var overWeightFee = calculateOverWeightFee (district, innerCity,req.body.goods)
         
-        //console.log("=============fee===============",fee);        
-        //console.log("=============overWeightFee=======",overWeightFee);
-        //console.log("=============req.body===============",req.body);
         newOrder.storeid = req.body.order.storeid;
         newOrder.ordertypeid = req.body.order.ordertypeid;
         newOrder.pickupaddress = req.body.order.pickupaddress;
@@ -236,8 +230,7 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
         newOrder.deliverydistrictid = req.body.order.deliverydistrictid;
         newOrder.deliverywardid = req.body.order.deliverywardid;
         newOrder.cod = parseInt(req.body.order.cod)?parseInt(req.body.order.cod):0;
-        //console.log("==============11===============");
-
+        
         var code1 = {
             'codecontent' : parseInt(req.body.order.gatheringCode),
             'typeid' : 2,
@@ -264,7 +257,6 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
         //     'typeid' : 5,
         //     'orderid' : newOrder.orderid
         // };
-       //console.log("==============22==============");
        db.order.postOneOrder(newOrder)
        .then(function (order) {
                 //return res.status(200).json(order);
@@ -273,7 +265,6 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
                 db.confirmationcode.postOneCode(code2);
                 db.confirmationcode.postOneCode(code3);
                 db.confirmationcode.postOneCode(code4);
-                //console.log("==============44==============");
                 for(var i = 0; i < req.body.goods.length; i++){
                     var good = {};                    
                     good.orderid = newOrderID;
@@ -309,11 +300,10 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
                     } else {
                         good.amount = parseInt(req.body.goods[i].amount);
                     }                    
-                    console.log("===========good=======",good);
                     db.goods.postOneGood(good).then(function(goodsObj){
 
                     });
-                    //console.log("==============55==============");
+                    
                 }
                 var response = order.toJSON();
                 response.customerAddress = order.getCustomerAddress();
@@ -381,14 +371,12 @@ var updateOrder = function (req, res, next) {
 
  var updateExpressOrder = function (req, res, next) {
      var order = req.body.order;
-     console.log(order);
-     return db.order.updateExpressOrder({
+    return db.order.updateExpressOrder({
          statusid : order.statusId,
          isdraff: order.isDraff,
      },order.orderId)
          .then(function (rs) {
-             console.log(rs);
-             res.status(201).json(rs);
+            res.status(201).json(rs);
          }, function (err) {
              next(err);
          })
@@ -420,8 +408,7 @@ var putDraff = function(req, res, next){
 };
 
 var cancelOrder = function (req, res, next) {
-    console.log("=======cancerOrderId======", req.body.orderid);
-    var ownerStoreUser = req.user.username;
+   var ownerStoreUser = req.user.username;
     var storeID = req.user.stores[0].storeid;
 
     var issueCancel = {
@@ -432,8 +419,7 @@ var cancelOrder = function (req, res, next) {
         createddate: new Date(),
         sender: ownerStoreUser
     };
-    console.log("STRID:419", storeID);
-    //Add new issue
+   //Add new issue
     db.issue.createNewIssue(issueCancel)
     .then(function(issue){
         //Add notification
@@ -462,9 +448,7 @@ var cancelOrder = function (req, res, next) {
             return Promise.all(promises);
         })
         .then(function(data){
-            console.log('orderManage:449', data.length);
-            console.log('send notification disconnect to store and admin');
-            //send socket
+           //send socket
             var sender = {
                 type: 'store',
                 clientID: storeID
@@ -523,11 +507,9 @@ deleteGoods =  function(req, res, next){
 
 addGoods = function(req, res, next){
     var newGoods = req.body;
-        //console.log("=============req.body==============",newGoods);
         db.goods.postOneGood(newGoods)
         .then(function(rs){
-            console.log("============rs===============",rs.goodsid);
-            return res.status(200).json(rs.goodsid);
+           return res.status(200).json(rs.goodsid);
 
         }, function(){
             return res.status(400).json("Add goods fail!");
@@ -537,7 +519,6 @@ addGoods = function(req, res, next){
         var goodsid = req.query.goodsid;
         var storeid = req.user.stores[0].storeid;
         var updateGoods = req.body;
-        console.log("=============req.body==============",updateGoods);
         var newGoods = {
             goodsname: updateGoods.goodsname,
             weight: updateGoods.weight,
@@ -586,8 +567,6 @@ addGoods = function(req, res, next){
     };
 
     var countOrder = function (req, res, next){
-        console.log("==========,stoerid=========",req.query.storeid);
-        console.log("==========,year=========",req.query.year);
         var storeid = req.query.storeid;
 
         db.order.countOrder(storeid)
