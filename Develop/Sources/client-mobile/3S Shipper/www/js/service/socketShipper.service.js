@@ -22,6 +22,11 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
       });
   });
 
+  //receive message after admin resolved issue
+  socketService.on('shipper:issue:resolve', function(data) {
+    console.log(data.msg);
+  });
+
   socketService.on('shipper:choose:express', function(data) {
     //Ionic Loading
     $rootScope.show = function() {
