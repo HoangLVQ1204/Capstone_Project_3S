@@ -239,6 +239,15 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
      $rootScope.$on("updatePendingOrder", function(event, data){
         getDataFromServer();
      });
+
+    $scope.findShipperAgain = function(order) {
+        console.log('findShipperAgain', order);
+        $rootScope.findExpressShipper({
+            orderID: order.orderid, 
+            customerAddress: order.fullDeliveryAddress
+        }, {}, true);
+    };
+    
 }
 
 
