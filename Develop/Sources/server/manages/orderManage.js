@@ -92,9 +92,10 @@
             group['Inprocess'] = group['Inprocess'] || [];
             _.each(listOrders, function(item) {
                 if(item.ledgerid == ''){
-
+                    totalNewOrder++;
                     if(item['isdraff']) {
                         group['Draff'].push(item);
+                       totalNewOrder--;
                     }else if(_.isEqual(item['statusname'],'Done')|| _.isEqual(item['statusname'],'Cancel') ){
                         group['Done'].push(item);
                         totalNewCod = totalNewCod + parseInt(item.cod);
@@ -102,8 +103,7 @@
                     }else {
                         group['Inprocess'].push(item);
                     }                        
-                    totalNewOrder++;
-
+                    
                     if(!_.isEqual(item['createdate'],'' && !item['isdraff'])){
                         var date = new Date(item['createdate']);
                         date.setHours(0,0,0,0);
