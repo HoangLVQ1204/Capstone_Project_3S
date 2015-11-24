@@ -10,15 +10,21 @@ function adminReportController($scope,$state, $http,dataService, $filter, config
         var urlBase = config.baseURI + '/api/admin/report/orderCount';
         dataService.getDataServer(urlBase)
             .success(function (rs) {
-                console.log("==============rs===============",rs);
-                // $scope.listStore = rs;
-                // $scope.selectedStore = rs.STR001;
-                // $scope.listYear;
-                // $scope.selectedYear = selectedStore.2015;
-                // $scope.listOrderOfMonth;
-
+                 $scope.listStore = rs;
+                 $scope.selectedStore = rs[0];
+                 $scope.listYear = $scope.selectedStore.years;
+                 $scope.selectedYear = $scope.listYear[0];
+                 $scope.listOrderOfMonth = $scope.selectedYear.months;
+                 var selectedMonth = $scope.listOrderOfMonth[0];
+                 //console.log("==============exoress===============",selectedMonth);
+                 // console.log("==============normal===============",selectedMonth.types[1].countNum);
+                setTimeout(function(){
+                    caplet();
+                },200);
+                 
             })
             .error(function (error) {
+                caplet();
                 console.log('Unable to load customer data: ' + error);
             });
     }
@@ -36,8 +42,8 @@ function adminReportController($scope,$state, $http,dataService, $filter, config
     }
 
     $scope.$watch('$viewContentLoaded', function (event) {
-
-        caplet();
+        console.log("CHEHENJGKJEBFJGKFY=====================================");
+        // caplet();
 
     });
 
