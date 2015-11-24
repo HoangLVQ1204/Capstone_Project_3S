@@ -118,9 +118,17 @@ function socketAdmin(socketService,authService,mapService, $rootScope){
         'client:register');
     };
 
-    api.issueMessage = function (issue, msg) {
-        //var shipperList = [];
+    api.issueMessage = function (issue) {//send message after resolve issue
+        //var shipperList = [
         var orderList = [];
+        var msgToStore = {
+            type: 'info',
+            title: 'Info',
+            //content: msg,
+            url: '#/store/dashboard',
+            //isread: false,
+            //createddate: new Date()
+        };
 
         issue.orderissues.map(function (orderissue) {
             var order = new Object();
@@ -138,12 +146,36 @@ function socketAdmin(socketService,authService,mapService, $rootScope){
             {
                 orderList: orderList,
                 shipperid: issue.orderissues[0].order.tasks[0].shipperid,
-                msg: msg
+                categoryid: issue.issuetype.categoryid,
+                msg: msgToStore
             },
             'admin:messageIssue');
     };
 
 
+    api.confirmPaymentMessage = function (storeid) {//send message after confirm payment
+        //var shipperList = [
+        var msgToStore = {
+            type: 'info',
+            title: 'Info',
+            //content: msg,
+            url: '#/store/transactionHistory',
+            //isread: false,
+            //createddate: new Date()
+        };
+        var user = api.getCurrentUser();
+        socketService.sendPacket(
+            {
+                type: 'admin',
+                clientID: user.adminID
+            },
+            'server',
+            {
+                storeid: storeid,
+                msg: msgToStore
+            },
+            'admin:message:confirmPayment');
+    };
 
     return api;
 }

@@ -163,7 +163,6 @@ angular.module('app', [
         .state('admin.acceptStore',{
             url: '/acceptStore',
             template: '<admin-accept-store></admin-accept-store>',
-            //parent: 'admin.issueBox',
             access: config.role.admin
         })
 
@@ -304,15 +303,14 @@ angular.module('app', [
         order.isDraff = isDraff;
         order.orderId = orderID;
         order.statusId = statusId;
-        // console.log('app:345', order);
         return dataService.putDataServer(urlBase, {order: order})
             .then(function(res) {
-                // console.log(res);
                 return null;
             });
     };
 
     $rootScope.createExpressTask = function(order, shipperID) {
+
         var urlBaseTask = config.baseURI + '/api/createTask';
         var dataTask = {
             orderid: order.orderID,
@@ -321,6 +319,7 @@ angular.module('app', [
             statusid: 2,
             typeid: 3
         }
+
         return dataService.postDataServer(urlBaseTask,dataTask)
             .then(function(res){
                 if(res.status != 500){

@@ -193,7 +193,6 @@ module.exports = function(sequelize, DataTypes) {
       },
 
       checkTokenTime: function (username, tokenTime) {
-        console.log(tokenTime,"+++++++++++++++++++++++++++++__________________________++")
         return user.findOne({
           where: {
             'username': username,

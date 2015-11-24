@@ -509,35 +509,35 @@ addGoods = function(req, res, next){
     var newGoods = req.body;
         db.goods.postOneGood(newGoods)
         .then(function(rs){
-           return res.status(200).json(rs.goodsid);
-
-        }, function(){
-            return res.status(400).json("Add goods fail!");
+            return res.status(200).json(rs.goodsid);
+        },function(err){
+            next (err);
         })
     };
+
     updateGoods = function(req, res, next){
         var goodsid = req.query.goodsid;
         var storeid = req.user.stores[0].storeid;
         var updateGoods = req.body;
         var newGoods = {
-            goodsname: updateGoods.goodsname,
-            weight: updateGoods.weight,
-            lengthsize: updateGoods.lengthsize,
-            widthsize: updateGoods.widthsize,
-            heightsize: updateGoods.heightsize,
+            goodsname:   updateGoods.goodsname,
+            weight:      parseFloat(updateGoods.weight),
+            lengthsize:  parseFloat(updateGoods.lengthsize),
+            widthsize:   parseFloat(updateGoods.widthsize),
+            heightsize:  parseFloat(updateGoods.heightsize),
             description: updateGoods.description
         }
+
         db.goods.checkGoodsBelongStore(goodsid, storeid, db.order).then(function(goods){
             db.goods.updateGoods(newGoods,updateGoods.goodsid)       
             .then(function(){                
                 return res.status(200).json("Update goods successfully!");
-            }, function(){
-                return res.status(400).json("Add goods fail!");
+            }, function(err){
+                next(err);
             })
         },function(er){
-            return res.status(400).json("Delete goods fail!");
+            next(err);
         })
-        
     };
  
     var storeGetOrderList = function (req, res, next) {
