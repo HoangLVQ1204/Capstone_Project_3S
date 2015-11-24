@@ -287,7 +287,7 @@ module.exports = function(server,app){
             });
             result.customer.push(customer);
         }
-
+        console.log('getDataForStore', result);
         return result;
     };
 
