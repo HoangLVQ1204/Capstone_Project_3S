@@ -11,7 +11,8 @@ module.exports = function (app) {
         var listShipper;
         var getStore = db.store.adminGetAllStoreNameAndStoreiD();
         var getShipper = db.user.getUserByRole(1);
-        Promise.all([getStore,getShipper])
+        var getTotalOrder = db.order.adminCountAllOrder();        
+        Promise.all([getStore,getShipper,getTotalOrder])
             .then(function(rs){                
                 return res.status(200).json(rs);
             },function(err){

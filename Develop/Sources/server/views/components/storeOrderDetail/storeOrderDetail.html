@@ -204,7 +204,10 @@
 <hr>
 <div class="form-group">
   <button ng-disabled="order.statusid>1" ng-if="disabled" type="button" ng-click="changeToEn()" class="btn btn-theme"> Edit Order</button>
+
   <button ng-if="!disabled" type="submit" class="btn btn-theme"> Update Order</button>
+  <button ng-if="!disabled" type="button" ng-click="updateOldOrderToServer()" class="btn btn-theme"> Cancel</button>
+
 </div>
 </form>
 

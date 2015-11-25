@@ -109,14 +109,18 @@ function notificationService($q,$http, config, dataService, authService){
     };
 
     api.readNotification = function(index) {
-        if (listNotifications[index].isread) return;
+        if (listNotifications[index].isread) {
+            d = $q.defer();
+            d.resolve();
+            return d.promise;
+        }
         totalUnreadNotifications -= 1;
         listNotifications[index].isread = true;
         var urlBase = config.baseURI + '/api/notifications/' + listNotifications[index].notificationid;     
         // console.log('readNotification', urlBase);
-        dataService.putDataServer(urlBase, listNotifications[index])
+        return dataService.putDataServer(urlBase, listNotifications[index])
         .then(function(data) {
-            console.log('readNotification', data);
+            return data;
         });
     };
 

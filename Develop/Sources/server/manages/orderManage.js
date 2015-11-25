@@ -328,6 +328,7 @@ var updateOrder = function (req, res, next) {
     var updateOrder = req.body.order;
     var listupdateGoods = req.body.listgoods;
     var clStoreid = req.user.stores[0].storeid;        
+
     order.ordertypeid = updateOrder.ordertypeid;
     order.recipientname = updateOrder.recipientname;
     order.recipientphone = updateOrder.recipientphone;
@@ -339,22 +340,38 @@ var updateOrder = function (req, res, next) {
     order.fee = calculateShipFee (district, innerCity,updateOrder.ordertypeid);
     order.cod = updateOrder.cod;
     order.overweightfee = calculateOverWeightFee (district, innerCity, listupdateGoods);
+
     db.order.getOneOrder(updateOrder.orderid)
     .then(function(orderRs){
         if(orderRs.storeid == clStoreid){
+            db.goods.deleteGood(updateOrder.orderid);
+
+                //goodsname: newGood.goodsname,
+                //orderid: newGood.orderid,
+                //stockid: newGood.stockid,
+                //weight: parseFloat(newGood.weight),
+                //lengthsize: parseFloat(newGood.lengthsize),
+                //widthsize: parseFloat(newGood.widthsize),
+                //heightsize: parseFloat(newGood.heightsize),
+                //description: newGood.description,
+                //amount: newGood.amount
+
             for(var i =0; i <listupdateGoods.length;i++){
                 var updateGoods = listupdateGoods[i];
                 var newGoods = {
-                    goodsname: updateGoods.goodsname,
-                    weight: updateGoods.weight,
-                    lengthsize: updateGoods.lengthsize,
-                    widthsize: updateGoods.widthsize,
-                    heightsize: updateGoods.heightsize,
+                    goodsname  : updateGoods.goodsname,
+                    orderid    : updateOrder.orderid,
+                    weight     : updateGoods.weight,
+                    lengthsize : updateGoods.lengthsize,
+                    widthsize  : updateGoods.widthsize,
+                    heightsize : updateGoods.heightsize,
                     description: updateGoods.description,
-                    amount: updateGoods.amount
+                    amount     : updateGoods.amount
                 }
-                db.goods.updateGoods(newGoods,updateGoods.goodsid)                        
+                db.goods.postOneGood(newGoods);
+                //db.goods.updateGoods(newGoods,updateGoods.goodsid)
             }
+
             db.order.updateOrder(order,updateOrder.orderid)
             .then(function(rs){                            
                 if(rs){
@@ -408,8 +425,10 @@ var putDraff = function(req, res, next){
 };
 
 var cancelOrder = function (req, res, next) {
-   var ownerStoreUser = req.user.username;
+    var ownerStoreUser = req.user.username;
     var storeID = req.user.stores[0].storeid;
+    var orderID = req.body.orderid;
+    console.log('orderID:414: ', orderID);
 
     var issueCancel = {
         typeid: 7,
@@ -422,18 +441,32 @@ var cancelOrder = function (req, res, next) {
    //Add new issue
     db.issue.createNewIssue(issueCancel)
     .then(function(issue){
-        //Add notification
+        //create new orderissue
+        var newOrderIssue = {};
+        newOrderIssue.issueid = issue.issueid;
+        newOrderIssue.orderid = _.clone(orderID, true);
+        db.orderissue.createOrderIssue(newOrderIssue);
+        //msg to Admin
         var msgRequestCancel = {
-            type: 'Issue',
+            type: 'issue',
             title: 'Issue',
             content: 'Store ' + storeID + ' requested cancel an order',
             url: '#/admin/issueBox/content?issueid=' + issue.dataValues.issueid,
             isread: false,
             createddate: new Date()
         };
-
-        //get Admin
-        db.user.getUserByRole(3)
+        //Update status order = cancelling
+        db.order.getOneOrder(orderID)
+        .then(function(orders){
+            orders = orders.toJSON();
+            orders.statusid = 6;
+            return db.order.updateOrderStatus(orders);
+            //return Promise.all(promises);
+        })
+        .then(function(data){
+            //get Admin
+            return db.user.getUserByRole(3)
+        })
         .then(function(admins){
             admins = admins.map(function(e) {
                 return e.toJSON();
@@ -459,7 +492,9 @@ var cancelOrder = function (req, res, next) {
                 msgRequestCancel,
                 'admin::issue:cancelorder'
             );
-        })
+        });
+        //res status code
+        res.status(200).json('OK');
     }, function(err){
         next(err);
     })
@@ -491,28 +526,28 @@ var getTodayTotal = function (req, res, next) {
     });
 };
 
-deleteGoods =  function(req, res, next){
-    var goodsid = req.query.goodsid;
-    var storeid = req.user.stores[0].storeid;
-    db.goods.checkGoodsBelongStore(goodsid, storeid, db.order).then(function(goods){
-        db.goods.deleteGoodsByID(goodsid).then(function(){
-            return res.status(200).json("Delete goods successfully!");
-        },function(){
+    deleteGoods =  function(req, res, next){
+        var goodsid = req.query.goodsid;
+        var storeid = req.user.stores[0].storeid;
+        db.goods.checkGoodsBelongStore(goodsid, storeid, db.order).then(function(goods){
+            db.goods.deleteGoodsByID(goodsid).then(function(){
+                return res.status(200).json("Delete goods successfully!");
+            },function(){
+                return res.status(400).json("Delete goods fail!");
+            })
+        },function(er){
             return res.status(400).json("Delete goods fail!");
         })
-    },function(er){
-        return res.status(400).json("Delete goods fail!");
-    })
-};
+    };
 
-addGoods = function(req, res, next){
-    var newGoods = req.body;
-        db.goods.postOneGood(newGoods)
-        .then(function(rs){
-            return res.status(200).json(rs.goodsid);
-        },function(err){
-            next (err);
-        })
+    addGoods = function(req, res, next){
+            var newGoods = req.body;
+            db.goods.postOneGood(newGoods)
+            .then(function(rs){
+                return res.status(200).json(rs.goodsid);
+            },function(err){
+                next (err);
+            })
     };
 
     updateGoods = function(req, res, next){

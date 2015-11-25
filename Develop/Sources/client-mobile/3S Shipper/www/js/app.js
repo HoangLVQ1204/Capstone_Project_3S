@@ -46,6 +46,19 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
   //Fix tab bottom in android
   $ionicConfigProvider.tabs.position('bottom');
 
+  $httpProvider.interceptors.push(function($q) {
+    return {
+      responseError: function(rejection) {
+        if(rejection.status == 0) {
+          //window.location = "noresponse.html";
+          console.log('API is offline, Plz check config hotServer. Try Again !');
+          return;
+        }
+        return $q.reject(rejection);
+      }
+    };
+  });
+
   uiGmapGoogleMapApiProvider.configure({
     key: 'AIzaSyA_tcRSfGJdCCDLvGXGPZqdOMQC9bniNoo',
     v: '3.17',

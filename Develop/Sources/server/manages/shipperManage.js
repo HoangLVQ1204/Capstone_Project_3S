@@ -419,16 +419,16 @@ module.exports = function (app) {
                 ];
 
                 var msgToAdmin = {
-                    type: 'Issue',
+                    type: 'issue',
                     title: 'Issue:',
                     content: 'Shipper ' + shipperID + ' sent an issue.',
-                    url: '#/admin/issueBox?issueid=' + issue.dataValues.issueid,
+                    url: '#/admin/issueBox?content?issueid=' + issue.dataValues.issueid,
                     isread: false,            
                     createddate: new Date()
                 };
 
                 var msgToStore = {
-                    type: 'Issue',
+                    type: 'issue',
                     title: 'Issue:',
                     content: 'Some orders are in trouble. We are repairing.' ,
                     url: '#/store/dashboard',
