@@ -313,13 +313,21 @@ angular.module('app', [
     });
 
     $rootScope.onlineShipper = 0;
-    $rootScope.readNewNoti = function() {
-
+    $rootScope.readNewNoti = function(notification) {
+        var urlBase = config.baseURI + '/api/notifications/' + notification.notificationid;     
+        // console.log('readNotification', urlBase);
+        dataService.putDataServer(urlBase, notification)
+        .then(function(data) {
+            // console.log('press notification', data.data);
+            if ($state.current.name == 'store.notification' || $state.current.name == 'admin.notification') {
+                $state.go($state.current.name, {}, { reload: true });
+            }            
+        });
     };
 
     $rootScope.displayNotification = function(notification) {
         var data = {
-            life: 10000,
+            life: 5000,
             horizontal: 'bottom',
             horizontalEdge: 'bottom',
             verticalEdge: 'right',
@@ -330,9 +338,17 @@ angular.module('app', [
                 '<span style="color: white">' + notification.content + '</span>'
                 '</div>';        
         $.notific8(template, data);
+        console.log('current $state', $state.current.name);
         $('#noti' + notification.notificationid).on('click', function() {
-            console.log('notification.notificationid', notification.notificationid);
+            // console.log('notification.notificationid', notification.notificationid);
+            if (notification.notificationid) {
+                $rootScope.readNewNoti(notification);
+            }
         });
+        if ($state.current.name == 'store.notification' || $state.current.name == 'admin.notification') {
+            $state.go($state.current.name, {}, { reload: true });
+        }
+
         //$rootScope.$apply();
         setTimeout(function () {
             $rootScope.$apply();
@@ -555,15 +571,6 @@ angular.module('app', [
     };
 
     $rootScope.cancelExpress = function(order, goods, inDatabase) {
-        var temp = {
-            type: 'issue',
-            title: 'Error: ',
-            content: 'Finding Shipper fail.',
-            url: '/#/notiListdemo',
-            isread: false
-        };
-        $rootScope.notify(temp);
-
         unloading();
         $rootScope.rightShipper = {
             avatar: "assets/img/notfound.png"
