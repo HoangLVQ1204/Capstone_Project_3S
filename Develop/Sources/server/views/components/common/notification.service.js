@@ -128,6 +128,7 @@ function notificationService($q,$http, config, dataService, authService){
     api.addNotification = function(item) {
         var currentUser = authService.getCurrentInfoUser();
         item.username = currentUser.username;
+        item.createddate = new Date();
         var urlBase = config.baseURI + '/api/notifications';
         // console.log('addNotification', urlBase);
         dataService.postDataServer(urlBase, item)
