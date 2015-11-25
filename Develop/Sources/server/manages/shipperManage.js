@@ -348,6 +348,7 @@ module.exports = function (app) {
     var createIssue = function (req, res, next) {
         var issueType;
         var task = db.task;
+        var listStores = [];
         //Instance new Issue
         var newIssue = _.cloneDeep(req.body[0].issue);
         var shipperID = req.user.username;
@@ -456,6 +457,7 @@ module.exports = function (app) {
                     storeIDs = storeIDs.map(function(e){
                         return e.storeid;
                     });
+                    listStores = _.clone(storeIDs, true);
                     return db.managestore.getOwnerOfStore(storeIDs);
                 })
                 .then(function(ownerStores) {
@@ -478,7 +480,7 @@ module.exports = function (app) {
                 .then(function(data) {
                     console.log('shipperController:480', data.length);
                     console.log('send notification to store and admin');
-                    // send socket
+                    // Send socket
                     var sender = {
                         type: 'shipper',
                         clientID: shipperID
@@ -491,15 +493,34 @@ module.exports = function (app) {
                         },
                         'admin:issue:notification'
                     );
-                    server.socket.forward(
-                        sender,
-                        {
-                            type: 'room',
-                            room: shipperID
-                        },
-                        msgToStore,
-                        'store:issue:pending'
-                    );
+                    //Issue Pending
+                    if (_.parseInt(categoryissue) === 1) {
+                        server.socket.forward(
+                            sender,
+                            {
+                                type: 'room',
+                                room: shipperID
+                            },
+                            msgToStore,
+                            'store:issue:pending'
+                        );
+                    //Issue Cancel
+                    } else if (_.parseInt(categoryissue) === 2) {
+                        console.log("shipperMaanges:516", listStores);
+                        listStores.forEach(function(storeID){
+                            server.socket.forward(
+                                sender,
+                                {
+                                    type: 'store',
+                                    clientID: storeID
+                                },
+                                msgToStore,
+                                'store:issue:pending'
+                            );
+                        });
+                    }
+
+
                 });
 
                 //Respon data

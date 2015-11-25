@@ -25,11 +25,6 @@ function storeController($scope,$state,socketService,socketStore,dataService,aut
 
     }
 
-    $scope.test = function(){
-        // $rootScope.findExpressShipper();
-        alert('WTH are u testing??? Use Make An Order, please!!');
-    };
-
     $scope.$watch('$viewContentLoaded', function(event) {
 
             $('nav#menu-ver').mmenu({
@@ -48,19 +43,6 @@ function storeController($scope,$state,socketService,socketStore,dataService,aut
 
     });
 
-
-    //setTimeout(function() {
-    //    var temp = {
-    //        type: 'issue',
-    //        title: 'issue 1',
-    //        content: 'This is very big issue number 1',
-    //        url: '/#/notiListdemo',
-    //        isread: false,
-    //        createddate: new Date()
-    //    };
-    //    $rootScope.notify(temp);
-    //}, 1000);
-
     notificationService.getTotalUnreadNotificationsServer()
     .then(function() {
         $rootScope.numberUnreadNoti = notificationService.getTotalUnreadNotifications();
@@ -69,6 +51,10 @@ function storeController($scope,$state,socketService,socketStore,dataService,aut
     $scope.makeAnOrder = function() {
         $state.go('store.order', {}, {reload: true});
     }
+
+    $rootScope.$on("logoutStore",function(data){
+        $scope.signOut();
+    });
 }
 
 storeController.$inject = ['$scope','$state','socketService','socketStore','dataService','authService','config','$rootScope','notificationService'];

@@ -106,7 +106,7 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
         dataService.getDataServer(urlBase)
             .then(function (res) {
                 var rs = res.data;
-                console.log("======================",rs);
+                console.log("=========fgfgfgfgf=============",rs);
                 $scope.orderToday = rs['Total'][2];
                 $scope.totalCod = rs['Total'][0];
                 $scope.todayCod = rs['Total'][3];

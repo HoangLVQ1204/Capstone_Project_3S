@@ -86,8 +86,8 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
 
     socketService.on('store:notification:blockStore', function(data) {
         console.log("store:notification:blockStore: ", data);
-        //$rootScope.$emit("updatePenddingOrder", data.msg);
-        $rootScope.notify(data.msg);
+        $rootScope.$emit("logoutStore", data.msg);
+        //$rootScope.notify(data.msg);
     });
 
 

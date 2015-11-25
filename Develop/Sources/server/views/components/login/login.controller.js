@@ -22,10 +22,9 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
             .then(function(res){
 
                 authService.saveToken(res.data.token);
-                console.log('saveToken + authenSocket');
                 socketService.authenSocket()
                 .then(function() {
-                    console.log('then initSocket');
+
                     if(authService.isRightRole(config.role.admin)){
                         socketAdmin.registerSocket();
                         $state.go('admin.dashboard');
@@ -36,36 +35,26 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
                         $state.go('store.dashboard');
                     }
 
-                    if(authService.isRightRole(config.role.shipper)){                    
-                        socketShipper.registerSocket();
-                        $state.go('mapdemo');
-                    }  
                 });
-                // if(authService.isRightRole(config.role.admin)){
-                //     socketAdmin.registerSocket();
-                //     $state.go('admin.dashboard');
-                // }
-
-                // if(authService.isRightRole(config.role.store)){
-                //     socketStore.registerSocket();
-                //     $state.go('store.dashboard');
-                // }
-
-                // if(authService.isRightRole(config.role.shipper)){                    
-                //     socketShipper.registerSocket();
-                //     $state.go('mapdemo');
-                // }
             })
-            .catch(function(error){
-                main.removeClass("slideDown");
-                $.notific8('Check Username or Password again !! ',
-                    {
-                        life:5000,
-                        horizontalEdge:"bottom",
-                        theme:"danger" ,
-                        heading:" ERROR :); "
-                    });
-                return false;
+            .catch(function(rs){
+                console.log("---ERROR---");
+                console.log($scope.user);
+                console.log("---ERROR---");
+                if(rs.data == "Banned"){
+                    main.removeClass("slideDown");
+                    $("#displayInforBan").modal("show");
+                }else{
+                    main.removeClass("slideDown");
+                    $.notific8('Check Username or Password again !! ',
+                        {
+                            life:5000,
+                            horizontalEdge:"bottom",
+                            theme:"danger" ,
+                            heading:" ERROR :); "
+                        });
+                    return false;
+                }
             })
     };
 
