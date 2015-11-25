@@ -123,17 +123,17 @@ function notificationService($q,$http, config, dataService, authService){
             return data;
         });
     };
-
-    // Move update database to server
+    
     api.addNotification = function(item) {
         var currentUser = authService.getCurrentInfoUser();
         item.username = currentUser.username;
         item.createddate = new Date();
         var urlBase = config.baseURI + '/api/notifications';
         // console.log('addNotification', urlBase);
-        dataService.postDataServer(urlBase, item)
+        return dataService.postDataServer(urlBase, item)
         .then(function(data) {
             console.log('addNotification', data);
+            return data;
         });
     };
 
