@@ -143,24 +143,12 @@ function storeOrderController($scope, dataService, config, socketService, socket
         });
 
 
-        ///////////////////////////////////////////////////
-        //....Disable textbox when click on checkbox....///
-        ///////////////////////////////////////////////////
-        // function handleStatusChanged() {
-        //     $('#enElementCb').on('change', function () {
-        //         if (!$('#enElementCb').is(':checked')) {
-        //             $('#elementsToEn :input').attr('disabled', true);
-        //         } else {
-        //             $('#elementsToEn :input').removeAttr('disabled');
-        //         }
-        //     });
-        // }
     });    
     $scope.newGood = {};
     var index;
-    $scope.setGood = function(good,index){
+    $scope.setGood = function(good,clickedIndex){
         $scope.newGood = (JSON.parse(JSON.stringify(good)));
-        index = index;
+        index = clickedIndex;
     };
 
     $scope.refreshGood = function(){
