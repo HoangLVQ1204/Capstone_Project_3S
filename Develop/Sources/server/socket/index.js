@@ -369,10 +369,9 @@ module.exports = function(server,app){
     };
 
     io.reconnectStore = function(storeid, socket){
-      for(var order in io.orders){
-          console.log("INDEX373============", order);
-          if (order.storeID === storeid) {
-              io.addToRoom(socket, order.shipperID)
+      for(keys in io.orders){
+          if (io.orders[keys].storeID === storeid) {
+              io.addToRoom(socket, io.orders[keys].shipperID);
           }
       }
     };
@@ -611,6 +610,30 @@ module.exports = function(server,app){
             } 
         });
     };
+
+    //// HuyTDH - 25-11-2015
+    // START - Change shipper of an order active
+    io.changeShipperOfOrder = function(shipperID, orderID){
+        for(var i = 0; i != io.orders.length; i++){
+            if(io.orders[i].orderID === orderID){
+                io.orders[i].shipperID = shipperID;
+                return true;
+            }
+        }
+        return false;
+    };
+    // END - Change shipper of an order active
+
+    //// HuyTDH - 25-11-2015
+    // START - Change all order of shipper to pending or not
+    io.updatePendingOrder = function(shipperid, status){
+        var orders = io.getOrdersOfShipper(shipperid);
+        orders.forEach(function(e) {
+            e.orderInfo.isPending = status;
+            io.updateOrder(e.orderID, e.orderInfo);
+        });
+    };
+    // END - Change all order of shipper to pending or not
 
     //// HuyTDH - 18-11-2015
     // START - Find id of socket connection by shipper id
