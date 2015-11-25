@@ -4,6 +4,7 @@
 
 function adminReportController($scope,$state, $http,dataService, $filter, config, $stateParams) {
     $scope.height = 300;
+    getComCanFromServer();
     getCodFeeFromServer();
     getExNoFromServer();
     getDateOverView();
@@ -41,28 +42,30 @@ function adminReportController($scope,$state, $http,dataService, $filter, config
     function getComCanFromServer(){
         var urlBase = config.baseURI + '/api/admin/report/storeOrderCount';
         dataService.getDataServer(urlBase)
-            // .success(function (rs) {
-            //      $scope.listStore = rs;
-            //      $scope.selectedStore = rs[0];
-            //      $scope.listYear = $scope.selectedStore.years;
-            //      $scope.selectedYear = $scope.listYear[0];
-            //      $scope.listExNoOfMonth = $scope.selectedYear.months;
-            //      var selectedMonth = $scope.listExNoOfMonth[0];
-            //      setTimeout(function(){
-            //         caplet();
-            //     },200);
+            .success(function (rs) {
+                console.log("==================ComCan=========",rs);
+                 $scope.listStoreCC = rs;
+                 $scope.selectedStoreCC = $scope.listStoreCC[0];
+                 $scope.listYearCC = $scope.selectedStoreCC.years;
+                 $scope.selectedYearCC = $scope.listYearCC[0];
+                 $scope.listOfMonthCC = $scope.selectedYearCC.months;
+                 console.log("==========COmplete================",$scope.listOfMonthCC[0].status[0].countNum);
+                 console.log("==========Cancel================",$scope.listOfMonthCC[0].status[1].countNum);
+                 // //  setTimeout(function(){
+                //     caplet();
+                // },200);
                  
-            // })
-            // .error(function (error) {
-            //     caplet();
-            //     console.log('Unable to load customer data: ' + error);
-            // });
+            })
+            .error(function (error) {
+                caplet();
+                console.log('Unable to load customer data: ' + error);
+            });
     }
     function getCodFeeFromServer(){
         var urlBase = config.baseURI + '/api/admin/report/storeOrderCount';
         dataService.getDataServer(urlBase)
             .success(function (rs) {
-                console.log("==================rtrt===rs==========",rs);
+                
                  $scope.listStoreFin = rs;
                  $scope.selectedStoreFin = rs[0];
                  $scope.listYearFin = $scope.selectedStoreFin.years;
