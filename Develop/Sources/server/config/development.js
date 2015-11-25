@@ -6,7 +6,7 @@ module.exports = {
 	seed: false,
 	db: {
 
-		 url: 'postgres://englishaholic:englishaholic@localhost:5432/3S'
+		 url: 'postgres://hoanglvq:dothebest1204@localhost:5432/3S'
 
 	}
 };
