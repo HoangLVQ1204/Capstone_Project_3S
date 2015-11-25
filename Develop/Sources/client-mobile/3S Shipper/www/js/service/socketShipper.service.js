@@ -25,6 +25,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
   //receive message after admin resolved issue
   socketService.on('shipper:issue:resolve', function(data) {
     console.log('shipper:issue:resolve', data.msg.notification);
+    //$rootScope.$broadcast('issue:resolve', {type: data.msg.type, content: data.msg.notification.content});
     $rootScope.$broadcast('issue:resolve', {type: data.msg.type});
   });
 

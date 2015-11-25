@@ -68,7 +68,7 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
 
     socketService.on('store:issue:cancel', function(data) {
         console.log('store:issue:cancel', data);
-        $rootScope.$emit("updatePenddingOrder", data.msg);
+        $rootScope.$emit("updatePendingOrder", data.msg);
         $rootScope.notify(data.msg);
     });
 

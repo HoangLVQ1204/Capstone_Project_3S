@@ -55,6 +55,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.BOOLEAN,
       allowNull: true
     },
+    iscancel: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
+    },
     isdraff: {
       type: DataTypes.BOOLEAN,
       allowNull: true
