@@ -103,10 +103,11 @@ module.exports = function(sequelize, DataTypes) {
     freezeTableName: true,
     timestamps: false,
     instanceMethods: {
-      updateOrderStatus: function (nextStatus, completeDate) {
+      updateOrderStatus: function (nextStatus, completeDate, stockID) {
         return this.update({
           statusid: nextStatus,
-          completedate: completeDate
+          completedate: completeDate,
+          stockid: stockID
         })
       },
       getCustomerAddress: function(){
@@ -146,6 +147,11 @@ module.exports = function(sequelize, DataTypes) {
           constraints: false
         });
 
+        order.belongsTo(db.stock, {
+          foreignKey: 'stockid',
+          constraints: false
+        });
+
       },
       getAllTaskOfShipper: function(task, shipperid) {
         return order.findAll({
@@ -172,7 +178,7 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
 
-      getOrderDetailById: function (taskID, shipperID, orderStatusModel, goodsModel, taskModel, storeModel) {
+      getOrderDetailById: function (taskID, shipperID, orderStatusModel, goodsModel, taskModel, storeModel, stockModel) {
         return order.findOne({
           attributes:{ exclude: ['ledgerid', 'createdate', 'isdraff', 'pickupaddresscoordination', 'deliveryaddresscoordination']},
           where: {
@@ -198,6 +204,10 @@ module.exports = function(sequelize, DataTypes) {
             {
               model: storeModel,
               attributes: ['name', 'phonenumber'],
+            },
+            {
+              model: stockModel,
+              attributes: ['name', 'address'],
             }
           ]
         });
