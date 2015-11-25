@@ -83,8 +83,8 @@
                                         <th st-sort="lastbalance" class="text-center sortable">Last Balance(VND)</th>
                                         <th st-sort="amount" class="text-center sortable">Amount(VND)</th>
                                         <th st-sort="balance" class="text-center sortable">Balance(VND)</th>
-                                        <th st-sort="totaldelivery" class="text-center sortable">Delivery(VND)</th>
-                                        <th st-sort="totalcod" class="text-center sortable">CoD(VND)</th>
+                                        <!--<th st-sort="totaldelivery" class="text-center sortable">New Delivery(VND)</th>-->
+                                        <!--<th st-sort="totalcod" class="text-center sortable">New CoD(VND)</th>-->
                                         <th st-sort="paydate" class="text-center sortable">Paydate</th>
 
                                         <th class="text-center">Note</th>
@@ -96,10 +96,13 @@
                                         <td>{{x.ledgerid}}</td>
                                         <td class="text-left"><a ui-sref="admin.storeDetail({storeid:x.storeid})">{{x.store.name}}</a></td>
                                         <td>{{x.lastbalance = x.amount + x.balance}}</td>
-                                        <td>{{x.amount}}</td>
-                                        <td class="center"> {{x.balance}}</td>
-                                        <td class="center"> {{x.totaldelivery}}</td>
-                                        <td class="center"> {{x.totalcod}}</td>
+                                        <td><strong>{{x.amount}}</strong></td>
+                                        <td class="center">
+                                            <span class="tooltip-area">
+                                            <a title="Total delivery: {{x.totaldelivery}} - Total CoD: {{x.totalcod}}">{{x.balance}}</a>
+                                        </span></td>
+                                        <!--<td class="center"> {{x.totaldelivery}}</td>-->
+                                        <!--<td class="center"> {{x.totalcod}}</td>-->
                                         <td class="center"> {{x.paydate|date: "dd/MM/yyyy"}}</td>
                                         <td>
                                         <span class="tooltip-area">

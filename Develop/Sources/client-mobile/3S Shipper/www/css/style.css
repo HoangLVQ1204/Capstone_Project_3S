@@ -187,6 +187,11 @@ div.fixed {
 .history-done {
   background-color: #33cd5f;
 }
+
+.not-active {
+  pointer-events: none;
+  cursor: default;
+}
 /* ---END StyleSheet of Task & History---*/
 
 /*---START StyleSheet of Profile---*/

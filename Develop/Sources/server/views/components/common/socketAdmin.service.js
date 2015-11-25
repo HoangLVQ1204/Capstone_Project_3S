@@ -3,7 +3,7 @@
  */
 
 
-function socketAdmin(socketService,authService,mapService, $rootScope){
+function socketAdmin(socketService,authService,mapService, $rootScope, notificationService){
 
     var EPSILON = 1e-8;            
 
@@ -126,8 +126,8 @@ function socketAdmin(socketService,authService,mapService, $rootScope){
             title: 'Info',
             //content: msg,
             url: '#/store/dashboard',
-            //isread: false,
-            //createddate: new Date()
+            isread: false,
+            createddate: new Date()
         };
 
         issue.orderissues.map(function (orderissue) {
@@ -161,8 +161,8 @@ function socketAdmin(socketService,authService,mapService, $rootScope){
             title: 'Info',
             content: 'A new transaction was added successfully...',
             url: '#/store/transactionHistory',
-            //isread: false,
-            //createddate: new Date()
+            isread: false,
+            createddate: new Date()
         };
         var user = api.getCurrentUser();
         socketService.sendPacket(
@@ -178,10 +178,37 @@ function socketAdmin(socketService,authService,mapService, $rootScope){
             'admin:message:confirmPayment');
     };
 
+    api.blockStoreMessage = function (storeid, type, reason) {//send message after confirm payment
+        //var shipperList = [
+        var content = "";
+        if (type == 1) content = "Your store is blocked because "+ reason +"... please contact them for get more information...";
+          else content = "Your store is unblocked...";
+        var msgToStore = {
+            type: 'info',
+            title: 'Info',
+            content: content,
+            url: '#/store/transactionHistory',
+            isread: false,
+            createddate: new Date()
+        };
+        var user = api.getCurrentUser();
+        socketService.sendPacket(
+            {
+                type: 'admin',
+                clientID: user.adminID
+            },
+            'server',
+            {
+                storeid: storeid,
+                msg: msgToStore
+            },
+            'admin:notification:blockStore');
+    };
+
     return api;
 }
 
 
-socketAdmin.$inject = ['socketService','authService','mapService', '$rootScope'];
+socketAdmin.$inject = ['socketService','authService','mapService', '$rootScope','notificationService'];
 
 angular.module('app').factory('socketAdmin', socketAdmin);

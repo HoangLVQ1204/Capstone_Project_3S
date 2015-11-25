@@ -46,21 +46,27 @@ function adminStoreListController($scope,$state, $http, authService, config, soc
         $http.get(config.baseURI + "/api/store/getTotalFee").success(function(response){
             $scope.currentFee = response;
             //==//console.log(response);
-            var i=0;
+
             $scope.storeList.map(function (store) {
                 var resultCoD = $.grep($scope.currentCoD, function(e){ return e.storeid == store.storeid; });
                 if ($scope.currentCoD.length > 0)
-                    store.currentCoD =  resultCoD[0].totalCoD;
+                    store.currentCoD =  parseInt(resultCoD[0].totalCoD);
 
                 var resultFee = $.grep($scope.currentFee, function(e){ return e.storeid == store.storeid; });
                 if ($scope.currentFee.length > 0)
-                store.currentFee =  resultFee[0].totalFee;
+                store.currentFee =  parseInt(resultFee[0].totalFee);
                 if (store.generalledgers.length > 0)
                 store.generalledgers[0].balance =  parseInt(store.generalledgers[0].balance);
 
+                $http.get(config.baseURI + "/api/store/getLatestLedgerOfStore/" + store.storeid).success(function(response){
+                    store['currentBanlance'] = response.balance;
+
+                    //console.log(response);
+                }).then(function () {
+                    if (!store['currentBanlance']) store['currentBanlance']=0;
+                    return store;
+                })
                 //console.log(store);
-                i++;
-                return store;
             })
             //console.log($scope.storeList);
         })
@@ -132,6 +138,7 @@ function adminStoreListController($scope,$state, $http, authService, config, soc
         $http.post(config.baseURI + "/api/log/postBannedLog", bannedLog).then(function success(response){
             //console.log(store);bal
             store.managestores[0].user.userstatus =  bannedLog['userStatus'];
+            socketAdmin.blockStoreMessage(store.storeid, bannedLog['type'], bannedLog['reason']);
             smsData.theme="theme-inverse";
             $.notific8($("#sms-success").val(), smsData);
             $("#md-effect-block").attr('class','modal fade').addClass(smsData.effect).modal('hide');
@@ -213,6 +220,7 @@ function adminStoreListController($scope,$state, $http, authService, config, soc
     //-----------------------------------
     $scope.showTransactionHistory = function (store, period){
         var autoDate = $scope.latestAutoDate;
+        //console.log(autoDate);
         if (!period) autoDate='null';
         $http.get(config.baseURI + "/api/getLedgerOfStore/" + store.storeid +"/" + autoDate).success(function(response){
             $scope.ledgerListOfStore = response;
@@ -253,7 +261,6 @@ function adminStoreListController($scope,$state, $http, authService, config, soc
              //console.log(response);
         })
     }
-
     //----------------------------------
     //FUNCTION GET TOTAL COD OF A STORE
     //-----------------------------------
