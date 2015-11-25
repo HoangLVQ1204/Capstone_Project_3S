@@ -54,9 +54,11 @@ module.exports = function(socket, io, app) {
         //send to shipper
         if (data.msg.typeid <= 6)
             data.msg.msg['content'] = 'Your pending issue has been resolved';
-
+        console.log(data.msg.orderList[0].orderid);
         if (data.msg.typeid == 7)
-            data.msg.msg['content'] = "Order " + order.orderid + " has been cancel by store...";
+            data.msg.msg['content'] = "Order " + data.msg.orderList[0].orderid + " has been cancel by store...";
+        if (data.msg.typeid == 8)
+            data.msg.msg['content'] = "Reconnect successfully";
         data.msg.msg['username'] = data.msg.shipperid;
         data.msg.msg['url'] = '#';
         notificationManage.postFromSever(data.msg.msg);
