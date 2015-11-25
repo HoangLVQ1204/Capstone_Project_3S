@@ -12,7 +12,7 @@ module.exports = function (app) {
 
     app.get('/api/shipper/getNewShipperID', shipperCtrl.createShipperID);
 
-    app.post('/api/shipper/updateTaskForShipper', shipperCtrl.updateTaskForShipper);
+    app.put('/api/shipper/updateTaskForShipper', shipperCtrl.updateTaskForShipper);
 
     app.get('/api/shipper/getAllShipper', shipperCtrl.getAllShipper);
 

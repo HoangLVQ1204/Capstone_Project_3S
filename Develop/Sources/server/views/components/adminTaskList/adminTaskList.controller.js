@@ -2,7 +2,7 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminTaskListController($scope,$state, $http, $filter, config) {
+function adminTaskListController($scope,$state, dataService, $filter, config) {
 
 
 
@@ -39,18 +39,18 @@ function adminTaskListController($scope,$state, $http, $filter, config) {
     $scope.taskStatusOptions =[];
     $scope.taskTypeOptions =[];
 
-    $http.get(config.baseURI + "/api/getAllTaskStatus").success(function(response){
-        $scope.taskStatusOptions = response;
+     dataService.getDataServer(config.baseURI + "/api/getAllTaskStatus").then(function(response){
+        $scope.taskStatusOptions = response.data;
         $scope.taskStatusOptions.sort(ComparatorStatus);
         //console.log(response);
     }).then(function () {
-        $http.get(config.baseURI  + "/api/getTaskList").success(function(response){
-            $scope.taskList = response;
+         dataService.getDataServer(config.baseURI  + "/api/getTaskList").then(function(response){
+            $scope.taskList = response.data;
             $scope.taskList.sort(dateSort);
         })
         .then(function () {
-        $http.get(config.baseURI + "/api/getAllTaskType").success(function(response){
-            $scope.taskTypeOptions= response;
+         dataService.getDataServer(config.baseURI + "/api/getAllTaskType").then(function(response){
+            $scope.taskTypeOptions= response.data;
             $scope.taskStatusOptions.sort(ComparatorType);
             //console.log(response);
         })
@@ -83,7 +83,6 @@ function adminTaskListController($scope,$state, $http, $filter, config) {
         $("#inputValue").val(0);
         $scope.isValid = $('#inputValue').parsley( 'validate' );
 
-        console.log($('#inputValue'));
     };
 
     function ComparatorStatus(a,b){
@@ -101,47 +100,47 @@ function adminTaskListController($scope,$state, $http, $filter, config) {
         //----------------------------------
     //FUNCTION GET ALL STATUS OF TASK
     //-----------------------------------
-    var getAllTaskStatus = function (){
-        //alert(1);
-        $http.get(config.baseURI + "/api/getAllTaskStatus").success(function(response){
-            $scope.taskStatusOptions= response;
-            //response.map(function(status){
-            //    var options = new Object();
-            //    options.option = status.statusname;
-            //})
-            console.log($scope.taskList);
-
-        })
-    }
+    //var getAllTaskStatus = function (){
+    //    //alert(1);
+    //     dataService.getDataServer(config.baseURI + "/api/getAllTaskStatus").success(function(response){
+    //        $scope.taskStatusOptions= response;
+    //        //response.map(function(status){
+    //        //    var options = new Object();
+    //        //    options.option = status.statusname;
+    //        //})
+    //        console.log($scope.taskList);
+    //
+    //    })
+    //}
     //$scope.getAllTaskStatus = getAllTaskStatus;
 
     //----------------------------------
     //FUNCTION GET ALL TYPE OF TASK
     //-----------------------------------
-    var getAllTaskType = function (){
-        ////console.log(11);
-        $http.get(config.baseURI + "/api/getAllTaskType").success(function(response){
-            $scope.taskTypeOptions= response;
-            //console.log(response);
-        })
-    }
+    //var getAllTaskType = function (){
+    //    ////console.log(11);
+    //     dataService.getDataServer(config.baseURI + "/api/getAllTaskType").success(function(response){
+    //        $scope.taskTypeOptions= response;
+    //        //console.log(response);
+    //    })
+    //}
 
     //-----------------------------------
     //FUNCTION SAVE TASK STATE
     //-----------------------------------
-    $scope.saveTaskState = function (){
-        ////console.log(11);
-        $http.put(config.baseURI + "/api/updateAllTaskState", $scope.taskList).then(function success(response){
-            smsData.theme="theme-inverse";
-            $.notific8($("#sms-success").val(), smsData);
-            //console.log(response);
-        },function (error) {
-            smsData.theme="danger";
-            //data.sticky="true";
-            $.notific8($("#sms-fail").val(), smsData);
-            console.log(error)
-        })
-    }
+    //$scope.saveTaskState = function (){
+    //    ////console.log(11);
+    //    $http.put(config.baseURI + "/api/updateAllTaskState", $scope.taskList).then(function success(response){
+    //        smsData.theme="theme-inverse";
+    //        $.notific8($("#sms-success").val(), smsData);
+    //        //console.log(response);
+    //    },function (error) {
+    //        smsData.theme="danger";
+    //        //data.sticky="true";
+    //        $.notific8($("#sms-fail").val(), smsData);
+    //        console.log(error)
+    //    })
+    //}
 
 
     var dateSort =  function(x, y){
@@ -165,5 +164,5 @@ function adminTaskListController($scope,$state, $http, $filter, config) {
 
 }
 
-adminTaskListController.$inject = ['$scope','$state', '$http', '$filter', 'config'];
+adminTaskListController.$inject = ['$scope','$state', 'dataService', '$filter', 'config'];
 angular.module('app').controller('adminTaskListController',adminTaskListController);

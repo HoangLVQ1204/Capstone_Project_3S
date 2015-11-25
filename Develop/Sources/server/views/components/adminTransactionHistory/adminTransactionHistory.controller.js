@@ -2,7 +2,7 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminTransactionHistoryController($scope,$state, $http, $location, config) {
+function adminTransactionHistoryController($scope,$state, dataService, $location, config) {
 
     $scope.ledgerList = [];
     $scope.autoList = [];
@@ -62,9 +62,9 @@ function adminTransactionHistoryController($scope,$state, $http, $location, conf
     $scope.dateRange = '';
     $scope.autoDateRange = '';
 
-    $http.get(config.baseURI + "/api/ledgerList").success(function(response){
+     dataService.getDataServer(config.baseURI + "/api/ledgerList").then(function(response){
        // $scope.ledgerList = response;
-        response.map(function(ledger){
+        response.data.map(function(ledger){
             ledger.balance = parseInt(ledger.balance);
             ledger.totalcod = parseInt(ledger.totalcod);
             ledger.totaldelivery = parseInt(ledger.totaldelivery);
@@ -116,5 +116,5 @@ function adminTransactionHistoryController($scope,$state, $http, $location, conf
 
 }
 
-adminTransactionHistoryController.$inject = ['$scope','$state', '$http', '$location', 'config'];
+adminTransactionHistoryController.$inject = ['$scope','$state', 'dataService', '$location', 'config'];
 angular.module('app').controller('adminTransactionHistoryController',adminTransactionHistoryController);

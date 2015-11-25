@@ -2,7 +2,7 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminAddStoreController($scope,$state, $http, $filter, config) {
+function adminAddStoreController($scope,$state, $http, $filter, config, dataService) {
 
     $scope.shipperList = [];
 
@@ -16,14 +16,14 @@ function adminAddStoreController($scope,$state, $http, $filter, config) {
     $scope.newStore.avatar = "assets/avatar/store/Default.jpg";
     //$scope.newStoreOwner.profile.dob = null;
 
-    $http.get(config.baseURI + "/api/store/getNewStoreOwnerID").success(function(response){
-        $scope.newStoreOwner.account.username = response;
-        $scope.newStoreOwner.profile.username = response;
+    dataService.getDataServer(config.baseURI + "/api/store/getNewStoreOwnerID").then(function(rs){
+        $scope.newStoreOwner.account.username = rs.data;
+        $scope.newStoreOwner.profile.username = rs.data;
         //console.log(response);
     })
 
-    $http.get(config.baseURI + "/api/store/getNewStoreID").success(function(response){
-        $scope.newStore.storeid = response;
+    dataService.getDataServer(config.baseURI + "/api/store/getNewStoreID").then(function(rs){
+        $scope.newStore.storeid = rs.data;
         //console.log(response);
     })
 
@@ -38,17 +38,17 @@ function adminAddStoreController($scope,$state, $http, $filter, config) {
         var managestore = new Object();
         managestore['storeid'] = $scope.newStore.storeid;
         managestore['managerid'] = $scope.newStoreOwner.account.username;
-        promises.push($http.post(config.baseURI + "/api/user/addNewUser", $scope.newStoreOwner));
-        promises.push($http.post(config.baseURI + "/api/store", $scope.newStore));
+        promises.push( dataService.postDataServer(config.baseURI + "/api/user/addNewUser", $scope.newStoreOwner));
+        promises.push( dataService.postDataServer(config.baseURI + "/api/store", $scope.newStore));
         Promise.all(promises).then(function () {
-            promises.push($http.post(config.baseURI + "/api/store/addManageStore", managestore));
+            promises.push( dataService.postDataServer(config.baseURI + "/api/store/addManageStore", managestore));
         })
        //console.log(valid);
         Promise.all(promises).then(function () {
             smsData.theme="theme-inverse";
             $.notific8($("#sms-success").val(), smsData);
             $state.go('admin.storeList');
-        },function (error) {
+        }) .catch(function (error) {
             smsData.theme="danger";
             //data.sticky="true";
             $.notific8($("#sms-fail").val(), smsData);
@@ -117,5 +117,5 @@ function adminAddStoreController($scope,$state, $http, $filter, config) {
 
 }
 
-adminAddStoreController.$inject = ['$scope','$state', '$http', '$filter', 'config'];
+adminAddStoreController.$inject = ['$scope','$state', '$http', '$filter', 'config', 'dataService'];
 angular.module('app').controller('adminAddStoreController',adminAddStoreController);

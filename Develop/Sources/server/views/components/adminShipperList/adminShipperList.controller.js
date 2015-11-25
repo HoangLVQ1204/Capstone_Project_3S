@@ -2,7 +2,7 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminShipperListController($scope,$state, $http, $filter, config, $stateParams, $rootScope) {
+function adminShipperListController($scope,$state, dataService, $filter, config, $stateParams, $rootScope) {
 
     //$scope.topShipper = $stateParams.newShipper; //getting fooVal
     //console.log($scope.topShipper);
@@ -29,8 +29,8 @@ function adminShipperListController($scope,$state, $http, $filter, config, $stat
     $scope.selected = $scope.searchOptions[0];
     $scope.dateRange = '';
 
-    $http.get(config.baseURI + "/api/shipper/getAllShipper").success(function(response){
-        $scope.shipperList= response;
+    dataService.getDataServer(config.baseURI + "/api/shipper/getAllShipper").then(function(response){
+        $scope.shipperList= response.data;
         $scope.shipperList.map(function (shipper) {
             shipper['workingStatus'] = 'Offline';
             if (shipper.userstatus == 3)  shipper['workingStatus'] = 'Block';
@@ -75,5 +75,5 @@ function adminShipperListController($scope,$state, $http, $filter, config, $stat
     // END listen to socket changes
 }
 
-adminShipperListController.$inject = ['$scope','$state', '$http', '$filter', 'config', '$stateParams', '$rootScope'];
+adminShipperListController.$inject = ['$scope','$state', 'dataService', '$filter', 'config', '$stateParams', '$rootScope'];
 angular.module('app').controller('adminShipperListController',adminShipperListController);
