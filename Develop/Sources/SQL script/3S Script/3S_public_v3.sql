@@ -1018,7 +1018,7 @@ CREATE TABLE "public"."goods" (
 "goodsid" int4 DEFAULT nextval('goods_goodsid_seq'::regclass) NOT NULL,
 "goodsname" varchar(20) COLLATE "default",
 "orderid" varchar(8) COLLATE "default",
-"stockid" int4,
+--"stockid" int4,
 "weight" float8,
 "lengthsize" float8,
 "widthsize" float8,
@@ -1033,26 +1033,26 @@ WITH (OIDS=FALSE)
 -- ----------------------------
 -- Records of goods
 -- ----------------------------
-INSERT INTO "public"."goods" VALUES ('1', 'Apricot', 'OD122222', null, '32', '20', '50', '35', 'Very height', '2');
-INSERT INTO "public"."goods" VALUES ('2', 'Asparagus', 'OD981921', null, '34', '34', '34', '50', 'Very width', '1');
-INSERT INTO "public"."goods" VALUES ('3', 'Aubergine', 'OD555461', null, '34', '34', '34', '50', 'Very width', '3');
-INSERT INTO "public"."goods" VALUES ('4', 'Avocado', 'OD555461', null, '34', '34', '34', '50', 'Very width', '1');
-INSERT INTO "public"."goods" VALUES ('5', 'Banana', 'OD123322', null, '34', '34', '34', '50', 'Very width', '4');
-INSERT INTO "public"."goods" VALUES ('6', 'Banana', 'OD123322', null, '34', '34', '34', '50', 'Very width', '1');
-INSERT INTO "public"."goods" VALUES ('7', 'Beetroot', 'OD192851', null, '34', '34', '34', '50', 'Very width', '2');
-INSERT INTO "public"."goods" VALUES ('8', 'Black-eye bean', 'OD122122', '1', '34', '34', '34', '50', 'Very width', '3');
-INSERT INTO "public"."goods" VALUES ('9', 'Broad bean', 'OD999811', null, '34', '34', '34', '50', 'Very width', '1');
-INSERT INTO "public"."goods" VALUES ('10', 'Broccoli', 'OD872818', null, '34', '34', '34', '50', 'Very width', '4');
-INSERT INTO "public"."goods" VALUES ('11', 'Broccoli', 'OD901001', null, '34', '34', '34', '50', 'Very width', '3');
-INSERT INTO "public"."goods" VALUES ('12', 'Brussels sprout', 'OD828101', null, '34', '34', '34', '50', 'Very width', '2');
-INSERT INTO "public"."goods" VALUES ('13', 'Butternut Squash', 'OD666121', null, '34', '34', '34', '50', 'Very width', '1');
-INSERT INTO "public"."goods" VALUES ('14', 'Carrot', 'OD090909', null, '34', '34', '34', '50', 'Very width', '3');
-INSERT INTO "public"."goods" VALUES ('15', 'Cherry', 'OD190271', null, '34', '34', '34', '50', 'Very width', '2');
-INSERT INTO "public"."goods" VALUES ('16', 'Clementine', 'OD154444', null, '34', '34', '34', '50', 'Very width', '4');
-INSERT INTO "public"."goods" VALUES ('17', 'Courgette', 'OD901001', null, '34', '34', '34', '50', 'Very width', '1');
-INSERT INTO "public"."goods" VALUES ('18', 'Date', 'OD154444', null, '34', '34', '34', '50', 'Very width', '4');
-INSERT INTO "public"."goods" VALUES ('19', 'Elderberry', 'OD190271', null, '34', '34', '34', '50', 'Very width', '2');
-INSERT INTO "public"."goods" VALUES ('20', 'Endive', 'OD190271', null, '34', '34', '34', '50', 'Very width', '3');
+INSERT INTO "public"."goods" VALUES ('1', 'Apricot', 'OD122222', '32', '20', '50', '35', 'Very height', '2');
+INSERT INTO "public"."goods" VALUES ('2', 'Asparagus', 'OD981921', '34', '34', '34', '50', 'Very width', '1');
+INSERT INTO "public"."goods" VALUES ('3', 'Aubergine', 'OD555461', '34', '34', '34', '50', 'Very width', '3');
+INSERT INTO "public"."goods" VALUES ('4', 'Avocado', 'OD555461', '34', '34', '34', '50', 'Very width', '1');
+INSERT INTO "public"."goods" VALUES ('5', 'Banana', 'OD123322', '34', '34', '34', '50', 'Very width', '4');
+INSERT INTO "public"."goods" VALUES ('6', 'Banana', 'OD123322', '34', '34', '34', '50', 'Very width', '1');
+INSERT INTO "public"."goods" VALUES ('7', 'Beetroot', 'OD192851', '34', '34', '34', '50', 'Very width', '2');
+INSERT INTO "public"."goods" VALUES ('8', 'Black-eye bean', 'OD122122', '34', '34', '34', '50', 'Very width', '3');
+INSERT INTO "public"."goods" VALUES ('9', 'Broad bean', 'OD999811', '34', '34', '34', '50', 'Very width', '1');
+INSERT INTO "public"."goods" VALUES ('10', 'Broccoli', 'OD872818', '34', '34', '34', '50', 'Very width', '4');
+INSERT INTO "public"."goods" VALUES ('11', 'Broccoli', 'OD901001', '34', '34', '34', '50', 'Very width', '3');
+INSERT INTO "public"."goods" VALUES ('12', 'Brussels sprout', 'OD828101', '34', '34', '34', '50', 'Very width', '2');
+INSERT INTO "public"."goods" VALUES ('13', 'Butternut Squash', 'OD666121', '34', '34', '34', '50', 'Very width', '1');
+INSERT INTO "public"."goods" VALUES ('14', 'Carrot', 'OD090909', '34', '34', '34', '50', 'Very width', '3');
+INSERT INTO "public"."goods" VALUES ('15', 'Cherry', 'OD190271', '34', '34', '34', '50', 'Very width', '2');
+INSERT INTO "public"."goods" VALUES ('16', 'Clementine', 'OD154444', '34', '34', '34', '50', 'Very width', '4');
+INSERT INTO "public"."goods" VALUES ('17', 'Courgette', 'OD901001', '34', '34', '34', '50', 'Very width', '1');
+INSERT INTO "public"."goods" VALUES ('18', 'Date', 'OD154444', '34', '34', '34', '50', 'Very width', '4');
+INSERT INTO "public"."goods" VALUES ('19', 'Elderberry', 'OD190271', '34', '34', '34', '50', 'Very width', '2');
+INSERT INTO "public"."goods" VALUES ('20', 'Endive', 'OD190271', '34', '34', '34', '50', 'Very width', '3');
 
 -- ----------------------------
 -- Table structure for issue
@@ -1186,6 +1186,7 @@ DROP TABLE IF EXISTS "public"."order";
 CREATE TABLE "public"."order" (
 "orderid" varchar(8) COLLATE "default" NOT NULL,
 "storeid" varchar(8) COLLATE "default",
+"stockid" int4,
 "ordertypeid" int4,
 "pickupaddress" varchar(100) COLLATE "default",
 "deliveryaddress" varchar(100) COLLATE "default",
@@ -1215,24 +1216,24 @@ WITH (OIDS=FALSE)
 -- ----------------------------
 -- Records of order
 -- ----------------------------
-INSERT INTO "public"."order" VALUES ('OD090909', 'STR001', '1', 'Quận Long Biên - Hà Nội', 'Quận Thanh Xuân - Hà Nội', '2015-11-09 00:00:00+07', '2015-11-09 00:00:00+07', null, '0911212122', 'Anh Khanh', null, '1', 'f', 'f', 'f', '50000', '10000', '0', '01', '001', '00001', '514515', '5151');
-INSERT INTO "public"."order" VALUES ('OD122122', 'STR002', '1', 'Thị xã Sơn Tây - Hà Nội', 'Huyện Phúc Thọ- Hà Nội', '2015-11-09 00:00:00+07', '2015-11-09 00:00:00+07', null, '0944512111', 'Chi Nghia', null, '4', 'f', 'f', 'f', '100000', '0', '0', '01', '001', '00001', '51251514', '5151');
-INSERT INTO "public"."order" VALUES ('OD122222', 'STR002', '1', 'Huyện Gia Lâm - Hà Nội', 'Huyện Đông Anh - Hà Nội', '2015-11-09 00:00:00+07', '2015-11-09 00:00:00+07', null, '0944151544', 'Anh Kien', null, '2', 'f', 'f', 'f', '50000', '500000', '0', '01', '001', '00001', '215454', '515415');
-INSERT INTO "public"."order" VALUES ('OD123322', 'STR002', '1', 'Quận Tây Hồ - Hà Nội', 'Quận Cầu Giấy - Hà Nội', '2015-11-09 00:00:00+07', '2015-11-09 00:00:00+07', '2015-11-11 00:00:00+07', '0165554222', 'Anh Loang', null, '7', 'f', 'f', 'f', '10000', '20000', '0', '01', '001', '00001', '515151', '515151');
-INSERT INTO "public"."order" VALUES ('OD123451', 'STR003', '1', 'Từ Liêm - Hà Nội', 'Cầu Giấy - Hà Nội', '2015-11-04 00:00:00+07', '2015-11-06 00:00:00+07', '2015-11-07 00:00:00+07', '0911241212', 'Anh Hoàng', '1', '7', 'f', 'f', 'f', '50000', '20000', '0', '01', '001', '00001', '3524231545115', '54545454');
-INSERT INTO "public"."order" VALUES ('OD154444', 'STR002', '1', 'Huyện Từ Liêm - Hà Nội', 'Huyện Thanh Trì - Hà Nội', '2015-11-09 00:00:00+07', '2015-11-08 00:00:00+07', null, '0955412112', 'Anh Hoang', null, '1', 'f', 'f', 'f', '10000', '5000', '0', '01', '001', '00001', '5515616', '5151515');
-INSERT INTO "public"."order" VALUES ('OD154515', 'STR004', '1', 'Quận Hoàng Mai - Hà Nội', 'Quận Thanh Xuân - Hà Nội', '2015-11-03 00:00:00+07', '2015-11-02 00:00:00+07', '2015-11-04 00:00:00+07', '0912311221', 'Anh Nam', '7', '7', 'f', 'f', 'f', '20000', '200000', '0', '01', '001', '00001', '2121515', '216156151');
-INSERT INTO "public"."order" VALUES ('OD190271', 'STR001', '1', 'Huyện Từ Liêm - Hà Nội', 'Huyện Thanh Trì - Hà Nội', '2015-11-09 00:00:00+07', '2015-11-09 00:00:00+07', null, '01645445454', 'Anh Tam', null, '2', 'f', 'f', 'f', '60000', '400000', '0', '01', '001', '00001', '5454', '5454');
-INSERT INTO "public"."order" VALUES ('OD192851', 'STR001', '2', 'Quận Hà Đông - Hà Nội', 'Huyện Ba Vì - Hà Nội', '2015-11-11 00:00:00+07', '2015-11-11 00:00:00+07', null, '0911215455', 'Anh Fan', null, '6', 'f', 'f', 'f', '20000', '100000', '0', '01', '001', '00001', '5215151', '51515');
-INSERT INTO "public"."order" VALUES ('OD515645', 'STR004', '1', 'Quận Cầu Giấy - Hà Nội', 'Quận Tây Hồ - Hà Nội', '2015-11-03 00:00:00+07', '2015-11-02 00:00:00+07', '2015-11-04 00:00:00+07', '0165554512', 'Anh Hải', null, '7', 'f', 'f', 'f', '100000', '50000', '0', '01', '001', '00001', '155111', '561155611');
-INSERT INTO "public"."order" VALUES ('OD555461', 'STR004', '2', 'Huyện Thanh Trì - Hà Nội', 'Huyện Gia Lâm - Hà Nội', '2015-11-11 00:00:00+07', '2015-11-11 00:00:00+07', null, '0165545555', 'Anh Huy', null, '2', 'f', 'f', 'f', '50000', '500000', '0', '01', '001', '00001', '545641', '65415615');
-INSERT INTO "public"."order" VALUES ('OD666121', 'STR002', '2', 'Quận Hai Bà Trưng - Hà Nội', 'Quận Ba Đình - Hà Nội', '2015-11-11 00:00:00+07', '2015-11-11 00:00:00+07', null, '0941121212', 'Anh Manh', null, '5', 'f', 'f', 'f', '38000', '80000', '0', '01', '001', '00001', '5451541', '515151');
-INSERT INTO "public"."order" VALUES ('OD666612', 'STR001', '1', 'Hoàn Kiếm - Hà Nội', 'Hai Bà Trưng - Hà Nội', '2015-11-04 00:00:00+07', '2015-11-03 00:00:00+07', '2015-11-07 00:00:00+07', '01625456455', 'Anh Kinh', '2', '7', 'f', 'f', 'f', '50000', '100000', '0', '01', '001', '00001', '4545614564', '564561564564');
-INSERT INTO "public"."order" VALUES ('OD828101', 'STR003', '1', 'Quận Hoàn Kiếm - Hà Nội', 'Quận Đống Đa - Hà Nội', '2015-11-09 00:00:00+07', '2015-11-09 00:00:00+07', null, '0944545421', 'Anh Tien', null, '5', 'f', 'f', 'f', '20000', '0', '0', '01', '001', '00001', '515645', '5454');
-INSERT INTO "public"."order" VALUES ('OD872818', 'STR003', '1', 'Huyện Thanh Trì - Hà Nội', 'Quận Thanh Xuân - Hà Nội', '2015-11-09 00:00:00+07', '2015-11-09 00:00:00+07', null, '0168445455', 'Anh Anhki', null, '2', 'f', 'f', 'f', '50000', '30000', '0', '01', '001', '00001', '54545', '54564');
-INSERT INTO "public"."order" VALUES ('OD901001', 'STR003', '2', 'Huyện Đan Phượng - Hà Nội', 'Huyện Hoài Đức - Hà Nội', '2015-11-11 00:00:00+07', '2015-11-11 00:00:00+07', null, '01644511122', 'Anh Dien', null, '2', 'f', 'f', 'f', '50000', '100000', '0', '01', '001', '00001', '656556', '6565');
-INSERT INTO "public"."order" VALUES ('OD981921', 'STR001', '1', 'Huyện Đông Anh - Hà Nội', 'Huyện Sóc Sơn - Hà Nội', '2015-11-10 00:00:00+07', '2015-11-10 00:00:00+07', '2015-11-11 00:00:00+07', '09445211542', 'Anh Ranh', null, '7', 'f', 'f', 'f', '80000', '900000', '0', '01', '001', '00001', '474454', '1111223');
-INSERT INTO "public"."order" VALUES ('OD999811', 'STR002', '1', 'Huyện Đan Phượng - Hà Nội', 'Huyện Hoài Đức - Hà Nội', '2015-11-09 00:00:00+07', '2015-11-09 00:00:00+07', '2015-11-13 00:00:00+07', '0955412121', 'Chi Anh', null, '8', 'f', 'f', 'f', '40000', '0', '0', '01', '001', '00001', '5156456', '545454');
+INSERT INTO "public"."order" VALUES ('OD090909', 'STR001', null, '1', 'Quận Long Biên - Hà Nội', 'Quận Thanh Xuân - Hà Nội', '2015-11-09 00:00:00+07', '2015-11-09 00:00:00+07', null, '0911212122', 'Anh Khanh', null, '1', 'f', 'f', 'f', '50000', '10000', '0', '01', '001', '00001', '514515', '5151');
+INSERT INTO "public"."order" VALUES ('OD122122', 'STR002', null, '1', 'Thị xã Sơn Tây - Hà Nội', 'Huyện Phúc Thọ- Hà Nội', '2015-11-09 00:00:00+07', '2015-11-09 00:00:00+07', null, '0944512111', 'Chi Nghia', null, '4', 'f', 'f', 'f', '100000', '0', '0', '01', '001', '00001', '51251514', '5151');
+INSERT INTO "public"."order" VALUES ('OD122222', 'STR002', null, '1', 'Huyện Gia Lâm - Hà Nội', 'Huyện Đông Anh - Hà Nội', '2015-11-09 00:00:00+07', '2015-11-09 00:00:00+07', null, '0944151544', 'Anh Kien', null, '2', 'f', 'f', 'f', '50000', '500000', '0', '01', '001', '00001', '215454', '515415');
+INSERT INTO "public"."order" VALUES ('OD123322', 'STR002', null, '1', 'Quận Tây Hồ - Hà Nội', 'Quận Cầu Giấy - Hà Nội', '2015-11-09 00:00:00+07', '2015-11-09 00:00:00+07', '2015-11-11 00:00:00+07', '0165554222', 'Anh Loang', null, '7', 'f', 'f', 'f', '10000', '20000', '0', '01', '001', '00001', '515151', '515151');
+INSERT INTO "public"."order" VALUES ('OD123451', 'STR003', null, '1', 'Từ Liêm - Hà Nội', 'Cầu Giấy - Hà Nội', '2015-11-04 00:00:00+07', '2015-11-06 00:00:00+07', '2015-11-07 00:00:00+07', '0911241212', 'Anh Hoàng', '1', '7', 'f', 'f', 'f', '50000', '20000', '0', '01', '001', '00001', '3524231545115', '54545454');
+INSERT INTO "public"."order" VALUES ('OD154444', 'STR002', null, '1', 'Huyện Từ Liêm - Hà Nội', 'Huyện Thanh Trì - Hà Nội', '2015-11-09 00:00:00+07', '2015-11-08 00:00:00+07', null, '0955412112', 'Anh Hoang', null, '1', 'f', 'f', 'f', '10000', '5000', '0', '01', '001', '00001', '5515616', '5151515');
+INSERT INTO "public"."order" VALUES ('OD154515', 'STR004', null, '1', 'Quận Hoàng Mai - Hà Nội', 'Quận Thanh Xuân - Hà Nội', '2015-11-03 00:00:00+07', '2015-11-02 00:00:00+07', '2015-11-04 00:00:00+07', '0912311221', 'Anh Nam', '7', '7', 'f', 'f', 'f', '20000', '200000', '0', '01', '001', '00001', '2121515', '216156151');
+INSERT INTO "public"."order" VALUES ('OD190271', 'STR001', null, '1', 'Huyện Từ Liêm - Hà Nội', 'Huyện Thanh Trì - Hà Nội', '2015-11-09 00:00:00+07', '2015-11-09 00:00:00+07', null, '01645445454', 'Anh Tam', null, '2', 'f', 'f', 'f', '60000', '400000', '0', '01', '001', '00001', '5454', '5454');
+INSERT INTO "public"."order" VALUES ('OD192851', 'STR001', null, '2', 'Quận Hà Đông - Hà Nội', 'Huyện Ba Vì - Hà Nội', '2015-11-11 00:00:00+07', '2015-11-11 00:00:00+07', null, '0911215455', 'Anh Fan', null, '2', 'f', 'f', 'f', '20000', '100000', '0', '01', '001', '00001', '5215151', '51515');
+INSERT INTO "public"."order" VALUES ('OD515645', 'STR004', null, '1', 'Quận Cầu Giấy - Hà Nội', 'Quận Tây Hồ - Hà Nội', '2015-11-03 00:00:00+07', '2015-11-02 00:00:00+07', '2015-11-04 00:00:00+07', '0165554512', 'Anh Hải', null, '7', 'f', 'f', 'f', '100000', '50000', '0', '01', '001', '00001', '155111', '561155611');
+INSERT INTO "public"."order" VALUES ('OD555461', 'STR004', null, '2', 'Huyện Thanh Trì - Hà Nội', 'Huyện Gia Lâm - Hà Nội', '2015-11-11 00:00:00+07', '2015-11-11 00:00:00+07', null, '0165545555', 'Anh Huy', null, '2', 'f', 'f', 'f', '50000', '500000', '0', '01', '001', '00001', '545641', '65415615');
+INSERT INTO "public"."order" VALUES ('OD666121', 'STR002', null, '2', 'Quận Hai Bà Trưng - Hà Nội', 'Quận Ba Đình - Hà Nội', '2015-11-11 00:00:00+07', '2015-11-11 00:00:00+07', null, '0941121212', 'Anh Manh', null, '5', 'f', 'f', 'f', '38000', '80000', '0', '01', '001', '00001', '5451541', '515151');
+INSERT INTO "public"."order" VALUES ('OD666612', 'STR001', null, '1', 'Hoàn Kiếm - Hà Nội', 'Hai Bà Trưng - Hà Nội', '2015-11-04 00:00:00+07', '2015-11-03 00:00:00+07', '2015-11-07 00:00:00+07', '01625456455', 'Anh Kinh', '2', '7', 'f', 'f', 'f', '50000', '100000', '0', '01', '001', '00001', '4545614564', '564561564564');
+INSERT INTO "public"."order" VALUES ('OD828101', 'STR003', null, '1', 'Quận Hoàn Kiếm - Hà Nội', 'Quận Đống Đa - Hà Nội', '2015-11-09 00:00:00+07', '2015-11-09 00:00:00+07', null, '0944545421', 'Anh Tien', null, '5', 'f', 'f', 'f', '20000', '0', '0', '01', '001', '00001', '515645', '5454');
+INSERT INTO "public"."order" VALUES ('OD872818', 'STR003', null, '1', 'Huyện Thanh Trì - Hà Nội', 'Quận Thanh Xuân - Hà Nội', '2015-11-09 00:00:00+07', '2015-11-09 00:00:00+07', null, '0168445455', 'Anh Anhki', null, '2', 'f', 'f', 'f', '50000', '30000', '0', '01', '001', '00001', '54545', '54564');
+INSERT INTO "public"."order" VALUES ('OD901001', 'STR003', null, '2', 'Huyện Đan Phượng - Hà Nội', 'Huyện Hoài Đức - Hà Nội', '2015-11-11 00:00:00+07', '2015-11-11 00:00:00+07', null, '01644511122', 'Anh Dien', null, '2', 'f', 'f', 'f', '50000', '100000', '0', '01', '001', '00001', '656556', '6565');
+INSERT INTO "public"."order" VALUES ('OD981921', 'STR001', null, '1', 'Huyện Đông Anh - Hà Nội', 'Huyện Sóc Sơn - Hà Nội', '2015-11-10 00:00:00+07', '2015-11-10 00:00:00+07', '2015-11-11 00:00:00+07', '09445211542', 'Anh Ranh', null, '7', 'f', 'f', 'f', '80000', '900000', '0', '01', '001', '00001', '474454', '1111223');
+INSERT INTO "public"."order" VALUES ('OD999811', 'STR002', null, '1', 'Huyện Đan Phượng - Hà Nội', 'Huyện Hoài Đức - Hà Nội', '2015-11-09 00:00:00+07', '2015-11-09 00:00:00+07', '2015-11-13 00:00:00+07', '0955412121', 'Chi Anh', null, '8', 'f', 'f', 'f', '40000', '0', '0', '01', '001', '00001', '5156456', '545454');
 
 -- ----------------------------
 -- Table structure for orderissue
@@ -12955,7 +12956,6 @@ ALTER TABLE "public"."generalledger" ADD FOREIGN KEY ("adminid") REFERENCES "pub
 -- ----------------------------
 -- Foreign Key structure for table "public"."goods"
 -- ----------------------------
-ALTER TABLE "public"."goods" ADD FOREIGN KEY ("stockid") REFERENCES "public"."stock" ("stockid") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "public"."goods" ADD FOREIGN KEY ("orderid") REFERENCES "public"."order" ("orderid") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- ----------------------------
@@ -12987,6 +12987,7 @@ ALTER TABLE "public"."order" ADD FOREIGN KEY ("ledgerid") REFERENCES "public"."g
 ALTER TABLE "public"."order" ADD FOREIGN KEY ("ordertypeid") REFERENCES "public"."ordertype" ("typeid") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "public"."order" ADD FOREIGN KEY ("storeid") REFERENCES "public"."store" ("storeid") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "public"."order" ADD FOREIGN KEY ("statusid") REFERENCES "public"."orderstatus" ("statusid") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "public"."order" ADD FOREIGN KEY ("stockid") REFERENCES "public"."stock" ("stockid") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- ----------------------------
 -- Foreign Key structure for table "public"."orderissue"

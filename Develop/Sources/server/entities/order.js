@@ -11,6 +11,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
+    stockid: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
     ordertypeid: {
       type: DataTypes.INTEGER,
       allowNull: true

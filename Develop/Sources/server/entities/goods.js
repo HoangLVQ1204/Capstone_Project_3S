@@ -17,11 +17,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       primaryKey: true
     },
-    stockid: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      primaryKey: true
-    },
     weight: {
       type: DataTypes.DOUBLE,
       allowNull: true
