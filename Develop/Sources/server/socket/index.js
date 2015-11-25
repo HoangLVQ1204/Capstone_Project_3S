@@ -368,6 +368,15 @@ module.exports = function(server,app){
         io.stores[store.storeID].socketID = socket.id;
     };
 
+    io.reconnectStore = function(storeid, socket){
+      for(var order in io.orders){
+          console.log("INDEX373============", order);
+          if (order.storeID === storeid) {
+              io.addToRoom(socket, order.shipperID)
+          }
+      }
+    };
+
     io.updateOrderOfStore = function(storeID, orderID) {
         io.stores[storeID].order.push(orderID);
     };
@@ -708,11 +717,14 @@ module.exports = function(server,app){
                     if (io.containShipper(shipper.shipperID)) {
                         io.updateShipper(shipper, socket);
                         var orders = io.getOrdersOfShipper(shipper.shipperID);
+
                         orders.forEach(function(e) {
                             e.orderInfo.isPending = false;
                             io.updateOrder(e.orderID, e.orderInfo);
                         });
+
                         console.log('after connect', orders);
+
                         io.forward(
                         {
                             type: 'shipper',
@@ -745,6 +757,7 @@ module.exports = function(server,app){
 
                     if (io.containStore(store.storeID)) {
                         io.updateStore(store, socket);
+                        io.reconnectStore(store.storeID, socket)
                     } else
                         io.addStore(store, socket);
 

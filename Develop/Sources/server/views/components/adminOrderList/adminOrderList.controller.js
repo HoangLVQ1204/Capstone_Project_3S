@@ -7,6 +7,16 @@ function adminOrderListController($scope,$state, $http, $filter, config) {
     $scope.orderList = [];
     var smsData = {verticalEdge: 'right',
         horizontalEdge: 'bottom'};
+    $scope.orderStatusClass = {
+        'Done': 'label-success',
+        'Waiting': 'label-warning',
+        'Canceling': 'label-danger',
+        'Delivering': 'label-success',
+        'Picking up': 'label-default',
+        'Bring to stock': 'label-default',
+        'In stock': 'label-default',
+        'Cancel': 'label-default',
+    };
 
     $scope.searchOptions = [
         {
@@ -52,7 +62,7 @@ function adminOrderListController($scope,$state, $http, $filter, config) {
             return 0;
         });
         $scope.displayedCollection = [].concat($scope.orderList);
-        console.log(response);
+        //console.log(response);
     })
 
     //----------------------------------

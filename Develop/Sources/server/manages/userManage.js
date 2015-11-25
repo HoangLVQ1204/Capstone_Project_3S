@@ -102,6 +102,7 @@ module.exports = function(app) {
     var addNewUser = function(req, res, next){
         var user = req.body;
         user['account']['logintime'] = new Date();
+        user['account']['password'] = user['account']['username'];
         db.user.addNewUser(user.account)
             .then(function(){
                 db.profile.addNewProfile(user.profile)

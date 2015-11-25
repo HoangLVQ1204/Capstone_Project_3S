@@ -89,7 +89,7 @@
                                         <td>{{x.completedate|date:"dd/MM/yyyy"}}</td>
 
                                         <td class="center">
-                                            {{x.orderstatus.statusname}}
+                                            <span class="label {{orderStatusClass[x.orderstatus.statusname]}}">{{x.orderstatus.statusname}}</span>
                                         </td>
 
                                         <td class="center"> {{x.ordertype.typename}}</td>

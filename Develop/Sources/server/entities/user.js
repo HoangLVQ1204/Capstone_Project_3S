@@ -32,14 +32,6 @@ module.exports = function(sequelize, DataTypes) {
     instanceMethods: {
       authenticate: function(plainTextPassword){
         return bcrypt.compareSync(plainTextPassword, this.password);
-      },
-      encyptPassword: function(plainTextPassword){
-        if(!plainTextPassword){
-          return ''
-        }else{
-          var salt = bcrypt.genSaltSync(10);
-          return bcrypt.hashSync(plainTextPassword,salt);
-        }
       }
     },
     classMethods: {
@@ -61,6 +53,15 @@ module.exports = function(sequelize, DataTypes) {
             {as: 'tasks',foreignKey: 'shipperid'}
         );
 
+      },
+
+      encyptPassword: function(plainTextPassword){
+        if(!plainTextPassword){
+          return ''
+        }else{
+          var salt = bcrypt.genSaltSync(10);
+          return bcrypt.hashSync(plainTextPassword,salt);
+        }
       },
 
       getAllUsers: function() {
@@ -106,6 +107,8 @@ module.exports = function(sequelize, DataTypes) {
       },
 
       addNewUser: function(newUser){
+
+        newUser.password = user.encyptPassword(newUser.password);
         return user.build(newUser).save();
       },
 
@@ -115,7 +118,7 @@ module.exports = function(sequelize, DataTypes) {
 
       putUser: function(currentUser) {
         return user.update({
-          'password': currentUser.password,
+          'password': user.encyptPassword(currentUser.password),
           'userrole': currentUser.userrole,
           'userstatus': currentUser.userstatus
         },{where: {

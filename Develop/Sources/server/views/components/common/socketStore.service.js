@@ -67,7 +67,8 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
     });
 
     socketService.on('store:issue:cancel', function(data) {
-        $rootScope.$emit("updateCancelOrder", data.msg);
+        console.log('store:issue:cancel', data);
+        $rootScope.$emit("updatePenddingOrder", data.msg);
         $rootScope.notify(data.msg);
     });
 
@@ -77,11 +78,12 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
         $rootScope.notify(data.msg);
     });
 
-
-    socketService.on('store:issue:message', function(data) {
-        console.log('store:issue:message', data)
-        //alert(1);
+    socketService.on('store:message:confirmPayment', function(data) {
+        console.log("store:message:confirmPayment: ", data);
+        //$rootScope.$emit("updatePenddingOrder", data.msg);
+        $rootScope.notify(data.msg);
     });
+
 
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();

@@ -33,13 +33,13 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
         var promise=[];
 
             promise.push($http.get(config.baseURI + "/api/countProcessingTaskOfShipper?shipperid=" + $scope.issue.orderissues[0].order.tasks[0].shipperid).success(function(response){
-                $scope.activeTask = response;
+                $scope.processingTask = response;
             }))
 
         //if (promise)
         Promise.all(promise).then(function () {
             //alert($scope.resolveType);
-            if ($scope.activeTask>0 && $scope.resolveType == 2) {
+            if ($scope.processingTask>0 && $scope.resolveType == 2) {
                 smsData.theme="danger";
                 //data.sticky="true";
                 $.notific8($("#sms-fail-assign").val(), smsData);
@@ -119,7 +119,10 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
             })
             //console.log($scope.issue.orderissues);
             $http.put(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue).then(function success(response){
-                resolveIssue();
+                var promises = resolveIssue();
+                promises.then(function () {
+                    socketAdmin.issueMessage($scope.issue);
+                })
             },function (error) {
                 smsData.theme="danger";
                 //data.sticky="true";
@@ -186,7 +189,10 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
         })
         //console.log($scope.issue.orderissues);
         $http.put(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue).then(function success(response){
-            resolveIssue();
+            var promises = resolveIssue();
+            promises.then(function () {
+                socketAdmin.issueMessage($scope.issue)
+            })
         },function (error) {
             smsData.theme="danger";
             //data.sticky="true";

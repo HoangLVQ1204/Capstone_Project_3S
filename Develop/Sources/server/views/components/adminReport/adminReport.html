@@ -14,19 +14,19 @@
 						<li><a data-toggle="tab" href="#sectionB" target="ui-seft"><i class="fa fa-qrcode"></i> &nbsp; Complete / Cancel</a></li>
 
 						<li class="pull-right">
-							<select class="form-control" ng-option ="x in listYear">
+							<select class="form-control" ng-options ="x.name for x in listYear" ng-model="selectedYear">
 							</select>
 						</li>
 
 						<li class="pull-right">
-							<select class="form-control" ng-option ="x in listStore">
+							<select class="form-control" ng-options ="x.name for x in listStore" ng-model="selectedStore" ng-change="updateDate()">
 							</select>
 						</li>
 					</ul>
 					<div class="tab-content">
 						<div id="sectionA" class="tab-pane in active">
 							<div class="widget-chart chart-dark">
-								<table id="stack-chart" data-stack="true" class="flot-chart" data-type="lines"  data-yaxis-max="3000" data-tool-tip="show" data-width="100%" data-height="300px"  data-bar-width="0.5" data-tick-color="rgba(0,0,0,0.05)">
+								<table class="flot-chart" data-type="lines" data-tool-tip="show" data-width="100%" data-height="220px">
 									<thead>
 										<tr>
 											<th></th>
@@ -36,9 +36,9 @@
 									</thead>
 									<tbody>
 										<tr ng-repeat="x in listOrderOfMonth">
-											<th>{{x.Month}}</th>
-											<td>{{x.expressOrder}}</td>
-											<td>{{x.normalOrder}}</td>
+											<th>{{x.name}}</th>	
+											<td>{{x.types[1].countNum}}</td>
+											<td>{{x.types[0].countNum}}</td>
 										</tr>
 										
 									</tbody>
@@ -53,7 +53,7 @@
 						</div>
 						<div id="sectionB" class="tab-pane">
 							<div class="widget-chart chart-dark">
-								<table id="stack-chart" data-stack="true" class="flot-chart" data-type="lines"  data-yaxis-max="3000" data-tool-tip="show" data-width="100%" data-height="300px"  data-bar-width="0.5" data-tick-color="rgba(0,0,0,0.05)">
+								<table class="flot-chart" data-type="lines" data-tool-tip="show" data-width="100%" data-height="220px">
 									<thead>
 										<tr>
 											<th></th>
@@ -62,7 +62,7 @@
 										</tr>
 									</thead>
 									<tbody>
-										<tr ng-repeat="x in lis">
+										<tr>
 											<th>x</th>
 											<td>250</td>
 											<td>295</td>
@@ -87,17 +87,15 @@
 					<br>
 				</header>
 				<ul class="nav">						
-					<li class="pull-right"><select class="form-control">
-						<option>2013</option>
-						<option>2014</option>
-						<option>2015</option>
-					</select></li>
+					<li class="pull-right">
+							<select class="form-control" ng-options ="x.name for x in listYearFin" ng-model="selectedYearFin">
+							</select>
+						</li>
 
-					<li class="pull-right"><select class="form-control">
-						<option>Domino</option>
-						<option>Shop tre tho</option>
-						<option>KFC</option>
-					</select></li>
+						<li class="pull-right">
+							<select class="form-control" ng-options ="x.name for x in listStoreFin" ng-model="selectedStoreFin">
+							</select>
+						</li>
 				</ul>
 
 					<div class="tabbable">
@@ -111,66 +109,12 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<th>JAN</th>
-								<td>4295</td>
-								<td>295</td>
+							<tr ng-repeat="x in listCodFeeOfMonthFin">
+								<th>{{x.name}}</th>
+								<td>{{x.status[0].countNum}}</td>
+								<td>{{x.status[1].countNum}}</td>
 							</tr>
-							<tr>
-								<th>FEB</th>
-								<td>5145</td>
-								<td>3145</td>
-							</tr>
-							<tr>
-								<th>MAR</th>
-								<td>1015</td>
-								<td>1515</td>
-							</tr>
-							<tr>
-								<th>APR</th>
-								<td>2500</td>
-								<td>4578</td>
-							</tr>
-							<tr>
-								<th>MAY</th>
-								<td>0</td>
-								<td>4041</td>
-							</tr>
-							<tr>
-								<th>JUN</th>
-								<td>15700</td>
-								<td>12090</td>
-							</tr>
-							<tr>
-								<th>JUL</th>
-								<td>2315</td>
-								<td>4235</td>
-							</tr>
-							<tr>
-								<th>AUG</th>
-								<td>200</td>
-								<td>1215</td>
-							</tr>
-							<tr>
-								<th>SEP</th>
-								<td>5605</td>
-								<td>2315</td>
-							</tr>
-							<tr>
-								<th>OCT</th>
-								<td>1900</td>
-								<td>5315</td>
-							</tr>
-							<tr>
-								<th>NOV</th>
-								<td>1900</td>
-								<td>2015</td>
-							</tr>
-							<tr>
-								<th>DEC</th>
-								<td>1900</td>
-								<td>315</td>
-							</tr>
+							
 						</tbody>
 					</table>
 					<div class="label-sparkline align-lg-center">
@@ -212,15 +156,18 @@
 					</section>
 				</div>
 				<div class="col-md-4">
-					<section class="panel corner-flip">						
-						<div class="widget-chart">
+					<section class="panel corner-flip">		
+						<header class="panel-heading no-borders bg-theme-inverse">
 							<h3><strong>Over</strong> view</h3>
 							<br>
+						</header>	
+
+						<div class="widget-chart">
 							<ol class="">
-								<li><span class="label bg-theme-inverse"><i class="fa fa-home"></i></span>&nbsp;&nbsp;&nbsp;Store <span class="pull-right">{{totalStore}}</span></li> 
-								<li><span class="label bg-theme-inverse"><i class="fa fa-truck"></i></span>&nbsp;&nbsp;&nbsp;Shipper <span class="pull-right">{{totalShipper}}</span></li>	
-								<li><span class="label bg-theme-inverse"><i class=" fa fa-shopping-cart"></i></span>&nbsp;&nbsp;&nbsp;Order <span class="pull-right">9,875</span></li>
-								<li><span class="label bg-theme-inverse"><i class=" fa fa-money"></i></span>&nbsp;&nbsp;&nbsp;Fee <span class="pull-right">9,214</span></li>	
+								<li><span class="label bg-theme-inverse"><i class="fa fa-home"></i></span>&nbsp;&nbsp;&nbsp;Store <span class="pull-right">{{totalStore|number}}</span></li> 
+								<li><span class="label bg-theme-inverse"><i class="fa fa-truck"></i></span>&nbsp;&nbsp;&nbsp;Shipper <span class="pull-right">{{totalShipper|number}}</span></li>	
+								<li><span class="label bg-theme-inverse"><i class=" fa fa-shopping-cart"></i></span>&nbsp;&nbsp;&nbsp;Order <span class="pull-right">{{totalOrder|number}}</span></li>
+								<li><span class="label bg-theme-inverse"><i class=" fa fa-money"></i></span>&nbsp;&nbsp;&nbsp;Fee <span class="pull-right">{{totalFee}}</span></li>	
 							</ol>
 						</div>
 					</section>

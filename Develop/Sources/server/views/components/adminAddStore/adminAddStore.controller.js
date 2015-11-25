@@ -5,6 +5,7 @@
 function adminAddStoreController($scope,$state, $http, $filter, config) {
 
     $scope.shipperList = [];
+
     var smsData = {verticalEdge: 'right',
         horizontalEdge: 'bottom'};
     $scope.newStoreOwner = new Object();

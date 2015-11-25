@@ -146,7 +146,8 @@ function socketAdmin(socketService,authService,mapService, $rootScope){
             {
                 orderList: orderList,
                 shipperid: issue.orderissues[0].order.tasks[0].shipperid,
-                categoryid: issue.issuetype.categoryid,
+                //categoryid: issue.issuetype.categoryid,
+                typeid: issue.typeid,
                 msg: msgToStore
             },
             'admin:messageIssue');
@@ -158,7 +159,7 @@ function socketAdmin(socketService,authService,mapService, $rootScope){
         var msgToStore = {
             type: 'info',
             title: 'Info',
-            //content: msg,
+            content: 'A new transaction was added successfully...',
             url: '#/store/transactionHistory',
             //isread: false,
             //createddate: new Date()
