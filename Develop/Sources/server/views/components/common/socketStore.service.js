@@ -84,6 +84,12 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
         $rootScope.notify(data.msg);
     });
 
+    socketService.on('store:notification:blockStore', function(data) {
+        console.log("store:notification:blockStore: ", data);
+        //$rootScope.$emit("updatePenddingOrder", data.msg);
+        $rootScope.notify(data.msg);
+    });
+
 
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();

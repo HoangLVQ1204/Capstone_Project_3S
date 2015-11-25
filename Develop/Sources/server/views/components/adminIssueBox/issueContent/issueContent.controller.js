@@ -136,6 +136,7 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
                 issue.order.tasks[0].statusid = 2;//active task
                 issue.order.tasks[0].typeid = 4;//active task
                 issue.order.statusid= 6;//cancel order
+                if ($scope.issue.typeid == 7) issue.order.iscancel= false;//cancel order
                 issue.order.orderstatus.statusname= 'Canceling';//cancel order
                 promise.push($http.put(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue));
             });
@@ -162,6 +163,7 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
                 //issue.order.tasks[0].statusid = 5;//fail task
                 issue.order.statusid= 7;//cancel order
                 issue.order.fee= parseInt(issue.order.fee) * 0.1;//cancel order
+                issue.order.iscancel= false;//cancel order
             })
             //console.log($scope.issue.orderissues);
             $http.put(config.baseURI + "/api/updateStateOfStoreCancelIssue", $scope.issue).then(function success(response){

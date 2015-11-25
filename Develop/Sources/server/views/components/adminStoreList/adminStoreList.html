@@ -91,7 +91,7 @@
                                         </td>
                                         <td class="center">
                                             <a href="" ng-click="showTransactionHistory(x, false)">
-                                                {{x.total = x.currentFee - x.currentCoD + x.generalledgers[0].balance}}
+                                                {{x.currentBanlance}}
                                             </a>
                                         </td>
                                         <!--<td class="center"> {{x.registereddate|date:"dd/MM/yyyy"}}</td>-->
@@ -99,10 +99,10 @@
 
                                         <span class="tooltip-area">
                                         <a class="btn btn-default btn-sm" ui-sref="admin.storeDetail({storeid:x.storeid})" title="Edit"><i class="fa fa-edit (alias)"></i></a>
-                                        <a class="btn btn-default btn-sm" title="Send Message"><i class="fa fa-envelope"></i></a>
+                                        <!--<a class="btn btn-default btn-sm" title="Send Message"><i class="fa fa-envelope"></i></a>-->
                                         <a class="btn btn-default btn-sm md-effect" title="Block" ng-click="blockConfirm($event, x)" ng-show="x.managestores[0].user.userstatus == 2"><i class="fa fa-ban"></i></a>
                                         <a class="btn btn-default btn-sm md-effect" title="Unblock" ng-click="blockConfirm($event, x)" ng-show="x.managestores[0].user.userstatus != 2"><i class="glyphicon glyphicon-ok-circle"></i></a>
-                                        <a class="btn btn-default btn-sm" title="Export"><i class="glyphicon glyphicon-export"></i></i></a>
+                                        <!--<a class="btn btn-default btn-sm" title="Export"><i class="glyphicon glyphicon-export"></i></i></a>-->
                                         <a class="btn btn-default btn-sm md-effect" ng-click="showConfirm($event, x)" data-effect="md-flipVer" title="Confirm Payment"><i class="fa fa-check-square-o"></i></i></a>
                                         </span>
                                     </td>
@@ -122,7 +122,7 @@
                 </div>
                 <p style="font-style: italic"> * The last period balance is the balance of last period from
                     {{fromAutoDate|date:'dd/MM/yyyy'}} to {{latestAutoDate|date:'dd/MM/yyyy'}} </p>
-                <p style="font-style: italic"> * The current period balance is the balance until now </p>
+                <p style="font-style: italic"> * The current period balance is the balance until now</p>
             </div>
             <!-- //content > row-->
 
@@ -160,8 +160,8 @@
                 <tbody>
                 <tr>
                     <td>{{selectedStore.name}}</td>
-                    <td class="text-right">{{selectedStore.generalledgers[0].totaldelivery }}</td>
-                    <td class="text-right">{{selectedStore.generalledgers[0].totalcod}}</td>
+                    <td class="text-right">{{selectedStore.generalledgers[0].totaldelivery+0 }}</td>
+                    <td class="text-right">{{selectedStore.generalledgers[0].totalcod+0}}</td>
                     <td class="text-right">{{selectedStore.generalledgers[0].totaldelivery - selectedStore.generalledgers[0].totalcod - payFee*(payfrom)}}</td>
                     <td class="text-right">
                         <select  class="form-control" ng-model="payfrom">
@@ -260,8 +260,8 @@
         <!-- //modal-header-->
         <div class="modal-body align-xs-center">
             <form name="myForm" data-parsley-validate>
-                <h5><strong>Are you sure to {{blocktext}} {{selectedStore.name}} with this reason?</strong></h5><br>
-                <input type="search" id="blockReason" required class="form-control text-center" placeholder="Type reason here..." ng-model="reason">
+                <h5><strong>Are you sure to {{blocktext}} {{selectedStore.name}}?</strong></h5><br>
+                <input type="search" ng-show="selectedStore.managestores[0].user.userstatus == 2" id="blockReason" required class="form-control text-center" placeholder="Type reason here..." ng-model="reason">
                 <br>
                 <button type="button" class="btn btn-danger" ng-click="blockStore(selectedStore)"><i class="fa fa-check-circle"></i> Yes</button>
                 <button type="button" class="btn btn-inverse" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i> No</button>
