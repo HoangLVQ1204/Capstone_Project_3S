@@ -2,52 +2,13 @@
  * Created by hoanglvq on 10/26/15.
  */
 
-/*
-    TODO: notifications
-    - list of notifications
-    - notificationService.js
-        + client-2-server
-        data {
-
-            notification:
-                {
-                    type: ['issue', 'info']
-                    title:
-                    content:
-                    url:
-                    notify: true/false
-                }
-
-        }
-
-        + server-2-client
-        {
-            message: {
-                    type: ['issue', 'info']
-                    content:
-                    url:
-                    notify: true/false
-                }
-        }
-    - directives: ...
-
-*/
-
-/*
-    BUG: Disable cache in browser
-*/
-
-/*
-    Filter pending shippers
-    Accept order right away in store
-    draft thi goi lai
-*/
-
 var _ = require('lodash');
 
 module.exports = function(server,app){
 
-    var socketConnection = {};
+    // IMPORT MODULES
+
+    var socketConnection = {};    
 
     var io = require('socket.io')(server);
     var socketioJwt = require("socketio-jwt");
@@ -55,14 +16,198 @@ module.exports = function(server,app){
     var controllerStore = require('../manages/storeManage')(app);
     var controllerShipper = require('../manages/shipperManage')(app);
 
+    // HELPER FUNCTION SOCKET
+
     /*
-        io.admins[adminID] = {
+        Return socket connection by ID
+     */
+    io.receiverSocket = function(receiver) {
+        if (receiver === 'admin' || receiver === 'shipper' || receiver === 'store') {
+            return io.to(receiver);
+        }
+        if (receiver.room) {
+            console.log('Receiver Room ' + receiver.room, io.nsps['/'].adapter.rooms[receiver.room]);
+            return io.in(receiver.room);
+        }
+        if (receiver.clientID) {    // clientID = shipperID || storeID
+            var socketID = '';
+            if (receiver.type === 'shipper') {
+                if(io.shippers[receiver.clientID]) socketID = io.shippers[receiver.clientID].socketID;
+            } else if (receiver.type == 'store') {
+
+                if(io.stores[receiver.clientID]) socketID = io.stores[receiver.clientID].socketID;
+            } else if (receiver.type == 'admin') {
+                if(io.admins[receiver.clientID]) socketID = io.admins[receiver.clientID].socketID;
+            }
+            return io.sockets.connected[socketID];
+        }
+    };
+
+    /*
+     receiver = { type: xxx, clientID: xxx}
+     msg = Object
+     */
+    io.reply = function(receiver, msg, eventName, callback) {
+        var reply = {
+            sender: 'server',
+            receiver: receiver,
+            msg: msg
+        };
+        io.receiverSocket(receiver).emit(eventName, reply, callback);
+    };
+
+    /*
+     sender: { type: xxx, clientID: xxx }
+     receiver = 'admin' || 'shipper' || 'store' || {room: ...} || { type: 'store', clientID: storeid } || Arrays of these types [ 'admin', { room: ...} ]
+     msg = Object
+     eventName = String || Array of Strings
+     */
+    io.forward = function(sender, receiver, msg, eventName, callback) {
+        var data = {
+            sender: sender,
+            msg: msg
+        };
+
+        var listEvents = [].concat(eventName);
+        [].concat(receiver).forEach(function(type, index) {
+            data.receiver = type;
+            var connection = io.receiverSocket(type);
+            if(connection) connection.emit(listEvents[index], data, callback);
+
+        });
+    };
+
+    /*
+        This function is used to add socket to room
+     */
+    io.addToRoom = function(socket, roomID) {
+        socket.join(roomID, function() {
+            console.log(socket.id, 'join to room', roomID);
+            console.log('Room ' + roomID+ ":::::: ");// + io.sockets.clients(roomID));
+            var clients_in_the_room = io.sockets.adapter.rooms[roomID];
+            for (var clientId in clients_in_the_room ) {
+                console.log('client: %s', clientId); //Seeing is believing
+                //var client_socket = io.sockets.connected[clientId];//Do whatever you want with this
+            }
+        });
+    };
+
+    /*
+        This function is used to remove socket from room
+     */
+    io.leaveRoom = function(socket, roomID) {
+        socket.leave(roomID, function() {
+            console.log(socket.id, 'leave room', roomID);
+            console.log('Room ' + roomID+ ":::::: ");// + io.sockets.clients(roomID));
+            var clients_in_the_room = io.sockets.adapter.rooms[roomID];
+            for (var clientId in clients_in_the_room ) {
+                console.log('client: %s', clientId); //Seeing is believing
+                //var client_socket = io.sockets.connected[clientId];//Do whatever you want with this
+            }
+        });
+    };
+
+
+    // DATA SOCKET
+
+    /*
+        io.admins[adminID] = {            
             socketID,
             latitude,
-            longitude
+            longitude   
         }
     */
     io.admins = {};
+
+    /*
+     io.stores[storeID] = {
+     order: [],
+     socketID,
+     latitude,
+     longitude
+     }
+     */
+    io.stores = {};
+
+    /*
+     io.shippers[shipperID] = {
+     order: [],
+     socketID,
+     latitude,
+     longitude,
+     isConnected,
+     numTasks
+     }
+     */
+    io.shippers = {};
+
+    /*
+     io.customers[i] = {
+     order: [],
+     geoText
+     }
+     */
+    io.customers = [];
+
+    /*
+     io.orders[orderID] = {
+     shipperID,
+     storeID,
+     status: ["Waiting"  // dont' use
+     "Picking up"
+     "Bring to stock"
+     "In stock"
+     "Delivering"
+     "Done"
+     "Canceling"
+     "Cancel"],
+     isPending
+     }
+     */
+    io.orders = {};
+
+    /*
+     io.pendingShippers[shipperID] = {
+     storeID,
+     .....
+     }
+     */
+    io.pendingShippers = {};
+
+
+    // HELPER FUNCTION DATA SOCKET
+
+    io.updateListStore = function(){
+        controllerStore.getAllStores().then(function(rs){
+            rs = rs.map(function(e){
+                return e.toJSON();
+            });
+            rs.forEach(function(e){
+                io.addStore({
+                    storeID: e.storeid,
+                    latitude: parseFloat(e.latitude),
+                    longitude: parseFloat(e.longitude)
+                });
+            });
+        });
+    }
+
+    io.updateListShipper = function(){
+        controllerShipper.getAllShippers().then(function(rs){
+            rs = rs.map(function(e){
+                return e.toJSON();
+            });
+            rs.forEach(function(e){
+                io.addShipper({
+                    shipperID: e.username,
+                    latitude: parseFloat(e.latitude),
+                    longitude: parseFloat(e.longitude),
+                    isConnected: false
+                });
+            });
+        });
+    }
+
 
     io.containAdmin = function(adminID) {
         return !!io.admins[adminID];
@@ -75,69 +220,67 @@ module.exports = function(server,app){
     };
 
     io.addAdmin = function(admin, socket) {
-        io.admins[admin.adminID] = {
+        io.admins[admin.adminID] = {            
             latitude: admin.latitude,
             longitude: admin.longitude,
-            socketID: socket.id
+            socketID: socket.id            
+        };              
+    };
+
+
+
+    io.containStore = function(storeID) {
+        return !!io.stores[storeID];     // bang!! bang!! return true/false :v
+    };
+
+    io.updateStore = function(store, socket) {
+        io.stores[store.storeID].latitude = store.latitude;
+        io.stores[store.storeID].longitude = store.longitude;
+        io.stores[store.storeID].socketID = socket.id;
+    };
+
+    io.addStore = function(store, socket) {
+        io.stores[store.storeID] = {
+            order: [],
+            latitude: store.latitude,
+            longitude: store.longitude,
+            socketID: (!!socket ? socket.id : null)
         };
     };
 
-    /*
-        io.stores[storeID] = {
-            order: [],
-            socketID,
-            latitude,
-            longitude
-        }
-    */
-    io.stores = {};
-    /*
-        io.shippers[shipperID] = {
-            order: [],
-            socketID,
-            latitude,
-            longitude,
-            isConnected,
-            numTasks
-        }
-    */
-    io.shippers = {};
 
-    /*
-        io.customers[i] = {
-            order: [],
-            geoText
-        }
-    */
-    io.customers = [];
 
-    /*
-        io.orders[orderID] = {
-            shipperID,
-            storeID,
-            status: ["Waiting"  // dont' use
-                    "Picking up"
-                    "Bring to stock"
-                    "In stock"
-                    "Delivering"
-                    "Done"
-                    "Canceling"
-                    "Cancel"],
-            isPending
-        }
-    */
-    io.orders = {};
+    io.containShipper = function(shipperID) {
+        return !!io.shippers[shipperID];
+    };
 
-    /*
-        io.pendingShippers[shipperID] = {
-            storeID,
-            .....
-        }
-    */
-    io.pendingShippers = {};
+    io.updateShipper = function(shipper, socket) {
+        io.shippers[shipper.shipperID].latitude = shipper.latitude;
+        io.shippers[shipper.shipperID].longitude = shipper.longitude;
+        io.shippers[shipper.shipperID].socketID = socket.id;
+        io.shippers[shipper.shipperID].isConnected = true;
+        io.shippers[shipper.shipperID].numTasks = io.countNumTasksByShipperID(shipper.shipperID);
+    };
+
+    io.addShipper = function(shipper, socket) {
+        io.shippers[shipper.shipperID] = {
+            order: io.getOrderIDsOfShipper(shipper.shipperID),
+            latitude: shipper.latitude,
+            longitude: shipper.longitude,
+            socketID: (!!socket ? socket.id : null),
+            isConnected: (io.shippers.length == 0 ? true : false),
+            numTasks: io.countNumTasksByShipperID(shipper.shipperID)
+        };
+    };
+
+
 
     io.addPendingShipper = function(shipperID, store) {
         io.pendingShippers[shipperID] = store;
+    };
+
+    io.removePendingShipper = function(shipperID) {
+        delete io.pendingShippers[shipperID];
     };
 
     io.getNumberPendingShippersOfStore = function(storeID) {
@@ -148,10 +291,6 @@ module.exports = function(server,app){
             }
         }
         return count;
-    };
-
-    io.removePendingShipper = function(shipperID) {
-        delete io.pendingShippers[shipperID];
     };
 
     io.removePendingShippersOfStore = function(storeID) {
@@ -178,70 +317,7 @@ module.exports = function(server,app){
     };
 
 
-    // Returns socket by receiver type
-    io.receiverSocket = function(receiver) {
-        if (receiver === 'admin' || receiver === 'shipper' || receiver === 'store') {
-            return io.to(receiver);
-        }
-        if (receiver.room) {
-            console.log('Receiver Room ' + receiver.room, io.nsps['/'].adapter.rooms[receiver.room]);
-            return io.in(receiver.room);
-        }
-        if (receiver.clientID) {    // clientID = shipperID || storeID
-            var socketID = '';
-            if (receiver.type === 'shipper') {
-                if(io.shippers[receiver.clientID]) socketID = io.shippers[receiver.clientID].socketID;
-            } else if (receiver.type == 'store') {
-
-                if(io.stores[receiver.clientID]) socketID = io.stores[receiver.clientID].socketID;
-            } else if (receiver.type == 'admin') {
-                if(io.admins[receiver.clientID]) socketID = io.admins[receiver.clientID].socketID;
-            }
-            return io.sockets.connected[socketID];
-        }
-    };
-
-    /*
-        receiver = { type: xxx, clientID: xxx}
-        msg = Object
-    */
-    io.reply = function(receiver, msg, eventName, callback) {
-        var reply = {
-            sender: 'server',
-            receiver: receiver,
-            msg: msg
-        };
-        io.receiverSocket(receiver).emit(eventName, reply, callback);
-    };
-
-    /*
-        sender: { type: xxx, clientID: xxx }
-        receiver = 'admin' || 'shipper' || 'store' || {room: ...} || { type: 'store', clientID: storeid } || Arrays of these types [ 'admin', { room: ...} ]
-        msg = Object
-        eventName = String || Array of Strings
-    */
-    io.forward = function(sender, receiver, msg, eventName, callback) {
-        var data = {
-            sender: sender,
-            msg: msg
-        };
-
-        var listEvents = [].concat(eventName);
-        [].concat(receiver).forEach(function(type, index) {
-            data.receiver = type;
-            var connection = io.receiverSocket(type);
-            if(connection) connection.emit(listEvents[index], data, callback);
-
-        });
-    }
-
-    // var distanceFrom = function(currentPosition,shippers,distanceRadius){
-
-    // };
-
-    // var findShipper = function(socket, data){
-    //     var shippersNearest = {};
-    // };
+    // MAP DATA
 
     io.getDataForStore = function(storeID) {
         // Returns data for map of storeID
@@ -254,7 +330,7 @@ module.exports = function(server,app){
 
         var store = io.getOneStore(storeID);
         result.store.push(store);
-        store.order.forEach(function(orderID) {
+        store.order.forEach(function(orderID) {            
             result.orders[orderID] = _.clone(io.orders[orderID], true);
             var shipper = io.getOneShipper(io.orders[orderID].shipperID);
             shipper.order = shipper.order.filter(function(e) {
@@ -349,7 +425,7 @@ module.exports = function(server,app){
             result.shipper.push(io.getOneShipper(shipperID));
         });
         Object.keys(io.stores).forEach(function(storeID) {
-            result.store.push(io.getOneStore(storeID));
+            result.store.push(io.getOneStore(storeID));            
         });
         result.customer = _.clone(io.customers, true);
         result.orders = _.clone(io.orders, true);
@@ -358,15 +434,9 @@ module.exports = function(server,app){
         return result;
     };
 
-    io.containStore = function(storeID) {
-        return !!io.stores[storeID];     // bang!! bang!! return true/false :v
-    };
 
-    io.updateStore = function(store, socket) {
-        io.stores[store.storeID].latitude = store.latitude;
-        io.stores[store.storeID].longitude = store.longitude;
-        io.stores[store.storeID].socketID = socket.id;
-    };
+
+    // STORE FUNCTION
 
     io.updateOrderOfStore = function(storeID, orderID) {
         io.stores[storeID].order.push(orderID);
@@ -381,15 +451,6 @@ module.exports = function(server,app){
         }
     };
 
-    io.addStore = function(store, socket) {
-        io.stores[store.storeID] = {
-            order: [],
-            latitude: store.latitude,
-            longitude: store.longitude,
-            socketID: (!!socket ? socket.id : null)
-        };
-    };
-
     io.getOneStore = function(storeID) {
         // remove socketID
         var store = _.clone(io.stores[storeID], true);
@@ -401,9 +462,26 @@ module.exports = function(server,app){
         };
     };
 
-    io.containShipper = function(shipperID) {
-        return !!io.shippers[shipperID];
+    io.addOrder = function(orderID, storeID, shipperID) {
+        io.orders[orderID] = {
+            shipperID: shipperID,
+            storeID: storeID,
+            status: 'Picking up',
+            isPending: false
+        };
     };
+
+    io.removeOrder = function(orderID) {
+        delete io.orders[orderID];
+    };
+
+    io.updateOrder = function(orderID, newOrder) {
+        io.orders[orderID] = _.merge(io.orders[orderID], newOrder);
+    };
+
+
+
+    // SHIPPER FUNCTION
 
     io.countNumTasksByShipperID = function(shipperID){
         var orderIDs = Object.keys(io.orders);
@@ -416,28 +494,11 @@ module.exports = function(server,app){
         io.shippers[shipperID].numTasks = io.countNumTasksByShipperID(shipperID);
     }
 
-    io.updateShipper = function(shipper, socket) {
-        io.shippers[shipper.shipperID].latitude = shipper.latitude;
-        io.shippers[shipper.shipperID].longitude = shipper.longitude;
-        io.shippers[shipper.shipperID].socketID = socket.id;
-        io.shippers[shipper.shipperID].isConnected = true;
-        io.shippers[shipper.shipperID].numTasks = io.countNumTasksByShipperID(shipper.shipperID);
-    };
-
-    io.getListConnectedShippers = function(){
-        var listRightShippers = [{
-            SPID : 'SP000001',
-            isConnected: true
-        }]
-        return listRightShippers;
-    }
-
     io.updateStatusShipper = function(shipper) {
         io.shippers[shipper.shipperID].isConnected = false;
     };
 
     io.updateOrderOfShipper = function(shipperID, orderID) {
-        console.log(shipperID," PUSH:==========",orderID);
         io.shippers[shipperID].order.push(orderID);
     };
 
@@ -450,28 +511,16 @@ module.exports = function(server,app){
         }
     };
 
-    io.addShipper = function(shipper, socket) {
-        io.shippers[shipper.shipperID] = {
-            order: io.getOrderIDsOfShipper(shipper.shipperID),
-            latitude: shipper.latitude,
-            longitude: shipper.longitude,
-            socketID: (!!socket ? socket.id : null),
-            isConnected: (io.shippers.length == 0 ? true : false),
-            numTasks: io.countNumTasksByShipperID(shipper.shipperID)
-        };
-    };
-
     io.getShipperBySocketID = function(socketID) {
         var shipperIDs = Object.keys(io.shippers);
         var shipperID = _.find(shipperIDs, function(e) {
             return io.shippers[e].socketID === socketID;
-        });
+        });        
         if (!shipperID) return null;
-        return io.getOneShipper(shipperID);
+        return io.getOneShipper(shipperID);        
     };
 
     io.disconnectShipper = function(shipperID) {
-        // delete io.shippers[shipperID];
         io.shippers[shipperID].isConnected = false;
     };
 
@@ -502,19 +551,6 @@ module.exports = function(server,app){
         return shipperInfos;
     };
 
-    io.addOrder = function(orderID, storeID, shipperID) {
-        io.orders[orderID] = {
-            shipperID: shipperID,
-            storeID: storeID,
-            status: 'Picking up',
-            isPending: false
-        };
-    };
-
-    io.removeOrder = function(orderID) {
-        delete io.orders[orderID];
-    };
-
     io.getOrdersOfShipper = function(shipperID) {
         var orderIDs = Object.keys(io.orders);
         var filteredOrderIDs = _.clone(orderIDs.filter(function(e) {
@@ -532,12 +568,21 @@ module.exports = function(server,app){
         var orderIDs = Object.keys(io.orders);
         return _.clone(orderIDs.filter(function(e) {
             return io.orders[e].shipperID === shipperID;
-        }), true);
+        }), true);        
+    };
+    /*
+         HuyTDH - 18-11-2015
+         START - Find id of socket connection by shipper id
+     */
+    io.findSocketIdByShipperId = function(shipperid){
+        var socket =  io.shippers[shipperid];
+        if(socket) return socket.socketID;
+        return null;
     };
 
-    io.updateOrder = function(orderID, newOrder) {
-        io.orders[orderID] = _.merge(io.orders[orderID], newOrder);
-    };
+
+
+    // CUSTOMER FUNCTION
 
     io.addCustomer = function(customer) {
         io.customers.push({
@@ -560,60 +605,13 @@ module.exports = function(server,app){
     };
 
 
-    io.addToRoom = function(socket, roomID) {
-        socket.join(roomID, function() {
-            console.log(socket.id, 'join to room', roomID);
-            console.log('Room ' + roomID+ ":::::: ");// + io.sockets.clients(roomID));
-            var clients_in_the_room = io.sockets.adapter.rooms[roomID];
-            for (var clientId in clients_in_the_room ) {
-                console.log('client: %s', clientId); //Seeing is believing
-                //var client_socket = io.sockets.connected[clientId];//Do whatever you want with this
-            }
-        });
-    };
 
+    // OTHER FUNCTION
 
-    io.updateListStore = function(){
-        controllerStore.getAllStores()
-            .then(function(rs){
-                rs = rs.map(function(e) {
-                    return e.toJSON();
-                })
-                rs.forEach(function(item){
-                    io.addStore({
-                        storeID: item.storeid,
-                        latitude: item.latitude,
-                        longitude: item.longitude
-                    })
-                })
-            })
-    }
-
-    //io.updateListStore();
-
-    io.leaveRoom = function(socket, roomID) {
-        socket.leave(roomID, function() {
-            console.log(socket.id, 'leave room', roomID);
-            console.log('Room ' + roomID+ ":::::: ");// + io.sockets.clients(roomID));
-            var clients_in_the_room = io.sockets.adapter.rooms[roomID];
-            for (var clientId in clients_in_the_room ) {
-                console.log('client: %s', clientId); //Seeing is believing
-                //var client_socket = io.sockets.connected[clientId];//Do whatever you want with this
-            }
-        });
-    };
-
-    //// HuyTDH - 18-11-2015
-    // START - Find id of socket connection by shipper id
-    io.findSocketIdByShipperId = function(shipperid){
-        var socket =  io.shippers[shipperid];
-        if(socket) return socket.socketID;
-        return null;
-    };
-    // END - Find id of socket connection by shipper id
-
-    //// HuyTDH - 18-11-2015
-    // START - Update information of socket when shipper start a task
+    /*
+        HuyTDH - 18-11-2015
+        START - Update information of socket when shipper start a task
+     */
     io.startTask = function(orderID, storeid, shipperid, customer){
         io.addOrder(orderID, storeid, shipperid);
         io.updateOrderOfShipper(shipperid, orderID);
@@ -629,10 +627,11 @@ module.exports = function(server,app){
             io.addToRoom(socketStore,roomID);
         }
     };
-    // END - Update information of socket when shipper start a task
 
-    //// HuyTDH - 18-11-2015
-    // START - Update information of socket when shipper finished a task
+    /*
+        HuyTDH - 18-11-2015
+        START - Update information of socket when shipper finished a task
+     */
     io.finishTask = function(orderID, storeid, shipperid, customer){
         io.removeOrder(orderID);
         io.removeOrderOfShipper(shipperid, orderID);
@@ -649,43 +648,13 @@ module.exports = function(server,app){
         }
     };
 
-    // END - Update information of socket when shipper finished a task
 
 
-    io.updateListStore = function(){
-        controllerStore.getAllStores().then(function(rs){
-            rs = rs.map(function(e){
-                return e.toJSON();
-            });
-            rs.forEach(function(e){
-                io.addStore({
-                    storeID: e.storeid,
-                    latitude: parseFloat(e.latitude),
-                    longitude: parseFloat(e.longitude)
-                });
-            });
-        });
-    }
 
-    io.updateListShipper = function(){
-        controllerShipper.getAllShippers().then(function(rs){
-            rs = rs.map(function(e){
-                return e.toJSON();
-            });
-            rs.forEach(function(e){
-                io.addShipper({
-                    shipperID: e.username,
-                    latitude: parseFloat(e.latitude),
-                    longitude: parseFloat(e.longitude),
-                    isConnected: false
-                });
-            });
-        });
-    }
+    // RUN
 
     io.updateListStore();
     io.updateListShipper();
-
 
 
     io
@@ -722,7 +691,7 @@ module.exports = function(server,app){
                         {
                             orders: orders
                         },
-                        [ 'store:update:order', 'admin:update:order' ]);
+                        [ 'store:update:order', 'admin:update:order' ]);        
                     } else
                         io.addShipper(shipper, socket);
 
