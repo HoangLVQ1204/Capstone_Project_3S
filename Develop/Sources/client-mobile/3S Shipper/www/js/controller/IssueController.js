@@ -8,7 +8,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
 
   $scope.$on("issue:resolve", function (event, args) {
     //Continue not show this
-    if (args !== 1 && args !== 2 && args !== 3 && args !== 6 && args !== 8) {
+    if (args.type !== 1 && args.type !== 2 && args.type !== 3 && args.type !== 6 && args.type !== 8) {
       var alertPopup = $ionicPopup.alert({
         title: 'Information',
         template: 'Your Task is resolved'
@@ -181,7 +181,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
 
         $timeout(function() {
           $scope.showAlert(rs);
-        }, 250)
+        }, 500)
 
       }, function (error) {
         console.log('Unable to load customer data: ' + error);
@@ -271,7 +271,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
                   templateUrl: 'loading.html',
                   scope: $scope,
                   noBackdrop: false,
-                  delay: 250
+                  delay: 500
                 });
               };
               //1 is Pending

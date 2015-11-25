@@ -815,6 +815,7 @@ module.exports = function (app) {
 
     var updateTaskForShipper = function (req, res, next) {
         var shipperList = req.body;
+
         shipperList.forEach(function(shipperTasks){
             if(shipperTasks.tasks) {
                 shipperTasks.tasks.forEach(function(task){
@@ -824,6 +825,7 @@ module.exports = function (app) {
                 });
             }
         });
+
         return shipperList.map(function (shipper) {
             shipper.tasks.map(function (task) {
                 db.task.assignTaskForShipper(task)

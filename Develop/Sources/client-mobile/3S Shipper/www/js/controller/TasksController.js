@@ -4,19 +4,20 @@
 app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoading', '$ionicPopup', '$timeout', function($rootScope, $scope, dataFactory, $ionicLoading, $ionicPopup, $timeout) {
 
   console.log('Reload Data TaskController');
-  var haveIssue = false;
+  $scope.haveIssue = false;
   getAllTaskBeIssued();
   getListOfTask();
 
   $rootScope.$on("shipper:express:order:success", function(event, args) {
     var des = {
       id: 999,
-      content: 'Your Task is resolved'
+      content: 'You just grab an a new order'
     };
     $scope.showAlert(des);
   });
 
   $scope.$on("issue:resolve", function (event, args) {
+    console.log('Args: ', args);
     //Continue not show this
     if (args.type !== 1 && args.type !== 2 && args.type !== 3 && args.type !== 6 && args.type !== 8) {
       var des = {
@@ -41,7 +42,7 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
       scope: $scope,
       templateUrl: 'loading.html',
       noBackdrop: false,
-      delay: 250
+      delay: 500
     });
   };
   //END Show IonicLoading
@@ -58,7 +59,7 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
         $scope.showLoading();
       } else {
         //TODO
-        haveIssue = false;
+        $scope.haveIssue = false;
         console.log("111");
         getListOfTask();
         $ionicLoading.hide();
@@ -84,7 +85,7 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
             $scope.isResolved = rs[property][0].isresolved;
           }
           if (typeof $scope.issueId !== "undefined" || $scope.isResolved == true) {
-            haveIssue = true;
+            $scope.haveIssue = true;
             //show ionicLoading
             $scope.showLoading();
           }
@@ -113,7 +114,7 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
           $ionicLoading.hide();
           $timeout(function(){
             $scope.showAlert(rs);
-          }, 250);
+          }, 500);
         }, function (error) {
             console.log('Unable to load customer data: ' + error);
             if(error.status == 401) dataFactory.signOutWhenTokenFail()
@@ -126,7 +127,7 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
    * StatusTasks are 'Inactive' and 'Active'
    * */
   function getListOfTask() {
-    if (!haveIssue) {
+    if (!$scope.haveIssue) {
       $ionicLoading.show({
         noBackdrop: false,
         template: '<ion-spinner icon="bubbles" class="spinner-balanced"/>'
@@ -138,7 +139,7 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
         var rs = res.data;
         formatData(rs);
         //Hide IonicLoading without Issue Pending
-        if (!haveIssue) {
+        if (!$scope.haveIssue) {
           $ionicLoading.hide();
         }
       },function (error) {

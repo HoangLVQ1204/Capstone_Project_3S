@@ -25,10 +25,15 @@ module.exports = function (app) {
 
         //var enddate = new Date(req.params.enddate);
         //console.log(perioddate)
-        return db.generalledger.getLedgerOfStore(db.store, storeid, perioddate)
-            .then(function (ledgerList) {
-                res.status(200).json(ledgerList);
-            }, function (err) {
+        return db.generalledger.getLatestAutoAccountDate()
+            .then(function (ledger) {
+                db.generalledger.getLedgerOfStore(db.store, storeid, perioddate, ledger.paydate)
+                    .then(function (ledgerList) {
+                        res.status(200).json(ledgerList);
+                    }, function (err) {
+                        next(err);
+                    })
+        }, function (err) {
                 next(err);
             })
     };
