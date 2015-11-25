@@ -59,6 +59,9 @@ module.exports = function (app) {
     app.route('/api/shipper/test-socket')
         .get(shipperCtrl.testSk);
 
+    app.route('/api/shipper/test-socket2')
+        .get(shipperCtrl.testSk2);
+
 
 
 }

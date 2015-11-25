@@ -439,7 +439,14 @@ module.exports = function(server,app){
 
 
 
-    // STORE FUNCTION
+    // STORE FUNCTIONS
+	io.reconnectStore = function(storeid, socket){
+      for(keys in io.orders){
+          if (io.orders[keys].storeID === storeid) {
+              io.addToRoom(socket, io.orders[keys].shipperID);
+          }
+      }
+    };
 
     io.updateOrderOfStore = function(storeID, orderID) {
         io.stores[storeID].order.push(orderID);
@@ -611,10 +618,73 @@ module.exports = function(server,app){
 
     // OTHER FUNCTION
 
+    io.updateListStore = function(){
+        controllerStore.getAllStores()
+            .then(function(rs){
+                rs = rs.map(function(e) {
+                    return e.toJSON();
+                })
+                rs.forEach(function(item){
+                    io.addStore({
+                        storeID: item.storeid,
+                        latitude: item.latitude,
+                        longitude: item.longitude
+                    })
+                })
+            })
+    }
+
+    //io.updateListStore();
+
+    io.leaveRoom = function(socket, roomID) {
+        socket.leave(roomID, function() {
+            console.log(socket.id, 'leave room', roomID);
+            console.log('Room ' + roomID+ ":::::: ");// + io.sockets.clients(roomID));
+            var clients_in_the_room = io.sockets.adapter.rooms[roomID];
+            for (var clientId in clients_in_the_room ) {
+                console.log('client: %s', clientId); //Seeing is believing
+                //var client_socket = io.sockets.connected[clientId];//Do whatever you want with this
+            } 
+        });
+    };
+
+    //// HuyTDH - 25-11-2015
+    // START - Change shipper of an order active
+    io.changeShipperOfOrder = function(shipperID, orderID){
+        for(var i = 0; i != io.orders.length; i++){
+            if(io.orders[i].orderID === orderID){
+                io.orders[i].shipperID = shipperID;
+                return true;
+            }
+        }
+        return false;
+    };
+    // END - Change shipper of an order active
+
+    //// HuyTDH - 25-11-2015
+    // START - Change all order of shipper to pending or not
+    io.updatePendingOrder = function(shipperid, status){
+        var orders = io.getOrdersOfShipper(shipperid);
+        orders.forEach(function(e) {
+            e.orderInfo.isPending = status;
+            io.updateOrder(e.orderID, e.orderInfo);
+        });
+    };
+    // END - Change all order of shipper to pending or not
+
+    //// HuyTDH - 18-11-2015
+    // START - Find id of socket connection by shipper id
+    io.findSocketIdByShipperId = function(shipperid){
+        var socket =  io.shippers[shipperid];
+        if(socket) return socket.socketID;
+        return null;
+    };
+    // END - Find id of socket connection by shipper id
+
     /*
-        HuyTDH - 18-11-2015
+		HuyTDH - 18-11-2015
         START - Update information of socket when shipper start a task
-     */
+	*/
     io.startTask = function(orderID, storeid, shipperid, customer){
         io.addOrder(orderID, storeid, shipperid);
         io.updateOrderOfShipper(shipperid, orderID);

@@ -115,17 +115,16 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
   $scope.customerMarkers = $scope.customerMarkers || [];
   $scope.orders = $scope.orders || {};
 
-  console.log($scope.shipperMarkers == mapService.getShipperMarkers());
-
   $scope.circleRadius = $scope.circleRadius || 1000000000;
 
   var initCenter = {
     latitude: 21.013419,
     longitude: 105.526180
-  }
+  };
 
+  var initZoom = 16;
+  $scope.zoom = $scope.zoom || initZoom;
   $scope.center = $scope.center || initCenter;
-
   $scope.shipperControl = {};
   $scope.storeControl = {};
   $scope.customerControl = {};
