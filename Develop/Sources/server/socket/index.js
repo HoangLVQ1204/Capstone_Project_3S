@@ -787,6 +787,7 @@ module.exports = function(server,app){
 
                     if (io.containStore(store.storeID)) {
                         io.updateStore(store, socket);
+                        io.reconnectStore(store.storeID, socket);
                     } else
                         io.addStore(store, socket);
 
