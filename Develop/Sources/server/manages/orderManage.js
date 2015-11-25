@@ -75,7 +75,8 @@
                     'completedate' : completedate,
                     'ordertype': order['ordertype'].dataValues.typename,
                     'ledgerid': ledgerid,
-                    'fullDeliveryAddress': fullDeliveryAddress
+                    'fullDeliveryAddress': fullDeliveryAddress,
+                    'iscancel' : order.dataValues.iscancel
 
                 })
             });
@@ -459,9 +460,8 @@ var cancelOrder = function (req, res, next) {
         db.order.getOneOrder(orderID)
         .then(function(orders){
             orders = orders.toJSON();
-            orders.statusid = 6;
+            orders.iscancel = true;
             return db.order.updateOrderStatus(orders);
-            //return Promise.all(promises);
         })
         .then(function(data){
             //get Admin

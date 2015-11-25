@@ -38,32 +38,29 @@ function adminStoreListController($scope,$state, $http, authService, config, soc
         $scope.storeList = response;
         $scope.storeList.sort(dateSort)
     }).then(function () {
-        $http.get(config.baseURI + "/api/store/getTotalCoD").success(function(response){
-            $scope.currentCoD= response;
-            //console.log(2);
-        })
-    }).then(function () {
-        $http.get(config.baseURI + "/api/store/getTotalFee").success(function(response){
-            $scope.currentFee = response;
-            //==//console.log(response);
-
             $scope.storeList.map(function (store) {
-                var resultCoD = $.grep($scope.currentCoD, function(e){ return e.storeid == store.storeid; });
-                if ($scope.currentCoD.length > 0)
-                    store.currentCoD =  parseInt(resultCoD[0].totalCoD);
-
-                var resultFee = $.grep($scope.currentFee, function(e){ return e.storeid == store.storeid; });
-                if ($scope.currentFee.length > 0)
-                store.currentFee =  parseInt(resultFee[0].totalFee);
+                //var resultCoD = $.grep($scope.currentCoD, function(e){ return e.storeid == store.storeid; });
+                //if ($scope.currentCoD.length > 0)
+                //    store.currentCoD =  parseInt(resultCoD[0].totalCoD);
+                //
+                //
+                //var resultFee = $.grep($scope.currentFee, function(e){ return e.storeid == store.storeid; });
+                //if ($scope.currentFee.length > 0)
+                //store.currentFee =  parseInt(resultFee[0].totalFee);
                 if (store.generalledgers.length > 0)
                 store.generalledgers[0].balance =  parseInt(store.generalledgers[0].balance);
 
                 $http.get(config.baseURI + "/api/store/getLatestLedgerOfStore/" + store.storeid).success(function(response){
-                    store['currentBanlance'] = response.balance;
-
+                    if (response!=null) {
+                        store['currentBalance'] = response.balance;
+                        store['currentFee'] = response.totaldelivery;
+                        store['currentCoD'] = response.totalcod;
+                    }
                     //console.log(response);
                 }).then(function () {
-                    if (!store['currentBanlance']) store['currentBanlance']=0;
+                    if (!store['currentBalance']) store['currentBalance']=0;
+                    if (!store['currentFee']) store['currentFee']=0;
+                    if (!store['currentCoD']) store['currentCoD']=0;
                     return store;
                 })
                 //console.log(store);
@@ -71,7 +68,7 @@ function adminStoreListController($scope,$state, $http, authService, config, soc
             //console.log($scope.storeList);
         })
 
-    })
+
 
     $scope.displayedCollection = [].concat($scope.storeList);
 
@@ -117,8 +114,11 @@ function adminStoreListController($scope,$state, $http, authService, config, soc
     //-----------------------------------
     $scope.blockStore = function (store){
         //console.log(store);
-        var valid = $('#blockReason').parsley( 'validate' );
-        if (!valid) return;
+        if (store.managestores[0].user.userstatus == 2)
+        {
+            var valid = $('#blockReason').parsley( 'validate' );
+            if (!valid) return;
+        }
         var bannedLog = new Object();
         bannedLog['adminid'] = currentUser.username;
         bannedLog['storeid'] = store.managestores[0].managerid;
@@ -162,7 +162,12 @@ function adminStoreListController($scope,$state, $http, authService, config, soc
     $scope.postLedger = function (store){
         //alert(1);
         //$scope.payFee = 0;
+        //console.log(store.currentBalance, $scope.payfrom);
         if (!$scope.isValid) return;
+        //if (store.currentBalance == 0) return;
+        //if ($scope.payFee == 0) return;
+        //if ($scope.payFee*$scope.payfrom > store.currentBalance) return;
+        //if ((store.currentBalance - $scope.payFee*($scope.payfrom))*store.currentBalance <0) return;
 
         var ledger = new Object();
         ledger.storeid = store.storeid;
@@ -174,15 +179,15 @@ function adminStoreListController($scope,$state, $http, authService, config, soc
         if (ledger.payfrom  == 1)
         {
             //ledger.payfrom = 1;
-            ledger.totaldelivery = store.generalledgers[0].totaldelivery - ledger.amount;
-            ledger.totalcod = store.generalledgers[0].totalcod;
+            ledger.totaldelivery = store.currentFee - ledger.amount;
+            ledger.totalcod = store.currentCoD;
 
         }
          else
         {
             ledger.payfrom = 2;
-            ledger.totaldelivery = store.generalledgers[0].totaldelivery;
-            ledger.totalcod = parseInt(store.generalledgers[0].totalcod) - ledger.amount;
+            ledger.totaldelivery = store.currentFee;
+            ledger.totalcod = parseInt(store.currentCoD) - ledger.amount;
         }
         ledger.balance = ledger.totaldelivery - ledger.totalcod;
         //console.log(ledger);
@@ -196,9 +201,9 @@ function adminStoreListController($scope,$state, $http, authService, config, soc
         }
         $http.post(config.baseURI + "/api/store/postNewLedger", ledger).then(function success(response){
             //$scope.currentCoD= response;
-            store.generalledgers[0].totalcod = ledger.totalcod;
-            store.generalledgers[0].totaldelivery = ledger.totaldelivery;
-            store.generalledgers[0].balance = ledger.balance;
+            store.currentCoD = ledger.totalcod;
+            store.currentFee = ledger.totaldelivery;
+            store.currentBalance = ledger.balance;
             socketAdmin.confirmPaymentMessage(store.storeid);
             //console.log(store);
             smsData.theme="theme-inverse";
@@ -219,10 +224,10 @@ function adminStoreListController($scope,$state, $http, authService, config, soc
     //FUNCTION SHOW TRANSACTION HISTORY
     //-----------------------------------
     $scope.showTransactionHistory = function (store, period){
-        var autoDate = $scope.latestAutoDate;
+        $scope.autoDate = $scope.latestAutoDate;
         //console.log(autoDate);
-        if (!period) autoDate='null';
-        $http.get(config.baseURI + "/api/getLedgerOfStore/" + store.storeid +"/" + autoDate).success(function(response){
+        if (!period) $scope.autoDate='null';//neu chon current Period Balance
+        $http.get(config.baseURI + "/api/getLedgerOfStore/" + store.storeid +"/" + $scope.autoDate).success(function(response){
             $scope.ledgerListOfStore = response;
 
             $scope.ledgerListOfStore.sort(function(x, y){

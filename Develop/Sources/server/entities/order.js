@@ -11,6 +11,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
+    stockid: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
     ordertypeid: {
       type: DataTypes.INTEGER,
       allowNull: true
@@ -52,6 +56,10 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
     },
     ispending: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
+    },
+    iscancel: {
       type: DataTypes.BOOLEAN,
       allowNull: true
     },
@@ -197,7 +205,7 @@ module.exports = function(sequelize, DataTypes) {
       //KhanhKC
       storeGetAllOrders: function (oderstatusModel,ordertypeModel, store_id) {
         return order.findAll({
-          attributes: ['orderid','recipientname','recipientphone','statusid','isdraff','ispending','cod','fee','completedate','deliveryaddress','createdate','ledgerid','deliverydistrictid','deliveryprovinceid','deliverywardid'],
+          attributes: ['orderid','recipientname','recipientphone','statusid','isdraff','ispending','iscancel','cod','fee','completedate','deliveryaddress','createdate','ledgerid','deliverydistrictid','deliveryprovinceid','deliverywardid'],
           where: {storeid:store_id },
           include: [
             {'model': oderstatusModel,
@@ -457,7 +465,7 @@ module.exports = function(sequelize, DataTypes) {
 
       updateOrderStatus: function (newOrder) {//change status of order
         return order.update(
-            {'statusid': newOrder.statusid, 'ispending': newOrder.ispending},
+            {'statusid': newOrder.statusid, 'ispending': newOrder.ispending, 'iscancel': newOrder.iscancel},
             {
               where: {
                 'orderid': newOrder.orderid
