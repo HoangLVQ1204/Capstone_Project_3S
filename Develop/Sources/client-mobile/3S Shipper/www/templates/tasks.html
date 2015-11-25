@@ -8,7 +8,7 @@
           <ion-content>
             <p ng-if="badgeCountExpress == 0" class="notasks">No Task</p>
             <ion-list>
-              <ion-item class="item-icon-right" ng-repeat="order in expressTasks" type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.taskid}}', isCancel: '{{order.iscancel}}'})">
+              <ion-item ng-class="(haveIssue==true) ? 'not-active' : ''" class="item-icon-right" ng-repeat="order in expressTasks" type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.taskid}}', isCancel: '{{order.iscancel}}'})">
                 <div class="titleContent" style="min-height: 90px;">
                   <div>
                     <img src="img/storeprofile.png"/>
@@ -38,7 +38,7 @@
           <ion-content>
             <p ng-if="badgeCountPick == 0" class="notasks">No Task</p>
             <ion-list>
-              <ion-item class="item-icon-right" ng-repeat="order in pickupTasks | orderBy: 'pickupdate' " type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.taskid}}', isCancel: '{{order.iscancel}}'})">
+              <ion-item ng-class="(haveIssue==true) ? 'not-active' : ''" class="item-icon-right" ng-repeat="order in pickupTasks | orderBy: 'pickupdate' " type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.taskid}}', isCancel: '{{order.iscancel}}'})">
                 <div class="titleContent" style="min-height: 90px;">
                   <div>
                     <img src="img/storeprofile.png"/>
@@ -68,7 +68,7 @@
           <ion-content >
             <p ng-if="badgeCountShip == 0" class="notasks">No Task</p>
             <ion-list>
-              <ion-item class="item-icon-right" ng-repeat="order in shipTasks | orderBy: 'deliverydate'" type="item-text-wrap"  ui-sref="app.detail({orderId: '{{order.taskid}}', isCancel: '{{order.iscancel}}'})">
+              <ion-item ng-class="(haveIssue==true) ? 'not-active' : ''" class="item-icon-right" ng-repeat="order in shipTasks | orderBy: 'deliverydate'" type="item-text-wrap"  ui-sref="app.detail({orderId: '{{order.taskid}}', isCancel: '{{order.iscancel}}'})">
                 <div class="titleContent" style="min-height: 90px;">
                   <div>
                     <img src="img/storeprofile.png"/>
@@ -98,7 +98,7 @@
           <ion-content>
             <p ng-if="badgeCountReturn == 0" class="notasks">No Task</p>
             <ion-list>
-              <ion-item class="item-icon-right" ng-repeat="order in returnTasks" type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.taskid}}', isCancel: '{{order.iscancel}}'})">
+              <ion-item ng-class="(haveIssue==true) ? 'not-active' : ''" class="item-icon-right" ng-repeat="order in returnTasks" type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.taskid}}', isCancel: '{{order.iscancel}}'})">
                 <div class="titleContent" style="min-height: 90px;">
                   <div>
                     <img src="img/storeprofile.png"/>
@@ -123,9 +123,9 @@
           </ion-content>
         </ion-pane>
       </ion-tab>
-      <div class="fixed">
-        <a type="button" href="#/app/bestway/{{tabParam}}" class="btn-cus btn-primary-cus btn-circle-cus btn-xl-cus"><i class="ion-ios-paperplane" style="font-size: 26px"></i></a>
-      </div>
+      <!--<div class="fixed">-->
+        <!--<a type="button" href="#/app/bestway/{{tabParam}}" class="btn-cus btn-primary-cus btn-circle-cus btn-xl-cus"><i class="ion-ios-paperplane" style="font-size: 26px"></i></a>-->
+      <!--</div>-->
     </ion-tabs>
 </ion-view>
 <script id="loading.html" type="text/ng-template">

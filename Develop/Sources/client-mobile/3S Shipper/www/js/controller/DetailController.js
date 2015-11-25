@@ -2,7 +2,7 @@
  * Created by Kaka Hoang Huy on 10/19/2015.
  */
 
-function detailController($scope, $stateParams, dataService, $cordovaGeolocation, $ionicPopup, $ionicPopover, uiGmapGoogleMapApi, uiGmapIsReady, $rootScope, $ionicLoading, mapService) {
+function detailController($scope, $stateParams, dataService, $cordovaGeolocation, $ionicPopup, $ionicPopover, uiGmapGoogleMapApi, uiGmapIsReady, $rootScope, $ionicLoading, mapService, authService) {
 
   $scope.isCancel = $stateParams.isCancel;
   //shipper category of issue = cancel
@@ -79,6 +79,15 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
   $scope.stores = mapService.getStoreMarkers(mode);
   $scope.customers = mapService.getCustomerMarkers(mode);
   $scope.orders = mapService.getOrders(mode);
+  var currentUser = authService.getCurrentInfoUser();
+  $scope.center = {
+      // :TODO get address of shipper
+      //latitude: currentUser.latitude,
+      //longitude: currentUser.longitude
+      latitude: 21.013419,
+      longitude: 105.526180
+  };
+  console.log($scope.center);
 
   getDetailFromServer();
 
@@ -228,5 +237,5 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
   //// END - functions area
 }
 
-detailController.$inject = ['$scope', '$stateParams', 'dataService', '$cordovaGeolocation', '$ionicPopup', '$ionicPopover', 'uiGmapGoogleMapApi', 'uiGmapIsReady', '$rootScope', '$ionicLoading', 'mapService'];
+detailController.$inject = ['$scope', '$stateParams', 'dataService', '$cordovaGeolocation', '$ionicPopup', '$ionicPopover', 'uiGmapGoogleMapApi', 'uiGmapIsReady', '$rootScope', '$ionicLoading', 'mapService', 'authService'];
 app.controller('DetailCtrl', detailController);

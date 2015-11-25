@@ -62,11 +62,16 @@ module.exports = function (app) {
         });
     };
 
+    var postFromSever = function(notification) {
+        return db.notification.addNotification(notification);
+    };
+
     return {
         getTotal: getTotal,
         getTotalUnread: getTotalUnread,
         get: get,
         post: post,
-        put: put
+        put: put,
+        postFromSever: postFromSever
     }
 }

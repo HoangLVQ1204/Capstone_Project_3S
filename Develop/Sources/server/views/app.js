@@ -313,16 +313,19 @@ angular.module('app', [
     });
 
     $rootScope.onlineShipper = 0;
-    $rootScope.readNewNoti = function() {
-
+    $rootScope.readNewNoti = function(notification) {
+        var urlBase = config.baseURI + '/api/notifications/' + notification.notificationid;     
+        // console.log('readNotification', urlBase);
+        dataService.putDataServer(urlBase, notification)
+        .then(function(data) {
+            // console.log('press notification', data.data);
+            if ($state.current.name == 'store.notification' || $state.current.name == 'admin.notification') {
+                $state.go($state.current.name, {}, { reload: true });
+            }            
+        });
     };
 
-    $rootScope.notify = function(notification, onlyDisplay) {
-        if (!!onlyDisplay == false) {
-            $rootScope.numberUnreadNoti += 1;
-            notificationService.setTotalUnreadNotifications($rootScope.numberUnreadNoti);
-            notificationService.addNotification(notification);
-        } 
+    $rootScope.displayNotification = function(notification) {
         var data = {
             life: 5000,
             horizontal: 'bottom',
@@ -330,18 +333,46 @@ angular.module('app', [
             verticalEdge: 'right',
             theme: (notification.type === 'issue' ? 'danger' : 'success')
         };                
-        var template = '<div class="btn globalNoti" onclick="location.href=\'' + notification.url + '\'">' +
+        var template = '<div class="btn" id="noti' + notification.notificationid + '" onclick="location.href=\'' + notification.url + '\'">' +
                 '<h4 style="color: white"><strong>' + notification.title + '</strong></h4>' +
                 '<span style="color: white">' + notification.content + '</span>'
                 '</div>';        
         $.notific8(template, data);
-        $('.globalNoti').on('click', function() {
-            console.log('click globalNoti');
+        console.log('current $state', $state.current.name);
+        $('#noti' + notification.notificationid).on('click', function() {
+            // console.log('notification.notificationid', notification.notificationid);
+            if (notification.notificationid) {
+                $rootScope.readNewNoti(notification);
+            }
         });
+        if ($state.current.name == 'store.notification' || $state.current.name == 'admin.notification') {
+            $state.go($state.current.name, {}, { reload: true });
+        }
+
         //$rootScope.$apply();
         setTimeout(function () {
             $rootScope.$apply();
         }, 2000);
+    };
+
+    $rootScope.notify = function(notification, type) {
+        if (type) {
+            if (type == 1) {    // Update unread notification
+                $rootScope.numberUnreadNoti += 1;
+                notificationService.setTotalUnreadNotifications($rootScope.numberUnreadNoti);
+                $rootScope.displayNotification(notification);
+            } else if (type == 2) { // Update unread notification + Database
+                $rootScope.numberUnreadNoti += 1;
+                notificationService.setTotalUnreadNotifications($rootScope.numberUnreadNoti);    
+                notificationService.addNotification(notification)
+                .then(function(data) {
+                    notification.notificationid = data.data.notificationid;
+                    $rootScope.displayNotification(notification);
+                })
+            }
+        } else {    // type == undefined, only display
+            $rootScope.displayNotification(notification);
+        }
     };
 
     // combo functions for express order
@@ -379,7 +410,7 @@ angular.module('app', [
                         isread: false,
                         createddate: new Date()
                     };
-                    $rootScope.notify(temp);
+                    $rootScope.notify(temp, 2);
                     order.isdraff = false;
                     return order;
                 }else{
@@ -391,7 +422,7 @@ angular.module('app', [
                         isread: false,
                         createddate: new Date()
                     };
-                    $rootScope.notify(temp);
+                    $rootScope.notify(temp, 2);
                     order.isdraff = true;
                     return order;
                 }
@@ -509,6 +540,15 @@ angular.module('app', [
             s = s + 1;
 
             if(s == 60 || $rootScope.flag){
+                var temp = {
+                    type: 'issue',
+                    title: 'Error: ',
+                    content: 'Finding Shipper fail.',
+                    url: '/#/notiListdemo',
+                    isread: false
+                };
+                $rootScope.notify(temp, 2);
+
                 unloading();
                 $rootScope.rightShipper = {
                     avatar: "assets/img/notfound.png"

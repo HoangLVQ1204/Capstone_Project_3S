@@ -6,6 +6,21 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
     console.log('IssueController');
     getAllTaskOfShipper();
 
+  $scope.$on("issue:resolve", function (event, args) {
+    //Continue not show this
+    if (args.type !== 1 && args.type !== 2 && args.type !== 3 && args.type !== 6 && args.type !== 8) {
+      var alertPopup = $ionicPopup.alert({
+        title: 'Information',
+        template: 'Your Task is resolved'
+      });
+      alertPopup.then(function(res) {
+        console.log('You got it');
+        //reload data
+        //getListOfTask();
+      });
+    }
+  });
+
 /*
  * By QuyenNV - 23/10/2015
  * This function get all task of shipper
@@ -32,6 +47,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
   function formatData(rs) {
     $scope.listOrderActive = [];
     var listOrderInactive = [];
+    var listShipping = [];
     if (undefined !== rs['Pickup'] && rs['Pickup'].length) {
       rs['Pickup'].forEach(function(item) {
         //statusid = 2, Active status of Task
@@ -60,6 +76,11 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
           'val': item.orderid,
           'text': item.orderid
         });
+        listShipping.push({
+          'val': item.orderid,
+          'text': item.orderid
+        })
+
       });
     }
     if (undefined !== rs['Express'] && rs['Express'].length) {
@@ -94,6 +115,8 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
     }
     //Fill to "Order" dropdown list
     $scope.selectable = listOrderInactive;
+    //Fill to "Order" dropdown list
+    $scope.listOrderShipping = listShipping;
   }
 
   //Fill to "Type" dropdown list
@@ -101,20 +124,20 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
     {categoryID: '1', categoryName: 'Pending' },
     {categoryID: '2', categoryName: 'Cancel' }
   ];
-$scope.listReasons = [
-  {typeID: '1', categoryID: '1', typeName: 'Traffic jam' },
-  {typeID: '2', categoryID: '1', typeName: 'Vehicle' },
-  {typeID: '3', categoryID: '1', typeName: 'Accident' },
-  {typeID: '6', categoryID: '1', typeName: 'Other' },
-  {typeID: '4', categoryID: '2', typeName: 'Goods is broken' },
-  {typeID: '5', categoryID: '2', typeName: 'Cannot contact with customer' }
-  //{typeID: '7', categoryID: '2', typeName: 'Other' }
-];
-  $scope.pendingReasons = [
+  $scope.listReasons = [
     {typeID: '1', categoryID: '1', typeName: 'Traffic jam' },
     {typeID: '2', categoryID: '1', typeName: 'Vehicle' },
     {typeID: '3', categoryID: '1', typeName: 'Accident' },
     {typeID: '6', categoryID: '1', typeName: 'Other' },
+    {typeID: '4', categoryID: '2', typeName: 'Goods is broken' },
+    {typeID: '5', categoryID: '2', typeName: 'Cannot contact with customer' }
+  //{typeID: '7', categoryID: '2', typeName: 'Other' }
+  ];
+  $scope.pendingReasons = [
+    {typeID: '1', categoryID: '1', typeName: 'Traffic jam' },
+    {typeID: '2', categoryID: '1', typeName: 'Vehicle' },
+    {typeID: '3', categoryID: '1', typeName: 'Accident' },
+    {typeID: '6', categoryID: '1', typeName: 'Other' }
   ];
   $scope.cancelReasons = [
     {typeID: '4', categoryID: '2', typeName: 'Goods is broken' },
@@ -158,7 +181,7 @@ $scope.listReasons = [
 
         $timeout(function() {
           $scope.showAlert(rs);
-        }, 250)
+        }, 500)
 
       }, function (error) {
         console.log('Unable to load customer data: ' + error);
@@ -234,10 +257,7 @@ $scope.listReasons = [
         var urlCreateBase = config.hostServer + 'api/issue';
         dataFactory.postDataServer(urlCreateBase, data)
           .success(function (rs) {
-            //socket
-            //TODO Send (listOrders)
-            //rs[0].issueid;
-            //socketShipper.sendInfoOfIssue(rs[0].issueid);
+
             $ionicPopup.alert({
               title: 'Success',
               content: 'Your Issue is sent to Admin'
@@ -251,7 +271,7 @@ $scope.listReasons = [
                   templateUrl: 'loading.html',
                   scope: $scope,
                   noBackdrop: false,
-                  delay: 250
+                  delay: 500
                 });
               };
               //1 is Pending

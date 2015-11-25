@@ -348,15 +348,11 @@ module.exports = function (app) {
         }
     };
 
-    var nextStepCode = function (req, res, next) {
-        return res.status(200).json('Test');
-    };
-
     /*
      * create Issue @quyennv
      */
     var createIssue = function (req, res, next) {
-
+        var issueType;
         var task = db.task;
         //Instance new Issue
         var newIssue = _.cloneDeep(req.body[0].issue);
@@ -370,7 +366,7 @@ module.exports = function (app) {
         console.log('shipperController:357 -- newIssue', newIssue);
         db.issue.createNewIssue(newIssue)
             .then(function(issue) {
-
+                issueType = issue.dataValues.typeid;
                 //UPDATE task status of task to 'Processing'
                 //Case: Pending
                 var newStatus = 4;
@@ -423,16 +419,16 @@ module.exports = function (app) {
                 ];
 
                 var msgToAdmin = {
-                    type: 'Issue',
+                    type: 'issue',
                     title: 'Issue:',
                     content: 'Shipper ' + shipperID + ' sent an issue.',
-                    url: '#/admin/issueBox?issueid=' + issue.dataValues.issueid,
+                    url: '#/admin/issueBox?content?issueid=' + issue.dataValues.issueid,
                     isread: false,            
                     createddate: new Date()
                 };
 
                 var msgToStore = {
-                    type: 'Issue',
+                    type: 'issue',
                     title: 'Issue:',
                     content: 'Some orders are in trouble. We are repairing.' ,
                     url: '#/store/dashboard',
@@ -515,22 +511,29 @@ module.exports = function (app) {
                 //Respon data
 
                 // Insert into orderissue
-                var newOrderIssue = {};
-                newOrderIssue.issueid = issue.issueid;
-                var isPending = true;
-                _.each(orders, function(orderID) {
-                    newOrderIssue.orderid = orderID;
-                    db.orderissue.createOrderIssue(newOrderIssue);
-                    if (_.parseInt(categoryissue) === 1) {
-                        //Change isPending
-                        db.order.changeIsPendingOrder(orderID, isPending);
-                    }
-                });
+                //var newOrderIssue = {};
+                //newOrderIssue.issueid = issue.issueid;
+                //var isPending = true;
+                //_.each(orders, function(orderID) {
+                //    newOrderIssue.orderid = orderID;
+                //    db.orderissue.createOrderIssue(newOrderIssue);
+                //    if (_.parseInt(categoryissue) === 1) {
+                //        //Change isPending
+                //        db.order.changeIsPendingOrder(orderID, isPending);
+                //    }
+                //});
                 var group = [];
                 group.push({
                     'issueid': issue.dataValues.issueid,
                     'catissue': categoryissue
                 });
+
+                // Update data in socket
+                var listPending = [1,2,3,6];
+                if(listPending.indexOf(issueType) >= 0){
+                    server.socket.updatePendingOrder(shipperID, true);
+                };
+
                 res.status(200).json(group);
             }, function (err) {
                 next(err);
@@ -655,7 +658,7 @@ module.exports = function (app) {
                                 msgToStore,
                                 'store:issue:continue'
                             );
-
+                            server.socket.updatePendingOrder(shipperid, false);
                             //res mesage continue
                             res.status(200).json(resMess[2]);
                         });
@@ -813,6 +816,16 @@ module.exports = function (app) {
     var updateTaskForShipper = function (req, res, next) {
         var shipperList = req.body;
 
+        shipperList.forEach(function(shipperTasks){
+            if(shipperTasks.tasks) {
+                shipperTasks.tasks.forEach(function(task){
+                    if(task.statusid === 2){
+                        server.socket.changeShipperOfOrder(shipperTasks.username, task.order.orderid);
+                    }
+                });
+            }
+        });
+
         return shipperList.map(function (shipper) {
             shipper.tasks.map(function (task) {
                 db.task.assignTaskForShipper(task)
@@ -946,9 +959,8 @@ module.exports = function (app) {
     //// END change status of shipper
 
     var testSk = function(req, res, next){
-        /*
-        //var storeid = 'STR001';
-        //var storeid2 = 'STR003';
+        var storeid = 'STR001';
+        var storeid2 = 'STR003';
         var shipperid = 'SP000001';
         //var orderid = 'OD025421';
         //addStoreToShipperRoom(storeid,shipperid);
@@ -979,66 +991,28 @@ module.exports = function (app) {
             "st": st,
             "od": od
         });
-        */
 
-        ///*
-        db.order.findAll({
-            attributes: [
-                ['storeid', 'store'],
-                [
-                    db.sequelize.fn('date_part',
-                        'year',
-                        db.sequelize.col('createdate')
-                    ),
-                    'year'
-                ],
-                [
-                    db.sequelize.fn('date_part',
-                        'month',
-                        db.sequelize.col('createdate')
-                    ),
-                    'month'
-                ],
-                ['ordertypeid', 'type'],
-                [
-                    db.sequelize.fn('count',
-                        db.sequelize.col('orderid')
-                    ),
-                    'count'
-                ]
-            ],
-            group: ['storeid','year','month', 'type'],
-            order: ['store','month']
-        }).then(function(rows) {
-            var rs = {};
-            rows.forEach(function(row){
-                row = row.toJSON();
-                var count = row['count'];
-                var type = row['type'];
-                var month = row['month'];
-                var year = row['year'];
-                var store = row['store'];
-                if (!rs.hasOwnProperty(store)) rs[store] = {};
-                if (!rs[store].hasOwnProperty(year)) rs[store][year] = {};
-                if (!rs[store][year].hasOwnProperty(month)) rs[store][year][month] = {};
-                rs[store][year][month][type] = parseInt(count)? parseInt(count):0;
-            });
-            return res.status(200).json(rs)
-        },function(er){
-            console.log(er);
-            return res.status(400).json(er)
+    };
+
+    var testSk2 = function(req, res, next){
+        var storeid = 'STR001';
+        var storeid2 = 'STR003';
+        var shipperid = 'SP000001';
+        addStoreToShipperRoom(storeid,shipperid);
+        addStoreToShipperRoom(storeid2,shipperid);
+        addOrderIntoSocket("OD542012", storeid, shipperid);
+        addOrderIntoSocket("OD000012", storeid2, shipperid);
+        var cs = server.socket.customers;
+        var sp = server.socket.shippers;
+        var st = server.socket.stores;
+        var od = server.socket.orders;
+        return res.status(200).json({
+            "cs": cs,
+            "sp": sp,
+            "st": st,
+            "od": od
         });
-           //*/
-        /*
-        db.order.findOne().then(function(rs){
-            var a = 'dd'
-            a = rs.getCustomerAddress()
-            return res.status(200).json(a);
-        }, function(er){
-            console.log(er)
-            return res.status(400).json(er)
-        })
-        */
+
     };
 
     //function create new shipperid
@@ -1117,7 +1091,6 @@ module.exports = function (app) {
         paramOrderId: paramOrderId,
         getOrderStatusList: getOrderStatusList,
         nextStep: nextStep,
-        nextStepCode: nextStepCode,
         createIssue: createIssue,
         changeIsPending: changeIsPending,
         paramMapdata: paramMapdata,
@@ -1131,6 +1104,7 @@ module.exports = function (app) {
         changeShipperStatus: changeShipperStatus,
         getTaskBeIssuePending: getTaskBeIssuePending,
         testSk: testSk,
+        testSk2: testSk2,
         createShipperID: createShipperID,
         getAllShipperWithTaskForProcessing: getAllShipperWithTaskForProcessing,
         getAllShippers: getAllShippers

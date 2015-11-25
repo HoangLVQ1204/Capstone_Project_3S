@@ -68,7 +68,7 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
 
     socketService.on('store:issue:cancel', function(data) {
         console.log('store:issue:cancel', data);
-        $rootScope.$emit("updatePenddingOrder", data.msg);
+        $rootScope.$emit("updatePendingOrder", data.msg);
         $rootScope.notify(data.msg);
     });
 
@@ -80,6 +80,12 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
 
     socketService.on('store:message:confirmPayment', function(data) {
         console.log("store:message:confirmPayment: ", data);
+        //$rootScope.$emit("updatePenddingOrder", data.msg);
+        $rootScope.notify(data.msg);
+    });
+
+    socketService.on('store:notification:blockStore', function(data) {
+        console.log("store:notification:blockStore: ", data);
         //$rootScope.$emit("updatePenddingOrder", data.msg);
         $rootScope.notify(data.msg);
     });

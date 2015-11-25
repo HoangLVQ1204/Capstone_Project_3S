@@ -12,12 +12,16 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
   $scope.good={};
   $scope.listgoods =[];
   $scope.houseNumber="";
+
   getOrderFromServer();
   getStoreName();
   getProvince ();
-  $scope.changeToEn = function(){   
-    $scope.disabled = false;    
+
+  $scope.changeToEn = function(){
+    $scope.disabled = false;
+    $scope.oldOrder = _.cloneDeep($scope.order);
   };
+
   $scope.changeToDis = function(){
     $scope.disabled = true;    
   };
@@ -52,18 +56,27 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
 
     //iCheck[components] validate
     $('input').on('ifChanged', function(event){
-    $(event.target).parsley( 'validate' );
+        $(event.target).parsley( 'validate' );
     });
     
   });
-  
- 
+
+    function addToTempOrder(order){
+        $scope.tmpOrder = {
+            oldOrder: order,
+            newOrder: order
+        }
+    }
+
     function getOrderFromServer() {
         var urlBase = config.baseURI + '/orders/' + $scope.orderid;
         dataService.getDataServer(urlBase)
-            .success(function (rs) {               
-               $scope.order = rs;
-               $scope.listgoods = rs.goods;
+            .success(function (rs) {
+                $scope.order = rs;
+                $scope.listgoods = rs.goods;
+                console.log("---DATA ORDER---");
+                console.log(rs);
+                console.log("---DATA ORDER---");
                var confirmationcode = rs.confirmationcodes;
                for(var i = 0; i < confirmationcode.length;i++){
                   if(confirmationcode[i].typeid ==2){
@@ -102,8 +115,8 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
               type:'info',
               title: 'Info',
               content: "Update successfully!"
-            }; 
-            $rootScope.notify(success);           
+            };
+            $rootScope.notify(success);
           },function(er){
             var err = {
               type:'issue',
@@ -115,12 +128,31 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
         
     }
 
+    $scope.updateOldOrderToServer = function(){
+        var urlBase = config.baseURI + '/orders/' + $scope.orderid;
+        var data = {
+            order: $scope.oldOrder,
+            listgoods: $scope.oldOrder.goods
+        }
+
+        dataService.putDataServer(urlBase,data)
+            .then(function(sc){
+                $scope.disabled = true;
+                getOrderFromServer();
+            },function(er){
+                var err = {
+                    type:'issue',
+                    title: 'Error',
+                    content: "Can't cancel this order! Try again!"
+                };
+                $rootScope.notify(err);
+            });
+    }
+
     $scope.newGood = {};
-    var index;
-    $scope.setGood = function(good,index){        
-        $scope.newGood = (JSON.parse(JSON.stringify(good)));
-        index = index;
-        
+    $scope.setGood = function(good,index){
+        $scope.newGood = (JSON.parse(JSON.stringify(good)))
+        $scope.currentIndexGood = index;
     };
 
     $scope.refreshGood = function(){
@@ -128,91 +160,51 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
     }
 
     function editGood () {
-      var urlBase = config.baseURI + '/api/store/goods?goodsid=' + $scope.newGood.goodsid;                
-      var data = $scope.newGood;                              
-      dataService.putDataServer(urlBase,data)
-      .then(function(){
-        for(var i = 0; i < $scope.listgoods.length;i++){
-          if( $scope.listgoods[i].goodsid == $scope.newGood.goodsid){ 
-            $scope.listgoods[i] = $scope.newGood; 
+          var data = $scope.newGood;
+          for(var i = 0; i < $scope.listgoods.length;i++){
+            if( $scope.listgoods[i].goodsid == $scope.newGood.goodsid){
+              $scope.listgoods[i] = $scope.newGood;
+            }
           }
-        }                                       
-        $scope.order.overweightfee = calculateOverWeightFee($scope.data.selectedDistrict.districtid,$scope.listgoods);
-        $('#md-edit-good').modal('hide');
-      },function(er){
-        var err = {
-          type:'issue',
-          title: 'Error',
-          content: "Can't update this good! Try again!"
-        };
-        $rootScope.notify(err);
-      });  
+          $scope.order.overweightfee = calculateOverWeightFee($scope.data.selectedDistrict.districtid,$scope.listgoods);
+          $scope.$apply();
+          $('#md-edit-good').modal('hide');
 
     }
 
     function addGood(){
-        var urlBase = config.baseURI + '/api/store/addGoods';
-        $scope.good.orderid = $scope.orderid;
-        var data = $scope.good;
-
-        dataService.postDataServer(urlBase,data)
-          .then(function(sc){
-            $scope.good.goodsid = sc.data;
-            $scope.good.goodID = bigestGoodId;
-            $scope.listgoods.push($scope.good);           
-            bigestGoodId++;
-            $scope.order.overweightfee = calculateOverWeightFee($scope.data.selectedDistrict.districtid,$scope.listgoods);
-            $('#md-add-good').modal('hide');
-          },function(er){
-            var err = {
-              type:'issue',
-              title: 'Error',
-              content: "Can't add this good! Try again!"
-            };
-            $rootScope.notify(err);
-          });
+        var newGoods = $scope.good;
+        $scope.listgoods.push(newGoods);
+        $scope.order.overweightfee = calculateOverWeightFee($scope.data.selectedDistrict.districtid,$scope.listgoods);
+        $scope.$apply();
+        $('#md-add-good').modal('hide');
     }
 
     $scope.deleteGoods = function(){
-        var urlDeleteGoods = config.baseURI + 'api/store/deleteGoods?goodsid=' + $scope.newGood.goodsid;
-        dataService.deleteDataServer(urlDeleteGoods).then(function(sc){
-            $scope.listgoods.splice(index,1);
-        },function(er){
-            var err = {
-                type: 'issue',
-                title: 'Error',
-                content: "Can't delete this good! Try again!"
-            };
-            $rootScope.notify(err);
-        });
+        $scope.listgoods.splice($scope.currentIndexGood,1);
     };
 
-    function caculatateWeight(listGoods){
+    function calculateWeight(listGoods){
         var totalWeight = 0;
         for(var i = 0; i <listGoods.length;i++){
             totalWeight = totalWeight + listGoods[i].weight*listGoods[i].amount;
         }
-        //console.log("=============totalWeight=======",totalWeight);
         return totalWeight;
 
     }
 
     function calculateOverWeightFee(districtId,listGoods){
-        var totalWeight = caculatateWeight(listGoods);
+        var totalWeight = calculateWeight(listGoods);
         var overWeightFee = 0;
         var listInDistrictId =["001","002","003","005","006","007","008","009"];
         if(totalWeight > 4000 ){
-            if(listInDistrictId.indexOf(districtId)>-1){
-                //console.log("=============IN=======",districtId);
-                overWeightFee = (totalWeight - 4000)*2*2;
+            if(listInDistrictId.indexOf(districtId) > -1){
+                overWeightFee = Math.round((totalWeight - 4000)/500)*2000;
             }else {
-                //console.log("=============out=======",districtId);
-                overWeightFee = (totalWeight - 4000)*2*2.5;
+                overWeightFee = Math.round((totalWeight - 4000)/500)*2500;
             }
             
         }
-         //console.log("=============totalWeight=======",totalWeight);
-         //console.log("=============overWeightFee=======",overWeightFee);
          return overWeightFee;        
     }
 
@@ -232,16 +224,9 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
                 fee = 30000;
             }       
         }
-        //console.log("=============districtId=======",districtId);
-        //console.log("=============deliveryType=======",deliveryType);
-        //console.log("=============fee=======",fee);
+
         return fee;
     }
-
-    // $scope.updateFee = function(){
-    //     $scope.order.fee = calculateFee($scope.data.selectedDistrict.districtid,$scope.order.ordertypeid);
-    //     $scope.order.overweightfee = calculateOverWeightFee($scope.data.selectedDistrict.districtid,$scope.listgoods);      
-    // }
 
     function getStoreName(){
         var urlBase = config.baseURI + '/api/getAllStoreName';
@@ -264,7 +249,6 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
         dataService.getDataServer(urlBase)
             .success(function (rs) {                
                 $scope.addressDB = rs;
-                //console.log("========Adress========",rs);                
                 $scope.listProvince = $scope.addressDB.slice(0,1);
                 $scope.data.selectedProvince = $scope.listProvince[0];
 
