@@ -58,15 +58,20 @@ module.exports = function(socket, io, app) {
         if (data.msg.typeid == 7)
             data.msg.msg['content'] = "Order " + order.orderid + " has been cancel by store...";
         data.msg.msg['username'] = data.msg.shipperid;
+        data.msg.msg['url'] = '#';
         notificationManage.postFromSever(data.msg.msg);
+
+
         io.forward(
             {
                 type: 'admin',
                 clientID: data.sender
             },
             { type: 'shipper', clientID: data.msg.shipperid},
-
-            data.msg.msg,
+            {
+                notification: data.msg.msg,
+                type: data.msg.typeid
+            },
             'shipper:issue:resolve')
         console.log('Issue', data.msg);
 

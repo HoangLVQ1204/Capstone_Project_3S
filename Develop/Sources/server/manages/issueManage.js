@@ -78,7 +78,7 @@ module.exports = function (app) {
                         newIssueID = issue.dataValues.issueid;
                         //Add new notification
                         var msgDisconnectToAdmin = {
-                            type: 'Issue',
+                            type: 'issue',
                             title: 'Issue',
                             content: 'Shipper ' + shipperID + ' is disconnected',
                             url: '#/admin/issueBox/content?issueid=' + issue.dataValues.issueid,
@@ -86,7 +86,7 @@ module.exports = function (app) {
                             createddate: new Date()
                         };
                         var msgDisconnectToStore = {
-                            type: 'Info',
+                            type: 'info',
                             title: 'Warning',
                             content: 'Some orders are in trouble. We are repairing',
                             url: '#/store/dashboard',

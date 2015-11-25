@@ -154,9 +154,11 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
     //cancel in process order
     $scope.cancerOrder = function(){
         var urlBase = config.baseURI + '/store/orders/cancel';
-            dataService.postDataServer(urlBase,{
-                orderid : $scope.Order.orderid
-            });        
+            dataService.postDataServer(urlBase,{orderid : $scope.Order.orderid})
+            .then(function(rs){
+                console.log('success', rs.length);
+                getDataFromServer();
+            });
         // var index =  $scope.displayedCollectionInprocess.indexOf( $scope.Order);
         // if (index !== -1) {
         //     $scope.displayedCollectionInprocess.splice(index, 1);
