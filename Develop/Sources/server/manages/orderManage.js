@@ -425,8 +425,10 @@ var putDraff = function(req, res, next){
 };
 
 var cancelOrder = function (req, res, next) {
-   var ownerStoreUser = req.user.username;
+    var ownerStoreUser = req.user.username;
     var storeID = req.user.stores[0].storeid;
+    var orderID = req.body.orderid;
+    console.log('orderID:414: ', orderID);
 
     var issueCancel = {
         typeid: 7,
@@ -439,18 +441,32 @@ var cancelOrder = function (req, res, next) {
    //Add new issue
     db.issue.createNewIssue(issueCancel)
     .then(function(issue){
-        //Add notification
+        //create new orderissue
+        var newOrderIssue = {};
+        newOrderIssue.issueid = issue.issueid;
+        newOrderIssue.orderid = _.clone(orderID, true);
+        db.orderissue.createOrderIssue(newOrderIssue);
+        //msg to Admin
         var msgRequestCancel = {
-            type: 'Issue',
+            type: 'issue',
             title: 'Issue',
             content: 'Store ' + storeID + ' requested cancel an order',
             url: '#/admin/issueBox/content?issueid=' + issue.dataValues.issueid,
             isread: false,
             createddate: new Date()
         };
-
-        //get Admin
-        db.user.getUserByRole(3)
+        //Update status order = cancelling
+        db.order.getOneOrder(orderID)
+        .then(function(orders){
+            orders = orders.toJSON();
+            orders.statusid = 6;
+            return db.order.updateOrderStatus(orders);
+            //return Promise.all(promises);
+        })
+        .then(function(data){
+            //get Admin
+            return db.user.getUserByRole(3)
+        })
         .then(function(admins){
             admins = admins.map(function(e) {
                 return e.toJSON();
@@ -476,7 +492,9 @@ var cancelOrder = function (req, res, next) {
                 msgRequestCancel,
                 'admin::issue:cancelorder'
             );
-        })
+        });
+        //res status code
+        res.status(200).json('OK');
     }, function(err){
         next(err);
     })

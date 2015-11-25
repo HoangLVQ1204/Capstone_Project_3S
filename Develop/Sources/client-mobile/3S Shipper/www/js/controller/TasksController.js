@@ -9,23 +9,31 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
   getListOfTask();
 
   $rootScope.$on("shipper:express:order:success", function(event, args) {
-    var alertPopup = $ionicPopup.alert({
-      title: 'Information',
-      template: 'You just grab an a new order'
-    });
-    alertPopup.then(function(res) {
-      console.log('You got it');
-      //reload data
-      getListOfTask();
-    });
+    var des = {
+      id: 999,
+      content: 'Your Task is resolved'
+    };
+    $scope.showAlert(des);
   });
-  //Select tab for find bestway screen
-  $scope.tabSelected = function(tab) {
-    $scope.tabParam = tab;
-    if (typeof $scope.tabParam === "undefined" || $scope.tabParam === "") {
-      $scope.tabParam = "all";
+
+  $scope.$on("issue:resolve", function (event, args) {
+    //Continue not show this
+    if (args.type !== 1 && args.type !== 2 && args.type !== 3 && args.type !== 6 && args.type !== 8) {
+      var des = {
+        id: 999,
+        content: 'Your Task is resolved'
+      };
+      $scope.showAlert(des);
     }
-  };
+  });
+
+  //TODO: Select tab for find bestway screen
+  //$scope.tabSelected = function(tab) {
+  //  $scope.tabParam = tab;
+  //  if (typeof $scope.tabParam === "undefined" || $scope.tabParam === "") {
+  //    $scope.tabParam = "all";
+  //  }
+  //};
 
   //START Show IonicLoading
   $scope.showLoading = function(){

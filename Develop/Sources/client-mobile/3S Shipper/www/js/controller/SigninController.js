@@ -21,28 +21,35 @@ app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService',
         message: 'Username and Password cannot be blank'
       });
     } else {
-      console.log(1111);
+      console.log('sigincontroller:24');
       authService.signIn($scope.user)
         .then(function(res){
-          authService.saveToken(res.data.token);
-          //check role !shipper
-          if (!authService.isRightRole(roles.shipper)) {
+          if (typeof res == "undefined") {
             $ionicLoading.hide();
-            authService.signOut();
             showError({
-              message: 'Username or Password is invalid'
+              message: 'Connection Network is Not Available. Try again !'
             });
           } else {
-            socketService.authenSocket()
-              .then(function(){
-                socketShipper.registerSocket();
-                $state.go('app.tasks');
-                //$ionicLoading.hide();
+            authService.saveToken(res.data.token);
+            //check role !shipper
+            if (!authService.isRightRole(roles.shipper)) {
+              $ionicLoading.hide();
+              authService.signOut();
+              showError({
+                message: 'Username or Password is invalid'
               });
+            } else {
+              socketService.authenSocket()
+                .then(function(){
+                  socketShipper.registerSocket();
+                  $state.go('app.tasks');
+                  //$ionicLoading.hide();
+                });
+            }
           }
         })
         .catch(function(error){
-          console.log('SigninController:44 error', error);
+          console.log('SigninController:52 error', error);
           $ionicLoading.hide();
           showError({
             message: 'Username or Password is invalid'
