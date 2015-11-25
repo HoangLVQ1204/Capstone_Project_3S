@@ -91,7 +91,7 @@
                                         </td>
                                         <td class="center">
                                             <a href="" ng-click="showTransactionHistory(x, false)">
-                                                {{x.currentBanlance}}
+                                                {{x.currentBalance}}
                                             </a>
                                         </td>
                                         <!--<td class="center"> {{x.registereddate|date:"dd/MM/yyyy"}}</td>-->
@@ -160,13 +160,13 @@
                 <tbody>
                 <tr>
                     <td>{{selectedStore.name}}</td>
-                    <td class="text-right">{{selectedStore.generalledgers[0].totaldelivery+0 }}</td>
-                    <td class="text-right">{{selectedStore.generalledgers[0].totalcod+0}}</td>
-                    <td class="text-right">{{selectedStore.generalledgers[0].totaldelivery - selectedStore.generalledgers[0].totalcod - payFee*(payfrom)}}</td>
+                    <td class="text-right">{{selectedStore.currentFee+0 }}</td>
+                    <td class="text-right">{{selectedStore.currentCoD+0}}</td>
+                    <td class="text-right">{{selectedStore.currentBalance - payFee*(payfrom)}}</td>
                     <td class="text-right">
                         <select  class="form-control" ng-model="payfrom">
-                            <option value="1">KW</option>
-                            <option value="-1">{{selectedStore.name}}</option>
+                            <option value="-1">KW</option>
+                            <option value="1">{{selectedStore.name}}</option>
                         </select>
                     </td>
 
@@ -207,11 +207,12 @@
                 <thead>
                 <tr>
                     <th width="2%" st-sort="ledgerid" class="text-center sortable">LedgerID</th>
-                    <th st-sort="lastbalance" class="text-center sortable">Last Balance(VND)</th>
-                    <th st-sort="amount" class="text-center sortable">Amount(VND)</th>
-                    <th st-sort="balance" class="text-center sortable">Balance(VND)</th>
-                    <th st-sort="totaldelivery" class="text-center sortable">Delivery(VND)</th>
-                    <th st-sort="totalcod" class="text-center sortable">CoD(VND)</th>
+                    <th st-sort="lastbalance" ng-show="autoDate!='null'" class="text-center sortable">Balance(VND)</th>
+                    <th st-sort="lastbalance" ng-show="autoDate=='null'" class="text-center sortable">Last Balance(VND)</th>
+                    <th st-sort="amount" ng-show="autoDate=='null'"  class="text-center sortable">Amount(VND)</th>
+                    <th st-sort="balance" ng-show="autoDate=='null'"  class="text-center sortable">Balance(VND)</th>
+                    <th st-sort="totaldelivery" ng-show="autoDate!='null'" class="text-center sortable">Delivery(VND)</th>
+                    <th st-sort="totalcod" ng-show="autoDate!='null'" class="text-center sortable">CoD(VND)</th>
                     <th st-sort="paydate" class="text-center sortable">Paydate</th>
 
                     <th class="text-center">Note</th>
@@ -222,11 +223,16 @@
                 <tr class="odd gradeX" ng-repeat= "x in displayedLedgerCollection"
                     ng-class="(x.amount==null) ? 'table_active' : ''">
                     <td>{{x.ledgerid}}</td>
-                    <td>{{x.lastbalance}}</td>
-                    <td>{{x.amount}}</td>
-                    <td class="center"> {{x.balance}}</td>
-                    <td class="center"> {{x.totaldelivery}}</td>
-                    <td class="center"> {{x.totalcod}}</td>
+                    <td ng-show="x.amount!=null">{{x.lastbalance}}</td>
+                    <td ng-show="x.amount!=null" ><strong>{{x.amount}}</strong></td>
+                    <td ng-show="x.amount!=null" class="center">
+                                            <span class="tooltip-area">
+                                            <a title="Total delivery: {{x.totaldelivery}} - Total CoD: {{x.totalcod}}">{{x.balance}}</a>
+                                        </span></td>
+
+                    <td ng-show="x.amount==null">{{x.balance}}</td>
+                    <td ng-show="x.amount==null" class="center"> {{x.totaldelivery}}</td>
+                    <td ng-show="x.amount==null" class="center"> {{x.totalcod}}</td>
                     <td class="center"> {{x.paydate|date: "dd/MM/yyyy"}}</td>
                     <td>
                                         <span class="tooltip-area">

@@ -139,7 +139,7 @@ module.exports = function(sequelize, DataTypes) {
             }],where: {
               'storeid': storeid,
               'paydate': {
-                gte: latestAutoDate
+                gt: latestAutoDate
               }
             }
           })
