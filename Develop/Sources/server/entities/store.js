@@ -109,7 +109,7 @@ module.exports = function(sequelize, DataTypes) {
                     include: [{
                         model: generalledger,
                         where: {
-                            $and: [{'totaldelivery': {$ne: null}}, {'totalcod': {$ne: null}}]
+                            'payfrom': 3
                         },limit: 1, order: 'payDate DESC'
                     },{
                         model: bannedhistorylog,

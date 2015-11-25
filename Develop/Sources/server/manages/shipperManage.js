@@ -812,7 +812,7 @@ module.exports = function (app) {
 
     var updateTaskForShipper = function (req, res, next) {
         var shipperList = req.body;
-
+        
         return shipperList.map(function (shipper) {
             shipper.tasks.map(function (task) {
                 db.task.assignTaskForShipper(task)

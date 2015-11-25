@@ -788,7 +788,7 @@ module.exports = function(server,app){
                         shipperList: io.getAllShippers()
                     }, 'admin:register:location');
 
-                    require('./socketAdmin')(socket, io);
+                    require('./socketAdmin')(socket, io, app);
 
                 }
             })

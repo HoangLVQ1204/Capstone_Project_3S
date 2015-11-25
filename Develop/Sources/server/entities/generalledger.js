@@ -1,5 +1,5 @@
 /* jshint indent: 2 */
-
+var moment         = require('moment');
 module.exports = function(sequelize, DataTypes) {
   var generalledger =  sequelize.define('generalledger', {
     ledgerid: {
@@ -118,30 +118,31 @@ module.exports = function(sequelize, DataTypes) {
         })
       },
 
-      getLedgerOfStore: function (store, storeid, perioddate) {
-        
-        if (perioddate != 'null')
-        {
-          return generalledger.findAll({
+      getLedgerOfStore: function (store, storeid, perioddate, latestAutoDate) {
+        //console.log(moment(perioddate).subtract(10, 'days').calendar());
+          if (perioddate != 'null')
+          {
+            return generalledger.findAll({
+              include:[{
+                model: store
+                //as: 'store'
+              }],where: {
+                'storeid': storeid,
+                'paydate':  latestAutoDate
+              }
+            })
+          }
+          else return generalledger.findAll({
             include:[{
               model: store
               //as: 'store'
             }],where: {
-                'storeid': storeid,
-                'paydate':  {
-                  gte: perioddate
-                }
+              'storeid': storeid,
+              'paydate': {
+                gte: latestAutoDate
+              }
             }
           })
-        }
-        else return generalledger.findAll({
-          include:[{
-            model: store
-            //as: 'store'
-          }],where: {
-            'storeid': storeid
-          }
-        })
       },
       storeGetAllLedger: function (storeid) {
         return generalledger.findAll({

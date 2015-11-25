@@ -637,7 +637,26 @@ module.exports = function(sequelize, DataTypes) {
           group: ['storeid', 'year', 'month', 'status'],
           order: ['store', 'month']
         })
-      }
+      },
+
+      //HoangNK - get list order hasn't paid
+      //getCurrentPeriodOrder: function (ordertypeModel, store_id, date) {
+      //  return order.findAll({
+      //    attributes: ['orderid','statusid','cod','fee','completedate','deliveryaddress'],
+      //    where: {storeid:store_id,
+      //            statusid: [7,8],
+      //            completedate: {
+      //              gte: date
+      //            }},
+      //    include: [
+      //      {
+      //        'model': ordertypeModel,
+      //        attributes: ['typename']
+      //      }
+      //    ],
+      //    order: 'createdate DESC'
+      //  });
+      //},
 
     }
   });

@@ -1,9 +1,10 @@
 
 
 
-module.exports = function(socket, io) {
+module.exports = function(socket, io, app) {
 	
     io.addToRoom(socket, 'admin');
+    var notificationManage = require('../manages/notificationManage')(app);
 
     socket.on('disconnect', function() {
 
@@ -36,7 +37,8 @@ module.exports = function(socket, io) {
                 socketName =  'store:issue:cancel';
             }
 
-
+            data.msg.msg['username'] = order.storeid;
+            notificationManage.postFromSever(data.msg.msg);
             io.forward(
                 {
                     type: 'admin',
@@ -55,7 +57,8 @@ module.exports = function(socket, io) {
 
         if (data.msg.typeid == 7)
             data.msg.msg['content'] = "Order " + order.orderid + " has been cancel by store...";
-
+        data.msg.msg['username'] = data.msg.shipperid;
+        notificationManage.postFromSever(data.msg.msg);
         io.forward(
             {
                 type: 'admin',
@@ -79,8 +82,27 @@ module.exports = function(socket, io) {
                 { type: 'store', clientID: data.msg.storeid},
                   data.msg.msg,
                 'store:message:confirmPayment');
-
+        data.msg.msg['username'] = data.msg.storeid;
+        notificationManage.postFromSever(data.msg.msg);
         console.log('Payment confirmation', data.msg);
+
+    });
+
+    socket.on('admin:notification:blockStore', function(data) {
+
+        data.msg.msg['username'] = data.msg.storeid;
+        notificationManage.postFromSever(data.msg.msg);
+
+        io.forward(
+            {
+                type: 'admin',
+                clientID: data.sender
+            },
+            { type: 'store', clientID: data.msg.storeid},
+            data.msg.msg,
+            'store:notification:blockStore');
+
+        console.log('Block store', data.msg);
 
     });
     // socket.on('admin:filter:shipper', function(data) {
