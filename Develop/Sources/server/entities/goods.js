@@ -80,6 +80,7 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
 
+
       updateGoods: function (currentGoods,goodsid) {
         return goods.update(
           currentGoods,
