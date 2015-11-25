@@ -66,8 +66,13 @@ function notificationListController($scope, config, dataService, notificationSer
 	};
 
 	$scope.readNotification = function(index) {
-		notificationService.readNotification(index);
-		$rootScope.numberUnreadNoti -= 1;
+		notificationService.readNotification(index)
+		.then(function(data) {
+			console.log('readNotification', data);
+			if (data) {
+				$rootScope.numberUnreadNoti = Math.max($rootScope.numberUnreadNoti - 1, 0);
+			}
+		});		
 	};
 }
 
