@@ -47,6 +47,11 @@
 
           <p class="detail-p">{{order.deliveryaddress}}</p>
         </div>
+        <div class="item item-input" ng-if="order.ordertypeid == 1">
+          <span class="input-label">Stock:</span>
+
+          <p class="detail-p">{{order.stock.name}}<br/>{{order.stock.address}}</p>
+        </div>
         <div class="item item-input" ng-if="order.tasks[0].typeid != 1">
           <span class="input-label">Delivery Date:</span>
 
