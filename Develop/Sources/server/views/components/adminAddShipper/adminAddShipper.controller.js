@@ -2,7 +2,7 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminAddShipperController($scope,$state, $http, $filter, config) {
+function adminAddShipperController($scope,$state, $http, $filter, config, dataService) {
 
     $scope.shipperList = [];
     var smsData = {verticalEdge: 'right',
@@ -12,11 +12,13 @@ function adminAddShipperController($scope,$state, $http, $filter, config) {
     $scope.newShipper.profile = new Object();
     $scope.newShipper.profile.avatar = "assets/avatar/shipper/Default.png";
 
-    $http.get(config.baseURI + "/api/shipper/getNewShipperID").success(function(response){
-        $scope.newShipper.account.username = response;
-        $scope.newShipper.profile.username = response;
-        //console.log(response);
-    })
+    var urlBase = config.baseURI + "/api/shipper/getNewShipperID";
+    dataService.getDataServer(urlBase)
+        .then(function(rs){
+            $scope.newShipper.account.username = rs.data;
+            $scope.newShipper.profile.username = rs.data;
+            //console.log(response);
+        });
 
     $scope.createShipper = function () {
        var valid = $('#formID').parsley( 'validate' );
@@ -25,17 +27,27 @@ function adminAddShipperController($scope,$state, $http, $filter, config) {
         $scope.newShipper.account.userstatus = 2;
         $scope.newShipper.profile.dob = new Date($scope.newShipper.profile.dob);
 
-        $http.post(config.baseURI + "/api/user/addNewUser", $scope.newShipper).success(function(response){
-            smsData.theme="theme-inverse";
-            $.notific8($("#sms-success").val(), smsData);
-            $state.go('admin.shipperList', {newShipper: $scope.newShipper.account});
-            //console.log(response);
-        },function (error) {
-            smsData.theme="danger";
-            //data.sticky="true";
-            $.notific8($("#sms-fail").val(), smsData);
-            console.log(error)
-        })
+        var urlBase = config.baseURI + "/api/user/addNewUser";
+        dataService.postDataServer(urlBase, $scope.newShipper)
+            .then(function(rs){
+                console.log('AAAAA', rs);
+                smsData.theme="theme-inverse";
+                $.notific8($("#sms-success").val(), smsData);
+                $state.go('admin.shipperList', {newShipper: $scope.newShipper.account});
+                //console.log(response);
+            })
+            .catch(function(error){
+                smsData.theme="danger";
+                $.notific8($("#sms-fail").val(), smsData);
+                console.log(error);
+            })
+
+        //function (error) {
+        //    smsData.theme="danger";
+        //    //data.sticky="true";
+        //    $.notific8($("#sms-fail").val(), smsData);
+        //    console.log(error)
+        //})
        //console.log(valid);
     }
     //----------------------------------
@@ -50,5 +62,5 @@ function adminAddShipperController($scope,$state, $http, $filter, config) {
 
 }
 
-adminAddShipperController.$inject = ['$scope','$state', '$http', '$filter', 'config'];
+adminAddShipperController.$inject = ['$scope','$state', '$http', '$filter', 'config', 'dataService'];
 angular.module('app').controller('adminAddShipperController',adminAddShipperController);

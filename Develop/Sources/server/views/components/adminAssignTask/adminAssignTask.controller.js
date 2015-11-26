@@ -1,7 +1,7 @@
 /**
  * Created by Hoang on 10/18/2015.
  */
-function adminAssignTaskController($scope,$state, $http, authService, config) {
+function adminAssignTaskController($scope,$state, $http, authService, config, dataService) {
 
 
     $scope.tasksList = [];//all task of shipper
@@ -49,15 +49,15 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
     $scope.dateNow = new Date();
     //console.log("URL:"+ config.baseURI + "/api/shipper/getAllShipperWithTask");
 
-    $http.get(config.baseURI + "/api/shipper/getAllShipper").success(function(response){
-        $scope.shipperList = response;
+    dataService.getDataServer(config.baseURI + "/api/shipper/getAllShipper").then(function(response){
+        $scope.shipperList = response.data;
         $scope.displayedShipperCollection = [].concat($scope.tasksList);
         //console.log($scope.displayedShipperCollection)
         //console.log(1);
         //console.log(response);
     }).then(function () {
-        $http.get(config.baseURI + "/api/shipper/getAllShipperWithTask").success(function(response){
-            $scope.tasksList = response;
+        dataService.getDataServer(config.baseURI + "/api/shipper/getAllShipperWithTask").then(function(response){
+            $scope.tasksList = response.data;
             getOldTask();
             $scope.shipperList.map(function (shipper) {
                 var result = $.grep($scope.tasksList, function(e){ return e.username == shipper.username; });
@@ -70,8 +70,8 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
             //console.log(1);
 
         }).then(function () {
-            $http.get(config.baseURI + "/api/getUserGetIssue").success(function(response){
-                $scope.listUserHasIssue = response;
+            dataService.getDataServer(config.baseURI + "/api/getUserGetIssue").then(function(response){
+                $scope.listUserHasIssue = response.data;
                 $scope.tasksList.map(function (shipper) {
                     var shipperHasIssue = $.grep($scope.listUserHasIssue, function(e){ return e.sender == shipper.username;});
                     if (shipperHasIssue.length > 0) shipper['hasIssue'] = true;
@@ -84,8 +84,8 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
     })
 
 
-    $http.get(config.baseURI + "/api/shipper/getAllOrderToAssignTask").success(function(response){
-        $scope.orderList = response;
+    dataService.getDataServer(config.baseURI + "/api/shipper/getAllOrderToAssignTask").then(function(response){
+        $scope.orderList = response.data;
         $scope.displayedOrderCollection = [].concat($scope.orderList);
         //console.log($scope.orderList);
     });
@@ -94,7 +94,7 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
 
 
     $scope.assignTask = function () {
-        $http.post(config.baseURI + "/api/shipper/updateTaskForShipper", $scope.tasksList).then(function success(response){
+        dataService.putDataServer(config.baseURI + "/api/shipper/updateTaskForShipper", $scope.tasksList).then(function success(response){
             var data = new Object();
             data.verticalEdge='right';
             data.horizontalEdge='bottom';
@@ -124,7 +124,7 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
 
                 //$http.put(config.baseURI + "/api/updateTaskNoShipper", $scope.taskNoShipper);
 
-        }, function (error) {
+        }) .catch( function (error) {
             var data = new Object();
             data.verticalEdge='right';
             data.horizontalEdge='bottom';
@@ -289,5 +289,5 @@ function adminAssignTaskController($scope,$state, $http, authService, config) {
 
 }
 
-adminAssignTaskController.$inject = ['$scope','$state', '$http', 'authService', 'config'];
+adminAssignTaskController.$inject = ['$scope','$state', '$http', 'authService', 'config', 'dataService'];
 angular.module('app').controller('adminAssignTaskController',adminAssignTaskController);

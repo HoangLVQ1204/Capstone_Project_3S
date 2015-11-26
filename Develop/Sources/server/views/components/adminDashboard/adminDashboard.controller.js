@@ -2,7 +2,7 @@
  * Created by hoanglvq on 9/22/15.
  */
 
-function adminDashboardController($scope,$state,dataService, $http, config, $rootScope){
+function adminDashboardController($scope,$state,dataService, config, $rootScope){
 
     //Option for drop down list
     $scope.searchOptionsInactive = [
@@ -55,8 +55,9 @@ function adminDashboardController($scope,$state,dataService, $http, config, $roo
         var urlBase = config.baseURI + "/api/getTaskList";
 
         dataService.getDataServer(urlBase)
-            .success(function (taskList) {
-                taskList.map(function (task) {
+            .then(function (rs) {
+                //console.log(rs);
+                rs.data.map(function (task) {
                      if (task.statusid == 1)  $scope.inactiveList.push(task);
                      if (task.statusid == 2)  $scope.activeList.push(task);
                      if (task.statusid == 3)  $scope.doneList.push(task);
@@ -72,21 +73,18 @@ function adminDashboardController($scope,$state,dataService, $http, config, $roo
                     $scope.displayedFailList = [].concat($scope.failList);
 
             })
-            .error(function (error) {
-                console.log('Unable to load customer data: ' + error);
-            });
 
         var urlBaseTotal = config.baseURI + "/api/getTodayTotal";
         dataService.getDataServer(urlBaseTotal)
-            .success(function (total) {
-                $scope.todayTotal = total;
+            .then(function (rs) {
+                $scope.todayTotal = rs.data;
             })
 
         var urlBaseAllShipper = config.baseURI + "/api/shipper/getAllShipper";
         dataService.getDataServer(urlBaseAllShipper)
-            .success(function (shipperList) {
-                $scope.shipperList = shipperList;
-                $scope.totalShipper = shipperList.length;
+            .then(function (rs) {
+                $scope.shipperList = rs.data;
+                $scope.totalShipper = rs.data.length;
             })
 
     }
@@ -149,7 +147,7 @@ function adminDashboardController($scope,$state,dataService, $http, config, $roo
 }
 
 
-adminDashboardController.$inject = ['$scope','$state','dataService','$http','config','$rootScope'];
+adminDashboardController.$inject = ['$scope','$state','dataService','config','$rootScope'];
 
 angular.module('app').controller('adminDashboardController',adminDashboardController);
 

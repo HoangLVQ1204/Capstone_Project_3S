@@ -2,7 +2,7 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminStoreListController($scope,$state, $http, authService, config, socketAdmin) {
+function adminStoreListController($scope,$state, dataService, authService, config, socketAdmin) {
 
     $scope.storeList = [];
     $scope.payfrom = '1';
@@ -26,17 +26,17 @@ function adminStoreListController($scope,$state, $http, authService, config, soc
     $scope.dateRange = '';
 
     //get latest date of auto calculate
-    $http.get(config.baseURI + "/api/store/getLatestAutoAccountDate").success(function(response){
-        $scope.latestAutoDate= response;
+    dataService.getDataServer(config.baseURI + "/api/store/getLatestAutoAccountDate").then(function(response){
+        $scope.latestAutoDate= response.data;
         $scope.fromAutoDate = new Date($scope.latestAutoDate);
         $scope.fromAutoDate.setDate($scope.fromAutoDate.getDate()-7);
         //console.log( $scope.fromAutoDate);
     })
 
     //get List to display
-    $http.get(config.baseURI + "/api/store/getAllLedger").success(function(response){
-        $scope.storeList = response;
-        $scope.storeList.sort(dateSort)
+    dataService.getDataServer(config.baseURI + "/api/store/getAllLedger").then(function(response){
+        $scope.storeList = response.data;
+        $scope.storeList.sort(dateSort);
     }).then(function () {
             $scope.storeList.map(function (store) {
                 //var resultCoD = $.grep($scope.currentCoD, function(e){ return e.storeid == store.storeid; });
@@ -50,11 +50,11 @@ function adminStoreListController($scope,$state, $http, authService, config, soc
                 if (store.generalledgers.length > 0)
                 store.generalledgers[0].balance =  parseInt(store.generalledgers[0].balance);
 
-                $http.get(config.baseURI + "/api/store/getLatestLedgerOfStore/" + store.storeid).success(function(response){
-                    if (response!=null) {
-                        store['currentBalance'] = response.balance;
-                        store['currentFee'] = response.totaldelivery;
-                        store['currentCoD'] = response.totalcod;
+                dataService.getDataServer(config.baseURI + "/api/store/getLatestLedgerOfStore/" + store.storeid).then(function(response){
+                    if (response.data!=null) {
+                        store['currentBalance'] = response.data.balance;
+                        store['currentFee'] = response.data.totaldelivery;
+                        store['currentCoD'] = response.data.totalcod;
                     }
                     //console.log(response);
                 }).then(function () {
@@ -135,7 +135,7 @@ function adminStoreListController($scope,$state, $http, authService, config, soc
             bannedLog['userStatus'] = 2;
         }
         //console.log(bannedLog);
-        $http.post(config.baseURI + "/api/log/postBannedLog", bannedLog).then(function success(response){
+        dataService.postDataServer(config.baseURI + "/api/log/postBannedLog", bannedLog).then(function success(response){
             //console.log(store);bal
             store.managestores[0].user.userstatus =  bannedLog['userStatus'];
             socketAdmin.blockStoreMessage(store.storeid, bannedLog['type'], bannedLog['reason']);
@@ -143,14 +143,13 @@ function adminStoreListController($scope,$state, $http, authService, config, soc
             $.notific8($("#sms-success").val(), smsData);
             $("#md-effect-block").attr('class','modal fade').addClass(smsData.effect).modal('hide');
 
-        },function (error) {
+        }).catch(function(error){
             smsData.theme="danger";
-            //data.sticky="true";
             $.notific8($("#sms-fail").val(), smsData);
-            console.log(error)
+            console.log(error);
         })
-        if (store.ban.length == 0) store.ban.push(bannedLog);
-            else store.ban[0] = bannedLog;
+        //if (store.ban.length == 0) store.ban.push(bannedLog);
+        //    else store.ban[0] = bannedLog;
         //$scope.getLatestLedgerOfStore(storeid);
         //console.log( $scope.selectedStore.totalcod);
         //var data=$(this).data();
@@ -192,14 +191,15 @@ function adminStoreListController($scope,$state, $http, authService, config, soc
         ledger.balance = ledger.totaldelivery - ledger.totalcod;
         //console.log(ledger);
         if (ledger.balance == 0){
-            $http.put(config.baseURI +"/api/store/updateLedgerForOrder/" + ledger.storeid).success(function(response){
-                //console.log(1);
-                //console.log(response);
+            dataService.putDataServer(config.baseURI +"/api/store/updateLedgerForOrder/" + ledger.storeid).then(function(response){
 
-                //store.generalledgers[0].balance = ledger.balance;
+            }).catch(function(error){
+                smsData.theme="danger";
+                $.notific8($("#sms-fail").val(), smsData);
+                console.log(error);
             })
         }
-        $http.post(config.baseURI + "/api/store/postNewLedger", ledger).then(function success(response){
+        dataService.postDataServer(config.baseURI + "/api/store/postNewLedger", ledger).then(function success(response){
             //$scope.currentCoD= response;
             store.currentCoD = ledger.totalcod;
             store.currentFee = ledger.totaldelivery;
@@ -209,11 +209,10 @@ function adminStoreListController($scope,$state, $http, authService, config, soc
             smsData.theme="theme-inverse";
             $.notific8($("#sms-success").val(), smsData);
             $("#md-effect-confirm").attr('class','modal fade').addClass(smsData.effect).modal('hide');
-        },function (error) {
+        }).catch(function(error){
             smsData.theme="danger";
-            //data.sticky="true";
             $.notific8($("#sms-fail").val(), smsData);
-            console.log(error)
+            console.log(error);
         })
 
     };
@@ -227,8 +226,8 @@ function adminStoreListController($scope,$state, $http, authService, config, soc
         $scope.autoDate = $scope.latestAutoDate;
         //console.log(autoDate);
         if (!period) $scope.autoDate='null';//neu chon current Period Balance
-        $http.get(config.baseURI + "/api/getLedgerOfStore/" + store.storeid +"/" + $scope.autoDate).success(function(response){
-            $scope.ledgerListOfStore = response;
+        dataService.getDataServer(config.baseURI + "/api/getLedgerOfStore/" + store.storeid +"/" + $scope.autoDate).then(function(response){
+            $scope.ledgerListOfStore = response.data;
 
             $scope.ledgerListOfStore.sort(function(x, y){
                 if (x.paydate > y.paydate) {
@@ -258,37 +257,6 @@ function adminStoreListController($scope,$state, $http, authService, config, soc
     }
 
     //----------------------------------
-    //FUNCTION GET TOTAL COD OF A STORE
-    //-----------------------------------
-    $scope.getLatestLedgerOfStore = function (storeid){
-        $http.get(config.baseURI + "/api/store/getLatestLedgerOfStore/" + storeid).success(function(response){
-            $scope.ledger = response;
-             //console.log(response);
-        })
-    }
-    //----------------------------------
-    //FUNCTION GET TOTAL COD OF A STORE
-    //-----------------------------------
-    this.getTotalCoD = function (){
-        ////console.log(11);
-        $http.get(config.baseURI + "/api/store/getTotalCoD").success(function(response){
-            $scope.currentFee= response;
-            //console.log(response);
-        })
-    }
-
-    //----------------------------------
-    //FUNCTION GET TOTAL FEE OF A STORE
-    //-----------------------------------
-    this.getTotalFee = function (){
-        $http.get(config.baseURI + "/api/store/getTotalFee").success(function(response){
-            $scope.currentCoD = response;
-            //console.log(response);
-        })
-    }
-
-
-    //----------------------------------
     //FUNCTION LOAD SCRIPT
     //-----------------------------------
     $scope.$watch('$viewContentLoaded', function (event) {
@@ -309,6 +277,7 @@ function adminStoreListController($scope,$state, $http, authService, config, soc
         if (x.registereddate > y.registereddate) {
             return -1;
         }
+
         if (x.registereddate < y.registereddate) {
             return 1;
         }
@@ -326,5 +295,5 @@ function adminStoreListController($scope,$state, $http, authService, config, soc
 
 }
 
-adminStoreListController.$inject = ['$scope','$state', '$http', 'authService','config','socketAdmin'];
+adminStoreListController.$inject = ['$scope','$state', 'dataService', 'authService','config','socketAdmin'];
 angular.module('app').controller('adminStoreListController',adminStoreListController);

@@ -32,6 +32,10 @@ module.exports = function(sequelize, DataTypes) {
     instanceMethods: {
       authenticate: function(plainTextPassword){
         return bcrypt.compareSync(plainTextPassword, this.password);
+      },
+
+      isBanned: function(){
+        return (this.userstatus == 3 ? true : false);
       }
     },
     classMethods: {

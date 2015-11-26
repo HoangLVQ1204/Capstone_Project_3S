@@ -193,6 +193,11 @@ angular.module('app', [
             access: config.role.admin
         })
 
+        .state('admin.notification',{
+            url: '/notification',
+            template: '<notification-list></notification-list>',
+            access: config.role.admin
+        })
 
         .state('store',{
             abstract: true,
@@ -307,10 +312,7 @@ angular.module('app', [
 
 }).run(function($rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper,socketService, notificationService, dataService){
 
-    notificationService.getTotalUnreadNotificationsServer()
-    .then(function() {
-        $rootScope.numberUnreadNoti = notificationService.getTotalUnreadNotifications();
-    });
+
 
     $rootScope.onlineShipper = 0;
     $rootScope.readNewNoti = function(notification) {
@@ -446,10 +448,6 @@ angular.module('app', [
                 var order = res.data;
                 var orderID = res.data.orderid;
                 order.orderID = orderID;
-
-                console.log("---DATA ORDER ID---");
-                console.log(orderID);
-                console.log("---DATA ORDER ID---");
 
                 if (isDraft) return order;
                 else {
@@ -596,23 +594,19 @@ angular.module('app', [
     // END - combo functions
 
     $rootScope.displayInfoShipper = function(profileShipper,inforOrder){
-        console.log("displayInfoShipper");
         $rootScope.inforShipper = {
             profileShipper : profileShipper,
             inforOrder: inforOrder
         }
-        console.log($rootScope.inforShipper);
-        console.log("displayInfoShipper");
         $("#displayInforShipper").modal("show");
-
     }
 
     if(authService.isLogged()){
         socketService.authenSocket()
         .then(function() {
+
                 if(authService.isRightRole(config.role.admin)){
                     socketAdmin.registerSocket();
-                    //$state.go("admin.dashboard");
                 }
 
 
@@ -622,10 +616,11 @@ angular.module('app', [
 
                 }
 
-                //if(authService.isRightRole(config.role.shipper)){
-                //    socketShipper.registerSocket();
-                //    $state.go('admin.dashboard');
-                //}
+                notificationService.getTotalUnreadNotificationsServer()
+                    .then(function() {
+                        $rootScope.numberUnreadNoti = notificationService.getTotalUnreadNotifications();
+                    });
+
             })
     }
 
@@ -639,7 +634,6 @@ angular.module('app', [
             }
 
             if(!authService.isRightRole(toState.access)){
-                console.log("access");
                 $state.go("error");
                 event.preventDefault();
             }

@@ -2,7 +2,7 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminIssueBoxController($scope,$state, $http, $filter, config, $rootScope) {
+function adminIssueBoxController($scope,$state, $http, $filter, config, $rootScope, dataService) {
     //alert(0);
     getDataFromSever();
 
@@ -10,8 +10,8 @@ function adminIssueBoxController($scope,$state, $http, $filter, config, $rootSco
         $scope.issueList = [];
         $scope.currentPage = 0;
         $scope.pageSize = 10;
-        $http.get(config.baseURI + "/api/getAllIssue").success(function(response){
-            $scope.issueList = response;
+        dataService.getDataServer(config.baseURI + "/api/getAllIssue").then(function(response){
+            $scope.issueList = response.data;
             $scope.issueList.sort( $scope.sortByDate);
             //$scope.displayedOrderCollection = [].concat($scope.orderList);
             //console.log($scope.issueList)
@@ -62,8 +62,8 @@ function adminIssueBoxController($scope,$state, $http, $filter, config, $rootSco
 
     // START Listen to socket changes
     $rootScope.$on("admin:issue:newIssue", function(event, args){
-        $http.get(config.baseURI + "/api/getAllIssue").success(function(response){
-            $scope.issueList = response;
+        dataService.getDataServer(config.baseURI + "/api/getAllIssue").then(function(response){
+            $scope.issueList = response.data;
             $scope.issueList.sort( $scope.sortByDate);
             //$scope.displayedOrderCollection = [].concat($scope.orderList);
             //console.log($scope.issueList)
@@ -71,5 +71,5 @@ function adminIssueBoxController($scope,$state, $http, $filter, config, $rootSco
     });
 }
 
-adminIssueBoxController.$inject = ['$scope','$state', '$http', '$filter','config','$rootScope'];
+adminIssueBoxController.$inject = ['$scope','$state', '$http', '$filter','config','$rootScope','dataService'];
 angular.module('app').controller('adminIssueBoxController',adminIssueBoxController);

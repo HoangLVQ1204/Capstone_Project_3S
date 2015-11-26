@@ -1,7 +1,7 @@
 /**
  * Created by Hoang on 10/18/2015.
  */
-function adminAssignTaskProcessingController($scope,$state, $http, authService, config, $stateParams) {
+function adminAssignTaskProcessingController($scope,$state, $http, authService, config, $stateParams, dataService) {
 
     $scope.originShipperID = $stateParams.shipperid;
     $scope.tasksList = [];//all task of shipper
@@ -48,15 +48,15 @@ function adminAssignTaskProcessingController($scope,$state, $http, authService, 
     $scope.dateNow = new Date();
     //console.log("URL:"+ config.baseURI + "/api/shipper/getAllShipperWithTask");
 
-    $http.get(config.baseURI + "/api/shipper/getAllShipper").success(function(response){
-        $scope.shipperList = response;
+    dataService.getDataServer(config.baseURI + "/api/shipper/getAllShipper").then(function(response){
+        $scope.shipperList = response.data;
         $scope.displayedShipperCollection = [].concat($scope.tasksList);
         //console.log($scope.displayedShipperCollection)
         //console.log(1);
         //console.log(response);
     }).then(function () {
-            $http.get(config.baseURI + "/api/shipper/getAllShipperWithTaskForProcessing").success(function(response){
-            $scope.tasksList = response;
+            dataService.getDataServer(config.baseURI + "/api/shipper/getAllShipperWithTaskForProcessing").then(function(response){
+            $scope.tasksList = response.data;
             getOldTask();
             //add shipper doesn't have task to list
             $scope.shipperList.map(function (shipper) {
@@ -71,8 +71,8 @@ function adminAssignTaskProcessingController($scope,$state, $http, authService, 
             //console.log(1);
 
         }).then(function () {
-                $http.get(config.baseURI + "/api/getUserGetIssue").success(function(response){
-                    $scope.listUserHasIssue = response;
+                dataService.getDataServer(config.baseURI + "/api/getUserGetIssue").then(function(response){
+                    $scope.listUserHasIssue = response.data;
                     $scope.tasksList.map(function (shipper) {
                         var shipperHasIssue = $.grep($scope.listUserHasIssue, function(e){ return e.sender == shipper.username;});
                         if (shipperHasIssue.length > 0) shipper['hasIssue'] = true;
@@ -87,7 +87,8 @@ function adminAssignTaskProcessingController($scope,$state, $http, authService, 
 
 
     $scope.assignTask = function () {
-        $http.post(config.baseURI + "/api/shipper/updateTaskForShipper", $scope.tasksList).then(function success(response){
+
+        dataService.putDataServer(config.baseURI + "/api/shipper/updateTaskForShipper", $scope.tasksList).then(function success(response){
             var data = new Object();
             data.verticalEdge='right';
             data.horizontalEdge='bottom';
@@ -96,7 +97,6 @@ function adminAssignTaskProcessingController($scope,$state, $http, authService, 
             $.notific8($("#sms-success").val(), data);
             $scope.tasksList.map(function (shipper) {
                 var i= 0, n=shipper.tasks.length;
-
                 while(i<n) {
                     var task = shipper.tasks[i];
                     var oldTask = $.grep($scope.oldTasks, function(e){ return e.taskid ==  task.taskid;});
@@ -116,7 +116,7 @@ function adminAssignTaskProcessingController($scope,$state, $http, authService, 
             getOldTask();
                 //$http.put(config.baseURI + "/api/updateTaskNoShipper", $scope.taskNoShipper);
 
-        }, function (error) {
+        }).catch(function (error) {
             var data = new Object();
             data.verticalEdge='right';
             data.horizontalEdge='bottom';
@@ -282,5 +282,5 @@ function adminAssignTaskProcessingController($scope,$state, $http, authService, 
 
 
 }
-adminAssignTaskProcessingController.$inject = ['$scope','$state', '$http', 'authService', 'config', '$stateParams'];
+adminAssignTaskProcessingController.$inject = ['$scope','$state', '$http', 'authService', 'config', '$stateParams','dataService'];
 angular.module('app').controller('adminAssignTaskProcessingController',adminAssignTaskProcessingController);
