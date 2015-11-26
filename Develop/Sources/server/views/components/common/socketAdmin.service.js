@@ -85,7 +85,7 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
         });
         $rootScope.$emit("admin:issue:newIssue", data.msg);
 
-        $rootScope.notify(data.msg.notification);
+        $rootScope.notify(data.msg.notification, 1);
     });
 
     socketService.on('admin::issue:disconnected', function(data) {
@@ -95,7 +95,7 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
         });
         $rootScope.$emit("admin:issue:newIssue", data.msg);
 
-        $rootScope.notify(data.msg);
+        $rootScope.notify(data.msg, 1);
     });
     //admin::issue:cancelorder
     socketService.on('admin::issue:cancelorder', function(data) {
@@ -103,7 +103,7 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
         getUnreadMail().then(function () {
             $rootScope.$emit("admin:issue:newIssue", data.msg);
         });
-        $rootScope.notify(data.msg);
+        $rootScope.notify(data.msg, 1);
     });
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();        
