@@ -2,7 +2,7 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminIssueBoxController($scope,$state, $http, $filter, config, $rootScope, dataService) {
+function adminIssueBoxController($scope,$state, $http, $filter, config, $rootScope, dataService, socketAdmin) {
     //alert(0);
     getDataFromSever();
 
@@ -14,8 +14,10 @@ function adminIssueBoxController($scope,$state, $http, $filter, config, $rootSco
         dataService.getDataServer(config.baseURI + "/api/getAllIssue").then(function(response){
             $scope.issueList = response.data;
             $scope.issueList.sort( $scope.sortByDate);
+
+            $scope.unreadMail = 0;
             $scope.issueList.map(function (issue) {
-                if (!issue.isresolved) $rootScope.unreadMail++;
+                if (!issue.isresolved)  $scope.unreadMail++;
             })
             //$scope.displayedOrderCollection = [].concat($scope.orderList);
             //console.log($scope.issueList)
@@ -66,18 +68,11 @@ function adminIssueBoxController($scope,$state, $http, $filter, config, $rootSco
 
     // START Listen to socket changes
     $rootScope.$on("admin:issue:newIssue", function(event, args){
-        dataService.getDataServer(config.baseURI + "/api/getAllIssue").then(function(response){
-            $scope.issueList = response.data;
-            $scope.issueList.sort( $scope.sortByDate);
-            $rootScope.unreadMail=0;
-            $scope.issueList.map(function (issue) {
-                if (!issue.isresolved) $rootScope.unreadMail++;
-            })
+            $scope.unreadMail = socketAdmin.unreadMail;
             //$scope.displayedOrderCollection = [].concat($scope.orderList);
             //console.log($scope.issueList)
-        })
     });
 }
 
-adminIssueBoxController.$inject = ['$scope','$state', '$http', '$filter','config','$rootScope','dataService'];
+adminIssueBoxController.$inject = ['$scope','$state', '$http', '$filter','config','$rootScope','dataService','socketAdmin'];
 angular.module('app').controller('adminIssueBoxController',adminIssueBoxController);

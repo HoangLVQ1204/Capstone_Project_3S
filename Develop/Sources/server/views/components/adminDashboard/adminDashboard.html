@@ -6,11 +6,11 @@
                         <div class="widget-tile">
                             <section>
                                 <h5><strong>AVAILABLE</strong> SHIPPER </h5>
-                                <h2>{{$root.onlineShipper}}</h2>
+                                <h2>{{onlineShipper}}</h2>
                                 <div class="progress progress-xs progress-white progress-over-tile">
                                     <div class="progress-bar progress-bar-white" aria-valuetransitiongoal="8590" aria-valuemax="10000"></div>
                                 </div>
-                                <label class="progress-label label-white"> <strong>{{totalShipper - $root.onlineShipper}} shippers is offline now</strong> </label>
+                                <label class="progress-label label-white"> <strong>{{totalShipper - onlineShipper}} shippers is offline now</strong> </label>
                             </section>
                             <div class="hold-icon"><i class="fa fa-truck"></i></div>
                         </div>
@@ -168,7 +168,7 @@
                             <div id="sectionB" class="tab-pane fade">
                                 <section class="panel">
                                     <header class="panel-heading">
-                                        <h3><strong>Completed</strong> Order </h3>
+                                        <h3><strong>Active</strong> Task </h3>
                                     </header>
                                     <div class="panel-body">
                                         <form>
@@ -266,7 +266,7 @@
                             <div id="sectionC" class="tab-pane fade ">
                                 <section class="panel">
                                     <header class="panel-heading">
-                                        <h3><strong>Draft</strong> Order </h3>
+                                        <h3><strong>Done</strong> Task </h3>
                                     </header>
                                     <div class="panel-body">
                                         <form>
@@ -363,7 +363,7 @@
                             <div id="sectionD" class="tab-pane fade ">
                                 <section class="panel">
                                     <header class="panel-heading">
-                                        <h3><strong>Draft</strong> Order </h3>
+                                        <h3><strong>Fail</strong> Task </h3>
                                     </header>
                                     <div class="panel-body">
                                         <form>

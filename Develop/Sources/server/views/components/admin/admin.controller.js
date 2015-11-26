@@ -2,7 +2,7 @@
  * Created by hoanglvq on 9/22/15.
  */
 
-function adminController($scope,$state,$http,$q,$rootScope,config,socketService,authService){
+function adminController($scope,$state,$http,$q,$rootScope,config,socketService,authService,socketAdmin){
 
 
     $scope.getUser = function(){
@@ -18,6 +18,9 @@ function adminController($scope,$state,$http,$q,$rootScope,config,socketService,
         });
     };
     //$scope.getUser();
+    $scope.unreadMail = socketAdmin.unreadMail;
+    //console.log( socketAdmin.unreadMail);
+
     authService.getProfileUser().then(function (admin) {
         $scope.admin = admin.data;
         console.log($scope.admin);
@@ -47,8 +50,14 @@ function adminController($scope,$state,$http,$q,$rootScope,config,socketService,
         });
         caplet();
     });
+    // START Listen to socket changes
+    $rootScope.$on("admin:issue:newIssue", function(event, args){
+            $scope.unreadMail = socketAdmin.unreadMail;
+            //$scope.displayedOrderCollection = [].concat($scope.orderList);
+            console.log(socketAdmin.unreadMail);
+    });
 }
 
-adminController.$inject = ['$scope','$state','$http','$q','$rootScope','config','socketService','authService'];
+adminController.$inject = ['$scope','$state','$http','$q','$rootScope','config','socketService','authService','socketAdmin'];
 angular.module('app').controller('adminController',adminController);
 
