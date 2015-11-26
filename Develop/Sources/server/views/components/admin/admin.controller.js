@@ -6,36 +6,31 @@ function adminController($scope,$state,$http,$q,$rootScope,config,socketService,
 
 
     $scope.getUser = function(){
-        console.log("get Users");
         return $http({
             url: config.baseURI + '/api/user/:user',
             method: 'GET'
         }).then(function(data){
             $scope.data  = data;
-            console.log('AAAA',$scope.data);
         }).catch(function(error){
             console.log(error);
         });
     };
-    //$scope.getUser();
+
     $scope.unreadMail = socketAdmin.unreadMail;
-    //console.log( socketAdmin.unreadMail);
+
 
     authService.getProfileUser().then(function (admin) {
         $scope.admin = admin.data;
-        console.log($scope.admin);
     });
 
 
     $scope.signOut = function(){
-        console.log("log out");
         socketService.disconnect();
         authService.signOut();
         $state.go("login");
     }
 
     $scope.$watch('$viewContentLoaded', function(event) {
-
         $('nav#menu-ver').mmenu({
             searchfield   :  false,
             slidingSubmenus	: false
@@ -50,12 +45,7 @@ function adminController($scope,$state,$http,$q,$rootScope,config,socketService,
         });
         caplet();
     });
-    // START Listen to socket changes
-    $rootScope.$on("admin:issue:newIssue", function(event, args){
-            $scope.unreadMail = socketAdmin.unreadMail;
-            //$scope.displayedOrderCollection = [].concat($scope.orderList);
-            console.log(socketAdmin.unreadMail);
-    });
+
 }
 
 adminController.$inject = ['$scope','$state','$http','$q','$rootScope','config','socketService','authService','socketAdmin'];

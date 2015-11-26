@@ -14,7 +14,8 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
     api.listShippers = [];
     api.listOnlineShipper = [];
 
-    api.unreadMail = 0;
+    $rootScope.unreadMail = 0;
+
     getUnreadMail();
     /*
         add handlers
@@ -76,12 +77,10 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
     });
 
     socketService.on('admin:issue:notification', function(data) {
-        console.log('admin:issue:notification', data);
         getUnreadMail().then(function () {
             $rootScope.$emit("admin:issue:newIssue", data.msg);
         });
         $rootScope.$emit("admin:issue:newIssue", data.msg);
-
         $rootScope.notify(data.msg.notification, 1);
     });
 
@@ -221,20 +220,15 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
     };
 
     function getUnreadMail() {
-        api.unreadMail=0;
-        //console.log('AAAAAA');
+        $rootScope.unreadMail=0;
         return dataService.getDataServer(config.baseURI + "/api/getAllIssue").then(function(response){
             var issueList = response.data;
 
             issueList.map(function (issue) {
-                if (!issue.isresolved) api.unreadMail++;
+                if (!issue.isresolved) $rootScope.unreadMail++;
             });
-            console.log('unreadMail', api.unreadMail)
-            //$scope.displayedOrderCollection = [].concat($scope.orderList);
+
         });
-            //console.log('BBBBBBBBB')
-
-
     }
 
     return api;
