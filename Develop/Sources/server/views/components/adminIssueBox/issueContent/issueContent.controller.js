@@ -158,7 +158,7 @@ function issueContentController($scope,$stateParams, dataService, authService,co
         //console.log($scope.issue);
             $scope.issue.orderissues.map(function (issue) {
                 //issue.order.tasks[0].statusid = 5;//fail task
-                issue.order.statusid= 7;//cancel order
+                issue.order.statusid= 8;//cancel order
                 issue.order.fee= parseInt(issue.order.fee) * 0.1;//cancel order
                 issue.order.iscancel= false;//cancel order
             })
