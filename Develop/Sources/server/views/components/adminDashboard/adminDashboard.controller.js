@@ -47,15 +47,11 @@ function adminDashboardController($scope,$state,dataService, config, $rootScope,
     $scope.totalTaskToday = 0;
     $scope.totalDoneToday = 0;
 
-    //$scope.onlineShipper = $rootScope.onlineShipper;
-    //alert($rootScope.onlineShipper);
-
     getDataFromServer();
 
     function getDataFromServer() {
         var urlBase = config.baseURI + "/api/getTaskList";
-        //console.log(socketAdmin.onlineShipperList);
-        $scope.onlineShipper = socketAdmin.onlineShipperList.length;
+        $scope.onlineShipper = socketAdmin.listOnlineShipper.length;
         dataService.getDataServer(urlBase)
             .then(function (rs) {
                 //console.log(rs);
@@ -120,23 +116,11 @@ function adminDashboardController($scope,$state,dataService, config, $rootScope,
         }
     };
 
-
-    // START Listen to socket changes
     $rootScope.$on("admin:dashboard:getShipperList", function(event, args){
 
-        $scope.onlineShipper = socketAdmin.onlineShipperList.length;
+        $scope.onlineShipper = socketAdmin.listOnlineShipper.length;
 
     });
-
-    //setTimeout(function () {
-    //
-    //    $scope.onlineShipper = 9;
-    //    $scope.$apply();
-    //    console.log('AAAAA');
-    //
-    //},2000)
-    // END listen to socket changes
-
 }
 
 

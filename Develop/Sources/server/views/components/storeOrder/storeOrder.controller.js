@@ -110,7 +110,7 @@ function storeOrderController($scope, dataService, config, socketService, socket
             $("#addGoodModal").submit(function(e){
                 e.preventDefault();
                 $scope.currentWeight = calculateWeight($scope.goods) + $scope.good.weight*$scope.good.amount;
-                if($scope.currentWeight>30000){
+                if($scope.currentWeight > 30000){
                     var temp = {
                       type: 'issue',
                       title: 'OOPS!',
@@ -156,7 +156,7 @@ function storeOrderController($scope, dataService, config, socketService, socket
         });
 
 
-    });    
+    });
     $scope.newGood = {};
     var index;
     $scope.setGood = function(good,clickedIndex){
@@ -165,6 +165,8 @@ function storeOrderController($scope, dataService, config, socketService, socket
         index = clickedIndex;
         $scope.currentWeight = calculateWeight($scope.goods);
     };
+
+
 
     $scope.refreshGood = function(){
         $scope.good ={};

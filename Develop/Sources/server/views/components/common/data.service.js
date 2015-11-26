@@ -7,13 +7,16 @@ angular.module('app').factory('dataService', ['$http','$state',function ($http,$
     var dataFactory = {};
 
     function errorHandle(err){
+
         if(err.status == 401){
+
             var tag = 'EHID';
             window.localStorage.removeItem(tag);
-            $state.go("login");
-        }else{
-            throw err;
+            location.href = '#/auth/login';
+
         }
+
+        throw err;
     }
 
     dataFactory.getDataServer = function (urlBase) {
