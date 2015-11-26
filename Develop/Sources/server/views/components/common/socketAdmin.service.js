@@ -10,38 +10,38 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
     var currentLocation = null;
 
     var api = {};
-    api.onlineShipperList = [];
+
+    api.listShippers = [];
+    api.listOnlineShipper = [];
+
     api.unreadMail = 0;
     getUnreadMail();
     /*
         add handlers
     */
-    
-    socketService.on('admin:register:location', function(data) {
 
-        mapService.setMapData(data.msg.mapData)
-        .then(function() {
-                //console.log('register', data);
-            });
+    function updateListShipper(data){
+        api.listShippers = data;
+        api.listOnlineShipper = [];
+        data.map(function (shipper) {
 
-        //$rootScope.onlineShipper = 0;
+            if (shipper.isConnected) api.listOnlineShipper.push(shipper);
 
-        data.msg.shipperList.map(function (shipper) {
-
-            if (shipper.isConnected) api.onlineShipperList.push(shipper);
         });
+    }
 
+    socketService.on('admin:register:location', function(data) {
+        mapService.setMapData(data.msg.mapData);
+        updateListShipper(data.msg.shipperList);
     });
 
-    socketService.on('admin:add:shipper', function(data) {   
-       // console.log('admin:add:shipper', data);
+    socketService.on('admin:add:shipper', function(data) {
         mapService.addShipper(data.msg.shipper);
-        api.onlineShipperList.push(data.msg.shipper);
+        updateListShipper(data.msg.shipperList);
         $rootScope.$emit("admin:dashboard:getShipperList", data.msg.shipperList);
     });
 
-    socketService.on('admin:add:store', function(data) { 
-        // console.log('admin:add:store', data);       
+    socketService.on('admin:add:store', function(data) {
         mapService.addStore(data.msg.store);
     });
 
@@ -54,7 +54,6 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
     });
 
     socketService.on('admin:update:shipper', function(data) {
-        console.log('admin:update:shipper', data);
         var shipper = data.msg.shipper;
         mapService.updateShipper(shipper);
 
@@ -62,8 +61,7 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
 
     socketService.on('admin:delete:shipper', function(data) {
         var shipper = data.msg.shipper;
-        var index = api.onlineShipperList.indexOf(shipper);
-        api.onlineShipperList.splice(index,1);
+        updateListShipper(data.msg.shipperList);
         mapService.deleteShipper(shipper.shipperID);
         $rootScope.$emit("admin:dashboard:getShipperList", data.msg.shipperList);
     });
@@ -96,7 +94,7 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
 
         $rootScope.notify(data.msg, 1);
     });
-    //admin::issue:cancelorder
+
     socketService.on('admin::issue:cancelorder', function(data) {
         console.log("admin::issue:cancelorder", data);
         getUnreadMail().then(function () {
@@ -104,6 +102,7 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
         });
         $rootScope.notify(data.msg, 1);
     });
+
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();        
         // TODO: Change later

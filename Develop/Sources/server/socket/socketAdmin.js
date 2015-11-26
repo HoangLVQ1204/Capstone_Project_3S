@@ -115,12 +115,5 @@ module.exports = function(socket, io, app) {
 
 
     });
-    // socket.on('admin:filter:shipper', function(data) {
-    // 	data.shippers.forEach(function(shipper) {    		
-    // 		io.sockets.connected[shipper.socketID].emit('shipper:choose:express', {
-    // 			distance: shipper.distance,
-    // 			storeSocket: data.storeSocket
-    // 		});
-    // 	});  	
-    // });
+
 }
