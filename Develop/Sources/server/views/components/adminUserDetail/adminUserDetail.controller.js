@@ -2,14 +2,14 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminUserDetailController($scope,$state, $http, $filter, config, $stateParams) {
+function adminUserDetailController($scope,$state, dataService, $filter, config, $stateParams) {
     $scope.username = $stateParams.username; //getting fooVal
     var smsData = {verticalEdge: 'right',
         horizontalEdge: 'bottom'};
     //$scope.newShipper.profile.dob = null;
 
-    $http.get(config.baseURI + "/api/user/" + $scope.username).success(function(response){
-        $scope.user = response;
+    dataService.getDataServer(config.baseURI + "/api/user/" + $scope.username).then(function(response){
+        $scope.user = response.data;
         //$scope.shipper.dob =  new Date($scope.shipper.dob,;
         //console.log(response);
     })
@@ -21,14 +21,13 @@ function adminUserDetailController($scope,$state, $http, $filter, config, $state
         var valid = $('#formID').parsley( 'validate' );
         if (!valid) return;
         //console.log($scope.user.profile);
-        $http.put(config.baseURI + "/api/userProfile/" + $scope.user.username,  $scope.user.profile).success(function(response){
+        dataService.putDataServer(config.baseURI + "/api/userProfile/" + $scope.user.username,  $scope.user.profile).then(function(response){
             smsData.theme="theme-inverse";
             $.notific8($("#sms-success").val(), smsData);
-        },function (error) {
+        }) .catch(function(error){
             smsData.theme="danger";
-            //data.sticky="true";
             $.notific8($("#sms-fail").val(), smsData);
-            console.log(error)
+            console.log(error);
         })
     }
 
@@ -44,5 +43,5 @@ function adminUserDetailController($scope,$state, $http, $filter, config, $state
 
 }
 
-adminUserDetailController.$inject = ['$scope','$state', '$http', '$filter', 'config', '$stateParams'];
+adminUserDetailController.$inject = ['$scope','$state', 'dataService', '$filter', 'config', '$stateParams'];
 angular.module('app').controller('adminUserDetailController',adminUserDetailController);

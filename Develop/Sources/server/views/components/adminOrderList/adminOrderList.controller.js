@@ -2,7 +2,7 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminOrderListController($scope,$state, $http, $filter, config) {
+function adminOrderListController($scope,$state, dataService, $filter, config) {
 
     $scope.orderList = [];
     var smsData = {verticalEdge: 'right',
@@ -10,7 +10,7 @@ function adminOrderListController($scope,$state, $http, $filter, config) {
     $scope.orderStatusClass = {
         'Done': 'label-success',
         'Waiting': 'label-warning',
-        'Canceling': 'label-danger',
+        //'Canceling': 'label-danger',
         'Delivering': 'label-success',
         'Picking up': 'label-default',
         'Bring to stock': 'label-default',
@@ -54,8 +54,8 @@ function adminOrderListController($scope,$state, $http, $filter, config) {
     $scope.selectedDate = $scope.dateOptions[0];
     $scope.dateRange = '';
 
-    $http.get(config.baseURI + "/api/getAllOrder").success(function(response){
-        $scope.orderList = response;
+    dataService.getDataServer(config.baseURI + "/api/getAllOrder").then(function(response){
+        $scope.orderList = response.data;
         $scope.orderList.sort(function (a,b) {
             if (a.completedate < b.completedate) return -1;
             if (a.completedate > b.completedate) return 1;
@@ -78,5 +78,5 @@ function adminOrderListController($scope,$state, $http, $filter, config) {
 
 }
 
-adminOrderListController.$inject = ['$scope','$state', '$http', '$filter', 'config'];
+adminOrderListController.$inject = ['$scope','$state', 'dataService', '$filter', 'config'];
 angular.module('app').controller('adminOrderListController',adminOrderListController);

@@ -11,6 +11,8 @@ angular.module('app').factory('dataService', ['$http','$state',function ($http,$
             var tag = 'EHID';
             window.localStorage.removeItem(tag);
             $state.go("login");
+        }else{
+            throw err;
         }
     }
 

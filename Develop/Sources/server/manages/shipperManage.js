@@ -167,9 +167,10 @@ module.exports = function (app) {
         var Goods = db.goods;
         var Task = db.task;
         var Store = db.store;
+        var Stock = db.stock;
         var shipper = _.cloneDeep(req.user);
         var shipperid = shipper.username;
-        Order.getOrderDetailById(detailtaskid, shipperid, OrderStatus, Goods, Task, Store)
+        Order.getOrderDetailById(detailtaskid, shipperid, OrderStatus, Goods, Task, Store, Stock)
             .then(function (rs) {
                 if (rs) {
                     rs = rs.toJSON();
@@ -249,12 +250,13 @@ module.exports = function (app) {
                             isRequireCode = st.requiredcode;
                         }
                     }
-                    var completeDate = (nextStatus == 7)? new Date(): orderObj.completedate;
+                    var completeDate = (nextStatus == configConstant.doneStatus)? new Date(): orderObj.completedate;
+                    var stockID = (nextStatus == configConstant.inStockStatus)? configConstant.stockID : null;
                     if (isRequireCode) {
                         db.confirmationcode.checkCode(key, data.confirmcode, orderObj.statusid)
                             .then(function (codeObj) {
                             if (codeObj) {
-                                orderObj.updateOrderStatus(nextStatus, completeDate)
+                                orderObj.updateOrderStatus(nextStatus, completeDate, stockID)
                                     .then(function (rs) {
                                     if(oldStatus == pickUpStatusID){
                                         db.profile.getProfileUser(shipperid).then(function(profile){
@@ -272,18 +274,14 @@ module.exports = function (app) {
                                         db.notification.addNotification(msg);
                                     });
                                     if(oldStatus == taskBegin.statusid){
-                                        Task.updateTaskStatus(2, taskid, shipperid).then(function (ok) {
-                                            //addStoreToShipperRoom(orderObj.storeid, shipperid);
-                                            //addOrderIntoSocket(orderObj.orderid, orderObj.storeid, shipperid);
+                                        Task.updateTaskStatus(configConstant.taskActive, taskid, shipperid).then(function (ok) {
                                             server.socket.startTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
                                             return res.status(200).json("Your task was active!");
                                         },function(er){
                                             return res.status(400).json("Sorry! Something went wrong!");
                                         });
                                     }else if(nextStatus == taskDone.statusid){
-                                        Task.updateTaskStatus(3,taskid,shipperid).then(function(ok){
-                                            //removeStoreFromShipperRoom(orderObj.storeid, shipperid);
-                                            //removeOrderInSocket(orderObj.orderid);
+                                        Task.updateTaskStatus(configConstant.taskDone,taskid,shipperid).then(function(ok){
                                             server.socket.finishTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
                                             return res.status(200).json("Your task was done!");
                                         },function(er){
@@ -302,7 +300,7 @@ module.exports = function (app) {
                             return res.status(400).json("Wrong Code!");
                         });
                     } else {
-                        orderObj.updateOrderStatus(nextStatus, completeDate)
+                        orderObj.updateOrderStatus(nextStatus, completeDate, stockID)
                             .then(function (rs) {
                             server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
                             db.managestore.getUsersByStoreID(orderObj.storeid).then(function(rs){
@@ -312,18 +310,14 @@ module.exports = function (app) {
                                 db.notification.addNotification(msg);
                             });
                             if(oldStatus == taskBegin.statusid){
-                                Task.updateTaskStatus(nextStatus,taskid,shipperid).then(function(ok){
-                                    //addStoreToShipperRoom(orderObj.storeid, shipperid);
-                                    //addOrderIntoSocket(orderObj.orderid, orderObj.storeid, shipperid);
+                                Task.updateTaskStatus(configConstant.taskActive,taskid,shipperid).then(function(ok){
                                     server.socket.startTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
                                     return res.status(200).json("Your task was active!");
                                 },function(er){
                                     return res.status(400).json("Sorry! Something went wrong!");
                                 });
                             }else if(nextStatus == taskDone.statusid){
-                                Task.updateTaskStatus(nextStatus,taskid,shipperid).then(function(ok){
-                                    //removeStoreFromShipperRoom(orderObj.storeid, shipperid);
-                                    //removeOrderInSocket(orderObj.orderid);
+                                Task.updateTaskStatus(configConstant.taskDone,taskid,shipperid).then(function(ok){
                                     server.socket.finishTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
                                     return res.status(200).json("Your task was done!");
                                 },function(er){

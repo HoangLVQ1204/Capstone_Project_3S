@@ -2,7 +2,7 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function issueContentController($scope,$stateParams, $http, authService,config, $rootScope ,socketAdmin, $state) {
+function issueContentController($scope,$stateParams, dataService, authService,config, $rootScope ,socketAdmin, $state) {
     //$rootScope.$state = $state;
     //$rootScope.$stateParams = $stateParams;
 
@@ -14,8 +14,8 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
 
     $scope.issue = [];
 
-    $http.get(config.baseURI + "/api/getIssueContent?issueid=" + $scope.issueid).success(function(response){
-        $scope.issue = response;
+    dataService.getDataServer(config.baseURI + "/api/getIssueContent?issueid=" + $scope.issueid).then(function(response){
+        $scope.issue = response.data;
         $scope.issue.orderissues.map(function (order) {
             order.order.tasks.sort(dateSort);
             order.order.tasks.splice(1,order.order.tasks.length-1);
@@ -32,8 +32,8 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
     $scope.updateResolve = function () {
         var promise=[];
 
-            promise.push($http.get(config.baseURI + "/api/countProcessingTaskOfShipper?shipperid=" + $scope.issue.orderissues[0].order.tasks[0].shipperid).success(function(response){
-                $scope.processingTask = response;
+            promise.push(dataService.getDataServer(config.baseURI + "/api/countProcessingTaskOfShipper?shipperid=" + $scope.issue.orderissues[0].order.tasks[0].shipperid).then(function(response){
+                $scope.processingTask = response.data;
             }))
 
         //if (promise)
@@ -86,7 +86,7 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
 
     //resolve pending issue
     function resolveIssue(){
-        return $http.put(config.baseURI + "/api/updateResolveIssue?issueid=" + $scope.issueid, $scope.issue).success(function(response){
+        return dataService.putDataServer(config.baseURI + "/api/updateResolveIssue?issueid=" + $scope.issueid, $scope.issue).then(function(response){
             //$scope.issue = response;
             $scope.issue.isresolved = true;
             var result = $.grep($scope.$parent.issueList, function(e){ return e.issueid == $scope.issueid; });
@@ -100,9 +100,8 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
             $("#md-effect-block").attr('class','modal fade').addClass(smsData.effect).modal('hide');
             //$scope.displayedOrderCollection = [].concat($scope.orderList);
             //console.log($scope.issueList)
-        },function (error) {
+        }).catch(function (error) {
             smsData.theme="danger";
-            //data.sticky="true";
             $.notific8($("#sms-fail").val(), smsData);
             //console.log(error)
         })
@@ -118,16 +117,15 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
                 issue.order.orderstatus.statusname= 'Cancel';//cancel order
             })
             //console.log($scope.issue.orderissues);
-            $http.put(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue).then(function success(response){
+            dataService.putDataServer(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue).then(function success(response){
                 var promises = resolveIssue();
                 promises.then(function () {
                     socketAdmin.issueMessage($scope.issue);
                 })
-            },function (error) {
+            }).catch(function (error) {
                 smsData.theme="danger";
-                //data.sticky="true";
                 $.notific8($("#sms-fail").val(), smsData);
-                console.log(error)
+                console.log(error);
             })
         };
         if ($scope.issue.typeid == 5 || $scope.issue.typeid == 7){
@@ -138,7 +136,7 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
                 issue.order.statusid= 6;//cancel order
                 if ($scope.issue.typeid == 7) issue.order.iscancel= false;//cancel order
                 issue.order.orderstatus.statusname= 'Canceling';//cancel order
-                promise.push($http.put(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue));
+                promise.push(dataService.putDataServer(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue));
             });
 
             Promise.all(promise).then(function success(response){
@@ -147,9 +145,8 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
                     socketAdmin.issueMessage($scope.issue)
                 })
 
-            },function (error) {
+            }).catch(function (error) {
                 smsData.theme="danger";
-                //data.sticky="true";
                 $.notific8($("#sms-fail").val(), smsData);
                 console.log(error)
             })
@@ -166,15 +163,14 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
                 issue.order.iscancel= false;//cancel order
             })
             //console.log($scope.issue.orderissues);
-            $http.put(config.baseURI + "/api/updateStateOfStoreCancelIssue", $scope.issue).then(function success(response){
+            dataService.putDataServer(config.baseURI + "/api/updateStateOfStoreCancelIssue", $scope.issue).then(function success(response){
 
                 var promise = resolveIssue();
                 promise.then(function () {
                     socketAdmin.issueMessage($scope.issue)
                 })
-            },function (error) {
+            }).catch(function (error) {
                 smsData.theme="danger";
-                //data.sticky="true";
                 $.notific8($("#sms-fail").val(), smsData);
                 console.log(error)
             })
@@ -190,14 +186,13 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
             //issue.order.fee= parseInt(issue.order.fee) * 0.1;//cancel order
         })
         //console.log($scope.issue.orderissues);
-        $http.put(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue).then(function success(response){
+        dataService.putDataServer(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue).then(function success(response){
             var promises = resolveIssue();
             promises.then(function () {
                 socketAdmin.issueMessage($scope.issue)
             })
-        },function (error) {
+        }).catch(function (error) {
             smsData.theme="danger";
-            //data.sticky="true";
             $.notific8($("#sms-fail").val(), smsData);
             console.log(error)
         })
@@ -213,14 +208,13 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
             //issue.order.fee= parseInt(issue.order.fee) * 0.1;//cancel order
         })
         //console.log($scope.issue.orderissues);
-        $http.put(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue).then(function success(response){
+        dataService.putDataServer(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue).then(function success(response){
             var promise = resolveIssue();
             promise.then(function () {
                 socketAdmin.issueMessage($scope.issue)
             })
-        },function (error) {
+        }).catch(function (error) {
             smsData.theme="danger";
-            //data.sticky="true";
             $.notific8($("#sms-fail").val(), smsData);
             console.log(error)
         })
@@ -256,5 +250,5 @@ function issueContentController($scope,$stateParams, $http, authService,config, 
 
 }
 
-issueContentController.$inject = ['$scope','$stateParams', '$http', 'authService','config','$rootScope', 'socketAdmin','$state'];
+issueContentController.$inject = ['$scope','$stateParams', 'dataService', 'authService','config','$rootScope', 'socketAdmin','$state'];
 angular.module('app').controller('issueContentController',issueContentController);

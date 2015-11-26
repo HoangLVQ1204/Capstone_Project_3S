@@ -193,6 +193,11 @@ angular.module('app', [
             access: config.role.admin
         })
 
+        .state('admin.notification',{
+            url: '/notification',
+            template: '<notification-list></notification-list>',
+            access: config.role.admin
+        })
 
         .state('store',{
             abstract: true,
@@ -589,15 +594,11 @@ angular.module('app', [
     // END - combo functions
 
     $rootScope.displayInfoShipper = function(profileShipper,inforOrder){
-        console.log("displayInfoShipper");
         $rootScope.inforShipper = {
             profileShipper : profileShipper,
             inforOrder: inforOrder
         }
-        console.log($rootScope.inforShipper);
-        console.log("displayInfoShipper");
         $("#displayInforShipper").modal("show");
-
     }
 
     if(authService.isLogged()){
