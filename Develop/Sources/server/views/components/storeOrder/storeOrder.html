@@ -296,12 +296,12 @@
                         <div class="pull-left col-md-8">
                             <section>
                               <div class="form-group column col-md-7 align-left">
-                                <div><h5>Curent weight: </h5></div>
+                                <div><h5>Total Current weight: </h5></div>
                                 <div ng-if="currentWeight<=30000"><h5>You can add more: </h5></div>
                                 <div ng-if="currentWeight >30000"><h5>Overweight: </h5></div>
                             </div>
                             <div class="form-group column align-left">            
-                                <div><h5>{{((good.weight * good.amount) + currentWeight) |number}} Gram</h5></div>
+                                <div><h5>{{currentWeight|number}} Gram</h5></div>
                                 <div ng-if="currentWeight<=30000"><h5>{{30000 - currentWeight | number}} Gram</h5></div>
                                 <div ng-if="currentWeight>30000"><h5>{{currentWeight-30000 | number}} Gram</h5></div>
                             </div>
@@ -376,12 +376,12 @@
                         <div class="pull-left col-md-8">
                             <section>
                               <div class="form-group column col-md-7 align-left">
-                                <div><h5>Curent weight: </h5></div>
+                                <div><h5>Current weight: </h5></div>
                                 <div ng-if="currentWeight<=30000"><h5>You can add more: </h5></div>
                                 <div ng-if="currentWeight >30000"><h5>Overweight: </h5></div>
                             </div>
                             <div class="form-group column align-left">            
-                                <div><h5>{{(currentWeight- (good.weight * good.amount) + (newGood.weight * newGood.amount)) |number}} Gram</h5></div>
+                                <div><h5>{{currentWeight|number}} Gram</h5></div>
                                 <div ng-if="currentWeight<=30000"><h5>{{30000 - currentWeight | number}} Gram</h5></div>
                                 <div ng-if="currentWeight>30000"><h5>{{currentWeight-30000 | number}} Gram</h5></div>
                             </div>

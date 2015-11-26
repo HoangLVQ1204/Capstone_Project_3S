@@ -109,18 +109,17 @@ function storeOrderController($scope, dataService, config, socketService, socket
             //////////////////////////////////////
             $("#addGoodModal").submit(function(e){
                 e.preventDefault();
-
-                if((calculateWeight($scope.goods) + $scope.good.weight * $scope.good.amount) > 30000){
+                $scope.currentWeight = calculateWeight($scope.goods) + $scope.good.weight*$scope.good.amount;
+                if($scope.currentWeight > 30000){
                     var temp = {
                       type: 'issue',
                       title: 'OOPS!',
                       content: 'Over weight! Total weight <= 300000 gram',
-                      url: ''
+                      url: '',
                   };
                   $rootScope.notify(temp);
               } else
               if($(this).parsley( 'validate' )){
-
                 addGood();                    
             }
         });
@@ -157,15 +156,12 @@ function storeOrderController($scope, dataService, config, socketService, socket
         });
 
 
-    });    
+    });
     $scope.newGood = {};
     var index;
     $scope.setGood = function(good,clickedIndex){
         $scope.good = good;
-
         $scope.newGood = (JSON.parse(JSON.stringify(good)));
-        $scope.newGood.amount = 0;
-        $scope.newGood.weight = 0;
         index = clickedIndex;
         $scope.currentWeight = calculateWeight($scope.goods);
     };
@@ -174,8 +170,6 @@ function storeOrderController($scope, dataService, config, socketService, socket
 
     $scope.refreshGood = function(){
         $scope.good ={};
-        $scope.good.amount = 0;
-        $scope.good.weight = 0;
         $scope.currentWeight = calculateWeight($scope.goods);
     }
 
@@ -192,7 +186,6 @@ function storeOrderController($scope, dataService, config, socketService, socket
     }
 
     function addGood(){
-        //$scope.currentWeight = calculateWeight($scope.goods) + $scope.good.weight * $scope.good.amount;
         $scope.good.goodID = bigestGoodId;
         $scope.goods.push($scope.good);
         $scope.order.overWeightFee = calculateOverWeightFee($scope.selectedDistrict.districtid,$scope.goods);
