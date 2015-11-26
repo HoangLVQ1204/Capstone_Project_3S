@@ -82,7 +82,7 @@
       </div>
     </div>
     <button ng-repeat="status in statuslist"
-            ng-if="status.statusid == order.statusid && status.nextAction" class="button button-full button-positive"
+            ng-if="status.statusid == order.statusid && status.nextAction && order.tasks[0].statusid != 5" class="button button-full button-positive"
             ng-click="showConfirm(order.statusid, status.nextAction)">{{status.nextAction}}
     </button>
     <!--</ion-content>-->
