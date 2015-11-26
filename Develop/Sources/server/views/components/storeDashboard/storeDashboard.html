@@ -162,12 +162,12 @@
                                                     <td width="8%">{{x.ordertype}}</td>
 
                                                     <td width="9%">
-                                                        <span ng-if="x.statusname == 'Waiting'" class="label label-warning">{{x.statusname}}</span>
-                                                        <span ng-if="x.statusname =='Canceling'" class="label label-danger">{{x.statusname}} </span>    
-                                                        <span ng-if="x.statusname =='Delivering'" class="label label-success">{{x.statusname}} </span>
-                                                        <span ng-if="x.statusname =='Picking up'" class="label label-default">{{x.statusname}} </span>
-                                                        <span ng-if="x.statusname =='Bring to stock'" class="label label-default">{{x.statusname}} </span>
-                                                        <span ng-if="x.statusname =='In stock'" class="label label-default">{{x.statusname}} </span>
+                                                        <span ng-if="x.statusname == 'Waiting' && !x.iscancel" class="label label-warning">{{x.statusname}}</span>
+                                                        <span ng-if="x.iscancel" class="label label-danger">Canceling </span>
+                                                        <span ng-if="x.statusname =='Delivering' && !x.iscancel" class="label label-success">{{x.statusname}} </span>
+                                                        <span ng-if="x.statusname =='Picking up' && !x.iscancel" class="label label-default">{{x.statusname}} </span>
+                                                        <span ng-if="x.statusname =='Bring to stock' && !x.iscancel" class="label label-default">{{x.statusname}} </span>
+                                                        <span ng-if="x.statusname =='In stock' && !x.iscancel" class="label label-default">{{x.statusname}} </span>
                                                         
                                                     </td>
                                                     <td width="10%">
@@ -175,7 +175,7 @@
                                                     <a class="btn btn-default btn-sm"
                                                        title="View detail" ui-sref="store.orderdetail({orderid: x.orderid})"><i class="fa fa-eye "></i></a>
 
-                                                    <a ng-disabled ="x.statusname == 'Canceling'" ng-click="setOrder(x)" data-toggle="modal"
+                                                    <a ng-disabled ="x.iscancel" ng-click="setOrder(x)" data-toggle="modal"
                                                        data-target="#md-cancel-order" class="btn btn-default btn-sm"
                                                        title="Cancel"><i class="fa fa-times"></i></a>
                                                     </span>
@@ -497,19 +497,8 @@
                                 </div>
                                 <!-- //modal-footer-->
                             </div>
-                            <!--///////////////////////////////////////////////////////
-                               /////////////////////   SUCCESS DELETE ALERT   /////////////////
-                               ///////////////////////////////////////////////////////////
-                               -->
-                                <textarea class="form-control success" id="smsDeleted" rows="5" style="display:none">
-                                    Order <strong>{{Order.orderid}}</strong> has been deleted successfully!
-                                </textarea>
-
-                            <!--///////////////////////////////////////////////////////
-                               /////////////////////   FAIL DELETE ALERT   /////////////////
-                               ///////////////////////////////////////////////////////////
-                               -->
-                                <textarea class="form-control theme" id="smsDeleteFail" rows="5" style="display:none">
+                            
+                            <textarea class="form-control theme" id="smsDeleteFail" rows="5" style="display:none">
                                     Order <strong>{{Order.orderid}}</strong> can not delete successfully!
                                 </textarea>
                         </div>

@@ -35,8 +35,8 @@ function adminReportController($scope,$state, $http,dataService, $filter, config
         $scope.selectedYear = $scope.listYear[0];
         $scope.listOrderOfMonth = $scope.selectedYear.months;
         console.log("=========yeah hoo===================!",$scope.selectedStore);
-        //caplet();
-        $state.reload();
+        caplet();
+       // $state.reload();
     }
 
     function getComCanFromServer(){
@@ -48,9 +48,9 @@ function adminReportController($scope,$state, $http,dataService, $filter, config
                  $scope.selectedStoreCC = $scope.listStoreCC[0];
                  $scope.listYearCC = $scope.selectedStoreCC.years;
                  $scope.selectedYearCC = $scope.listYearCC[0];
-                 $scope.listOfMonthCC = $scope.selectedYearCC.months;
-                 console.log("==========COmplete================",$scope.listOfMonthCC[0].status[0].countNum);
-                 console.log("==========Cancel================",$scope.listOfMonthCC[0].status[1].countNum);
+                 $scope.listOrderOfMonthCC = $scope.selectedYearCC.months;
+                 // console.log("==========COmplete================",$scope.listOfMonthCC[0].status[0].countNum);
+                 // console.log("==========Cancel================",$scope.listOfMonthCC[0].status[1].countNum);
                  // //  setTimeout(function(){
                 //     caplet();
                 // },200);

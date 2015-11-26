@@ -3,7 +3,6 @@
  */
 
 function storeOrderDetailController($scope,$stateParams,dataService, $http, config, $rootScope){
-  
   $scope.orderid = $stateParams.orderid;
   $scope.disabled = true;
   $scope.colspan = 9;
@@ -31,14 +30,33 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
 
     $("#addGoodModal").submit(function(e){
       e.preventDefault();
-      if($(this).parsley( 'validate' )){
+      $scope.currentWeight = calculateWeight($scope.listgoods) + $scope.good.weight*$scope.good.amount;
+      if($scope.currentWeight>30000){
+        var temp = {
+          type: 'issue',
+          title: 'OOPS!',
+          content: 'Over weight! Total weight <= 300000 gram',
+          url: '',
+        };
+        $rootScope.notify(temp);
+      } else if($(this).parsley( 'validate' )){
         addGood();        
       }
     });
 
     $("#editGoodModal").submit(function(e){
       e.preventDefault();
-      if($(this).parsley( 'validate' )){
+      $scope.currentWeight = calculateWeight($scope.listgoods)-$scope.good.weight*$scope.good.amount + $scope.newGood.weight*$scope.newGood.amount;
+      if($scope.currentWeight>30000){
+        var temp = {
+          type: 'issue',
+          title: 'OOPS!',
+          content: 'Over weight! Total weight <= 300000 gram',
+          url: '',
+        };
+        $rootScope.notify(temp);
+      } else
+      if($(this).parsley( 'validate' )){        
         editGood();       
       }
     });
@@ -46,7 +64,13 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
     $("#edit-order-form").submit(function(e){
       e.preventDefault();
       if($scope.listgoods.length==0){
-        alertEmptyGood();        
+        var temp = {
+          type: 'issue',
+          title: 'OOPS!',
+          content: 'You must add at least one goods to order!',
+          url: '',
+        };
+        $rootScope.notify(temp);        
       }else if($(this).parsley( 'validate' )){
         updateOrderToServer();
       }
@@ -71,13 +95,13 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
     function getOrderFromServer() {
         var urlBase = config.baseURI + '/orders/' + $scope.orderid;
         dataService.getDataServer(urlBase)
-            .success(function (rs) {
-                $scope.order = rs;
-                $scope.listgoods = rs.goods;
+            .then(function (rs) {
+                $scope.order = rs.data;
+                $scope.listgoods = rs.data.goods;
                 console.log("---DATA ORDER---");
                 console.log(rs);
                 console.log("---DATA ORDER---");
-               var confirmationcode = rs.confirmationcodes;
+               var confirmationcode = rs.data.confirmationcodes;
                for(var i = 0; i < confirmationcode.length;i++){
                   if(confirmationcode[i].typeid ==2){
                     $scope.codeForShipper = confirmationcode[i].codecontent;
@@ -94,9 +118,8 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
                }
                calculateOverWeightFee($scope.order.deliverydistrictid,$scope.listgoods);
             })
-            .error(function (error) {
-                console.log('Unable to load order: ' + error);
-            });
+            
+            
     };
 
     function updateOrderToServer(){
@@ -151,12 +174,15 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
 
     $scope.newGood = {};
     $scope.setGood = function(good,index){
+        $scope.good = good;
         $scope.newGood = (JSON.parse(JSON.stringify(good)))
         $scope.currentIndexGood = index;
+        $scope.currentWeight = calculateWeight($scope.listgoods);
     };
 
     $scope.refreshGood = function(){
         $scope.good ={};
+        $scope.currentWeight = calculateWeight($scope.listgoods);
     }
 
     function editGood () {
@@ -188,9 +214,8 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
         var totalWeight = 0;
         for(var i = 0; i <listGoods.length;i++){
             totalWeight = totalWeight + listGoods[i].weight*listGoods[i].amount;
-        }
+        }       
         return totalWeight;
-
     }
 
     function calculateOverWeightFee(districtId,listGoods){
@@ -231,24 +256,24 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
     function getStoreName(){
         var urlBase = config.baseURI + '/api/getAllStoreName';
         dataService.getDataServer(urlBase)
-            .success(function (rs) {
-                $scope.stores = rs;
+            .then(function (rs) {
+                $scope.stores = rs.data;
                 //console.log("=======Store=========",rs);
                 $scope.order.storeid = $scope.stores[0].storeid;
                 $scope.order.pickupaddress = $scope.stores[0].address;
                 $scope.order.pickupphone = $scope.stores[0].phonenumber;
                 $scope.selectedStore =  $scope.stores[0];
-            })
-            .error(function (error) {
+            },function (error) {
                 console.log('Unable to load store name: ' + error);
-            });
+            })
+            
     }
     $scope.listProvince = [];    
     function getProvince () {
         var urlBase = config.baseURI + '/api/getProvince';
         dataService.getDataServer(urlBase)
-            .success(function (rs) {                
-                $scope.addressDB = rs;
+            .then(function (rs) {                
+                $scope.addressDB = rs.data;
                 $scope.listProvince = $scope.addressDB.slice(0,1);
                 $scope.data.selectedProvince = $scope.listProvince[0];
 
@@ -266,10 +291,10 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
                     }
                 }                
                 
-            })
-            .error(function (error) {
+            },function (error) {
                 console.log('Unable to load province: ' + error);
-            });
+            })
+            
     }
 
     $scope.updateDistrict= function(){
@@ -294,14 +319,7 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
          $scope.order.overweightfee = calculateOverWeightFee($scope.data.selectedDistrict.districtid,$scope.listgoods);
     }    
     
-    function alertEmptyGood() {
-        var data = new Object();
-        data.verticalEdge = 'right';
-        data.horizontalEdge = 'bottom';
-        data.theme = 'theme';
-        $.notific8($("#smsEmptyGood").val(), data);       
-    }
-
+   
     /*
      by HoangLVQ - 24/11/2015
      This function is used to listen event which reload status order

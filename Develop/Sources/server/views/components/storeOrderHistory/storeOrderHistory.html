@@ -102,14 +102,14 @@
             <td width="8%">{{x.ordertype.typename}}</td>
 
             <td width="9%">
-                <span ng-if="x.orderstatus.statusname == 'Waiting'" class="label label-warning">{{x.orderstatus.statusname}}</span>
-                <span ng-if="x.orderstatus.statusname =='Canceling'" class="label label-danger">{{x.orderstatus.statusname}} </span>    
-                <span ng-if="x.orderstatus.statusname =='Delivering'" class="label label-success">{{x.orderstatus.statusname}} </span>
-                <span ng-if="x.orderstatus.statusname =='Picking up'" class="label label-default">{{x.orderstatus.statusname}} </span>
-                <span ng-if="x.orderstatus.statusname =='Bring to stock'" class="label label-default">{{x.orderstatus.statusname}} </span>
-                <span ng-if="x.orderstatus.statusname =='In stock'" class="label label-default">{{x.orderstatus.statusname}} </span>
-                <span ng-if="x.orderstatus.statusname =='Done'" class="label label-default">{{x.orderstatus.statusname}} </span>
-                <span ng-if="x.orderstatus.statusname =='Cancel'" class="label label-default">{{x.orderstatus.statusname}} </span>
+                <span ng-if="x.orderstatus.statusname == 'Waiting' && !x.iscancel" class="label label-warning">{{x.orderstatus.statusname}}</span>
+                <span ng-if="x.iscancel" class="label label-danger">Canceling </span>
+                <span ng-if="x.orderstatus.statusname =='Delivering' && !x.iscancel" class="label label-success">{{x.orderstatus.statusname}} </span>
+                <span ng-if="x.orderstatus.statusname =='Picking up' && !x.iscancel" class="label label-default">{{x.orderstatus.statusname}} </span>
+                <span ng-if="x.orderstatus.statusname =='Bring to stock' && !x.iscancel" class="label label-default">{{x.orderstatus.statusname}} </span>
+                <span ng-if="x.orderstatus.statusname =='In stock' && !x.iscancel" class="label label-default">{{x.orderstatus.statusname}} </span>
+                <span ng-if="x.orderstatus.statusname =='Done' && !x.iscancel" class="label label-default">{{x.orderstatus.statusname}} </span>
+                <span ng-if="x.orderstatus.statusname =='Cancel' && !x.iscancel" class="label label-default">{{x.orderstatus.statusname}} </span>
 
 
             </td>
