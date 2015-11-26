@@ -315,6 +315,7 @@ angular.module('app', [
 
 
     $rootScope.onlineShipper = 0;
+    $rootScope.unreadMail = 0;
     $rootScope.readNewNoti = function(notification) {
         var urlBase = config.baseURI + '/api/notifications/' + notification.notificationid;     
         // console.log('readNotification', urlBase);

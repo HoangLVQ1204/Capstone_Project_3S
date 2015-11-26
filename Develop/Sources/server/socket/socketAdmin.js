@@ -28,15 +28,16 @@ module.exports = function(socket, io, app) {
                 data.msg.msg['content'] = "Your order " + order.orderid + " can't find your customer, please call to your customer...";
                 socketName = 'store:issue:cancel';
             }
-            if (data.msg.type == 7) {
+            if (data.msg.typeid == 7) {
                 data.msg.msg['content'] = "Your cancel request of order " + order.orderid + " has been accepted...";
                 socketName = 'store:issue:cancel';
             }
-
-            db.managestore.getOwnerOfStore(data.msg.storeid)
+            //console.log(socketName, '0000');
+            db.managestore.getOwnerOfStore(order.storeid)
                 .then(function (user) {
                     data.msg.msg['username'] = user[0].managerid;
                     notificationManage.postFromSever(data.msg.msg);
+                    console.log(socketName, 'AAA');
                     io.forward(
                         {
                             type: 'admin',
@@ -53,7 +54,7 @@ module.exports = function(socket, io, app) {
         //send to shipper
         if (data.msg.typeid <= 6)
             data.msg.msg['content'] = 'Your pending issue has been resolved';
-        console.log(data.msg.orderList[0].orderid);
+        //console.log(data.msg.orderList[0].orderid,'BBB');
         if (data.msg.typeid == 7)
             data.msg.msg['content'] = "Order " + data.msg.orderList[0].orderid + " has been cancel by store...";
         if (data.msg.typeid == 8)
@@ -72,7 +73,7 @@ module.exports = function(socket, io, app) {
                 type: data.msg.typeid
             },
             'shipper:issue:resolve')
-        console.log('Issue', data.msg);
+        //console.log('Issue', data.msg);
 
     });
 

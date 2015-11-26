@@ -58,7 +58,13 @@ function storeOrderController($scope, dataService, config, socketService, socket
                             if(!$valid){
                                 return false;
                             }else if($scope.goods.length==0){
-                                alertEmptyGood();
+                                var temp = {
+                                    type: 'issue',
+                                    title: 'OOPS!',
+                                    content: 'You must add at least one goods to order!',
+                                    url: '',
+                                };
+                                $rootScope.notify(temp);
                                 return false;
                             }
                         }
@@ -103,31 +109,38 @@ function storeOrderController($scope, dataService, config, socketService, socket
             //////////////////////////////////////
             $("#addGoodModal").submit(function(e){
                 e.preventDefault();
-                if($(this).parsley( 'validate' )){
-                    addGood();
-                    $scope.order.overWeightFee = calculateOverWeightFee($scope.selectedDistrict.districtid,$scope.goods);
-                    $scope.$apply();                                    
-                    $('#md-add-good').modal('hide');
-                }
-            });
-
-            //iCheck[components] validate
-            $('input').on('ifChanged', function(event){
-                $(event.target).parsley( 'validate' );
-            });
-            //Validate Add Modal//
-
+                $scope.currentWeight = calculateWeight($scope.goods) + $scope.good.weight*$scope.good.amount;
+                if($scope.currentWeight>30000){
+                    var temp = {
+                      type: 'issue',
+                      title: 'OOPS!',
+                      content: 'Over weight! Total weight <= 300000 gram',
+                      url: '',
+                  };
+                  $rootScope.notify(temp);
+              } else
+              if($(this).parsley( 'validate' )){
+                addGood();                    
+            }
+        });
 
             //////////////////////////////////////
             //////// Validate Edit Modal///////////
             //////////////////////////////////////
             $("#editGoodModal").submit(function(e){
                 e.preventDefault();
+                $scope.currentWeight = calculateWeight($scope.goods)-$scope.good.weight*$scope.good.amount +$scope.newGood.weight*$scope.newGood.amount;
+                if($scope.currentWeight>30000){
+                    var temp = {
+                      type: 'issue',
+                      title: 'OOPS!',
+                      content: 'Over weight! Total weight <= 300000 gram',
+                      url: '',
+                  };
+                  $rootScope.notify(temp);
+              } else
                 if($(this).parsley( 'validate' )){
                     editGood();
-                    $scope.order.overWeightFee = calculateOverWeightFee($scope.selectedDistrict.districtid,$scope.goods);
-                    $scope.$apply(); 
-                    $('#md-edit-good').modal('hide');
                 }
 
             });
@@ -143,28 +156,19 @@ function storeOrderController($scope, dataService, config, socketService, socket
         });
 
 
-        ///////////////////////////////////////////////////
-        //....Disable textbox when click on checkbox....///
-        ///////////////////////////////////////////////////
-        // function handleStatusChanged() {
-        //     $('#enElementCb').on('change', function () {
-        //         if (!$('#enElementCb').is(':checked')) {
-        //             $('#elementsToEn :input').attr('disabled', true);
-        //         } else {
-        //             $('#elementsToEn :input').removeAttr('disabled');
-        //         }
-        //     });
-        // }
     });    
     $scope.newGood = {};
     var index;
-    $scope.setGood = function(good,index){
+    $scope.setGood = function(good,clickedIndex){
+        $scope.good = good;
         $scope.newGood = (JSON.parse(JSON.stringify(good)));
-        index = index;
+        index = clickedIndex;
+        $scope.currentWeight = calculateWeight($scope.goods);
     };
 
     $scope.refreshGood = function(){
         $scope.good ={};
+        $scope.currentWeight = calculateWeight($scope.goods);
     }
 
     function editGood () {
@@ -172,16 +176,19 @@ function storeOrderController($scope, dataService, config, socketService, socket
             if( $scope.goods[i].goodID===$scope.newGood.goodID){
                 $scope.goods[i] = $scope.newGood;
             }
-
         }
-        $scope.$apply();
-
+        $scope.order.overWeightFee = calculateOverWeightFee($scope.selectedDistrict.districtid,$scope.goods);
+        $scope.$apply(); 
+        $('#md-edit-good').modal('hide');
+        
     }
 
     function addGood(){
         $scope.good.goodID = bigestGoodId;
         $scope.goods.push($scope.good);
-        $scope.$apply();
+        $scope.order.overWeightFee = calculateOverWeightFee($scope.selectedDistrict.districtid,$scope.goods);
+        $scope.$apply();                                    
+        $('#md-add-good').modal('hide');
         bigestGoodId++;
     };
 
@@ -219,7 +226,7 @@ function storeOrderController($scope, dataService, config, socketService, socket
         }
     }
 
-    function caculatateWeight(listGoods){
+    function calculateWeight(listGoods){
         var totalWeight = 0;
         for(var i = 0; i <listGoods.length;i++){
             totalWeight = totalWeight + listGoods[i].weight*listGoods[i].amount;
@@ -228,7 +235,7 @@ function storeOrderController($scope, dataService, config, socketService, socket
     }
 
     function calculateOverWeightFee(districtId,listGoods){
-        var totalWeight = caculatateWeight(listGoods);
+        var totalWeight = calculateWeight(listGoods);
         var overWeightFee = 0;
         var listInDistrictId =["001","002","003","005","006","007","008","009"];
         if(totalWeight > 4000 ){
@@ -279,23 +286,21 @@ function storeOrderController($scope, dataService, config, socketService, socket
     function getStoreName(){
         var urlBase = config.baseURI + '/api/getAllStoreName';
         dataService.getDataServer(urlBase)
-            .success(function (rs) {
-                $scope.stores = rs;
+            .then(function (rs) {
+                $scope.stores = rs.data;
                 $scope.order.storeid = $scope.stores[0].storeid;
                 $scope.order.pickupaddress = $scope.stores[0].address;
                 $scope.order.pickupphone = $scope.stores[0].phonenumber;
                 $scope.selectedStore =  $scope.stores[0];
             })
-            .error(function (error) {
-                console.log('Unable to load store name: ' + error);
-            });
+            
     }
     $scope.listProvince = []    
     function getProvince () {
         var urlBase = config.baseURI + '/api/getProvince';
         dataService.getDataServer(urlBase)
-            .success(function (rs) {                
-                $scope.addressDB = rs;
+            .then(function (rs) {                
+                $scope.addressDB = rs.data;
                 $scope.listProvince = $scope.addressDB.slice(0,1);
                 $scope.selectedProvince = $scope.listProvince[0];
 
@@ -306,9 +311,6 @@ function storeOrderController($scope, dataService, config, socketService, socket
                 $scope.selectedWard = $scope.listWard[0];
                 updateDeliveryAdd();
             })
-            .error(function (error) {
-                console.log('Unable to load province: ' + error);
-            });
     }
 
     $scope.updateDistrict= function(){
@@ -338,13 +340,7 @@ function storeOrderController($scope, dataService, config, socketService, socket
     function updateDeliveryAdd(){
         $scope.fulldeliveryaddress = $scope.order.deliveryaddress + ", " + $scope.selectedWard.name + ", " + $scope.selectedDistrict.name + ", " + $scope.selectedProvince.name;        
      }
-    function alertEmptyGood() {
-        var data = new Object();
-        data.verticalEdge = 'right';
-        data.horizontalEdge = 'bottom';
-        data.theme = 'theme';
-        $.notific8($("#smsEmptyGood").val(), data);       
-    }
+    
 
 
 }

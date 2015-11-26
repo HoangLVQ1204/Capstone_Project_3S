@@ -47,9 +47,8 @@ function storeOrderHistoryController($rootScope,$scope,dataService,$state, $http
     function getDataFromServer() {
         var urlBase = config.baseURI + '/api/store/getAllOrder';
         dataService.getDataServer(urlBase)
-        .success(function(response){
-        console.log("=============response===========",response);
-        $scope.orderList = response;
+        .then(function(response){
+        $scope.orderList = response.data;
         $scope.orderList.sort(function (a,b) {
             if (a.completedate < b.completedate) return -1;
             if (a.completedate > b.completedate) return 1;
