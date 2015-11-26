@@ -56,7 +56,6 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
     });
 
     socketService.on('admin:delete:shipper', function(data) {
-        console.log('admin:delete:shipper', data);
         var shipper = data.msg.shipper;
         mapService.deleteShipper(shipper.shipperID);
         $rootScope.$emit("admin:dashboard:getShipperList", data.msg.shipperList);

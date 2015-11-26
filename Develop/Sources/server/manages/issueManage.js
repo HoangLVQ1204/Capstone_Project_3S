@@ -71,7 +71,6 @@ module.exports = function (app) {
                     _.each(tasks, function(task){
                         listOrders.push(task.orderid);
                     })
-                    console.log("issueManage:71: ", listOrders);
                     //Add new issue
                     db.issue.createNewIssue(issueDisconnect)
                     .then(function(issue){
@@ -103,7 +102,6 @@ module.exports = function (app) {
                             return Promise.all(promises);
                         })
                         .then(function(data){
-                            console.log("TaskStatus:101: ", data.length);
                             //INSERT to order issue
                             var newOrderIssue = {};
                             newOrderIssue.issueid = newIssueID;
@@ -117,12 +115,10 @@ module.exports = function (app) {
                             return Promise.all(promises);
                         })
                         .then(function(data){
-                            console.log("changeISPEndingOrder:117: ", data.length);
                             //get Admin
                             return db.user.getUserByRole(3);
                         })
                         .then(function(admins){
-                            console.log("admins:110: ", admins);
                             admins = admins.map(function(e) {
                                 return e.toJSON();
                             });
@@ -136,12 +132,10 @@ module.exports = function (app) {
                             return Promise.all(promises);
                         })
                         .then(function(data) {
-                            console.log('shipperController:401', data.length);
                             return db.order.getStoresOfOrder(listOrders);
                         })
                         .then(function(storeIDs){
                             storeIDs = _.uniq(storeIDs, 'storeid');
-                            console.log('isssueManage:112', storeIDs);
                             storeIDs = storeIDs.map(function(e){
                                 return e.storeid;
                             });
@@ -151,21 +145,16 @@ module.exports = function (app) {
                             ownerStores = ownerStores.map(function (e) {
                                 return e.toJSON();
                             });
-                            console.log('issueManage:119', ownerStores);
-
                             //insert to notification to store
                             var promises = ownerStores.map(function (e) {
                                 var data = _.clone(msgDisconnectToStore, true);
                                 data.username = e.managerid;
-                                console.log('data', data);
                                 return db.notification.addNotification(data);
                             });
 
                             return Promise.all(promises);
                         })
                         .then(function (data) {
-                            console.log('issueManage:135', data.length);
-                            console.log('send notification disconnect to store and admin');
                             //send socket
                             var sender = {
                                 type: 'shipper',

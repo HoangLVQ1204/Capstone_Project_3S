@@ -11,7 +11,9 @@ module.exports = function(socket, io, app) {
     // Add shipper:disconnect for shipper to disconnect by himself
     socket.on('disconnect', function() {
         console.log('Shipper', socket.id, 'disconnect');
+
         var shipper = io.getShipperBySocketID(socket.id);
+
         if (!shipper) return;
         var orders = io.getOrdersOfShipper(shipper.shipperID);
         orders.forEach(function(e) {
@@ -24,6 +26,7 @@ module.exports = function(socket, io, app) {
         issueManage.createNewIssue(shipper.shipperID);
 
         io.disconnectShipper(shipper.shipperID);
+
         io.forward(
         {
             type: 'shipper',

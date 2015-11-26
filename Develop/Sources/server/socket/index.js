@@ -425,15 +425,16 @@ module.exports = function(server,app){
         result.orders = {};
 
         Object.keys(io.shippers).forEach(function(shipperID) {
-            result.shipper.push(io.getOneShipper(shipperID));
+            var shipper = io.getOneShipper(shipperID);
+            if(shipper.isConnected === true)
+                result.shipper.push(shipper);
         });
         Object.keys(io.stores).forEach(function(storeID) {
             result.store.push(io.getOneStore(storeID));            
         });
         result.customer = _.clone(io.customers, true);
         result.orders = _.clone(io.orders, true);
-
-        console.log('io.getDataForAdmin', io.shippers);
+        
         return result;
     };
 
