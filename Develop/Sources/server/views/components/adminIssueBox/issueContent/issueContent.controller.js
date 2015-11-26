@@ -121,6 +121,7 @@ function issueContentController($scope,$stateParams, dataService, authService,co
                 var promises = resolveIssue();
                 promises.then(function () {
                     socketAdmin.issueMessage($scope.issue);
+                    $rootScope.unreadMail--;
                 })
             }).catch(function (error) {
                 smsData.theme="danger";
@@ -142,7 +143,8 @@ function issueContentController($scope,$stateParams, dataService, authService,co
             Promise.all(promise).then(function success(response){
                 var promises = resolveIssue();
                 promises.then(function () {
-                    socketAdmin.issueMessage($scope.issue)
+                    socketAdmin.issueMessage($scope.issue);
+                    $rootScope.unreadMail--;
                 })
 
             }).catch(function (error) {
@@ -167,7 +169,8 @@ function issueContentController($scope,$stateParams, dataService, authService,co
 
                 var promise = resolveIssue();
                 promise.then(function () {
-                    socketAdmin.issueMessage($scope.issue)
+                    socketAdmin.issueMessage($scope.issue);
+                    $rootScope.unreadMail--;
                 })
             }).catch(function (error) {
                 smsData.theme="danger";
@@ -189,7 +192,8 @@ function issueContentController($scope,$stateParams, dataService, authService,co
         dataService.putDataServer(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue).then(function success(response){
             var promises = resolveIssue();
             promises.then(function () {
-                socketAdmin.issueMessage($scope.issue)
+                socketAdmin.issueMessage($scope.issue);
+                $rootScope.unreadMail--;
             })
         }).catch(function (error) {
             smsData.theme="danger";
@@ -211,7 +215,8 @@ function issueContentController($scope,$stateParams, dataService, authService,co
         dataService.putDataServer(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue).then(function success(response){
             var promise = resolveIssue();
             promise.then(function () {
-                socketAdmin.issueMessage($scope.issue)
+                socketAdmin.issueMessage($scope.issue);
+                $rootScope.unreadMail--;
             })
         }).catch(function (error) {
             smsData.theme="danger";

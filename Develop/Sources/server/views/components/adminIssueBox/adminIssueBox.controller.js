@@ -10,9 +10,13 @@ function adminIssueBoxController($scope,$state, $http, $filter, config, $rootSco
         $scope.issueList = [];
         $scope.currentPage = 0;
         $scope.pageSize = 10;
+        //$scope.unreadMail = 10;
         dataService.getDataServer(config.baseURI + "/api/getAllIssue").then(function(response){
             $scope.issueList = response.data;
             $scope.issueList.sort( $scope.sortByDate);
+            $scope.issueList.map(function (issue) {
+                if (!issue.isresolved) $rootScope.unreadMail++;
+            })
             //$scope.displayedOrderCollection = [].concat($scope.orderList);
             //console.log($scope.issueList)
         }).then(function () {
@@ -65,6 +69,10 @@ function adminIssueBoxController($scope,$state, $http, $filter, config, $rootSco
         dataService.getDataServer(config.baseURI + "/api/getAllIssue").then(function(response){
             $scope.issueList = response.data;
             $scope.issueList.sort( $scope.sortByDate);
+            $rootScope.unreadMail=0;
+            $scope.issueList.map(function (issue) {
+                if (!issue.isresolved) $rootScope.unreadMail++;
+            })
             //$scope.displayedOrderCollection = [].concat($scope.orderList);
             //console.log($scope.issueList)
         })

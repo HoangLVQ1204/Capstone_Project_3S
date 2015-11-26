@@ -19,7 +19,9 @@
             <div id="nav-scroll">
                 <div class="mail-list">
                     <header>
-                        <h2 class="header-text">issue</h2>
+
+                        <h2 class="header-text pull-left">issue</h2>
+                        <span class="badge bg-theme pull-left ng-show=" ng-show="$root.unreadMail>0">{{$root.unreadMail}}</span>
                         <div class="mail-seach">
                             <input type="text" placeholder="Search Issue" ng-model="mailSearch" class="form-control" />
                         </div>
