@@ -3,9 +3,10 @@
  */
 app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoading', '$timeout', function ($scope, $ionicPopup, dataFactory, $ionicLoading, $timeout) {
 
-    console.log('IssueController');
-    getAllTaskOfShipper();
+  //Get All Task of shipper
+  getAllTaskOfShipper();
 
+  //socket on issue
   $scope.$on("issue:resolve", function (event, args) {
     //Continue not show this
     if (args.type !== 1 && args.type !== 2 && args.type !== 3 && args.type !== 6 && args.type !== 8) {
@@ -13,6 +14,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
         title: 'Information',
         template: 'Your Task is resolved'
       });
+
       alertPopup.then(function(res) {
         console.log('You got it');
         //reload data
@@ -21,10 +23,10 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
     }
   });
 
-/*
- * By QuyenNV - 23/10/2015
- * This function get all task of shipper
- * */
+  /*
+   * By QuyenNV - 23/10/2015
+   * This function get all task of shipper
+   * */
   function getAllTaskOfShipper() {
     //get all tasks of shipper
     var urlBase = config.hostServer + "api/tasks";
@@ -32,18 +34,19 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
       .then(function (res) {
         var rs = res.data;
         formatData(rs);
+
       }, function (error) {
         console.log('Unable to load customer data: ' + error);
         if(error.status == 401) dataFactory.signOutWhenTokenFail();
       });
   }
 
-/*
- * By QuyenNV - 23/10/2015
- *
- * This function is format data respon from from server
- * @param: rs
- * */
+  /*
+   * By QuyenNV - 23/10/2015
+   *
+   * This function is format data respon from from server
+   * @param: rs
+   * */
   function formatData(rs) {
     $scope.listOrderActive = [];
     var listOrderInactive = [];
@@ -150,15 +153,29 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
       return items.map(function(item){ return item.text; }).join(', ');
     }
   };
-//START Alert Dialog
+
+  //START Show IonicLoading
+  $scope.showLoading = function(){
+    $ionicLoading.show({
+      scope: $scope,
+      templateUrl: 'loading.html',
+      noBackdrop: false,
+      // delay: 100
+    });
+  };
+  //END Show IonicLoading
+
+  //START Alert Dialog
   $scope.showAlert = function(des) {
     var alertPopup = $ionicPopup.alert({
       title: 'Information',
       template: des.content
     });
+
     alertPopup.then(function(res) {
       if (des.id === 1) {
-        $scope.show();
+        $scope.btnContinue = false;
+        $scope.showLoading();
       } else {
         $ionicLoading.hide();
       }
@@ -171,6 +188,8 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
    * ChangePending of order
    * */
   $scope.changeIsPendingOrderIssue = function (issueId) {
+    //disable the button on click
+    $scope.btnContinue = true;
     //Change ispending of Task
     var data = {'issueId': issueId};
     var urlBase = config.hostServer + "api/changeIsPendingOrder";
@@ -178,10 +197,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
       .then(function (res) {
         var rs = res.data;
         $ionicLoading.hide();
-
-        $timeout(function() {
-          $scope.showAlert(rs);
-        }, 500)
+        $scope.showAlert(rs);
 
       }, function (error) {
         console.log('Unable to load customer data: ' + error);
@@ -264,20 +280,10 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
             }).then(function(res) {
               //Pass to function changeIsPendingOrder
               $scope.issueId = rs[0].issueid;
-              //Show ionic Loading
-              $scope.isBackdropShowing = false;
-              $scope.show = function(){
-                $ionicLoading.show({
-                  templateUrl: 'loading.html',
-                  scope: $scope,
-                  noBackdrop: false,
-                  delay: 500
-                });
-              };
               //1 is Pending
               if (rs[0].catissue == 1) {
-                console.log('here here');
-                $scope.show();
+                $scope.btnContinue = false;
+                $scope.showLoading();
               }
               //TODO Del order choosed in issuedOrder array for 'Cancel Order' cause
               //var delIndex;
