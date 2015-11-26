@@ -3,12 +3,16 @@
  */
 
 
-function socketAdmin(socketService,authService,mapService, $rootScope, notificationService){
+function socketAdmin(socketService,authService,mapService, $rootScope, notificationService, dataService, config){
 
     var EPSILON = 1e-8;            
 
-    var currentLocation = null;    
+    var currentLocation = null;
+
     var api = {};
+    api.onlineShipperList = [];
+    api.unreadMail = 0;
+    getUnreadMail();
     /*
         add handlers
     */
@@ -20,11 +24,11 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
                 //console.log('register', data);
             });
 
-        $rootScope.onlineShipper = 0;
+        //$rootScope.onlineShipper = 0;
 
         data.msg.shipperList.map(function (shipper) {
 
-            if (shipper.isConnected) $rootScope.onlineShipper++;
+            if (shipper.isConnected) api.onlineShipperList.push(shipper);
         });
 
     });
@@ -32,6 +36,7 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
     socketService.on('admin:add:shipper', function(data) {   
        // console.log('admin:add:shipper', data);
         mapService.addShipper(data.msg.shipper);
+        api.onlineShipperList.push(data.msg.shipper);
         $rootScope.$emit("admin:dashboard:getShipperList", data.msg.shipperList);
     });
 
@@ -57,6 +62,8 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
 
     socketService.on('admin:delete:shipper', function(data) {
         var shipper = data.msg.shipper;
+        var index = api.onlineShipperList.indexOf(shipper);
+        api.onlineShipperList.splice(index,1);
         mapService.deleteShipper(shipper.shipperID);
         $rootScope.$emit("admin:dashboard:getShipperList", data.msg.shipperList);
     });
@@ -72,20 +79,30 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
 
     socketService.on('admin:issue:notification', function(data) {
         console.log('admin:issue:notification', data);
+        getUnreadMail().then(function () {
+            $rootScope.$emit("admin:issue:newIssue", data.msg);
+        });
         $rootScope.$emit("admin:issue:newIssue", data.msg);
-        $rootScope.notify(data.msg.notification);
+
+        $rootScope.notify(data.msg.notification, 1);
     });
 
     socketService.on('admin::issue:disconnected', function(data) {
         console.log("admin:issue:disconnected: ", data);
+        getUnreadMail().then(function () {
+            $rootScope.$emit("admin:issue:newIssue", data.msg);
+        });
         $rootScope.$emit("admin:issue:newIssue", data.msg);
-        $rootScope.notify(data.msg);
+
+        $rootScope.notify(data.msg, 1);
     });
     //admin::issue:cancelorder
     socketService.on('admin::issue:cancelorder', function(data) {
         console.log("admin::issue:cancelorder", data);
-        $rootScope.$emit("admin:issue:newIssue", data.msg);
-        $rootScope.notify(data.msg);
+        getUnreadMail().then(function () {
+            $rootScope.$emit("admin:issue:newIssue", data.msg);
+        });
+        $rootScope.notify(data.msg, 1);
     });
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();        
@@ -204,10 +221,28 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
             'admin:notification:blockStore');
     };
 
+    function getUnreadMail() {
+        api.unreadMail=0;
+        //console.log('AAAAAA');
+        return dataService.getDataServer(config.baseURI + "/api/getAllIssue").then(function(response){
+            var issueList = response.data;
+
+            issueList.map(function (issue) {
+                if (!issue.isresolved) api.unreadMail++;
+            });
+            console.log('unreadMail', api.unreadMail)
+            //$scope.displayedOrderCollection = [].concat($scope.orderList);
+        });
+            //console.log('BBBBBBBBB')
+
+
+    }
+
     return api;
+
 }
 
 
-socketAdmin.$inject = ['socketService','authService','mapService', '$rootScope','notificationService'];
+socketAdmin.$inject = ['socketService','authService','mapService', '$rootScope','notificationService','dataService','config'];
 
 angular.module('app').factory('socketAdmin', socketAdmin);

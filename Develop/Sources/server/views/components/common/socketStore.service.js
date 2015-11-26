@@ -63,7 +63,7 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
     socketService.on('store:issue:pending', function(data) {
         console.log('store:issue:pending', data);
         $rootScope.$emit("updatePendingOrder", data.msg);
-        $rootScope.notify(data.msg);
+        $rootScope.notify(data.msg, 1);
     });
 
     socketService.on('store:issue:cancel', function(data) {
@@ -75,7 +75,7 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
     socketService.on('store:issue:continue', function(data) {
         console.log("store:isue:continue: ", data);
          $rootScope.$emit("updatePendingOrder", data.msg);
-        $rootScope.notify(data.msg);
+        $rootScope.notify(data.msg, 1);
     });
 
     socketService.on('store:message:confirmPayment', function(data) {

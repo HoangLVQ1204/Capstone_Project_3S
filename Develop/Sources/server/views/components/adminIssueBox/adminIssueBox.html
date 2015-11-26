@@ -19,7 +19,9 @@
             <div id="nav-scroll">
                 <div class="mail-list">
                     <header>
-                        <h2 class="header-text">issue</h2>
+
+                        <h2 class="header-text pull-left">issue</h2>
+                        <span class="badge bg-theme pull-left ng-show=" ng-show="unreadMail>0">{{unreadMail}}</span>
                         <div class="mail-seach">
                             <input type="text" placeholder="Search Issue" ng-model="mailSearch" class="form-control" />
                         </div>
@@ -28,18 +30,19 @@
                                 <i class="dropdown-icon fa fa-angle-down"></i>
                             </button>
                             <ul class="dropdown-menu  pull-right">
-                                <li><a href="" ng-click="customFilter.isresolved=true"> Resolved</a></li>
-                                <li><a href="" ng-click="customFilter.isresolved=false"> Unresolved </a></li>
+                                <li><a href="" ng-click="customFilter.issuetype.issuecategory.categoryname = '';customFilter.isresolved=true"> Resolved</a></li>
+                                <li><a href="" ng-click="customFilter.issuetype.issuecategory.categoryname = '';customFilter.isresolved=false"> Unresolved </a></li>
                                 <li class="divider"></li>
-                                <!--<li><a href="" ng-click="sortByDate()"> Sort by date</a></li>-->
-                                <!--<li class="divider"></li>-->
-                                <!--<li><a href="#"> Action </a></li>-->
+                                <li><a href="" ng-click="customFilter.issuetype.issuecategory.categoryname = 'Shipper Pending'; customFilter.isresolved=''">Shipper Pending</a></li>
+                                <li><a href="" ng-click="customFilter.issuetype.issuecategory.categoryname = 'Shipper Cancel'; customFilter.isresolved=''">Shipper Cancel</a></li>
+                                <li><a href="" ng-click="customFilter.issuetype.issuecategory.categoryname = 'Store Cancel'; customFilter.isresolved=''">Store Cancel</a></li>
+
                             </ul>
                             <!-- //dropdown-menu-->
                         </div>
                         <div class="btn-group " >
                             <!--<button type="button" class="btn btn-theme btn-transparent"><i class="fa fa-clock-o"></i></button>-->
-                            <button type="button" class="btn btn-theme btn-transparent active" ng-click="customFilter.isresolved=''"><i class="fa fa-inbox"></i></button>
+                            <button type="button" class="btn btn-theme btn-transparent active" ng-click="customFilter.issuetype.issuecategory.categoryname = '';customFilter.isresolved=''"><i class="fa fa-inbox"></i></button>
                             <!--<button type="button" class="btn btn-theme btn-transparent" ng-click="mailSearch.isresolved=true"><i class="fa fa-check"></i></button>-->
                         </div>
                     </header>

@@ -110,7 +110,7 @@
       <a class="button icon-left ion-ios7-telephone button-calm button-outline" ng-href="tel: +840905507734">Call Admin</a>
     </div>
     <div class="popup-buttons">
-      <a ng-click="changeIsPendingOrderIssue(issueId)" class="button btn-success-cus ">Continue</a>
+      <a ng-click="changeIsPendingOrderIssue(issueId)" ng-class="(btnContinue==true) ? 'not-active' : ''" class="button btn-success-cus ">Continue</a>
     </div>
   </div>
 </script>

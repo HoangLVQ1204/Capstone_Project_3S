@@ -830,11 +830,10 @@ module.exports = function (app) {
 
     var updateTaskForShipper = function (req, res, next) {
         var shipperList = req.body;
-
         shipperList.forEach(function(shipperTasks){
             if(shipperTasks.tasks) {
                 shipperTasks.tasks.forEach(function(task){
-                    if(task.statusid === 2){
+                    if(task.statusid === 4){
                         server.socket.changeShipperOfOrder(shipperTasks.username, task.order.orderid);
                     }
                 });
@@ -1015,8 +1014,29 @@ module.exports = function (app) {
         var shipperid = 'SP000001';
         addStoreToShipperRoom(storeid,shipperid);
         addStoreToShipperRoom(storeid2,shipperid);
-        addOrderIntoSocket("OD542012", storeid, shipperid);
-        addOrderIntoSocket("OD000012", storeid2, shipperid);
+        addOrderIntoSocket("OD090909", storeid, shipperid);
+        addOrderIntoSocket("OD901001", storeid2, shipperid);
+        var cs = server.socket.customers;
+        var sp = server.socket.shippers;
+        var st = server.socket.stores;
+        var od = server.socket.orders;
+        return res.status(200).json({
+            "cs": cs,
+            "sp": sp,
+            "st": st,
+            "od": od
+        });
+
+    };
+
+    var testSk3 = function(req, res, next){
+        var storeid = 'STR001';
+        var storeid2 = 'STR003';
+        var shipperid = 'SP000002';
+        addStoreToShipperRoom(storeid,shipperid);
+        addStoreToShipperRoom(storeid2,shipperid);
+        addOrderIntoSocket("OD090909", storeid, shipperid);
+        addOrderIntoSocket("OD901001", storeid2, shipperid);
         var cs = server.socket.customers;
         var sp = server.socket.shippers;
         var st = server.socket.stores;
@@ -1120,6 +1140,7 @@ module.exports = function (app) {
         getTaskBeIssuePending: getTaskBeIssuePending,
         testSk: testSk,
         testSk2: testSk2,
+        testSk3: testSk3,
         createShipperID: createShipperID,
         getAllShipperWithTaskForProcessing: getAllShipperWithTaskForProcessing,
         getAllShippers: getAllShippers

@@ -2,7 +2,7 @@
  * Created by hoanglvq on 9/22/15.
  */
 
-function adminDashboardController($scope,$state,dataService, config, $rootScope){
+function adminDashboardController($scope,$state,dataService, config, $rootScope, socketAdmin){
 
     //Option for drop down list
     $scope.searchOptionsInactive = [
@@ -46,6 +46,7 @@ function adminDashboardController($scope,$state,dataService, config, $rootScope)
     $scope.shipperList = [];
     $scope.totalTaskToday = 0;
     $scope.totalDoneToday = 0;
+
     //$scope.onlineShipper = $rootScope.onlineShipper;
     //alert($rootScope.onlineShipper);
 
@@ -53,7 +54,8 @@ function adminDashboardController($scope,$state,dataService, config, $rootScope)
 
     function getDataFromServer() {
         var urlBase = config.baseURI + "/api/getTaskList";
-
+        //console.log(socketAdmin.onlineShipperList);
+        $scope.onlineShipper = socketAdmin.onlineShipperList.length;
         dataService.getDataServer(urlBase)
             .then(function (rs) {
                 //console.log(rs);
@@ -121,18 +123,9 @@ function adminDashboardController($scope,$state,dataService, config, $rootScope)
 
     // START Listen to socket changes
     $rootScope.$on("admin:dashboard:getShipperList", function(event, args){
-        //alert(args.message);
-        console.log('args');
-        console.log(args);
-        $rootScope.onlineShipper = 0;
-        args.map(function (shipper) {
-            if (shipper.isConnected) $rootScope.onlineShipper++;
 
-        });
-        //$scope.$apply();
-        //getDataFromServer();
-       // console.log( $scope.onlineShipper);
-        //$scope.onlineShipper = 10;
+        $scope.onlineShipper = socketAdmin.onlineShipperList.length;
+
     });
 
     //setTimeout(function () {
@@ -147,7 +140,7 @@ function adminDashboardController($scope,$state,dataService, config, $rootScope)
 }
 
 
-adminDashboardController.$inject = ['$scope','$state','dataService','config','$rootScope'];
+adminDashboardController.$inject = ['$scope','$state','dataService','config','$rootScope','socketAdmin'];
 
 angular.module('app').controller('adminDashboardController',adminDashboardController);
 

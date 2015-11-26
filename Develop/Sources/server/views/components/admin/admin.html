@@ -86,7 +86,10 @@
                     <li><a href="/#/admin/addStore"> Add Store </a></li>
                     <li><a href="/#/admin/storeList"> Store's List </a></li>
                     <li><a href="/#/admin/transactionHistory"> Transaction history</a></li>
-                    <li><a href="/#/admin/issueBox"> Issue Box</a></li>
+                    <li><a href="/#/admin/issueBox"> Issue Box
+                        <span class="badge bg-inverse pull-right" ng-show="unreadMail>0">{{unreadMail}}</span>
+                    </a>
+                    </li>
                 </ul>
             </li>
             <li>
@@ -94,7 +97,7 @@
                 <ul>
                     <li><a href="/#/admin/addShipper"> Add New Shipper</a></li>
                     <li><a href="/#/admin/shipperList"> Shipper's List</a></li>
-                    <li><a href="/#/admin/taskList"> List Task</a></li>
+                    <li><a href="/#/admin/taskList"> Task List</a></li>
                     <li><a href="/#/admin/assignTask"> Assign Task</a></li>
                 </ul>
             </li>

@@ -2,7 +2,7 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminShipperListController($scope,$state, dataService, $filter, config, $stateParams, $rootScope) {
+function adminShipperListController($scope,$state, dataService, $filter, config, $stateParams, $rootScope, socketAdmin) {
 
     //$scope.topShipper = $stateParams.newShipper; //getting fooVal
     //console.log($scope.topShipper);
@@ -37,9 +37,18 @@ function adminShipperListController($scope,$state, dataService, $filter, config,
         })
         //if ($scope.topShipper) putToTop($scope.topShipper);
         $scope.displayedCollection = [].concat($scope.shipperList);
-        console.log(response);
+        getShipperOnline();
+        //console.log(response);
     })
 
+
+    function getShipperOnline(){
+        socketAdmin.onlineShipperList.map(function (shipper) {
+            var result = $.grep($scope.shipperList, function(e){ return e.username == shipper.shipperID; });
+            if (shipper.isConnected) result[0]['workingStatus'] = 'Online';
+            else result[0]['workingStatus'] = 'Offline';
+        })
+    }
     //----------------------------------
     //FUNCTION put new shipper to top
     //-----------------------------------
@@ -63,17 +72,13 @@ function adminShipperListController($scope,$state, dataService, $filter, config,
     // START Listen to socket changes
     $rootScope.$on("admin:dashboard:getShipperList", function(event, args){
         //alert(args.message);
-        console.log(args);
+        //console.log(args);
         //$scope.onlineShipper = 0;
-        args.map(function (shipper) {
-            var result = $.grep($scope.shipperList, function(e){ return e.username == shipper.shipperID; });
-            if (shipper.isConnected) result[0]['workingStatus'] = 'Online';
-            else result[0]['workingStatus'] = 'Offline';
-        })
+        getShipperOnline();
         //getDataFromServer();
     });
     // END listen to socket changes
 }
 
-adminShipperListController.$inject = ['$scope','$state', 'dataService', '$filter', 'config', '$stateParams', '$rootScope'];
+adminShipperListController.$inject = ['$scope','$state', 'dataService', '$filter', 'config', '$stateParams', '$rootScope','socketAdmin'];
 angular.module('app').controller('adminShipperListController',adminShipperListController);

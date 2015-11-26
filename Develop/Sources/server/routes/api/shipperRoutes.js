@@ -62,6 +62,8 @@ module.exports = function (app) {
     app.route('/api/shipper/test-socket2')
         .get(shipperCtrl.testSk2);
 
+    app.route('/api/shipper/test-socket3')
+        .get(shipperCtrl.testSk3);
 
 
 }
