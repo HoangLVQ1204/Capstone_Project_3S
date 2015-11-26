@@ -42,6 +42,10 @@
             <div class="col-md-7"><h4>Over weight fee:</h4></div>
             <div class="col-md-5"><h4>{{order.overweightfee|number}} VND</h4></div>  
           </div>
+          <div class="form-group row">
+            <div class="col-md-7"><h4>Total fee:</h4></div>
+            <div class="col-md-5"><h4>{{order.overweightfee + order.fee|number}} VND</h4></div>  
+          </div>
         </section>
       </div>
       <div class="col-md-4">
@@ -242,7 +246,7 @@
              <div class="col-md-3">
               <label class="control-label">Weight</label>
               <input type="text" class="form-control"
-              parsley-min="0" parsley-max="5000"
+              parsley-min="0" 
               placeholder="Gram" ng-model="good.weight" data-parsley-type="number" parsley-required="true">
             </div>
             <div class="col-md-3">
@@ -265,12 +269,26 @@
             </div>
           </div>
           <div class="form-group">
-           <label class="control-label">Good description</label>
+           <label class="control-label">Goods description</label>
            <input type="text" class="form-control" ng-model="good.description">
          </div>
        </div>
        <!-- //modal-body-->
        <div class="modal-footer">
+        <div class="pull-left col-md-8">
+        <section>
+          <div class="form-group column col-md-7 align-left">
+            <div><h5>Curent weight: </h5></div>
+            <div ng-if="currentWeight<=30000"><h5>You can add more: </h5></div>
+            <div ng-if="currentWeight >30000"><h5>Overweight: </h5></div>
+          </div>
+          <div class="form-group column align-left">            
+            <div><h5>{{currentWeight|number}} Gram</h5></div> 
+            <div ng-if="currentWeight<=30000"><h5>{{30000 - currentWeight | number}} Gram</h5></div>
+            <div ng-if="currentWeight>30000"><h5>{{currentWeight-30000 | number}} Gram</h5></div>
+          </div>
+        </section>
+      </div>
         <button type="submit"class="btn btn-theme">Add</button>
         <button type="button" data-dismiss="modal" class="btn btn-inverse">Close</button>
       </div>
@@ -308,7 +326,7 @@
             <div class="col-md-3">
              <label class="control-label">Weight</label>
              <input type="text" class="form-control"
-             parsley-min="0" parsley-max="5000"
+             parsley-min="0"
              placeholder="Gram" ng-model="newGood.weight" data-parsley-type="number" parsley-required="true">
            </div>
            <div class="col-md-3">
@@ -331,12 +349,27 @@
            </div>
          </div>
          <div class="form-group">
-          <label class="control-label">Good description</label>
+          <label class="control-label">Goods description</label>
           <input type="text" class="form-control" ng-model="newGood.description">
         </div>
       </div>
       <!-- //modal-body-->
       <div class="modal-footer">
+        <div class="pull-left col-md-8">
+        <section>
+          <div class="form-group column col-md-7 align-left">
+            <div><h5>Curent weight: </h5></div>
+            <div ng-if="currentWeight<=30000"><h5>You can add more: </h5></div>
+            <div ng-if="currentWeight >30000"><h5>Overweight: </h5></div>
+          </div>
+          <div class="form-group column align-left">            
+            <div><h5>{{currentWeight|number}} Gram</h5></div> 
+            <div ng-if="currentWeight<=30000"><h5>{{30000 - currentWeight | number}} Gram</h5></div>
+            <div ng-if="currentWeight>30000"><h5>{{currentWeight-30000 | number}} Gram</h5></div>
+          </div>
+        </section>
+      </div>        
+        
        <button type="submit"  class="btn btn-theme">Save</button>
        <button type="button"  data-dismiss="modal" class="btn btn-inverse">Close</button>
      </div>
@@ -372,14 +405,6 @@
          </div>
          <!-- //modal-->
 
-
-            <!--///////////////////////////////////////////////////////
-              /////////////////////   Empty good   /////////////////
-             ///////////////////////////////////////////////////////////
-           -->
-           <textarea class="form-control theme" id="smsEmptyGood" rows="5" style="display:none">
-            You must add at least 1 good to order!
-          </textarea>
 
         </div>
       </div>

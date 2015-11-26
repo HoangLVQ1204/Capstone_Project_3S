@@ -14,8 +14,8 @@ function initStoreMarker($scope, geocoder, maps, storeMarker) {
     storeMarker.icon = $scope.storeIcon;
     geocoder.geocode({
             'location': {
-                lat: storeMarker.latitude,
-                lng: storeMarker.longitude
+                lat: parseFloat(storeMarker.latitude),
+                lng: parseFloat(storeMarker.longitude)
             }
         }, function(results, status) {
             var geoText = 'Not Available';

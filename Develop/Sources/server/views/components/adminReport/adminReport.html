@@ -58,14 +58,14 @@
 										<tr>
 											<th></th>
 											<th class="color-theme-inverse">Complete</th>
-											<th class="color-theme">Cancel</th>
+											<th class="color-warning">Cancel</th>
 										</tr>
 									</thead>
 									<tbody>
-										<tr>
-											<th>x</th>
-											<td>250</td>
-											<td>295</td>
+										<tr ng-repeat="x in listOrderOfMonthCC">
+											<th>{{x.name}}</th>	
+											<td>{{x.status[0].countNum}}</td>
+											<td>{{x.status[1].countNum}}</td>
 										</tr>
 										
 									</tbody>
@@ -74,7 +74,7 @@
 							<div class="label-sparkline align-lg-center">
 								<ul>
 									<li><span data-color="theme-inverse"></span>Complete </li>
-									<li><span data-color="theme"></span>Cancel</li>
+									<li><span data-color="warning"></span>Cancel</li>
 								</ul>
 							</div>
 						</div>

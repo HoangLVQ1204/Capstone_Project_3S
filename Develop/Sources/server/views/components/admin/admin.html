@@ -17,9 +17,9 @@
             <!--</ul>-->
             <ul class="nav navbar-nav navbar-right tooltip-area">
                
-                <li><a href="#" class="nav-collapse avatar-header">
+                <li><a href="/#/admin/notification" class="avatar-header">
                     <img alt="" src="{{admin.avatar}}"  class="circle">
-                    <span class="badge">3</span>
+                    <span class="badge" ng-show="$root.numberUnreadNoti">{{ $root.numberUnreadNoti }}</span>
                 </a>
                 </li>
                 <li class="dropdown">
