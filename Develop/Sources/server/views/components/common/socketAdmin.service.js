@@ -74,19 +74,19 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
     socketService.on('admin:issue:notification', function(data) {
         console.log('admin:issue:notification', data);
         $rootScope.$emit("admin:issue:newIssue", data.msg);
-        $rootScope.notify(data.msg.notification);
+        $rootScope.notify(data.msg.notification, 1);
     });
 
     socketService.on('admin::issue:disconnected', function(data) {
         console.log("admin:issue:disconnected: ", data);
         $rootScope.$emit("admin:issue:newIssue", data.msg);
-        $rootScope.notify(data.msg);
+        $rootScope.notify(data.msg, 1);
     });
     //admin::issue:cancelorder
     socketService.on('admin::issue:cancelorder', function(data) {
         console.log("admin::issue:cancelorder", data);
         $rootScope.$emit("admin:issue:newIssue", data.msg);
-        $rootScope.notify(data.msg);
+        $rootScope.notify(data.msg, 1);
     });
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();        
