@@ -473,6 +473,7 @@ module.exports = function(server,app){
     };
 
     io.addOrder = function(orderID, storeID, shipperID) {
+        //:TODO: Change status of an ORDER
         io.orders[orderID] = {
             shipperID: shipperID,
             storeID: storeID,
@@ -651,8 +652,8 @@ module.exports = function(server,app){
     //// HuyTDH - 25-11-2015
     // START - Change shipper of an order active
     io.changeShipperOfOrder = function(shipperID, orderID){
-        for(var i = 0; i != io.orders.length; i++){
-            if(io.orders[i].orderID === orderID){
+        for( i in io.orders){
+            if(i === orderID){
                 io.orders[i].shipperID = shipperID;
                 return true;
             }
