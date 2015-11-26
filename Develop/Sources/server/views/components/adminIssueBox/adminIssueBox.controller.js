@@ -14,11 +14,6 @@ function adminIssueBoxController($scope,$state, $http, $filter, config, $rootSco
         dataService.getDataServer(config.baseURI + "/api/getAllIssue").then(function(response){
             $scope.issueList = response.data;
             $scope.issueList.sort( $scope.sortByDate);
-
-            $scope.unreadMail = 0;
-            $scope.issueList.map(function (issue) {
-                if (!issue.isresolved)  $scope.unreadMail++;
-            })
             //$scope.displayedOrderCollection = [].concat($scope.orderList);
             //console.log($scope.issueList)
         }).then(function () {
@@ -68,9 +63,12 @@ function adminIssueBoxController($scope,$state, $http, $filter, config, $rootSco
 
     // START Listen to socket changes
     $rootScope.$on("admin:issue:newIssue", function(event, args){
-            $scope.unreadMail = socketAdmin.unreadMail;
+        dataService.getDataServer(config.baseURI + "/api/getAllIssue").then(function(response){
+            $scope.issueList = response.data;
+            $scope.issueList.sort( $scope.sortByDate);
             //$scope.displayedOrderCollection = [].concat($scope.orderList);
             //console.log($scope.issueList)
+        })
     });
 }
 

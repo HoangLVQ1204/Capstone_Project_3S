@@ -16,9 +16,6 @@ function adminController($scope,$state,$http,$q,$rootScope,config,socketService,
         });
     };
 
-    $scope.unreadMail = socketAdmin.unreadMail;
-
-
     authService.getProfileUser().then(function (admin) {
         $scope.admin = admin.data;
     });
