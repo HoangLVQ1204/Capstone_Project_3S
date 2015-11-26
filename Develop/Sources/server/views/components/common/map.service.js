@@ -237,8 +237,8 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
             console.log("latitude: " + latitude + " - longitude: " + longitude );
             geocoder.geocode({
                 'location': {
-                    lat: latitude,
-                    lng: longitude
+                    lat: parseFloat(latitude),
+                    lng: parseFloat(longitude)
                 }
             }, function(results, status) {                
                 if (status === maps.GeocoderStatus.OK) {
