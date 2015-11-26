@@ -120,13 +120,6 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
 
                 $scope.listDraff =  $scope.ordersDraff;
             })
-            //.catch(function(err){
-            //    console.log("---ERROR---");
-            //    console.log(err);
-            //    console.log("---ERROR---");
-            //    window.localStorage.removeItem("EHID");
-            //    $state.go("login");
-            //});
     }
     $scope.Order = {};
 
@@ -149,8 +142,7 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
         var urlBase = config.baseURI + '/store/orders/cancel';
             dataService.postDataServer(urlBase,{orderid : $scope.Order.orderid})
             .then(function(rs){
-                console.log('success', rs.length);
-                getDataFromServer();
+               getDataFromServer();
             });
         // var index =  $scope.displayedCollectionInprocess.indexOf( $scope.Order);
         // if (index !== -1) {
@@ -168,9 +160,21 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
                 $scope.displayedCollectionDraff.splice(index, 1);
                 $scope.ordersDraff.splice(index, 1);
             }
-            alertDelete.success();
+            var temp = {
+                    type: 'info',
+                    title: 'Info',
+                    content: 'Order '+$scope.Order.orderid + 'has been deleted successfully!',
+                    url: '',
+                };
+                $rootScope.notify(temp);
         },function(err){
-            alertDelete.error();
+            var temp = {
+                    type: 'issue',
+                    title: 'OOPS!',
+                    content: 'Fail to delete order '+$scope.Order.orderid,
+                    url: '',
+                };
+                $rootScope.notify(temp);
         });
 
 
@@ -197,24 +201,6 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
     $scope.$watch('$viewContentLoaded', function(event) {
         caplet();
     });
-
-    var alertDelete = {
-        "success": function () {
-            var data = new Object();
-            data.verticalEdge = 'right';
-            data.horizontalEdge = 'bottom';
-            data.theme = 'success';
-            $.notific8($("#smsDeleted").val(), data);
-        },
-        "error": function () {
-            var data = new Object();
-            data.verticalEdge = 'right';
-            data.horizontalEdge = 'bottom';
-            data.theme = 'theme';
-            $.notific8($("#smsDeleteFail").val(), data);
-        }
-    };
-
 
     /*
         by HoangLVQ - 24/11/2015

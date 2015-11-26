@@ -2,16 +2,19 @@
  * Created by KhanhKC on 19/11/2015.
  */
 
-function storeProfileController($scope,$state, $http, $filter, config, $stateParams) {
+function storeProfileController($scope,$state,dataService, $http, $filter, config, $stateParams) {
     var smsData = {verticalEdge: 'right',
         horizontalEdge: 'bottom'};
     //$scope.newShipper.profile.dob = null;
 
-    $http.get(config.baseURI + "/api/storeDetail").success(function(response){
-        $scope.store = response;
-        //$scope.shipper.dob =  new Date($scope.shipper.dob,;
-        console.log(response);
-    })    
+    getStoreProfile();
+    function getStoreProfile(){
+        var urlBase = config.baseURI + '/api/storeDetail';
+        dataService.getDataServer(urlBase)
+            .then(function (rs) {
+                $scope.store = rs.data;
+            })
+    }    
 
     //----------------------------------
     //FUNCTION LOAD SCRIPT
@@ -25,5 +28,5 @@ function storeProfileController($scope,$state, $http, $filter, config, $statePar
 
 }
 
-storeProfileController.$inject = ['$scope','$state', '$http', '$filter', 'config', '$stateParams'];
+storeProfileController.$inject = ['$scope','$state','dataService', '$http', '$filter', 'config', '$stateParams'];
 angular.module('app').controller('storeProfileController',storeProfileController);
