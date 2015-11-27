@@ -31,7 +31,66 @@ function adminReportController($scope,$state, $http,dataService, $filter, config
         $scope.listYear = $scope.selectedStore.years;
         $scope.selectedYear = $scope.listYear[0];
         $scope.listOrderOfMonth = $scope.selectedYear.months;
-        caplet();
+         function getDataForChart(){
+            $scope.listYear = $scope.selectedStore.years;
+        $scope.selectedYear = $scope.listYear[0];
+       var listOrderOfMonth = $scope.selectedYear.months;
+            return listOrderOfMonth;
+    }
+    var livedata = [] , totalPoints = getDataForChart().length;
+        function getRandomData() {
+            // if (livedata.length > 0)
+            //     livedata = livedata.slice(1);
+            //     while (livedata.length < totalPoints) {
+            //         var prev = livedata.length > 0 ? livedata[livedata.length - 1] : 20,
+            //             y = prev + Math.random() * 10 - 5;
+            //             if (y < 0) {  y = 0; }else if (y > 30) {    y = 30; }
+            //         $("#onlinerealtime  span").text(Math.ceil( y));
+            //         livedata.push(y);
+            //     }
+            //     var res = [];
+            //     for (var i = 0; i < livedata.length; ++i) {
+            //         res.push([i, livedata[i]])
+            //     }
+            // return res;
+            var listOrderOfMonth = getDataForChart();
+            var myData =[];
+            for(var i = 0; i<listOrderOfMonth.length;i++){
+                myData.push([listOrderOfMonth[i].name,listOrderOfMonth[i].types[0].countNum]);
+                
+            }
+           return myData;
+        }
+
+        var updateInterval = 2000;
+        
+        var plot = $.plot("#placeholder", [ getRandomData() ], {
+            colors: ["#f35958"],
+            series: { lines: { show: true  , fill:0.1 } ,shadowSize: 0 },
+            yaxis: { tickColor: "rgba(0,0,0,0.2)" ,min: 0,},  
+            grid: { borderWidth: { top: 0, right: 0, bottom: 1, left: 1 },color :  "rgba(0,0,0,0.2)" },
+            tooltip: true,
+            tooltipOpts: { content: ("%y")  },
+            xaxis: { show: true}
+        });
+
+        //var plot = $.plot("#placeholder", [ getRandomData() ]);
+        
+        // // <div class="widget-chart chart-dark">
+        // // <div id="placeholder" class="demo-placeholder" style="height:150px"></div>
+        // // <div id="onlinerealtime" class="align-lg-center">Right now <span>0</span> visitors on site </div>
+        // // </div><!-- // widget-chart -->
+         console.log("=========================plot=========================");
+        console.log(plot);
+        console.log("=========================plot=========================");
+        function update() {
+            plot.setData( [getRandomData()] );
+            plot.draw();
+            console.log(getRandomData());
+            setTimeout(update, updateInterval);
+        }
+        
+        update();
 
     }
 
@@ -78,7 +137,7 @@ function adminReportController($scope,$state, $http,dataService, $filter, config
     }
 
     $scope.$watch('$viewContentLoaded', function (event) {
-        // caplet();
+        
     });
 
 
