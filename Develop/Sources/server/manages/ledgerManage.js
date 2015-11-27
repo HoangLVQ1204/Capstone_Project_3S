@@ -23,8 +23,6 @@ module.exports = function (app) {
         if (req.params.perioddate != 'null')
             perioddate = new Date(perioddate);
 
-        //var enddate = new Date(req.params.enddate);
-        //console.log(perioddate)
         return db.generalledger.getLatestAutoAccountDate()
             .then(function (ledger) {
                 db.generalledger.getLedgerOfStore(db.store, storeid, perioddate, ledger.paydate)
@@ -39,7 +37,6 @@ module.exports = function (app) {
     };
 
     var storeGetAllLedger = function (req, res, next) {
-        console.log("============req===========",req.user.stores[0].storeid);
         var storeId = req.user.stores[0].storeid;
         db.generalledger.storeGetAllLedger(storeId)
         .then(function(list){
