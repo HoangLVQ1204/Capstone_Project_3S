@@ -8,7 +8,7 @@
                 controller: 'adminReportController',
                 templateUrl: '/components/adminReport/adminReport.html',
                 controllerAs: 'adminReportController',
-                scope: {},
+                scope: false,
                 replace: true,
                 restrict: 'E'
             }

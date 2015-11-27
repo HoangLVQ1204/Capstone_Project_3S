@@ -294,6 +294,31 @@ angular.module('app', [
         .state('admin.adminReport',{
             url: '/adminReport',
             template: '<admin-report></admin-report>',
+            resolve: {
+                // dataChart: function(reportService){
+                //     reportService.getDateOverView()
+                //     .then(function(rs){
+                //         return rs;
+                //     })
+                // }
+
+                dataChart: function($http,config){
+                    var urlBase = config.baseURI + '/api/admin/report/orderCount';
+                    return $http({method: 'GET', url: urlBase});
+                }
+            },
+            controller: function($scope,dataChart){
+                console.log("---Here xxx---");
+                console.log(dataChart.data);
+                console.log("---Here xxx---");
+                 $scope.dataChart = dataChart.data;
+                 // $scope.listStoreCC = $scope.dataChart;
+                 // $scope.selectedStoreCC = $scope.dataChart[0];
+                 // $scope.listYearCC = $scope.dataChart[0].years;
+                 // $scope.selectedYearCC = $scope.dataChart[0].years[0];
+                 // $scope.listOrderOfMonthCC = $scope.dataChart[0].years[0].months;
+                        
+            },
             access: config.role.admin
         })
 
