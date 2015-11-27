@@ -7,7 +7,6 @@ app.controller('ProfileCtrl', ['$scope', 'authService', function ($scope, authSe
   authService.getProfileUser().then(function(rs){
     $scope.profile = rs.data;
     $scope.profile.avatar = config.hostServer + $scope.profile.avatar;
-    console.log("HISTORY: ",rs);
   },function(er){
     $scope.error = er.data;
   });
