@@ -177,10 +177,8 @@ module.exports = function(sequelize, DataTypes) {
             attributes: ['taskid'],
             where: {
               shipperid: shipperid,
-              statusid: [1, 2]
+              statusid: [2]
             }
-            // limit: 1,
-            // order: '"taskdate" DESC'
           }]
         });
       },
