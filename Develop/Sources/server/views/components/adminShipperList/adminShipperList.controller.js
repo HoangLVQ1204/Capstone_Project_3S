@@ -2,7 +2,7 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminShipperListController($scope,$state, dataService, $filter, config, $stateParams, $rootScope) {
+function adminShipperListController($scope,$state, dataService, $filter, config, $stateParams, $rootScope, socketAdmin) {
 
     //$scope.topShipper = $stateParams.newShipper; //getting fooVal
     //console.log($scope.topShipper);
@@ -35,45 +35,36 @@ function adminShipperListController($scope,$state, dataService, $filter, config,
             shipper['workingStatus'] = 'Offline';
             if (shipper.userstatus == 3)  shipper['workingStatus'] = 'Block';
         })
-        //if ($scope.topShipper) putToTop($scope.topShipper);
         $scope.displayedCollection = [].concat($scope.shipperList);
-        console.log(response);
+        getShipperOnline();
     })
 
-    //----------------------------------
-    //FUNCTION put new shipper to top
-    //-----------------------------------
-    //var putToTop = function (topShipper) {
-    //    var result = $.grep($scope.shipperList, function(e){ return e.username == $scope.topShipper.username; });
-    //    var indexTask = $scope.shipperList.indexOf(result[0]);
-    //    $scope.shipperList.unshift($scope.shipperList[indexTask]);
-    //    $scope.shipperList.tasks.splice(indexTask+1, 1);
-    //    console.log($scope.shipperList);
-    //}
-    
-    //----------------------------------
-    //FUNCTION LOAD SCRIPT
-    //-----------------------------------
+
+    function getShipperOnline(){
+        socketAdmin.listShippers.map(function (shipper) {
+            var result = $.grep($scope.shipperList, function(e){ return e.username == shipper.shipperID; });
+
+            if (shipper.isConnected)
+                result[0]['workingStatus'] = 'Online';
+            else
+                result[0]['workingStatus'] = 'Offline';
+        });
+    }
+
     $scope.$watch('$viewContentLoaded', function (event) {
 
         caplet();
 
     });
 
-    // START Listen to socket changes
+
     $rootScope.$on("admin:dashboard:getShipperList", function(event, args){
-        //alert(args.message);
-        console.log(args);
-        //$scope.onlineShipper = 0;
-        args.map(function (shipper) {
-            var result = $.grep($scope.shipperList, function(e){ return e.username == shipper.shipperID; });
-            if (shipper.isConnected) result[0]['workingStatus'] = 'Online';
-            else result[0]['workingStatus'] = 'Offline';
-        })
-        //getDataFromServer();
+
+        getShipperOnline();
+
     });
-    // END listen to socket changes
+
 }
 
-adminShipperListController.$inject = ['$scope','$state', 'dataService', '$filter', 'config', '$stateParams', '$rootScope'];
+adminShipperListController.$inject = ['$scope','$state', 'dataService', '$filter', 'config', '$stateParams', '$rootScope','socketAdmin'];
 angular.module('app').controller('adminShipperListController',adminShipperListController);

@@ -3,40 +3,46 @@
  */
 
 
-function socketAdmin(socketService,authService,mapService, $rootScope, notificationService){
+function socketAdmin(socketService,authService,mapService, $rootScope, notificationService, dataService, config){
 
     var EPSILON = 1e-8;            
 
-    var currentLocation = null;    
+    var currentLocation = null;
+
     var api = {};
+
+    api.listShippers = [];
+    api.listOnlineShipper = [];
+
+    $rootScope.unreadMail = 0;
+
+    getUnreadMail();
     /*
         add handlers
     */
-    
-    socketService.on('admin:register:location', function(data) {
 
-        mapService.setMapData(data.msg.mapData)
-        .then(function() {
-                //console.log('register', data);
-            });
+    function updateListShipper(data){
+        api.listShippers = data;
+        api.listOnlineShipper = [];
+        data.map(function (shipper) {
 
-        $rootScope.onlineShipper = 0;
+            if (shipper.isConnected) api.listOnlineShipper.push(shipper);
 
-        data.msg.shipperList.map(function (shipper) {
-
-            if (shipper.isConnected) $rootScope.onlineShipper++;
         });
+    }
 
+    socketService.on('admin:register:location', function(data) {
+        mapService.setMapData(data.msg.mapData);
+        updateListShipper(data.msg.shipperList);
     });
 
-    socketService.on('admin:add:shipper', function(data) {   
-       // console.log('admin:add:shipper', data);
+    socketService.on('admin:add:shipper', function(data) {
         mapService.addShipper(data.msg.shipper);
+        updateListShipper(data.msg.shipperList);
         $rootScope.$emit("admin:dashboard:getShipperList", data.msg.shipperList);
     });
 
-    socketService.on('admin:add:store', function(data) { 
-        // console.log('admin:add:store', data);       
+    socketService.on('admin:add:store', function(data) {
         mapService.addStore(data.msg.store);
     });
 
@@ -49,15 +55,14 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
     });
 
     socketService.on('admin:update:shipper', function(data) {
-        console.log('admin:update:shipper', data);
         var shipper = data.msg.shipper;
         mapService.updateShipper(shipper);
 
     });
 
     socketService.on('admin:delete:shipper', function(data) {
-        console.log('admin:delete:shipper', data);
         var shipper = data.msg.shipper;
+        updateListShipper(data.msg.shipperList);
         mapService.deleteShipper(shipper.shipperID);
         $rootScope.$emit("admin:dashboard:getShipperList", data.msg.shipperList);
     });
@@ -72,22 +77,31 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
     });
 
     socketService.on('admin:issue:notification', function(data) {
-        console.log('admin:issue:notification', data);
+        getUnreadMail().then(function () {
+            $rootScope.$emit("admin:issue:newIssue", data.msg);
+        });
         $rootScope.$emit("admin:issue:newIssue", data.msg);
-        $rootScope.notify(data.msg.notification);
+        $rootScope.notify(data.msg.notification, 1);
     });
 
     socketService.on('admin::issue:disconnected', function(data) {
         console.log("admin:issue:disconnected: ", data);
+        getUnreadMail().then(function () {
+            $rootScope.$emit("admin:issue:newIssue", data.msg);
+        });
         $rootScope.$emit("admin:issue:newIssue", data.msg);
-        $rootScope.notify(data.msg);
+
+        $rootScope.notify(data.msg, 1);
     });
-    //admin::issue:cancelorder
+
     socketService.on('admin::issue:cancelorder', function(data) {
         console.log("admin::issue:cancelorder", data);
-        $rootScope.$emit("admin:issue:newIssue", data.msg);
-        $rootScope.notify(data.msg);
+        getUnreadMail().then(function () {
+            $rootScope.$emit("admin:issue:newIssue", data.msg);
+        });
+        $rootScope.notify(data.msg, 1);
     });
+
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();        
         // TODO: Change later
@@ -205,10 +219,23 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
             'admin:notification:blockStore');
     };
 
+    function getUnreadMail() {
+        $rootScope.unreadMail=0;
+        return dataService.getDataServer(config.baseURI + "/api/getAllIssue").then(function(response){
+            var issueList = response.data;
+
+            issueList.map(function (issue) {
+                if (!issue.isresolved) $rootScope.unreadMail++;
+            });
+
+        });
+    }
+
     return api;
+
 }
 
 
-socketAdmin.$inject = ['socketService','authService','mapService', '$rootScope','notificationService'];
+socketAdmin.$inject = ['socketService','authService','mapService', '$rootScope','notificationService','dataService','config'];
 
 angular.module('app').factory('socketAdmin', socketAdmin);

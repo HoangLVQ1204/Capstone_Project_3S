@@ -357,8 +357,9 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
                 if (!api.shipperContainOrderID(shipperMarkers[i], orderID)) {
                     shipperMarkers[i].order.push(orderID);
                 }                
-                return;
-            }            
+                break;
+            }
+
         }
         api.updateReturnedValues();
     };
@@ -374,17 +375,18 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         for (var i = 0; i < shipperMarkers.length; ++i) {
             if (shipperMarkers[i].shipperID === newShipper.shipperID) {
                 shipperMarkers[i] = _.merge(shipperMarkers[i], newShipper);
-                return;
+                break;
             }            
         }
         api.updateReturnedValues();
     };
 
     api.deleteShipper = function(shipperID) {
+
         for (var i = shipperMarkers.length - 1; i >= 0; --i) {
             if (shipperMarkers[i].shipperID === shipperID) {
                 shipperMarkers.splice(i, 1);
-                return;
+                break;
             }
         }
         api.updateReturnedValues();
@@ -437,7 +439,7 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
                 if (!api.storeContainOrderID(storeMarkers[i], orderID)) {
                     storeMarkers[i].order.push(orderID);    
                 }
-                return;
+                break;
             }            
         }
         api.updateReturnedValues();

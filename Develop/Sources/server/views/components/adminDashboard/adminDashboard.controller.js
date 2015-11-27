@@ -2,7 +2,7 @@
  * Created by hoanglvq on 9/22/15.
  */
 
-function adminDashboardController($scope,$state,dataService, config, $rootScope){
+function adminDashboardController($scope,$state,dataService, config, $rootScope, socketAdmin){
 
     //Option for drop down list
     $scope.searchOptionsInactive = [
@@ -46,14 +46,12 @@ function adminDashboardController($scope,$state,dataService, config, $rootScope)
     $scope.shipperList = [];
     $scope.totalTaskToday = 0;
     $scope.totalDoneToday = 0;
-    //$scope.onlineShipper = $rootScope.onlineShipper;
-    //alert($rootScope.onlineShipper);
 
     getDataFromServer();
 
     function getDataFromServer() {
         var urlBase = config.baseURI + "/api/getTaskList";
-
+        $scope.onlineShipper = socketAdmin.listOnlineShipper.length;
         dataService.getDataServer(urlBase)
             .then(function (rs) {
                 //console.log(rs);
@@ -118,36 +116,15 @@ function adminDashboardController($scope,$state,dataService, config, $rootScope)
         }
     };
 
-
-    // START Listen to socket changes
     $rootScope.$on("admin:dashboard:getShipperList", function(event, args){
-        //alert(args.message);
-        console.log('args');
-        console.log(args);
-        $rootScope.onlineShipper = 0;
-        args.map(function (shipper) {
-            if (shipper.isConnected) $rootScope.onlineShipper++;
 
-        });
-        //$scope.$apply();
-        //getDataFromServer();
-       // console.log( $scope.onlineShipper);
-        //$scope.onlineShipper = 10;
+        $scope.onlineShipper = socketAdmin.listOnlineShipper.length;
+
     });
-
-    //setTimeout(function () {
-    //
-    //    $scope.onlineShipper = 9;
-    //    $scope.$apply();
-    //    console.log('AAAAA');
-    //
-    //},2000)
-    // END listen to socket changes
-
 }
 
 
-adminDashboardController.$inject = ['$scope','$state','dataService','config','$rootScope'];
+adminDashboardController.$inject = ['$scope','$state','dataService','config','$rootScope','socketAdmin'];
 
 angular.module('app').controller('adminDashboardController',adminDashboardController);
 

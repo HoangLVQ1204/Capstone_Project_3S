@@ -141,6 +141,17 @@ module.exports = function(sequelize, DataTypes) {
                 'isresolved': false
           }
         })
+      },
+
+      getIssueBySender: function (sender) {
+        return issue.findOne({
+          where: {
+            sender: sender,
+            typeid: [1, 2, 3, 6, 8]
+          },
+          limit: 1,
+          order: '"createddate" DESC',
+        })
       }
     }
   });

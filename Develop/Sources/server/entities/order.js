@@ -53,7 +53,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     statusid: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: true
     },
     ispending: {
       type: DataTypes.BOOLEAN,
@@ -111,7 +111,7 @@ module.exports = function(sequelize, DataTypes) {
         })
       },
       getCustomerAddress: function(){
-        var addressList = require("../config/address.json")
+        var addressList = require("../config/address.json");
         var address = (this.deliveryaddress) ? this.deliveryaddress : '';
         var wardText = (this.deliverywardid) ? addressList.ward[this.deliverywardid] : '';
         var districtText = (this.deliverydistrictid) ? addressList.district[this.deliverydistrictid] : '';
@@ -165,6 +165,22 @@ module.exports = function(sequelize, DataTypes) {
               //taskdate: taskdate,
               statusid: [1, 2, 4]
             }
+          }]
+        });
+      },
+
+      getLastestTasksOfShipper: function(task, shipperid) {
+        return order.findAll({
+          attributes: ['orderid'],
+          include: [{
+            model: task,
+            attributes: ['taskid'],
+            where: {
+              shipperid: shipperid,
+              statusid: [1, 2]
+            }
+            // limit: 1,
+            // order: '"taskdate" DESC'
           }]
         });
       },
@@ -445,7 +461,10 @@ module.exports = function(sequelize, DataTypes) {
               'model': modelTask,
               where: {
                 shipperid: shipper,
-                taskid: taskid
+                taskid: taskid,
+                statusid: {
+                  $in: [1, 2]
+                }
               }
             }
           ]

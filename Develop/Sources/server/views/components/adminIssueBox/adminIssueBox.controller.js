@@ -2,7 +2,7 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminIssueBoxController($scope,$state, $http, $filter, config, $rootScope, dataService) {
+function adminIssueBoxController($scope,$state, $http, $filter, config, $rootScope, dataService, socketAdmin) {
     //alert(0);
     getDataFromSever();
 
@@ -10,6 +10,7 @@ function adminIssueBoxController($scope,$state, $http, $filter, config, $rootSco
         $scope.issueList = [];
         $scope.currentPage = 0;
         $scope.pageSize = 10;
+        //$scope.unreadMail = 10;
         dataService.getDataServer(config.baseURI + "/api/getAllIssue").then(function(response){
             $scope.issueList = response.data;
             $scope.issueList.sort( $scope.sortByDate);
@@ -71,5 +72,5 @@ function adminIssueBoxController($scope,$state, $http, $filter, config, $rootSco
     });
 }
 
-adminIssueBoxController.$inject = ['$scope','$state', '$http', '$filter','config','$rootScope','dataService'];
+adminIssueBoxController.$inject = ['$scope','$state', '$http', '$filter','config','$rootScope','dataService','socketAdmin'];
 angular.module('app').controller('adminIssueBoxController',adminIssueBoxController);

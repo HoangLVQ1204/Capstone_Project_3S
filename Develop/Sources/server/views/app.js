@@ -339,7 +339,8 @@ angular.module('app', [
 
 
 
-    $rootScope.onlineShipper = 0;
+    //$rootScope.onlineShipper = 0;
+    //$rootScope.unreadMail = 0;
     $rootScope.readNewNoti = function(notification) {
         var urlBase = config.baseURI + '/api/notifications/' + notification.notificationid;     
         // console.log('readNotification', urlBase);
@@ -656,17 +657,16 @@ angular.module('app', [
             if(!authService.isLogged()){
                 $state.go("error");
                 event.preventDefault();
-            }
+            }else{
 
-            if(!authService.isRightRole(toState.access)){
-                $state.go("error");
-                event.preventDefault();
+                if(!authService.isRightRole(toState.access)){
+                    $state.go("error");
+                    event.preventDefault();
+                }
             }
-
         }
 
         if(toState.name == 'login'){
-
             if(authService.isLogged()){
                 if(authService.isRightRole(config.role.admin)){
                     $state.go('admin.dashboard');
