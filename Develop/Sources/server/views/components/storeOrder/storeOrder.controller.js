@@ -165,7 +165,8 @@ function storeOrderController($scope, dataService, config, socketService, socket
         index = clickedIndex;
         $scope.currentWeight = calculateWeight($scope.goods);
     };
-
+    $scope.currentWeight = calculateWeight($scope.goods)-$scope.good.weight*$scope.good.amount +$scope.newGood.weight*$scope.newGood.amount;
+                
     $scope.refreshGood = function(){
         $scope.good ={};
         $scope.currentWeight = calculateWeight($scope.goods);
