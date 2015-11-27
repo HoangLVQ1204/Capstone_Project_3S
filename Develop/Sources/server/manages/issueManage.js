@@ -93,11 +93,7 @@ module.exports = function (app) {
                     // console.log('++++++++++', tasks);
                     if (_.isEmpty(tasks) == false) {
                         _.each(tasks, function(task){
-                            // console.log('task:99', task.tasks);
-                            // console.log('task:100: ', task.tasks[0]);
-                            // if (task.statusid != 4) {
                                 listOrders.push(task.orderid);
-                            // }
                         })
                         //Add new issue
                         db.issue.createNewIssue(issueDisconnect)
@@ -133,7 +129,7 @@ module.exports = function (app) {
                                 //INSERT to order issue
                                 var newOrderIssue = {};
                                 newOrderIssue.issueid = newIssueID;
-                                listOrders = _.uniq(listOrders, 'storeid');
+                                listOrders = _.uniq(listOrders);
                                 var promises = listOrders.map(function(orderID){
                                     newOrderIssue.orderid = orderID;
                                     db.orderissue.createOrderIssue(newOrderIssue);
