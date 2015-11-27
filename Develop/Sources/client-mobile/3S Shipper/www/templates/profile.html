@@ -11,28 +11,33 @@
         <div class="item item-body">
           <label class="item item-input">
             <!--<i class="ion-android-calendar"></i>-->
+            <span class="input-label format-display"> Shipper ID:</span>
+            <p class="detail-p">{{profile.username}}</p>
+          </label>
+          <label class="item item-input">
+            <!--<i class="ion-android-calendar"></i>-->
             <span class="input-label format-display"> Date of Birtd:</span>
-            <p class="pull-right">{{profile.dob| date : 'dd-MM-yyyy'}}</p>
+            <p class="detail-p">{{profile.dob| date : 'dd-MM-yyyy'}}</p>
           </label>
           <label class="item item-input">
             <!--<i class="ion-card"></i>-->
             <span class="input-label format-display"> Identity Card:</span>
-            <p>{{profile.identitycard}}</p>
+            <p class="detail-p">{{profile.identitycard}}</p>
           </label>
           <label class="item item-input">
             <!--<i class="ion-android-call"></i>-->
             <span class="input-label format-display"> Phone Number:</span>
-            <p>{{profile.phonenumber}}</p>
+            <p class="detail-p">{{profile.phonenumber}}</p>
           </label>
           <label class="item item-input">
             <!--<i class="ion-email"></i>-->
             <span class="input-label format-display">Email:</span>
-            <p>{{profile.email}}</p>
+            <p class="detail-p">{{profile.email}}</p>
           </label>
           <label class="item item-input item-text-wrap">
             <!--<i class="ion-email"></i>-->
             <span class="input-label format-display">Address:</span>
-            <p>{{profile.address}}</p>
+            <p class="detail-p">{{profile.address}}</p>
           </label>
         </div>
       </div>
