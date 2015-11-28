@@ -26,11 +26,12 @@ function notificationService($q,$http, config, dataService, authService){
     }
 
     function genPagination() {
+        console.log('genPagination', currentPage);
         pageNumbers = [];
         for (var i = 0; i < parseInt((totalNumberNotifications + notificationsPerPage - 1) / notificationsPerPage); ++i) {
             pageNumbers.push(false);
         }
-        currentPage = 0;
+        // currentPage = 0;
         enableCurrentPage();
     }    
 
