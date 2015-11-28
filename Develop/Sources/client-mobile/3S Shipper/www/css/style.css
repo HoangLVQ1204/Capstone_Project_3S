@@ -57,6 +57,16 @@ a {
   line-height: 4px;
 }
 
+/*popup format*/
+ .popup .popup-body > span {
+    font-size: 1.2em;
+    line-height: 1.5;
+}
+
+ .popup > .popup-head {
+  border-bottom: 1px solid grey !important;
+}
+
 /*END Common*/
 
 /*---START Task & History---*/
@@ -429,6 +439,13 @@ div.fixed-button {
 .detail-p {
   margin-top: 0px !important;
 }
+
+.detail-orderid {
+  font-weight: bold;
+  color: #9B9B9B;
+  font-size: 1em;
+}
+
 /*--END StyleSheet For Order's Detail--*/
 
 /*START fancy-select*/
