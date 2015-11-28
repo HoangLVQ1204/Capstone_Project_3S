@@ -31,7 +31,7 @@
                                     <label class="control-label">Full name</label>
                                     <input type="text" name="fullname" ng-model="order.recipientname"
                                            class="form-control"
-                                           placeholder="Your customer name" parsley-required="true">
+                                           placeholder="Your customer name" parsley-required="true" parsley-rangelength="[0,50]">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="control-label">Phone</label>
@@ -134,7 +134,7 @@
                                             <tr>
                                                 <td colspan="10" class="text-left">
                                                     <div  class="col-sm-12 col-lg-12 btn-group btn-group-xs color">
-                                                        <button type="button" ng-click="refreshGood()" class=" btn btn-block buttonAdd " data-toggle="modal" data-target="#md-add-good"><i class="fa fa-plus"></i></button>
+                                                        <button type="button" ng-click="refreshGood()" class=" btn btn-block buttonAdd " data-toggle="modal" data-target="#md-add-good"><i class="fa fa-plus"></i>Add goods</button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -276,13 +276,13 @@
                             <div class="col-md-3">
                                 <label class="control-label">Width</label>
                                 <input type="text" class="form-control"
-                                       parsley-min="0" arsley-max="500"
+                                       parsley-min="0" parsley-max="500"
                                        placeholder="mm" ng-model="good.widthsize" data-parsley-type="number" parsley-required="true">
                             </div>
                             <div class="col-md-3">
-                                <label class="control-label">High</label>
+                                <label class="control-label">Height</label>
                                 <input type="text" class="form-control"
-                                       parsley-min="0" arsley-max="500"
+                                       parsley-min="0" parsley-max="500"
                                        placeholder="mm" ng-model="good.heightsize" data-parsley-type="number" parsley-required="true">
                             </div>
                         </div>
@@ -356,13 +356,13 @@
                             <div class="col-md-3">
                                 <label class="control-label">Width</label>
                                 <input type="text" class="form-control"
-                                       parsley-min="0" arsley-max="500"
+                                       parsley-min="0" parsley-max="500"
                                        placeholder="mm" ng-model="newGood.widthsize" data-parsley-type="number" parsley-required="true">
                             </div>
                             <div class="col-md-3">
                                 <label class="control-label">High</label>
                                 <input type="text" class="form-control"
-                                       parsley-min="0" arsley-max="500"
+                                       parsley-min="0" parsley-max="500"
                                        placeholder="mm" ng-model="newGood.heightsize" data-parsley-type="number" parsley-required="true">
                             </div>
                         </div>
@@ -376,7 +376,7 @@
                         <div class="pull-left col-md-8">
                             <section>
                               <div class="form-group column col-md-7 align-left">
-                                <div><h5>Current weight: </h5></div>
+                                <div><h5>Total current weight: </h5></div>
                                 <div ng-if="currentWeight<=30000"><h5>You can add more: </h5></div>
                                 <div ng-if="currentWeight >30000"><h5>Overweight: </h5></div>
                             </div>

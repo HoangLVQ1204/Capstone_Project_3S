@@ -169,6 +169,20 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
 
+      getLastestTasksOfShipper: function(task, shipperid) {
+        return order.findAll({
+          attributes: ['orderid'],
+          include: [{
+            model: task,
+            attributes: ['taskid'],
+            where: {
+              shipperid: shipperid,
+              statusid: [2]
+            }
+          }]
+        });
+      },
+
       getStoresOfOrder: function(orderIDs) {
         return order.findAll({
           attributes: ['storeid'],

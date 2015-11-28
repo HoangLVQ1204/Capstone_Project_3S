@@ -253,11 +253,11 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
             'typeid' : 5,
             'orderid' : newOrder.orderid
         };
-        // var code5 = {
-        //     'codecontent' : GenerateRandomCode(6),
-        //     'typeid' : 5,
-        //     'orderid' : newOrder.orderid
-        // };
+        var code5 = {
+            'codecontent' : GenerateRandomCode(6),
+            'typeid' : 4,
+            'orderid' : newOrder.orderid
+        };
        db.order.postOneOrder(newOrder)
        .then(function (order) {
                 //return res.status(200).json(order);
@@ -266,6 +266,7 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
                 db.confirmationcode.postOneCode(code2);
                 db.confirmationcode.postOneCode(code3);
                 db.confirmationcode.postOneCode(code4);
+                db.confirmationcode.postOneCode(code5);
                 for(var i = 0; i < req.body.goods.length; i++){
                     var good = {};                    
                     good.orderid = newOrderID;
