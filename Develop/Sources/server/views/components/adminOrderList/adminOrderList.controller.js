@@ -41,6 +41,7 @@ function adminOrderListController($scope,$state, dataService, $filter, config) {
             option: 'Status',
             value: 'orderstatus.statusname'
         }];
+
     $scope.dateOptions = [
         {
             option: 'Pickup Date',
@@ -50,31 +51,35 @@ function adminOrderListController($scope,$state, dataService, $filter, config) {
             option: 'Delivery Date',
             value: 'deliverydate'
         }];
+
     $scope.selected = $scope.searchOptions[0];
     $scope.selectedDate = $scope.dateOptions[0];
     $scope.dateRange = '';
 
-    dataService.getDataServer(config.baseURI + "/api/getAllOrder").then(function(response){
-        $scope.orderList = response.data;
-        $scope.orderList.sort(function (a,b) {
-            if (a.completedate < b.completedate) return -1;
-            if (a.completedate > b.completedate) return 1;
-            return 0;
-        });
-        $scope.displayedCollection = [].concat($scope.orderList);
-        //console.log(response);
-    })
+    getDataFromServer();
 
-    //----------------------------------
-    //FUNCTION LOAD SCRIPT
-    //-----------------------------------
+    function getDataFromServer(){
+        dataService.getDataServer(config.baseURI + "/api/getAllOrder").then(function(response){
+            $scope.orderList = response.data;
+            $scope.orderList.sort(function (a,b) {
+                if (a.completedate < b.completedate) return -1;
+                if (a.completedate > b.completedate) return 1;
+                return 0;
+            });
+            $scope.displayedCollection = [].concat($scope.orderList);
+        })
+    }
+
+    $rootScope.$emit("shipper:change:order:status", function(event,args){
+        getDataFromServer();
+    });
+
     $scope.$watch('$viewContentLoaded', function (event) {
 
         caplet();
 
 
     });
-
 
 }
 

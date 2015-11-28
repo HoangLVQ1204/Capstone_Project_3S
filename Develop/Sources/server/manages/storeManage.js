@@ -42,7 +42,6 @@ module.exports = function(app) {
             newStore['longitude'] = map.longitude+"";
             console.log('MAP', newStore)
         }, function(err) {
-             //console.log('AAAAA', err);
             next(err);
         }).then(function () {
             db.store.postOneStore(newStore)
@@ -125,7 +124,6 @@ module.exports = function(app) {
                     }))
                 })
                 Promise.all(promises).then(function() {
-                    // _.merge(fee, storeList);
                     res.status(200).json(fee);
                 }, function (err) {
                     res.status(400).json(err);
@@ -174,7 +172,7 @@ module.exports = function(app) {
         var store = req.store;
         return db.generalledger.getLatestAutoAccountDate()
             .then(function(total) {
-                res.status(200).json(total.paydate);
+                res.status(200).json(!!total ? total.paydate : null);
             }, function(err) {
                 next(err);
             })
@@ -183,7 +181,6 @@ module.exports = function(app) {
     var updateLedgerForOrder = function(req, res, next){
         var store = req.store;
         var ledger;
-        // newUser.Token = newUser.storeid;
         return db.generalledger.getLatestAutoAccountWithStoreID(store.storeid)
             .then(function(total) {
                 ledger = total;
@@ -202,7 +199,6 @@ module.exports = function(app) {
 
     var postNewLedger = function(req, res, next){
         var newLedger = req.body;
-        // newUser.Token = newUser.storeid;
         return db.generalledger.postNewLedger(newLedger)
             .then(function(ledger) {
                 res.status(201).json(ledger);

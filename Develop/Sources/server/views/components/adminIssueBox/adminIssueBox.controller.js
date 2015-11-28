@@ -47,24 +47,16 @@ function adminIssueBoxController($scope,$state, $http, $filter, config, $rootSco
 
     }
 
-    //----------------------------------
-    //FUNCTION LOAD SCRIPT
-    //-----------------------------------
+
     $scope.$watch('$viewContentLoaded', function (event) {
-
         caplet();
-
-
     });
 
 
-    // START Listen to socket changes
     $rootScope.$on("admin:issue:newIssue", function(event, args){
         dataService.getDataServer(config.baseURI + "/api/getAllIssue").then(function(response){
             $scope.issueList = response.data;
             $scope.issueList.sort( $scope.sortByDate);
-            //$scope.displayedOrderCollection = [].concat($scope.orderList);
-            //console.log($scope.issueList)
         })
     });
 }
