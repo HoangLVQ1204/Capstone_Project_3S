@@ -15,6 +15,7 @@ module.exports = function(server,app){
     var config      = require('../config/config');
     var controllerStore = require('../manages/storeManage')(app);
     var controllerShipper = require('../manages/shipperManage')(app);
+    io.gmapUtil = require('./googlemapUtil');
 
     // HELPER FUNCTION SOCKET
 
@@ -108,6 +109,59 @@ module.exports = function(server,app){
     };
 
 
+    var icons = {
+        shipperIcon: 'http://maps.google.com/mapfiles/kml/shapes/motorcycling.png',           
+        storeIcon: 'http://maps.google.com/mapfiles/kml/shapes/homegardenbusiness.png',
+        customerIcon: 'http://maps.google.com/mapfiles/kml/shapes/man.png',
+        sourceIcon: 'https://chart.googleapis.com/chart?' +
+            'chst=d_map_pin_letter&chld=S|FFFF00|000000',
+        disabledIcon: 'http://chart.apis.google.com/chart?' +
+            'chst=d_map_pin_letter&chld=x|3366FF'
+    };
+
+
+    /*
+        These functions are used to init shipper, store, customer
+     */
+    io.initShipper = function(shipperMarker, api) {  
+        if (!shipperMarker.order)  
+            shipperMarker.order = [];
+        shipperMarker.icon = icons.shipperIcon;
+        shipperMarker.avatar = "assets/avatar/shipper/SP000002.jpg";
+    }
+
+    io.initStore = function(storeMarker, api) {    
+        if (!storeMarker.order)
+            storeMarker.order = [];
+        storeMarker.icon = icons.storeIcon;    
+
+        return io.gmapUtil.getGeoText(storeMarker.latitude, storeMarker.longitude)
+        .then(function(geoText) {        
+            storeMarker.geoText = geoText;
+        })
+        .catch(function(err) {
+            console.log('initStore', err);
+        });    
+    }
+
+    // add customerID into orders
+    io.initCustomer = function(customerMarker, orders, api) {    
+        customerMarker.customerID = customerMarker.order[0];
+        customerMarker.order.forEach(function(order) {        
+            orders[order].customerID = customerMarker.customerID;
+        });
+
+        customerMarker.icon = icons.customerIcon;
+
+        return io.gmapUtil.getLatLng(customerMarker.geoText)
+        .then(function(coords) {
+            customerMarker.latitude = coords.latitude;
+            customerMarker.longitude = coords.longitude;
+        });    
+    }
+
+
+
     // DATA SOCKET
 
     /*
@@ -174,6 +228,34 @@ module.exports = function(server,app){
      */
     io.pendingShippers = {};
     
+    // Define observer for watching io.shippers, io.stores, io.customers, io.orders
+    var observer = function(changes) {
+        console.log('observer', changes);
+        for (shipperID in io.shippers) {
+            if (io.shippers[shipper].isConnected) {
+                io.reply({ type: 'shipper', clientID: shipperID }, 
+                    { mapData: io.getDataForShipper(shipperID) }, 'shipper:register:location');
+            }
+        }
+        for (storeID in io.stores) {
+            if (io.stores[storeID].socketID) {
+                io.reply({ type: 'store', clientID: storeID }, 
+                    { mapData: io.getDataForStore(storeID) }, 'store:register:location');
+            }
+        }
+        for (adminID in io.admins) {
+            if (io.admins[adminID].socketID) {
+                io.reply({ type: 'admin', clientID: adminID }, 
+                    { mapData: io.getDataForAdmin() }, 'admin:register:location');   
+            }
+        }        
+    };
+
+    Object.observe(io.admins, observer);
+    Object.observe(io.shippers, observer);
+    Object.observe(io.stores, observer);
+    Object.observe(io.customers, observer);
+    Object.observe(io.orders, observer);
     
 
 
@@ -227,53 +309,7 @@ module.exports = function(server,app){
             longitude: admin.longitude,
             socketID: socket.id            
         };              
-    };
-
-
-
-    io.containStore = function(storeID) {
-        return !!io.stores[storeID];     // bang!! bang!! return true/false :v
-    };
-
-    io.updateStore = function(store, socket) {
-        io.stores[store.storeID].latitude = store.latitude;
-        io.stores[store.storeID].longitude = store.longitude;
-        io.stores[store.storeID].socketID = socket.id;
-    };
-
-    io.addStore = function(store, socket) {
-        io.stores[store.storeID] = {
-            order: [],
-            latitude: store.latitude,
-            longitude: store.longitude,
-            socketID: (!!socket ? socket.id : null)
-        };
-    };
-
-
-
-    io.containShipper = function(shipperID) {
-        return !!io.shippers[shipperID];
-    };
-
-    io.updateShipper = function(shipper, socket) {
-        io.shippers[shipper.shipperID].latitude = shipper.latitude;
-        io.shippers[shipper.shipperID].longitude = shipper.longitude;
-        io.shippers[shipper.shipperID].socketID = socket.id;
-        io.shippers[shipper.shipperID].isConnected = true;
-        io.shippers[shipper.shipperID].numTasks = io.countNumTasksByShipperID(shipper.shipperID);
-    };
-
-    io.addShipper = function(shipper, socket) {
-        io.shippers[shipper.shipperID] = {
-            order: io.getOrderIDsOfShipper(shipper.shipperID),
-            latitude: shipper.latitude,
-            longitude: shipper.longitude,
-            socketID: (!!socket ? socket.id : null),
-            isConnected: (io.shippers.length == 0 ? true : false),
-            numTasks: io.countNumTasksByShipperID(shipper.shipperID)
-        };
-    };
+    };        
 
 
 
@@ -443,6 +479,33 @@ module.exports = function(server,app){
 
 
     // STORE FUNCTIONS
+    io.containStore = function(storeID) {
+        return !!io.stores[storeID];     // bang!! bang!! return true/false :v
+    };
+
+    io.updateStore = function(store, socket) {
+        io.stores[store.storeID].latitude = store.latitude;
+        io.stores[store.storeID].longitude = store.longitude;
+        io.stores[store.storeID].socketID = socket.id;
+    };
+
+    io.addStore = function(store, socket) {
+        var newStore = {
+            order: [],
+            latitude: store.latitude,
+            longitude: store.longitude,
+            socketID: (!!socket ? socket.id : null)
+        };
+        
+        return io.initStore(newStore)
+        .then(function() {
+            io.stores[newStore.storeID] = newStore;
+        })
+        .catch(function(err) {
+            console.log(err);
+        });
+    };
+
 	io.reconnectStore = function(storeid, socket){
       for(keys in io.orders){
           if (io.orders[keys].storeID === storeid) {
@@ -451,12 +514,20 @@ module.exports = function(server,app){
       }
     };
 
+    io.storeContainOrderID = function(store, orderID) {
+        var find = _.find(store.order, function(e) {
+            return e == orderID;
+        });
+        return !!find;
+    };
+
     io.updateOrderOfStore = function(storeID, orderID) {
-        io.stores[storeID].order.push(orderID);
+        if (!io.storeContainOrderID(io.stores[storeID], orderID))
+            io.stores[storeID].order.push(orderID);
     };
 
     io.removeOrderOfStore = function(storeID, orderID) {
-        for(var i =  0; i < io.stores[storeID].order.length; i++){
+        for(var i = io.stores[storeID].order.length - 1; i >= 0 ; i--){
             if (io.stores[storeID].order[i] === orderID) {
                 io.stores[storeID].order.splice(i, 1);
                 break;
@@ -468,6 +539,7 @@ module.exports = function(server,app){
         // remove socketID
         var store = _.clone(io.stores[storeID], true);
         return {
+            // geoText: store.geoText,
             storeID: storeID,
             order: store.order,
             latitude: store.latitude,
@@ -475,14 +547,17 @@ module.exports = function(server,app){
         };
     };
 
-    io.addOrder = function(orderID, storeID, shipperID) {
-        //:TODO: Change status of an ORDER
+
+    // ORDER FUNCTIONS
+    io.addOrder = function(orderID, store, shipper, customer) {
         io.orders[orderID] = {
-            shipperID: shipperID,
-            storeID: storeID,
+            shipperID: shipper.shipperID,
+            storeID: store.storeID,
             status: 'Picking up',
             isPending: false
         };
+
+        return io.addStore(store)
     };
 
     io.removeOrder = function(orderID) {
@@ -497,6 +572,31 @@ module.exports = function(server,app){
 
 
     // SHIPPER FUNCTION
+    io.containShipper = function(shipperID) {
+        return !!io.shippers[shipperID];
+    };
+
+    io.updateShipper = function(shipper, socket) {
+        io.shippers[shipper.shipperID].latitude = shipper.latitude;
+        io.shippers[shipper.shipperID].longitude = shipper.longitude;
+        io.shippers[shipper.shipperID].socketID = socket.id;
+        io.shippers[shipper.shipperID].isConnected = true;
+        io.shippers[shipper.shipperID].numTasks = io.countNumTasksByShipperID(shipper.shipperID);
+    };
+
+    io.addShipper = function(shipper, socket) {
+        var newShipper = {
+            order: io.getOrderIDsOfShipper(shipper.shipperID),
+            latitude: shipper.latitude,
+            longitude: shipper.longitude,
+            socketID: (!!socket ? socket.id : null),
+            isConnected: (io.shippers.length == 0 ? true : false),
+            numTasks: io.countNumTasksByShipperID(shipper.shipperID)
+        };
+        
+        io.initShipper(newShipper);
+        io.shippers[newShipper.shipperID] = newShipper;
+    };
 
     io.countNumTasksByShipperID = function(shipperID){
         var orderIDs = Object.keys(io.orders);
@@ -513,8 +613,16 @@ module.exports = function(server,app){
         io.shippers[shipper.shipperID].isConnected = false;
     };
 
+    io.shipperContainOrderID = function(shipper, orderID) {
+        var find = _.find(shipper.order, function(e) {
+            return e == orderID;
+        });
+        return !!find;
+    };
+
     io.updateOrderOfShipper = function(shipperID, orderID) {
-        io.shippers[shipperID].order.push(orderID);
+        if (!io.shipperContainOrderID(io.shippers[shipperID], orderID))
+            io.shippers[shipperID].order.push(orderID);
     };
 
     io.removeOrderOfShipper = function(shipperID, orderID) {
@@ -601,10 +709,15 @@ module.exports = function(server,app){
     // CUSTOMER FUNCTION
 
     io.addCustomer = function(customer) {
-        io.customers.push({
+        var newCustomer = {
             order: _.clone(customer.order),
             geoText: customer.geoText
-        });
+        };
+
+        return io.initCustomer(newCustomer)
+        .then(function() {
+            io.customers.push(newCustomer);
+        })
     };
 
     io.removeCustomer = function(customer) {

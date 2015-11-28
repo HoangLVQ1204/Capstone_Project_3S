@@ -55,7 +55,7 @@ function notificationService($q,$http, config, dataService, authService){
         // console.log('getTotalUnreadNotificationsServer', urlBase);
         return dataService.getDataServer(urlBase)
         .then(function(data) {            
-            totalUnreadNotifications = data.data;
+            totalUnreadNotifications = parseInt(data.data);
             genPagination();            
         });
         // return Promise.resolve();

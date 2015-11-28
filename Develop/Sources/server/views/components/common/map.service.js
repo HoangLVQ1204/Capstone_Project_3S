@@ -59,7 +59,7 @@ function initCustomer(customerMarker, orders, api) {
 }
 
 
-function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){        
+function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady,$state,$stateParams){        
 
     var shipperMarkers = [];
     var storeMarkers = [];
@@ -76,6 +76,12 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     // { type: 'store', storeID: xxx }
     // { type: 'orderdetail', orderID: xxx }
     var currentMode = { type: 'all' };
+
+    if ($state.current.name == 'store.dashboard') {
+        currentMode = { type: 'all' };        
+    } else if ($state.current.name == 'store.orderdetail') {
+        console.log('params', $stateParams.orderid);
+    }
 
     var api = {};
 
@@ -334,14 +340,19 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         return !!find;
     }
 
-    api.addShipper = function(inputShipper) {    
+    api.addShipper = function(inputShipper) {  
+        var d = $q.defer();  
         var shipper = _.clone(inputShipper, true);
-        if (this.containShipper(shipper)) return Promise.resolve();
+        if (this.containShipper(shipper)) {
+            d.resolve();
+            return d.promise;
+        }
         initShipper(shipper, api);
         shipperMarkers.push(shipper);
         console.log('addShipper', shipper);
         api.updateReturnedValues();
-        return Promise.resolve();
+        d.resolve();
+        return d.promise;
     };
 
     api.shipperContainOrderID = function(shipper, orderID) {
@@ -406,11 +417,7 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         var find = _.find(storeMarkers, function(storeMarker) {
             return store.storeID == storeMarker.storeID;
         });
-        if (find) {
-            return true;
-        } else {
-            return false;
-        }
+        return !!find;
     };
 
     api.addStore = function(inputStore) {        
@@ -456,39 +463,39 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
         mapData.shipper.forEach(function(e) {
             shipperMarkers.push(_.clone(e, true));
         });        
-        shipperMarkers.forEach(function(shipperMarker) {
-            initShipper(shipperMarker, api);
-        });        
+        // shipperMarkers.forEach(function(shipperMarker) {
+        //     initShipper(shipperMarker, api);
+        // });        
 
         storeMarkers.splice(0, storeMarkers.length);
         mapData.store.forEach(function(e) {
             storeMarkers.push(_.clone(e, true));
         });        
-        var storePromises = storeMarkers.map(function(storeMarker) {
-            return initStore(storeMarker, api);
-        });
-        // console.log('storePromises', storePromises);
-        return Promise.all(storePromises)
-        .then(function() {            
-            for (var e in orders) delete orders[e];
-            for (var e in mapData.orders) orders[e] = _.clone(mapData.orders[e], true);            
+        // var storePromises = storeMarkers.map(function(storeMarker) {
+        //     return initStore(storeMarker, api);
+        // });
+        // // console.log('storePromises', storePromises);
+        // return Promise.all(storePromises)
+        // .then(function() {            
+        //     for (var e in orders) delete orders[e];
+        //     for (var e in mapData.orders) orders[e] = _.clone(mapData.orders[e], true);            
 
             customerMarkers.splice(0, customerMarkers.length);
             mapData.customer.forEach(function(e) {
                 customerMarkers.push(_.clone(e, true));
             });            
-            var customerPromises = customerMarkers.map(function(customerMarker) {
-                return initCustomer(customerMarker, orders, api)                
-            });
-            return Promise.all(customerPromises);
-        })
-        .then(function() {
+        //     var customerPromises = customerMarkers.map(function(customerMarker) {
+        //         return initCustomer(customerMarker, orders, api)                
+        //     });
+        //     return Promise.all(customerPromises);
+        // })
+        // .then(function() {
             console.log('SET shipper', shipperMarkers);
             console.log('SET store', storeMarkers);
             console.log('SET orders', orders);
             console.log('SET customer', customerMarkers);    
             api.setMode({ type: 'all' });    
-        });
+        // });
     };
 
 
@@ -553,7 +560,7 @@ function mapService($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     return api;
 }
 
-mapService.$inject = ['$q','$http','uiGmapGoogleMapApi','uiGmapIsReady'];
+mapService.$inject = ['$q','$http','uiGmapGoogleMapApi','uiGmapIsReady','$state','$stateParams'];
 
 angular.module('app').factory('mapService', mapService);
 

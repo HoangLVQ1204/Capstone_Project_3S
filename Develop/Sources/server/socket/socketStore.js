@@ -3,7 +3,6 @@
 
 
 
-var gmapUtil = require('./googlemapUtil');
 var config   = require('../config/config');
 var _ = require('lodash');
 
@@ -22,7 +21,7 @@ module.exports = function(socket, io) {
         });
 
         if(numShippers.length != 0){
-            gmapUtil.getClosestShippers(data.msg.store, numShippers, config.filter)
+            io.gmapUtil.getClosestShippers(data.msg.store, numShippers, config.filter)
                 .then(function(results) {
                     if(results.length == 0){
                         console.log("---ERROR CASE: NO SHIPPER IN FILTER---");
