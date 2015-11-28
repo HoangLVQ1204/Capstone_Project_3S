@@ -34,44 +34,7 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
     socketService.on('admin:register:location', function(data) {
         mapService.setMapData(data.msg.mapData);
         updateListShipper(data.msg.shipperList);
-    });
-
-    socketService.on('admin:add:shipper', function(data) {
-        mapService.addShipper(data.msg.shipper);
-        updateListShipper(data.msg.shipperList);
         $rootScope.$emit("admin:dashboard:getShipperList", data.msg.shipperList);
-    });
-
-    socketService.on('admin:add:store', function(data) {
-        mapService.addStore(data.msg.store);
-    });
-
-    socketService.on('admin:add:order', function(data) {                
-        var msg = data.msg;
-        mapService.addOrder(msg.orderID, msg.store, msg.shipper, msg.customer)
-        .then(function() {
-            console.log('admin add order', data);
-        })
-    });
-
-    socketService.on('admin:update:shipper', function(data) {
-        var shipper = data.msg.shipper;
-        mapService.updateShipper(shipper);
-
-    });
-
-    socketService.on('admin:delete:shipper', function(data) {
-        var shipper = data.msg.shipper;
-        updateListShipper(data.msg.shipperList);
-        mapService.deleteShipper(shipper.shipperID);
-        $rootScope.$emit("admin:dashboard:getShipperList", data.msg.shipperList);
-    });
-
-    socketService.on('admin:update:order', function(data) {
-        var orders = data.msg.orders;
-        orders.forEach(function(e) {
-            mapService.updateOrder(e.orderID, e.orderInfo);
-        });
     });
 
     socketService.on('admin:issue:notification', function(data) {
@@ -104,14 +67,9 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
 
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();        
-        // TODO: Change later
-        currentUser.latitude = 21.028784;
-        currentUser.longitude = 105.826088;
 
         var dataAdmin = {
-            adminID: currentUser.username,
-            latitude: currentUser.latitude,
-            longitude: currentUser.longitude              
+            adminID: currentUser.username
         };
         return dataAdmin;
     };
@@ -216,6 +174,31 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
                 msg: msgToStore
             },
             'admin:notification:blockStore');
+    };
+
+    api.taskNotification = function (shipperList) {//send message after confirm payment
+        //var shipperList = [
+
+        var msgToStore = {
+            type: 'info',
+            title: 'Info',
+            content: 'New task update',
+            url: '#/store/transactionHistory',
+            isread: false,
+            createddate: new Date()
+        };
+        var user = api.getCurrentUser();
+        socketService.sendPacket(
+            {
+                type: 'admin',
+                clientID: user.adminID
+            },
+            'server',
+            {
+                shipperList: shipperList,
+                msg: msgToStore
+            },
+            'admin:notification:newTask');
     };
 
     function getUnreadMail() {

@@ -4,21 +4,20 @@
 app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoading', '$timeout', function ($scope, $ionicPopup, dataFactory, $ionicLoading, $timeout) {
 
   //Get All Task of shipper
+  $scope.isSend = false;
   getAllTaskOfShipper();
 
   //socket on issue
   $scope.$on("issue:resolve", function (event, args) {
     //Continue not show this
     if (args.type !== 1 && args.type !== 2 && args.type !== 3 && args.type !== 6 && args.type !== 8) {
+
       var alertPopup = $ionicPopup.alert({
         title: 'Information',
         template: 'Your Task is resolved'
       });
-
       alertPopup.then(function(res) {
         console.log('You got it');
-        //reload data
-        //getListOfTask();
       });
     }
   });
@@ -160,19 +159,20 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
       scope: $scope,
       templateUrl: 'loading.html',
       noBackdrop: false,
-      // delay: 100
     });
   };
   //END Show IonicLoading
 
   //START Alert Dialog
   $scope.showAlert = function(des) {
+
     var alertPopup = $ionicPopup.alert({
       title: 'Information',
       template: des.content
     });
 
     alertPopup.then(function(res) {
+      $scope.isSend = false;
       if (des.id === 1) {
         $scope.btnContinue = false;
         $scope.showLoading();
@@ -188,8 +188,10 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
    * ChangePending of order
    * */
   $scope.changeIsPendingOrderIssue = function (issueId) {
+
     //disable the button on click
     $scope.btnContinue = true;
+
     //Change ispending of Task
     var data = {'issueId': issueId};
     var urlBase = config.hostServer + "api/changeIsPendingOrder";
@@ -212,101 +214,126 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
    * @param: issue
    * */
   $scope.submitData = function (issue) {
-    //Validation
+      $scope.isSend = true;
+
+      //Validation
       if ( typeof issue === "undefined" || issue.category === null || typeof issue.category === "undefined") {
-        $ionicPopup.alert({
-          title: 'Information',
+        var msg1 = {
+          id: 999,
           content: 'Please choose Type !'
-        }).then(function(res) {
-        });
+        }
+        $scope.showAlert(msg1);
       } else if (issue.type === null || typeof issue.type === "undefined") {
-        $ionicPopup.alert({
-          title: 'Information',
+        var msg2 = {
+          id: 999,
           content: 'Please choose Reason !'
-        }).then(function(res) {
-        });
+        }
+        $scope.showAlert(msg2);
       } else if (issue.category.categoryID != 1 && typeof issue.issuedOrder === "undefined") {
-        $ionicPopup.alert({
-          title: 'Information',
+        var msg3 = {
+          id: 999,
           content: 'Please choose Order !'
-        }).then(function(res) {
-        });
+        }
+        $scope.showAlert(msg3);
       } else if (typeof issue.description === "undefined" || issue.description === "") {
-        $ionicPopup.alert({
-          title: 'Information',
+        var msg4 = {
+          id: 999,
           content: 'Please write Content !'
-        }).then(function(res) {
-        });
+        }
+        $scope.showAlert(msg4);
       } else {
+
         //post an API
         var listOrders = [];
+
         //Pending: All order will sent
         if (issue.category.categoryID == 1) {
+
           //$scope.listOrders
           listOrders = $scope.listOrderActive;
-          if (listOrders <= 0) {
-            $ionicPopup.alert({
-              title: 'Information',
+          if (listOrders.length == 0) {
+            var msg5 = {
+              id: 999,
               content: "You don't have task is actived"
-            }).then(function(res) {
-            });
+            }
+            $scope.showAlert(msg5);
           }
         } else {
+
           //Cancel
           listOrders = issue.issuedOrder;
+          if (listOrders.length == 0) {
+            var msg6 = {
+              id: 999,
+              content: "You don't have task"
+            }
+            $scope.showAlert(msg6);
+          }
         }
-        //List issuedOrder
-        var listPostOrders = [];
-        listOrders.forEach(function(item){
-          listPostOrders.push(item.text);
-        });
-        ////New Issue
-        var newIssue = {};
-        newIssue.typeid = issue.type.typeID;
-        newIssue.description = issue.description;
-        var data = [];
-        data.push({
-          'orders': listPostOrders,
-          'issue': newIssue,
-          'categoryissue': issue.category.categoryID
-        });
-        var urlCreateBase = config.hostServer + 'api/issue';
-        dataFactory.postDataServer(urlCreateBase, data)
-          .success(function (rs) {
+        if (listOrders.length > 0) {
 
-            $ionicPopup.alert({
-              title: 'Success',
-              content: 'Your Issue is sent to Admin'
-            }).then(function(res) {
-              //Pass to function changeIsPendingOrder
-              $scope.issueId = rs[0].issueid;
-              //1 is Pending
-              if (rs[0].catissue == 1) {
-                $scope.btnContinue = false;
-                $scope.showLoading();
-              }
-              //TODO Del order choosed in issuedOrder array for 'Cancel Order' cause
-              //var delIndex;
-              //issue.issuedOrder.forEach(function(item) {
-              //  $scope.selectable.forEach(function(i) {
-              //    if (i.val === item.val) {
-              //      delIndex = $scope.selectable.indexOf(i);
-              //      if (delIndex != -1) {
-              //        $scope.selectable.splice(delIndex, 1);
-              //      }
-              //    }
-              //  });
-              //});
-              //reset values
-              issue.description = '';
-              issue.category = null;
-              issue.type = null;
-              issue.issuedOrder = [];
-            });
-          })
-          .error(function (error) {
-            console.log('Unable to load customer data: ' + error);
+          //send issue
+          //List issuedOrder
+          var listPostOrders = [];
+          listOrders.forEach(function(item){
+            listPostOrders.push(item.text);
           });
+
+          //New Issue
+          var newIssue = {};
+          newIssue.typeid = issue.type.typeID;
+          newIssue.description = issue.description;
+          var data = [];
+
+          data.push({
+            'orders': listPostOrders,
+            'issue': newIssue,
+            'categoryissue': issue.category.categoryID
+          });
+
+          var urlCreateBase = config.hostServer + 'api/issue';
+          dataFactory.postDataServer(urlCreateBase, data)
+            .success(function (rs) {
+
+              $ionicPopup.alert({
+                title: 'Success',
+                content: 'Your Issue is sent to Admin'
+              }).then(function(res) {
+                $scope.isSend = false;
+
+                //Pass to function changeIsPendingOrder
+                $scope.issueId = rs[0].issueid;
+
+                //1 is Pending
+                if (rs[0].catissue == 1) {
+                  $scope.btnContinue = false;
+                  $scope.showLoading();
+                }
+
+                //TODO Del order choosed in issuedOrder array for 'Cancel Order' cause
+                //var delIndex;
+                //issue.issuedOrder.forEach(function(item) {
+                //  $scope.selectable.forEach(function(i) {
+                //    if (i.val === item.val) {
+                //      delIndex = $scope.selectable.indexOf(i);
+                //      if (delIndex != -1) {
+                //        $scope.selectable.splice(delIndex, 1);
+                //      }
+                //    }
+                //  });
+                //});
+
+                //reset values
+                issue.description = '';
+                issue.category = null;
+                issue.type = null;
+                issue.issuedOrder = [];
+              });
+            })
+            .error(function (error) {
+              console.log('Unable to load customer data: ' + error);
+            });
+        }
       }
   }
 }]);

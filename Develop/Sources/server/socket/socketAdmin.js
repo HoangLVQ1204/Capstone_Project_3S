@@ -7,7 +7,6 @@ module.exports = function(socket, io, app) {
     var notificationManage = require('../manages/notificationManage')(app);
     var db = app.get('models');
     socket.on('disconnect', function() {
-
         console.log('Admin', socket.id, 'disconnect');
     });
 
@@ -114,5 +113,19 @@ module.exports = function(socket, io, app) {
 
 
     });
+
+    socket.on('admin:notification:newTask', function(data) {
+            data.msg.shipperList.map(function (shipperid) {
+                io.forward(
+                    {
+                        type: 'admin',
+                        clientID: data.sender
+                    },
+                    { type: 'shipper', clientID: shipperid},
+                    data.msg.msg,
+                    'shipper:notification:newTask');
+                console.log('New Task', data.msg);
+            });
+            })
 
 }

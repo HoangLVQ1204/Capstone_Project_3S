@@ -1,7 +1,7 @@
 /**
  * Created by Hoang on 10/18/2015.
  */
-function adminAssignTaskController($scope,$state, $http, authService, config, dataService) {
+function adminAssignTaskController($scope,$state, $http, authService, config, dataService, socketAdmin) {
 
 
     $scope.tasksList = [];//all task of shipper
@@ -119,7 +119,8 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
                         i++;
                     } else i++;
                 }
-            })
+            });
+            sendSocketToShipper();
             getOldTask();
 
                 //$http.put(config.baseURI + "/api/updateTaskNoShipper", $scope.taskNoShipper);
@@ -275,6 +276,20 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
             })
 
         })
+    };
+
+    function sendSocketToShipper(){
+        var listShipper = [];
+        $scope.tasksList.map(function (shipper) {
+            shipper.tasks.map(function (task) {
+                var result = $.grep($scope.oldTasks, function(e){ return e.taskid == task.taskid; });
+                if (result.length == 0 || (result.length > 0 && result[0].shipperid != shipper.username)){
+                    var index = listShipper.indexOf(shipper.username);
+                    if (index == -1) listShipper.push(shipper.username);
+                }
+            })
+        });
+        socketAdmin.taskNotification(listShipper);
     }
     //----------------------------------
     //FUNCTION LOAD SCRIPT
@@ -290,5 +305,5 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
 
 }
 
-adminAssignTaskController.$inject = ['$scope','$state', '$http', 'authService', 'config', 'dataService'];
+adminAssignTaskController.$inject = ['$scope','$state', '$http', 'authService', 'config', 'dataService','socketAdmin'];
 angular.module('app').controller('adminAssignTaskController',adminAssignTaskController);

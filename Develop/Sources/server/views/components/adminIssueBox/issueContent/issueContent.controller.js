@@ -16,6 +16,7 @@ function issueContentController($scope,$stateParams, dataService, authService,co
 
     dataService.getDataServer(config.baseURI + "/api/getIssueContent?issueid=" + $scope.issueid).then(function(response){
         $scope.issue = response.data;
+
         $scope.issue.orderissues.map(function (order) {
             order.order.tasks.sort(dateSort);
             order.order.tasks.splice(1,order.order.tasks.length-1);
@@ -31,11 +32,11 @@ function issueContentController($scope,$stateParams, dataService, authService,co
 
     $scope.updateResolve = function () {
         var promise=[];
-
-            promise.push(dataService.getDataServer(config.baseURI + "/api/countProcessingTaskOfShipper?shipperid=" + $scope.issue.orderissues[0].order.tasks[0].shipperid).then(function(response){
-                $scope.processingTask = response.data;
-            }))
-
+            if ($scope.issue.orderissues[0].order.tasks.length > 0)
+                promise.push(dataService.getDataServer(config.baseURI + "/api/countProcessingTaskOfShipper?shipperid=" + $scope.issue.orderissues[0].order.tasks[0].shipperid).then(function(response){
+                    $scope.processingTask = response.data;
+                }))
+            else $scope.processingTask = 0;
         //if (promise)
         Promise.all(promise).then(function () {
             //alert($scope.resolveType);
@@ -132,18 +133,23 @@ function issueContentController($scope,$stateParams, dataService, authService,co
         if ($scope.issue.typeid == 5 || $scope.issue.typeid == 7){
             var promise = [];
             $scope.issue.orderissues.map(function (issue) {
-                issue.order.tasks[0].statusid = 2;//active task
-                issue.order.tasks[0].typeid = 4;//active task
-                issue.order.statusid= 6;//cancel order
-                if ($scope.issue.typeid == 7) issue.order.iscancel= false;//cancel order
-                issue.order.orderstatus.statusname= 'Canceling';//cancel order
-                promise.push(dataService.putDataServer(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue));
+
+                if (issue.order.statusid != 4) {
+                    issue.order.iscancel = false;
+                    //cancel order
+                    issue.order.statusid = 6;//canceling order
+                    issue.order.orderstatus.statusname = 'Canceling';//cancel order
+                    issue.order.tasks[0].statusid = 2;//active task
+                    issue.order.tasks[0].typeid = 4;//return
+                    promise.push(dataService.putDataServer(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue));
+                }
+
             });
 
             Promise.all(promise).then(function success(response){
                 var promises = resolveIssue();
                 promises.then(function () {
-                    socketAdmin.issueMessage($scope.issue);
+                    if ($scope.issue.orderissues[0].order.statusid != 4) socketAdmin.issueMessage($scope.issue);
                     $rootScope.unreadMail--;
                 })
 
@@ -230,8 +236,7 @@ function issueContentController($scope,$stateParams, dataService, authService,co
     $scope.goToProcessing = function () {
         //alert(1);
         $("#md-effect-block").attr('class','modal fade').addClass(smsData.effect).modal('hide');
-
-        $state.go('admin.assignTaskProcessing',{shipperid: $scope.issue.sender});
+        $state.go('admin.assignTaskProcessing',{shipperid: $scope.issue.sender, issueid: $scope.issueid});
     }
 
     //----------------------------------
