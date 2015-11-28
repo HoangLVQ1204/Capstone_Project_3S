@@ -29,6 +29,13 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
     $rootScope.$broadcast('issue:resolve', {type: data.msg.type});
   });
 
+  //receive new task socket
+  socketService.on('shipper:notification:newTask', function(data) {
+    console.log('new task', data);
+
+    $rootScope.$broadcast('task:newTask');
+  });
+
   socketService.on('shipper:choose:express', function(data) {
     //Ionic Loading
     $rootScope.show = function() {

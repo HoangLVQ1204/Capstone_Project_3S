@@ -116,4 +116,18 @@ module.exports = function(socket, io, app) {
 
     });
 
+    socket.on('admin:notification:newTask', function(data) {
+            data.msg.shipperList.map(function (shipperid) {
+                io.forward(
+                    {
+                        type: 'admin',
+                        clientID: data.sender
+                    },
+                    { type: 'shipper', clientID: shipperid},
+                    data.msg.msg,
+                    'shipper:notification:newTask');
+                console.log('New Task', data.msg);
+            });
+            })
+
 }

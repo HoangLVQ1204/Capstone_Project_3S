@@ -130,6 +130,7 @@ function adminAssignTaskProcessingController($scope,$state, $rootScope, authServ
             if ($scope.orderList.length == 0){
                 resolveChangeShipperIssue();
             }
+            sendSocketToShipper();
             getOldTask();
                 //$http.put(config.baseURI + "/api/updateTaskNoShipper", $scope.taskNoShipper);
 
@@ -325,6 +326,20 @@ function adminAssignTaskProcessingController($scope,$state, $rootScope, authServ
            })
 
        })
+    }
+
+    function sendSocketToShipper(){
+        var listShipper = [];
+        $scope.tasksList.map(function (shipper) {
+            shipper.tasks.map(function (task) {
+                var result = $.grep($scope.oldTasks, function(e){ return e.taskid == task.taskid; });
+                if (result.length == 0 || (result.length > 0 && result[0].shipperid != shipper.username)){
+                    var index = listShipper.indexOf(shipper.username);
+                    if (index == -1) listShipper.push(shipper.username);
+                }
+            })
+        });
+        socketAdmin.taskNotification(listShipper);
     }
 
     var dateSort =  function(x, y){

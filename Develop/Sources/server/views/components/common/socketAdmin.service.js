@@ -219,6 +219,31 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
             'admin:notification:blockStore');
     };
 
+    api.taskNotification = function (shipperList) {//send message after confirm payment
+        //var shipperList = [
+
+        var msgToStore = {
+            type: 'info',
+            title: 'Info',
+            content: 'New task update',
+            url: '#/store/transactionHistory',
+            isread: false,
+            createddate: new Date()
+        };
+        var user = api.getCurrentUser();
+        socketService.sendPacket(
+            {
+                type: 'admin',
+                clientID: user.adminID
+            },
+            'server',
+            {
+                shipperList: shipperList,
+                msg: msgToStore
+            },
+            'admin:notification:newTask');
+    };
+
     function getUnreadMail() {
         $rootScope.unreadMail=0;
         return dataService.getDataServer(config.baseURI + "/api/getAllIssue").then(function(response){
