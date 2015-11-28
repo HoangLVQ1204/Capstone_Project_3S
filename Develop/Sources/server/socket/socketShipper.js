@@ -26,29 +26,6 @@ module.exports = function(socket, io, app) {
         issueManage.createNewIssue(shipper.shipperID);
 
         io.disconnectShipper(shipper.shipperID);
-
-        io.forward(
-        {
-            type: 'shipper',
-            clientID: shipper.shipperID
-        },
-        [ { room: shipper.shipperID }, 'admin' ],
-        {
-            shipper: shipper,
-            shipperList: io.getAllShippers()
-        },
-        [ 'store:delete:shipper', 'admin:delete:shipper' ]);
-
-        io.forward(
-        {
-            type: 'shipper',
-            clientID: shipper.shipperID
-        },
-        [ { room: shipper.shipperID }, 'admin' ],
-        {
-            orders: orders
-        },
-        [ 'store:update:order', 'admin:update:order' ]);        
     });
 
     socket.on('shipper:disconnect', function() {        
@@ -58,18 +35,6 @@ module.exports = function(socket, io, app) {
     socket.on('shipper:choose:express', function(data) {
         if (io.pendingShippers[data.msg.shipper.shipperID]) {
             io.forward(data.sender, data.receiver, data.msg, 'store:find:shipper');
-            
-            // notify other shippers
-            // var storeID = data.receiver.clientID;
-            // var shipperMsg = {
-            //     store: {
-            //         storeID: storeID
-            //     }
-            // };        
-            // console.log('socketStore:90 pendingShippers', io.pendingShippers);
-            // io.notifyPendingShippers(storeID, data.msg.shipper.shipperID, data.receiver, shipperMsg);
-            // io.removePendingShippersOfStore(storeID);
-            // console.log('pendingShippers', io.pendingShippers);    	    
         } else {
             console.log('dont exist in pendingShippers');
         }
@@ -77,13 +42,13 @@ module.exports = function(socket, io, app) {
 
     socket.on('shipper:update:location', function(data) {
         console.log('update loc', data);
+        
         io.forward(data.sender, data.receiver, data.msg, ['admin:update:shipper', 'store:update:shipper']);
     });
 
     socket.on('shipper:update:status', function(data) {
         var shipper = io.getOneShipper(data.msg.shipperID);
         io.updateStatusShipper(shipper);
-
     });
 
     socket.on('shipper:reject:order', function(data) {

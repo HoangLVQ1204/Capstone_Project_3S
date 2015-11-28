@@ -130,8 +130,9 @@ api.getLatLng = function(geoText) {
 api.getGeoText = function(latitude, longitude) {
 	var latlng = latitude + ',' + longitude;
 	var d = Q.defer();
-    gmAPI.geocode({
+    gmAPI.reverseGeocode({
         latlng: latlng
+        // location_type: 'APPROXIMATE'
     }, function(err, response) {
         if (err) {
 			d.reject(err);			
