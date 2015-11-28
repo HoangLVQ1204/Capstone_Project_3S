@@ -18,11 +18,8 @@ function adminIssueBoxController($scope,$state, $http, $filter, config, $rootSco
             //console.log($scope.issueList)
         }).then(function () {
 
-            $state.go('admin.issueBox.content',{issueid: $scope.issueList[0].issueid},{
-                //reload: true,
-            });
+            $state.go('admin.issueBox.content',{issueid: $scope.issueList[0].issueid});
 
-            //alert(1);
         })
     }
 

@@ -243,7 +243,6 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
       .then(function(user) {
         mapService.addShipper(user)
           .then(function() {
-            console.log(":Heerer3");
             socketService.sendPacket(
               {
                 type: 'shipper',

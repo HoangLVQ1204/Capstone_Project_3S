@@ -243,5 +243,27 @@
 
     </div>
 
+    <!--////////////////////////////////////////////////////////////////////////-->
+    <!--//////////     MODAL EFFECT DEMO    //////////-->
+    <!--//////////////////////////////////////////////////////////////////////-->
+    <!--&ndash;&gt;-->
+    <!-- //modal-->
+    <div id="md-effect-dialog" class="modal fade" tabindex="-1" data-width="400">
+        <div class="modal-header bg-inverse bd-inverse-darken">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+            <h4 class="modal-title">Confirm Dialog</h4>
+        </div>
+        <!-- //modal-header-->
+        <div class="modal-body align-xs-center">
+            <form name="myForm">
+                <h5><strong>All tasks of shipper {{originShipperID}} was assign for other shipper </strong></h5><br>
+                <p>Issue of {{issue.sender}} was resolved by Change Shipper</p>
+                 <hr>
 
+                <button type="button" class="btn btn-danger" ng-click="goInbox()"><i class="fa fa-check-circle"></i> OK</button>
+
+            </form>
+        </div>
+        <!-- //modal-body-->
+    </div>
 </div>
