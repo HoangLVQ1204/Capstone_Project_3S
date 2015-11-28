@@ -105,7 +105,7 @@ angular.module('app', [
         })
 
         .state('admin.assignTaskProcessing',{
-            url: '/assignTaskProcessing?shipperid',
+            url: '/assignTaskProcessing?shipperid&&issueid',
             template: '<admin-assign-task-processing></admin-assign-task-processing>',
             access: config.role.admin
         })

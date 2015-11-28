@@ -33,7 +33,7 @@
       </div>
       <textarea style="width: 100%; height: 220px; padding: 15px" ng-model="issue.description">
       </textarea>
-      <button class="button button-block btCommon" type="submit">Send</button>
+      <button ng-class="(isSend==true) ? 'not-active' : ''" class="button button-block btCommon" type="submit">Send</button>
     </form>
   </ion-content>
 </ion-view>

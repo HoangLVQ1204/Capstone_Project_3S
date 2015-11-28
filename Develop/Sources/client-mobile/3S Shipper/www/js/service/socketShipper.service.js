@@ -245,7 +245,6 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
       .then(function(user) {
         mapService.addShipper(user)
           .then(function() {
-            console.log(":Heerer3");
             socketService.sendPacket(
               {
                 type: 'shipper',
@@ -272,26 +271,6 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
       .catch(function(err){
         console.log(":Failllll " + err);
       });
-  };
-
-  /*
-   * io: Change status of shipper when shipper logout
-   * @author: quyennv
-   * */
-  api.updateStatusShipper = function() {
-    var shipper = authService.getCurrentInfoUser();
-    console.log("shipper", shipper);
-    socketService.sendPacket(
-      {
-        type: 'shipper',
-        clientID: shipper.username
-      },
-      'admin',
-      {
-        shipperID: shipper.username
-      },
-      'shipper:update:status'
-    )
   };
 
   return api;

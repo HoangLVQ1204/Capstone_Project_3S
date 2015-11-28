@@ -157,7 +157,8 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
                 order['statusid'] = 1;
                 //order['taskstatus'] = new Object();
                 //order['taskstatus']['statusname'] = 'Inactive';
-                if (order.order.orderstatus == 1 ) order['typeid'] = 1
+                console.log(order.order.statusid );
+                if (order.order.statusid == 1 ) order['typeid'] = 1;
                   else order['typeid'] = 2;
                 order['taskdate'] = new Date(Date.now());
             }

@@ -26,7 +26,17 @@ module.exports = function(sequelize, DataTypes) {
       },
       createOrderIssue: function(newOrderIssue) {
         return orderissue.build(newOrderIssue).save();
-      }
+      },
+
+      getOrderOfIssue: function(issueid) {
+        return orderissue.findAll({
+          attribute: 'orderid',
+
+          where: {
+            'issueid': issueid
+          }
+        });
+      },
     }
   });
   return orderissue;

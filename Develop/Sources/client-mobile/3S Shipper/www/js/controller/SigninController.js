@@ -66,7 +66,7 @@ app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService',
       noBackdrop: false,
       template: '<ion-spinner icon="bubbles" class="spinner-balanced"/>'
     });
-    socketShipper.updateStatusShipper();
+
     authService.signOut();
     socketService.disconnect();
     $state.go('sign-in');

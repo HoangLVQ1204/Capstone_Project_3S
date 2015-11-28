@@ -1,4 +1,20 @@
-﻿--DROP/DELETE TABLE--
+﻿/*
+Navicat PGSQL Data Transfer
+
+Source Server         : 3S
+Source Server Version : 90500
+Source Host           : localhost:5432
+Source Database       : 3S
+Source Schema         : public
+
+Target Server Type    : PGSQL
+Target Server Version : 90500
+File Encoding         : 65001
+
+Date: 2015-11-28 00:29:08
+*/
+
+--DROP/DELETE TABLE--
 
 /*
 DROP TABLE Notification;
@@ -30,22 +46,16 @@ DROP TABLE province;
 */
 
 
-/*
-Navicat PGSQL Data Transfer
-
-Source Server         : decodedmrq
-Source Server Version : 90405
-Source Host           : localhost:5432
-Source Database       : 3S
-Source Schema         : public
-
-Target Server Type    : PGSQL
-Target Server Version : 90405
-File Encoding         : 65001
-
-Date: 2015-11-18 10:55:17
-*/
-
+-- ----------------------------
+-- Sequence structure for bannedhistorylog_logid_seq
+-- ----------------------------
+DROP SEQUENCE IF EXISTS "public"."bannedhistorylog_logid_seq";
+CREATE SEQUENCE "public"."bannedhistorylog_logid_seq"
+ INCREMENT 1
+ MINVALUE 1
+ MAXVALUE 9223372036854775807
+ START 1
+ CACHE 1;
 
 -- ----------------------------
 -- Sequence structure for confirmationcode_codeid_seq
@@ -55,9 +65,9 @@ CREATE SEQUENCE "public"."confirmationcode_codeid_seq"
  INCREMENT 1
  MINVALUE 1
  MAXVALUE 9223372036854775807
- START 56
+ START 135
  CACHE 1;
-
+SELECT setval('"public"."confirmationcode_codeid_seq"', 135, true);
 
 -- ----------------------------
 -- Sequence structure for generalledger_ledgerid_seq
@@ -78,9 +88,9 @@ CREATE SEQUENCE "public"."goods_goodsid_seq"
  INCREMENT 1
  MINVALUE 1
  MAXVALUE 9223372036854775807
- START 20
+ START 43
  CACHE 1;
-
+SELECT setval('"public"."goods_goodsid_seq"', 43, true);
 
 -- ----------------------------
 -- Sequence structure for issue_issueid_seq
@@ -93,7 +103,6 @@ CREATE SEQUENCE "public"."issue_issueid_seq"
  START 1
  CACHE 1;
 
-
 -- ----------------------------
 -- Sequence structure for notification_notificationid_seq
 -- ----------------------------
@@ -102,9 +111,9 @@ CREATE SEQUENCE "public"."notification_notificationid_seq"
  INCREMENT 1
  MINVALUE 1
  MAXVALUE 9223372036854775807
- START 1
+ START 3
  CACHE 1;
-
+SELECT setval('"public"."notification_notificationid_seq"', 3, true);
 
 -- ----------------------------
 -- Sequence structure for task_taskid_seq
@@ -115,17 +124,6 @@ CREATE SEQUENCE "public"."task_taskid_seq"
  MINVALUE 1
  MAXVALUE 9223372036854775807
  START 14
- CACHE 1;
-
--- ----------------------------
--- Sequence structure for bannedhistorylog_logid_seq
--- ---------------------------- 
-DROP SEQUENCE IF EXISTS "public"."bannedhistorylog_logid_seq";
-CREATE SEQUENCE "public"."bannedhistorylog_logid_seq"
- INCREMENT 1
- MINVALUE 1
- MAXVALUE 9223372036854775807
- START 1
  CACHE 1;
 
 -- ----------------------------
@@ -166,7 +164,86 @@ WITH (OIDS=FALSE)
 -- ----------------------------
 -- Records of confirmationcode
 -- ----------------------------
-
+INSERT INTO "public"."confirmationcode" VALUES ('56', '937948', '2', 'OD669907');
+INSERT INTO "public"."confirmationcode" VALUES ('57', '784425', '3', 'OD669907');
+INSERT INTO "public"."confirmationcode" VALUES ('58', '747415', '6', 'OD669907');
+INSERT INTO "public"."confirmationcode" VALUES ('59', '395841', '5', 'OD669907');
+INSERT INTO "public"."confirmationcode" VALUES ('60', '253654', '4', 'OD669907');
+INSERT INTO "public"."confirmationcode" VALUES ('61', '345797', '2', 'OD385512');
+INSERT INTO "public"."confirmationcode" VALUES ('62', '824893', '6', 'OD385512');
+INSERT INTO "public"."confirmationcode" VALUES ('63', '793481', '3', 'OD385512');
+INSERT INTO "public"."confirmationcode" VALUES ('64', '869871', '5', 'OD385512');
+INSERT INTO "public"."confirmationcode" VALUES ('65', '773464', '4', 'OD385512');
+INSERT INTO "public"."confirmationcode" VALUES ('66', '313875', '2', 'OD097614');
+INSERT INTO "public"."confirmationcode" VALUES ('67', '258182', '6', 'OD097614');
+INSERT INTO "public"."confirmationcode" VALUES ('68', '198599', '3', 'OD097614');
+INSERT INTO "public"."confirmationcode" VALUES ('69', '174935', '5', 'OD097614');
+INSERT INTO "public"."confirmationcode" VALUES ('70', '849552', '4', 'OD097614');
+INSERT INTO "public"."confirmationcode" VALUES ('71', '712226', '2', 'OD720944');
+INSERT INTO "public"."confirmationcode" VALUES ('72', '673886', '6', 'OD720944');
+INSERT INTO "public"."confirmationcode" VALUES ('73', '562853', '3', 'OD720944');
+INSERT INTO "public"."confirmationcode" VALUES ('74', '514649', '5', 'OD720944');
+INSERT INTO "public"."confirmationcode" VALUES ('75', '671873', '4', 'OD720944');
+INSERT INTO "public"."confirmationcode" VALUES ('76', '466298', '2', 'OD818019');
+INSERT INTO "public"."confirmationcode" VALUES ('77', '822492', '6', 'OD818019');
+INSERT INTO "public"."confirmationcode" VALUES ('78', '792222', '3', 'OD818019');
+INSERT INTO "public"."confirmationcode" VALUES ('79', '987311', '5', 'OD818019');
+INSERT INTO "public"."confirmationcode" VALUES ('80', '794514', '4', 'OD818019');
+INSERT INTO "public"."confirmationcode" VALUES ('81', '461116', '2', 'OD794692');
+INSERT INTO "public"."confirmationcode" VALUES ('82', '233866', '6', 'OD794692');
+INSERT INTO "public"."confirmationcode" VALUES ('83', '229893', '3', 'OD794692');
+INSERT INTO "public"."confirmationcode" VALUES ('84', '945841', '5', 'OD794692');
+INSERT INTO "public"."confirmationcode" VALUES ('85', '199174', '4', 'OD794692');
+INSERT INTO "public"."confirmationcode" VALUES ('86', '915715', '2', 'OD228063');
+INSERT INTO "public"."confirmationcode" VALUES ('87', '699762', '6', 'OD228063');
+INSERT INTO "public"."confirmationcode" VALUES ('88', '184256', '3', 'OD228063');
+INSERT INTO "public"."confirmationcode" VALUES ('89', '689473', '5', 'OD228063');
+INSERT INTO "public"."confirmationcode" VALUES ('90', '677762', '4', 'OD228063');
+INSERT INTO "public"."confirmationcode" VALUES ('91', '986519', '2', 'OD516692');
+INSERT INTO "public"."confirmationcode" VALUES ('92', '866921', '6', 'OD516692');
+INSERT INTO "public"."confirmationcode" VALUES ('93', '798562', '3', 'OD516692');
+INSERT INTO "public"."confirmationcode" VALUES ('94', '674635', '5', 'OD516692');
+INSERT INTO "public"."confirmationcode" VALUES ('95', '916362', '4', 'OD516692');
+INSERT INTO "public"."confirmationcode" VALUES ('96', '196499', '2', 'OD796286');
+INSERT INTO "public"."confirmationcode" VALUES ('97', '231621', '6', 'OD796286');
+INSERT INTO "public"."confirmationcode" VALUES ('98', '926461', '3', 'OD796286');
+INSERT INTO "public"."confirmationcode" VALUES ('99', '127773', '5', 'OD796286');
+INSERT INTO "public"."confirmationcode" VALUES ('100', '357835', '4', 'OD796286');
+INSERT INTO "public"."confirmationcode" VALUES ('101', '193233', '2', 'OD033334');
+INSERT INTO "public"."confirmationcode" VALUES ('102', '855717', '6', 'OD033334');
+INSERT INTO "public"."confirmationcode" VALUES ('103', '919425', '3', 'OD033334');
+INSERT INTO "public"."confirmationcode" VALUES ('104', '294763', '5', 'OD033334');
+INSERT INTO "public"."confirmationcode" VALUES ('105', '474318', '4', 'OD033334');
+INSERT INTO "public"."confirmationcode" VALUES ('106', '442499', '2', 'OD638589');
+INSERT INTO "public"."confirmationcode" VALUES ('107', '682993', '6', 'OD638589');
+INSERT INTO "public"."confirmationcode" VALUES ('108', '863499', '3', 'OD638589');
+INSERT INTO "public"."confirmationcode" VALUES ('109', '987121', '5', 'OD638589');
+INSERT INTO "public"."confirmationcode" VALUES ('110', '255237', '4', 'OD638589');
+INSERT INTO "public"."confirmationcode" VALUES ('111', '946834', '2', 'OD809450');
+INSERT INTO "public"."confirmationcode" VALUES ('112', '976618', '6', 'OD809450');
+INSERT INTO "public"."confirmationcode" VALUES ('113', '587745', '3', 'OD809450');
+INSERT INTO "public"."confirmationcode" VALUES ('114', '266367', '5', 'OD809450');
+INSERT INTO "public"."confirmationcode" VALUES ('115', '891299', '4', 'OD809450');
+INSERT INTO "public"."confirmationcode" VALUES ('116', '675861', '2', 'OD416288');
+INSERT INTO "public"."confirmationcode" VALUES ('117', '167527', '6', 'OD416288');
+INSERT INTO "public"."confirmationcode" VALUES ('118', '763664', '3', 'OD416288');
+INSERT INTO "public"."confirmationcode" VALUES ('119', '125711', '5', 'OD416288');
+INSERT INTO "public"."confirmationcode" VALUES ('120', '194932', '4', 'OD416288');
+INSERT INTO "public"."confirmationcode" VALUES ('121', '778733', '2', 'OD052651');
+INSERT INTO "public"."confirmationcode" VALUES ('122', '596861', '6', 'OD052651');
+INSERT INTO "public"."confirmationcode" VALUES ('123', '257586', '3', 'OD052651');
+INSERT INTO "public"."confirmationcode" VALUES ('124', '284838', '5', 'OD052651');
+INSERT INTO "public"."confirmationcode" VALUES ('125', '788898', '4', 'OD052651');
+INSERT INTO "public"."confirmationcode" VALUES ('126', '897744', '2', 'OD702638');
+INSERT INTO "public"."confirmationcode" VALUES ('127', '665793', '6', 'OD702638');
+INSERT INTO "public"."confirmationcode" VALUES ('128', '742637', '3', 'OD702638');
+INSERT INTO "public"."confirmationcode" VALUES ('129', '578929', '5', 'OD702638');
+INSERT INTO "public"."confirmationcode" VALUES ('130', '846891', '4', 'OD702638');
+INSERT INTO "public"."confirmationcode" VALUES ('131', '976977', '2', 'OD613046');
+INSERT INTO "public"."confirmationcode" VALUES ('132', '559322', '6', 'OD613046');
+INSERT INTO "public"."confirmationcode" VALUES ('133', '163458', '3', 'OD613046');
+INSERT INTO "public"."confirmationcode" VALUES ('134', '488377', '5', 'OD613046');
+INSERT INTO "public"."confirmationcode" VALUES ('135', '588542', '4', 'OD613046');
 
 -- ----------------------------
 -- Table structure for confirmationcodetype
@@ -188,6 +265,7 @@ INSERT INTO "public"."confirmationcodetype" VALUES ('3', 'In Stock');
 INSERT INTO "public"."confirmationcodetype" VALUES ('4', 'Checkout Stock');
 INSERT INTO "public"."confirmationcodetype" VALUES ('5', 'Return store');
 INSERT INTO "public"."confirmationcodetype" VALUES ('6', 'Deliver');
+
 
 -- ----------------------------
 -- Table structure for district
@@ -928,7 +1006,6 @@ WITH (OIDS=FALSE)
 -- Records of generalledger
 -- ----------------------------
 
-
 -- ----------------------------
 -- Table structure for goods
 -- ----------------------------
@@ -937,7 +1014,6 @@ CREATE TABLE "public"."goods" (
 "goodsid" int4 DEFAULT nextval('goods_goodsid_seq'::regclass) NOT NULL,
 "goodsname" varchar(20) COLLATE "default",
 "orderid" varchar(8) COLLATE "default",
---"stockid" int4,
 "weight" float8,
 "lengthsize" float8,
 "widthsize" float8,
@@ -952,7 +1028,30 @@ WITH (OIDS=FALSE)
 -- ----------------------------
 -- Records of goods
 -- ----------------------------
-
+INSERT INTO "public"."goods" VALUES ('20', 'Áo da lạc đà', 'OD669907', '500', '3', '3', '3', 'Áo kỵ nước và lửa', '5');
+INSERT INTO "public"."goods" VALUES ('21', 'Quần bò', 'OD669907', '500', '2', '2', '2', '2', '10');
+INSERT INTO "public"."goods" VALUES ('22', 'Sách', 'OD385512', '200', '3', '3', '3', '3', '10');
+INSERT INTO "public"."goods" VALUES ('23', 'Balo', 'OD385512', '500', '33', '33', '50', '', '2');
+INSERT INTO "public"."goods" VALUES ('24', 'Nồi cơm điện', 'OD097614', '2000', '30', '30', '50', '...', '3');
+INSERT INTO "public"."goods" VALUES ('25', 'Đệm Kim Đan', 'OD720944', '6000', '500', '500', '500', 'Đệm cứng', '1');
+INSERT INTO "public"."goods" VALUES ('26', 'Son môi giữ ẩm Nivia', 'OD818019', '100', '100', '20', '20', null, '6');
+INSERT INTO "public"."goods" VALUES ('27', 'Ao len', 'OD794692', '500', '3', '3', '3', '3', '4');
+INSERT INTO "public"."goods" VALUES ('28', 'Tat chan', 'OD794692', '100', '5', '5', '5', 'ta cao den dau goi', '5');
+INSERT INTO "public"."goods" VALUES ('29', 'Quan tat', 'OD228063', '50', '3', '3', '3', '3', '10');
+INSERT INTO "public"."goods" VALUES ('30', 'Laptop Asus', 'OD516692', '2000', '3', '3', '3', '3', '6');
+INSERT INTO "public"."goods" VALUES ('31', 'Chuot mat tinh', 'OD516692', '20', '4', '4', '4', '4', '2');
+INSERT INTO "public"."goods" VALUES ('32', 'Dan ghita', 'OD796286', '1000', '400', '100', '500', 'hang de vo', '1');
+INSERT INTO "public"."goods" VALUES ('33', 'Sao Truc', 'OD033334', '200', '5', '5', '5', '5', '10');
+INSERT INTO "public"."goods" VALUES ('34', 'Ban Phim', 'OD033334', '1000', '6', '5', '6', '5', '3');
+INSERT INTO "public"."goods" VALUES ('35', 'Man Hinh LCD', 'OD638589', '6000', '4', '4', '4', '4', '1');
+INSERT INTO "public"."goods" VALUES ('36', '1', 'OD809450', '1', '1', '1', '1', '1', '2');
+INSERT INTO "public"."goods" VALUES ('37', '3', 'OD809450', '3', '3', '3', '3', '3', '3');
+INSERT INTO "public"."goods" VALUES ('38', 'Cach Ga Ran', 'OD416288', '50', '4', '4', '4', '4', '10');
+INSERT INTO "public"."goods" VALUES ('39', 'Com Ga Happy', 'OD416288', '400', '3', '3', '3', 'Ngot tuyet', '2');
+INSERT INTO "public"."goods" VALUES ('40', 'Ga quay Bac Kinh', 'OD052651', '5000', '3', '3', '3', 'Giao khi con nong', '2');
+INSERT INTO "public"."goods" VALUES ('41', 'Cocacola', 'OD702638', '50', '4', '4', '4', '4', '3');
+INSERT INTO "public"."goods" VALUES ('42', 'Pizza', 'OD702638', '500', '3', '3', '3', 'an nong', '5');
+INSERT INTO "public"."goods" VALUES ('43', 'Banh Trang Tron', 'OD613046', '50', '4', '4', '4', '4', '3');
 
 -- ----------------------------
 -- Table structure for issue
@@ -993,7 +1092,6 @@ WITH (OIDS=FALSE)
 INSERT INTO "public"."issuecategory" VALUES ('1', 'Shipper Pending');
 INSERT INTO "public"."issuecategory" VALUES ('2', 'Shipper Cancel');
 INSERT INTO "public"."issuecategory" VALUES ('3', 'Store Cancel');
-
 
 -- ----------------------------
 -- Table structure for issuetype
@@ -1061,6 +1159,9 @@ WITH (OIDS=FALSE)
 -- ----------------------------
 -- Records of notification
 -- ----------------------------
+INSERT INTO "public"."notification" VALUES ('1', 'issue', 'Error: ', 'Finding Shipper fail.', '/#/notiListdemo', 'f', 'ST000002', '2015-11-27 23:42:29.035+07');
+INSERT INTO "public"."notification" VALUES ('2', 'issue', 'Error: ', 'Finding Shipper fail.', '/#/notiListdemo', 'f', 'ST000002', '2015-11-27 23:53:10.494+07');
+INSERT INTO "public"."notification" VALUES ('3', 'issue', 'Error: ', 'Finding Shipper fail.', '/#/notiListdemo', 'f', 'ST000002', '2015-11-27 23:54:47.942+07');
 
 -- ----------------------------
 -- Table structure for order
@@ -1099,7 +1200,22 @@ WITH (OIDS=FALSE)
 -- ----------------------------
 -- Records of order
 -- ----------------------------
-
+INSERT INTO "public"."order" VALUES ('OD033334', 'STR002', null, '1', 'Ngõ Bà Triệu,Lê Đại Hành,Hồ Tây, Hà Nội', '23', null, '2015-11-27 23:24:00.254+07', null, '0789677567', 'Nguyen Van CCC', null, '1', 'f', null, 'f', '20000', '500000', '5000', '01', '018', '00526', null, null);
+INSERT INTO "public"."order" VALUES ('OD052651', 'STR002', null, '2', 'Ngõ Bà Triệu,Lê Đại Hành,Hồ Tây, Hà Nội', '345', null, '2015-11-27 23:54:47.995+07', null, '0987866787', 'Ngo Thi Thanh V', null, null, 'f', null, 't', '20000', '500000', '24000', '01', '008', '00331', null, null);
+INSERT INTO "public"."order" VALUES ('OD097614', 'STR001', null, '1', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', '30, Lạc Long Quân', null, '2015-11-27 22:33:05.966+07', null, '01666335588', 'Trần Văn A', null, '1', 'f', null, 'f', '10000', '0', '8000', '01', '003', '00103', null, null);
+INSERT INTO "public"."order" VALUES ('OD228063', 'STR001', null, '1', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', '30', null, '2015-11-27 23:00:32.872+07', null, '0677566466', 'Nguyen Thi Kieu C', null, '1', 'f', null, 'f', '20000', '40000', '0', '01', '018', '00526', null, null);
+INSERT INTO "public"."order" VALUES ('OD385512', 'STR001', null, '1', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', '40 Duy Tân', null, '2015-11-27 22:30:32.206+07', null, '03456434654', 'Nguyen Van B', null, '1', 'f', null, 'f', '20000', '70000', '0', '01', '276', '04927', null, null);
+INSERT INTO "public"."order" VALUES ('OD416288', 'STR002', null, '2', 'Ngõ Bà Triệu,Lê Đại Hành,Hồ Tây, Hà Nội', '34', null, '2015-11-27 23:53:10.536+07', null, '09675674667', 'Le Thi Tra Y', null, null, 'f', null, 't', '30000', '100000', '0', '01', '276', '10000', null, null);
+INSERT INTO "public"."order" VALUES ('OD516692', 'STR001', null, '1', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', '134', null, '2015-11-27 23:04:31.126+07', null, '07663344224', 'Tran Dinh Hoang Huy', null, '1', 'f', null, 'f', '10000', '30000', '32160', '01', '002', '00037', null, null);
+INSERT INTO "public"."order" VALUES ('OD613046', 'STR001', null, '2', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', '543', null, '2015-11-28 00:02:20.645+07', null, '01643543446', 'Tran Thi N', null, null, 'f', null, 't', '20000', '12000', '0', '01', '005', '00157', null, null);
+INSERT INTO "public"."order" VALUES ('OD638589', 'STR002', null, '1', 'Ngõ Bà Triệu,Lê Đại Hành,Hồ Tây, Hà Nội', '45', null, '2015-11-27 23:26:01.855+07', null, '0788688577', 'Le Van C', null, '1', 'f', null, 'f', '20000', '2000000', '10000', '01', '268', '09538', null, null);
+INSERT INTO "public"."order" VALUES ('OD669907', 'STR001', null, '1', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', 'Xòm Hòa Bình', null, '2015-11-27 21:48:42.475+07', null, '01653445345', 'Nguyễn Văn A', null, '1', 'f', null, 'f', '20000', '50000', '17500', '01', '276', '10012', null, null);
+INSERT INTO "public"."order" VALUES ('OD702638', 'STR001', null, '2', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', '42', null, '2015-11-27 23:59:58.476+07', null, '0986565453', 'Nguyen Van Q', null, null, 'f', null, 't', '30000', '500000', '0', '01', '016', '00376', null, null);
+INSERT INTO "public"."order" VALUES ('OD720944', 'STR001', null, '1', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', '23', null, '2015-11-27 22:48:22.468+07', null, '09686868686', 'Trần Văn C', null, '1', 'f', null, 'f', '20000', '750000', '10000', '01', '018', '00526', null, null);
+INSERT INTO "public"."order" VALUES ('OD794692', 'STR001', null, '1', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', '23232', null, '2015-11-27 22:57:10.188+07', null, '0987566456', 'Tran Thi Van A', null, '1', 'f', null, 'f', '10000', '30000', '0', '01', '007', '00280', null, null);
+INSERT INTO "public"."order" VALUES ('OD796286', 'STR002', null, '1', 'Ngõ Bà Triệu,Lê Đại Hành,Hồ Tây, Hà Nội', '23', null, '2015-11-27 23:21:05.437+07', null, '0877566455', 'Nguyen Khac Hoang', null, '1', 'f', null, 'f', '10000', '1000000', '0', '01', '006', '00178', null, null);
+INSERT INTO "public"."order" VALUES ('OD809450', 'STR002', null, '2', 'Ngõ Bà Triệu,Lê Đại Hành,Hồ Tây, Hà Nội', '43434', null, '2015-11-27 23:42:29.084+07', null, '3434343434', 'ewewe', null, null, 'f', null, 't', '20000', '4000', '0', '01', '001', '00001', null, null);
+INSERT INTO "public"."order" VALUES ('OD818019', 'STR001', null, '1', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', '343', null, '2015-11-27 22:53:06.12+07', null, '0967676788', 'Nguyen Thi Kieu A', null, '1', 'f', null, 'f', '20000', '40000', '0', '01', '016', '00403', null, null);
 
 -- ----------------------------
 -- Table structure for orderissue
@@ -1117,38 +1233,6 @@ WITH (OIDS=FALSE)
 -- Records of orderissue
 -- ----------------------------
 
--- ----------------------------
--- Table structure for orderlog
--- ----------------------------
--- DROP TABLE IF EXISTS "public"."orderlog";
--- CREATE TABLE "public"."orderlog" (
--- "logid" int8 NOT NULL,
--- "orderid" varchar(8) COLLATE "default",
--- "storeid" varchar(8) COLLATE "default",
--- "taskid" varchar(8) COLLATE "default",
--- "ordertypeid" int4,
--- "pickupaddress" varchar(100) COLLATE "default",
--- "deliveryaddress" varchar(100) COLLATE "default",
--- "pickupdate" timestamptz(6),
--- "deliverydate" timestamptz(6),
--- "recipientphone" varchar(11) COLLATE "default",
--- "recipientname" varchar(50) COLLATE "default",
--- "ledgerid" int4,
--- "statusid" int4,
--- "fee" int8,
--- "cod" int8,
--- "pickupaddresscoordination" text COLLATE "default",
--- "deliveryaddresscoordination" text COLLATE "default",
--- "uptimestamp" timestamptz(6),
--- "updater" varchar(20) COLLATE "default"
--- )
--- WITH (OIDS=FALSE)
-
--- ;
-
--- ----------------------------
--- Records of orderlog
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for orderstatus
@@ -1449,12 +1533,11 @@ WITH (OIDS=FALSE)
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-
 INSERT INTO "public"."user" VALUES ('AD000001', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '3', '2', '2015-11-09 00:00:00+07');
-INSERT INTO "public"."user" VALUES ('SP000001', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '1', '2', '2015-11-09 00:00:00+07');
+INSERT INTO "public"."user" VALUES ('SP000001', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '1', '2', '2015-11-27 23:55:07.908+07');
 INSERT INTO "public"."user" VALUES ('SP000002', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '1', '2', '2015-11-09 00:00:00+07');
-INSERT INTO "public"."user" VALUES ('ST000001', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '2', '2015-11-09 00:00:00+07');
-INSERT INTO "public"."user" VALUES ('ST000002', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '2', '2015-11-09 00:00:00+07');
+INSERT INTO "public"."user" VALUES ('ST000001', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '2', '2015-11-27 23:58:07.385+07');
+INSERT INTO "public"."user" VALUES ('ST000002', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '2', '2015-11-27 23:06:12.095+07');
 INSERT INTO "public"."user" VALUES ('ST000003', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '2', '2015-11-09 00:00:00+07');
 INSERT INTO "public"."user" VALUES ('ST000004', '$2a$10$029HEemrvDiCarL93NlTWOtjVvT4tPXJsahQyJygiKZTJBm43uXOq', '2', '2', '2015-11-09 00:00:00+07');
 
@@ -12607,16 +12690,16 @@ INSERT INTO "public"."ward" VALUES ('32245', 'Tân Ân', 'Xã', '8 38 45N, 105 0
 INSERT INTO "public"."ward" VALUES ('32248', 'Đất Mũi', 'Xã', '8 36 41N, 104 47 12E', '973');
 
 
+
 -- ----------------------------
 -- Alter Sequences Owned By 
 -- ----------------------------
+ALTER SEQUENCE "public"."bannedhistorylog_logid_seq" OWNED BY "bannedhistorylog"."logid";
 ALTER SEQUENCE "public"."confirmationcode_codeid_seq" OWNED BY "confirmationcode"."codeid";
 ALTER SEQUENCE "public"."generalledger_ledgerid_seq" OWNED BY "generalledger"."ledgerid";
 ALTER SEQUENCE "public"."goods_goodsid_seq" OWNED BY "goods"."goodsid";
 ALTER SEQUENCE "public"."issue_issueid_seq" OWNED BY "issue"."issueid";
 ALTER SEQUENCE "public"."task_taskid_seq" OWNED BY "task"."taskid";
-ALTER SEQUENCE "public"."bannedhistorylog_logid_seq" OWNED BY "bannedhistorylog"."logid";
-
 
 -- ----------------------------
 -- Primary Key structure for table bannedhistorylog
@@ -12632,6 +12715,7 @@ ALTER TABLE "public"."confirmationcode" ADD PRIMARY KEY ("codeid");
 -- Primary Key structure for table confirmationcodetype
 -- ----------------------------
 ALTER TABLE "public"."confirmationcodetype" ADD PRIMARY KEY ("typeid");
+
 
 -- ----------------------------
 -- Primary Key structure for table district
@@ -12683,10 +12767,6 @@ ALTER TABLE "public"."order" ADD PRIMARY KEY ("orderid");
 -- ----------------------------
 ALTER TABLE "public"."orderissue" ADD PRIMARY KEY ("issueid", "orderid");
 
--- ----------------------------
--- Primary Key structure for table orderlog
--- ----------------------------
--- ALTER TABLE "public"."orderlog" ADD PRIMARY KEY ("logid");
 
 -- ----------------------------
 -- Primary Key structure for table orderstatus
@@ -12753,18 +12833,19 @@ ALTER TABLE "public"."userstatus" ADD PRIMARY KEY ("statusid");
 -- ----------------------------
 ALTER TABLE "public"."ward" ADD PRIMARY KEY ("wardid");
 
+
 -- ----------------------------
 -- Foreign Key structure for table "public"."bannedhistorylog"
 -- ----------------------------
-ALTER TABLE "public"."bannedhistorylog" ADD FOREIGN KEY ("adminid") REFERENCES "public"."user" ("username") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "public"."bannedhistorylog" ADD FOREIGN KEY ("storeid") REFERENCES "public"."user" ("username") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "public"."bannedhistorylog" ADD FOREIGN KEY ("adminid") REFERENCES "public"."user" ("username") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "public"."bannedhistorylog" ADD FOREIGN KEY ("shipperid") REFERENCES "public"."user" ("username") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- ----------------------------
 -- Foreign Key structure for table "public"."confirmationcode"
 -- ----------------------------
-ALTER TABLE "public"."confirmationcode" ADD FOREIGN KEY ("orderid") REFERENCES "public"."order" ("orderid") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "public"."confirmationcode" ADD FOREIGN KEY ("typeid") REFERENCES "public"."confirmationcodetype" ("typeid") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "public"."confirmationcode" ADD FOREIGN KEY ("orderid") REFERENCES "public"."order" ("orderid") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- ----------------------------
 -- Foreign Key structure for table "public"."district"
@@ -12785,8 +12866,8 @@ ALTER TABLE "public"."goods" ADD FOREIGN KEY ("orderid") REFERENCES "public"."or
 -- ----------------------------
 -- Foreign Key structure for table "public"."issue"
 -- ----------------------------
-ALTER TABLE "public"."issue" ADD FOREIGN KEY ("typeid") REFERENCES "public"."issuetype" ("typeid") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "public"."issue" ADD FOREIGN KEY ("sender") REFERENCES "public"."user" ("username") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "public"."issue" ADD FOREIGN KEY ("typeid") REFERENCES "public"."issuetype" ("typeid") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- ----------------------------
 -- Foreign Key structure for table "public"."issuetype"
@@ -12796,34 +12877,23 @@ ALTER TABLE "public"."issuetype" ADD FOREIGN KEY ("categoryid") REFERENCES "publ
 -- ----------------------------
 -- Foreign Key structure for table "public"."managestore"
 -- ----------------------------
-ALTER TABLE "public"."managestore" ADD FOREIGN KEY ("storeid") REFERENCES "public"."store" ("storeid") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "public"."managestore" ADD FOREIGN KEY ("managerid") REFERENCES "public"."user" ("username") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "public"."managestore" ADD FOREIGN KEY ("storeid") REFERENCES "public"."store" ("storeid") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
--- ----------------------------
--- Foreign Key structure for table "public"."notification"
--- ----------------------------
--- ALTER TABLE "public"."notification" ADD FOREIGN KEY ("username") REFERENCES "public"."user" ("username") ON DELETE NO ACTION ON UPDATE NO ACTION;
--- ALTER TABLE "public"."notification" ADD FOREIGN KEY ("username") REFERENCES "public"."store" ("storeid") ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ----------------------------
 -- Foreign Key structure for table "public"."order"
 -- ----------------------------
+ALTER TABLE "public"."order" ADD FOREIGN KEY ("storeid") REFERENCES "public"."store" ("storeid") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "public"."order" ADD FOREIGN KEY ("stockid") REFERENCES "public"."stock" ("stockid") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "public"."order" ADD FOREIGN KEY ("statusid") REFERENCES "public"."orderstatus" ("statusid") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "public"."order" ADD FOREIGN KEY ("ledgerid") REFERENCES "public"."generalledger" ("ledgerid") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "public"."order" ADD FOREIGN KEY ("ordertypeid") REFERENCES "public"."ordertype" ("typeid") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "public"."order" ADD FOREIGN KEY ("storeid") REFERENCES "public"."store" ("storeid") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "public"."order" ADD FOREIGN KEY ("statusid") REFERENCES "public"."orderstatus" ("statusid") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "public"."order" ADD FOREIGN KEY ("stockid") REFERENCES "public"."stock" ("stockid") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- ----------------------------
 -- Foreign Key structure for table "public"."orderissue"
 -- ----------------------------
-ALTER TABLE "public"."orderissue" ADD FOREIGN KEY ("issueid") REFERENCES "public"."issue" ("issueid") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "public"."orderissue" ADD FOREIGN KEY ("orderid") REFERENCES "public"."order" ("orderid") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- ----------------------------
--- Foreign Key structure for table "public"."orderlog"
--- ----------------------------
--- ALTER TABLE "public"."orderlog" ADD FOREIGN KEY ("orderid") REFERENCES "public"."order" ("orderid") ON DELETE NO ACTION ON UPDATE NO ACTION;
--- ALTER TABLE "public"."orderlog" ADD FOREIGN KEY ("updater") REFERENCES "public"."user" ("username") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "public"."orderissue" ADD FOREIGN KEY ("issueid") REFERENCES "public"."issue" ("issueid") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- ----------------------------
 -- Foreign Key structure for table "public"."profile"
@@ -12839,10 +12909,10 @@ ALTER TABLE "public"."stock" ADD FOREIGN KEY ("adminid") REFERENCES "public"."us
 -- Foreign Key structure for table "public"."task"
 -- ----------------------------
 ALTER TABLE "public"."task" ADD FOREIGN KEY ("orderid") REFERENCES "public"."order" ("orderid") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "public"."task" ADD FOREIGN KEY ("statusid") REFERENCES "public"."taskstatus" ("statusid") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "public"."task" ADD FOREIGN KEY ("typeid") REFERENCES "public"."tasktype" ("typeid") ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "public"."task" ADD FOREIGN KEY ("shipperid") REFERENCES "public"."user" ("username") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "public"."task" ADD FOREIGN KEY ("adminid") REFERENCES "public"."user" ("username") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "public"."task" ADD FOREIGN KEY ("shipperid") REFERENCES "public"."user" ("username") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "public"."task" ADD FOREIGN KEY ("typeid") REFERENCES "public"."tasktype" ("typeid") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "public"."task" ADD FOREIGN KEY ("statusid") REFERENCES "public"."taskstatus" ("statusid") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- ----------------------------
 -- Foreign Key structure for table "public"."user"

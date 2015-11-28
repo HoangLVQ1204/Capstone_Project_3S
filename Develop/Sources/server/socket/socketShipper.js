@@ -80,12 +80,6 @@ module.exports = function(socket, io, app) {
         io.forward(data.sender, data.receiver, data.msg, ['admin:update:shipper', 'store:update:shipper']);
     });
 
-    socket.on('shipper:update:status', function(data) {
-        var shipper = io.getOneShipper(data.msg.shipperID);
-        io.updateStatusShipper(shipper);
-
-    });
-
     socket.on('shipper:reject:order', function(data) {
         var shipper = data.msg.shipper;
         console.log('shipper reject order', shipper);

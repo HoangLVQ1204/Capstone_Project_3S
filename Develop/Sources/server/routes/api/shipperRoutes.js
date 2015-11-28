@@ -20,7 +20,7 @@ module.exports = function (app) {
 
     app.get('/api/shipper/getAllShipperWithTask', shipperCtrl.getAllShipperWithTask);
 
-    app.get('/api/shipper/getAllShipperWithTaskForProcessing', shipperCtrl.getAllShipperWithTaskForProcessing);
+    app.get('/api/shipper/getAllShipperWithTaskForProcessing/:shipperid', shipperCtrl.getAllShipperWithTaskForProcessing);
 
     app.get('/api/shipper/getAllOrderToAssignTask', shipperCtrl.getAllOrderToAssignTask);
 
