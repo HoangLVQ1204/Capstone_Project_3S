@@ -22,11 +22,11 @@ app.factory('dataService', ['$http', '$state', function ($http, $state) {
     return $http.delete(urlBase);
   };
 
-  var tag = 'EHID'
+  var tag = 'EHID';
   dataFactory.signOutWhenTokenFail = function () {
     window.localStorage.removeItem(tag);
     $state.go("sign-in");
-  }
+  };
 
   return dataFactory;
 }]);
