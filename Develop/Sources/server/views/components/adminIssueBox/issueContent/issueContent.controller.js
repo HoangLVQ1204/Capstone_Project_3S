@@ -230,8 +230,7 @@ function issueContentController($scope,$stateParams, dataService, authService,co
     $scope.goToProcessing = function () {
         //alert(1);
         $("#md-effect-block").attr('class','modal fade').addClass(smsData.effect).modal('hide');
-
-        $state.go('admin.assignTaskProcessing',{shipperid: $scope.issue.sender});
+        $state.go('admin.assignTaskProcessing',{shipperid: $scope.issue.sender, issueid: $scope.issueid});
     }
 
     //----------------------------------

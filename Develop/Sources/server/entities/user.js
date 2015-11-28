@@ -153,7 +153,7 @@ module.exports = function(sequelize, DataTypes) {
                 //required: false,
                 attributes: ['statusname'],
                 where:{
-                  statusid: [1,4]
+                  statusid: 1
                 }
               }
 

@@ -819,7 +819,7 @@ module.exports = function (app) {
     var getAllShipperWithTaskForProcessing = function (req, res, next) {
         var shipperid = req.params.shipperid;
         //console.log(shipperid)
-        return db.user.getAllShipperWithTask(db.task, db.profile, db.order, db.orderstatus, db.tasktype, db.taskstatus, shipperid)
+        return db.user.getAllTaskProcessingOfShipper(db.task, db.profile, db.order, db.orderstatus, db.tasktype, db.taskstatus, shipperid)
             .then(function(shipper) {
                 //console.log("--------------Data Task Shipper -------------------");
                 //console.log(shipper);

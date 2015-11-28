@@ -1,9 +1,11 @@
 /**
  * Created by Hoang on 10/18/2015.
  */
-function adminAssignTaskProcessingController($scope,$state, $http, authService, config, $stateParams, dataService) {
-
+function adminAssignTaskProcessingController($scope,$state, $rootScope, authService, config, $stateParams, dataService, socketAdmin) {
     $scope.originShipperID = $stateParams.shipperid;
+    $scope.issueid = $stateParams.issueid;
+    var smsData = {verticalEdge: 'right',
+        horizontalEdge: 'bottom'};
     $scope.tasksList = [];//all task of shipper
     $scope.shipperList = [];
     $scope.orderList = [];
@@ -81,6 +83,15 @@ function adminAssignTaskProcessingController($scope,$state, $http, authService, 
                     //console.log( $scope.tasksList);
                 });
                 $scope.moveAllProcessingTask($scope.originShipperID);
+
+                //get issueDetail
+                dataService.getDataServer(config.baseURI + "/api/getIssueContent?issueid=" + $scope.issueid).then(function(response){
+                    $scope.issue = response.data;
+                    $scope.issue.orderissues.map(function (order) {
+                        order.order.tasks.sort(dateSort);
+                        order.order.tasks.splice(1,order.order.tasks.length-1);
+                    });
+                })
             })
     })
 
@@ -111,8 +122,14 @@ function adminAssignTaskProcessingController($scope,$state, $http, authService, 
                         task['taskstatus']['statusname'] = 'Inactive';
                         i++;
                     } else i++;
-                }
+                };
+
+
+
                 })
+            if ($scope.orderList.length == 0){
+                resolveChangeShipperIssue();
+            }
             getOldTask();
                 //$http.put(config.baseURI + "/api/updateTaskNoShipper", $scope.taskNoShipper);
 
@@ -199,6 +216,45 @@ function adminAssignTaskProcessingController($scope,$state, $http, authService, 
     };
 
 
+    //function resolve continue issue
+    function resolveChangeShipperIssue(){
+        //console.log($scope.issue);
+        $scope.issue.orderissues.map(function (issue) {
+            //issue.order.tasks[0].statusid = 2;//fail task
+            issue.order.ispending= false;//cancel order
+            //issue.order.fee= parseInt(issue.order.fee) * 0.1;//cancel order
+        });
+        $scope.issue.resolvetype = 2;
+        //console.log($scope.issue.orderissues);
+        dataService.putDataServer(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue).then(function success(response){
+            var promise = dataService.putDataServer(config.baseURI + "/api/updateResolveIssue?issueid=" + $scope.issueid, $scope.issue).then(function(response){
+                //$scope.issue = response;
+                //$scope.issue.isresolved = true;
+                //var result = $.grep($scope.$parent.issueList, function(e){ return e.issueid == $scope.issueid; });
+                //if (result.length == 1) {
+                //    result[0].isresolved = true;
+                //}
+
+            }).catch(function (error) {
+                smsData.theme="danger";
+                $.notific8($("#sms-fail").val(), smsData);
+                //console.log(error)
+            });
+            promise.then(function () {
+                socketAdmin.issueMessage($scope.issue);
+                $rootScope.unreadMail--;
+                smsData.theme="theme-inverse";
+                $("#md-effect-dialog").attr('class','modal fade').addClass(smsData.effect).modal('show');
+                //alert('Change success');
+            })
+        }).catch(function (error) {
+            smsData.theme="danger";
+            $.notific8($("#sms-fail").val(), smsData);
+            console.log(error)
+        })
+
+    }
+
     //----------------------------------
     //FUNCTION move processing task away shipper has issue
     //-----------------------------------
@@ -249,8 +305,9 @@ function adminAssignTaskProcessingController($scope,$state, $http, authService, 
     $scope.goInbox = function(){
         var issue = $.grep($scope.listUserHasIssue, function(e){ return e.sender ==  $scope.originShipperID;});
         //console.log(issue[0])
-        $state.go('admin.issueBox.content',{issueid: issue[0].issueid});
-    }
+        $state.go('admin.issueBox.content',{issueid: $scope.issueid});
+        $("#md-effect-dialog").attr('class','modal fade').addClass(smsData.effect).modal('hide');
+    };
 
     //----------------------------------
     //FUNCTION move order away shipper has issue
@@ -270,6 +327,15 @@ function adminAssignTaskProcessingController($scope,$state, $http, authService, 
        })
     }
 
+    var dateSort =  function(x, y){
+        if (x.taskdate > y.taskdate) {
+            return -1;
+        }
+        if (x.taskdate < y.taskdate) {
+            return 1;
+        }
+        return 0;
+    };
     //----------------------------------
     //FUNCTION LOAD SCRIPT
     //-----------------------------------
@@ -283,5 +349,5 @@ function adminAssignTaskProcessingController($scope,$state, $http, authService, 
 
 
 }
-adminAssignTaskProcessingController.$inject = ['$scope','$state', '$http', 'authService', 'config', '$stateParams','dataService'];
+adminAssignTaskProcessingController.$inject = ['$scope','$state', '$rootScope', 'authService', 'config', '$stateParams','dataService','socketAdmin'];
 angular.module('app').controller('adminAssignTaskProcessingController',adminAssignTaskProcessingController);
