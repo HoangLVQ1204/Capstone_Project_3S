@@ -73,23 +73,18 @@ function socketStore($q,socketService,authService,mapService, $rootScope){
     });
 
     socketService.on('store:issue:continue', function(data) {
-        console.log("store:isue:continue: ", data);
          $rootScope.$emit("updatePendingOrder", data.msg);
-        $rootScope.notify(data.msg, 1);
+         $rootScope.notify(data.msg, 1);
     });
 
     socketService.on('store:message:confirmPayment', function(data) {
-        console.log("store:message:confirmPayment: ", data);
-        //$rootScope.$emit("updatePenddingOrder", data.msg);
+        $rootScope.$emit("store:message:confirmPayment", data.msg);
         $rootScope.notify(data.msg);
     });
 
     socketService.on('store:notification:blockStore', function(data) {
-        console.log("store:notification:blockStore: ", data);
         $rootScope.$emit("logoutStore", data.msg);
-        //$rootScope.notify(data.msg);
     });
-
 
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();

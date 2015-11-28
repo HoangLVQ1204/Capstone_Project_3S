@@ -80,7 +80,6 @@ module.exports = function(socket, io) {
     });
 
     socket.on('store:choose:shipper', function(data) {
-        console.log('choose shipper', data);
         var sender = data.sender;
         var receiver = data.receiver;
         var msg = data.msg;
@@ -98,10 +97,10 @@ module.exports = function(socket, io) {
         var shipperMsg = {
             store: _.clone(msg.store, true)
         };        
-        console.log('socketStore:90 pendingShippers', io.pendingShippers);
+
         io.notifyPendingShippers(msg.store.storeID, msg.shipper.shipperID, data.sender, shipperMsg);
         io.removePendingShippersOfStore(msg.store.storeID);
-        console.log('pendingShippers', io.pendingShippers);
+
 
         io.addToRoom(socket, msg.shipper.shipperID);    
 

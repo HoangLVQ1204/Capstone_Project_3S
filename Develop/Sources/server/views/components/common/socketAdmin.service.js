@@ -68,11 +68,9 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
     });
 
     socketService.on('admin:update:order', function(data) {
-        console.log('admin:update:order', data);
         var orders = data.msg.orders;
         orders.forEach(function(e) {
             mapService.updateOrder(e.orderID, e.orderInfo);
-
         });
     });
 
@@ -85,7 +83,6 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
     });
 
     socketService.on('admin::issue:disconnected', function(data) {
-        console.log("admin:issue:disconnected: ", data);
         getUnreadMail().then(function () {
             $rootScope.$emit("admin:issue:newIssue", data.msg);
         });
@@ -95,12 +92,15 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
     });
 
     socketService.on('admin::issue:cancelorder', function(data) {
-        console.log("admin::issue:cancelorder", data);
         getUnreadMail().then(function () {
             $rootScope.$emit("admin:issue:newIssue", data.msg);
         });
         $rootScope.notify(data.msg, 1);
     });
+
+    socketService.on('shipper:change:order:status',function(data){
+        $rootScope.$emit("shipper:change:order:status", data.msg);
+    })
 
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();        
@@ -160,7 +160,6 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
             {
                 orderList: orderList,
                 shipperid: issue.orderissues[0].order.tasks[0].shipperid,
-                //categoryid: issue.issuetype.categoryid,
                 typeid: issue.typeid,
                 msg: msgToStore
             },

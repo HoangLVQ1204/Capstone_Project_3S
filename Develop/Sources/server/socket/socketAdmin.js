@@ -91,7 +91,6 @@ module.exports = function(socket, io, app) {
                     'store:message:confirmPayment');
                 data.msg.msg['username'] = data.msg.storeid;
                 notificationManage.postFromSever(data.msg.msg);
-                console.log('Payment confirmation', data.msg);
             });
 
     });
