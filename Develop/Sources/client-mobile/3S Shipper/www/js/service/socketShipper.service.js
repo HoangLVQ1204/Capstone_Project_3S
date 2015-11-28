@@ -271,26 +271,6 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
       });
   };
 
-  /*
-   * io: Change status of shipper when shipper logout
-   * @author: quyennv
-   * */
-  api.updateStatusShipper = function() {
-    var shipper = authService.getCurrentInfoUser();
-    console.log("shipper", shipper);
-    socketService.sendPacket(
-      {
-        type: 'shipper',
-        clientID: shipper.username
-      },
-      'admin',
-      {
-        shipperID: shipper.username
-      },
-      'shipper:update:status'
-    )
-  };
-
   return api;
 }
 

@@ -509,10 +509,6 @@ module.exports = function(server,app){
         io.shippers[shipperID].numTasks = io.countNumTasksByShipperID(shipperID);
     }
 
-    io.updateStatusShipper = function(shipper) {
-        io.shippers[shipper.shipperID].isConnected = false;
-    };
-
     io.updateOrderOfShipper = function(shipperID, orderID) {
         io.shippers[shipperID].order.push(orderID);
     };
