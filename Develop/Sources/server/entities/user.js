@@ -130,10 +130,9 @@ module.exports = function(sequelize, DataTypes) {
         }})
       },
 
-      getAllShipperWithTask: function(task, profile, order, orderstatus, tasktype, taskstatus, processing) {
+      getAllShipperWithTask: function(task, profile, order, orderstatus, tasktype, taskstatus) {
         //neu processing = true thi chi lay loai processing
-        var isProcessing = 1;
-        if (processing) isProcessing = 4;
+
         return user.findAll({
           include:[{
             model: task,
@@ -154,7 +153,7 @@ module.exports = function(sequelize, DataTypes) {
                 //required: false,
                 attributes: ['statusname'],
                 where:{
-                  statusid: [isProcessing,4]
+                  statusid: [1,4]
                 }
               }
 
@@ -163,6 +162,41 @@ module.exports = function(sequelize, DataTypes) {
           where: {
             'userrole': 1
             //'username': 'task.shipperid'
+          }
+        });
+      },
+
+      getAllTaskProcessingOfShipper: function(task, profile, order, orderstatus, tasktype, taskstatus, shipperid) {
+        //neu processing = true thi chi lay loai processing
+        return user.findAll({
+          include:[{
+            model: task,
+            as:'tasks',
+            //required: false,
+            include: [
+              {
+                model: order,
+                attributes: ['orderid', 'storeid', 'statusid', 'deliveryaddress','pickupaddress'],
+                include: [{model: orderstatus,  attributes: ['statusname']}]
+              },
+              {
+                model: tasktype,
+                attributes: ['typename']
+              },
+              {
+                model: taskstatus,
+                //required: false,
+                attributes: ['statusname'],
+                where:{
+                  statusid: 4
+                }
+              }
+
+            ]
+          },{model: profile}],
+          where: {
+            'userrole': 1,
+            'username': shipperid
           }
         });
       },

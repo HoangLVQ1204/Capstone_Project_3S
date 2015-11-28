@@ -55,7 +55,7 @@ function adminAssignTaskProcessingController($scope,$state, $http, authService, 
         //console.log(1);
         //console.log(response);
     }).then(function () {
-            dataService.getDataServer(config.baseURI + "/api/shipper/getAllShipperWithTaskForProcessing").then(function(response){
+            dataService.getDataServer(config.baseURI + "/api/shipper/getAllShipperWithTaskForProcessing/"+$scope.originShipperID).then(function(response){
             $scope.tasksList = response.data;
             getOldTask();
             //add shipper doesn't have task to list
@@ -149,7 +149,8 @@ function adminAssignTaskProcessingController($scope,$state, $http, authService, 
                 order['statusid'] = 1;
                 //order['taskstatus'] = new Object();
                 //order['taskstatus']['statusname'] = 'Inactive';
-                if (order.order.orderstatus == 1 ) order['typeid'] = 1
+
+                if (order.order.statusid == 1 ) order['typeid'] = 1;
                   else order['typeid'] = 2;
                 order['taskdate'] = new Date(Date.now());
             }

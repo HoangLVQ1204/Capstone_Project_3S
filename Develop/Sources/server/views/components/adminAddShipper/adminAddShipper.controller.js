@@ -30,7 +30,7 @@ function adminAddShipperController($scope,$state, $http, $filter, config, dataSe
         var urlBase = config.baseURI + "/api/user/addNewUser";
         dataService.postDataServer(urlBase, $scope.newShipper)
             .then(function(rs){
-                console.log('AAAAA', rs);
+                //console.log('AAAAA', rs);
                 smsData.theme="theme-inverse";
                 $.notific8($("#sms-success").val(), smsData);
                 $state.go('admin.shipperList', {newShipper: $scope.newShipper.account});
@@ -40,7 +40,7 @@ function adminAddShipperController($scope,$state, $http, $filter, config, dataSe
                 smsData.theme="danger";
                 $.notific8($("#sms-fail").val(), smsData);
                 console.log(error);
-            })
+            });
 
         //function (error) {
         //    smsData.theme="danger";
