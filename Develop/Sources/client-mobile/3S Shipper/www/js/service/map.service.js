@@ -278,6 +278,8 @@ function mapServiceFn($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     });    
 
     api.setMapData = function(mapData) {
+        for (orderID in orders) delete orders[orderID];
+        for (orderID in mapData.orders) orders[orderID] = _.clone(mapData.orders[orderID], true);
         shipperMarkers.splice(0, shipperMarkers.length);
         mapData.shipper.forEach(function(e) {
             shipperMarkers.push(_.clone(e, true));
