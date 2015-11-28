@@ -7,7 +7,6 @@ module.exports = function(socket, io, app) {
     var notificationManage = require('../manages/notificationManage')(app);
     var db = app.get('models');
     socket.on('disconnect', function() {
-
         console.log('Admin', socket.id, 'disconnect');
     });
 

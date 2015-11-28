@@ -220,11 +220,13 @@ module.exports = function (app) {
                         type: 'info',
                         title: 'Info: Change Status Order',
                         content: orderObj.orderid + " changes status.",
-                        url: '#/store/dashboard',
+                        url: '#/store/orderdetail?orderid='+orderObj.orderid,
                         isread: false,
                         username: orderObj.storeid,
                         createddate: new Date()
                     };
+
+                    var msgAdmin = {};
 
                     var customer = {
                         order: [orderObj.orderid],
@@ -256,8 +258,7 @@ module.exports = function (app) {
                         db.confirmationcode.checkCode(key, data.confirmcode, orderObj.statusid)
                             .then(function (codeObj) {
                             if (codeObj) {
-                                orderObj.updateOrderStatus(nextStatus, completeDate, stockID)
-                                    .then(function (rs) {
+                                orderObj.updateOrderStatus(nextStatus, completeDate, stockID).then(function (rs) {
                                     if(oldStatus == pickUpStatusID){
                                         db.profile.getProfileUser(shipperid).then(function(profile){
                                             msg['profile'] = profile;
@@ -267,9 +268,11 @@ module.exports = function (app) {
                                     }else {
                                         server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
                                     }
-                                    db.managestore.getUsersByStoreID(orderObj.storeid).then(function(rs){
+                                    // SEND SOCKET FOR ADMINS
+                                    server.socket.forward('server', 'admin', msgAdmin, 'shipper:change:order:status');
+                                    db.managestore.getUsersByStoreID(orderObj.storeid).then(function (rs) {
                                         var manager = '';
-                                        if(rs.length>0) manager = rs[0].dataValues.manager;
+                                        if (rs.length > 0) manager = rs[0].dataValues.manager;
                                         msg['username'] = manager;
                                         db.notification.addNotification(msg);
                                     });
@@ -303,6 +306,8 @@ module.exports = function (app) {
                         orderObj.updateOrderStatus(nextStatus, completeDate, stockID)
                             .then(function (rs) {
                             server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
+                            // SEND SOCKET FOR ADMINS
+                            server.socket.forward('server', 'admin', msgAdmin, 'shipper:change:order:status');
                             db.managestore.getUsersByStoreID(orderObj.storeid).then(function(rs){
                                 var manager = '';
                                 if(rs.length>0) manager = rs[0].dataValues.manager;
