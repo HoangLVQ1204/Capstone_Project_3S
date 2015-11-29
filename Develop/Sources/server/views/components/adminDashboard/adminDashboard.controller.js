@@ -117,9 +117,11 @@ function adminDashboardController($scope,$state,dataService, config, $rootScope,
     };
 
     $rootScope.$on("admin:dashboard:getShipperList", function(event, args){
-
         $scope.onlineShipper = socketAdmin.listOnlineShipper.length;
+    });
 
+    $rootScope.$emit("shipper:change:order:status", function(event,args){
+        getDataFromServer();
     });
 }
 

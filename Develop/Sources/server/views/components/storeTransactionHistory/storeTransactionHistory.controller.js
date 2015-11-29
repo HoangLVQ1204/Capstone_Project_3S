@@ -1,10 +1,9 @@
-function storeTransactionHistoryController($scope,$state, $http, $location, config) {
+function storeTransactionHistoryController($scope,$state, $http, $location, config, $rootScope) {
 
     $scope.ledgerList = [];
     $scope.autoList = [];
     var smsData = {verticalEdge: 'right',
                 horizontalEdge: 'bottom'};
-
     $scope.searchCustomOptions = [
         {
             option: 'All',
@@ -31,7 +30,6 @@ function storeTransactionHistoryController($scope,$state, $http, $location, conf
         //     value: 'totalcod'
         // }
     ];
-
     $scope.searchAutoOptions = [
         {
             option: 'All',
@@ -58,34 +56,32 @@ function storeTransactionHistoryController($scope,$state, $http, $location, conf
     $scope.dateRange = '';
     $scope.autoDateRange = '';
 
-    $http.get(config.baseURI + "/api/store/ledger/getLedgerList").success(function(response){
-      //console.log("============res==========",response);
-        response.map(function(ledger){
-            ledger.balance = parseInt(ledger.balance);
-            ledger.totalcod = parseInt(ledger.totalcod);
-            ledger.totaldelivery = parseInt(ledger.totaldelivery);
+    function getDataFromServer(){
+        $http.get(config.baseURI + "/api/store/ledger/getLedgerList").success(function(response){
+            response.map(function(ledger){
+                ledger.balance = parseInt(ledger.balance);
+                ledger.totalcod = parseInt(ledger.totalcod);
+                ledger.totaldelivery = parseInt(ledger.totaldelivery);
 
-            if (ledger.amount == null)
-            {
-                //ledger.fromDate = new Date(ledger.paydate);
-                //ledger.fromDate.setDate(ledger.fromDate.getDate()-7);
-                $scope.autoList.push(ledger)
-            }
-            else
-            {
-                $scope.ledgerList.push(ledger);
-                ledger.amount = parseInt(ledger.amount);
-            }
-        })
-        $scope.ledgerList.sort(dateSort);
-        $scope.autoList.sort(dateSort);
-        //console.log( $scope.ledgerList);
-        //console.log(response);
-    })
+                if (ledger.amount == null)
+                {
+                    $scope.autoList.push(ledger)
+                }
+                else
+                {
+                    $scope.ledgerList.push(ledger);
+                    ledger.amount = parseInt(ledger.amount);
+                }
+            })
+            $scope.ledgerList.sort(dateSort);
+            $scope.autoList.sort(dateSort);
+        });
+    }
+
+    getDataFromServer();
 
     $scope.displayedLedgerCollection = [].concat($scope.ledgerList);
     $scope.displayedAutoCollection = [].concat($scope.autoList);
-
 
     var dateSort =  function(x, y){
                 if (x.paydate > y.paydate) {
@@ -97,13 +93,12 @@ function storeTransactionHistoryController($scope,$state, $http, $location, conf
                 return 0;
             };
 
-    //----------------------------------
-    //FUNCTION LOAD SCRIPT
-    //-----------------------------------
+    $rootScope.$on("store:message:confirmPayment",function(data){
+        getDataFromServer();
+    });
+
     $scope.$watch('$viewContentLoaded', function (event) {
-
         caplet();
-
     });
 
     $scope.go = function ( path ) {
@@ -112,5 +107,5 @@ function storeTransactionHistoryController($scope,$state, $http, $location, conf
 
 }
 
-storeTransactionHistoryController.$inject = ['$scope','$state', '$http', '$location', 'config'];
+storeTransactionHistoryController.$inject = ['$scope','$state', '$http', '$location', 'config','$rootScope'];
 angular.module('app').controller('storeTransactionHistoryController',storeTransactionHistoryController);

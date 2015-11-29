@@ -18,11 +18,8 @@ function adminIssueBoxController($scope,$state, $http, $filter, config, $rootSco
             //console.log($scope.issueList)
         }).then(function () {
 
-            $state.go('admin.issueBox.content',{issueid: $scope.issueList[0].issueid},{
-                //reload: true,
-            });
+            $state.go('admin.issueBox.content',{issueid: $scope.issueList[0].issueid});
 
-            //alert(1);
         })
     }
 
@@ -50,24 +47,16 @@ function adminIssueBoxController($scope,$state, $http, $filter, config, $rootSco
 
     }
 
-    //----------------------------------
-    //FUNCTION LOAD SCRIPT
-    //-----------------------------------
+
     $scope.$watch('$viewContentLoaded', function (event) {
-
         caplet();
-
-
     });
 
 
-    // START Listen to socket changes
     $rootScope.$on("admin:issue:newIssue", function(event, args){
         dataService.getDataServer(config.baseURI + "/api/getAllIssue").then(function(response){
             $scope.issueList = response.data;
             $scope.issueList.sort( $scope.sortByDate);
-            //$scope.displayedOrderCollection = [].concat($scope.orderList);
-            //console.log($scope.issueList)
         })
     });
 }

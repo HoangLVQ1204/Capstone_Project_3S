@@ -6,7 +6,7 @@
 function socketShipper($rootScope, $q,socketService,authService,mapService) {
 
 
-    var EPSILON = 1e-8;
+    var EPSILON = 1e-7;
 
     var currentLocation = null;
     var api = {};
@@ -16,10 +16,8 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
      */
 
     socketService.on('shipper:register:location', function(data) {
-        mapService.setMapData(data.msg.mapData)
-            .then(function() {
-                console.log('register', data);
-            });
+        console.log('register', data);
+        mapService.setMapData(data.msg.mapData);
     });
 
     socketService.on('shipper:choose:express', function(data) {
@@ -64,20 +62,6 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
         }
     });
 
-    socketService.on('shipper:add:order', function(data) {
-        var msg = data.msg;
-        mapService.addOrder(msg.orderID, msg.store, msg.shipper, msg.customer)
-            .then(function() {
-                console.log('shipper add order', data);
-                // console.log('after add order', mapService.getStoreMarkers(), mapService.getCustomerMarkers(), mapService.getOrders());
-            });
-        
-    });
-
-    socketService.on('shipper:remove:express', function(data) {
-        console.log('remove express', data);
-    });
-
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();
         console.log('api.getCurrentUser', currentUser);
@@ -100,12 +84,12 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
 
     api.watchCurrentPosition = function() {
         var geo_success = function(position) {
-            // if (currentLocation
-            //     && Math.abs(currentLocation.latitude - position.coords.latitude) <= EPSILON
-            //     && Math.abs(currentLocation.longitude - position.coords.longitude) <= EPSILON) {
-            //     console.log('the same location');
-            //     return;
-            // }
+            if (currentLocation
+                && Math.abs(currentLocation.latitude - position.coords.latitude) <= EPSILON
+                && Math.abs(currentLocation.longitude - position.coords.longitude) <= EPSILON) {
+                console.log('the same location');
+                return;
+            }
             console.log('different location');
             currentLocation = position.coords;
             var currentUser = authService.getCurrentInfoUser();            
@@ -146,28 +130,25 @@ function socketShipper($rootScope, $q,socketService,authService,mapService) {
 
     api.registerSocket = function(){
         api.getCurrentUser()
-            .then(function(user) {                
-                mapService.addShipper(user)
-                    .then(function() {
-                        console.log("---TEST SEND SOCKET---");
-                        socketService.sendPacket(
-                            {
-                                type: 'shipper',
-                                clientID: user.shipperID
-                            },
-                            'server',
-                            {
-                                shipper: user
-                            },
-                            'client:register');
+            .then(function(user) {                                    
+                console.log("---TEST SEND SOCKET---");
+                socketService.sendPacket(
+                    {
+                        type: 'shipper',
+                        clientID: user.shipperID
+                    },
+                    'server',
+                    {
+                        shipper: user
+                    },
+                    'client:register');
 
-                        // Test watch position
-                        // var watchID = api.watchCurrentPosition();
-                        // setTimeout(function() {
-                        //     console.log('stop watch');
-                        //     api.stopWatchCurrentPosition(watchID);
-                        // }, 10000);
-                    });
+                // Test watch position
+                // var watchID = api.watchCurrentPosition();
+                // setTimeout(function() {
+                //     console.log('stop watch');
+                //     api.stopWatchCurrentPosition(watchID);
+                // }, 10000);                
             })
             .catch(function(err){
                 alert(err);

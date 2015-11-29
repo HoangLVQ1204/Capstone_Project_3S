@@ -1170,7 +1170,7 @@ INSERT INTO "public"."orderstatus" VALUES ('2', 'Picking up');
 INSERT INTO "public"."orderstatus" VALUES ('3', 'Bring to stock');
 INSERT INTO "public"."orderstatus" VALUES ('4', 'In stock');
 INSERT INTO "public"."orderstatus" VALUES ('5', 'Delivering');
-INSERT INTO "public"."orderstatus" VALUES ('6', 'Canceling');
+INSERT INTO "public"."orderstatus" VALUES ('6', 'Returning');
 INSERT INTO "public"."orderstatus" VALUES ('7', 'Done');
 INSERT INTO "public"."orderstatus" VALUES ('8', 'Cancel');
 

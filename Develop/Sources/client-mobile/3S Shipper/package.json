@@ -1,7 +1,7 @@
 {
   "name": "3s-shipper",
   "version": "1.0.0",
-  "description": "3S Shipper: An Ionic project",
+  "description": "KarryWell: A Shipper's App project",
   "dependencies": {
     "angular-google-maps": "^2.2.1",
     "angular-jwt": "0.0.9",

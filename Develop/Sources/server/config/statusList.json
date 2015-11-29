@@ -100,8 +100,8 @@
       "requiredcode": true
     },
     {
-      "statusid": 7,
-      "statusname": "Done",
+      "statusid": 8,
+      "statusname": "Cancel",
       "nextAction": null,
       "requiredcode": false
     }

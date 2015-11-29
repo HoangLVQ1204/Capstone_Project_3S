@@ -17,8 +17,7 @@ module.exports = function(app) {
 							date = new Date(ledger.paydate);
 						else date = new Date("October 24, 2015 23:59:00");
 						//console.log(date);
-					})
-				;
+					});
 			datePromise.then(function(){
 				db.store.getAllStores()
 					.then(function (list) {
