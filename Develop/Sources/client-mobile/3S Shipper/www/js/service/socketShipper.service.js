@@ -31,7 +31,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
   socketService.on('shipper:notification:newTask', function(data) {
     console.log('new task', data);
 
-    $rootScope.$broadcast('task:newTask');
+    $rootScope.$broadcast('shipper:task:newTask');
   });
 
   socketService.on('shipper:choose:express', function(data) {
@@ -110,7 +110,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
       console.log('data recieve', data);
       api.getCurrentUser()
         .then(function(user) {
-          $ionicLoading.hide();
+          //$ionicLoading.hide();
           user.distanceText = data.msg.distanceText;
           user.durationText = data.msg.durationText;
           authService.getProfileUser()
@@ -136,7 +136,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
             });
         })
         .catch(function(err) {
-          $ionicLoading.hide();
+          //$ionicLoading.hide();
           console.log(err);
         });
     };
