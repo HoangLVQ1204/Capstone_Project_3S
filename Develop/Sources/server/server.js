@@ -31,7 +31,7 @@ app.set('io', {
 // setup routes
 require('./routes')(app);
 //
-var schedule       = require('./config/ledgerSchedule')(app);
+var schedule       = require('./config/ledgerSchedule')( app);
 schedule.autoPayment();
 
 // setup global error handler

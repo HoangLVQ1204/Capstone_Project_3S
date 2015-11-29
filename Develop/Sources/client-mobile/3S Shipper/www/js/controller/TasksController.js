@@ -32,6 +32,22 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
 	}
   });
 
+  //socket new Task shipper:task:newTask
+  $scope.$on("shipper:task:newTask", function(event, args){
+    console.log("Reload New Task");
+    getListOfTask();
+  });
+
+  //socket order express canceled
+  $scope.$on("shipper:canceled", function(event, args){
+    console.log('Shipper: canceled:', args);
+    var des = {
+        id: 999,
+        content: 'Store ' + args.storeid + ' has found a shipper or canceled order'
+    }
+    $scope.showAlert(des);
+  });
+
   //TODO: Select tab for find bestway screen
   //$scope.tabSelected = function(tab) {
   //  $scope.tabParam = tab;

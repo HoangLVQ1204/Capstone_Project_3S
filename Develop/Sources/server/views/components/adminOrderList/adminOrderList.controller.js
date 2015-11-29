@@ -2,7 +2,7 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminOrderListController($scope,$state, dataService, $filter, config) {
+function adminOrderListController($scope,$state, dataService, $filter, config, $rootScope) {
 
     $scope.orderList = [];
     var smsData = {verticalEdge: 'right',
@@ -61,6 +61,7 @@ function adminOrderListController($scope,$state, dataService, $filter, config) {
     function getDataFromServer(){
         dataService.getDataServer(config.baseURI + "/api/getAllOrder").then(function(response){
             $scope.orderList = response.data;
+            console.log($scope.orderList[0].customAddress)
             $scope.orderList.sort(function (a,b) {
                 if (a.completedate < b.completedate) return -1;
                 if (a.completedate > b.completedate) return 1;
@@ -83,5 +84,5 @@ function adminOrderListController($scope,$state, dataService, $filter, config) {
 
 }
 
-adminOrderListController.$inject = ['$scope','$state', 'dataService', '$filter', 'config'];
+adminOrderListController.$inject = ['$scope','$state', 'dataService', '$filter', 'config','$rootScope'];
 angular.module('app').controller('adminOrderListController',adminOrderListController);

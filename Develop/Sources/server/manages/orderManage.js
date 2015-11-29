@@ -502,9 +502,20 @@ var cancelOrder = function (req, res, next) {
 };
 
 var getOrderList = function (req, res, next) {
+    var list = [];
     db.order.getAllOrder(db.orderstatus, db.ordertype, db.store)
-    .then(function(list){
-        res.status(200).json(list);
+    .then(function(orderList){
+            orderList = orderList.map(function (order) {
+                var add = order.getCustomerAddress();
+                //console.log(add);
+                order = order.toJSON();
+                order['deliveryaddress'] = add;
+                //var newOrder = _.clone(order.toJSON());
+                //list.push(newOrder);
+                 return order;
+            });
+
+        res.status(200).json(orderList);
     }, function(err) {
         next(err);
     });
