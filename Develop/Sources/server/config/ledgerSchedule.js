@@ -1,13 +1,17 @@
 var cron           = require('node-schedule');// Job schedule
 var moment         = require('moment');
+
+
 module.exports = function(app) {
 	var db = app.get('models');
-
+	var notificationManage = require('../manages/notificationManage')(app);
+	var server = app.get('io')
 	var autoPayment = function () {
 		var rule = new cron.RecurrenceRule();
 		rule.dayOfWeek = [0];
 		rule.hour = 23;
 		rule.minute = 59;
+		//rule.second = 30;
 		cron.scheduleJob(rule, function(){
 			var date, totalcod, totaldelivery;
 			var storeList;
@@ -44,18 +48,40 @@ module.exports = function(app) {
 								ledger['balance'] = totaldelivery - totalcod;
 								ledger['note'] = 'Auto payment from ' + moment(date).format('DD/MM/YYYY') + ' to ' + moment(ledger['paydate']).format('DD/MM/YYYY') ;
 								db.generalledger.postNewLedger(ledger)
-									.then(function (gledger) {
+									.then(function (newledger) {
+										//console.log(newledger.ledgerid);
+										if (ledger['balance'] < 0)
+											updateLedgerForOrderAfterAuto(store.storeid);
+
 										console.log('Auto update ledger of store ' + store.storeid);
+										var msgToStore = {
+											type: 'info',
+											title: 'Info',
+											content: 'System calculated automatically your balance in ledger has id ' + newledger.ledgerid + ' from'+ moment(date).format('DD/MM/YYYY') +' to '
+														+ moment(ledger['paydate']).format('DD/MM/YYYY') +', please check it...',
+											url: '#/store/transactionHistory',
+											isread: false,
+											createddate: new Date()
+										};
+										db.managestore.getOwnerOfStore(store.storeid)
+											.then(function (user) {
+												msgToStore['username'] = user[0].managerid;
+												notificationManage.postFromSever(msgToStore);
+												server.socket.forward(
+													{
+														type: 'admin',
+														clientID: 'AD000001'
+													},
+													{type: 'store', clientID: store.storeid},
+													msgToStore
+													,
+													'store:message:confirmPayment');
+											})
 									})
 							})
 						})
 					})
 			})
-
-
-
-
-
 		});
 	}
 

@@ -71,14 +71,12 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
     myPopup.then(function (code) {
       if(code) $scope.nextStepConfirm(code);
     });
-  };
+  };  
 
-  var mode = "shipper";
-
-  $scope.shippers = mapService.getShipperMarkers(mode);
-  $scope.stores = mapService.getStoreMarkers(mode);
-  $scope.customers = mapService.getCustomerMarkers(mode);
-  $scope.orders = mapService.getOrders(mode);
+  $scope.shippers = mapService.getShipperMarkers();
+  $scope.stores = mapService.getStoreMarkers();
+  $scope.customers = mapService.getCustomerMarkers();
+  $scope.orders = mapService.getOrders();
   var currentUser = authService.getCurrentInfoUser();
   $scope.center = {
       // :TODO get address of shipper
@@ -99,6 +97,10 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
           $scope.order = rs.detail;
           console.log("DETAIL: ",$scope.order);
           $scope.statuslist = rs.statuslist;
+
+          // Filter map data
+          var mode = { type: 'orderdetail', orderID: $scope.order.orderid };
+          mapService.setMode(mode);
         }
       })
       .error(function (error) {

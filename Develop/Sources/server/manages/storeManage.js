@@ -187,9 +187,28 @@ module.exports = function(app) {
             }, function(err) {
                 next(err);
             }).then(function () {
+                if (ledger != null)
                 db.order.updateLedgerForOrder(store.storeid, ledger.paydate, ledger.ledgerid)
                     .then(function(ledger) {
                         res.status(201).json(ledger);
+                    }, function(err) {
+                        next(err);
+                    });
+            })
+
+    };
+
+    var updateLedgerForOrderAfterAuto = function(storeid){
+        //var store = req.store;
+        var ledger;
+        return db.generalledger.getLatestAutoAccountWithStoreID(storeid)
+            .then(function(total) {
+                ledger = total;
+            }, function(err) {
+                next(err);
+            }).then(function () {
+                db.order.updateLedgerForOrder(storeid, ledger.paydate, ledger.ledgerid)
+                    .then(function(ledger) {
                     }, function(err) {
                         next(err);
                     });
@@ -201,6 +220,7 @@ module.exports = function(app) {
         var newLedger = req.body;
         return db.generalledger.postNewLedger(newLedger)
             .then(function(ledger) {
+                console.log(ledger);
                 res.status(201).json(ledger);
             }, function(err) {
                 console.log(err);
@@ -340,7 +360,8 @@ module.exports = function(app) {
             createStoreOwnerID: createStoreOwnerID,
             createStoreID: createStoreID,
             postNewManageStore: postNewManageStore,
-            getAllStores: getAllStores
+            getAllStores: getAllStores,
+            updateLedgerForOrderAfterAuto: updateLedgerForOrderAfterAuto
 
     }
 }

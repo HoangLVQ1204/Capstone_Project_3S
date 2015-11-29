@@ -6,47 +6,6 @@
 /*
     Helper functions
 */
-function initShipperMarker($scope, geocoder, maps, shipperMarker) {
-    shipperMarker.icon = $scope.shipperIcon;
-}
-
-function initStoreMarker($scope, geocoder, maps, storeMarker) {
-    storeMarker.icon = $scope.storeIcon;
-    geocoder.geocode({
-            'location': {
-                lat: parseFloat(storeMarker.latitude),
-                lng: parseFloat(storeMarker.longitude)
-            }
-        }, function(results, status) {
-            var geoText = 'Not Available';
-            if (status === maps.GeocoderStatus.OK) {
-                if (results[0]) {
-                    geoText = results[0].formatted_address;
-
-                }
-            }
-            storeMarker.geoText = geoText;
-        });
-}
-
-function initCustomerMarker($scope, geocoder, maps, customerMarker) {    
-    customerMarker.customerID = customerMarker.order[0];
-    customerMarker.order.forEach(function(order) {        
-        $scope.orders[order].customerID = customerMarker.customerID;
-    });
-
-    customerMarker.icon = $scope.customerIcon;
-    geocoder.geocode({
-        address: customerMarker.geoText
-    }, function(results, status) {
-        if (status === maps.GeocoderStatus.OK) {
-            customerMarker.latitude = results[0].geometry.location.lat();
-            customerMarker.longitude = results[0].geometry.location.lng();
-        } else {
-            alert('Geocode was not successful for the following reason: ' + status);
-        }
-    });
-}
 
 var arrows = [];
 
@@ -103,8 +62,7 @@ function displayRelationship(model, object_1, object_2, $scope) {
             lng: model.longitude
         };
         //console.log(store, customer);
-        if (dest_1 && dest_2)
-            $scope.drawTwoArrows(start, dest_1, dest_2);
+        $scope.drawTwoArrows(start, dest_1, dest_2);
     });                
 }
 
@@ -202,20 +160,6 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
             }
         }
 
-        
-        // Initilize some attribute for markers
-        $scope.shipperMarkers.forEach(function(shipperMarker) {                        
-            initShipperMarker($scope, geocoder, maps, shipperMarker);
-        });        
-
-        $scope.storeMarkers.forEach(function(storeMarker) {
-            initStoreMarker($scope, geocoder, maps, storeMarker);
-        });
-
-        $scope.customerMarkers.forEach(function(customerMarker) {            
-            initCustomerMarker($scope, geocoder, maps, customerMarker);
-        });   
-
 
         // Events for markers        
         $scope.shipperEvents = {
@@ -305,37 +249,6 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
             }
         };    
 
-        // Test real-time
-
-         // setTimeout(function() {
-         //     console.log('time out');
-         //     var newOrder = "order1";
-         //     var shipperID = "shipper_1";
-         //     var storeID = "store_3";
-         //     var newStore = {
-         //         "order": [newOrder],
-         //         "latitude": 21.031526,
-         //         "longitude": 105.813359,
-         //         "storeID": storeID
-         //     };
-         //     var geoText = "306 Kim Mã,Ba Đình,Hà Nội,Việt Nam";
-         //     var newCustomer = {
-         //         "order": [newOrder],
-         //         "geoText": geoText
-         //     };
-         //     initStoreMarker($scope, geocoder, maps, newStore);
-         //     $scope.orders[newOrder] = {
-         //         "shipperID": shipperID,
-         //         "storeID": storeID
-         //     };
-         //     initCustomerMarker($scope, geocoder, maps, newCustomer);
-         //     // Add all new information
-         //     $scope.shipperMarkers[0].order.push(newOrder);
-         //     $scope.storeMarkers.push(newStore);
-         //     $scope.customerMarkers.push(newCustomer);
-         //     $scope.$apply();
-         // }, 5000);
-
         // Filling control for all angular-google-map directives
         uiGmapIsReady.promise().then(function(instances) {
             var myMap = instances[0].map;                                
@@ -346,17 +259,21 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
             };
 
             $scope.drawTwoArrows = function(start, dest_1, dest_2) {
-                var end = {
-                    lat: dest_1.latitude,
-                    lng: dest_1.longitude
-                };                    
-                drawArrow(start, end, $scope.arrowSymbol, 'blue', maps, myMap);
+                if (dest_1) {
+                    var end = {
+                        lat: dest_1.latitude,
+                        lng: dest_1.longitude
+                    };                    
+                    drawArrow(start, end, $scope.arrowSymbol, 'blue', maps, myMap);
+                }                
 
-                var end = {
-                    lat: dest_2.latitude,
-                    lng: dest_2.longitude
-                };
-                drawArrow(start, end, $scope.arrowSymbol, 'blue', maps, myMap);
+                if (dest_2) {
+                    var end = {
+                        lat: dest_2.latitude,
+                        lng: dest_2.longitude
+                    };
+                    drawArrow(start, end, $scope.arrowSymbol, 'blue', maps, myMap);
+                }                
             };
         });            
 

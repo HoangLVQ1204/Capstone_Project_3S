@@ -92,6 +92,19 @@ function adminStoreListController($scope,$state, dataService, authService, confi
         //console.log($('#inputValue'));
     };
 
+    $scope.showConfirmAgain = function (event){
+        //alert(1);
+        if (!$scope.isValid) return;
+        event.preventDefault();
+        //$scope.getLatestLedgerOfStore(storeid);
+        //console.log( $scope.selectedStore.totalcod);
+        //var data=$(this).data();
+        var data = new Object();
+        data.effect="md-flipVer";
+        $("#md-effect-payment-confirmAgain").attr('class','modal fade').addClass(data.effect).modal('show');
+        //console.log($('#inputValue'));
+    };
+
     $scope.blockConfirm = function (event, store){
         //alert(1);
         $scope.reason = "";
@@ -103,9 +116,8 @@ function adminStoreListController($scope,$state, dataService, authService, confi
         //$scope.getLatestLedgerOfStore(storeid);
         //console.log( $scope.selectedStore.totalcod);
         //var data=$(this).data();
-        var data = new Object();
-        data.effect="md-slideRight";
-        $("#md-effect-block").attr('class','modal fade').addClass(data.effect).modal('show');
+
+        $("#md-effect-block").attr('class','modal fade').addClass(smsData.effect).modal('show');
     };
 
     //----------------------------------
@@ -161,7 +173,7 @@ function adminStoreListController($scope,$state, dataService, authService, confi
         //alert(1);
         //$scope.payFee = 0;
         //console.log(store.currentBalance, $scope.payfrom);
-        if (!$scope.isValid) return;
+
         //if (store.currentBalance == 0) return;
         //if ($scope.payFee == 0) return;
         //if ($scope.payFee*$scope.payfrom > store.currentBalance) return;
@@ -189,7 +201,7 @@ function adminStoreListController($scope,$state, dataService, authService, confi
         }
         ledger.balance = ledger.totaldelivery - ledger.totalcod;
         //console.log(ledger);
-        if (ledger.balance == 0){
+        if (ledger.balance <= 0){
             dataService.putDataServer(config.baseURI +"/api/store/updateLedgerForOrder/" + ledger.storeid).then(function(response){
 
             }).catch(function(error){
@@ -200,14 +212,16 @@ function adminStoreListController($scope,$state, dataService, authService, confi
         }
         dataService.postDataServer(config.baseURI + "/api/store/postNewLedger", ledger).then(function success(response){
             //$scope.currentCoD= response;
+            var newLedgerID = response.data.ledgerid;
             store.currentCoD = ledger.totalcod;
             store.currentFee = ledger.totaldelivery;
             store.currentBalance = ledger.balance;
-            socketAdmin.confirmPaymentMessage(store.storeid);
+            socketAdmin.confirmPaymentMessage(store.storeid, newLedgerID);
             //console.log(store);
             smsData.theme="theme-inverse";
             $.notific8($("#sms-success").val(), smsData);
             $("#md-effect-confirm").attr('class','modal fade').addClass(smsData.effect).modal('hide');
+            $("#md-effect-payment-confirmAgain").attr('class','modal fade').addClass(smsData.effect).modal('hide');
         }).catch(function(error){
             smsData.theme="danger";
             $.notific8($("#sms-fail").val(), smsData);
