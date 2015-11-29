@@ -295,29 +295,28 @@ angular.module('app', [
             url: '/adminReport',
             template: '<admin-report></admin-report>',
             resolve: {
-                // dataChart: function(reportService){
-                //     reportService.getDateOverView()
-                //     .then(function(rs){
-                //         return rs;
-                //     })
-                // }
-
-                dataChart: function($http,config){
-                    var urlBase = config.baseURI + '/api/admin/report/orderCount';
-                    return $http({method: 'GET', url: urlBase});
-                }
+                
+                     dataExNo: function($http,config, reportService){
+                         return reportService.getExNoFromServer();
+                     },
+                     dataComCan: function($http,config, reportService){
+                         return reportService.getComCanFromServer();
+                     },
+                     dataCodFee: function($http,config, reportService){
+                         return reportService.getCodFeeFromServer();
+                     },
+                     dataOverView: function($http,config, reportService){
+                         return reportService.getDataOverView();
+                     }
+                
             },
-            controller: function($scope,dataChart){
-                console.log("---Here xxx---");
-                console.log(dataChart.data);
-                console.log("---Here xxx---");
-                 $scope.dataChart = dataChart.data;
-                 // $scope.listStoreCC = $scope.dataChart;
-                 // $scope.selectedStoreCC = $scope.dataChart[0];
-                 // $scope.listYearCC = $scope.dataChart[0].years;
-                 // $scope.selectedYearCC = $scope.dataChart[0].years[0];
-                 // $scope.listOrderOfMonthCC = $scope.dataChart[0].years[0].months;
-                        
+            controller: function($scope,dataExNo,dataComCan,dataCodFee,dataOverView){
+                $scope.dataChart = {
+                    dataExNo    : dataExNo,
+                    dataComCan  : dataComCan,
+                    dataCodFee  : dataCodFee,
+                    dataOverView: dataOverView
+                }               
             },
             access: config.role.admin
         })

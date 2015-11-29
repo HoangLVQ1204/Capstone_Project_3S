@@ -14,20 +14,25 @@
 						<li><a data-toggle="tab" href="#sectionB" target="ui-seft"><i class="fa fa-qrcode"></i> &nbsp; Complete / Cancel</a></li>
 
 						<li class="pull-right">
-							<select class="form-control" ng-options ="x.name for x in listYear" ng-model="selectedYear">
+							<select class="form-control" ng-options ="x.name for x in listYearExNo" ng-model="selectedYearExNo">
 							</select>
 						</li>
 
 						<li class="pull-right">
-							<select class="form-control" ng-options ="x.name for x in listStore" ng-model="selectedStore" ng-change="updateDate()">
+							<select class="form-control" ng-options ="x.name for x in listStore" ng-model="selectedStoreExNo" ng-change="updateCharOrderByStore()">
 							</select>
 						</li>
 					</ul>
 					<div class="tab-content">
 						<div id="sectionA" class="tab-pane in active">
 							<div class="widget-chart chart-dark">
-								<div id="placeholder" class="demo-placeholder" style="height:200px"></div>
-								<!-- <div id="onlinerealtime" class="align-lg-center">Right now <span>0</span> visitors on site </div> -->
+								<div id="chartExNo" class="demo-placeholder" style="height:200px"></div>
+								<div class="label-sparkline align-lg-center">
+								<ul>
+									<li><span data-color="theme-inverse"></span>Express </li>
+									<li><span data-color="warning"></span>Normal</li>
+								</ul>
+							</div>
 							</div><!-- // widget-chart -->
 							<!-- // widget-chart -->
 							<!-- <div class="widget-chart chart-dark">
@@ -58,6 +63,15 @@
 						</div>
 						<div id="sectionB" class="tab-pane">
 							<div class="widget-chart chart-dark">
+								<div id="chartComCan" class="demo-placeholder" style="height:200px"></div>
+								<div class="label-sparkline align-lg-center">
+								<ul>
+									<li><span data-color="theme-inverse"></span>Complete </li>
+									<li><span data-color="warning"></span>Cancel</li>
+								</ul>
+							</div>
+							</div><!-- // widget-chart -->
+							<!-- <div class="widget-chart chart-dark">
 								<table class="flot-chart" data-type="lines" data-tool-tip="show" data-width="100%" data-height="220px">
 									<thead>
 										<tr>
@@ -75,13 +89,13 @@
 										
 									</tbody>
 								</table>
-							</div>
-							<div class="label-sparkline align-lg-center">
+							</div> -->
+							<!-- <div class="label-sparkline align-lg-center">
 								<ul>
 									<li><span data-color="theme-inverse"></span>Complete </li>
 									<li><span data-color="warning"></span>Cancel</li>
 								</ul>
-							</div>
+							</div> -->
 						</div>
 					</div>
 				</div>
