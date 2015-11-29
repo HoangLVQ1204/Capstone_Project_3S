@@ -60,15 +60,12 @@ angular.module('app', [
             template: '<admin-layout></admin-layout>',
             controller: function($scope, $rootScope, mapService, authService){
                 var mode = { type: "all" };
-                var count = 0;
-                 var intervalID = setInterval(function() {
-                    if (count == 2) {
-                        clearInterval(intervalID);
-                        $rootScope.$apply();
-                    }
-                    ++count;
-                    mapService.setMode(mode);
-                 }, 1500);
+                // setTimeout(function() {                    
+                //     mapService.setMode(mode);
+                //     $rootScope.$apply();
+                //  }, 1500);
+                mapService.setMode(mode);
+                // $rootScope.$apply();
                 $scope.shippers = mapService.getShipperMarkers(mode);
                 $scope.stores = mapService.getStoreMarkers(mode);
                 $scope.customers = mapService.getCustomerMarkers(mode);
@@ -83,15 +80,12 @@ angular.module('app', [
             template: '<admin-store-list-layout></admin-store-list-layout>',
             controller: function($scope, $rootScope, mapService){
                 var mode = { type: "all" };
-                var count = 0;
-                 var intervalID = setInterval(function() {
-                    if (count == 2) {
-                        clearInterval(intervalID);
-                        $rootScope.$apply();
-                    }
-                    ++count;
-                    mapService.setMode(mode);
-                 }, 1500);
+                // setTimeout(function() {                    
+                //     mapService.setMode(mode);
+                //     $rootScope.$apply();
+                //  }, 1500);
+                mapService.setMode(mode);
+                // $rootScope.$apply();
                 $scope.stores = mapService.getStoreMarkers(mode);
                 $scope.zoom = 11;
             },
@@ -127,15 +121,12 @@ angular.module('app', [
             template: '<admin-shipper-list-layout></admin-shipper-list-layout>',
             controller: function($scope, $rootScope, mapService){
                 var mode = { type: "all" };
-                var count = 0;
-                 var intervalID = setInterval(function() {
-                    if (count == 2) {
-                        clearInterval(intervalID);
-                        $rootScope.$apply();
-                    }
-                    ++count;
-                    mapService.setMode(mode);
-                 }, 1500);
+                // setTimeout(function() {                    
+                //     mapService.setMode(mode);
+                //     $rootScope.$apply();
+                //  }, 1500);
+                mapService.setMode(mode);
+                // $rootScope.$apply();
                 $scope.shippers = mapService.getShipperMarkers(mode);
                 $scope.zoom = 11;
             },
@@ -211,15 +202,12 @@ angular.module('app', [
              template: '<layout></layout>',
              controller: function($scope, $rootScope, mapService, authService){
                  var mode = { type: "all" };
-                 var count = 0;
-                 var intervalID = setInterval(function() {
-                    if (count == 2) {
-                        clearInterval(intervalID);
-                        $rootScope.$apply();
-                    }
-                    ++count;
-                    mapService.setMode(mode);
-                 }, 1500);
+                 // setTimeout(function() {                    
+                 //    mapService.setMode(mode);
+                 //    $rootScope.$apply();
+                 // }, 1500);
+                mapService.setMode(mode);
+                // $rootScope.$apply();
                 // mapService.setMode(mode);
                  $scope.shippers = mapService.getShipperMarkers(mode);
                  $scope.stores = mapService.getStoreMarkers(mode);
@@ -244,15 +232,12 @@ angular.module('app', [
              template: '<store-order-detail-layout></store-order-detail-layout>',
              controller: function($scope, $rootScope, mapService, authService, $stateParams){
                  var mode = { type: 'orderdetail', orderID: $stateParams.orderid };
-                 var count = 0;
-                 var intervalID = setInterval(function() {
-                    if (count == 2) {
-                        clearInterval(intervalID);
-                        $rootScope.$apply();
-                    }
-                    ++count;
-                    mapService.setMode(mode);
-                 }, 1500);
+                 // setTimeout(function() {                    
+                 //    mapService.setMode(mode);
+                 //    $rootScope.$apply();
+                 // }, 1500);
+                mapService.setMode(mode);
+                // $rootScope.$apply();
                 // mapService.setMode(mode);
                  $scope.shippers = mapService.getShipperMarkers(mode);
                  $scope.stores = mapService.getStoreMarkers(mode);
@@ -295,29 +280,28 @@ angular.module('app', [
             url: '/adminReport',
             template: '<admin-report></admin-report>',
             resolve: {
-                // dataChart: function(reportService){
-                //     reportService.getDateOverView()
-                //     .then(function(rs){
-                //         return rs;
-                //     })
-                // }
-
-                dataChart: function($http,config){
-                    var urlBase = config.baseURI + '/api/admin/report/orderCount';
-                    return $http({method: 'GET', url: urlBase});
-                }
+                
+                     dataExNo: function($http,config, reportService){
+                         return reportService.getExNoFromServer();
+                     },
+                     dataComCan: function($http,config, reportService){
+                         return reportService.getComCanFromServer();
+                     },
+                     dataCodFee: function($http,config, reportService){
+                         return reportService.getCodFeeFromServer();
+                     },
+                     dataOverView: function($http,config, reportService){
+                         return reportService.getDataOverView();
+                     }
+                
             },
-            controller: function($scope,dataChart){
-                console.log("---Here xxx---");
-                console.log(dataChart.data);
-                console.log("---Here xxx---");
-                 $scope.dataChart = dataChart.data;
-                 // $scope.listStoreCC = $scope.dataChart;
-                 // $scope.selectedStoreCC = $scope.dataChart[0];
-                 // $scope.listYearCC = $scope.dataChart[0].years;
-                 // $scope.selectedYearCC = $scope.dataChart[0].years[0];
-                 // $scope.listOrderOfMonthCC = $scope.dataChart[0].years[0].months;
-                        
+            controller: function($scope,dataExNo,dataComCan,dataCodFee,dataOverView){
+                $scope.dataChart = {
+                    dataExNo    : dataExNo,
+                    dataComCan  : dataComCan,
+                    dataCodFee  : dataCodFee,
+                    dataOverView: dataOverView
+                }               
             },
             access: config.role.admin
         })

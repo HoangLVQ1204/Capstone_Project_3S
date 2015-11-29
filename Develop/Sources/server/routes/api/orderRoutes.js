@@ -32,16 +32,7 @@ module.exports = function (app) {
     app.route('/store/orders/cancel')
         .post(checkAll,controller.cancelOrder);
 
-    app.route('/api/store/deleteGoods')
-        .delete(checkAll, controller.deleteGoods);
-
-    app.route('/api/store/addGoods')
-        .post(controller.addGoods);
-
-    app.route('/api/store/goods')
-        .put(checkAll, controller.updateGoods);
-
-    app.route('/api/store/getAllOrder')
+     app.route('/api/store/getAllOrder')
         .get(checkAll, controller.storeGetOrderList);
 
     app.route('/api/admin/order/countOrder')

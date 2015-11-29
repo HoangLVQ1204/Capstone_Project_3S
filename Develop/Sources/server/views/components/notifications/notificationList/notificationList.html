@@ -17,7 +17,7 @@
 	
 			<ul class="pagination">
 					<li ng-click="goLeft()"><a><i class="fa fa-angle-left"></i></a></li>
-					<li ng-repeat="e in pageNumbers track by $index" ng-class="{active: e}" ng-click="selectPage($index)"><a>{{ $index + 1 }}</a></li>
+					<li ng-repeat="e in pageNumbers track by $index" ng-class="{'active': e}" ng-click="selectPage($index)"><a>{{ $index + 1 }}</a></li>
 					<li ng-click="goRight()"><a><i class="fa fa-angle-right"></i></a></li>
 			</ul>			
 	</div>	
@@ -28,7 +28,7 @@
 		<section class="thumbnail-in" ng-class="{'bg-info': !notification.isread}">
 				<div class="widget-im-tools tooltip-area pull-right">
 						<span>
-								<time class="timeago" datetime="2013-11-17T14:24:17Z">{{ passedTime(notification.createddate) }} ago</time>
+								<time class="timeago" datetime="{{notification.createddate}}">{{ passedTime(notification.createddate) }} ago</time>
 						</span>						
 				</div>
 				<div class="im-thumbnail bg-theme"><i class="fa fa-bell-o"></i></div>
@@ -43,7 +43,7 @@
 		<section class="thumbnail-in" ng-class="{'bg-info': !notification.isread}">			
 				<div class="widget-im-tools tooltip-area pull-right">
 						<span>
-								<time class="timeago" datetime="2013-11-17T01:24:17Z">{{ passedTime(notification.createddate) }} ago</time>
+								<time class="timeago" datetime="{{notification.createddate}}">{{ passedTime(notification.createddate) }} ago</time>
 						</span>
 						
 				</div>

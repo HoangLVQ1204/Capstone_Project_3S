@@ -20,12 +20,12 @@
         <div class="item item-input">
           <span class="input-label">Order code:</span>
 
-          <p class="detail-p">{{order.orderid}}</p>
+          <p class="detail-p detail-orderid">{{order.orderid}}</p>
         </div>
         <div class="item item-input">
           <span class="input-label">Status:</span>
 
-          <p class="detail-p">{{order.orderstatus.status}}</p>
+          <p class="detail-p statusDn label">{{order.orderstatus.status}}</p>
         </div>
         <div class="item item-input">
           <span class="input-label">Recipient:</span>
@@ -82,8 +82,8 @@
       </div>
     </div>
     <button ng-repeat="status in statuslist"
-            ng-if="status.statusid == order.statusid && status.nextAction && order.tasks[0].statusid != 5" class="button button-full button-positive"
-            ng-click="showConfirm(order.statusid, status.nextAction)">{{status.nextAction}}
+            ng-if="status.statusid == order.statusid && status.nextAction && order.tasks[0].statusid != 5" class="button button-block btCommon"
+            ng-click="showConfirm(order.statusid, status.nextAction)"><i class="ion-checkmark"></i>&nbsp;&nbsp;{{status.nextAction}}
     </button>
     <!--</ion-content>-->
     <!--<script id="status-popover.html" type="text/ng-template">-->
@@ -162,7 +162,7 @@
       </div>
     </div>
   </script>
-  <div class="fixed-button">
+  <!-- <div class="fixed-button">
     <a type="button" href="#/app/bestway/pickup" class="btn-cus btn-primary-cus btn-circle-cus btn-xl-cus"><i class="ion-ios-paperplane" style="font-size: 26px"></i></a>
-  </div>
+  </div> -->
 </ion-view>

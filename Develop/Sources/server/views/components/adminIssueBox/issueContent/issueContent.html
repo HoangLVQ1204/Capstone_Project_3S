@@ -69,8 +69,8 @@
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th ng-show="issue.issuetype.categoryid!=3">ShipperID</th>
-                            <th ng-show="issue.issuetype.categoryid==3">StoreID</th>
+                            <th ng-show="issue.issuetype.categoryid==3">ShipperID</th>
+                            <th ng-show="issue.issuetype.categoryid!=3">StoreID</th>
                             <th width="30%" class="text-center">Pickup Address</th>
                             <th width="30%" class="text-center">Delivery Address</th>
                             <th>Order Status</th>
@@ -124,8 +124,9 @@
                 <h5><strong>Are you sure to resolve this issue by {{resolveTypeValue[resolveType-1]}} options???</strong></h5><br>
                 <p ng-show="issue.typeid==4">- All order status change to Cancel<br>-Task status of shippers change to Fail</p>
                 <p ng-show="issue.typeid==5">- All order status change to Cancelling<br>-Task type of shippers change to Return</p>
-                <p ng-show="issue.typeid==7 && issue.orderissues[0].order.statusid > 2">- Order status change to Cancelling<br>-Task type of shipper change to Return</p>
+                <p ng-show="issue.typeid==7 && issue.orderissues[0].order.statusid > 2 && issue.orderissues[0].order.statusid != 4">- Order status change to Cancelling<br>-Task type of shipper change to Return</p>
                 <p ng-show="issue.typeid==7 && issue.orderissues[0].order.statusid < 3">- Order status change to Cancel<br>-Delete task of shipper</p>
+                <p ng-show="issue.typeid==7 && issue.orderissues[0].order.statusid == 4">- You have to assign this order to a shipper to return order to store </p>
                 <hr>
 
                 <button type="button" class="btn btn-danger" ng-click="updateResolve()"><i class="fa fa-check-circle"></i> Yes</button>

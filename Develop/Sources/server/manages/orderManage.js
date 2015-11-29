@@ -192,7 +192,7 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
             code += chars.charAt(Math.floor(Math.random() * chars.length));
         return code;
     }
-    var post = function (req, res, next) {
+    var postOneOrder = function (req, res, next) {
         var newOrder = {};
         /*
          * By HuyTDH - 09/10/2015
@@ -527,54 +527,7 @@ var getTodayTotal = function (req, res, next) {
     });
 };
 
-    deleteGoods =  function(req, res, next){
-        var goodsid = req.query.goodsid;
-        var storeid = req.user.stores[0].storeid;
-        db.goods.checkGoodsBelongStore(goodsid, storeid, db.order).then(function(goods){
-            db.goods.deleteGoodsByID(goodsid).then(function(){
-                return res.status(200).json("Delete goods successfully!");
-            },function(){
-                return res.status(400).json("Delete goods fail!");
-            })
-        },function(er){
-            return res.status(400).json("Delete goods fail!");
-        })
-    };
-
-    addGoods = function(req, res, next){
-            var newGoods = req.body;
-            db.goods.postOneGood(newGoods)
-            .then(function(rs){
-                return res.status(200).json(rs.goodsid);
-            },function(err){
-                next (err);
-            })
-    };
-
-    updateGoods = function(req, res, next){
-        var goodsid = req.query.goodsid;
-        var storeid = req.user.stores[0].storeid;
-        var updateGoods = req.body;
-        var newGoods = {
-            goodsname:   updateGoods.goodsname,
-            weight:      parseFloat(updateGoods.weight),
-            lengthsize:  parseFloat(updateGoods.lengthsize),
-            widthsize:   parseFloat(updateGoods.widthsize),
-            heightsize:  parseFloat(updateGoods.heightsize),
-            description: updateGoods.description
-        }
-
-        db.goods.checkGoodsBelongStore(goodsid, storeid, db.order).then(function(goods){
-            db.goods.updateGoods(newGoods,updateGoods.goodsid)       
-            .then(function(){                
-                return res.status(200).json("Update goods successfully!");
-            }, function(err){
-                next(err);
-            })
-        },function(er){
-            next(err);
-        })
-    };
+  
  
     var storeGetOrderList = function (req, res, next) {
         var storeId = req.user.stores[0].storeid;
@@ -617,7 +570,7 @@ var getTodayTotal = function (req, res, next) {
     return {
         getAllOrder: getAllOrder,
         getOne: getOne,
-        postOne: post,
+        postOne: postOneOrder,
         params: params,
         updateExpressOrder : updateExpressOrder,
         updateOrder : updateOrder,
@@ -626,9 +579,6 @@ var getTodayTotal = function (req, res, next) {
         cancelOrder: cancelOrder,
         getOrderList: getOrderList,
         getTodayTotal: getTodayTotal,
-        deleteGoods: deleteGoods,
-        addGoods: addGoods,
-        updateGoods : updateGoods,
         storeGetOrderList : storeGetOrderList,
         countOrder : countOrder
     }

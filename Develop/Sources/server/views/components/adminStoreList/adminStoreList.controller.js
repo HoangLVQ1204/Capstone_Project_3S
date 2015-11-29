@@ -30,7 +30,6 @@ function adminStoreListController($scope,$state, dataService, authService, confi
         $scope.latestAutoDate= response.data;
         $scope.fromAutoDate = new Date($scope.latestAutoDate);
         $scope.fromAutoDate.setDate($scope.fromAutoDate.getDate()-7);
-        //console.log( $scope.fromAutoDate);
     })
 
     //get List to display

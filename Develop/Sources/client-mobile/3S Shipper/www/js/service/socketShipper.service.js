@@ -16,10 +16,8 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
    */
 
   socketService.on('shipper:register:location', function(data) {
-    mapService.setMapData(data.msg.mapData)
-      .then(function() {
-        console.log('register', data);
-      });
+    console.log('register', data);
+    mapService.setMapData(data.msg.mapData);
   });
 
   //receive message after admin resolved issue
@@ -27,6 +25,13 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
     console.log('shipper:issue:resolve', data.msg.notification);
     //$rootScope.$broadcast('issue:resolve', {type: data.msg.type, content: data.msg.notification.content});
     $rootScope.$broadcast('issue:resolve', {type: data.msg.type});
+  });
+
+  //receive new task socket
+  socketService.on('shipper:notification:newTask', function(data) {
+    console.log('new task', data);
+
+    $rootScope.$broadcast('task:newTask');
   });
 
   socketService.on('shipper:choose:express', function(data) {
@@ -157,13 +162,6 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
 
   socketService.on('shipper:add:order', function(data) {
     var msg = data.msg;
-    mapService.addOrder(msg.orderID, msg.store, msg.shipper, msg.customer)
-      .then(function() {
-        console.log('shipper add order', data);
-        // alert('You have one express order from store ' + msg.store.storeID);
-        // console.log('after add order', mapService.getStoreMarkers(), mapService.getCustomerMarkers(), mapService.getOrders());
-      });
-
     $rootScope.$emit('shipper:express:order:success', msg);
   });
 
@@ -243,30 +241,23 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
   api.registerSocket = function(){
     api.getCurrentUser()
       .then(function(user) {
-        mapService.addShipper(user)
-          .then(function() {
-            socketService.sendPacket(
-              {
-                type: 'shipper',
-                clientID: user.shipperID
-              },
-              'server',
-              {
-                shipper: user
-              },
-              'client:register');
+          socketService.sendPacket(
+            {
+              type: 'shipper',
+              clientID: user.shipperID
+            },
+            'server',
+            {
+              shipper: user
+            },
+            'client:register');
 
-            // Test watch position
-            // var watchID = api.watchCurrentPosition();
-            // setTimeout(function() {
-            //     console.log('stop watch');
-            //     api.stopWatchCurrentPosition(watchID);
-            // }, 10000);
-          }, function(err){
-            console.log(":Fail " + err);
-          });
-      },function(err){
-        console.log(":FailGetUser " + err);
+          // Test watch position
+          // var watchID = api.watchCurrentPosition();
+          // setTimeout(function() {
+          //     console.log('stop watch');
+          //     api.stopWatchCurrentPosition(watchID);
+          // }, 10000);          
       })
       .catch(function(err){
         console.log(":Failllll " + err);

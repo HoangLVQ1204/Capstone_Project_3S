@@ -1,32 +1,42 @@
 function reportService(config,dataService){
 
-	function getExNoFromServer() {
+    /* This function use to get data order express/normal from server */
+    function getExNoFromServer() {
         var urlBase = config.baseURI + '/api/admin/report/orderCount';
-        dataService.getDataServer(urlBase)
-            .then(function (rs) {
-                return rs.data;
-            })
+
+        return  dataService.getDataServer(urlBase)
+                .then(function (rs) {
+                    console.log("---URL REPORT---");
+                    console.log(urlBase);
+                    console.log("---URL REPORT---");
+                    return rs.data;
+                })
     }
 
+    /* This function use to get data order complete/cancel from server */
     function getComCanFromServer(){
         var urlBase = config.baseURI + '/api/admin/report/storeOrderCount';
-        dataService.getDataServer(urlBase)
+        return dataService.getDataServer(urlBase)
             .then(function (rs) {
               	return rs.data;
             })
     }
 
+    /* This function use to get COD/Fee from server */
     function getCodFeeFromServer(){
         var urlBase = config.baseURI + '/api/admin/report/storeOrderCount';
-        dataService.getDataServer(urlBase)
+        return dataService.getDataServer(urlBase)
             .then(function (rs) {
                 return rs.data;
             })       
     }
 
-    function getDateOverView(){
+    function getDataOverView(){
         var urlBase = config.baseURI + '/api/admin/report/overView';
-        return dataService.getDataServer(urlBase);
+        return dataService.getDataServer(urlBase)
+                .then(function(rs){
+                    return rs.data;
+                });
     }
     
     // var dataExNo = [];
@@ -59,7 +69,7 @@ function reportService(config,dataService){
     	getExNoFromServer: getExNoFromServer,
     	getComCanFromServer: getComCanFromServer,
     	getCodFeeFromServer: getCodFeeFromServer,
-    	getDateOverView: getDateOverView,
+    	getDataOverView: getDataOverView,
         get10: 1
     }
 }
