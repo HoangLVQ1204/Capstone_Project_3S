@@ -161,7 +161,7 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
                 //console.log(order.order.statusid );
                 if (order.order.statusid == 1 ) order['typeid'] = 1;
                   else {
-                    if (order.order.iscancel) order['typeid'] = 3;
+                    if (order.order.iscancel) order['typeid'] = 4;
                       else order['typeid'] = 2;
                 }
                 order['taskdate'] = new Date(Date.now());
