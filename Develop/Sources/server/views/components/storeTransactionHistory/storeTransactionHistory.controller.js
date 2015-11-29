@@ -22,14 +22,14 @@ function storeTransactionHistoryController($scope,$state, $http, $location, conf
             option: 'Balance',
             value: 'balance'
         },
-        {
-            option: 'Delivery',
-            value: 'totaldelivery'
-        },
-        {
-            option: 'Cash on delivery',
-            value: 'totalcod'
-        }
+        // {
+        //     option: 'Delivery',
+        //     value: 'totaldelivery'
+        // },
+        // {
+        //     option: 'Cash on delivery',
+        //     value: 'totalcod'
+        // }
     ];
 
     $scope.searchAutoOptions = [
