@@ -467,7 +467,7 @@ angular.module('app', [
     };
 
     function loading(){
-        var overlay=$('<div class="load-overlay"><div><div class="c1"></div><div class="c2"></div><div class="c3"></div><div class="c4"></div></div><span>Finding Shipper...</span><button id="btnCancelExpress" class="btn btn-theme-inverse">Cancel</button></div>');
+        var overlay=$('<div class="load-overlay" style="text-align:center; margin: 0 auto;"><div><div class="c1"></div><div class="c2"></div><div class="c3"></div><div class="c4"></div></div><span>Finding Shipper...</span><button id="btnCancelExpress" class="btn btn-theme-inverse">Cancel</button></div>');
         $("body").append(overlay);
         overlay.css('opacity',3).fadeIn("slow");
     }

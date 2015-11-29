@@ -172,7 +172,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
                 console.log('mouseover customerMarkers', $scope.customerMarkers);
                 // console.log('avatar', model);
                 var content = '<div>' + 
-                        '<strong>' + model.shipperID + '</strong></div>' +
+                        '<strong>' + model.shipperID + '</strong><br><strong>' + model.geoText + '</strong></div>' +
                         '<ul>';
 
                 model.order.forEach(function(order) {
