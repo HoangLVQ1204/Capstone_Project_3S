@@ -31,7 +31,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
   socketService.on('shipper:notification:newTask', function(data) {
     console.log('new task', data);
 
-    $rootScope.$broadcast('task:newTask');
+    $rootScope.$broadcast('shipper:task:newTask');
   });
 
   socketService.on('shipper:choose:express', function(data) {

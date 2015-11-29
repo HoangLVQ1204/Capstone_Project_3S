@@ -32,6 +32,12 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
 	}
   });
 
+  //socket new Task shipper:task:newTask
+  $scope.$on("shipper:task:newTask", function(event, args){
+    console.log("Reload New Task");
+    getListOfTask();
+  });
+
   //TODO: Select tab for find bestway screen
   //$scope.tabSelected = function(tab) {
   //  $scope.tabParam = tab;
