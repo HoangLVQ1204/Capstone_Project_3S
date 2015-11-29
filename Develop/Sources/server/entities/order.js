@@ -676,20 +676,12 @@ module.exports = function(sequelize, DataTypes) {
 
       adminCountAllOrder:function(){
         return order.findAll({
-          attributes:[
-            [
-              sequelize.fn('count',
-                  sequelize.col('orderid')
-              ),
-              'totalOrder'
-            ],
-            [
-              sequelize.fn('sum',
-                  sequelize.col('fee')
-              ),
-              'totalFee'
-            ]
-          ]
+          attributes: ['storeid', 
+            [sequelize.fn('count', sequelize.col('orderid')),'numberOrder'],
+            [sequelize.fn('sum',sequelize.col('fee')),'totalFee']
+          ], 
+          group: ['storeid']
+   
         })
       }
 
