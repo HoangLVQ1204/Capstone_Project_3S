@@ -38,6 +38,16 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
     getListOfTask();
   });
 
+  //socket order express canceled
+  $scope.$on("shipper:canceled", function(event, args){
+    console.log('Shipper: canceled:', args);
+    var des = {
+        id: 999,
+        content: 'Store ' + args.storeid + ' has found a shipper or canceled order'
+    }
+    $scope.showAlert(des);
+  });
+
   //TODO: Select tab for find bestway screen
   //$scope.tabSelected = function(tab) {
   //  $scope.tabParam = tab;

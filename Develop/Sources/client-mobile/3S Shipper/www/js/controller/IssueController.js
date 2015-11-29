@@ -22,6 +22,16 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
     }
   });
 
+  //socket order express canceled
+  $scope.$on("shipper:canceled", function(event, args){
+    console.log('Shipper: canceled:', args);
+    var des = {
+        id: 999,
+        content: 'Store ' + args.storeid + ' has found a shipper or canceled order'
+    };
+    $scope.showAlert(des);
+  });
+
   /*
    * By QuyenNV - 23/10/2015
    * This function get all task of shipper
