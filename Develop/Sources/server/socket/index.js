@@ -290,7 +290,7 @@ module.exports = function(server,app){
     }
 
     io.updateListShipper = function(){
-        controllerShipper.getAllShippers().then(function(rs){
+        return controllerShipper.getAllShippers().then(function(rs){
             rs = rs.map(function(e){
                 return e.toJSON();
             });
@@ -861,75 +861,79 @@ module.exports = function(server,app){
 
     // RUN
 
-    io.updateListStore();
-    io.updateListShipper();
-    io
-        .on('connect', socketioJwt.authorize({
-            secret: config.secrets.jwt,
-            timeout: 15000 // 15 seconds to send the authentication message
-        }))
-        .on('authenticated', function(socket){
-            console.log("--HAVE CONNECTION--");
-            var dataToken = socket.decoded_token;
-            socket.on("client:register",function(data){
-                if(dataToken.userrole == 1){
+    io.updateListStore()
+    .then(function() {
+        return io.updateListShipper();
+    })
+    .then(function() {
+        io
+            .on('connect', socketioJwt.authorize({
+                secret: config.secrets.jwt,
+                timeout: 15000 // 15 seconds to send the authentication message
+            }))
+            .on('authenticated', function(socket){
+                console.log("--HAVE CONNECTION--");
+                var dataToken = socket.decoded_token;
+                socket.on("client:register",function(data){
+                    if(dataToken.userrole == 1){
 
-                    console.log("---This is Data Shipper---");
-                    console.log(data);
-                    console.log("---This is Data Shipper---");
+                        console.log("---This is Data Shipper---");
+                        console.log(data);
+                        console.log("---This is Data Shipper---");
 
-                    var shipper = data.msg.shipper;
-                    if (io.containShipper(shipper.shipperID)) {
-                        io.updateShipper(shipper, socket);
-                        var orders = io.getOrdersOfShipper(shipper.shipperID);
-                        orders.forEach(function(e) {
-                            e.orderInfo.isPending = false;
-                            io.updateOrder(e.orderID, e.orderInfo);
-                        });
-                        console.log('after connect', orders);
-                    } else
-                        io.addShipper(shipper, socket);
+                        var shipper = data.msg.shipper;
+                        if (io.containShipper(shipper.shipperID)) {
+                            io.updateShipper(shipper, socket);
+                            var orders = io.getOrdersOfShipper(shipper.shipperID);
+                            orders.forEach(function(e) {
+                                e.orderInfo.isPending = false;
+                                io.updateOrder(e.orderID, e.orderInfo);
+                            });
+                            console.log('after connect', orders);
+                        } else
+                            io.addShipper(shipper, socket);
 
-                    require('./socketShipper')(socket, io, app);
-                }
+                        require('./socketShipper')(socket, io, app);
+                    }
 
-                if(dataToken.userrole == 2){
+                    if(dataToken.userrole == 2){
 
-                    console.log("---This is Data Store---");
-                    console.log(data);
-                    console.log("---This is Data Store---");
+                        console.log("---This is Data Store---");
+                        console.log(data);
+                        console.log("---This is Data Store---");
 
-                    var store = data.msg.store;
+                        var store = data.msg.store;
 
-                    if (io.containStore(store.storeID)) {
-                        io.updateStore(store, socket);
-                        io.reconnectStore(store.storeID, socket);
-                    } else
-                        io.addStore(store, socket);
+                        if (io.containStore(store.storeID)) {
+                            io.updateStore(store, socket);
+                            io.reconnectStore(store.storeID, socket);
+                        } else
+                            io.addStore(store, socket);
 
-                    console.log("---DATA STORE---");
-                    console.log(io.getOneStore(store.storeID));
-                    console.log("---DATA STORE---");
+                        console.log("---DATA STORE---");
+                        console.log(io.getOneStore(store.storeID));
+                        console.log("---DATA STORE---");
 
-                    require('./socketStore')(socket, io);
-                }
+                        require('./socketStore')(socket, io);
+                    }
 
-                if(dataToken.userrole == 3){
+                    if(dataToken.userrole == 3){
 
-                    console.log("---This is Data Admin---");
-                    console.log(data);
-                    console.log("---This is Data Admin---");
+                        console.log("---This is Data Admin---");
+                        console.log(data);
+                        console.log("---This is Data Admin---");
 
-                    var admin = data.msg.admin;
-                    if (io.containAdmin(admin.adminID))
-                        io.updateAdmin(admin, socket);
-                    else
-                        io.addAdmin(admin, socket);
+                        var admin = data.msg.admin;
+                        if (io.containAdmin(admin.adminID))
+                            io.updateAdmin(admin, socket);
+                        else
+                            io.addAdmin(admin, socket);
 
-                    require('./socketAdmin')(socket, io, app);
-                }
-            })
-        });
+                        require('./socketAdmin')(socket, io, app);
+                    }
+                })
+            });
+    });    
 
     return {
         io: io
