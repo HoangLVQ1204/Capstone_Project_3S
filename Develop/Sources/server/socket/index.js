@@ -241,8 +241,11 @@ module.exports = function(server,app){
     
     // Define observer for watching io.shippers, io.stores, io.customers, io.orders
     var observer = function(changes) {
-        console.log('observer', io.orders);
-        console.log('total shippers in observer', io.shippers);
+        console.log("---OBSERVER CHANGE---");
+        console.log(changes);
+        console.log("---OBSERVER CHANGE---");
+        //console.log('observer', io.orders);
+        //console.log('total shippers in observer', io.shippers);
         for (shipperID in io.shippers) {            
             if (io.shippers[shipperID].isConnected) {
                 // console.log('observer shipper', shipperID);
@@ -250,7 +253,7 @@ module.exports = function(server,app){
                     { mapData: io.getDataForShipper(shipperID) }, 'shipper:register:location');
             }
         }
-        console.log('total stores in observer', io.stores);
+        //console.log('total stores in observer', io.stores);
         for (storeID in io.stores) {
             if (io.stores[storeID].socketID != null) {
                 // console.log('observer store', storeID);
@@ -258,7 +261,7 @@ module.exports = function(server,app){
                     { mapData: io.getDataForStore(storeID) }, 'store:register:location');
             }
         }
-        console.log('total admins in observer', io.admins);
+        //console.log('total admins in observer', io.admins);
         for (adminID in io.admins) {
             if (!!io.admins[adminID].socketID) {
                 // console.log('observer admin', adminID);
@@ -619,6 +622,7 @@ module.exports = function(server,app){
         temp.socketID = socket.id;
         temp.isConnected = true;
         temp.numTasks = io.countNumTasksByShipperID(shipper.shipperID);
+
         io.shippers[shipper.shipperID] = temp;
     };
 
