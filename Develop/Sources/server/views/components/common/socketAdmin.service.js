@@ -33,7 +33,7 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
 
     socketService.on('admin:register:location', function(data) {
         mapService.setMapData(data.msg.mapData);
-        updateListShipper(data.msg.shipperList);
+        if (data.msg.shipperList != null) updateListShipper(data.msg.shipperList);
         $rootScope.$emit("admin:dashboard:getShipperList", data.msg.shipperList);
     });
 
@@ -125,12 +125,12 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
     };
 
 
-    api.confirmPaymentMessage = function (storeid) {//send message after confirm payment
+    api.confirmPaymentMessage = function (storeid, newLedgerID) {//send message after confirm payment
         //var shipperList = [
         var msgToStore = {
             type: 'info',
             title: 'Info',
-            content: 'A new transaction was added successfully...',
+            content: 'A new transaction with id '+ newLedgerID +' was created by KarryWell, please check it...',
             url: '#/store/transactionHistory',
             isread: false,
             createddate: new Date()

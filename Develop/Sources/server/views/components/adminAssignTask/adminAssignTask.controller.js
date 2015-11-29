@@ -158,9 +158,12 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
                 order['statusid'] = 1;
                 //order['taskstatus'] = new Object();
                 //order['taskstatus']['statusname'] = 'Inactive';
-                console.log(order.order.statusid );
+                //console.log(order.order.statusid );
                 if (order.order.statusid == 1 ) order['typeid'] = 1;
-                  else order['typeid'] = 2;
+                  else {
+                    if (order.order.iscancel) order['typeid'] = 3;
+                      else order['typeid'] = 2;
+                }
                 order['taskdate'] = new Date(Date.now());
             }
             else {
@@ -286,6 +289,10 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
                 if (result.length == 0 || (result.length > 0 && result[0].shipperid != shipper.username)){
                     var index = listShipper.indexOf(shipper.username);
                     if (index == -1) listShipper.push(shipper.username);
+                    if (result.length > 0){
+                        var indexOld = listShipper.indexOf(result[0].shipperid);
+                        if (indexOld == -1) listShipper.push(result[0].shipperid);
+                    }
                 }
             })
         });
