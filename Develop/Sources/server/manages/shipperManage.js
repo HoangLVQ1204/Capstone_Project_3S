@@ -778,10 +778,14 @@ module.exports = function (app) {
         var orderList=[];
         var promise=[];
         return db.order.getAllOrderToAssignTask(db.orderstatus, db.task, db.taskstatus)
-            .then(function(shipper) {
-                shipper.map(function(item) {
+            .then(function(listOrder) {
+                listOrder.map(function(item) {
+                    var add = item.getCustomerAddress();
+                    item = item.toJSON();
+                    item['deliveryaddress'] = add;
                     var order = new Object();
                     order.order = item;
+
                     if (item.tasks.length == 0) {
                         orderList.push(order);
                     }
@@ -793,8 +797,6 @@ module.exports = function (app) {
                             var newOrder = new Object();
                             //console.log(item.tasks[item.tasks.length-1].toJSON());
                             newOrder = _.cloneDeep(item.tasks[item.tasks.length-1].toJSON());
-
-
                             newOrder['order'] =  _.cloneDeep(item.toJSON());
                             delete  newOrder['order']['tasks'];
                             //newOrder.order = item;
@@ -810,27 +812,70 @@ module.exports = function (app) {
     };
 
     var getAllShipperWithTask = function (req, res, next) {
-
+        var listReturn = [];
         return db.user.getAllShipperWithTask(db.task, db.profile, db.order, db.orderstatus, db.tasktype, db.taskstatus)
-            .then(function(shipper) {
+            .then(function(shipperList) {
                 //console.log("--------------Data Task Shipper -------------------");
+
                 //console.log(shipper);
-                res.status(200).json(shipper);
+                 shipperList.forEach(function (shipper) {
+                     var listTask = [];
+                     var shiperObj = {};
+                     console.log(shipper);
+                   shipper['tasks'].forEach(function (task) {
+                        var add = task.order.getCustomerAddress();
+                        task = task.toJSON();
+                        task['order']['deliveryaddress'] = add;
+                       //console.log(task);
+                       listTask.push(task)
+                    });
+                     shipper = shipper.toJSON();
+                     shipper['tasks']= listTask;
+                     //console.log(shipper.tasks[0].order);
+                     //shiperObj = _.cloneDeep(shipper.toJSON());
+                    //shipper['tasks'] = _.cloneDeep(rs);
+                    listReturn.push(shipper);
+                });
+               return listReturn;
             }, function(err) {
                 next(err);
+            }).then(function(listReturn){
+                res.status(200).json(listReturn);
             })
     };
 
     var getAllShipperWithTaskForProcessing = function (req, res, next) {
         var shipperid = req.params.shipperid;
+        var listReturn = [];
         //console.log(shipperid)
         return db.user.getAllTaskProcessingOfShipper(db.task, db.profile, db.order, db.orderstatus, db.tasktype, db.taskstatus, shipperid)
-            .then(function(shipper) {
+            .then(function(shipperList) {
                 //console.log("--------------Data Task Shipper -------------------");
+
                 //console.log(shipper);
-                res.status(200).json(shipper);
+                shipperList.forEach(function (shipper) {
+                    var listTask = [];
+                    var shiperObj = {};
+                    console.log(shipper);
+                    shipper['tasks'].forEach(function (task) {
+                        var add = task.order.getCustomerAddress();
+                        task = task.toJSON();
+                        task['order']['deliveryaddress'] = add;
+                        //console.log(task);
+                        listTask.push(task)
+                    });
+                    shipper = shipper.toJSON();
+                    shipper['tasks']= listTask;
+                    //console.log(shipper.tasks[0].order);
+                    //shiperObj = _.cloneDeep(shipper.toJSON());
+                    //shipper['tasks'] = _.cloneDeep(rs);
+                    listReturn.push(shipper);
+                });
+                return listReturn;
             }, function(err) {
                 next(err);
+            }).then(function(listReturn){
+                res.status(200).json(listReturn);
             })
     };
 

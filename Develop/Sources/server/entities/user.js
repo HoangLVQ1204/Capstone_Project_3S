@@ -141,7 +141,8 @@ module.exports = function(sequelize, DataTypes) {
             include: [
               {
                 model: order,
-                attributes: ['orderid', 'storeid', 'statusid', 'deliveryaddress','pickupaddress'],
+                attributes: ['orderid', 'storeid','pickupaddress','statusid','deliveryaddress','deliveryprovinceid',
+                  'deliverydistrictid', 'deliverywardid','iscancel'],
                 include: [{model: orderstatus,  attributes: ['statusname']}]
               },
               {
@@ -176,7 +177,8 @@ module.exports = function(sequelize, DataTypes) {
             include: [
               {
                 model: order,
-                attributes: ['orderid', 'storeid', 'statusid', 'deliveryaddress','pickupaddress'],
+                attributes: ['orderid', 'storeid','pickupaddress','statusid','deliveryaddress','deliveryprovinceid',
+                  'deliverydistrictid', 'deliverywardid','iscancel'],
                 include: [{model: orderstatus,  attributes: ['statusname']}]
               },
               {

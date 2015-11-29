@@ -213,8 +213,9 @@
                                             <td>{{x.order.orderid}}
                                                 <br ng-show="x.statusid==4"><label class="color-danger" ng-show="x.statusid==4">Processing</label>
                                             </td>
-                                            <td>{{x.order.deliveryaddress}}</td>
+
                                             <td cs-select-checkbox="x" id="{{x.order.orderid}}" select-action="pickOrder(x)" select-mode="multiple" shipper-row="$parent.isPicked">{{x.order.pickupaddress}}</td>
+                                            <td>{{x.order.deliveryaddress}}</td>
                                             <td>{{x.order.orderstatus.statusname}}</td>
 
                                         </tr>

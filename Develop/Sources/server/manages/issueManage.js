@@ -20,6 +20,16 @@ module.exports = function (app) {
        // console.log(id);
         return db.issue.getIssueDetail(db.orderissue, db.issuetype, db.issuecategory, id, db.order, db.task, db.orderstatus, db.taskstatus, db.profile)
             .then(function (issue) {
+
+                var rs = issue.orderissues.map(function (order) {
+                    var addr = order.order.getCustomerAddress();
+                    order = order.toJSON();
+                    order.order['deliveryaddress'] = addr;
+                    return order;
+                })
+                //console.log(rs);
+                issue = issue.toJSON();
+                issue.orderissues = rs;
                 res.status(200).json(issue);
             }, function (err) {
                 next(err);
