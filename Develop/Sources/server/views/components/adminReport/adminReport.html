@@ -12,90 +12,53 @@
 						<li class="active"><a data-toggle="tab" href="#sectionA" target="ui-seft"><i class="fa fa-bar-chart-o"></i> &nbsp; Express / Nomal</a></li>
 
 						<li><a data-toggle="tab" href="#sectionB" target="ui-seft"><i class="fa fa-qrcode"></i> &nbsp; Complete / Cancel</a></li>
-
-						<li class="pull-right">
-							<select class="form-control" ng-options ="x.name for x in listYearExNo" ng-model="selectedYearExNo">
-							</select>
-						</li>
-
-						<li class="pull-right">
-							<select class="form-control" ng-options ="x.name for x in listStore" ng-model="selectedStoreExNo" ng-change="updateCharOrderByStore()">
-							</select>
-						</li>
 					</ul>
 					<div class="tab-content">
-						<div id="sectionA" class="tab-pane in active">
+						<div id="sectionA" class="tab-pane active">
+							<ul class="nav">
+								<li class="pull-right ">
+									<select class="form-control" ng-options ="x.name for x in listYearExNo" ng-model="selectedYearExNo">
+									</select>
+								</li>
+
+								<li class="pull-right col-md-3">
+									<select class="form-control" ng-options ="x.name for x in listStore" ng-model="selectedStoreExNo" ng-change="updateCharExNoByStore()">
+									</select>
+								</li>
+							</ul>
+							<hr>
 							<div class="widget-chart chart-dark">
 								<div id="chartExNo" class="demo-placeholder" style="height:200px"></div>
 								<div class="label-sparkline align-lg-center">
 								<ul>
-									<li><span data-color="theme-inverse"></span>Express </li>
-									<li><span data-color="warning"></span>Normal</li>
+									<li><span style="background : #FFCC33;"></span>Express </li>
+									<li><span style="background : #0AA699;"></span>Normal</li>
 								</ul>
 							</div>
 							</div><!-- // widget-chart -->
-							<!-- // widget-chart -->
-							<!-- <div class="widget-chart chart-dark">
-								<table class="flot-chart" data-type="lines" data-tool-tip="show" data-width="100%" data-height="220px">
-									<thead>
-										<tr>
-											<th></th>
-											<th class="color-theme-inverse">Express</th>
-											<th class="color-warning">Normal</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr ng-repeat="x in listOrderOfMonth">
-											<th>{{x.name}}</th>	
-											<td>{{x.types[1].countNum}}</td>
-											<td>{{x.types[0].countNum}}</td>
-										</tr>
-										
-									</tbody>
-								</table>
-							</div>
-							<div class="label-sparkline align-lg-center">
-								<ul>
-									<li><span data-color="theme-inverse"></span>Express </li>
-									<li><span data-color="warning"></span>Normal</li>
-								</ul>
-							</div> -->
 						</div>
-						<div id="sectionB" class="tab-pane">
+						<div id="sectionB" ng-class="customClass">
+							<ul class="nav">
+								<li class="pull-right">
+									<select class="form-control" ng-options ="x.name for x in listYearCC" ng-model="selectedYearCC">
+									</select>
+								</li>
+
+								<li class="pull-right col-md-3">
+									<select class="form-control" ng-options ="x.name for x in listStoreCC" ng-model="selectedStoreCC" ng-change="updateCharComCanByStore()">
+									</select>
+								</li>
+							</ul>
+							<hr>
 							<div class="widget-chart chart-dark">
 								<div id="chartComCan" class="demo-placeholder" style="height:200px"></div>
 								<div class="label-sparkline align-lg-center">
 								<ul>
-									<li><span data-color="theme-inverse"></span>Complete </li>
-									<li><span data-color="warning"></span>Cancel</li>
+									<li><span style="background : #FFCC33;"></span>Complete
+									<li><span style="background : #0AA699;"></span>Cancel
 								</ul>
 							</div>
 							</div><!-- // widget-chart -->
-							<!-- <div class="widget-chart chart-dark">
-								<table class="flot-chart" data-type="lines" data-tool-tip="show" data-width="100%" data-height="220px">
-									<thead>
-										<tr>
-											<th></th>
-											<th class="color-theme-inverse">Complete</th>
-											<th class="color-warning">Cancel</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr ng-repeat="x in listOrderOfMonthCC">
-											<th>{{x.name}}</th>	
-											<td>{{x.status[0].countNum}}</td>
-											<td>{{x.status[1].countNum}}</td>
-										</tr>
-										
-									</tbody>
-								</table>
-							</div> -->
-							<!-- <div class="label-sparkline align-lg-center">
-								<ul>
-									<li><span data-color="theme-inverse"></span>Complete </li>
-									<li><span data-color="warning"></span>Cancel</li>
-								</ul>
-							</div> -->
 						</div>
 					</div>
 				</div>
@@ -105,49 +68,33 @@
 					<h2><strong>Finance</strong> by month </h2>
 					<br>
 				</header>
-				<ul class="nav">						
-					<li class="pull-right">
-							<select class="form-control" ng-options ="x.name for x in listYearFin" ng-model="selectedYearFin">
-							</select>
-						</li>
+					<div class="tab-content">
+						<ul class="nav">
+								<li class="pull-right">
+									<select class="form-control" ng-options ="x.name for x in listYearFin" ng-model="selectedYearFin">
+									</select>
+								</li>
 
-						<li class="pull-right">
-							<select class="form-control" ng-options ="x.name for x in listStoreFin" ng-model="selectedStoreFin">
-							</select>
-						</li>
-				</ul>
-
-					<div class="tabbable">
+								<li class="pull-right col-md-3">
+									<select class="form-control" ng-options ="x.name for x in listStoreFin" ng-model="selectedStoreFin" ng-change="updateCharFinByStore()">
+									</select>
+								</li>
+							</ul>
+						<hr>
 						<div class="widget-chart chart-dark">
-					<table class="flot-chart" data-type="lines" data-tool-tip="show" data-width="100%" data-height="220px">
-						<thead>
-							<tr>
-								<th></th>
-								<th class="color-theme-inverse">COD</th>
-								<th class="color-theme">Ship fee</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr ng-repeat="x in listCodFeeOfMonthFin">
-								<th>{{x.name}}</th>
-								<td>{{x.status[0].countNum}}</td>
-								<td>{{x.status[1].countNum}}</td>
-							</tr>
-							
-						</tbody>
-					</table>
-					<div class="label-sparkline align-lg-center">
-						<ul>
-							<li><span data-color="theme-inverse"></span>COD </li>
-							<li><span data-color="theme"></span>Ship fee</li>
-						</ul>
-					</div>
-				</div>
+								<div id="chartFinance" class="demo-placeholder" style="height:200px"></div>
+								<div class="label-sparkline align-lg-center">
+								<ul>
+									<li><span style="background : #FFCC33;"></span>Cod</li>
+									<li><span style="background : #0AA699;"></span>Fee<li>
+								</ul>
+							</div>
+							</div><!-- // widget-chart -->
 					</div>
 				
 			</section>
 
-					<section class="panel">
+					<!-- <section class="panel">
 						<div class="panel-body">
 							<div class="table-responsive">
 								<table class="table table-striped table-hover" data-provide="data-table">
@@ -172,7 +119,7 @@
 								</table>
 							</div>
 						</div>
-					</section>
+					</section> -->
 				</div>
 				<div class="col-md-4">
 					<section class="panel corner-flip">		
@@ -192,43 +139,16 @@
 					</section>
 					<section class="panel corner-flip">
 						<header class="panel-heading no-borders">
-							<!-- <h2><strong>pie</strong> Chart </h2> -->
 							<label class="color">Percentage <strong>order by stores </strong></label>
 						</header>												
 						<div class="widget-chart">
-							<div class="label-flot-custom-title"><span>Order by sotre</span></div>
-							<table id="example_pieDonut" class="flot-chart" data-type="pie" data-inner-radius="0.7" data-pie-style="shadow" data-tool-tip="show" data-width="100%" data-height="220px" >
-								<thead>
-									<tr>
-										<th></th>
-										<th style="color : #3db9af;">KFC</th>
-										<th style="color : #DC4D79;">Domino</th>
-										<th style="color : #BD3B47;">Lotte</th>
-										<th style="color : #DD4444;">FptShop</th>
-										<th style="color : #FD9C35;">Pho 365</th>
-										<th style="color : #FEC42C;">Cellphones</th>
-										<th style="color : #D4DF5A;">Hoangha Mobile</th>
-										<th style="color : #575757;">Shop tre tho</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<th></th>
-										<td>44</td>
-										<td>8</td>
-										<td>8</td>
-										<td>8</td>
-										<td>8</td>
-										<td>8</td>
-										<td>8</td>
-										<td>8</td>
-									</tr>
-								</tbody>
-							</table>
-						</div><!-- // widget-chart -->
+							<div id="orderPercent" style="width: 100%; height: 220px;"></div>
+						</div>
 
 						<div class="align-lg-center">
-							<div class="label-flot-custom" data-flot-id="#example_pieDonut"></div>
+							<div class="label-flot-custom">
+
+							</div>
 						</div>
 
 					</section>
@@ -237,37 +157,11 @@
 							<!-- <h2><strong>pie</strong> Chart </h2> -->
 							<div class="form-group">
 							<label class="col-md-7 color">Percentage <strong>task by shipper </strong></label>
-							<select class="col-md-5"></select></div>
+							<!-- <select class="col-md-5"></select></div> -->
 							
 						</header>												
 						<div class="widget-chart">
-							<div class="label-flot-custom-title"><span>Task by shipper</span></div>
-							<table id="example_pieDonut_2" class="flot-chart" data-type="pie" data-inner-radius="0.7" data-pie-style="shadow" data-tool-tip="show" data-width="100%" data-height="220px" >
-								<thead>
-									<tr>
-										<th></th>
-										<th style="color : #3db9af;">Khanh</th>
-										<th style="color : #DC4D79;">Hoang</th>
-										<th style="color : #BD3B47;">Quyen</th>
-										<th style="color : #DD4444;">Hoang</th>
-										<th style="color : #FD9C35;">Huy</th>
-										<th style="color : #FEC42C;">Other</th>
-										
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<th></th>
-										<td>40</td>
-										<td>20</td>
-										<td>15</td>
-										<td>15</td>
-										<td>5</td>
-										<td>5</td>
-										
-									</tr>
-								</tbody>
-							</table>
+							<div id="taskPercent" style="width: 100%; height: 220px;"></div>
 						</div><!-- // widget-chart -->
 
 						<div class="align-lg-center">

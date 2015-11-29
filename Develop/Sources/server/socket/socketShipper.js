@@ -15,6 +15,7 @@ module.exports = function(socket, io, app) {
         var shipper = io.getShipperBySocketID(socket.id);
 
         if (!shipper) return;
+        io.disconnectShipper(shipper.shipperID);
         var orders = io.getOrdersOfShipper(shipper.shipperID);
         orders.forEach(function(e) {
             e.orderInfo.isPending = true;
@@ -42,8 +43,7 @@ module.exports = function(socket, io, app) {
 
     socket.on('shipper:update:location', function(data) {
         console.log('update loc', data);
-        
-        io.forward(data.sender, data.receiver, data.msg, ['admin:update:shipper', 'store:update:shipper']);
+        io.updateLocationShipper(data.msg.shipper);
     });
 
     socket.on('shipper:update:status', function(data) {

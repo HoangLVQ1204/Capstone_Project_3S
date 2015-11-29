@@ -80,6 +80,7 @@ module.exports = function(socket, io, app) {
         db.managestore.getOwnerOfStore(data.msg.storeid)
             .then(function (user) {
                 data.msg.msg['username'] = user[0].managerid;
+                notificationManage.postFromSever(data.msg.msg);
                 io.forward(
                     {
                         type: 'admin',

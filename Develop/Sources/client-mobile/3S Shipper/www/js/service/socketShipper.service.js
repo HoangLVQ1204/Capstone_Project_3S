@@ -6,7 +6,7 @@
 function socketShipper($rootScope, $q,socketService,authService,mapService, $ionicLoading, $timeout) {
 
 
-  var EPSILON = 1e-8;
+  var EPSILON = 1e-7;
 
   var currentLocation = null;
   var api = {};
@@ -30,8 +30,18 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
   //receive new task socket
   socketService.on('shipper:notification:newTask', function(data) {
     console.log('new task', data);
+    $rootScope.$broadcast('shipper:task:newTask');
+  });
 
-    $rootScope.$broadcast('task:newTask');
+  socketService.on('shipper:add:order', function(data) {
+    var msg = data.msg;
+    $rootScope.$emit('shipper:express:order:success', msg);
+  });
+
+  socketService.on('shipper:remove:express', function(data) {
+    console.log('remove express', data);
+    $rootScope.stop();
+    $rootScope.$broadcast('shipper:canceled', {storeid: data.msg.store.storeID});
   });
 
   socketService.on('shipper:choose:express', function(data) {
@@ -39,21 +49,21 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
     $rootScope.show = function() {
       $ionicLoading.show({
         template: '<div class="popup">' +
-        '<div class="popup-head" style="background-color: rgb(239, 71, 58);'  +
-        'border-radius: 5px;border-bottom: 1px solid rgb(239, 71, 58);padding: 12px 10px">' +
-        '<h3 class="popup-title" style="font-size: 1.2em; font-weight: bold;">Grab</h3>' +
-        '</div>' +
-        '<div class="popup-body">' +
-        '<span style="font-size: 2.5em; display: block; margin: 7px 0">{{counter}}</span>' +
-        '<div id="graborder">' +
-        '<p>Có một đơn hàng ở địa cách đây {{data.msg.distanceText}}.</p>' +
-        '<p>Bạn có muốn nhận đơn hàng này ?</p>' +
-        '</div>' +
-        '</div>' +
-        '<div class="popup-buttons">' +
-        '<a href="#" ng-click="stop(true)" class="button btn-default-cus" >Cancel</a>' +
-        '<a ng-click="grabExpressOrder()" class="button btn-success-cus btn-default-cus">Grab</a>' +
-        '</div>' +
+          '<div class="popup-head" style="background-color: rgb(239, 71, 58);'  +
+            'border-radius: 5px;border-bottom: 1px solid rgb(239, 71, 58);padding: 12px 10px">' +
+            '<h3 class="popup-title" style="font-size: 1.2em; font-weight: bold;">Grab</h3>' +
+          '</div>' +
+          '<div class="popup-body">' +
+            '<span style="font-size: 2.5em; display: block; margin: 7px 0">{{counter}}</span>' +
+            '<div id="graborder">' +
+            '<p>Có một đơn hàng ở địa cách đây {{data.msg.distanceText}}.</p>' +
+            '<p>Bạn có muốn nhận đơn hàng này ?</p>' +
+            '</div>' +
+          '</div>' +
+          '<div class="popup-buttons">' +
+            '<a href="#" ng-click="stop(true)" class="button btn-default-cus" >Cancel</a>' +
+            '<a ng-click="grabExpressOrder()" class="button btn-success-cus btn-default-cus">Grab</a>' +
+          '</div>' +
         '</div>',
         scope: $rootScope
       });
@@ -160,46 +170,42 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
     //}
   });
 
-  socketService.on('shipper:add:order', function(data) {
-    var msg = data.msg;
-    $rootScope.$emit('shipper:express:order:success', msg);
-  });
-
-  socketService.on('shipper:remove:express', function(data) {
-    console.log('remove express', data);
-    $rootScope.stop();
-    alert('Store ' + data.msg.store.storeID + ' has found a shipper or canceled order');
-  });
-
   api.getCurrentUser = function() {
     var currentUser = authService.getCurrentInfoUser();
-
-    d = $q.defer();
-    navigator.geolocation.getCurrentPosition(function(position){
-      var dataShipper = {
+    var dataShipper = {
         shipperID: currentUser.username,
         status: currentUser.workingstatusid
       };
-      currentLocation = position.coords;
-      dataShipper.latitude = position.coords.latitude;
-      dataShipper.longitude = position.coords.longitude;
 
+    d = $q.defer();
+    if (currentLocation) {
+      dataShipper.latitude = currentLocation.latitude;
+      dataShipper.longitude = currentLocation.longitude;
       d.resolve(dataShipper);
-    },function(){
-      d.reject("Can't get your current location! Please check your connection");
-    });
+    } else {
+      navigator.geolocation.getCurrentPosition(function(position){
+        currentLocation = position.coords;
+        dataShipper.latitude = position.coords.latitude;
+        dataShipper.longitude = position.coords.longitude;
+
+        d.resolve(dataShipper);
+      },function(){
+        d.reject("Can't get your current location! Please check your connection");
+      });
+    }
 
     return d.promise;
   };
 
   api.watchCurrentPosition = function() {
+
     var geo_success = function(position) {
-      // if (currentLocation
-      //     && Math.abs(currentLocation.latitude - position.coords.latitude) <= EPSILON
-      //     && Math.abs(currentLocation.longitude - position.coords.longitude) <= EPSILON) {
-      //     console.log('the same location');
-      //     return;
-      // }
+      if (currentLocation
+          && Math.abs(currentLocation.latitude - position.coords.latitude) <= EPSILON
+          && Math.abs(currentLocation.longitude - position.coords.longitude) <= EPSILON) {
+          console.log('the same location');
+          return;
+      }
       console.log('different location');
       currentLocation = position.coords;
       var currentUser = authService.getCurrentInfoUser();
@@ -253,11 +259,11 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
             'client:register');
 
           // Test watch position
-          // var watchID = api.watchCurrentPosition();
+          var watchID = api.watchCurrentPosition();
           // setTimeout(function() {
           //     console.log('stop watch');
           //     api.stopWatchCurrentPosition(watchID);
-          // }, 10000);          
+          // }, 120000);
       })
       .catch(function(err){
         console.log(":Failllll " + err);

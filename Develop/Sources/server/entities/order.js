@@ -357,6 +357,8 @@ module.exports = function(sequelize, DataTypes) {
 
       getAllOrderToAssignTask: function(orderstatus, task, taskstatus){
         return order.findAll({
+          attributes: ['orderid', 'storeid','pickupaddress','statusid','deliveryaddress','deliveryprovinceid',
+          'deliverydistrictid', 'deliverywardid', 'iscancel'],
           where: {
             'statusid': {$or: [1,4]},
             'ispending': false
@@ -436,7 +438,7 @@ module.exports = function(sequelize, DataTypes) {
 
       getAllOrder: function (oderstatusModel,ordertypeModel, storeModel) {
         return order.findAll({
-          //where: {storeid:store_id },
+          where: {statusid: {$ne: null} },
           include: [
             {'model': oderstatusModel,
               attributes: ['statusname']
@@ -676,20 +678,12 @@ module.exports = function(sequelize, DataTypes) {
 
       adminCountAllOrder:function(){
         return order.findAll({
-          attributes:[
-            [
-              sequelize.fn('count',
-                  sequelize.col('orderid')
-              ),
-              'totalOrder'
-            ],
-            [
-              sequelize.fn('sum',
-                  sequelize.col('fee')
-              ),
-              'totalFee'
-            ]
-          ]
+          attributes: ['storeid', 
+            [sequelize.fn('count', sequelize.col('orderid')),'numberOrder'],
+            [sequelize.fn('sum',sequelize.col('fee')),'totalFee']
+          ], 
+          group: ['storeid']
+   
         })
       }
 
