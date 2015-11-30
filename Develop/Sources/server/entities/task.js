@@ -303,6 +303,16 @@ module.exports = function (sequelize, DataTypes) {
             deleteTask: function (currtask) {
                 return task.destroy(
                     {where: {'taskid': currtask.taskid}});
+            },
+
+            adminCountTaskOfEachShipper:function(){
+                return task.findAll({
+                  attributes: ['shipperid', 
+                    [sequelize.fn('count', sequelize.col('taskid')),'numberTask'],
+                  ], 
+                  group: ['shipperid']
+
+              })
             }
         }
     });
