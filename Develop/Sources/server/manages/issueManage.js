@@ -62,7 +62,11 @@ module.exports = function (app) {
             })
     };
 
-    var createNewIssue = function(shipperID) {
+    /*
+    * Create New Issue when shipper disconnect app
+    * @author quyennv - 15/11
+    */
+    var createIssueDisconnect = function(shipperID) {
         //Create issue
         var listOrders = [];
         var newIssueID = null;
@@ -239,7 +243,7 @@ module.exports = function (app) {
         getIssueDetail: getIssueDetail,
         updateResolveIssue: updateResolveIssue,
         postBannedLog: postBannedLog,
-        createNewIssue: createNewIssue,
+        createIssueDisconnect: createIssueDisconnect,
         getUserGetIssue: getUserGetIssue
     }
 }

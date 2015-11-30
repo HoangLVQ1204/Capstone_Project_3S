@@ -1,7 +1,9 @@
 /**
  * Created by Nguyen Van Quyen on 10/6/2015.
  */
-app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoading', '$ionicPopup', '$timeout', function($rootScope, $scope, dataFactory, $ionicLoading, $ionicPopup, $timeout) {
+
+
+app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoading', '$ionicPopup', '$timeout', 'socketShipper', function($rootScope, $scope, dataFactory, $ionicLoading, $ionicPopup, $timeout, socketShipper) {
 
   $scope.haveIssue = false;
   //Get All Task Be Issued
@@ -78,11 +80,15 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
 	  if (des.id === 1) {
         $scope.btnContinue = false;
 		$scope.showLoading();
-	  } else {
+	  } else {	  	
 		//TODO
 		$scope.haveIssue = false;
 		getListOfTask();
 		$ionicLoading.hide();
+	  }
+	  if (des.id == 3) {
+	  	// Shipper continue	  	
+	  	socketShipper.updateHaveIssue(false);
 	  }
 	});
   };
@@ -105,9 +111,14 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
 			$scope.isResolved = rs[property][0].isresolved;
 		  }
 		  if (typeof $scope.issueId !== "undefined" || $scope.isResolved == true) {
+		  	// Shipper have issue
+		  	setTimeout(function() {
+		  		socketShipper.updateHaveIssue(true);
+		  	}, 2000);		  	
+
 			$scope.haveIssue = true;
 			//show ionicLoading
-			$scope.showLoading();
+			$scope.showLoading();			
 		  }
 		} else {
 		  //hide ionicLoading

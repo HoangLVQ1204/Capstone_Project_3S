@@ -18,6 +18,7 @@ var config = {
 	filter: {
 		radius: 100000000,
 		isConnected: true,
+		haveIssue: false,
 		limit: 4,
 		maxTasks: 3
 	},

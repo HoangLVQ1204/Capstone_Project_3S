@@ -12,15 +12,15 @@ module.exports = function (app) {
     var server = app.get('io');
 
     /*
-     * Get all task of Shipper @quyennv
+     * Get all task of Shipper
+     * Get All Task Inactive, Active, Processing of Shipper by shipperID
+     * @author: quyennv
      */
-    var getTask = function (req, res, next) {
+    var getTasks = function (req, res, next) {
         var shipperid = req.user.username;
-        //var taskdate = '2015-02-15';
         var task = db.task;
-        var order = db.order;
 
-        return order.getAllTaskOfShipper(task, shipperid)
+        return db.order.getAllTaskOfShipper(task, shipperid)
             .then(function (tasks) {
                 var group = {};
                 if (_.isEmpty(tasks) == false) {
@@ -225,6 +225,7 @@ module.exports = function (app) {
                     var oldStatus = orderObj.statusid;
                     var pickUpStatusID = 2;
                     var nextStatus = 0;
+                    var nextStatusName = '';
                     var isRequireCode = false;
                     // :TODO Need to check is canceled
                     // :TODO Need to check is canceled
@@ -235,12 +236,18 @@ module.exports = function (app) {
                         var st = statusList[i];
                         if (orderObj.statusid < st.statusid) {
                             nextStatus = st.statusid;
+                            nextStatusName = st.statusname;
                             break;
                         } else {
                             nextStatus = st.statusid;
+                            nextStatusName = st.statusname;
                             isRequireCode = st.requiredcode;
                         }
                     }
+
+                    // Update status of order
+                    server.socket.updateStatusOrder(orderObj.orderid, nextStatusName);
+
                     var completeDate = (nextStatus == configConstant.doneStatus)? new Date(): orderObj.completedate;
                     var stockID = (nextStatus == configConstant.inStockStatus)? configConstant.stockID : null;
                     if (isRequireCode) {
@@ -256,6 +263,7 @@ module.exports = function (app) {
                                         });
                                     }else {
                                         server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
+
                                     }
                                     // SEND SOCKET FOR ADMINS
                                     server.socket.forward('server', 'admin', msgAdmin, 'shipper:change:order:status');
@@ -337,12 +345,15 @@ module.exports = function (app) {
     };
 
     /*
-     * create Issue @quyennv
+     * Create new Issue when shipper sned issue pending
+     * @author: quyennv - 6/11
      */
-    var createIssue = function (req, res, next) {
+
+    var createIssuePending = function (req, res, next) {
         var issueType;
         var task = db.task;
-        var listStores = [];
+        var listStores = [];        
+
         //Instance new Issue
         var newIssue = _.cloneDeep(req.body[0].issue);
         var shipperID = req.user.username;
@@ -352,6 +363,10 @@ module.exports = function (app) {
         newIssue.sender =  shipperID;
         var orders = _.cloneDeep(req.body[0].orders);
         var categoryissue = _.cloneDeep(req.body[0].categoryissue);
+
+        // Update status of shipper
+        server.socket.updateIssueForShipper(shipperID, true);
+
         console.log('shipperController:357 -- newIssue', newIssue);
         db.issue.createNewIssue(newIssue)
             .then(function(issue) {
@@ -668,6 +683,7 @@ module.exports = function (app) {
                                 'store:issue:continue'
                             );
                             server.socket.updatePendingOrder(shipperid, false);
+                            // server.socket.updateIssueForShipper(shipperid, false);
                             //res mesage continue
                             res.status(200).json(resMess[2]);
                         });
@@ -911,9 +927,12 @@ module.exports = function (app) {
         res.status(200).json({'status': true});
     };
     //// END - Get status of shipper
+
     /*
-    * Get all Task of Shipper tobe Issue @quyennv
+    * Get all Task of Shipper tobe Issue
+    * @author: quyennv
     */
+
     var getTaskBeIssuePending = function (req, res, next) {
         var shipperid = req.user.username;
         var task = db.task;
@@ -1160,13 +1179,13 @@ module.exports = function (app) {
 
 
     return {
-        getTask: getTask,
+        getTasks: getTasks,
         getHistory: getHistory,
         getDetail: getDetail,
         paramOrderId: paramOrderId,
         getOrderStatusList: getOrderStatusList,
         nextStep: nextStep,
-        createIssue: createIssue,
+        createIssuePending: createIssuePending,
         changeIsPending: changeIsPending,
         paramMapdata: paramMapdata,
         getMapData: getMapdata,

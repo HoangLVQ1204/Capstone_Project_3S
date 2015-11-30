@@ -101,14 +101,6 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
             + Địa điểm đến
 
          */
-        $scope.shipperIcon = 'http://maps.google.com/mapfiles/kml/shapes/motorcycling.png';
-        $scope.storeIcon = 'http://maps.google.com/mapfiles/kml/shapes/homegardenbusiness.png';
-        $scope.customerIcon = 'http://maps.google.com/mapfiles/kml/shapes/man.png';            
-
-        $scope.sourceIcon = 'https://chart.googleapis.com/chart?' +
-            'chst=d_map_pin_letter&chld=S|FFFF00|000000';
-        $scope.disabledIcon = 'http://chart.apis.google.com/chart?' +
-            'chst=d_map_pin_letter&chld=x|3366FF';
 
         $scope.arrowSymbol = {
             path: maps.SymbolPath.FORWARD_CLOSED_ARROW
@@ -172,7 +164,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
                 console.log('mouseover customerMarkers', $scope.customerMarkers);
                 // console.log('avatar', model);
                 var content = '<div>' + 
-                        '<strong>' + model.shipperID + '</strong></div>' +
+                        '<strong>' + model.shipperID + '</strong><br><strong>' + model.geoText + '</strong></div>' +
                         '<ul>';
 
                 model.order.forEach(function(order) {
