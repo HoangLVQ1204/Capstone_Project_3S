@@ -25,8 +25,6 @@ module.exports = function(socket, io, app) {
 
         //Create Issue Disconnected
         issueManage.createNewIssue(shipper.shipperID);
-
-        io.disconnectShipper(shipper.shipperID);
     });
 
     socket.on('shipper:disconnect', function() {        
