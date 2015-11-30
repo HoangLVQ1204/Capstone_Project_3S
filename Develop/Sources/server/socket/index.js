@@ -494,7 +494,8 @@ module.exports = function(server,app){
 
         Object.keys(io.shippers).forEach(function(shipperID) {
             var shipper = io.getOneShipper(shipperID);
-            result.shipper.push(shipper);
+            if (shipper.isConnected || shipper.icon != icons.shipperIcon)
+                result.shipper.push(shipper);
         });
         Object.keys(io.stores).forEach(function(storeID) {
             result.store.push(io.getOneStore(storeID));            
@@ -502,7 +503,7 @@ module.exports = function(server,app){
         result.customer = _.clone(io.customers, true);
         result.orders = _.clone(io.orders, true);
         
-        // console.log('getDataForAdmin', result);
+        console.log('getDataForAdmin', result);
         return result;
     };
 
