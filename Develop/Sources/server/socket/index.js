@@ -113,10 +113,15 @@ module.exports = function(server,app){
         shipperIcon: 'http://maps.google.com/mapfiles/kml/shapes/motorcycling.png',           
         storeIcon: 'http://maps.google.com/mapfiles/kml/shapes/homegardenbusiness.png',
         customerIcon: 'http://maps.google.com/mapfiles/kml/shapes/man.png',
-        sourceIcon: 'https://chart.googleapis.com/chart?' +
-            'chst=d_map_pin_letter&chld=S|FFFF00|000000',
-        disabledIcon: 'http://chart.apis.google.com/chart?' +
-            'chst=d_map_pin_letter&chld=x|3366FF'
+        issueIcon: 'http://maps.google.com/mapfiles/kml/shapes/caution.png',
+        issueIcon2: 'http://maps.google.com/mapfiles/kml/pal3/icon33.png',
+        disconnectIcon: 'http://maps.google.com/mapfiles/kml/pal3/icon33.png',
+        pink48: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/48/Map-Marker-Bubble-Pink-icon.png',
+        pink32: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Pink-icon.png',
+        blue48: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/48/Map-Marker-Bubble-Azure-icon.png',
+        blue32: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Azure-icon.png',
+        green48: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/48/Map-Marker-Bubble-Chartreuse-icon.png',
+        green32: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Chartreuse-icon.png'
     };
 
 
@@ -153,7 +158,7 @@ module.exports = function(server,app){
         .catch(function(err) {
             console.log('initCustomer', err);
         });    
-    }
+    };
 
 
 
@@ -188,7 +193,9 @@ module.exports = function(server,app){
      longitude,
      isConnected,
      numTasks,
-     icon
+     icon,
+     geoText,
+     haveIssue
      }
      */
     io.shippers = {};
@@ -233,10 +240,10 @@ module.exports = function(server,app){
     
     // Define observer for watching io.shippers, io.stores, io.customers, io.orders
     var observer = function(changes) {
-        console.log('observer', io.orders);
+        // console.log('observer', io.orders);
         // console.log('total shippers in observer', io.shippers);
         for (shipperID in io.shippers) {      
-            console.log('observer shipper', shipperID);      
+            // console.log('observer shipper', shipperID);      
             if (io.shippers[shipperID].isConnected) {
                 // console.log('observer shipper', shipperID);
                 io.reply({ type: 'shipper', clientID: shipperID }, 
@@ -246,7 +253,7 @@ module.exports = function(server,app){
         // console.log('total stores in observer', io.stores);
         for (storeID in io.stores) {
             if (io.stores[storeID].socketID) {
-                console.log('observer store', storeID);
+                // console.log('observer store', storeID);
                 io.reply({ type: 'store', clientID: storeID }, 
                     { mapData: io.getDataForStore(storeID) }, 'store:register:location');
             }
@@ -254,7 +261,7 @@ module.exports = function(server,app){
         // console.log('total admins in observer', io.admins);
         for (adminID in io.admins) {
             if (io.admins[adminID].socketID) {
-                console.log('observer admin', adminID);
+                // console.log('observer admin', adminID);
                 io.reply({ type: 'admin', clientID: adminID }, 
                     { mapData: io.getDataForAdmin(),
                       shipperList: io.getAllShippers() }, 'admin:register:location');   
@@ -295,14 +302,13 @@ module.exports = function(server,app){
                 return e.toJSON();
             });
             // console.log('updateListShipper', rs);
-            rs.forEach(function(e){
-                io.addShipper({
+            var rsPromises = rs.map(function(e){
+                return io.addShipper({
                     shipperID: e.username,
-                    latitude: parseFloat(e.latitude),
-                    longitude: parseFloat(e.longitude),
                     isConnected: false
                 });
             });
+            return Promise.all(rsPromises);
         });
     }
 
@@ -385,19 +391,20 @@ module.exports = function(server,app){
         store.order.forEach(function(orderID) {            
             result.orders[orderID] = _.clone(io.orders[orderID], true);
             var shipper = io.getOneShipper(io.orders[orderID].shipperID);
-            if (shipper.isConnected) {
-                shipper.order = shipper.order.filter(function(e) {
-                    var keep = false;
-                    for (var k = 0; k < store.order.length; ++k) {
-                        if (e === store.order[k]) {
-                            keep = true;
-                            break;
-                        }
+            if (shipper.icon == icons.disconnectIcon) {
+                shipper.icon = icons.issueIcon;
+            }
+            shipper.order = shipper.order.filter(function(e) {
+                var keep = false;
+                for (var k = 0; k < store.order.length; ++k) {
+                    if (e === store.order[k]) {
+                        keep = true;
+                        break;
                     }
-                    return keep;
-                });
-                result.shipper.push(shipper);
-            }            
+                }
+                return keep;
+            });
+            result.shipper.push(shipper);
         });
 
         for (var i = 0; i < io.customers.length; ++i) {
@@ -419,7 +426,8 @@ module.exports = function(server,app){
                 }
                 return keep;
             });
-            result.customer.push(customer);
+            if (customer.order.length > 0)
+                result.customer.push(customer);
         }
         // console.log('getDataForStore', result);
         return result;
@@ -469,7 +477,8 @@ module.exports = function(server,app){
                 }
                 return keep;
             });
-            result.customer.push(customer);
+            if (customer.order.length > 0)
+                result.customer.push(customer);
         }
         return result;
     };
@@ -485,8 +494,7 @@ module.exports = function(server,app){
 
         Object.keys(io.shippers).forEach(function(shipperID) {
             var shipper = io.getOneShipper(shipperID);
-            if(shipper.isConnected)
-                result.shipper.push(shipper);
+            result.shipper.push(shipper);
         });
         Object.keys(io.stores).forEach(function(storeID) {
             result.store.push(io.getOneStore(storeID));            
@@ -494,6 +502,7 @@ module.exports = function(server,app){
         result.customer = _.clone(io.customers, true);
         result.orders = _.clone(io.orders, true);
         
+        // console.log('getDataForAdmin', result);
         return result;
     };
 
@@ -522,7 +531,7 @@ module.exports = function(server,app){
             socketID: (!!socket ? socket.id : null)
         };        
         io.initStore(newStore);
-        console.log('add store', store.storeID, newStore);
+        // console.log('add store', store.storeID, newStore);
         io.stores[store.storeID] = newStore;
     };
 
@@ -597,6 +606,14 @@ module.exports = function(server,app){
         io.orders[orderID] = _.merge(io.orders[orderID], newOrder);
     };
 
+    io.updateStatusOrder = function(orderID, status) {
+        if (io.orders[orderID]) {
+            var temp = _.clone(io.orders[orderID], true);        
+            temp.status = status;
+            io.orders[orderID] = temp;
+        }                
+    };
+
 
 
 
@@ -607,12 +624,27 @@ module.exports = function(server,app){
 
     io.updateShipper = function(shipper, socket) {
         var temp = _.clone(io.shippers[shipper.shipperID], true);
+        // console.log('updateShipper', temp);
         temp.latitude = shipper.latitude;
         temp.longitude = shipper.longitude;
         temp.socketID = socket.id;
         temp.isConnected = true;
         temp.numTasks = io.countNumTasksByShipperID(shipper.shipperID);
-        io.shippers[shipper.shipperID] = temp;
+        // if (temp.haveIssue)
+        //     temp.icon = icons.issueIcon;
+        // else {
+        //     if (!temp.isConnected)
+        //         temp.icon = icons.disconnectIcon;
+        //     else 
+        //         temp.icon = icons.shipperIcon;
+        // }
+            
+        return io.gmapUtil.getGeoText(temp.latitude, temp.longitude)
+        .then(function(geoText) {
+            // console.log('geoText', geoText);
+            temp.geoText = geoText;
+            io.shippers[shipper.shipperID] = temp;
+        });
     };
 
     io.addShipper = function(shipper, socket) {
@@ -621,11 +653,22 @@ module.exports = function(server,app){
             latitude: shipper.latitude,
             longitude: shipper.longitude,
             socketID: (!!socket ? socket.id : null),
-            isConnected: (io.shippers.length == 0 ? true : false),
-            numTasks: io.countNumTasksByShipperID(shipper.shipperID)
+            isConnected: (!!socket ? true : false),
+            numTasks: io.countNumTasksByShipperID(shipper.shipperID),
+            haveIssue: false
         };
-        io.initShipper(newShipper);        
-        io.shippers[shipper.shipperID] = newShipper;
+        io.initShipper(newShipper);       
+        if (newShipper.latitude && newShipper.longitude) {
+            return io.gmapUtil.getGeoText(newShipper.latitude, newShipper.longitude)
+            .then(function(geoText) {
+                // console.log('geoText', geoText);
+                newShipper.geoText = geoText;
+                io.shippers[shipper.shipperID] = newShipper;
+            });
+        } else {
+            io.shippers[shipper.shipperID] = newShipper;
+            return Promise.resolve();
+        }  
     };
 
     io.countNumTasksByShipperID = function(shipperID){
@@ -644,14 +687,30 @@ module.exports = function(server,app){
     io.updateStatusShipper = function(shipper) {
         var temp = _.clone(io.shippers[shipper.shipperID], true);
         temp.isConnected = false;
+        temp.icon = icons.disconnectIcon;
         io.shippers[shipper.shipperID] = temp;
+    };
+
+    io.updateIssueForShipper = function(shipperID, haveIssue) {
+        console.log('updateIssueForShipper', shipperID, haveIssue);
+        var temp = _.clone(io.shippers[shipperID], true);
+        temp.haveIssue = haveIssue;
+        if (haveIssue)
+            temp.icon = icons.issueIcon;
+        else 
+            temp.icon = icons.shipperIcon;
+        io.shippers[shipperID] = temp;  
     };
 
     io.updateLocationShipper = function(shipper) {
         var temp = _.clone(io.shippers[shipper.shipperID], true);
         temp.latitude = shipper.latitude;
         temp.longitude = shipper.longitude;
-        io.shippers[shipper.shipperID] = temp;
+        return io.gmapUtil.getGeoText(temp.latitude, temp.longitude)
+        .then(function(geoText) {
+            temp.geoText = geoText;
+            io.shippers[shipper.shipperID] = temp;
+        });        
     };
 
     io.shipperContainOrderID = function(shipper, orderID) {
@@ -689,8 +748,13 @@ module.exports = function(server,app){
     };
 
     io.disconnectShipper = function(shipperID) {
+        console.log('disconnectShipper');
         var temp = _.clone(io.shippers[shipperID], true);
         temp.isConnected = false;
+        if (temp.order.length > 0)
+            temp.icon = icons.disconnectIcon;
+        else
+            temp.icon = icons.shipperIcon;
         io.shippers[shipperID] = temp;
     };
 
@@ -703,20 +767,23 @@ module.exports = function(server,app){
             longitude: shipper.longitude,
             isConnected: shipper.isConnected,
             numTasks: shipper.numTasks,
-            icon: shipper.icon
+            icon: shipper.icon,
+            geoText: shipper.geoText,
+            haveIssue: shipper.haveIssue
         };
     };
 
     io.getAllShippers = function() {
         var shipperIDs = Object.keys(io.shippers);
         var shipperInfos = shipperIDs.map(function(shipperID) {
-            return {
-                shipperID: shipperID,
-                latitude: io.shippers[shipperID].latitude,
-                longitude: io.shippers[shipperID].longitude,
-                isConnected: io.shippers[shipperID].isConnected,
-                numTasks: io.shippers[shipperID].numTasks
-            };
+            // return {
+            //     shipperID: shipperID,
+            //     latitude: io.shippers[shipperID].latitude,
+            //     longitude: io.shippers[shipperID].longitude,
+            //     isConnected: io.shippers[shipperID].isConnected,
+            //     numTasks: io.shippers[shipperID].numTasks
+            // };
+            return io.getOneShipper(shipperID);
         });
 
         return shipperInfos;
@@ -883,17 +950,22 @@ module.exports = function(server,app){
 
                         var shipper = data.msg.shipper;
                         if (io.containShipper(shipper.shipperID)) {
-                            io.updateShipper(shipper, socket);
-                            var orders = io.getOrdersOfShipper(shipper.shipperID);
-                            orders.forEach(function(e) {
-                                e.orderInfo.isPending = false;
-                                io.updateOrder(e.orderID, e.orderInfo);
+                            io.updateShipper(shipper, socket)
+                            .then(function() {
+                                var orders = io.getOrdersOfShipper(shipper.shipperID);
+                                orders.forEach(function(e) {
+                                    e.orderInfo.isPending = false;
+                                    io.updateOrder(e.orderID, e.orderInfo);
+                                });
+                                // console.log('after connect', orders);
+                                require('./socketShipper')(socket, io, app);
                             });
-                            console.log('after connect', orders);
-                        } else
-                            io.addShipper(shipper, socket);
-
-                        require('./socketShipper')(socket, io, app);
+                        } else {
+                            io.addShipper(shipper, socket)
+                            .then(function() {
+                                require('./socketShipper')(socket, io, app);
+                            });
+                        }
                     }
 
                     if(dataToken.userrole == 2){

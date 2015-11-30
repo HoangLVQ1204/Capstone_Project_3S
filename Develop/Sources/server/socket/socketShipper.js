@@ -25,8 +25,6 @@ module.exports = function(socket, io, app) {
 
         //Create Issue Disconnected
         issueManage.createNewIssue(shipper.shipperID);
-
-        io.disconnectShipper(shipper.shipperID);
     });
 
     socket.on('shipper:disconnect', function() {        
@@ -49,6 +47,12 @@ module.exports = function(socket, io, app) {
     socket.on('shipper:update:status', function(data) {
         var shipper = io.getOneShipper(data.msg.shipperID);
         io.updateStatusShipper(shipper);
+    });
+
+    socket.on('shipper:update:haveIssue', function(data) {
+        // console.log('shipper:update:haveIssue', data);
+        io.updateIssueForShipper(data.msg.shipper.shipperID, data.msg.shipper.haveIssue);
+        console.log(io.getOneShipper(data.msg.shipper.shipperID));
     });
 
     socket.on('shipper:reject:order', function(data) {
