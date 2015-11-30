@@ -13,14 +13,13 @@ module.exports = function (app) {
 
     /*
      * Get all task of Shipper @quyennv
+     * Get All Task Inactive, Active, Processing of Shipper by shipperID
      */
     var getTask = function (req, res, next) {
         var shipperid = req.user.username;
-        //var taskdate = '2015-02-15';
         var task = db.task;
-        var order = db.order;
 
-        return order.getAllTaskOfShipper(task, shipperid)
+        return db.order.getAllTaskOfShipper(task, shipperid)
             .then(function (tasks) {
                 var group = {};
                 if (_.isEmpty(tasks) == false) {
