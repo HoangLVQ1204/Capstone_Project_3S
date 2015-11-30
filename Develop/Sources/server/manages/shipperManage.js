@@ -61,6 +61,12 @@ module.exports = function (app) {
             })
     };
 
+    /*
+     * By HuyTDH - 10/18/2015
+     *
+     * This function is used to return json data for task history API
+     *
+     * */
     var getHistory = function (req, res, next) {
         var shipper = _.cloneDeep(req.user);
         var shipperid = shipper.username;
@@ -128,29 +134,6 @@ module.exports = function (app) {
                     var statuslist = configConstant.statusList[type];
                     req.statuslist = statuslist;
                     req.detail = rs;
-                    //req.details = {
-                    //    code: rs.orderid,
-                    //    statusid: rs.statusid,
-                    //    storeid: rs.storeid,
-                    //    ordertypeid: rs.ordertypeid,
-                    //    pickupaddress: rs.pickupaddress,
-                    //    deliveryaddress: rs.deliveryaddress,
-                    //    pickupdate: rs.pickupdate,
-                    //    deliverydate: rs.deliverydate,
-                    //    recipientphone: rs.recipientphone,
-                    //    recipientname: rs.recipientname,
-                    //    fee: rs.fee,
-                    //    cod: rs.cod,
-                    //    //pickupaddresscoordination: rs.pickupaddresscoordination.split(','),
-                    //    //deliveryaddresscoordination: rs.deliveryaddresscoordination.split(','),
-                    //    status: rs.orderstatus.status, // No need to get status name
-                    //    //stockid: 1, // Need to get stock info (join with stock)
-                    //    weight: rs.goods[0].weight,
-                    //    lengthsize: rs.goods[0].lengthsize,
-                    //    widthsize: rs.goods[0].widthsize,
-                    //    heightsize: rs.goods[0].heightsize,
-                    //    description: rs.goods[0].description
-                    //};
                     next();
                 } else {
                     next(new Error('No order with id' + orderid));
@@ -160,6 +143,12 @@ module.exports = function (app) {
             });
     };
 
+    /*
+     * By HuyTDH - 10/20/2015
+     *
+     * This function is used to return json data for task detail API
+     *
+     * */
     var getDetail = function (req, res, next) {
         var detailtaskid = req.query.taskid;
         var Order = db.order;
