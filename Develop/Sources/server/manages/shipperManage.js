@@ -236,6 +236,7 @@ module.exports = function (app) {
                     var oldStatus = orderObj.statusid;
                     var pickUpStatusID = 2;
                     var nextStatus = 0;
+                    var nextStatusName = '';
                     var isRequireCode = false;
                     // :TODO Need to check is canceled
                     // :TODO Need to check is canceled
@@ -246,12 +247,18 @@ module.exports = function (app) {
                         var st = statusList[i];
                         if (orderObj.statusid < st.statusid) {
                             nextStatus = st.statusid;
+                            nextStatusName = st.statusname;
                             break;
                         } else {
                             nextStatus = st.statusid;
+                            nextStatusName = st.statusname;
                             isRequireCode = st.requiredcode;
                         }
                     }
+
+                    // Update status of order
+                    server.socket.updateStatusOrder(orderObj.orderid, nextStatusName);
+
                     var completeDate = (nextStatus == configConstant.doneStatus)? new Date(): orderObj.completedate;
                     var stockID = (nextStatus == configConstant.inStockStatus)? configConstant.stockID : null;
                     if (isRequireCode) {
@@ -267,6 +274,7 @@ module.exports = function (app) {
                                         });
                                     }else {
                                         server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
+
                                     }
                                     // SEND SOCKET FOR ADMINS
                                     server.socket.forward('server', 'admin', msgAdmin, 'shipper:change:order:status');
@@ -355,7 +363,8 @@ module.exports = function (app) {
     var createIssuePending = function (req, res, next) {
         var issueType;
         var task = db.task;
-        var listStores = [];
+        var listStores = [];        
+
         //Instance new Issue
         var newIssue = _.cloneDeep(req.body[0].issue);
         var shipperID = req.user.username;
@@ -365,6 +374,10 @@ module.exports = function (app) {
         newIssue.sender =  shipperID;
         var orders = _.cloneDeep(req.body[0].orders);
         var categoryissue = _.cloneDeep(req.body[0].categoryissue);
+
+        // Update status of shipper
+        server.socket.updateIssueForShipper(shipperID, true);
+
         console.log('shipperController:357 -- newIssue', newIssue);
         db.issue.createNewIssue(newIssue)
             .then(function(issue) {
@@ -681,6 +694,7 @@ module.exports = function (app) {
                                 'store:issue:continue'
                             );
                             server.socket.updatePendingOrder(shipperid, false);
+                            // server.socket.updateIssueForShipper(shipperid, false);
                             //res mesage continue
                             res.status(200).json(resMess[2]);
                         });

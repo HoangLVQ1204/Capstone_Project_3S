@@ -7,13 +7,10 @@ module.exports = function(app){
 	var checkAll = [authManage.checkToken(),authManage.checkRole()];
 
  	app.param('username', controller.params);
- 	 	
-	//app.get('/users',checkAll,controller.get);
+
 	app.post('/api/user/addNewUser', controller.addNewUser);
 
-	app.get('/user/profile/:username',controller.getProfileUser);
-
-	app.post('/user/register',controller.createStoreOwnerAccount);
+	app.get('/user/profile/:username',checkAll,controller.getProfileUser);
 
 	app.route('/api/user/:user')
 		.get(controller.getUserDetail)
@@ -24,8 +21,4 @@ module.exports = function(app){
 
 	app.param('user', controller.paramUsername);
 
-    //app.route('/api/users/:user_id')
-    //	.get(controller.getOne)
-    //	.put(controller.put)
-    //	.delete(controller.del);
 }

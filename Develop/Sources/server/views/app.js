@@ -345,7 +345,7 @@ angular.module('app', [
             verticalEdge: 'right',
             theme: (notification.type === 'issue' ? 'danger' : 'success')
         };                
-        var template = '<div class="btn" id="noti' + notification.notificationid + '" onclick="location.href=\'' + notification.url + '\'">' +
+        var template = '<div style="white-space: pre-wrap;" class="btn" id="noti' + notification.notificationid + '" onclick="location.href=\'' + notification.url + '\'">' +
                 '<h4 style="color: white"><strong>' + notification.title + '</strong></h4>' +
                 '<span style="color: white">' + notification.content + '</span>'
                 '</div>';        
@@ -385,7 +385,7 @@ angular.module('app', [
         } else {    // type == undefined, only display
             $rootScope.displayNotification(notification);
         }
-    };
+    };    
 
     // combo functions for express order
     $rootScope.updateExpressOrder = function(orderID, isDraff, statusId) {
@@ -467,7 +467,7 @@ angular.module('app', [
     };
 
     function loading(){
-        var overlay=$('<div class="load-overlay"><div><div class="c1"></div><div class="c2"></div><div class="c3"></div><div class="c4"></div></div><span>Finding Shipper...</span><button id="btnCancelExpress" class="btn btn-theme-inverse">Cancel</button></div>');
+        var overlay=$('<div class="load-overlay" style="text-align:center; margin: 0 auto;"><div><div class="c1"></div><div class="c2"></div><div class="c3"></div><div class="c4"></div></div><span>Finding Shipper...</span><button id="btnCancelExpress" class="btn btn-theme-inverse">Cancel</button></div>');
         $("body").append(overlay);
         overlay.css('opacity',3).fadeIn("slow");
     }
