@@ -345,7 +345,7 @@ angular.module('app', [
             verticalEdge: 'right',
             theme: (notification.type === 'issue' ? 'danger' : 'success')
         };                
-        var template = '<div class="btn" id="noti' + notification.notificationid + '" onclick="location.href=\'' + notification.url + '\'">' +
+        var template = '<div style="white-space: pre-wrap;" class="btn" id="noti' + notification.notificationid + '" onclick="location.href=\'' + notification.url + '\'">' +
                 '<h4 style="color: white"><strong>' + notification.title + '</strong></h4>' +
                 '<span style="color: white">' + notification.content + '</span>'
                 '</div>';        
@@ -385,7 +385,7 @@ angular.module('app', [
         } else {    // type == undefined, only display
             $rootScope.displayNotification(notification);
         }
-    };
+    };    
 
     // combo functions for express order
     $rootScope.updateExpressOrder = function(orderID, isDraff, statusId) {
