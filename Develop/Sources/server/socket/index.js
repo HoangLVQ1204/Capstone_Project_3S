@@ -500,7 +500,7 @@ module.exports = function(server,app){
         result.customer = _.clone(io.customers, true);
         result.orders = _.clone(io.orders, true);
         
-        console.log('getDataForAdmin', result);
+        // console.log('getDataForAdmin', result);
         return result;
     };
 

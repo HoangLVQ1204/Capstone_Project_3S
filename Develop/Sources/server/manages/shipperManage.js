@@ -692,7 +692,7 @@ module.exports = function (app) {
                                 'store:issue:continue'
                             );
                             server.socket.updatePendingOrder(shipperid, false);
-                            server.socket.updateIssueForShipper(shipperid, false);
+                            // server.socket.updateIssueForShipper(shipperid, false);
                             //res mesage continue
                             res.status(200).json(resMess[2]);
                         });
