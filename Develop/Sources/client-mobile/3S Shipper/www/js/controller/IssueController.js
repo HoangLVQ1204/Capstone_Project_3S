@@ -5,13 +5,22 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
 
   //Get All Task of shipper
   $scope.isSend = false;
+  $scope.haveIssue = false;
   getAllTaskOfShipper();
 
   //socket on issue
   $scope.$on("issue:resolve", function (event, args) {
+    // if (args.type !== 1 && args.type !== 2 && args.type !== 3 && args.type !== 6 && args.type !== 8) {
+    //   var alertPopup = $ionicPopup.alert({
+    //     title: 'Information',
+    //     template: 'Your Task is resolved'
+    //   });
+    //   alertPopup.then(function(res) {
+    //     console.log('You got it');
+    //   });
+    // }
     //Continue not show this
-    if (args.type !== 1 && args.type !== 2 && args.type !== 3 && args.type !== 6 && args.type !== 8) {
-
+    if (!$scope.haveIssue) {
       var alertPopup = $ionicPopup.alert({
         title: 'Information',
         template: 'Your Task is resolved'
@@ -185,6 +194,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
       $scope.isSend = false;
       if (des.id === 1) {
         $scope.btnContinue = false;
+        $scope.haveIssue = true;
         $scope.showLoading();
       } else {
         $ionicLoading.hide();
@@ -316,6 +326,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
 
                 //1 is Pending
                 if (rs[0].catissue == 1) {
+                  $scope.haveIssue = true;
                   $scope.btnContinue = false;
                   $scope.showLoading();
                 }

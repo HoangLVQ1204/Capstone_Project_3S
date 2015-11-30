@@ -16,22 +16,32 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
   $rootScope.$on("shipper:express:order:success", function(event, args) {
 	var des = {
 	  id: 999,
-	  content: 'You just grab an a new order'
+	  content: 'You just grab a new order'
 	};
 	$scope.showAlert(des);
   });
 
   //socket on issue
   $scope.$on("issue:resolve", function (event, args) {
-	console.log('Args: ', args);
-	//Continue not show this
-	if (args.type !== 1 && args.type !== 2 && args.type !== 3 && args.type !== 6 && args.type !== 8) {
-	  var des = {
-		id: 999,
-		content: 'Your Task is resolved'
-	  };
-	  $scope.showAlert(des);
-	}
+    //!$scope.haveIssue
+	// if (args.type !== 1 && args.type !== 2 && args.type !== 3 && args.type !== 6 && args.type !== 7 && args.type !== 8) {
+	//   var des = {
+	// 	id: 999,
+	// 	content: 'Your Task is resolved'
+	//   };
+	//   $scope.showAlert(des);
+	// }
+
+    //Continue not show this
+    console.log("haveIssue:", $scope.haveIssue);
+    if (!$scope.haveIssue) {
+      var des = {
+         id: 999,
+         content: 'Your Task is resolved'
+      };
+      $scope.showAlert(des);
+    }
+
   });
 
   //socket new Task shipper:task:newTask
@@ -90,6 +100,15 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
 	  	// Shipper continue	  	
 	  	socketShipper.updateHaveIssue(false);
 	  }
+      if (des.id == 5) {
+        //continue in case: order canceled by store
+        $ionicPopup.alert({
+            title: 'Information',
+            template: 'Some orders canceled. Please check history'
+        }).then(function(){
+            getListOfTask();
+        });
+      }
 	});
   };
   //END Alert Dialog
@@ -145,9 +164,7 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
 		.then(function (res) {
 		  var rs = res.data;
 		  $ionicLoading.hide();
-		  // $timeout(function(){
-			$scope.showAlert(rs);
-		  // }, 100);
+		  $scope.showAlert(rs);
 
 		}, function (error) {
 			console.log('Unable to load customer data: ' + error);

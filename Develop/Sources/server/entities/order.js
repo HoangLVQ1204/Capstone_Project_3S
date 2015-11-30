@@ -685,6 +685,16 @@ module.exports = function(sequelize, DataTypes) {
           group: ['storeid']
    
         })
+      },
+
+      getManyOrder: function(orderIDs){
+        return order.findAll({
+          attributes: ['orderid'],
+          where: {
+            'orderid': orderIDs,
+            'statusid': 8
+          }
+        })
       }
 
 
