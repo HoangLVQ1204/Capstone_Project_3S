@@ -12,10 +12,11 @@ module.exports = function (app) {
     var server = app.get('io');
 
     /*
-     * Get all task of Shipper @quyennv
+     * Get all task of Shipper
      * Get All Task Inactive, Active, Processing of Shipper by shipperID
+     * @author: quyennv
      */
-    var getTask = function (req, res, next) {
+    var getTasks = function (req, res, next) {
         var shipperid = req.user.username;
         var task = db.task;
 
@@ -347,9 +348,11 @@ module.exports = function (app) {
     };
 
     /*
-     * create Issue @quyennv
+     * Create new Issue when shipper sned issue pending
+     * @author: quyennv - 6/11
      */
-    var createIssue = function (req, res, next) {
+
+    var createIssuePending = function (req, res, next) {
         var issueType;
         var task = db.task;
         var listStores = [];
@@ -921,9 +924,12 @@ module.exports = function (app) {
         res.status(200).json({'status': true});
     };
     //// END - Get status of shipper
+
     /*
-    * Get all Task of Shipper tobe Issue @quyennv
+    * Get all Task of Shipper tobe Issue
+    * @author: quyennv
     */
+
     var getTaskBeIssuePending = function (req, res, next) {
         var shipperid = req.user.username;
         var task = db.task;
@@ -1170,13 +1176,13 @@ module.exports = function (app) {
 
 
     return {
-        getTask: getTask,
+        getTasks: getTasks,
         getHistory: getHistory,
         getDetail: getDetail,
         paramOrderId: paramOrderId,
         getOrderStatusList: getOrderStatusList,
         nextStep: nextStep,
-        createIssue: createIssue,
+        createIssuePending: createIssuePending,
         changeIsPending: changeIsPending,
         paramMapdata: paramMapdata,
         getMapData: getMapdata,

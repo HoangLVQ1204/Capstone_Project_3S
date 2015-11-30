@@ -8,7 +8,7 @@ module.exports = function (app) {
     var authManage = require('./../../manages/authManage')(app);
     var checkAll = [authManage.checkToken(),authManage.checkRole()];
 
-    app.get('/api/tasks', checkAll, shipperCtrl.getTask);
+    app.get('/api/tasks', checkAll, shipperCtrl.getTasks);
 
     app.get('/api/shipper/getNewShipperID', shipperCtrl.createShipperID);
 
@@ -24,7 +24,7 @@ module.exports = function (app) {
 
     app.get('/api/shipper/getAllOrderToAssignTask', shipperCtrl.getAllOrderToAssignTask);
 
-    app.post('/api/issue', checkAll, shipperCtrl.createIssue);
+    app.post('/api/issue', checkAll, shipperCtrl.createIssuePending);
 
     app.put('/api/changeIsPendingOrder', checkAll, shipperCtrl.changeIsPending);
 
