@@ -426,7 +426,8 @@ module.exports = function(server,app){
                 }
                 return keep;
             });
-            result.customer.push(customer);
+            if (customer.order.length > 0)
+                result.customer.push(customer);
         }
         // console.log('getDataForStore', result);
         return result;
@@ -476,7 +477,8 @@ module.exports = function(server,app){
                 }
                 return keep;
             });
-            result.customer.push(customer);
+            if (customer.order.length > 0)
+                result.customer.push(customer);
         }
         return result;
     };
