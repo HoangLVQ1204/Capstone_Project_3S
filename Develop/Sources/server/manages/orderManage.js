@@ -580,8 +580,18 @@ var getTodayTotal = function (req, res, next) {
             },function(err){
                 next(err);
             })
-    }
-    
+    };
+     var test = {};
+     test.test = function(storeid){
+         return db.order.countOrder(storeid)
+             .then(function(listRs){
+                 return {status:200,
+                     data: listRs};
+             },function(er){
+                 return {status:400,
+                     data: er};
+             });
+     }
 
     return {
         getAllOrder: getAllOrder,
@@ -596,6 +606,7 @@ var getTodayTotal = function (req, res, next) {
         getOrderList: getOrderList,
         getTodayTotal: getTodayTotal,
         storeGetOrderList : storeGetOrderList,
-        countOrder : countOrder
+        countOrder : countOrder,
+        testF: test
     }
 }
