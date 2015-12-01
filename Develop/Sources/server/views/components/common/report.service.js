@@ -24,7 +24,7 @@ function reportService(config,dataService){
 
     /* This function use to get COD/Fee from server */
     function getCodFeeFromServer(){
-        var urlBase = config.baseURI + '/api/admin/report/storeOrderCount';
+        var urlBase = config.baseURI + '/api/admin/report/moneyCount';
         return dataService.getDataServer(urlBase)
             .then(function (rs) {
                 return rs.data;

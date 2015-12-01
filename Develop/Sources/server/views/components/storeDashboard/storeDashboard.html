@@ -164,6 +164,7 @@
                                                     <td width="9%">
                                                         <span ng-if="x.statusname == 'Waiting' && !x.iscancel" class="label label-warning">{{x.statusname}}</span>
                                                         <span ng-if="x.iscancel" class="label label-danger">Canceling </span>
+                                                        <span ng-if="x.statusname =='Canceling'" class="label label-danger">Returning </span>
                                                         <span ng-if="x.statusname =='Delivering' && !x.iscancel" class="label label-success">{{x.statusname}} </span>
                                                         <span ng-if="x.statusname =='Picking up' && !x.iscancel" class="label label-default">{{x.statusname}} </span>
                                                         <span ng-if="x.statusname =='Bring to stock' && !x.iscancel" class="label label-default">{{x.statusname}} </span>
@@ -175,7 +176,7 @@
                                                     <a class="btn btn-default btn-sm"
                                                        title="View detail" ui-sref="store.orderdetail({orderid: x.orderid})"><i class="fa fa-eye "></i></a>
 
-                                                    <a ng-disabled ="x.iscancel" ng-click="setOrder(x)" data-toggle="modal"
+                                                    <a ng-disabled ="x.iscancel || x.statusname =='Canceling'" ng-click="setOrder(x)" data-toggle="modal"
                                                        data-target="#md-cancel-order" class="btn btn-default btn-sm"
                                                        title="Cancel"><i class="fa fa-times"></i></a>
                                                     </span>

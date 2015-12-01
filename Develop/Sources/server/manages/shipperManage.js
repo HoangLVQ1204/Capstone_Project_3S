@@ -12,15 +12,15 @@ module.exports = function (app) {
     var server = app.get('io');
 
     /*
-     * Get all task of Shipper @quyennv
+     * Get all task of Shipper
+     * Get All Task Inactive, Active, Processing of Shipper by shipperID
+     * @author: quyennv
      */
-    var getTask = function (req, res, next) {
+    var getTasks = function (req, res, next) {
         var shipperid = req.user.username;
-        //var taskdate = '2015-02-15';
         var task = db.task;
-        var order = db.order;
 
-        return order.getAllTaskOfShipper(task, shipperid)
+        return db.order.getAllTaskOfShipper(task, shipperid)
             .then(function (tasks) {
                 var group = {};
                 if (_.isEmpty(tasks) == false) {
@@ -28,6 +28,7 @@ module.exports = function (app) {
                     _.each(tasks, function(task){
                         listTasks.push({
                             'orderid': task.dataValues.orderid,
+                            'orderstatusid': task.dataValues.statusid,
                             'taskid': task['tasks'][0].dataValues.taskid,
                             'typeid': task['tasks'][0].dataValues.typeid,
                             'isPending': task.dataValues.ispending,
@@ -61,6 +62,12 @@ module.exports = function (app) {
             })
     };
 
+    /*
+     * By HuyTDH - 10/18/2015
+     *
+     * This function is used to return json data for task history API
+     *
+     * */
     var getHistory = function (req, res, next) {
         var shipper = _.cloneDeep(req.user);
         var shipperid = shipper.username;
@@ -128,29 +135,6 @@ module.exports = function (app) {
                     var statuslist = configConstant.statusList[type];
                     req.statuslist = statuslist;
                     req.detail = rs;
-                    //req.details = {
-                    //    code: rs.orderid,
-                    //    statusid: rs.statusid,
-                    //    storeid: rs.storeid,
-                    //    ordertypeid: rs.ordertypeid,
-                    //    pickupaddress: rs.pickupaddress,
-                    //    deliveryaddress: rs.deliveryaddress,
-                    //    pickupdate: rs.pickupdate,
-                    //    deliverydate: rs.deliverydate,
-                    //    recipientphone: rs.recipientphone,
-                    //    recipientname: rs.recipientname,
-                    //    fee: rs.fee,
-                    //    cod: rs.cod,
-                    //    //pickupaddresscoordination: rs.pickupaddresscoordination.split(','),
-                    //    //deliveryaddresscoordination: rs.deliveryaddresscoordination.split(','),
-                    //    status: rs.orderstatus.status, // No need to get status name
-                    //    //stockid: 1, // Need to get stock info (join with stock)
-                    //    weight: rs.goods[0].weight,
-                    //    lengthsize: rs.goods[0].lengthsize,
-                    //    widthsize: rs.goods[0].widthsize,
-                    //    heightsize: rs.goods[0].heightsize,
-                    //    description: rs.goods[0].description
-                    //};
                     next();
                 } else {
                     next(new Error('No order with id' + orderid));
@@ -160,6 +144,12 @@ module.exports = function (app) {
             });
     };
 
+    /*
+     * By HuyTDH - 10/20/2015
+     *
+     * This function is used to return json data for task detail API
+     *
+     * */
     var getDetail = function (req, res, next) {
         var detailtaskid = req.query.taskid;
         var Order = db.order;
@@ -356,9 +346,11 @@ module.exports = function (app) {
     };
 
     /*
-     * create Issue @quyennv
+     * Create new Issue when shipper sned issue pending
+     * @author: quyennv - 6/11
      */
-    var createIssue = function (req, res, next) {
+
+    var createIssuePending = function (req, res, next) {
         var issueType;
         var task = db.task;
         var listStores = [];        
@@ -574,7 +566,8 @@ module.exports = function (app) {
     };
 
     /*
-     * Change is pending of order @quyennv
+     * Change is pending of order
+     * @author: quyennv
      */
     var changeIsPending = function(req, res, next) {
         //console.log('quyen', req.user.username);
@@ -604,9 +597,10 @@ module.exports = function (app) {
         var resMess = [
             {"id": 1, "content": "Your Issue is not resolved. Please waiting for Admin or contact to Admin."},
             {"id": 2, "content": "Your all active task is Fail. Please confirm with Admin"},
-            {"id": 3, "content": "You can continue"}
+            {"id": 3, "content": "You can continue"},
+            {"id": 5, "content": "You can Continue"}
         ];
-        return issue.preChangeIsPending(task, order, issuetype, orderissue, shipperid, issueId)
+        return issue.changeIsPendingOfShipper(task, order, issuetype, orderissue, shipperid, issueId)
             .then(function(tasks){
                 var listOrdersOfCurrentShip = [];
                 var listOrdersAsignToOther = [];
@@ -654,7 +648,6 @@ module.exports = function (app) {
                         db.order.getStoresOfOrder(listOrdersOfCurrentShip)
                         .then(function(storeIDs){
                             storeIDs = _.uniq(storeIDs, 'storeid');
-                            console.log("storeID:613", storeIDs);
                             storeIDs = storeIDs.map(function(e){
                                 return e.storeid;
                             });
@@ -664,18 +657,15 @@ module.exports = function (app) {
                             ownerStores = ownerStores.map(function(e) {
                                 return e.toJSON();
                             });
-                            console.log('shipperController:623', ownerStores);
                             //insert to notification
                             var promises = ownerStores.map(function(e) {
                                 var data = _.clone(msgToStore, true);
                                 data.username = e.managerid;
-                                console.log('data', data);
                                 return db.notification.addNotification(data);
                             });
                             return Promise.all(promises);
                         })
                         .then(function (data) {
-                            console.log('shipperController:642', data.length);
                             console.log('send notification continue to store');
                             // send socket
                             var sender = {
@@ -693,8 +683,24 @@ module.exports = function (app) {
                             );
                             server.socket.updatePendingOrder(shipperid, false);
                             // server.socket.updateIssueForShipper(shipperid, false);
-                            //res mesage continue
-                            res.status(200).json(resMess[2]);
+
+                            // Notify order canceled by Store
+                            var haveCancel = false;
+                            console.log("ListOrderOfShipperWhenIssue+++++:688", listOrdersOfCurrentShip)
+                            db.order.getManyOrder(listOrdersOfCurrentShip)
+                            .then(function(orderIDs){
+                                orderIDs = orderIDs.map(function(e) {
+                                    return e.toJSON();
+                                });
+                                console.log("listOrderCanceled+++++++: 694", orderIDs);
+                                if (orderIDs.length > 0) {
+                                    //res message continue, but some order canceled by store
+                                    res.status(200).json(resMess[3]);
+                                } else {
+                                    //res mesage continue
+                                    res.status(200).json(resMess[2]);
+                                }
+                            });
                         });
                     }
                 }
@@ -936,9 +942,12 @@ module.exports = function (app) {
         res.status(200).json({'status': true});
     };
     //// END - Get status of shipper
+
     /*
-    * Get all Task of Shipper tobe Issue @quyennv
+    * Get all Task of Shipper tobe Issue
+    * @author: quyennv
     */
+
     var getTaskBeIssuePending = function (req, res, next) {
         var shipperid = req.user.username;
         var task = db.task;
@@ -1185,13 +1194,13 @@ module.exports = function (app) {
 
 
     return {
-        getTask: getTask,
+        getTasks: getTasks,
         getHistory: getHistory,
         getDetail: getDetail,
         paramOrderId: paramOrderId,
         getOrderStatusList: getOrderStatusList,
         nextStep: nextStep,
-        createIssue: createIssue,
+        createIssuePending: createIssuePending,
         changeIsPending: changeIsPending,
         paramMapdata: paramMapdata,
         getMapData: getMapdata,

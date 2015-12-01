@@ -139,7 +139,9 @@ function adminReportController($scope,$state, $http,dataService, $filter, config
         var myData;
         var data1 = [];
         var data2=[];
-
+console.log("===========yahaaaa=======");
+            console.log(listOrderOfMonth);
+            console.log("===========yahaaa=======");
         for(var i = 0; i<listOrderOfMonth.length;i++){
             if(listOrderOfMonth[i].types.length == 2){
                 data1.push([listOrderOfMonth[i].name,listOrderOfMonth[i].types[0].countNum]);

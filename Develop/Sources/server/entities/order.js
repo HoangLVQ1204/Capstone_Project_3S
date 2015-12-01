@@ -240,7 +240,7 @@ module.exports = function(sequelize, DataTypes) {
             }
           ],
           order: 'createdate DESC'
-        });
+        }).then(sequelize.handler);
       },
 
       storeGetOneOrder: function (oderstatusModel, goodsModel,confirmationCodeModel, order_id) {
@@ -684,6 +684,16 @@ module.exports = function(sequelize, DataTypes) {
           ], 
           group: ['storeid']
    
+        })
+      },
+
+      getManyOrder: function(orderIDs){
+        return order.findAll({
+          attributes: ['orderid'],
+          where: {
+            'orderid': orderIDs,
+            'statusid': [8, 6]
+          }
         })
       }
 

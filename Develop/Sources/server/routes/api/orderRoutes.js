@@ -15,8 +15,16 @@ module.exports = function (app) {
         .get(controller.getTodayTotal);
 
     app.route('/orders')
-        .get(checkAll,controller.getAllOrder)
-        .post(controller.postOne);
+        .get(checkAll,function(req,res,next){
+                var storeId = req.user.stores[0].storeid;
+                controller.getAllOrder(storeId).then(function(data){
+                    res.status(200).json(data);
+                })
+                .catch(function(err){
+                    next(err);
+                })
+            })
+        .post(controller.postOneOrder);
 
     app.route('/orders/updateExpressOrder')
         .put(controller.updateExpressOrder)    
@@ -25,9 +33,6 @@ module.exports = function (app) {
         .get(controller.getOne)
         .put(checkAll,controller.updateOrder)
         .delete(checkAll,controller.deleteOrder);
-
-    app.route('/orders/putdraff')
-        .post(controller.putDraff);
 
     app.route('/store/orders/cancel')
         .post(checkAll,controller.cancelOrder);

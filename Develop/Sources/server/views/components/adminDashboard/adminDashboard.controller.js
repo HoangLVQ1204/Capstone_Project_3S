@@ -39,32 +39,33 @@ function adminDashboardController($scope,$state,dataService, config, $rootScope,
     $scope.dateRangeActive = null;
     $scope.dateRangeDone = null;
     $scope.dateRangeFail = null;
-    $scope.inactiveList = [];
-    $scope.doneList = [];
-    $scope.activeList = [];
-    $scope.failList = [];
-    $scope.shipperList = [];
-    $scope.totalTaskToday = 0;
-    $scope.totalDoneToday = 0;
+
 
     getDataFromServer();
 
     function getDataFromServer() {
         var urlBase = config.baseURI + "/api/getTaskList";
         $scope.onlineShipper = socketAdmin.listOnlineShipper.length;
+        $scope.inactiveList = [];
+        $scope.doneList = [];
+        $scope.activeList = [];
+        $scope.failList = [];
+        $scope.shipperList = [];
+        $scope.totalTaskToday = 0;
+        $scope.totalDoneToday = 0;
         dataService.getDataServer(urlBase)
             .then(function (rs) {
                 //console.log(rs);
                 rs.data.map(function (task) {
                      if (task.statusid == 1)  $scope.inactiveList.push(task);
-                     if (task.statusid == 2)  $scope.activeList.push(task);
+                     if (task.statusid == 2 || task.statusid == 4)  $scope.activeList.push(task);
                      if (task.statusid == 3)  $scope.doneList.push(task);
-                     if (task.statusid == 4)  $scope.failList.push(task);
+                     if (task.statusid == 5)  $scope.failList.push(task);
                      if (dateCompare(new Date(task.taskdate), new Date(Date.now()))) {
                          $scope.totalTaskToday++;
                          if (task.statusid == 3) $scope.totalDoneToday++;
                      }
-                })
+                });
                     $scope.displayedInactiveList = [].concat($scope.inactiveList);
                     $scope.displayedActiveList = [].concat($scope.activeList);
                     $scope.displayedDoneList = [].concat($scope.doneList);
@@ -121,6 +122,10 @@ function adminDashboardController($scope,$state,dataService, config, $rootScope,
     });
 
     $rootScope.$emit("shipper:change:order:status", function(event,args){
+        getDataFromServer();
+    });
+
+    $rootScope.$emit("shipper:change:task:status", function(event,args){
         getDataFromServer();
     });
 }

@@ -53,4 +53,5 @@ app.get('models').sequelize.sync().then(function () {
     });
 });
 
-// exports.socket = socket.io;
+// setup for unit test
+exports.app = app;

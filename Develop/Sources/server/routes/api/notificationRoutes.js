@@ -8,15 +8,51 @@ module.exports = function (app) {
     var checkAll = [authManage.checkToken(),authManage.checkRole()];
 
     app.route('/api/notifications/total')
-        .get(checkAll, controller.getTotal);
+        .get(checkAll, function(req, res, next) {
+            var username = req.user.username;
+            controller.getTotal(username)
+            .then(function(c) {
+                res.status(200).json(c);
+            });
+        });
 
     app.route('/api/notifications/unread')
-        .get(checkAll, controller.getTotalUnread);
+        .get(checkAll, function(req, res, next) {
+            var username = req.user.username;
+            controller.getTotalUnread(username)
+            .then(function(c) {
+                res.status(200).json(c);
+            })
+            .catch(function(err) {
+                next(err);
+            })
+        });
 
     app.route('/api/notifications')
-        .get(checkAll, controller.get)
-        .post(checkAll, controller.post);
+        .get(checkAll, function(req, res, next) {
+            var username = req.user.username;
+            var offset = parseInt(req.query.offset);
+            var limit = parseInt(req.query.limit);
+            controller.getPageNotifications(username, offset, limit)
+            .then(function(items) {
+                res.status(200).json(items);
+            });
+        })
+        .post(checkAll, function(req, res, next) {
+            var notification = req.body;
+            controller.addNotification(notification)
+            .then(function(data) {
+                res.status(201).json(data);
+            });
+        });
 
     app.route('/api/notifications/:notification_id')
-    	.put(checkAll, controller.put);          
+    	.put(checkAll, function(req, res, next) {
+            var notification_id = req.params.notification_id;
+            var data = req.body;            
+            controller.updateNotification(data, notification_id)
+            .then(function(data) {
+                res.status(200).json(data);
+            })
+        });          
 };

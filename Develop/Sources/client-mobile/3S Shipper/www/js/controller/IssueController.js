@@ -5,13 +5,22 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
 
   //Get All Task of shipper
   $scope.isSend = false;
+  $scope.haveIssue = false;
   getAllTaskOfShipper();
 
   //socket on issue
   $scope.$on("issue:resolve", function (event, args) {
+    // if (args.type !== 1 && args.type !== 2 && args.type !== 3 && args.type !== 6 && args.type !== 8) {
+    //   var alertPopup = $ionicPopup.alert({
+    //     title: 'Information',
+    //     template: 'Your Task is resolved'
+    //   });
+    //   alertPopup.then(function(res) {
+    //     console.log('You got it');
+    //   });
+    // }
     //Continue not show this
-    if (args.type !== 1 && args.type !== 2 && args.type !== 3 && args.type !== 6 && args.type !== 8) {
-
+    if (!$scope.haveIssue) {
       var alertPopup = $ionicPopup.alert({
         title: 'Information',
         template: 'Your Task is resolved'
@@ -46,7 +55,6 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
 
       }, function (error) {
         console.log('Unable to load customer data: ' + error);
-        if(error.status == 401) dataFactory.signOutWhenTokenFail();
       });
   }
 
@@ -60,6 +68,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
     $scope.listOrderActive = [];
     var listOrderInactive = [];
     var listShipping = [];
+    var listGoodIsBroken = [];
     if (undefined !== rs['Pickup'] && rs['Pickup'].length) {
       rs['Pickup'].forEach(function(item) {
         //statusid = 2, Active status of Task
@@ -76,6 +85,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
       });
     }
     if (undefined !== rs['Ship'] && rs['Ship'].length) {
+      console.log('Ship', rs['Ship']);
       rs['Ship'].forEach(function(item) {
         //statusid = 2, Active status of task
         if (item.isPending == false && item.statusid == 2) {
@@ -83,6 +93,12 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
             'val': item.orderid,
             'text': item.orderid
           });
+        }
+        if (item.orderstatusid == 5) {
+          listGoodIsBroken.push({
+            'val': item.orderid,
+            'text': item.orderid
+          })
         }
         listOrderInactive.push({
           'val': item.orderid,
@@ -96,6 +112,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
       });
     }
     if (undefined !== rs['Express'] && rs['Express'].length) {
+      console.log('Express', rs['Express']);
       rs['Express'].forEach(function(item) {
         //statusid = 2, Active status of task
         if (item.isPending == false && item.statusid == 2) {
@@ -104,6 +121,14 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
             'text': item.orderid
           });
         }
+
+        if (item.orderstatusid == 5) {
+          listGoodIsBroken.push({
+            'val': item.orderid,
+            'text': item.orderid
+          })
+        }
+
         listOrderInactive.push({
           'val': item.orderid,
           'text': item.orderid
@@ -111,6 +136,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
       });
     }
     if (undefined !== rs['Return'] && rs['Return'].length) {
+      console.log('return', rs['Return']);
       rs['Return'].forEach(function(item) {
         //statusid = 2, Active status of task
         if (item.isPending == false && item.statusid == 2) {
@@ -119,6 +145,14 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
             'text': item.orderid
           });
         }
+
+        if (item.orderstatusid == 6) {
+          listGoodIsBroken.push({
+            'val': item.orderid,
+            'text': item.orderid
+          })
+        }
+
         listOrderInactive.push({
           'val': item.orderid,
           'text': item.orderid
@@ -129,6 +163,8 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
     $scope.selectable = listOrderInactive;
     //Fill to "Order" dropdown list
     $scope.listOrderShipping = listShipping;
+    //Fill to cancel (goood is broken)
+    $scope.listOrderBroken = listGoodIsBroken;
   }
 
   //Fill to "Type" dropdown list
@@ -185,6 +221,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
       $scope.isSend = false;
       if (des.id === 1) {
         $scope.btnContinue = false;
+        $scope.haveIssue = true;
         $scope.showLoading();
       } else {
         $ionicLoading.hide();
@@ -213,7 +250,6 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
 
       }, function (error) {
         console.log('Unable to load customer data: ' + error);
-        if(error.status == 401) dataFactory.signOutWhenTokenFail();
       })
   };
 
@@ -303,8 +339,8 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
 
           var urlCreateBase = config.hostServer + 'api/issue';
           dataFactory.postDataServer(urlCreateBase, data)
-            .success(function (rs) {
-
+            .then(function (rs) {
+              rs = rs.data
               $ionicPopup.alert({
                 title: 'Success',
                 content: 'Your Issue is sent to Admin'
@@ -316,6 +352,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
 
                 //1 is Pending
                 if (rs[0].catissue == 1) {
+                  $scope.haveIssue = true;
                   $scope.btnContinue = false;
                   $scope.showLoading();
                 }
@@ -339,9 +376,6 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
                 issue.type = null;
                 issue.issuedOrder = [];
               });
-            })
-            .error(function (error) {
-              console.log('Unable to load customer data: ' + error);
             });
         }
       }

@@ -38,7 +38,7 @@ var app = angular.module('starter', ['ionic', 'ngCordova','uiGmapgoogle-maps','a
     } else {
       $state.go('sign-in');
     }
-
+    $rootScope.isLoggedOut = false;
   }]);
 
 app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvider, jwtInterceptorProvider, $httpProvider, $ionicConfigProvider) {

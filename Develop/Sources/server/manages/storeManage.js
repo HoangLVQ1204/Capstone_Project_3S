@@ -89,7 +89,7 @@ module.exports = function(app) {
             })
     };
 
-    var getAllLedger = function(req, res, next){
+    var getAllStoreWithLedger = function(req, res, next){
         return db.store.getStoreLatestTotal(db.generalledger, db.bannedhistorylog, db.managestore, db.user)
             .then(function(store) {
                 res.status(200).json(store);
@@ -347,7 +347,7 @@ module.exports = function(app) {
             del: del,
             params: params,
             getLatestLedgerOfStore: getLatestLedgerOfStore,
-            getAllLedger: getAllLedger,
+           getAllStoreWithLedger: getAllStoreWithLedger,
             getTotalFee: getTotalFee,
             getTotalCoD: getTotalCoD,
             getLatestAutoAccountDate: getLatestAutoAccountDate,

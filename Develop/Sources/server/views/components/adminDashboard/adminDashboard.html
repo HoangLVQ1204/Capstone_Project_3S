@@ -228,7 +228,8 @@
                                                 <tbody align="center">
 
                                                 <tr class="odd gradeX" ng-repeat="x in displayedActiveList">
-                                                    <td>{{x.taskid}}</td>
+                                                    <td>{{x.taskid}}
+                                                        <br ng-show="x.statusid==4"><label class="color-danger" ng-show="x.statusid==4">Processing</label></td>
                                                     <td><a ui-sref="admin.userDetail({username: x.shipperid})"> {{x.shipperid}}</a></td>
                                                     <td>{{x.orderid}}</td>
                                                     <td class="center"><a ui-sref="admin.storeDetail({storeid: x.order.storeid})"> {{x.order.storeid}}</a></td>

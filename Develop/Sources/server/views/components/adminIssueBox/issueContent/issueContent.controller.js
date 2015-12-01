@@ -190,7 +190,8 @@ function issueContentController($scope,$stateParams, dataService, authService,co
     function resolveContinueIssue(){
         //console.log($scope.issue);
         $scope.issue.orderissues.map(function (issue) {
-            issue.order.tasks[0].statusid = 2;//fail task
+            if (issue.order.tasks.length>0) 
+                 issue.order.tasks[0].statusid = 2;//fail task
             //issue.order.statusid= 2;//cancel order
             //issue.order.fee= parseInt(issue.order.fee) * 0.1;//cancel order
         })

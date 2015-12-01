@@ -90,17 +90,9 @@ module.exports = function (app) {
         var promise = [];
         issue.orderissues.map(function (orderissue) {
             //console.log(orderissue.order);
-            promise.push(db.task.updateTaskStatusAndType(orderissue.order.tasks[0])
-                .then(function (task) {
-                    db.order.updateOrderStatus(orderissue.order)
-                        .then(function (order) {
-
-                        }, function (err) {
-                            next(err);
-                        })
-                }, function (err) {
-                    next(err);
-                }));
+            if(orderissue.order.tasks.length>0)
+                promise.push(db.task.updateTaskStatusAndType(orderissue.order.tasks[0]));
+            promise.push(db.order.updateOrderStatus(orderissue.order));
         });
         return Promise.all(promise).then(function () {
             res.status(201).json('OK');
