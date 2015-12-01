@@ -26,9 +26,6 @@ module.exports = function (app) {
         .put(checkAll,controller.updateOrder)
         .delete(checkAll,controller.deleteOrder);
 
-    app.route('/orders/putdraff')
-        .post(controller.putDraff);
-
     app.route('/store/orders/cancel')
         .post(checkAll,controller.cancelOrder);
 

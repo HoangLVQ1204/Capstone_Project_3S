@@ -27,6 +27,10 @@
 
     };
 
+/*
+    by KhanhKC
+    this function use to get all order for a store
+*/
     var getAllOrder = function (req, res, next) {
 
         var storeId = req.user.stores[0].storeid;
@@ -41,26 +45,10 @@
             var completedate ='';
             var ledgerid ='';
             _.each(orders, function(order){
-                if(order['orderstatus'] == null){
-                    statusname = '';
-                } else {
-                    statusname = order['orderstatus'].dataValues.statusname;
-                }
-                if(order.dataValues.createdate == null){
-                    createDate = '';
-                }else {
-                    createDate = order.dataValues.createdate;
-                }
-                if(order.dataValues.completedate == null){
-                    completedate = '';
-                }else {
-                    completedate = order.dataValues.completedate;
-                }
-                if(order.dataValues.ledgerid == null){
-                    ledgerid = '';
-                }else {
-                    ledgerid = order.dataValues.ledgerid;
-                }
+                statusname = (order['orderstatus'])? order['orderstatus'].dataValues.statusname:'';
+                createDate = order.dataValues.createdate? order.dataValues.createdate:'';
+                completedate = order.dataValues.completedate? order.dataValues.completedate:'';
+                ledgerid = order.dataValues.ledgerid?order.dataValues.ledgerid:'';
                 var fullDeliveryAddress = order.getCustomerAddress();
                 listOrders.push({
                     'orderid': order.dataValues.orderid,
@@ -260,8 +248,6 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
         };
        db.order.postOneOrder(newOrder)
        .then(function (order) {
-                //return res.status(200).json(order);
-                //console.log("==============33==============");
                 db.confirmationcode.postOneCode(code1);
                 db.confirmationcode.postOneCode(code2);
                 db.confirmationcode.postOneCode(code3);
@@ -273,35 +259,11 @@ var calculateShipFee = function(district, innerCity,ordertypeid){
                     good.stockid = null;
                     good.goodsname = req.body.goods[i].goodsname;
                     good.description = req.body.goods[i].description;
-                    if(!_.isNumber(parseInt(req.body.goods[i].weight))){
-                        good.weight = 0;
-                    } else {
-                        good.weight = parseInt(req.body.goods[i].weight);
-                    }
-
-                    if(!_.isNumber(parseInt(req.body.goods[i].lengthsize))){
-                        good.lengthsize = 0;
-                    } else {
-                        good.lengthsize = parseInt(req.body.goods[i].lengthsize);
-                    }
-
-                    if(!_.isNumber(parseInt(req.body.goods[i].widthsize))){
-                        good.widthsize = 0;
-                    } else {
-                        good.widthsize = parseInt(req.body.goods[i].widthsize);
-                    }
-
-                    if(!_.isNumber(parseInt(req.body.goods[i].heightsize))){
-                        good.heightsize = 0;
-                    } else {
-                        good.heightsize = parseInt(req.body.goods[i].heightsize);
-                    }
-
-                    if(!_.isNumber(parseInt(req.body.goods[i].amount))){
-                        good.amount = 0;
-                    } else {
-                        good.amount = parseInt(req.body.goods[i].amount);
-                    }                    
+                    good.weight = parseInt(req.body.goods[i].weight);
+                    good.lengthsize = parseInt(req.body.goods[i].lengthsize);
+                    good.widthsize = parseInt(req.body.goods[i].widthsize);
+                    good.heightsize = parseInt(req.body.goods[i].heightsize);
+                    good.amount = parseInt(req.body.goods[i].amount);
                     db.goods.postOneGood(good).then(function(goodsObj){
 
                     });
@@ -401,6 +363,10 @@ var updateOrder = function (req, res, next) {
          })
  };
 
+/* 
+    by KhanhKC
+    this function use to delete an Order
+*/
 var deleteOrder = function (req, res, next) {
     req.orderRs = req.orderRs.toJSON();
     var deleteGoods = db.goods.deleteGood(req.orderRs.orderid);

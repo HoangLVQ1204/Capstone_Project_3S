@@ -144,11 +144,7 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
             .then(function(rs){
                getDataFromServer();
             });
-        // var index =  $scope.displayedCollectionInprocess.indexOf( $scope.Order);
-        // if (index !== -1) {
-        //     $scope.displayedCollectionInprocess.splice(index, 1);
-        //     $scope.orderInprocess.splice(index, 1);
-        // }
+        
     };
 
     //delete Draff order
@@ -164,7 +160,7 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
                     type: 'info',
                     title: 'Info',
                     content: 'Order '+$scope.Order.orderid + 'has been deleted successfully!',
-                    url: '',
+                    url: '#',
                 };
                 $rootScope.notify(temp);
         },function(err){
@@ -172,31 +168,13 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
                     type: 'issue',
                     title: 'OOPS!',
                     content: 'Fail to delete order '+$scope.Order.orderid,
-                    url: '',
+                    url: '#',
                 };
                 $rootScope.notify(temp);
         });
 
 
     };
-
-    //submit draff order
-    $scope.submitDraff = function (order) {
-        var urlBase = config.baseURI + '/orders/putdraff';
-        for(var i = 0; i < $scope.listDraff.length; i++){
-            if ($scope.listDraff[i].orderid == order.orderid){
-                dataService.postDataServer(urlBase,$scope.listDraff[i]);
-                var index =  $scope.displayedCollectionDraff.indexOf(order);
-                if (index !== -1) {
-                    $scope.ordersDraff.splice(index, 1)
-                    $scope.displayedCollectionDraff.splice(index, 1);
-                    
-                }
-            }
-        }
-    };
-
-
 
     $scope.$watch('$viewContentLoaded', function(event) {
         caplet();
