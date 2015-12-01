@@ -13,6 +13,10 @@ var request = require("request");
  * */
 describe("Shipper APIs", function() {
 
+    /*
+     * By HuyTDH - 11/29/15
+     * Test API GET LIST TASKS of shipper
+     */
     describe("Get list of tasks", function() {
         var url = "http://localhost:3000/api/tasks";
         var options = {
@@ -34,6 +38,55 @@ describe("Shipper APIs", function() {
             request(url, function(error, response, body) {
                 //expect(body).to.equal("");
                 expect(response.statusCode).to.equal(401);
+                expect(body).not.to.be.null;
+                done();
+            });
+        });
+
+    });
+
+    /*
+     * By HuyTDH - 11/30/15
+     * Test API task history of shipper
+     * Function code SP01
+     * Test case SP01_01 ~ SP01_16
+     */
+    describe("API SHIPPER GET HISTORY (SP01)", function() {
+        var url = "http://localhost:3000/api/shipper/history?page=0";
+        var tokenSP1 = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlNQMDAwMDAxIiwidXNlcnJvbGUiOjEsInVzZXJzdGF0dXMiOjIsInRpbWUiOiIyMDE1LTExLTMwVDE5OjE3OjM1Ljk1MloiLCJpYXQiOjE0NDg5MTEwNTUsImV4cCI6MTQ0OTc3NTA1NX0.K5zwW8KKj2P2phvO5Zn_xFGTNXjnQtW3OetVESeRDLE";
+        var tokenSP2 = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IlNQMDAwMDAxIiwidXNlcnJvbGUiOjEsInVzZXJzdGF0dXMiOjIsInRpbWUiOiIyMDE1LTExLTMwVDE5OjE3OjM1Ljk1MloiLCJpYXQiOjE0NDg5MTEwNTUsImV4cCI6MTQ0OTc3NTA1NX0.K5zwW8KKj2P2phvO5Zn_xFGTNXjnQtW3OetVESeRDLE";
+        var option1 = {
+            url: url,
+            headers: {
+                Authorization: tokenSP1
+            }
+        };
+        //TEST CASE SP01_01
+        it("Test case SP01_01", function(done) {
+            request(option1, function(error, response, body) {
+                expect(response.statusCode).to.equal(200);
+                expect(body).not.to.be.null;
+                done();
+            });
+        });
+        //TEST CASE SP01_02
+        it("Test case SP01_02", function(done) {
+            var option2 = {
+                url: url,
+                headers: {
+                    Authorization: tokenSP2
+                }
+            };
+            request(option2, function(error, response, body) {
+                expect(response.statusCode).to.equal(200);
+                expect(body).not.to.be.null;
+                done();
+            });
+        });
+        //TEST CASE SP01_03
+        it("Test case SP01_03", function(done) {
+            request(options1, function(error, response, body) {
+                expect(response.statusCode).to.equal(200);
                 expect(body).not.to.be.null;
                 done();
             });
