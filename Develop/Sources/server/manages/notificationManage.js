@@ -7,7 +7,7 @@ var _ = require('lodash');
 module.exports = function (app) {
     var db = app.get('models');
 
-    var getTotal = function(username) {
+    function getTotal(username) {
         return db.notification.getTotalNumberOfNotifications(username);
     };
 
@@ -15,7 +15,7 @@ module.exports = function (app) {
         return db.notification.getTotalUnreadNotifications(username);
     };
 
-    var get = function(username, offset, limit) {        
+    function getPageNotifications(username, offset, limit) {        
         return db.notification.getNotifications(username, offset, limit)
         .then(function(items) {
             items = items.map(function(e) {
@@ -28,7 +28,7 @@ module.exports = function (app) {
         });
     };
 
-    var post = function(notification) {
+    function addNotification(notification) {
         // console.log('notificationManage POST');        
         if (!notification.username) 
             notification.username = req.user.username;        
@@ -38,7 +38,7 @@ module.exports = function (app) {
         });
     };
 
-    var put = function(data, notification_id) {
+    function updateNotification(data, notification_id) {
         // console.log('notificationManage PUT');        
         data.notification_id = notification_id;
         // console.log('put', data);
@@ -51,8 +51,8 @@ module.exports = function (app) {
     return {
         getTotal: getTotal,
         getTotalUnread: getTotalUnread,
-        get: get,
-        post: post,
-        put: put
+        getPageNotifications: getPageNotifications,
+        addNotification: addNotification,
+        updateNotification: updateNotification
     }
 }

@@ -33,14 +33,14 @@ module.exports = function (app) {
             var username = req.user.username;
             var offset = parseInt(req.query.offset);
             var limit = parseInt(req.query.limit);
-            controller.get(username, offset, limit)
+            controller.getPageNotifications(username, offset, limit)
             .then(function(items) {
                 res.status(200).json(items);
             });
         })
         .post(checkAll, function(req, res, next) {
             var notification = req.body;
-            controller.post(notification)
+            controller.addNotification(notification)
             .then(function(data) {
                 res.status(201).json(data);
             });
@@ -50,7 +50,7 @@ module.exports = function (app) {
     	.put(checkAll, function(req, res, next) {
             var notification_id = req.params.notification_id;
             var data = req.body;            
-            controller.put(data, notification_id)
+            controller.updateNotification(data, notification_id)
             .then(function(data) {
                 res.status(200).json(data);
             })
