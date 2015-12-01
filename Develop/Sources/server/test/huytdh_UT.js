@@ -1,5 +1,5 @@
 /**
- * Created by Kaka Hoang Huy on 11/30/2015.
+ * Created by Kaka Hoang Huy on 12/1/2015.
  */
 
 var expect  = require("chai").expect;
@@ -34,7 +34,7 @@ describe("ORDOER-MANAGE FUNCTIONS TEST:", function () {
         it("Test case OD01_02", function (done) {
             orderManage.getAllOrder(null).then(function(rs){
             },function(er){
-                expect(er).to.equal("Can't not get data");
+                expect(er).to.equal("Can't not get datas");
             }).then(function(){
                 done();
             });
