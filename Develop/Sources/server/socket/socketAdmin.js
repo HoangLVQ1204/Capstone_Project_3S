@@ -52,7 +52,7 @@ module.exports = function(socket, io, app) {
 
         //send to shipper
         if (data.msg.typeid <= 6)
-            data.msg.msg['content'] = 'Your pending issue has been resolved';
+            data.msg.msg['content'] = 'Your issue has been resolved';
         //console.log(data.msg.orderList[0].orderid,'BBB');
         if (data.msg.typeid == 7)
             data.msg.msg['content'] = "Order " + data.msg.orderList[0].orderid + " has been cancel by store...";

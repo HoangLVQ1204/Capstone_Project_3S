@@ -40,16 +40,18 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
     socketService.on('admin:issue:notification', function(data) {
         getUnreadMail().then(function () {
             $rootScope.$emit("admin:issue:newIssue", data.msg);
+            $rootScope.$emit("admin:change:order:status", data.msg);
         });
-        $rootScope.$emit("admin:issue:newIssue", data.msg);
+        //$rootScope.$emit("admin:issue:newIssue", data.msg);
         $rootScope.notify(data.msg.notification, 1);
     });
 
     socketService.on('admin::issue:disconnected', function(data) {
         getUnreadMail().then(function () {
             $rootScope.$emit("admin:issue:newIssue", data.msg);
+            $rootScope.$emit("admin:change:order:status", data.msg);
         });
-        $rootScope.$emit("admin:issue:newIssue", data.msg);
+        //$rootScope.$emit("admin:issue:newIssue", data.msg);
 
         $rootScope.notify(data.msg, 1);
     });
@@ -57,18 +59,19 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
     socketService.on('admin::issue:cancelorder', function(data) {
         getUnreadMail().then(function () {
             $rootScope.$emit("admin:issue:newIssue", data.msg);
+            $rootScope.$emit("admin:change:order:status", data.msg);
         });
         $rootScope.notify(data.msg, 1);
     });
 
     socketService.on('shipper:change:order:status',function(data){
         $rootScope.$emit("admin:change:order:status", data.msg);
-        $rootScope.notify(data.msg, 1);
+        //$rootScope.notify(data.msg, 1);
     });
 
     socketService.on('shipper:change:task:status',function(data){
         $rootScope.$emit("shipper:change:task:status", data.msg);
-        $rootScope.notify(data.msg, 1);
+        //$rootScope.notify(data.msg, 1);
     });
 
     api.getCurrentUser = function() {
