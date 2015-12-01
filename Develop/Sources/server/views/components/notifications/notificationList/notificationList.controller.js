@@ -23,7 +23,9 @@ function notificationListController($scope, config, dataService, notificationSer
 	});	
 
 	$scope.selectPage = function(page) {
+		if (page == notificationService.getCurrentPage()) return;
 		notificationService.setCurrentPage(page);		
+		$scope.pageNumbers = notificationService.getPageNumbers();
 		notificationService.getListNotificationsServer()
 		.then(function() {
 			$scope.listNotifications = notificationService.getListNotifications();

@@ -31,8 +31,7 @@
         by KhanhKC
         this function use to get all order for a store
     */
-    function getAllOrder(storeId){
-            
+    function getAllOrder(storeId){            
             var orderStatus = db.orderstatus;
             var order = db.order;
             var ordertype = db.ordertype;
