@@ -90,14 +90,14 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
 	  if (des.id === 1) {
         $scope.btnContinue = false;
 		$scope.showLoading();
-	  } else {	  	
+	  } else {
 		//TODO
 		$scope.haveIssue = false;
 		getListOfTask();
 		$ionicLoading.hide();
 	  }
 	  if (des.id == 3) {
-	  	// Shipper continue	  	
+	  	// Shipper continue
 	  	socketShipper.updateHaveIssue(false);
 	  }
       if (des.id == 5) {
@@ -133,11 +133,11 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
 		  	// Shipper have issue
 		  	setTimeout(function() {
 		  		socketShipper.updateHaveIssue(true);
-		  	}, 2000);		  	
+		  	}, 2000);
 
 			$scope.haveIssue = true;
 			//show ionicLoading
-			$scope.showLoading();			
+			$scope.showLoading();
 		  }
 		} else {
 		  //hide ionicLoading
@@ -146,7 +146,6 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
 
 	  }, function(error) {
 		console.log('Unable to load customer data: ' + error);
-		if(error.status == 401) dataFactory.signOutWhenTokenFail()
 	  });
   }
 
@@ -158,18 +157,16 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
 	//disable the button on click
 	$scope.btnContinue = true;
 	//Change ispending of Task
+    $ionicLoading.hide();
 	var data = {'issueId': issueId};
 	  var urlBase = config.hostServer + "api/changeIsPendingOrder";
 		dataFactory.putDataServer(urlBase, data)
 		.then(function (res) {
 		  var rs = res.data;
-		  $ionicLoading.hide();
+		  // $ionicLoading.hide();
 		  $scope.showAlert(rs);
 
-		}, function (error) {
-			console.log('Unable to load customer data: ' + error);
-			if(error.status == 401) dataFactory.signOutWhenTokenFail()
-		  });
+		});
 	};
 
   /*
@@ -197,7 +194,6 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
 	  },function (error) {
 		console.log('Unable to load customer data: ' + error);
 		$ionicLoading.hide();
-		if(error.status == 401) dataFactory.signOutWhenTokenFail()
 	  })
   }
 

@@ -55,7 +55,6 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
 
       }, function (error) {
         console.log('Unable to load customer data: ' + error);
-        if(error.status == 401) dataFactory.signOutWhenTokenFail();
       });
   }
 
@@ -223,7 +222,6 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
 
       }, function (error) {
         console.log('Unable to load customer data: ' + error);
-        if(error.status == 401) dataFactory.signOutWhenTokenFail();
       })
   };
 
@@ -313,8 +311,8 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
 
           var urlCreateBase = config.hostServer + 'api/issue';
           dataFactory.postDataServer(urlCreateBase, data)
-            .success(function (rs) {
-
+            .then(function (rs) {
+              rs = rs.data
               $ionicPopup.alert({
                 title: 'Success',
                 content: 'Your Issue is sent to Admin'
@@ -350,9 +348,6 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
                 issue.type = null;
                 issue.issuedOrder = [];
               });
-            })
-            .error(function (error) {
-              console.log('Unable to load customer data: ' + error);
             });
         }
       }

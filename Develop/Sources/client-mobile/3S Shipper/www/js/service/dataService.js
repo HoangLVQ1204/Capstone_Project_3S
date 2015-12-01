@@ -2,17 +2,26 @@
  * Created by Kaka Hoang Huy on 10/18/2015.
  */
 
-app.factory('dataService', ['$http', '$state', function ($http, $state) {
+app.factory('dataService', ['$http', '$state', '$ionicPopup', '$rootScope', 'socketService', function ($http, $state, $ionicPopup, $rootScope, socketService) {
 
   var dataFactory = {};
 
   function errorHandle(err) {
 
     if (err.status == 401) {
-
       var tag = 'EHID';
       window.localStorage.removeItem(tag);
-      location.href = '#/auth/login';
+      if($rootScope.isLoggedOut == false){
+        $ionicPopup.alert({
+          title: 'Information',
+          template: err.data
+        }).then(function(res){
+          $rootScope.isLoggedOut = false;
+          socketService.disconnect();
+          location.href = '#/sign-in';
+        });
+      }
+      $rootScope.isLoggedOut = true;
     }
 
     throw err;

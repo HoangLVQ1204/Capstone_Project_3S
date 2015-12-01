@@ -685,11 +685,13 @@ module.exports = function (app) {
 
                             // Notify order canceled by Store
                             var haveCancel = false;
+                            console.log("ListOrderOfShipperWhenIssue+++++:688", listOrdersOfCurrentShip)
                             db.order.getManyOrder(listOrdersOfCurrentShip)
                             .then(function(orderIDs){
                                 orderIDs = orderIDs.map(function(e) {
                                     return e.toJSON();
                                 });
+                                console.log("listOrderCanceled+++++++: 694", orderIDs);
                                 if (orderIDs.length > 0) {
                                     //res message continue, but some order canceled by store
                                     res.status(200).json(resMess[3]);
