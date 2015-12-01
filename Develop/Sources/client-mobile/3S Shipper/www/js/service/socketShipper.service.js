@@ -270,6 +270,27 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
       });
   };
 
+  api.updateHaveIssue = function(haveIssue) {
+    var currentUser = authService.getCurrentInfoUser();
+    console.log('updateHaveIssue');
+    socketService.connect()
+    .then(function() {
+      socketService.sendPacket(
+      {
+        type: 'shipper',
+        clientID: currentUser.username
+      },
+      'server',
+      {
+        shipper: {
+          shipperID: currentUser.username,
+          haveIssue: haveIssue
+        }
+      },
+      'shipper:update:haveIssue');
+    });    
+  };
+
   return api;
 }
 

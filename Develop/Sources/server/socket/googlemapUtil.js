@@ -41,6 +41,7 @@ api.getDistanceFromOneToMany = function(origin, destinations) {
 			d.reject(err);			
 		} else {
 			if (response.status === 'OK') {
+				console.log('response', response.rows);
 				var results = response.rows[0].elements.map(function(element, index) {
 						return {
 							distance: element.distance,
@@ -60,11 +61,11 @@ api.getDistanceFromOneToMany = function(origin, destinations) {
 api.getClosestShippers = function(store, shippers, filter) {
 	// filter shippers by status
 
-	var validShippers = shippers.filter(function(shipper) {
-		return (shipper.isConnected === filter.isConnected && shipper.numTasks < filter.maxTasks);
-	});
+	console.log('validShippers', shippers);
 
-	console.log('validShippers', validShippers);
+	var validShippers = shippers.filter(function(shipper) {
+		return (shipper.isConnected === filter.isConnected && shipper.haveIssue === filter.haveIssue && shipper.numTasks < filter.maxTasks);
+	});	
 
 	return api.getDistanceFromOneToMany(store, validShippers)
 	.then(function(results) {
