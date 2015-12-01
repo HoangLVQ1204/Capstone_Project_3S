@@ -24,14 +24,14 @@ sequelize.handler = function(data) {
 	if (data) {
 		if (data instanceof Array) {
 			if (data.length == 0)
-				throw new Error('Error in handler for ' + data);
+				throw new Error('Result = empty');
 			else if ((data.length == 1 || data.length == 2) && data[0] == 0) {
-				throw new Error('Error in handler for ' + data);
+				throw new Error('Result is empty');
 			}
 		}
 		return data;
 	} else {
-		throw new Error('Error in handler for ' + data);
+		throw new Error('Result is empty');
 	}
 };
 
