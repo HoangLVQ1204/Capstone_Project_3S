@@ -68,6 +68,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
     $scope.listOrderActive = [];
     var listOrderInactive = [];
     var listShipping = [];
+    var listGoodIsBroken = [];
     if (undefined !== rs['Pickup'] && rs['Pickup'].length) {
       rs['Pickup'].forEach(function(item) {
         //statusid = 2, Active status of Task
@@ -84,6 +85,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
       });
     }
     if (undefined !== rs['Ship'] && rs['Ship'].length) {
+      console.log('Ship', rs['Ship']);
       rs['Ship'].forEach(function(item) {
         //statusid = 2, Active status of task
         if (item.isPending == false && item.statusid == 2) {
@@ -91,6 +93,12 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
             'val': item.orderid,
             'text': item.orderid
           });
+        }
+        if (item.orderstatusid == 5) {
+          listGoodIsBroken.push({
+            'val': item.orderid,
+            'text': item.orderid
+          })
         }
         listOrderInactive.push({
           'val': item.orderid,
@@ -104,6 +112,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
       });
     }
     if (undefined !== rs['Express'] && rs['Express'].length) {
+      console.log('Express', rs['Express']);
       rs['Express'].forEach(function(item) {
         //statusid = 2, Active status of task
         if (item.isPending == false && item.statusid == 2) {
@@ -112,6 +121,14 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
             'text': item.orderid
           });
         }
+
+        if (item.orderstatusid == 5) {
+          listGoodIsBroken.push({
+            'val': item.orderid,
+            'text': item.orderid
+          })
+        }
+
         listOrderInactive.push({
           'val': item.orderid,
           'text': item.orderid
@@ -119,6 +136,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
       });
     }
     if (undefined !== rs['Return'] && rs['Return'].length) {
+      console.log('return', rs['Return']);
       rs['Return'].forEach(function(item) {
         //statusid = 2, Active status of task
         if (item.isPending == false && item.statusid == 2) {
@@ -127,6 +145,14 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
             'text': item.orderid
           });
         }
+
+        if (item.orderstatusid == 6) {
+          listGoodIsBroken.push({
+            'val': item.orderid,
+            'text': item.orderid
+          })
+        }
+
         listOrderInactive.push({
           'val': item.orderid,
           'text': item.orderid
@@ -137,6 +163,8 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
     $scope.selectable = listOrderInactive;
     //Fill to "Order" dropdown list
     $scope.listOrderShipping = listShipping;
+    //Fill to cancel (goood is broken)
+    $scope.listOrderBroken = listGoodIsBroken;
   }
 
   //Fill to "Type" dropdown list

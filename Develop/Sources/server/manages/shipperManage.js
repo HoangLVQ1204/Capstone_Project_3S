@@ -28,6 +28,7 @@ module.exports = function (app) {
                     _.each(tasks, function(task){
                         listTasks.push({
                             'orderid': task.dataValues.orderid,
+                            'orderstatusid': task.dataValues.statusid,
                             'taskid': task['tasks'][0].dataValues.taskid,
                             'typeid': task['tasks'][0].dataValues.typeid,
                             'isPending': task.dataValues.ispending,

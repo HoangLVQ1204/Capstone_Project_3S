@@ -20,7 +20,7 @@
         {{issue.type.typeName || 'Reason of Issue'}}
       </div>
       <div ng-if = "issue.category.categoryID != 1&&issue.type.typeID ==4" class="item item-divider">Order</div>
-      <div  ng-if = "issue.category.categoryID != 1&&issue.type.typeID ==4" class="item item-select" fancy-select ng-model="issue.issuedOrder" multi-select="true" items="selectable" item-label="text">
+      <div  ng-if = "issue.category.categoryID != 1&&issue.type.typeID ==4" class="item item-select" fancy-select ng-model="issue.issuedOrder" multi-select="true" items="listOrderBroken" item-label="text">
         {{parseMulti(issue.issuedOrder) || 'Order get an Issue'}}
       </div>
       <div ng-if = "issue.category.categoryID != 1&&issue.type.typeID ==5" class="item item-divider">Order</div>

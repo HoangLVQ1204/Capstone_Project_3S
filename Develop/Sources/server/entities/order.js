@@ -692,7 +692,7 @@ module.exports = function(sequelize, DataTypes) {
           attributes: ['orderid'],
           where: {
             'orderid': orderIDs,
-            'statusid': 8
+            'statusid': [8, 6]
           }
         })
       }
