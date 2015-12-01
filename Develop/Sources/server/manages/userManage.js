@@ -92,12 +92,6 @@ module.exports = function(app) {
             });
     };
 
-   var createStoreOwnerAccount = function(req,res,next){
-        var dataUser = req.body.dataUser;
-
-
-    }
-
     //function add new Shipper to system
     var addNewUser = function(req, res, next){
         var user = req.body;
@@ -109,12 +103,10 @@ module.exports = function(app) {
                     .then(function(profile){
                         res.status(201).json(profile);
                     },function(err){
-                        //console.log(newShipperID, shipper);
                         console.log(err);
                         res.status(400).json("Can not add new profile");
                     });
             },function(err){
-                //console.log(newShipperID, shipper);
                 console.log(err);
                 res.status(400).json("Can not add new user");
             });
@@ -125,7 +117,6 @@ module.exports = function(app) {
         get: get,
         getProfileUser: getProfileUser,
         params: params,
-        createStoreOwnerAccount: createStoreOwnerAccount,
         paramUsername: paramUsername,
         getUserDetail: getUserDetail,
         putUser: putUser,

@@ -4,7 +4,7 @@
 
 
 
-function mapServiceFn($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){        
+function mapServiceFn($q,$http,uiGmapGoogleMapApi,uiGmapIsReady,authService){        
 
     var shipperMarkers = [];
     var storeMarkers = [];
@@ -41,12 +41,13 @@ function mapServiceFn($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
                 returnedShipperMarkers.push(_.clone(e, true));
             });
         } else if (currentMode.type == 'orderdetail') {
+            var currentUser = authService.getCurrentInfoUser();
             for (var k = 0; k < shipperMarkers.length; ++k) {
                 var e = _.clone(shipperMarkers[k], true);
                 e.order = e.order.filter(function(item) {
                     return item == currentMode.orderID;
                 });
-                if (e.order.length > 0) returnedShipperMarkers.push(e);
+                if (e.order.length > 0 || currentUser.userrole == 1) returnedShipperMarkers.push(e);
             }
         } else if (currentMode.type == 'shipper') {            
             var find = _.find(shipperMarkers, function(e) {
@@ -73,13 +74,14 @@ function mapServiceFn($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
                 returnedStoreMarkers.push(_.clone(e, true));
             });
         } else if (currentMode.type == 'orderdetail') {
+            var currentUser = authService.getCurrentInfoUser();            
             for (var k = 0; k < storeMarkers.length; ++k) {
                 var e = _.clone(storeMarkers[k], true);
                 e.order = e.order.filter(function(item) {
                     return item == currentMode.orderID;
                 });
-                if (e.order.length > 0) returnedStoreMarkers.push(e);
-            }
+                if (e.order.length > 0 || currentUser.userrole == 2) returnedStoreMarkers.push(e);
+            }            
         } else if (currentMode.type == 'store') {            
             var find = _.find(storeMarkers, function(e) {
                 return currentMode.storeID == e.storeID;
@@ -302,7 +304,7 @@ function mapServiceFn($q,$http,uiGmapGoogleMapApi,uiGmapIsReady){
     return api;
 }
 
-mapServiceFn.$inject = ['$q','$http','uiGmapGoogleMapApi','uiGmapIsReady'];
+mapServiceFn.$inject = ['$q','$http','uiGmapGoogleMapApi','uiGmapIsReady','authService'];
 
 angular.module('app').factory('mapService', mapServiceFn);
 

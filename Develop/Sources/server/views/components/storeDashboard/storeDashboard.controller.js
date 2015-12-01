@@ -178,6 +178,17 @@ function storeDashboardController($scope,$state,dataService, $http, config, $roo
 
     $scope.$watch('$viewContentLoaded', function(event) {
         caplet();
+
+        // Test notification
+        // var abc = {
+        //     type: 'info',
+        //     title: 'Info: ',
+        //     content: 'aaaaaaaaaaaaaaaacreatedsuccessfully aaaaaaaaaaaaaaaaa.',
+        //     url: '/#/notiListdemo',
+        //     isread: false,
+        //     createddate: new Date()
+        // };
+        // $rootScope.notify(abc);
     });
 
     /*

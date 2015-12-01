@@ -5,12 +5,12 @@
       "role": [2,3,4]
     },
     {
-      "url": "/admin",
-      "role": [1,2,3,4]
+      "url": "/user/profile/:username",
+      "role": [2,3]
     },
     {
-      "url": "/xyz",
-      "role": [1,2]
+      "url": "/admin",
+      "role": [1,2,3,4]
     },
     {
       "url": "/api/tasks",

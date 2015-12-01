@@ -392,7 +392,12 @@ var putDraff = function(req, res, next){
     });
 };
 
-var cancelOrder = function (req, res, next) {
+/*
+* Store request cance order
+* @author: quyennv - 11/11
+*/
+
+ var cancelOrder = function (req, res, next) {
     var ownerStoreUser = req.user.username;
     var storeID = req.user.stores[0].storeid;
     var orderID = req.body.orderid;
