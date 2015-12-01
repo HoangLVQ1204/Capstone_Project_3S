@@ -8,7 +8,7 @@ module.exports = function(app){
  	app.param('storeid', controller.params);
 
 	app.route('/api/store/getAllLedger')
-		.get(controller.getAllLedger);
+		.get(controller.getAllStoreWithLedger);
 
 	app.route('/api/store/getLatestAutoAccountDate')
 		.get(controller.getLatestAutoAccountDate);
@@ -20,7 +20,7 @@ module.exports = function(app){
 		.get(controller.createStoreID);
 
 	app.route('/api/store/postNewLedger')
-		.post(controller.postNewLedger);
+			.post(controller.postNewLedger);
 
 	app.route('/api/store/getTotalFee')
 		.get(controller.getTotalFee);

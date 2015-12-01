@@ -92,7 +92,8 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
   function getDetailFromServer() {
     var urlBase = config.hostServer + 'api/shipper/detail?taskid=' + $stateParams.orderId;
     dataService.getDataServer(urlBase)
-      .success(function (rs) {
+      .then(function (rs) {
+        rs = rs.data;
         if(rs) {
           $scope.order = rs.detail;
           console.log("DETAIL: ",$scope.order);
@@ -102,9 +103,6 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
           var mode = { type: 'orderdetail', orderID: $scope.order.orderid };
           mapService.setMode(mode);
         }
-      })
-      .error(function (error) {
-        console.log('Unable to load customer data: ' + error);
       });
   }
 

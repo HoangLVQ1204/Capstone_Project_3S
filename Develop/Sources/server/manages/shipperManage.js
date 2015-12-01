@@ -28,6 +28,7 @@ module.exports = function (app) {
                     _.each(tasks, function(task){
                         listTasks.push({
                             'orderid': task.dataValues.orderid,
+                            'orderstatusid': task.dataValues.statusid,
                             'taskid': task['tasks'][0].dataValues.taskid,
                             'typeid': task['tasks'][0].dataValues.typeid,
                             'isPending': task.dataValues.ispending,
@@ -565,7 +566,8 @@ module.exports = function (app) {
     };
 
     /*
-     * Change is pending of order @quyennv
+     * Change is pending of order
+     * @author: quyennv
      */
     var changeIsPending = function(req, res, next) {
         //console.log('quyen', req.user.username);
@@ -595,9 +597,10 @@ module.exports = function (app) {
         var resMess = [
             {"id": 1, "content": "Your Issue is not resolved. Please waiting for Admin or contact to Admin."},
             {"id": 2, "content": "Your all active task is Fail. Please confirm with Admin"},
-            {"id": 3, "content": "You can continue"}
+            {"id": 3, "content": "You can continue"},
+            {"id": 5, "content": "You can Continue"}
         ];
-        return issue.preChangeIsPending(task, order, issuetype, orderissue, shipperid, issueId)
+        return issue.changeIsPendingOfShipper(task, order, issuetype, orderissue, shipperid, issueId)
             .then(function(tasks){
                 var listOrdersOfCurrentShip = [];
                 var listOrdersAsignToOther = [];
@@ -645,7 +648,6 @@ module.exports = function (app) {
                         db.order.getStoresOfOrder(listOrdersOfCurrentShip)
                         .then(function(storeIDs){
                             storeIDs = _.uniq(storeIDs, 'storeid');
-                            console.log("storeID:613", storeIDs);
                             storeIDs = storeIDs.map(function(e){
                                 return e.storeid;
                             });
@@ -655,18 +657,15 @@ module.exports = function (app) {
                             ownerStores = ownerStores.map(function(e) {
                                 return e.toJSON();
                             });
-                            console.log('shipperController:623', ownerStores);
                             //insert to notification
                             var promises = ownerStores.map(function(e) {
                                 var data = _.clone(msgToStore, true);
                                 data.username = e.managerid;
-                                console.log('data', data);
                                 return db.notification.addNotification(data);
                             });
                             return Promise.all(promises);
                         })
                         .then(function (data) {
-                            console.log('shipperController:642', data.length);
                             console.log('send notification continue to store');
                             // send socket
                             var sender = {
@@ -684,8 +683,24 @@ module.exports = function (app) {
                             );
                             server.socket.updatePendingOrder(shipperid, false);
                             // server.socket.updateIssueForShipper(shipperid, false);
-                            //res mesage continue
-                            res.status(200).json(resMess[2]);
+
+                            // Notify order canceled by Store
+                            var haveCancel = false;
+                            console.log("ListOrderOfShipperWhenIssue+++++:688", listOrdersOfCurrentShip)
+                            db.order.getManyOrder(listOrdersOfCurrentShip)
+                            .then(function(orderIDs){
+                                orderIDs = orderIDs.map(function(e) {
+                                    return e.toJSON();
+                                });
+                                console.log("listOrderCanceled+++++++: 694", orderIDs);
+                                if (orderIDs.length > 0) {
+                                    //res message continue, but some order canceled by store
+                                    res.status(200).json(resMess[3]);
+                                } else {
+                                    //res mesage continue
+                                    res.status(200).json(resMess[2]);
+                                }
+                            });
                         });
                     }
                 }
