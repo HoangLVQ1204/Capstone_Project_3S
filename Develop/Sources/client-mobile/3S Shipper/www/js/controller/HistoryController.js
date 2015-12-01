@@ -14,8 +14,8 @@ app.controller('HistoryCtrl', ['$scope', 'dataService', '$localstorage', functio
   function getHistoryFromServer(page) {
     var urlBase = config.hostServer + 'api/shipper/history?page='+page;
     dataFactory.getDataServer(urlBase)
-      .success(function (rs) {
-        console.log(rs);
+      .then(function (rs) {
+        rs = rs.data;
         if($scope.historyorders.length > 0)
         if(rs.current[0].date == $scope.historyorders[$scope.historyorders.length - 1].date){
           $scope.historyorders[$scope.historyorders.length - 1].taskOfDate = $scope.historyorders[$scope.historyorders.length - 1].taskOfDate.concat(rs.current[0].taskOfDate);
@@ -28,10 +28,6 @@ app.controller('HistoryCtrl', ['$scope', 'dataService', '$localstorage', functio
         $scope.historyorders.map(function(it){
           $scope.totalLoaded += it.taskOfDate.length;
         });
-        console.log($scope.totalLoaded);
-      })
-      .error(function (error) {
-        console.log('Unable to load customer data: ' + error);
       });
   }
 

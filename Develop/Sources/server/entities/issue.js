@@ -56,7 +56,7 @@ module.exports = function(sequelize, DataTypes) {
       createNewIssue: function(newIssue){
         return issue.create({typeid: newIssue.typeid, description: newIssue.description, isresolved: newIssue.isresolved, resolvetype: newIssue.resolvetype, createddate: newIssue.createddate, sender: newIssue.sender});
       },
-      preChangeIsPending: function(task, order, issuetype, orderissue, shipperId, issueId){
+      changeIsPendingOfShipper: function(task, order, issuetype, orderissue, shipperId, issueId){
         return issue.findAll({
           attributes: ['issueid', 'typeid', 'isresolved'],
           where: {'issueid': issueId},
