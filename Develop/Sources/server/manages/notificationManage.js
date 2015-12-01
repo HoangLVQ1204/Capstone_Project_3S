@@ -7,28 +7,16 @@ var _ = require('lodash');
 module.exports = function (app) {
     var db = app.get('models');
 
-    var getTotal = function(req, res, next) {
-        var username = req.user.username;
-        db.notification.getTotalNumberOfNotifications(username)
-        .then(function(c) {
-            res.status(200).json(c);
-        });
+    function getTotal(username) {
+        return db.notification.getTotalNumberOfNotifications(username);
     };
 
-    var getTotalUnread = function(req, res, next) {
-        var username = req.user.username;
-        db.notification.getTotalUnreadNotifications(username)
-        .then(function(c) {
-            res.status(200).json(c);
-        });
+    function getTotalUnread(username) {
+        return db.notification.getTotalUnreadNotifications(username);
     };
 
-    var get = function(req, res, next) {
-        console.log('notificationManage GET', req.query);
-        var username = req.user.username;
-        var offset = parseInt(req.query.offset);
-        var limit = parseInt(req.query.limit);
-        db.notification.getNotifications(username, offset, limit)
+    function getPageNotifications(username, offset, limit) {        
+        return db.notification.getNotifications(username, offset, limit)
         .then(function(items) {
             items = items.map(function(e) {
                 var temp = e.toJSON();
@@ -36,42 +24,35 @@ module.exports = function (app) {
                 return temp;
             });
             // console.log('items', items);
-            res.status(200).json(items);
+            return items;
         });
     };
 
-    var post = function(req, res, next) {
-        console.log('notificationManage POST');
-        var notification = req.body;
-        notification.username = req.user.username;        
-        db.notification.addNotification(notification)
+    function addNotification(notification) {
+        // console.log('notificationManage POST');        
+        if (!notification.username) 
+            notification.username = req.user.username;        
+        return db.notification.addNotification(notification)
         .then(function(data) {
-            res.status(201).json(data.toJSON());
+            return data.toJSON();            
         });
     };
 
-    var put = function(req, res, next) {
-        console.log('notificationManage PUT');
-        var notification_id = req.params.notification_id;
-        var data = req.body;
+    function updateNotification(data, notification_id) {
+        // console.log('notificationManage PUT');        
         data.notification_id = notification_id;
         // console.log('put', data);
-        db.notification.updateNotification(data)
+        return db.notification.updateNotification(data)
         .then(function(data) {   
-            res.status(200).json(data.length);
+            return data.length;
         });
-    };
-
-    var postFromSever = function(notification) {
-        return db.notification.addNotification(notification);
     };
 
     return {
         getTotal: getTotal,
         getTotalUnread: getTotalUnread,
-        get: get,
-        post: post,
-        put: put,
-        postFromSever: postFromSever
+        getPageNotifications: getPageNotifications,
+        addNotification: addNotification,
+        updateNotification: updateNotification
     }
 }

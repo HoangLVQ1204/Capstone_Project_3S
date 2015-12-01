@@ -99,8 +99,8 @@ module.exports = function (app) {
                 //Check Task of shipper
                 db.order.getLastestTasksOfShipper(db.task, shipperID)
                 .then(function (tasks) {
+
                     //TODO: a order have two 3,4 task
-                    // console.log('++++++++++', tasks);
                     if (_.isEmpty(tasks) == false) {
                         _.each(tasks, function(task){
                                 listOrders.push(task.orderid);
@@ -118,6 +118,7 @@ module.exports = function (app) {
                                 isread: false,
                                 createddate: new Date()
                             };
+
                             var msgDisconnectToStore = {
                                 type: 'info',
                                 title: 'Warning',
@@ -126,6 +127,7 @@ module.exports = function (app) {
                                 isread: false,
                                 createddate: new Date()
                             };
+
                             // update task status to 'Processing'
                             db.task.getTaskOfShipperByOrder(shipperID, 'pending', [])
                             .then(function(items){
