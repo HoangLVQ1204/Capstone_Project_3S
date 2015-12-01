@@ -89,7 +89,7 @@ module.exports = function(sequelize, DataTypes) {
           where: {
             username: username
           }
-        }).then(sequelize.handler);
+        });
       },
 
 

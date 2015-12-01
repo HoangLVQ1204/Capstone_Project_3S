@@ -25,12 +25,13 @@ module.exports = function (app) {
 
         return db.generalledger.getLatestAutoAccountDate()
             .then(function (ledger) {
-                db.generalledger.getLedgerOfStore(db.store, storeid, perioddate, ledger.paydate)
-                    .then(function (ledgerList) {
-                        res.status(200).json(ledgerList);
-                    }, function (err) {
-                        next(err);
-                    })
+                if (ledger != null)
+                    db.generalledger.getLedgerOfStore(db.store, storeid, perioddate, ledger.paydate)
+                        .then(function (ledgerList) {
+                            res.status(200).json(ledgerList);
+                        }, function (err) {
+                            next(err);
+                        })
         }, function (err) {
                 next(err);
             })

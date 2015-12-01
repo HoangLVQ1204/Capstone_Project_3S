@@ -159,6 +159,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
         });
       });
     }
+    console.log("listOrderActive", $scope.listOrderActive);
     //Fill to "Order" dropdown list
     $scope.selectable = listOrderInactive;
     //Fill to "Order" dropdown list
@@ -296,6 +297,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
         if (issue.category.categoryID == 1) {
 
           //$scope.listOrders
+          console.log("listOrderActiveAAAAA", $scope.listOrderActive);
           listOrders = $scope.listOrderActive;
           if (listOrders.length == 0) {
             var msg5 = {

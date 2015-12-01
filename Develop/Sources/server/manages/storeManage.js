@@ -33,25 +33,22 @@ module.exports = function(app) {
         res.status(200).json(req.store.toJSON());
     };
     //
-    var postNewStore = function(req, res, next) {
-        var newStore = req.body;
-        console.log(newStore.address);
+    var postNewStore = function(newStore) {
+       // console.log(newStore.address);
         //return
-         gmapUtil.getLatLng(newStore.address).then(function (map) {
+        return gmapUtil.getLatLng(newStore.address).then(function (map) {
             newStore['latitude'] = map.latitude+"";
             newStore['longitude'] = map.longitude+"";
-            console.log('MAP', newStore)
+            //console.log('MAP', newStore)
         }, function(err) {
-            next(err);
+            throw err;
         }).then(function () {
-            db.store.postOneStore(newStore)
+            return db.store.postOneStore(newStore)
                 .then(function(store) {
-                    res.status(201).json(store);
-                }, function(err) {
-                    next(err);
+                    return store;
                 });
         }, function(err) {
-            next(err);
+             throw err;
         })
     };
     //
@@ -80,12 +77,12 @@ module.exports = function(app) {
             })
     };
 
-    var getLatestLedgerOfStore = function(req, res, next){
-        return db.generalledger.getLatestLedgerOfStore(req.store.storeid)
+    var getLatestLedgerOfStore = function(storeid){
+        return db.generalledger.getLatestLedgerOfStore(storeid)
             .then(function(ledger) {
-                res.status(200).json(ledger);
+                return ledger;
             }, function(err) {
-                next(err);
+                throw err;
             })
     };
 
@@ -178,28 +175,7 @@ module.exports = function(app) {
             })
     };
 
-    var updateLedgerForOrder = function(req, res, next){
-        var store = req.store;
-        var ledger;
-        return db.generalledger.getLatestAutoAccountWithStoreID(store.storeid)
-            .then(function(total) {
-                ledger = total;
-            }, function(err) {
-                next(err);
-            }).then(function () {
-                if (ledger != null)
-                db.order.updateLedgerForOrder(store.storeid, ledger.paydate, ledger.ledgerid)
-                    .then(function(ledger) {
-                        res.status(201).json(ledger);
-                    }, function(err) {
-                        next(err);
-                    });
-            })
-
-    };
-
-    var updateLedgerForOrderAfterAuto = function(storeid){
-        //var store = req.store;
+    var updateLedgerForOrder = function(storeid){
         var ledger;
         return db.generalledger.getLatestAutoAccountWithStoreID(storeid)
             .then(function(total) {
@@ -207,24 +183,24 @@ module.exports = function(app) {
             }, function(err) {
                 next(err);
             }).then(function () {
+                if (ledger != null)
                 db.order.updateLedgerForOrder(storeid, ledger.paydate, ledger.ledgerid)
                     .then(function(ledger) {
+                        return ledger;
                     }, function(err) {
-                        next(err);
+                        throw err;
                     });
             })
 
     };
 
-    var postNewLedger = function(req, res, next){
-        var newLedger = req.body;
+    var postNewLedger = function(newLedger){
         return db.generalledger.postNewLedger(newLedger)
             .then(function(ledger) {
-                console.log(ledger);
-                res.status(201).json(ledger);
+                //console.log(ledger);
+                return ledger;
             }, function(err) {
-                console.log(err);
-                next(err);
+                throw err;
             });
     };
 
@@ -243,20 +219,19 @@ module.exports = function(app) {
 
     };
 
-    var getStoreDetail = function(req,res,next){
-
-        db.store.getStoreDetail(req.store.storeid, db.managestore, db.user, db.profile)
+    var getStoreDetail = function(storeid){
+        return db.store.getStoreDetail(storeid, db.managestore, db.user, db.profile)
             .then(function (store) {
-                res.status(200).json(store);
-            }, function () {
-                next(new Error("Can not find store name!"))
+                return store;
+            }, function (err) {
+                throw err;
             });
 
     };
 
     var getAllInactiveStore = function(req,res,next){
 
-        db.store.getAllInactiveStore(db.managestore, db.user, db.profile)
+        return db.store.getAllInactiveStore(db.managestore, db.user, db.profile)
             .then(function (store) {
                 res.status(200).json(store);
             }, function () {
@@ -298,32 +273,34 @@ module.exports = function(app) {
         } while (isExisted);
     };
 
-    var createStoreID = function(req, res, next){
+    var createStoreID = function(){
         var isExisted = false;
+        var promise;
         do
         {
             var str = "000" + parseInt(Math.random()*1000000);
             var formatStr = str.substr(str.length - 3);
             var newStoreID = "STR" + formatStr;
             //console.log(newShipperID);
-            db.store.getOneStore(newStoreID)
+            promise = db.store.getOneStore(newStoreID)
                 .then(function(store){
                     //console.log(newShipperID, shipper);
                     if(!store){
                         //console.log('AAA');
                         isExisted = true;
-                        res.status(200).json(newStoreID);
+                        return newStoreID;
                     }
                 },function(err){
-                    //console.log(newShipperID, shipper);
-                    res.status(400).json("Can not get new storeid");
+                    throw err;
                 });
         } while (isExisted);
+
+        return promise;
     };
 
     var postNewManageStore = function(req, res, next) {
         var newManageStore = req.body;
-        console.log(newManageStore);
+        //console.log(newManageStore);
         // newUser.Token = newUser.storeid;
         return db.managestore.addNewManageStore(newManageStore)
             .then(function(newManageStore) {
@@ -347,7 +324,7 @@ module.exports = function(app) {
             del: del,
             params: params,
             getLatestLedgerOfStore: getLatestLedgerOfStore,
-           getAllStoreWithLedger: getAllStoreWithLedger,
+            getAllStoreWithLedger: getAllStoreWithLedger,
             getTotalFee: getTotalFee,
             getTotalCoD: getTotalCoD,
             getLatestAutoAccountDate: getLatestAutoAccountDate,
@@ -360,8 +337,7 @@ module.exports = function(app) {
             createStoreOwnerID: createStoreOwnerID,
             createStoreID: createStoreID,
             postNewManageStore: postNewManageStore,
-            getAllStores: getAllStores,
-            updateLedgerForOrderAfterAuto: updateLedgerForOrderAfterAuto
+            getAllStores: getAllStores
 
     }
 }

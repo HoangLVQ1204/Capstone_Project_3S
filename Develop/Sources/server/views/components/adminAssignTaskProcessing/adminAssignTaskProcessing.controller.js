@@ -84,14 +84,7 @@ function adminAssignTaskProcessingController($scope,$state, $rootScope, authServ
                 });
                 $scope.moveAllProcessingTask($scope.originShipperID);
 
-                //get issueDetail
-                dataService.getDataServer(config.baseURI + "/api/getIssueContent?issueid=" + $scope.issueid).then(function(response){
-                    $scope.issue = response.data;
-                    $scope.issue.orderissues.map(function (order) {
-                        order.order.tasks.sort(dateSort);
-                        order.order.tasks.splice(1,order.order.tasks.length-1);
-                    });
-                })
+
             })
     })
 
@@ -219,40 +212,50 @@ function adminAssignTaskProcessingController($scope,$state, $rootScope, authServ
 
     //function resolve continue issue
     function resolveChangeShipperIssue(){
-        //console.log($scope.issue);
-        $scope.issue.orderissues.map(function (issue) {
-            //issue.order.tasks[0].statusid = 2;//fail task
-            issue.order.ispending= false;//cancel order
-            //issue.order.fee= parseInt(issue.order.fee) * 0.1;//cancel order
-        });
-        $scope.issue.resolvetype = 2;
-        //console.log($scope.issue.orderissues);
-        dataService.putDataServer(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue).then(function success(response){
-            var promise = dataService.putDataServer(config.baseURI + "/api/updateResolveIssue?issueid=" + $scope.issueid, $scope.issue).then(function(response){
-                //$scope.issue = response;
-                //$scope.issue.isresolved = true;
-                //var result = $.grep($scope.$parent.issueList, function(e){ return e.issueid == $scope.issueid; });
-                //if (result.length == 1) {
-                //    result[0].isresolved = true;
-                //}
-
-            }).catch(function (error) {
-                smsData.theme="danger";
-                $.notific8($("#sms-fail").val(), smsData);
-                //console.log(error)
+        //get issueDetail
+        dataService.getDataServer(config.baseURI + "/api/getIssueContent?issueid=" + $scope.issueid).then(function(response){
+            $scope.issue = response.data;
+            $scope.issue.orderissues.map(function (order) {
+                order.order.tasks.sort(dateSort);
+                order.order.tasks.splice(1,order.order.tasks.length-1);
             });
-            promise.then(function () {
-                socketAdmin.issueMessage($scope.issue);
-                $rootScope.unreadMail--;
-                smsData.theme="theme-inverse";
-                $("#md-effect-dialog").attr('class','modal fade').addClass(smsData.effect).modal('show');
-                //alert('Change success');
+        }).then(function () {
+            $scope.issue.orderissues.map(function (issue) {
+                //issue.order.tasks[0].statusid = 2;//fail task
+                issue.order.ispending= false;//cancel order
+                //issue.order.fee= parseInt(issue.order.fee) * 0.1;//cancel order
+            });
+            $scope.issue.resolvetype = 2;
+            //console.log($scope.issue.orderissues);
+            dataService.putDataServer(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue).then(function success(response){
+                var promise = dataService.putDataServer(config.baseURI + "/api/updateResolveIssue?issueid=" + $scope.issueid, $scope.issue).then(function(response){
+                    //$scope.issue = response;
+                    //$scope.issue.isresolved = true;
+                    //var result = $.grep($scope.$parent.issueList, function(e){ return e.issueid == $scope.issueid; });
+                    //if (result.length == 1) {
+                    //    result[0].isresolved = true;
+                    //}
+
+                }).catch(function (error) {
+                    smsData.theme="danger";
+                    $.notific8($("#sms-fail").val(), smsData);
+                    //console.log(error)
+                });
+                promise.then(function () {
+                    socketAdmin.issueMessage($scope.issue);
+                    $rootScope.unreadMail--;
+                    smsData.theme="theme-inverse";
+                    $("#md-effect-dialog").attr('class','modal fade').addClass(smsData.effect).modal('show');
+                    //alert('Change success');
+                })
             })
         }).catch(function (error) {
             smsData.theme="danger";
             $.notific8($("#sms-fail").val(), smsData);
             console.log(error)
         })
+        //console.log($scope.issue);
+
 
     }
 
@@ -260,13 +263,16 @@ function adminAssignTaskProcessingController($scope,$state, $rootScope, authServ
     //FUNCTION move processing task away shipper has issue
     //-----------------------------------
     $scope.moveAllProcessingTask = function(shipperid){
+
         var originShipper = $.grep($scope.tasksList, function(e){ return e.username ==  shipperid;});
-        $scope.orderList = $scope.orderList.concat(originShipper[0].tasks.slice(0,originShipper[0].tasks.length));
-        originShipper[0].tasks.splice(0,originShipper[0].tasks.length);
-        //originShipper[0].tasks = [];
-        $scope.orderList.map(function (shipper) {
-            shipper.shipperid = null;
-        })
+        if (originShipper[0].tasks.length>0){
+            $scope.orderList = $scope.orderList.concat(originShipper[0].tasks.slice(0,originShipper[0].tasks.length));
+            originShipper[0].tasks.splice(0,originShipper[0].tasks.length);
+            //originShipper[0].tasks = [];
+            $scope.orderList.map(function (shipper) {
+                shipper.shipperid = null;
+            })
+        }
         //console.log(originShipper[0].tasks);
         //console.log($scope.orderList);
     }
@@ -296,6 +302,7 @@ function adminAssignTaskProcessingController($scope,$state, $rootScope, authServ
         //$scope.$parent.$apply();
         $scope.orderList.splice(0,$scope.orderList.length);
         //$scope.orderList = [];
+        //console.log($scope.tasksList);
         //console.log(originShipper[0].tasks);
         //console.log($scope.orderList);
     }
