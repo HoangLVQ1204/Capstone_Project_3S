@@ -388,11 +388,7 @@ var updateExpressOrder = function (req, res, next) {
 * @author: quyennv - 11/11
 */
 
-var cancelOrder = function (req, res, next) {
-    var ownerStoreUser = req.user.username;
-    var storeID = req.user.stores[0].storeid;
-    var orderID = req.body.orderid;
-    console.log('orderID:414: ', orderID);
+var cancelOrder = function (ownerStoreUser, storeID, orderID) {
 
     var issueCancel = {
         typeid: 7,
@@ -402,14 +398,16 @@ var cancelOrder = function (req, res, next) {
         createddate: new Date(),
         sender: ownerStoreUser
     };
+
    //Add new issue
-   db.issue.createNewIssue(issueCancel)
+   return db.issue.createNewIssue(issueCancel)
    .then(function(issue){
         //create new orderissue
         var newOrderIssue = {};
         newOrderIssue.issueid = issue.issueid;
         newOrderIssue.orderid = _.clone(orderID, true);
         db.orderissue.createOrderIssue(newOrderIssue);
+
         //msg to Admin
         var msgRequestCancel = {
             type: 'issue',
@@ -419,7 +417,8 @@ var cancelOrder = function (req, res, next) {
             isread: false,
             createddate: new Date()
         };
-        //Update status order = cancelling
+
+        //Update isCancel = true
         db.order.getOneOrder(orderID)
         .then(function(orders){
             orders = orders.toJSON();
@@ -455,11 +454,12 @@ var cancelOrder = function (req, res, next) {
             msgRequestCancel,
             'admin::issue:cancelorder'
             );
+
+        return true;
+
     });
-        //res status code
-        res.status(200).json('OK');
     }, function(err){
-        next(err);
+        throw err;
     })
 };
 

@@ -4,6 +4,7 @@
 
 var _ = require('lodash');
 var configConstant = require('../config/configConstant');
+var Q = require('q');
 // var server = require('../server');
 
 module.exports = function (app) {
@@ -16,8 +17,8 @@ module.exports = function (app) {
      * Get All Task Inactive, Active, Processing of Shipper by shipperID
      * @author: quyennv
      */
-    var getTasks = function (req, res, next) {
-        var shipperid = req.user.username;
+    var getTasks = function (shipperid) {
+        // var shipperid = req.user.username;
         var task = db.task;
 
         return db.order.getAllTaskOfShipper(task, shipperid)
@@ -56,9 +57,10 @@ module.exports = function (app) {
                         }
                     });
                 }
-                res.status(200).json(group);
+                return group;
+
             }, function (err) {
-                next(err);
+                throw err;
             })
     };
 
@@ -350,31 +352,28 @@ module.exports = function (app) {
      * @author: quyennv - 6/11
      */
 
-    var createIssuePending = function (req, res, next) {
+    var createIssuePending = function (shipperID, issue, orders, categoryissue) {
         var issueType;
         var task = db.task;
-        var listStores = [];        
+        var listStores = [];
 
         //Instance new Issue
-        var newIssue = _.cloneDeep(req.body[0].issue);
-        var shipperID = req.user.username;
+        var newIssue = _.cloneDeep(issue);
         newIssue.isresolved = false;
         newIssue.resolvetype = null;
         newIssue.createddate = new Date();
         newIssue.sender =  shipperID;
-        var orders = _.cloneDeep(req.body[0].orders);
-        var categoryissue = _.cloneDeep(req.body[0].categoryissue);
 
         // Update status of shipper
         server.socket.updateIssueForShipper(shipperID, true);
 
-        console.log('shipperController:357 -- newIssue', newIssue);
-        db.issue.createNewIssue(newIssue)
+        return db.issue.createNewIssue(newIssue)
             .then(function(issue) {
                 issueType = issue.dataValues.typeid;
                 //UPDATE task status of task to 'Processing'
                 //Case: Pending
                 var newStatus = 4;
+
                 if (_.parseInt(categoryissue) === 1) {
                     task.getTaskOfShipperByOrder(shipperID, 'pending', [])
                         .then(function(items){
@@ -419,7 +418,7 @@ module.exports = function (app) {
                 // Lay adminID
                 // Sinh ra cac notification and insert vao bang notification
                 var receiver = [
-                    { room: req.user.username },
+                    { room: shipperID },
                     'admin'
                 ];
 
@@ -428,7 +427,7 @@ module.exports = function (app) {
                     title: 'Issue:',
                     content: 'Shipper ' + shipperID + ' sent an issue.',
                     url: '#/admin/issueBox?content?issueid=' + issue.dataValues.issueid,
-                    isread: false,            
+                    isread: false,
                     createddate: new Date()
                 };
 
@@ -463,7 +462,6 @@ module.exports = function (app) {
                 })
                 .then(function (storeIDs) {
                     storeIDs = _.uniq(storeIDs, 'storeid');
-                    console.log('StoreID:463', storeIDs);
                     storeIDs = storeIDs.map(function(e){
                         return e.storeid;
                     });
@@ -485,7 +483,7 @@ module.exports = function (app) {
                     });
 
                     return Promise.all(promises);
-                    
+
                 })
                 .then(function(data) {
                     console.log('shipperController:480', data.length);
@@ -533,20 +531,6 @@ module.exports = function (app) {
 
                 });
 
-                //Respon data
-
-                // Insert into orderissue
-                //var newOrderIssue = {};
-                //newOrderIssue.issueid = issue.issueid;
-                //var isPending = true;
-                //_.each(orders, function(orderID) {
-                //    newOrderIssue.orderid = orderID;
-                //    db.orderissue.createOrderIssue(newOrderIssue);
-                //    if (_.parseInt(categoryissue) === 1) {
-                //        //Change isPending
-                //        db.order.changeIsPendingOrder(orderID, isPending);
-                //    }
-                //});
                 var group = [];
                 group.push({
                     'issueid': issue.dataValues.issueid,
@@ -559,9 +543,10 @@ module.exports = function (app) {
                     server.socket.updatePendingOrder(shipperID, true);
                 };
 
-                res.status(200).json(group);
+                return group;
+
             }, function (err) {
-                next(err);
+                throw err;
             });
     };
 
@@ -569,10 +554,10 @@ module.exports = function (app) {
      * Change is pending of order
      * @author: quyennv
      */
-    var changeIsPending = function(req, res, next) {
-        //console.log('quyen', req.user.username);
-        var shipperid = req.user.username;
-        var issueId = req.body.issueId;
+    var changeIsPending = function(shipperid, issueId) {
+        // var shipperid = req.user.username;
+        // var issueId = req.body.issueId;
+        var result;
         var task = db.task;
         var order = db.order;
         var orderissue = db.orderissue;
@@ -604,12 +589,13 @@ module.exports = function (app) {
             .then(function(tasks){
                 var listOrdersOfCurrentShip = [];
                 var listOrdersAsignToOther = [];
+                var deferred = Q.defer()
                 if(_.isEmpty(tasks) == false) {
+
                     _.each(tasks, function(task){
                         //Issue of current task not resolved -> Waiting for Admin
                         if (task.isresolved == false) {
-                            //console.log(resMess[0]);
-                            res.status(200).json(resMess[0]);
+                            deferred.resolve(resMess[0]);
                         } else {
                             _.each(task['orderissues'], function(item) {
                                 //If admin assign task for another shipper
@@ -622,14 +608,12 @@ module.exports = function (app) {
                             })
                         }
                     });
+
                     if (listOrdersAsignToOther.length > 0) {
-                        //TODO: Assign to other shipper. Current shipper cannot update order
-                        //_.each(listOrdersFail, function(orderID) {
-                        //    //Change isPending
-                        //    db.order.changeIsPendingOrder(orderID, false);
-                        //});
-                        res.status(200).json(resMess[1]);
+                        result = resMess[1];
+                        deferred.resolve(resMess[1]);
                     }
+
                     if (listOrdersOfCurrentShip.length > 0) {
                         var msgToStore = {
                             type: 'info',
@@ -641,7 +625,7 @@ module.exports = function (app) {
                         };
                         //change isPending of Order
                         _.each(listOrdersOfCurrentShip, function(orderID) {
-                            //Change isPending
+                            //change isPending
                             db.order.changeIsPendingOrder(orderID, false);
                         });
                         //add new notification
@@ -685,7 +669,6 @@ module.exports = function (app) {
                             // server.socket.updateIssueForShipper(shipperid, false);
 
                             // Notify order canceled by Store
-                            var haveCancel = false;
                             console.log("ListOrderOfShipperWhenIssue+++++:688", listOrdersOfCurrentShip)
                             db.order.getManyOrder(listOrdersOfCurrentShip)
                             .then(function(orderIDs){
@@ -695,17 +678,19 @@ module.exports = function (app) {
                                 console.log("listOrderCanceled+++++++: 694", orderIDs);
                                 if (orderIDs.length > 0) {
                                     //res message continue, but some order canceled by store
-                                    res.status(200).json(resMess[3]);
+                                    deferred.resolve(resMess[3]);
                                 } else {
                                     //res mesage continue
-                                    res.status(200).json(resMess[2]);
+                                    deferred.resolve(resMess[2]);
                                 }
                             });
                         });
                     }
+
+                    return deferred.promise;
                 }
             }, function(err) {
-                next(err);
+                throw err;
             })
     };
 
@@ -948,8 +933,7 @@ module.exports = function (app) {
     * @author: quyennv
     */
 
-    var getTaskBeIssuePending = function (req, res, next) {
-        var shipperid = req.user.username;
+    var getTaskBeIssuePending = function (shipperid) {
         var task = db.task;
         var order = db.order;
         var orderissue = db.orderissue;
@@ -986,9 +970,11 @@ module.exports = function (app) {
                             });
                     });
                 }
-                res.status(200).json(group);
+
+                return group;
+
             }, function(err) {
-                next(err);
+                throw err;
             })
     };
 

@@ -34,8 +34,17 @@ module.exports = function (app) {
         .put(checkAll,controller.updateOrder)
         .delete(checkAll,controller.deleteOrder);
 
-    app.route('/store/orders/cancel')
-        .post(checkAll,controller.cancelOrder);
+    app.route('/store/orders/cancel').post(checkAll,function(req, res, next) {
+        var ownerStoreUser = req.user.username;
+        var storeID = req.user.stores[0].storeid;
+        var orderID = req.body.orderid;
+        controller.cancelOrder(ownerStoreUser, storeID, orderID).then(function(data) {
+            res.status(200).json('OK');
+        })
+        .catch(function(err) {
+            next(err);
+        })
+    });
 
      app.route('/api/store/getAllOrder')
         .get(checkAll, controller.storeGetOrderList);
