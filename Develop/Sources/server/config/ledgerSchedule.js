@@ -25,7 +25,7 @@ module.exports = function(app) {
 			datePromise.then(function(){
 				db.store.getAllStores()
 					.then(function (list) {
-						console.log(date);
+
 						storeList = list;
 						var promise = [];
 						storeList.map(function (store) {

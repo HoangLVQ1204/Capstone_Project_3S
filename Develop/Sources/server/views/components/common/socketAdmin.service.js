@@ -62,8 +62,14 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
     });
 
     socketService.on('shipper:change:order:status',function(data){
-        $rootScope.$emit("shipper:change:order:status", data.msg);
-    })
+        $rootScope.$emit("admin:change:order:status", data.msg);
+        $rootScope.notify(data.msg, 1);
+    });
+
+    socketService.on('shipper:change:task:status',function(data){
+        $rootScope.$emit("shipper:change:task:status", data.msg);
+        $rootScope.notify(data.msg, 1);
+    });
 
     api.getCurrentUser = function() {
         var currentUser = authService.getCurrentInfoUser();        
