@@ -176,7 +176,6 @@ module.exports = function (app) {
 
                 var feeSum = parseInt(row['feeSum']) ? parseInt(row['feeSum']) : 0;
                 var codSum = parseInt(row['codSum']) ? parseInt(row['codSum']) : 0;
-                var type = row['type'];
                 var month = row['month'];
                 var year = row['year'];
                 var store = row['store'];
@@ -194,8 +193,11 @@ module.exports = function (app) {
                     "types": []
                 });
                 var typeIndex = pushIntoArray(rs[storeIndex].years[yearIndex].months[monthIndex].types, {
-                    "name": type,
-                    "feeNum": feeSum,
+                    "name": 1,
+                    "feeNum": feeSum
+                });
+                var typeIndex = pushIntoArray(rs[storeIndex].years[yearIndex].months[monthIndex].types, {
+                    "name": 2,
                     "codNum": codSum
                 });
 
@@ -213,8 +215,11 @@ module.exports = function (app) {
                     "types": []
                 });
                 typeIndex = pushIntoArray(rs[storeIndex].years[yearIndex].months[monthIndex].types, {
-                    "name": type,
-                    "feeNum": feeSum,
+                    "name": 1,
+                    "feeNum": feeSum
+                });
+                typeIndex = pushIntoArray(rs[storeIndex].years[yearIndex].months[monthIndex].types, {
+                    "name": 2,
                     "codNum": codSum
                 });
             });
