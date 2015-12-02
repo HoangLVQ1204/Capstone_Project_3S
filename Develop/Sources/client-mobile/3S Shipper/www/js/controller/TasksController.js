@@ -96,7 +96,7 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
 		getListOfTask();
 		$ionicLoading.hide();
 	  }
-	  if (des.id == 3) {
+	  if (des.id == 3 || des.id == 5) {
 	  	// Shipper continue
 	  	socketShipper.updateHaveIssue(false);
 	  }
