@@ -80,7 +80,8 @@ module.exports = function(sequelize, DataTypes) {
             }]
           }]
         });
-        return issue.build({categoryid: newIssue.categoryID, reason: newIssue.reason, description: newIssue.description}).save();
+        //?????
+        // return issue.build({categoryid: newIssue.categoryID, reason: newIssue.reason, description: newIssue.description}).save();
       },
 
       getAllIssue: function (issuetype, issuecategory) {
