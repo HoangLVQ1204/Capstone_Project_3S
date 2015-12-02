@@ -1,6 +1,7 @@
 /**
  * Created by hoanglvq on 10/13/15.
  */
+var _ = require('lodash');
 
 module.exports = function (app) {
 
@@ -29,10 +30,25 @@ module.exports = function (app) {
     app.put('/api/changeIsPendingOrder', checkAll, shipperCtrl.changeIsPending);
 
     app.route('/api/shipper/history')
-        .get(checkAll, shipperCtrl.getHistory);
+        .get(checkAll, function (req, res, next) {
+            var shipper = _.cloneDeep(req.user);
+            var shipperid = shipper.username;
+            var page = _.cloneDeep(req.query.page);
+            page = page ? page : 0;
+            shipperCtrl.getHistory(shipperid, page).then(function(history){
+                return res.status(200).json(history);
+            })
+        });
 
     app.route('/api/shipper/detail')
-        .get(checkAll, shipperCtrl.getDetail);
+        .get(checkAll, function (req, res, next) {
+            var detailtaskid = req.query.taskid;
+            var shipper = _.cloneDeep(req.user);
+            var shipperid = shipper.username;
+            shipperCtrl.getDetail(shipperid, detailtaskid).then(function(rs){
+                return res.status(200).json(rs);
+            })
+        });
 
     app.param('detailtaskid', shipperCtrl.paramOrderId);
 
@@ -40,7 +56,14 @@ module.exports = function (app) {
         .get(shipperCtrl.getOrderStatusList);
 
     app.route('/api/shipper/nextstep')
-        .put(checkAll, shipperCtrl.nextStep);
+        .put(checkAll, function (req, res, next) {
+            var shipper = _.cloneDeep(req.user);
+            var shipperid = shipper.username;
+            var data = _.cloneDeep(req.body);
+            shipperCtrl.nextStep(shipperid, data).then(function(rs){
+                return res.status(200).json(rs);
+            })
+        });
 
     app.route('/api/shipper/mapdata/:order')
         .get(shipperCtrl.getMapData);
