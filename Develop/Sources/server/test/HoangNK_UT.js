@@ -86,19 +86,19 @@ describe("ADMINFUNCTIONS TEST:", function () {
         //});
 
         var store2 = {
-                'username' : 'STR111',
+                'storeid' : 'STR112',
                 'name': '3S Food',
                 'description': 'Food',
                 'address': 'So 36, Xuan Thuy, Cau Giay, Ha Noi',
-                'dob': '01/01/1993',
                 'email': 'nguyenvana@gmail.com',
                 'phonenumber': '0986468965',
                 'avatar': './default.png',
-                'registereddate': './default.png',
+                'registereddate': new Date()
 
         }
         it("Test case AD_Function2_02", function (done) {
             storeManage.postNewStore(store2).then(function (rs){
+                //console.log(rs);
                 expect(rs).to.be.not.null;
                 done();
             },function(er){
@@ -107,7 +107,7 @@ describe("ADMINFUNCTIONS TEST:", function () {
         });
 
         it("Test case AD_Function2_03", function (done) {
-            userManage.addNewUser(user2).then(function (rs){
+            storeManage.postNewStore(store2).then(function (rs){
             },function(er){
                 //console.log(er);
                 expect(er).to.be.not.null;

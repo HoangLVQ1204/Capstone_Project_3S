@@ -264,15 +264,9 @@ function adminAssignTaskProcessingController($scope,$state, $rootScope, authServ
     //-----------------------------------
     $scope.moveAllProcessingTask = function(shipperid){
 
-        var originShipper = $.grep($scope.tasksList, function(e){ return e.username ==  shipperid;});
-        if (originShipper[0].tasks.length>0){
-            $scope.orderList = $scope.orderList.concat(originShipper[0].tasks.slice(0,originShipper[0].tasks.length));
-            originShipper[0].tasks.splice(0,originShipper[0].tasks.length);
-            //originShipper[0].tasks = [];
-            $scope.orderList.map(function (shipper) {
-                shipper.shipperid = null;
-            })
-        }
+        var i=0;
+        while (i<$scope.taskList.length)
+            $scope.pickTask($scope.taskList[i]);
         //console.log(originShipper[0].tasks);
         //console.log($scope.orderList);
     }
@@ -292,15 +286,10 @@ function adminAssignTaskProcessingController($scope,$state, $rootScope, authServ
             $.notific8($("#sms-fail-assign").val(), data);
             return;
         }
-        //var originShipper = $.grep($scope.tasksList, function(e){ return e.username ==  shipperid;});
-        for(i=0;i<$scope.orderList.length;i++)
-        {
-            $scope.orderList[i].shipperid = $scope.pickedShipper.username;
-            $scope.pickedShipper.tasks.push($scope.orderList[i]);
-            //console.log($scope.orderList[i]);
+        var i = 0;
+        while (i<$scope.orderList.length) {
+            $scope.pickOrder($scope.orderList[i]);
         }
-        //$scope.$parent.$apply();
-        $scope.orderList.splice(0,$scope.orderList.length);
         //$scope.orderList = [];
         //console.log($scope.tasksList);
         //console.log(originShipper[0].tasks);
