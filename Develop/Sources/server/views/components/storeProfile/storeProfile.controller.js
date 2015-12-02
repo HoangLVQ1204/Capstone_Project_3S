@@ -5,8 +5,7 @@
 function storeProfileController($scope,$state,dataService, $http, $filter, config, $stateParams) {
     var smsData = {verticalEdge: 'right',
         horizontalEdge: 'bottom'};
-    //$scope.newShipper.profile.dob = null;
-
+    
     getStoreProfile();
     function getStoreProfile(){
         var urlBase = config.baseURI + '/api/storeDetail';

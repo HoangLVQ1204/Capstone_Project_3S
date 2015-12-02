@@ -121,11 +121,12 @@ function adminDashboardController($scope,$state,dataService, config, $rootScope,
         $scope.onlineShipper = socketAdmin.listOnlineShipper.length;
     });
 
-    $rootScope.$emit("shipper:change:order:status", function(event,args){
+    $rootScope.$on("shipper:change:order:status", function(event,args){
+        //alert(2);
         getDataFromServer();
     });
 
-    $rootScope.$emit("shipper:change:task:status", function(event,args){
+    $rootScope.$on("shipper:change:task:status", function(event,args){
         getDataFromServer();
     });
 }

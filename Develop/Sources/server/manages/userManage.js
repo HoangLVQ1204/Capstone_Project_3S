@@ -93,22 +93,24 @@ module.exports = function(app) {
     };
 
     //function add new Shipper to system
-    var addNewUser = function(req, res, next){
-        var user = req.body;
+    var addNewUser = function(user){
+        var data;
+        if (user==null) {
+            throw new Error('AAAAA');
+        }
         user['account']['logintime'] = new Date();
         user['account']['password'] = user['account']['username'];
-        db.user.addNewUser(user.account)
+
+        return db.user.addNewUser(user.account)
             .then(function(){
-                db.profile.addNewProfile(user.profile)
+                return db.profile.addNewProfile(user.profile)
                     .then(function(profile){
-                        res.status(201).json(profile);
+                        return profile;
                     },function(err){
-                        console.log(err);
-                        res.status(400).json("Can not add new profile");
+                        throw err;
                     });
             },function(err){
-                console.log(err);
-                res.status(400).json("Can not add new user");
+                throw err;
             });
 
     };

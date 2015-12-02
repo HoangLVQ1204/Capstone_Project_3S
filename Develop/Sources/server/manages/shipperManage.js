@@ -770,16 +770,16 @@ module.exports = function (app) {
         return res.status(200).json(req.dataMap);
     };
 
-    var getAllShipper = function(req, res, next) {
+    var getAllShipper = function() {
         return db.user.getAllUsersHasRole(1, db.profile, db.workingstatus)
             .then(function(shipper) {
-                res.status(200).json(shipper);
+                return shipper;
             }, function(err) {
-                next(err);
-            })
+                throw err;
+            });
     };
 
-    var getAllOrderToAssignTask = function (req, res, next) {
+    var getAllOrderToAssignTask = function () {
         var orderList=[];
         var promise=[];
         return db.order.getAllOrderToAssignTask(db.orderstatus, db.task, db.taskstatus)
@@ -808,25 +808,21 @@ module.exports = function (app) {
                             orderList.push(newOrder);
                         }
                     }
-                })
-                res.status(200).json(orderList);
+                });
+                return orderList;
             }, function(err) {
-                next(err);
+               throw err;
             })
-
     };
 
-    var getAllShipperWithTask = function (req, res, next) {
+    var getAllShipperWithTask = function () {
         var listReturn = [];
         return db.user.getAllShipperWithTask(db.task, db.profile, db.order, db.orderstatus, db.tasktype, db.taskstatus)
             .then(function(shipperList) {
-                //console.log("--------------Data Task Shipper -------------------");
-
-                //console.log(shipper);
                  shipperList.forEach(function (shipper) {
                      var listTask = [];
                      var shiperObj = {};
-                     console.log(shipper);
+                    //console.log(shipper);
                    shipper['tasks'].forEach(function (task) {
                         var add = task.order.getCustomerAddress();
                         task = task.toJSON();
@@ -841,11 +837,9 @@ module.exports = function (app) {
                     //shipper['tasks'] = _.cloneDeep(rs);
                     listReturn.push(shipper);
                 });
-               return listReturn;
+                return listReturn;
             }, function(err) {
-                next(err);
-            }).then(function(listReturn){
-                res.status(200).json(listReturn);
+                throw err;
             })
     };
 
@@ -884,8 +878,8 @@ module.exports = function (app) {
             })
     };
 
-    var updateTaskForShipper = function (req, res, next) {
-        var shipperList = req.body;
+    var updateTaskForShipper = function (shipperList) {
+
         shipperList.forEach(function(shipperTasks){
             if(shipperTasks.tasks) {
                 shipperTasks.tasks.forEach(function(task){
@@ -896,18 +890,21 @@ module.exports = function (app) {
             }
         });
 
-        return shipperList.map(function (shipper) {
+        var promise = [];
+
+        shipperList.map(function (shipper) {
             shipper.tasks.map(function (task) {
-                db.task.assignTaskForShipper(task)
+                promise.push(db.task.assignTaskForShipper(task)
                     .then(function(newTask) {
-                         res.status(201).json(newTask);
+                         return newTask
                         //console.log(newTask.taskid)
                     }, function(err) {
-                        next(err);
-                    })
+                        throw err;
+                    }));
             })
 
-        })
+        });
+        return Promise.all(promise);
     };
 
     //// START - Get status of shipper
@@ -1111,27 +1108,29 @@ module.exports = function (app) {
     };
 
     //function create new shipperid
-    var createShipperID = function(req, res, next){
+    var createShipperID = function(){
         var isExisted = false;
+        var promise;
         do
         {
             var str = "000000" + parseInt(Math.random()*1000000);
             var formatStr = str.substr(str.length - 6);
             var newShipperID = "SP" + formatStr;
             //console.log(newShipperID);
-            db.user.findUserByUsername(newShipperID)
+            promise = db.user.findUserByUsername(newShipperID)
                 .then(function(shipper){
-                    console.log(newShipperID, shipper);
+                    //console.log(newShipperID, shipper);
                     if(!shipper){
                         //console.log('AAA');
                         isExisted = true;
-                        res.status(200).json(newShipperID);
+                        return newShipperID;
                     }
                 },function(err){
-                    //console.log(newShipperID, shipper);
-                    res.status(400).json("Can not get new shipperid");
+                    throw err;
                 });
         } while (isExisted);
+        //console.log(data);
+        return promise;
     };
 
 

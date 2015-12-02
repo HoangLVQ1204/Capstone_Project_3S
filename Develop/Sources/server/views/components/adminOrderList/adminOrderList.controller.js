@@ -72,15 +72,17 @@ function adminOrderListController($scope,$state, dataService, $filter, config, $
         })
     }
 
-    $rootScope.$emit("shipper:change:order:status", function(event,args){
-        getDataFromServer();
-    });
+
 
     $scope.$watch('$viewContentLoaded', function (event) {
 
         caplet();
 
 
+    });
+
+    $rootScope.$on("shipper:change:order:status", function(event,args){
+        getDataFromServer();
     });
 }
 

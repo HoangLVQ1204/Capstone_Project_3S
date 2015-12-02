@@ -9,6 +9,13 @@ module.exports = function (app) {
     // app.param('order_id', controller.params);
 
     app.route('/api/getProvince')
-        .get(controller.getAllProvince);
+        .get(function (req,res,next) {
+        	controller.getAllProvince().then(function(data){
+        		res.status(200).json(data);  
+        	})
+        	.catch (function(err){
+        		next(err);
+        	})
+        });
 
 };

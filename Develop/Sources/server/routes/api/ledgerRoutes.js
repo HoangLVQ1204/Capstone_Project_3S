@@ -13,6 +13,14 @@ module.exports = function (app) {
         .get(controller.getLedgerOfStore)
 
     app.route('/api/store/ledger/getLedgerList')
-        .get(checkAll,controller.storeGetAllLedger)
+        .get(checkAll,function(req,res,next) {
+        	var storeId = req.user.stores[0].storeid;
+        	controller.storeGetAllLedger(storeId).then(function(data){
+        		res.status(200).json(data);
+        	})
+        	.catch(function(err){
+        		next(err);
+        	})
+        })
 
 }

@@ -15,12 +15,10 @@ module.exports = function (app) {
             })
     };
 
-    var getIssueDetail = function (req, res, next) {
-        var id = req.query.issueid;
+    var getIssueDetail = function (id) {
        // console.log(id);
         return db.issue.getIssueDetail(db.orderissue, db.issuetype, db.issuecategory, id, db.order, db.task, db.orderstatus, db.taskstatus, db.profile)
             .then(function (issue) {
-
                 var rs = issue.orderissues.map(function (order) {
                     var addr = order.order.getCustomerAddress();
                     order = order.toJSON();
@@ -30,21 +28,19 @@ module.exports = function (app) {
                 //console.log(rs);
                 issue = issue.toJSON();
                 issue.orderissues = rs;
-                res.status(200).json(issue);
+                return issue;
             }, function (err) {
-                next(err);
+                throw err;
             })
     };
 
-    var updateResolveIssue = function (req, res, next) {
-        var id = req.query.issueid;
-        var updateIssue = req.body;
+    var updateResolveIssue = function (id, updateIssue) {
        // console.log(id);
         return db.issue.updateResolveIssue(id, updateIssue.resolvetype)
             .then(function (issue) {
-                res.status(200).json(issue);
+                return issue;
             }, function (err) {
-                next(err);
+               throw err;
             })
     };
 
