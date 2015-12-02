@@ -390,22 +390,18 @@ module.exports = function(server,app){
         result.store.push(store);
         store.order.forEach(function(orderID) {            
             result.orders[orderID] = _.clone(io.orders[orderID], true);
-            var shipper = io.getOneShipper(io.orders[orderID].shipperID);
+        });
+        for (shipperID in io.shippers) {            
+            var shipper = io.getOneShipper(shipperID);
             if (shipper.icon == icons.disconnectIcon) {
                 shipper.icon = icons.issueIcon;
             }
             shipper.order = shipper.order.filter(function(e) {
-                var keep = false;
-                for (var k = 0; k < store.order.length; ++k) {
-                    if (e === store.order[k]) {
-                        keep = true;
-                        break;
-                    }
-                }
-                return keep;
+                return io.orders[e].storeID == storeID;
             });
-            result.shipper.push(shipper);
-        });
+            if (shipper.order.length > 0)
+                result.shipper.push(shipper);
+        }
 
         for (var i = 0; i < io.customers.length; ++i) {
             var customer = {
@@ -444,19 +440,15 @@ module.exports = function(server,app){
         result.shipper.push(shipper);
         shipper.order.forEach(function(orderID) {
             result.orders[orderID] = _.clone(io.orders[orderID], true);
-            var store = io.getOneStore(io.orders[orderID].storeID);
-            store.order = store.order.filter(function(e) {
-                var keep = false;
-                for (var k = 0; k < shipper.order.length; ++k) {
-                    if (e === shipper.order[k]) {
-                        keep = true;
-                        break;
-                    }
-                }
-                return keep;
-            });
-            result.store.push(store);
         });
+        for (storeID in io.stores) {
+            var store = io.getOneStore(storeID);
+            store.order = store.order.filter(function(e) {
+                return io.orders[e].shipperID == shipperID;
+            });
+            if (store.order.length > 0)
+                result.store.push(store);
+        }
 
         for (var i = 0; i < io.customers.length; ++i) {
             var customer = {
@@ -503,7 +495,7 @@ module.exports = function(server,app){
         result.customer = _.clone(io.customers, true);
         result.orders = _.clone(io.orders, true);
         
-        console.log('getDataForAdmin', result);
+        // console.log('getDataForAdmin', result);
         return result;
     };
 
