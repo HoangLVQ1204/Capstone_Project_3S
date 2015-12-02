@@ -64,6 +64,7 @@ module.exports = function (app) {
 
     var createTask = function(req,res,next){
         var taskData = req.body;
+        console.log('createTask', taskData);
         return db.task.createTaskForShipper(taskData)
                 .then(function(newTask) {
                     console.log(newTask.taskid);

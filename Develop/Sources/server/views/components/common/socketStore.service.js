@@ -16,7 +16,7 @@ function socketStore($q,socketService,authService,mapService,$rootScope){
 
     
     socketService.on('store:register:location', function(data) {        
-        console.log('register', mapService.setMapData, data.msg.mapData);
+        // console.log('register', mapService.setMapData, data.msg.mapData);
         mapService.setMapData(data.msg.mapData);
     });
 
