@@ -48,11 +48,16 @@ module.exports = function (app) {
         });
     };
 
+    function postFromSever(notification) {
+        return db.notification.addNotification(notification);
+    };
+
     return {
         getTotal: getTotal,
         getTotalUnread: getTotalUnread,
         getPageNotifications: getPageNotifications,
         addNotification: addNotification,
-        updateNotification: updateNotification
+        updateNotification: updateNotification,
+        postFromSever: postFromSever
     }
 }

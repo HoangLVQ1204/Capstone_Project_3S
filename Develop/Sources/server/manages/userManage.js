@@ -94,24 +94,21 @@ module.exports = function(app) {
 
     //function add new Shipper to system
     var addNewUser = function(user){
-        var data;
-        if (user==null) {
-            throw new Error('AAAAA');
-        }
+
         user['account']['logintime'] = new Date();
         user['account']['password'] = user['account']['username'];
 
-        return db.user.addNewUser(user.account)
-            .then(function(){
-                return db.profile.addNewProfile(user.profile)
-                    .then(function(profile){
-                        return profile;
-                    },function(err){
-                        throw err;
-                    });
-            },function(err){
-                throw err;
-            });
+            return db.user.addNewUser(user.account)
+                .then(function(){
+                    return db.profile.addNewProfile(user.profile)
+                        .then(function(profile){
+                            return profile;
+                        },function(err){
+                            throw err;
+                        });
+                },function(err){
+                    throw err;
+                });
 
     };
 
