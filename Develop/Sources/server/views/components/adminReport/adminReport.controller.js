@@ -3,7 +3,6 @@
  */
 
 function adminReportController($scope,$state, $http,dataService, $filter, config, $stateParams) {
-    console.log("======xcd======",$scope.dataChart);
     $scope.customClass = ['tab-pane','active']
     drawCharFirstTimeRun();
     $scope.updateCharExNoByStore = function(){
@@ -12,7 +11,8 @@ function adminReportController($scope,$state, $http,dataService, $filter, config
         var listOrderOfMonthExNo = $scope.selectedYearExNo.months;
 
         var charExNoid = "#chartExNo";
-        var dataExNo = getDataForChart(listOrderOfMonthExNo);
+        var groupBy = "types"
+        var dataExNo = getDataForChart(listOrderOfMonthExNo,groupBy);
         drawChart(charExNoid,dataExNo);
     }
 
@@ -20,19 +20,24 @@ function adminReportController($scope,$state, $http,dataService, $filter, config
         $scope.listYearComCan = $scope.selectedStoreComCan.years;
         $scope.selectedYearComCan = $scope.listYearComCan[0];
         var listOrderOfMonthComCan = $scope.selectedYearComCan.months;
-
+        
         var charComCanid = "#chartComCan";
-        var dataComCan = getDataForChart(listOrderOfMonthComCan);
+        var groupBy = "status";
+        var dataComCan = getDataForChart(listOrderOfMonthComCan,groupBy);
         drawChart(charComCanid,dataComCan);
     }
 
     $scope.updateCharFinByStore = function(){
+        console.log("select Year");
+        console.log($scope.selectedStoreFin);
+        console.log("select Year");
         $scope.listYearFin = $scope.selectedStoreFin.years;
         $scope.selectedYearFin = $scope.listYearFin[0];
         var listOrderOfMonthFin = $scope.selectedYearFin.months;
 
         var charFinid = "#chartFinance";
-        var dataFin = getDataForChart(listOrderOfMonthFin);
+        var groupBy = "types";
+        var dataFin = getDataForChart(listOrderOfMonthFin,groupBy);
         drawChart(charFinid,dataFin);
     }
 
@@ -50,8 +55,6 @@ function adminReportController($scope,$state, $http,dataService, $filter, config
         if($scope.totalFee >1000){
             $scope.totalFee = $scope.totalFee/1000 + ' K';    
         }
-        console.log("===order===",$scope.totalOrder);
-        console.log("===fee===",$scope.totalFee);
         
         /* data for "order by month" char - tab "Express/Normal" */ 
         if($scope.dataChart.dataExNo.length == 0){
@@ -66,7 +69,8 @@ function adminReportController($scope,$state, $http,dataService, $filter, config
             var listOrderOfMonthExNo = $scope.selectedYearExNo.months;
 
             var charExNoid = "#chartExNo";
-            var dataExNo = getDataForChart(listOrderOfMonthExNo);
+            var groupBy = "types";
+            var dataExNo = getDataForChart(listOrderOfMonthExNo,groupBy);
             drawChart(charExNoid,dataExNo);    
         }
         
@@ -77,14 +81,15 @@ function adminReportController($scope,$state, $http,dataService, $filter, config
             var dataComCan = createDefaultData();
             drawChart(charComCanid,dataComCan);  
         } else{
-            $scope.listStoreCC = $scope.dataChart.dataComCan;
-            $scope.selectedStoreCC = $scope.listStoreCC[0];
-            $scope.listYearCC = $scope.selectedStoreCC.years;
-            $scope.selectedYearCC = $scope.listYearCC[0];
-            var listOrderOfMonthCC = $scope.selectedYearCC.months;
+            $scope.listStoreComCan = $scope.dataChart.dataComCan;
+            $scope.selectedStoreComCan = $scope.listStoreComCan[0];
+            $scope.listYearComCan = $scope.selectedStoreComCan.years;
+            $scope.selectedYearComCan = $scope.listYearComCan[0];
+            var listOrderOfMonthComCan = $scope.selectedYearComCan.months;
 
             var charComCanid = "#chartComCan";
-            var dataComCan = getDataForChart(listOrderOfMonthCC);
+            var groupBy = "status";
+            var dataComCan = getDataForChart(listOrderOfMonthComCan,groupBy);
             drawChart(charComCanid,dataComCan);  
         }
         
@@ -95,13 +100,14 @@ function adminReportController($scope,$state, $http,dataService, $filter, config
             drawChart(charFinid,dataFin);  
         } else {
             $scope.listStoreFin = $scope.dataChart.dataCodFee;
-            $scope.selectedStoreFin = rs[0];
+            $scope.selectedStoreFin = $scope.listStoreFin[0];
             $scope.listYearFin = $scope.selectedStoreFin.years;
             $scope.selectedYearFin = $scope.listYearFin[0];
             var listCodFeeOfMonthFin = $scope.selectedYearFin.months;
 
-            var charFinid = "#chartFinance";        
-            var dataFin = getDataForChart(listCodFeeOfMonthFin);
+            var charFinid = "#chartFinance";    
+            var groupBy = "types";    
+            var dataFin = getDataForChart(listCodFeeOfMonthFin,groupBy);
             drawChart(charFinid,dataFin);
         }
         $scope.customClass.pop('active');
@@ -135,14 +141,15 @@ function adminReportController($scope,$state, $http,dataService, $filter, config
     }
 
     /* This function is use to create data for function drawChar */
-    function getDataForChart(listOrderOfMonth){
+    function getDataForChart(listOrderOfMonth,groupBy){
+        console.log("=========listOrderOfMonth=======");
+        console.log(listOrderOfMonth);
+        console.log("=========listOrderOfMonth=======");
         var myData;
         var data1 = [];
         var data2=[];
-console.log("===========yahaaaa=======");
-            console.log(listOrderOfMonth);
-            console.log("===========yahaaa=======");
-        for(var i = 0; i<listOrderOfMonth.length;i++){
+        if(groupBy  == "types"){
+            for(var i = 0; i<listOrderOfMonth.length;i++){
             if(listOrderOfMonth[i].types.length == 2){
                 data1.push([listOrderOfMonth[i].name,listOrderOfMonth[i].types[0].countNum]);
                 data2.push([listOrderOfMonth[i].name,listOrderOfMonth[i].types[1].countNum]);    
@@ -159,9 +166,34 @@ console.log("===========yahaaaa=======");
                 data2.push([listOrderOfMonth[i].name,0]);    
             }          
             
+            }    
+        }else if (groupBy == "status"){
+            for(var i = 0; i<listOrderOfMonth.length;i++){
+            if(listOrderOfMonth[i].status.length == 2){
+                data1.push([listOrderOfMonth[i].name,listOrderOfMonth[i].status[0].countNum]);
+                data2.push([listOrderOfMonth[i].name,listOrderOfMonth[i].status[1].countNum]);    
+            }  else if (listOrderOfMonth[i].status.length == 1) {
+                if(listOrderOfMonth[i].status[0].name == 7){
+                    data1.push([listOrderOfMonth[i].name,listOrderOfMonth[i].status[0].countNum]);
+                    data2.push([listOrderOfMonth[i].name,0]);    
+                } else if (listOrderOfMonth[i].status[0].name == 8){
+                    data1.push([listOrderOfMonth[i].name,0]);
+                    data2.push([listOrderOfMonth[i].name,listOrderOfMonth[i].status[0].countNum]);    
+                }
+            } else {
+                data1.push([listOrderOfMonth[i].name,0]);
+                data2.push([listOrderOfMonth[i].name,0]);    
+            }          
+            
+            }
         }
+        
         myData = [{ data:data1, label:"", bars:{ show:true, align: "left", barWidth:0.3},fill:true, fillColor:"#0AA699"}
         ,{ data:data2, label:"", bars:{ show:true, barWidth:0.3,align: "right"}}];
+        console.log("=====data=====");
+                console.log(myData);
+                console.log("=====data=====");
+                
         return myData;
     }
 
@@ -279,7 +311,8 @@ console.log("===========yahaaaa=======");
                 tooltip: true,
                 tooltipOpts: { content: ("%y")},
                 yaxis: {min: 0,},
-                colors:["#0AA699","#FFCC33","#77D7B0","#E15258"]
+                colors:["#0AA699","#FFCC33","#77D7B0","#E15258"],
+                xaxis: { show: true,min:0.67,max:12.33, ticks:[[1, "Jan"], [2, "Feb"], [3, "Mar"],[4, "Apr"],[5, "May"],[6, "Jun"],[7, "Jul"],[8, "Aug"],[9, "Sep"],[10, "Oct"],[11, "Now"],[12, "Dec"]]}
             };
             $.plot(chartid,data,options);
         }

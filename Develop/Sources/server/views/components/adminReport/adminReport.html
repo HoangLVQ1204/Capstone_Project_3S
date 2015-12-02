@@ -40,12 +40,12 @@
 						<div id="sectionB" ng-class="customClass">
 							<ul class="nav">
 								<li class="pull-right">
-									<select class="form-control" ng-options ="x.name for x in listYearCC" ng-model="selectedYearCC">
+									<select class="form-control" ng-options ="x.name for x in listYearComCan" ng-model="selectedYearComCan">
 									</select>
 								</li>
 
 								<li class="pull-right col-md-3">
-									<select class="form-control" ng-options ="x.name for x in listStoreCC" ng-model="selectedStoreCC" ng-change="updateCharComCanByStore()">
+									<select class="form-control" ng-options ="x.name for x in listStoreComCan" ng-model="selectedStoreComCan" ng-change="updateCharComCanByStore()">
 									</select>
 								</li>
 							</ul>
