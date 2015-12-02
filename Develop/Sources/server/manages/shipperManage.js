@@ -70,20 +70,16 @@ module.exports = function (app) {
      * This function is used to return json data for task history API
      *
      * */
-    var getHistory = function (req, res, next) {
-        var shipper = _.cloneDeep(req.user);
-        var shipperid = shipper.username;
-        var page = _.cloneDeep(req.query.page);
-        page = page? page : 0;
+    var getHistory = function (shipperid, page) {
         var History = db.task;
         var Order = db.order;
         var OrderStatus = db.orderstatus;
         var getHistory = History.getAllHistoryOfShipper(shipperid, page, Order, OrderStatus);
         var getTotal = History.countTotalTaskHistoryOfShipper(shipperid);
-        Promise.all([getHistory, getTotal])
+        return Promise.all([getHistory, getTotal])
             .then(function (p) {
                 var history = (p[0]) ? p[0] : [];
-                var total = (p[1]) ? p[1] : 0;
+                var total = (p[1].dataValues) ? p[1].dataValues : 0;
                 var listHistory = [];
                 history.map(function (order) {
                     order = order.toJSON();
@@ -111,9 +107,9 @@ module.exports = function (app) {
                 var result = {};
                 result['current'] = curentPageResult;
                 result['total'] = total;
-                return res.status(200).json(result);
+                return result;
             }, function (err) {
-                next(err);
+                throw(err);
             })
     };
 
@@ -146,23 +142,18 @@ module.exports = function (app) {
             });
     };
 
-    /*
+    /**
      * By HuyTDH - 10/20/2015
-     *
      * This function is used to return json data for task detail API
-     *
      * */
-    var getDetail = function (req, res, next) {
-        var detailtaskid = req.query.taskid;
+    var getDetail = function (shipperid, detailtaskid){
         var Order = db.order;
         var OrderStatus = db.orderstatus;
         var Goods = db.goods;
         var Task = db.task;
         var Store = db.store;
         var Stock = db.stock;
-        var shipper = _.cloneDeep(req.user);
-        var shipperid = shipper.username;
-        Order.getOrderDetailById(detailtaskid, shipperid, OrderStatus, Goods, Task, Store, Stock)
+        return Order.getOrderDetailById(detailtaskid, shipperid, OrderStatus, Goods, Task, Store, Stock)
             .then(function (rs) {
                 if (rs) {
                     rs = rs.toJSON();
@@ -171,18 +162,16 @@ module.exports = function (app) {
                         delete rs['deliveryaddress'];
                         delete rs['completedate'];
                     }
-                    req.statuslist = configConstant.statusList[type];
-                    req.detail = rs;
-                    var resObj = {
-                        "detail": req.detail,
-                        "statuslist": req.statuslist
+                    var statuslist = configConstant.statusList[type];
+                    return {
+                        "detail": rs,
+                        "statuslist": statuslist
                     };
-                    return res.status(200).json(resObj);
                 } else {
-                    return res.status(400).json('Can not found this task detail');
+                    throw new Error('Can not find this task detail');
                 }
             }, function (err) {
-                return res.status(400).json('Can not found this task detail');
+                throw new Error('Can not find this task detail');
             });
     };
 
@@ -191,23 +180,23 @@ module.exports = function (app) {
         return res.status(200).json(rs);
     };
 
-    var nextStep = function (req, res, next) {
-        var shipper = _.cloneDeep(req.user);
-        var shipperid = shipper.username;
+    /**
+     * By HuyTDH - 10/20/2015
+     * This function allows shipper to change order status to next step in their task
+     */
+    var nextStep = function(shipperid, data){
         var Order = db.order;
         var Task = db.task;
-        var data = _.cloneDeep(req.body);
         if (data) {
             var key = data.code;
             var taskid = data.taskid;
-            Order.shipperGetOneOrder(taskid, key, shipperid, Task).then(function (orderObj) {
+            return Order.shipperGetOneOrder(taskid, key, shipperid, Task).then(function (orderObj) {
                 if (orderObj) {
                     // DATA TO SEND SOCKET
                     var receiver = {
                         type: 'store',
                         clientID: orderObj.storeid
                     };
-
                     var msg = {
                         type: 'info',
                         title: 'Info: Change Status Order',
@@ -217,9 +206,7 @@ module.exports = function (app) {
                         username: orderObj.storeid,
                         createddate: new Date()
                     };
-
                     var msgAdmin = {};
-
                     var customer = {
                         order: [orderObj.orderid],
                         geoText: orderObj.deliveryaddress
@@ -230,8 +217,6 @@ module.exports = function (app) {
                     var nextStatus = 0;
                     var nextStatusName = '';
                     var isRequireCode = false;
-                    // :TODO Need to check is canceled
-                    // :TODO Need to check is canceled
                     var statusList = configConstant.statusList[orderObj.tasks[0].typeid];
                     var taskBegin = statusList[0];
                     var taskDone = statusList[statusList.length - 1];
@@ -247,17 +232,16 @@ module.exports = function (app) {
                             isRequireCode = st.requiredcode;
                         }
                     }
-
                     // Update status of order
                     server.socket.updateStatusOrder(orderObj.orderid, nextStatusName);
 
                     var completeDate = (nextStatus == configConstant.doneStatus)? new Date(): orderObj.completedate;
                     var stockID = (nextStatus == configConstant.inStockStatus)? configConstant.stockID : null;
                     if (isRequireCode) {
-                        db.confirmationcode.checkCode(key, data.confirmcode, orderObj.statusid)
+                        return db.confirmationcode.checkCode(key, data.confirmcode, orderObj.statusid)
                             .then(function (codeObj) {
                             if (codeObj) {
-                                orderObj.updateOrderStatus(nextStatus, completeDate, stockID).then(function (rs) {
+                                return orderObj.updateOrderStatus(nextStatus, completeDate, stockID).then(function (rs) {
                                     if(oldStatus == pickUpStatusID){
                                         db.profile.getProfileUser(shipperid).then(function(profile){
                                             msg['profile'] = profile;
@@ -266,7 +250,6 @@ module.exports = function (app) {
                                         });
                                     }else {
                                         server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
-
                                     }
                                     // SEND SOCKET FOR ADMINS
                                     server.socket.forward('server', 'admin', msgAdmin, 'shipper:change:order:status');
@@ -277,33 +260,33 @@ module.exports = function (app) {
                                         db.notification.addNotification(msg);
                                     });
                                     if(oldStatus == taskBegin.statusid){
-                                        Task.updateTaskStatus(configConstant.taskActive, taskid, shipperid).then(function (ok) {
+                                        return Task.updateTaskStatus(configConstant.taskActive, taskid, shipperid).then(function (ok) {
                                             server.socket.startTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
-                                            return res.status(200).json("Your task was active!");
+                                            return "Your task was active!";
                                         },function(er){
-                                            return res.status(400).json("Sorry! Something went wrong!");
+                                            throw new Error("Sorry! Something went wrong!");
                                         });
                                     }else if(nextStatus == taskDone.statusid){
-                                        Task.updateTaskStatus(configConstant.taskDone,taskid,shipperid).then(function(ok){
+                                        return Task.updateTaskStatus(configConstant.taskDone,taskid,shipperid).then(function(ok){
                                             server.socket.finishTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
-                                            return res.status(200).json("Your task was done!");
+                                            return "Your task was done!";
                                         },function(er){
-                                            return res.status(400).json("Sorry! Something went wrong!");
+                                            throw new Error("Sorry! Something went wrong!");
                                         });
                                     }else{
-                                        return res.status(200).json("Your order has been moved to next step! Continue your work!");
+                                        return "Your order has been moved to next step! Continue your work!";
                                     }
                                 }, function (er) {
-                                    return res.status(400).json("Update failed!");
+                                    throw new Error("Update failed!");
                                 });
                             } else {
-                                return res.status(400).json("Wrong Code!");
+                                throw new Error("Wrong Code!");
                             }
                         }, function (err) {
-                            return res.status(400).json("Wrong Code!");
+                            throw new Error("Checking code failed!");
                         });
                     } else {
-                        orderObj.updateOrderStatus(nextStatus, completeDate, stockID)
+                        return orderObj.updateOrderStatus(nextStatus, completeDate, stockID)
                             .then(function (rs) {
                             server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
                             // SEND SOCKET FOR ADMINS
@@ -315,35 +298,35 @@ module.exports = function (app) {
                                 db.notification.addNotification(msg);
                             });
                             if(oldStatus == taskBegin.statusid){
-                                Task.updateTaskStatus(configConstant.taskActive,taskid,shipperid).then(function(ok){
+                                return Task.updateTaskStatus(configConstant.taskActive,taskid,shipperid).then(function(ok){
                                     server.socket.startTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
-                                    return res.status(200).json("Your task was active!");
+                                    return "Your task was active!";
                                 },function(er){
-                                    return res.status(400).json("Sorry! Something went wrong!");
+                                    throw new Error("Sorry! Something went wrong!");
                                 });
                             }else if(nextStatus == taskDone.statusid){
-                                Task.updateTaskStatus(configConstant.taskDone,taskid,shipperid).then(function(ok){
+                                return Task.updateTaskStatus(configConstant.taskDone,taskid,shipperid).then(function(ok){
                                     server.socket.finishTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
-                                    return res.status(200).json("Your task was done!");
+                                    return "Your task was done!";
                                 },function(er){
-                                    return res.status(400).json("Sorry! Something went wrong!");
+                                    throw new Error("Sorry! Something went wrong!");
                                 });
                             }else{
-                                return res.status(200).json("Your order has been moved to next step! Continue your work!");
+                                return "Your order has been moved to next step! Continue your work!";
                             }
                         }, function (er) {
-                            return res.status(400).json("Update failed!");
+                            throw new Error("Updating failed!");
                         });
                     }
                 }else{
-                    return res.status(400).json("Update failed!");
+                    throw new Error("Update failed!");
                 }
             }, function () {
-                return res.status(400).json("Can't find this order!");
+                throw new Error("Can't find this order!");
             });
         }
         else{
-            return res.status(400).json("Can't go to next step");
+            throw new Error("Can't go to next step");
         }
     };
 

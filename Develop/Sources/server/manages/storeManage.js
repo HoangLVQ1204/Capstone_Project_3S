@@ -45,6 +45,7 @@ module.exports = function(app) {
         }).then(function () {
             return db.store.postOneStore(newStore)
                 .then(function(store) {
+                    //console.log(store);
                     return store;
                 });
         }, function(err) {
