@@ -74,11 +74,19 @@ module.exports = function(sequelize, DataTypes) {
               where:{
                 'storeid':storeid
               }
+            }).then(function (store) {
+                return store;
+            }, function (err) {
+                throw err;
             });
           },
 
           postOneStore: function(newStore){
-            return store.build(newStore).save();
+            return store.build(newStore).save().then(function (store) {
+                return store;
+            }, function (err) {
+                throw err;
+            });
           },
 
           deleteStore: function (stores) {

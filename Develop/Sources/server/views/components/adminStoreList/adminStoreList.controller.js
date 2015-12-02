@@ -238,6 +238,8 @@ function adminStoreListController($scope,$state, dataService, authService, confi
     $scope.showTransactionHistory = function (store, period){
         $scope.autoDate = $scope.latestAutoDate;
         //console.log(autoDate);
+        smsData.effect="md-slideRight";
+        $("#md-effect-history").attr('class','modal fade').addClass(smsData.effect).modal('show');
         if (!period) $scope.autoDate='null';//neu chon current Period Balance
         dataService.getDataServer(config.baseURI + "/api/getLedgerOfStore/" + store.storeid +"/" + $scope.autoDate).then(function(response){
             $scope.ledgerListOfStore = response.data;
@@ -263,8 +265,7 @@ function adminStoreListController($scope,$state, dataService, authService, confi
             })
             $scope.displayedLedgerCollection = [].concat($scope.ledgerListOfStore);
             $scope.selectedStore = store;
-            smsData.effect="md-slideRight";
-            $("#md-effect-history").attr('class','modal fade').addClass(smsData.effect).modal('show');
+
              //console.log(response);
         })
     }

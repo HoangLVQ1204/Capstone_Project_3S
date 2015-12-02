@@ -168,11 +168,11 @@ function adminTaskListController($scope,$state, dataService, $filter, config, $r
 
     });
 
-    $rootScope.$emit("shipper:change:order:status", function(event,args){
+    $rootScope.$on("shipper:change:order:status", function(event,args){
         getDataFromServer();
     });
 
-    $rootScope.$emit("shipper:change:task:status", function(event,args){
+    $rootScope.$on("shipper:change:task:status", function(event,args){
         getDataFromServer();
     });
 }

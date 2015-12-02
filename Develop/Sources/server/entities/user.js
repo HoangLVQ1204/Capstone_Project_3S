@@ -69,7 +69,8 @@ module.exports = function(sequelize, DataTypes) {
       },
 
       getAllUsers: function() {
-        return user.findAll({});
+        return user.findAll({})
+        .then(sequelize.handler);
       },
 
       getAllUsersHasRole: function(role, profile) {
@@ -107,7 +108,7 @@ module.exports = function(sequelize, DataTypes) {
           where: {
             userrole: role
           }
-        });
+        }).then(sequelize.handler);
       },
 
       addNewUser: function(newUser){
@@ -128,6 +129,7 @@ module.exports = function(sequelize, DataTypes) {
         },{where: {
           'username': currentUser.username
         }})
+        .then(sequelize.handler);
       },
 
       getAllShipperWithTask: function(task, profile, order, orderstatus, tasktype, taskstatus) {

@@ -19,6 +19,22 @@ var sequelize = new Sequelize(config.db.url, {
 
 var db = {};
 
+sequelize.handler = function(data) {
+	// console.log('handler', data);	
+	if (data) {
+		if (data instanceof Array) {
+			if (data.length == 0)
+				throw new Error('Result = empty');
+			else if ((data.length == 1 || data.length == 2) && data[0] == 0) {
+				throw new Error('Result is empty');
+			}
+		}
+		return data;
+	} else {
+		throw new Error('Result is empty');
+	}
+};
+
 
 globber.getGlobbedFiles('./entities/**/!(index.js)').forEach(function(routePath) {
 
@@ -27,6 +43,7 @@ globber.getGlobbedFiles('./entities/**/!(index.js)').forEach(function(routePath)
     var model = sequelize.import(path.resolve(routePath));
     db[model.name] = model;
 });
+
 
 
 Object.keys(db).forEach(function(modelName) {
@@ -40,3 +57,9 @@ db.Sequelize = Sequelize;
 
 module.exports = db;
 
+
+/*
+create: null/undefined => Error
+destroy: 0 => Error
+update: Array.length => 
+*/

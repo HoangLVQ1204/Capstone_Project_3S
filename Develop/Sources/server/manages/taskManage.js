@@ -105,18 +105,22 @@ module.exports = function (app) {
         var issue = req.body;
         var promise = [];
         issue.orderissues.map(function (orderissue) {
-            //console.log(orderissue.order);
-            promise.push(db.task.deleteTask(orderissue.order.tasks[0])
-                .then(function (task) {
-                    db.order.updateOrderAfterStoreCancel(orderissue.order)
-                        .then(function (order) {
 
+            if(orderissue.order.tasks !== undefined && orderissue.order.tasks.length != 0){
+                promise.push(
+
+                    db.task.deleteTask(orderissue.order.tasks[0])
+                        .then(function (task) {
+                            db.order.updateOrderAfterStoreCancel(orderissue.order);
                         }, function (err) {
                             next(err);
                         })
-                }, function (err) {
-                    next(err);
-                }));
+                );
+            }else{
+                promise.push(
+                    db.order.updateOrderAfterStoreCancel(orderissue.order)
+                );
+            }
         });
         return Promise.all(promise).then(function () {
             res.status(201).json('OK');

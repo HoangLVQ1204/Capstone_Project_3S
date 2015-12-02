@@ -20,8 +20,8 @@ function notificationService($q,$http, config, dataService, authService){
 
     function enableCurrentPage() {
         for (var i = 0; i < pageNumbers.length; ++i) {
-            if (i == currentPage) pageNumbers[i] = true;
-            else pageNumbers[i] = false;
+            if (i == currentPage) pageNumbers[i].value = true;
+            else pageNumbers[i].value = false;
         }
     }
 
@@ -29,7 +29,7 @@ function notificationService($q,$http, config, dataService, authService){
         console.log('genPagination', currentPage);
         pageNumbers = [];
         for (var i = 0; i < parseInt((totalNumberNotifications + notificationsPerPage - 1) / notificationsPerPage); ++i) {
-            pageNumbers.push(false);
+            pageNumbers.push({ value: false });
         }
         // currentPage = 0;
         enableCurrentPage();
@@ -83,8 +83,8 @@ function notificationService($q,$http, config, dataService, authService){
     }
 
     api.setCurrentPage = function(page) {
-        pageNumbers[currentPage] = false;
-        pageNumbers[page] = true;
+        pageNumbers[currentPage].value = false;
+        pageNumbers[page].value = true;
         currentPage = page;        
     };
 
