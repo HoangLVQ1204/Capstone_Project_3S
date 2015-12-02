@@ -6,18 +6,22 @@
 module.exports = function (app) {
     var db = app.get('models');
 
+    /*
+        By KhanhKC
+        This function is use to get all province
+    */
+    function getProvince(){
+        var districtModel = db.district;
+        var wardModel = db.ward;
+        return db.province.getAllProvince(districtModel,wardModel)
+        .then(function(province){
+            return province;            
+        }, function(err) {
+            throw err;
+        });
+    }
 
-    var get= function (req, res, next) {
-    	var districtModel = db.district;
-    	var wardModel = db.ward;
-    	return db.province.getAllProvince(districtModel,wardModel)
-    		.then(function(province){
-            	res.status(200).json(province);            
-	        }, function(err) {
-	            next(err);
-	        });
-    };
     return {
-        getAllProvince: get      
+        getAllProvince: getProvince      
     }
 }

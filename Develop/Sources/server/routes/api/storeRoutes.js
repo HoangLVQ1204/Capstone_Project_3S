@@ -47,7 +47,15 @@ module.exports = function(app){
 		.put(controller.updateLedgerForOrder);
 
 	app.route('/api/getAllStoreName')
-		.get(checkAll,controller.getAllStoreName);
+		.get(checkAll,function(req,res,next){
+			var listStoreId = req.user.stores;
+			controller.getAllStoreName(listStoreId).then(function(data){
+				res.status(200).json(data);
+			})
+			.catch (function(err){
+				next(err);
+			})
+		});
 
 	app.route('/api/getInactiveStore')
 		.get(controller.getAllInactiveStore);
@@ -56,5 +64,13 @@ module.exports = function(app){
 		.get(controller.getStoreDetail);
 
 	app.route('/api/storeDetail')
-		.get(checkAll,controller.storeGetStoreDetail);
+		.get(checkAll,function(req,res,next) {
+			var storeid = req.user.stores[0].storeid
+			controller.storeGetStoreDetail(storeid).then(function(data){
+				res.status(200).json(data);
+			})
+			.catch(function(err){
+				next(err);
+			})
+		});
 };

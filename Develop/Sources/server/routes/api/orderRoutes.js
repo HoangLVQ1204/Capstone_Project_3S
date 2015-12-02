@@ -20,25 +20,59 @@ module.exports = function (app) {
                 controller.getAllOrder(storeId).then(function(data){
                     res.status(200).json(data);
                 })
-                .catch(function(err){
+                .catch(function(er){
                     next(err);
                 })
             })
-        .post(controller.postOneOrder);
+        .post(checkAll,function(req,res,next){
+            var data = req.body;
+            controller.postOneOrder(data).then(function(){
+                res.status(200).json("Post successfully!");
+            })
+            .catch(function(er){
+                    next(err);
+            })
+        });
 
     app.route('/orders/updateExpressOrder')
         .put(controller.updateExpressOrder)    
         
     app.route('/orders/:orderid')
-        .get(controller.getOne)
-        .put(checkAll,controller.updateOrder)
-        .delete(checkAll,controller.deleteOrder);
+        .get(checkAll, function(req,res,next){
+             res.status(200).json(req.orderRs);
+        })
+        .put(checkAll,function(req,res,next) {
+            controller.updateOrder(req).then(function(){
+                res.status(200).json("Update successfully!");
+            })
+            .catch(function(er){
+                    next(err);
+            })
+        })
+
+        .delete(checkAll,function(req,res,next){
+            var orderId = req.orderRs.toJSON().orderid;
+            controller.deleteOrder(orderId).then(function(data){
+                    res.status(200).json("DELETED!");
+            })
+            .catch(function(err){
+                next(err);
+            })
+        });
 
     app.route('/store/orders/cancel')
         .post(checkAll,controller.cancelOrder);
 
      app.route('/api/store/getAllOrder')
-        .get(checkAll, controller.storeGetOrderList);
+        .get(checkAll,function(req,res,next){
+            var storeId = req.user.stores[0].storeid;
+            controller.storeGetOrderList(storeId).then(function(data){
+                res.status(200).json(data);
+            }) 
+            .catch(function(err){
+                next(err);
+            })  
+        });
 
     app.route('/api/admin/order/countOrder')
         .get(checkAll, controller.countOrder);

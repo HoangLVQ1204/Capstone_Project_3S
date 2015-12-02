@@ -228,20 +228,22 @@ module.exports = function(app) {
             });
     };
 
-    //KhanhKC
-    var getStoreName = function(req,res,next){
+    /*
+        By KhanhKC
+        This function is use to get all name of list storeid
+    */
+    function getStoreName (listStoreId){
         var listStoreID = [];
-         _.each(req.user.stores, function(store){
-                listStoreID.push(store.storeid);
-          });       
-        db.store.getListStoreName(listStoreID)
-            .then(function (storeRs) {
-                res.status(200).json(storeRs);
-            }, function () {
-                next(new Error("Can not find store name!"))
-            });
-
-    };
+        _.each(listStoreId, function(store){
+            listStoreID.push(store.storeid);
+        });       
+        return db.store.getListStoreName(listStoreID)
+        .then(function (storeRs) {
+             return storeRs;
+        }, function (err) {
+            throw err
+        });
+    }
 
     var getStoreDetail = function(req,res,next){
 
@@ -265,15 +267,20 @@ module.exports = function(app) {
 
     };
 
-    var storeGetStoreDetail = function(req,res,next){
-        var storeid = req.user.stores[0].storeid
-        db.store.getStoreDetail(storeid, db.managestore, db.user, db.profile)
+
+/*
+    By KhanhKC
+    This function is use to get info of a store and info of store's manager
+*/
+    function storeGetStoreDetail(storeid) {
+        return db.store.getStoreDetail(storeid, db.managestore, db.user, db.profile)
             .then(function (store) {
-                res.status(200).json(store);
-            }, function () {
-                next(new Error("Can not find store name!"))
-            });
-	};
+                return store;
+            }, function (err) {
+                throw err;
+            });  
+    };
+
     //function create new shipperid
     var createStoreOwnerID = function(req, res, next){
         var isExisted = false;
