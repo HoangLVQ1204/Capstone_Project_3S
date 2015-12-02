@@ -1,4 +1,4 @@
-function storeTransactionHistoryController($scope,$state, $http, $location, config, $rootScope) {
+function storeTransactionHistoryController($scope,$state,dataService, $http, $location, config, $rootScope) {
 
     $scope.ledgerList = [];
     $scope.autoList = [];
@@ -21,14 +21,7 @@ function storeTransactionHistoryController($scope,$state, $http, $location, conf
             option: 'Balance',
             value: 'balance'
         },
-        // {
-        //     option: 'Delivery',
-        //     value: 'totaldelivery'
-        // },
-        // {
-        //     option: 'Cash on delivery',
-        //     value: 'totalcod'
-        // }
+        
     ];
     $scope.searchAutoOptions = [
         {
@@ -57,7 +50,10 @@ function storeTransactionHistoryController($scope,$state, $http, $location, conf
     $scope.autoDateRange = '';
 
     function getDataFromServer(){
-        $http.get(config.baseURI + "/api/store/ledger/getLedgerList").success(function(response){
+        var urlBase = config.baseURI + "/api/store/ledger/getLedgerList";
+        dataService.getDataServer(urlBase)
+        .then(function(response){
+            response = response.data;
             response.map(function(ledger){
                 ledger.balance = parseInt(ledger.balance);
                 ledger.totalcod = parseInt(ledger.totalcod);
@@ -107,5 +103,5 @@ function storeTransactionHistoryController($scope,$state, $http, $location, conf
 
 }
 
-storeTransactionHistoryController.$inject = ['$scope','$state', '$http', '$location', 'config','$rootScope'];
+storeTransactionHistoryController.$inject = ['$scope','$state','dataService','$http', '$location', 'config','$rootScope'];
 angular.module('app').controller('storeTransactionHistoryController',storeTransactionHistoryController);
