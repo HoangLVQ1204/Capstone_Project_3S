@@ -8,12 +8,22 @@ module.exports = function(app){
 
  	app.param('username', controller.params);
 
-	app.post('/api/user/addNewUser', controller.addNewUser);
+	app.post('/api/user/addNewUser', checkAll,function(req,res,next){
+		var user = req.body;
+		controller.addNewUser(user).then(function(data){
+			res.status(201).json(data);
+		})
+			.catch(function(err){
+				next(err);
+			})
+	});
 
 	app.get('/user/profile/:username',checkAll,controller.getProfileUser);
 
 	app.route('/api/user/:user')
-		.get(controller.getUserDetail)
+		.get(checkAll,function(req,res,next){
+			res.status(200).json(req.user.toJSON());
+		})
 		.put(controller.putUser);
 
 	app.route('/api/userProfile/:user')

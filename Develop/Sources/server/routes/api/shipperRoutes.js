@@ -9,25 +9,98 @@ module.exports = function (app) {
     var authManage = require('./../../manages/authManage')(app);
     var checkAll = [authManage.checkToken(),authManage.checkRole()];
 
-    app.get('/api/tasks', checkAll, shipperCtrl.getTasks);
+    app.get('/api/tasks', checkAll, function(req, res, next) {
+        var shipperID = req.user.username;
+        shipperCtrl.getTasks(shipperID).then(function(data) {
+            res.status(200).json(data);
+        })
+        .catch(function(err) {
+            next(err);
+        })
+    });
 
-    app.get('/api/shipper/getNewShipperID', shipperCtrl.createShipperID);
+    app.get('/api/shipper/getNewShipperID', checkAll,function(req,res,next){
+            shipperCtrl.createShipperID().then(function(data){
+                res.status(200).json(data);
+            })
+            .catch(function(err){
+                next(err);
+            })
+    });
 
-    app.put('/api/shipper/updateTaskForShipper', shipperCtrl.updateTaskForShipper);
+    app.put('/api/shipper/updateTaskForShipper', checkAll,function(req,res,next){
+            var shipperList = req.body;
+            shipperCtrl.updateTaskForShipper(shipperList).then(function(data){
+                res.status(201).json(data);
+            })
+            .catch(function(err){
+                next(err);
+            })
+    });
 
-    app.get('/api/shipper/getAllShipper', shipperCtrl.getAllShipper);
+    app.get('/api/shipper/getAllShipper', checkAll,function(req,res,next){
+            shipperCtrl.getAllShipper().then(function(data){
+                res.status(200).json(data);
+            })
+            .catch(function(err){
+                next(err);
+            })
+    });
 
-    app.get('/api/shipper/getTaskBeIssuePending', checkAll, shipperCtrl.getTaskBeIssuePending);
+    app.get('/api/shipper/getTaskBeIssuePending', checkAll, function(req, res, next) {
+        var shipperID = req.user.username;
+        shipperCtrl.getTaskBeIssuePending(shipperID).then(function(data) {
+            res.status(200).json(data);
+        })
+        .catch(function(err) {
+            next(err)
+        })
+    });
 
-    app.get('/api/shipper/getAllShipperWithTask', shipperCtrl.getAllShipperWithTask);
+    app.get('/api/shipper/getAllShipperWithTask', checkAll,function(req,res,next){
+            shipperCtrl.getAllShipperWithTask().then(function(data){
+                res.status(200).json(data);
+            })
+            .catch(function(err){
+                next(err);
+            })
+    });
 
     app.get('/api/shipper/getAllShipperWithTaskForProcessing/:shipperid', shipperCtrl.getAllShipperWithTaskForProcessing);
 
-    app.get('/api/shipper/getAllOrderToAssignTask', shipperCtrl.getAllOrderToAssignTask);
+    app.get('/api/shipper/getAllOrderToAssignTask', checkAll,function(req,res,next){
+            shipperCtrl.getAllOrderToAssignTask().then(function(data){
+                res.status(200).json(data);
+            })
+            .catch(function(err){
+                next(err);
+            })
+    });
 
-    app.post('/api/issue', checkAll, shipperCtrl.createIssuePending);
+    app.post('/api/issue', checkAll, function(req, res, next) {
+        var shipperID = req.user.username;
+        var newIssue = req.body[0].issue;
+        var orders = req.body[0].orders
+        var categoryissue = req.body[0].categoryissue
+        shipperCtrl.createIssuePending(shipperID, newIssue, orders, categoryissue).then(function(data) {
+            res.status(200).json(data);
+        })
+        .catch(function(err) {
+            next(err);
+        })
+    });
 
-    app.put('/api/changeIsPendingOrder', checkAll, shipperCtrl.changeIsPending);
+    app.put('/api/changeIsPendingOrder', checkAll, function(req, res, next) {
+        var shipperid = req.user.username;
+        var issueId = req.body.issueId;
+        shipperCtrl.changeIsPending(shipperid, issueId).then(function(data) {
+            console.log("data:shipperRouter:62",  data);
+            res.status(200).json(data)
+        })
+        .catch(function(err) {
+            next(err);
+        })
+    });
 
     app.route('/api/shipper/history')
         .get(checkAll, function (req, res, next) {

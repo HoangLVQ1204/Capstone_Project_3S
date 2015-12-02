@@ -1,19 +1,15 @@
 /**
  * Created by Hoang on 10/18/2015.
  */
-function adminAssignTaskController($scope,$state, $http, authService, config, dataService, socketAdmin) {
-
-
-    $scope.tasksList = [];//all task of shipper
-    $scope.tasksList = [];//all task of shipper
-    $scope.shipperList = [];
-    $scope.orderList = [];
-    $scope.taskList = [];
-    $scope.oldTasks = [];//old Task
-    $scope.taskNoShipper = [];
-    $scope.pickedShipper = null;
+function adminAssignTaskController($scope,$state, $http, authService, config, dataService, socketAdmin, $rootScope) {
     var currentUser = authService.getCurrentInfoUser();
+    $scope.pickedShipper = null;
+    $scope.taskList = [];
+
+
     $scope.displayedTaskCollection = [].concat($scope.taskList);
+    $scope.oldTasks = [];//old Task
+    getDataFromServer(true);
     $scope.searchShipperOptions = [
         {
             option: 'All',
@@ -47,54 +43,76 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
     $scope.selectedOrder =$scope.searchOrderOptions[0];
     $scope.dateRange = null;
     $scope.dateNow = new Date();
-    //console.log("URL:"+ config.baseURI + "/api/shipper/getAllShipperWithTask");
 
-    dataService.getDataServer(config.baseURI + "/api/shipper/getAllShipper").then(function(response){
-        $scope.shipperList = response.data;
-        $scope.displayedShipperCollection = [].concat($scope.tasksList);
-        //console.log($scope.displayedShipperCollection)
-        //console.log(1);
-        //console.log(response);
-    }).then(function () {
-        dataService.getDataServer(config.baseURI + "/api/shipper/getAllShipperWithTask").then(function(response){
-            $scope.tasksList = response.data;
-            getOldTask();
-            $scope.shipperList.map(function (shipper) {
-                var result = $.grep($scope.tasksList, function(e){ return e.username == shipper.username; });
-                shipper['tasks'] = [];
-                if (result.length==0) $scope.tasksList.push(shipper);
+    function getDataFromServer(firsttime){
 
-            })
+        $scope.tasksList = [];//all task of shipper
+        $scope.shipperList = [];
+        $scope.orderList = [];
+        $scope.taskNoShipper = [];
+        //console.log("URL:"+ config.baseURI + "/api/shipper/getAllShipperWithTask");
+
+        dataService.getDataServer(config.baseURI + "/api/shipper/getAllShipper").then(function(response){
+            $scope.shipperList = response.data;
             $scope.displayedShipperCollection = [].concat($scope.tasksList);
             //console.log($scope.displayedShipperCollection)
             //console.log(1);
-
+            //console.log(response);
         }).then(function () {
-            dataService.getDataServer(config.baseURI + "/api/getUserGetIssue").then(function(response){
-                $scope.listUserHasIssue = response.data;
-                $scope.tasksList.map(function (shipper) {
-                    var shipperHasIssue = $.grep($scope.listUserHasIssue, function(e){ return e.sender == shipper.username;});
-                    if (shipperHasIssue.length > 0) shipper['hasIssue'] = true;
-                    else shipper['hasIssue'] = false;
+            dataService.getDataServer(config.baseURI + "/api/shipper/getAllShipperWithTask").then(function(response){
+                $scope.tasksList = response.data;
+                getOldTask();
+                $scope.shipperList.map(function (shipper) {
+                    var result = $.grep($scope.tasksList, function(e){ return e.username == shipper.username; });
+                    shipper['tasks'] = [];
+                    if (result.length==0) $scope.tasksList.push(shipper);
+
+                })
+                $scope.displayedShipperCollection = [].concat($scope.tasksList);
+
+                if (!firsttime)
+                    if ($scope.pickedShipper!=null)
+                        {
+                            var result = $.grep($scope.tasksList, function(e){ return e.username == $scope.pickedShipper.username; });
+                            $scope.pickedShipper = result[0];
+                            $scope.taskList = $scope.pickedShipper.tasks;
+                        }
+                //console.log($scope.displayedShipperCollection)
+                //console.log(1);
+
+            }).then(function () {
+                dataService.getDataServer(config.baseURI + "/api/getUserGetIssue").then(function(response){
+                    $scope.listUserHasIssue = response.data;
+                    $scope.tasksList.map(function (shipper) {
+                        var shipperHasIssue = $.grep($scope.listUserHasIssue, function(e){ return e.sender == shipper.username;});
+                        if (shipperHasIssue.length > 0) shipper['hasIssue'] = true;
+                        else shipper['hasIssue'] = false;
+                    });
+                    //console.log( $scope.tasksList);
                 });
-                //console.log( $scope.tasksList);
-            });
-            //$scope.moveAllProcessingTask($scope.originShipperID);
+
+                dataService.getDataServer(config.baseURI + "/api/shipper/getAllOrderToAssignTask").then(function(response){
+                    $scope.orderList = response.data;
+                    $scope.displayedOrderCollection = [].concat($scope.orderList);
+                    //console.log($scope.orderList);
+                });
+                //$scope.moveAllProcessingTask($scope.originShipperID);
+            })
         })
-    })
 
 
-    dataService.getDataServer(config.baseURI + "/api/shipper/getAllOrderToAssignTask").then(function(response){
-        $scope.orderList = response.data;
-        $scope.displayedOrderCollection = [].concat($scope.orderList);
-        //console.log($scope.orderList);
-    });
+
+    }
+
+
 
 
 
 
     $scope.assignTask = function () {
-        dataService.putDataServer(config.baseURI + "/api/shipper/updateTaskForShipper", $scope.tasksList).then(function success(response){
+        dataService.putDataServer(config.baseURI + "/api/shipper/updateTaskForShipper", $scope.tasksList)
+            .then(function success(response){
+
             var data = new Object();
             data.verticalEdge='right';
             data.horizontalEdge='bottom';
@@ -214,13 +232,9 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
     //FUNCTION move processing task away shipper has issue
     //-----------------------------------
     $scope.moveAllProcessingTask = function(shipperid){
-        var originShipper = $.grep($scope.tasksList, function(e){ return e.username ==  shipperid;});
-        $scope.orderList = $scope.orderList.concat(originShipper[0].tasks.slice(0,originShipper[0].tasks.length));
-        originShipper[0].tasks.splice(0,originShipper[0].tasks.length);
-        //originShipper[0].tasks = [];
-        $scope.orderList.map(function (shipper) {
-            shipper.shipperid = null;
-        })
+        var i=0;
+        while (i<$scope.taskList.length)
+            $scope.pickTask($scope.taskList[i]);
         //console.log(originShipper[0].tasks);
         //console.log($scope.orderList);
     }
@@ -240,18 +254,13 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
             $.notific8($("#sms-fail-assign").val(), data);
             return;
         }
-        //var originShipper = $.grep($scope.tasksList, function(e){ return e.username ==  shipperid;});
-        for(i=0;i<$scope.orderList.length;i++)
-        {
-            $scope.orderList[i].shipperid = $scope.pickedShipper.username;
-            $scope.pickedShipper.tasks.push($scope.orderList[i]);
-            //console.log($scope.orderList[i]);
+        var i = 0;
+        while (i<$scope.orderList.length) {
+            $scope.pickOrder($scope.orderList[i]);
         }
-        //$scope.$parent.$apply();
-        $scope.orderList.splice(0,$scope.orderList.length);
         //$scope.orderList = [];
         //console.log(originShipper[0].tasks);
-        console.log($scope.tasksList);
+        //console.log($scope.tasksList);
     }
 
     //----------------------------------
@@ -268,17 +277,21 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
     //-----------------------------------
     function getOldTask(){
         $scope.oldTasks = [];
-        $scope.tasksList.map(function (shipper) {
-            shipper.tasks.map(function (oldtask) {
-                if (oldtask.statusid != null){
-                    var task = new Object();
-                    task['shipperid'] = shipper.username;
-                    task['taskid'] = oldtask.taskid;
-                    $scope.oldTasks.push(task);
-                }
+        dataService.getDataServer(config.baseURI + "/api/shipper/getAllShipperWithTask").then(function(response){
+            response.data.map(function (shipper) {
+                shipper.tasks.map(function (oldtask) {
+                    if (oldtask.statusid != null){
+                        var task = new Object();
+                        task['shipperid'] = shipper.username;
+                        task['taskid'] = oldtask.taskid;
+                        $scope.oldTasks.push(task);
+                    }
+                })
+
             })
 
         })
+
     };
 
     function sendSocketToShipper(){
@@ -296,6 +309,7 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
                 }
             })
         });
+        console.log('Send to: ', $scope.oldTasks);
         socketAdmin.taskNotification(listShipper);
     }
     //----------------------------------
@@ -307,10 +321,31 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
 
     });
 
+    //function updateListData(){
+    //    var i=1;
+    //    while (i<$scope.taskList.length){
+    //        if ($scope.taskList.statusid == 2 || $scope.taskList.statusid == 5)
+    //            $scope.taskList.splice(i, 1);
+    //        else i++;
+    //    };
+    //    //i=1;
+    //    //while (i<$scope.orderList.length){
+    //    //    if ($scope.orderList.statusid != 1 && $scope.orderList.statusid != 4)
+    //    //        $scope.orderList.splice(i, 1);
+    //    //    else i++;
+    //    //}
+    //}
 
+    $rootScope.$on("shipper:change:order:status", function(event,args){
+        getDataFromServer(false);
+    });
+
+    $rootScope.$on("shipper:change:task:status", function(event,args){
+        getDataFromServer(false)
+    });
 
 
 }
 
-adminAssignTaskController.$inject = ['$scope','$state', '$http', 'authService', 'config', 'dataService','socketAdmin'];
+adminAssignTaskController.$inject = ['$scope','$state', '$http', 'authService', 'config', 'dataService','socketAdmin', '$rootScope'];
 angular.module('app').controller('adminAssignTaskController',adminAssignTaskController);

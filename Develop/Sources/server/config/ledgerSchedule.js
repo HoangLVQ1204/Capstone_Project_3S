@@ -5,6 +5,7 @@ var moment         = require('moment');
 module.exports = function(app) {
 	var db = app.get('models');
 	var notificationManage = require('../manages/notificationManage')(app);
+	var storeManage = require('../manages/storeManage')(app);
 	var server = app.get('io')
 	var autoPayment = function () {
 		var rule = new cron.RecurrenceRule();
@@ -51,7 +52,7 @@ module.exports = function(app) {
 									.then(function (newledger) {
 										//console.log(newledger.ledgerid);
 										if (ledger['balance'] < 0)
-											updateLedgerForOrderAfterAuto(store.storeid);
+											storeManage.updateLedgerForOrder(store.storeid);
 
 										console.log('Auto update ledger of store ' + store.storeid);
 										var msgToStore = {

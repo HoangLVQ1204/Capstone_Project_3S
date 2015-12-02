@@ -17,10 +17,25 @@ module.exports = function(app){
 		.get(controller.createStoreOwnerID);
 
 	app.route('/api/store/getNewStoreID')
-		.get(controller.createStoreID);
+		.get(checkAll,function(req,res,next){
+			controller.createStoreID().then(function(data){
+				res.status(200).json(data);
+			})
+				.catch(function(err){
+					next(err);
+				})
+		});
 
 	app.route('/api/store/postNewLedger')
-			.post(controller.postNewLedger);
+		.post(checkAll,function(req,res,next){
+			var newLedger = req.body;
+			controller.postNewLedger(newLedger).then(function(data){
+				res.status(201).json(data);
+			})
+				.catch(function(err){
+					next(err);
+				})
+		});
 
 	app.route('/api/store/getTotalFee')
 		.get(controller.getTotalFee);
@@ -33,7 +48,15 @@ module.exports = function(app){
 
     app.route('/api/store')
     	.get(controller.get)
-    	.post(controller.postNewStore);
+    	.post(checkAll,function(req,res,next){
+			var newStore = req.body;
+			controller.postNewStore(newStore).then(function(data){
+				res.status(201).json(data);
+			})
+				.catch(function(err){
+					next(err);
+				})
+		});
 
     app.route('/api/store/:storeid')
     	.get(controller.getOne)
@@ -41,20 +64,60 @@ module.exports = function(app){
     	.delete(controller.del);
 
 	app.route('/api/store/getLatestLedgerOfStore/:storeid')
-		.get(controller.getLatestLedgerOfStore);
+		.get(checkAll,function(req,res,next){
+			var storeid = req.store.storeid;
+			controller.getLatestLedgerOfStore(storeid).then(function(data){
+				res.status(200).json(data);
+			})
+			.catch(function(err){
+				next(err);
+			})
+		});
 
 	app.route('/api/store/updateLedgerForOrder/:storeid')
-		.put(controller.updateLedgerForOrder);
+		.put(checkAll,function(req,res,next){
+			var storeid = req.store.storeid;
+			controller.updateLedgerForOrder(storeid).then(function(data){
+				res.status(201).json(data);
+			})
+			.catch(function(err){
+				next(err);
+			})
+		});
 
 	app.route('/api/getAllStoreName')
-		.get(checkAll,controller.getAllStoreName);
+		.get(checkAll,function(req,res,next){
+			var listStoreId = req.user.stores;
+			controller.getAllStoreName(listStoreId).then(function(data){
+				res.status(200).json(data);
+			})
+			.catch (function(err){
+				next(err);
+			})
+		});
 
 	app.route('/api/getInactiveStore')
 		.get(controller.getAllInactiveStore);
 
 	app.route('/api/storeDetail/:storeid')
-		.get(controller.getStoreDetail);
+		.get(checkAll,function(req,res,next){
+			var storeid = req.store.storeid;
+			controller.getStoreDetail(storeid).then(function(data){
+				res.status(200).json(data);
+			})
+			.catch(function(err){
+				next(err);
+			})
+		});
 
 	app.route('/api/storeDetail')
-		.get(checkAll,controller.storeGetStoreDetail);
+		.get(checkAll,function(req,res,next) {
+			var storeid = req.user.stores[0].storeid
+			controller.storeGetStoreDetail(storeid).then(function(data){
+				res.status(200).json(data);
+			})
+			.catch(function(err){
+				next(err);
+			})
+		});
 };

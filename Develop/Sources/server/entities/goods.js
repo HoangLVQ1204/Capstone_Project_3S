@@ -64,7 +64,7 @@ module.exports = function(sequelize, DataTypes) {
             description: newGood.description,
             amount: newGood.amount
           }
-        ).save();
+        ).save()
       },
 
       deleteGood: function (orderid) {
