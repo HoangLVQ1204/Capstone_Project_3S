@@ -56,7 +56,7 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/api/shipper/getAllShipperWithTask', checkAll,function(req,res,next){
+    app.get('/api/shipper/getAllShipperWithTask',function(req,res,next){
             shipperCtrl.getAllShipperWithTask().then(function(data){
                 res.status(200).json(data);
             })

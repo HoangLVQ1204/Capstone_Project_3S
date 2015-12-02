@@ -116,4 +116,88 @@ describe("ADMINFUNCTIONS TEST:", function () {
         });
 
     });
+
+    describe("FUNCTION UPDATE TASK FOR SHIPPER:", function () {
+        //TEST CASE AD_Function1
+        //var user1 = null;
+        //it("Test case AD_Function1_01", function (done) {
+        //    userManage.addNewUser(user1).then(function(rs){
+        //        expect(rs).to.be.null;
+        //        done();
+        //    },function(er){
+        //
+        //    });
+        //
+        //});
+
+        var shipperList2 = [{
+            tasks: []
+        }]
+        it("Test case AD_Function3_02", function (done) {
+            shipperManage.updateTaskForShipper(shipperList2).then(function (rs){
+                //console.log(rs);
+                expect(rs).to.be.empty;
+                done();
+            },function(er){
+            });
+        });
+
+        var shipperList3 = [{
+            tasks: [
+                {
+                    orderid: "OD669907",
+                    shipperid: "SP000002",
+                    adminid: "AD000001",
+                    statusid: 1,
+                    typeid: 1,
+                    taskdate: "2015-12-02"
+                }
+            ]
+        }]
+        it("Test case AD_Function3_03", function (done) {
+            shipperManage.updateTaskForShipper(shipperList3).then(function (rs){
+                //console.log(rs);
+                expect(rs).to.be.not.empty;
+                done();
+            },function(er){
+                //console.log(er);
+                //done();
+            });
+        });
+
+    });
+
+    describe("FUNCTION GET LATEST LEDGER OF STORE:", function () {
+        //TEST CASE AD_Function1
+        //var user1 = null;
+        //it("Test case AD_Function1_01", function (done) {
+        //    userManage.addNewUser(user1).then(function(rs){
+        //        expect(rs).to.be.null;
+        //        done();
+        //    },function(er){
+        //
+        //    });
+        //
+        //});
+
+        it("Test case AD_Function4_02", function (done) {
+            storeManage.getLatestLedgerOfStore(null).then(function (rs){
+                //console.log(rs);
+                //expect(rs).to.be.not.null;
+                //done();
+            },function(er){
+                //console.log(er);
+            });
+        });
+
+        it("Test case AD_Function2_03", function (done) {
+            storeManage.postNewStore(store2).then(function (rs){
+            },function(er){
+                //console.log(er);
+                expect(er).to.be.not.null;
+                done();
+            });
+        });
+
+    });
 });

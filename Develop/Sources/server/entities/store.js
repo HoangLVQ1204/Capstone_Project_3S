@@ -84,9 +84,7 @@ module.exports = function(sequelize, DataTypes) {
           postOneStore: function(newStore){
             return store.build(newStore).save().then(function (store) {
                 return store;
-            }, function (err) {
-                throw err;
-            });
+            }).then(sequelize.handler);
           },
 
           deleteStore: function (stores) {
