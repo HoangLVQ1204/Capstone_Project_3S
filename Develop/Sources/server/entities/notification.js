@@ -51,7 +51,7 @@ module.exports = function(sequelize, DataTypes) {
           where: {
             username: username
           }
-        }).then(sequelize.handler);        
+        });
       },
 
       getTotalUnreadNotifications: function(username) {
@@ -60,7 +60,7 @@ module.exports = function(sequelize, DataTypes) {
             username: username,
             isread: false
           }
-        }).then(sequelize.handler);        
+        });
       },
 
       getNotifications: function(username, offset, limit) {
@@ -74,7 +74,7 @@ module.exports = function(sequelize, DataTypes) {
           order: [
             ['createddate', 'DESC']
           ]
-        }).then(sequelize.handler);
+        });
         // return sequelize.query('SELECT * FROM notification WHERE username = :username ORDER BY createddate DESC OFFSET :offset LIMIT :limit',
         //   { 
         //     replacements: { 
