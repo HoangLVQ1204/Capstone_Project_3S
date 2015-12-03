@@ -80,7 +80,8 @@ module.exports = function(sequelize, DataTypes) {
             }]
           }]
         });
-        return issue.build({categoryid: newIssue.categoryID, reason: newIssue.reason, description: newIssue.description}).save();
+        //?????
+        // return issue.build({categoryid: newIssue.categoryID, reason: newIssue.reason, description: newIssue.description}).save();
       },
 
       getAllIssue: function (issuetype, issuecategory) {
@@ -121,7 +122,7 @@ module.exports = function(sequelize, DataTypes) {
           where: {
             'issueid': issueid
           }
-        })
+        }).then(sequelize.handler)
       },
 
       updateResolveIssue: function (issueid, type) {
@@ -132,7 +133,7 @@ module.exports = function(sequelize, DataTypes) {
               where: {
                 'issueid': issueid
               }
-            })
+            }).then(sequelize.handler)
         },
 
       getUserGetIssue: function () {

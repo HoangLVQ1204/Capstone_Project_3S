@@ -103,8 +103,6 @@ module.exports = function(app) {
                     return db.profile.addNewProfile(user.profile)
                         .then(function(profile){
                             return profile;
-                        },function(err){
-                            throw err;
                         });
                 },function(err){
                     throw err;

@@ -350,7 +350,7 @@ module.exports = function(sequelize, DataTypes) {
             'completedate': {lt: paydate},
             'statusid': [7, 8]
           }
-        })
+        }).then(sequelize.handler)
       },
 
 

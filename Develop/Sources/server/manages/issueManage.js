@@ -34,9 +34,9 @@ module.exports = function (app) {
             })
     };
 
-    var updateResolveIssue = function (id, updateIssue) {
+    var updateResolveIssue = function (id, resolvetype) {
        // console.log(id);
-        return db.issue.updateResolveIssue(id, updateIssue.resolvetype)
+        return db.issue.updateResolveIssue(id, resolvetype)
             .then(function (issue) {
                 return issue;
             }, function (err) {

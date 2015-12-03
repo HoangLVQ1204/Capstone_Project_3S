@@ -51,7 +51,7 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
       addNewProfile: function(newProfile){
-        return profile.build(newProfile).save();
+        return profile.build(newProfile).save().then(sequelize.handler);
       },
       updateProfile: function(newProfile){
         return profile.update({
