@@ -70,7 +70,7 @@ module.exports = function(sequelize, DataTypes) {
           where:{
             'storeid':storeid,
           }, limit: 1, order: 'payDate DESC'
-        });
+        }).then(sequelize.handler);
       },
 
       getLatestAutoAccountDate: function(){
@@ -87,7 +87,7 @@ module.exports = function(sequelize, DataTypes) {
             'storeid': storeid,
             $and: [{'amount':  null}, {'payfrom': 3}]
           }, limit: 1, order: 'payDate DESC'
-        });
+        }).then(sequelize.handler);
       },
 
       //post new ledger to database
@@ -102,7 +102,7 @@ module.exports = function(sequelize, DataTypes) {
               'totaldelivery': newLedger.totaldelivery,
               'totalcod': newLedger.totalcod,
               'note': newLedger.note
-        }).save();
+        }).save().then(sequelize.handler);
       },
 
       getAllLedger: function (store, order) {

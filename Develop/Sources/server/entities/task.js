@@ -160,6 +160,7 @@ module.exports = function (sequelize, DataTypes) {
                         taskdate: shipper.taskdate
                     }
                 }).spread(function(tasks, created){
+
                     if (!created && tasks.shipperid != shipper.shipperid)
                         if (tasks.statusid == 4){
                             task.create({
@@ -170,9 +171,9 @@ module.exports = function (sequelize, DataTypes) {
                                     'typeid': shipper.typeid,
                                     'taskdate': new Date(Date.now())
                                 });
-                            task.updateStatusOfTask(tasks.taskid, 5);
+                            return task.updateStatusOfTask(tasks.taskid, 5);
                         }
-                    else  task.updateShipperOfTask(tasks.taskid, shipper.shipperid);
+                    else  return task.updateShipperOfTask(tasks.taskid, shipper.shipperid);
 
                 })
             },

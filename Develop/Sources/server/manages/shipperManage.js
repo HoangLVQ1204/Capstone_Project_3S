@@ -879,6 +879,7 @@ module.exports = function (app) {
             shipper.tasks.map(function (task) {
                 promise.push(db.task.assignTaskForShipper(task)
                     .then(function(newTask) {
+                        console.log(newTask)
                          return newTask
                         //console.log(newTask.taskid)
                     }, function(err) {

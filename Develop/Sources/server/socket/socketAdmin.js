@@ -11,7 +11,7 @@ module.exports = function(socket, io, app) {
     });
 
     socket.on('admin:messageIssue', function(data) {
-        data.msg.orderList.map(function (order) {
+        var promises = data.msg.orderList.map(function (order) {
             //var msg = new Object();
             //msg['title'] = data.msg.msg;
             var socketName = "";
@@ -32,23 +32,40 @@ module.exports = function(socket, io, app) {
                 socketName = 'store:issue:cancel';
             }
             //console.log(socketName, '0000');
-            db.managestore.getOwnerOfStore(order.storeid)
+            return db.managestore.getOwnerOfStore(order.storeid)
                 .then(function (user) {
                     data.msg.msg['username'] = user[0].managerid;
                     notificationManage.postFromSever(data.msg.msg);
                     console.log(socketName, 'AAA');
-                    io.forward(
-                        {
-                            type: 'admin',
-                            clientID: data.sender
-                        },
-                        {type: 'store', clientID: order.storeid},
-
-                        data.msg.msg
-                        ,
-                        socketName);
+                    return { storeID: order.storeid, socketName: socketName };                    
                 })
-        })
+        });
+
+        Promise.all(promises)
+        .then(function(infos) {            
+            var unique = {};
+            // console.log('socketAdmin.js:47', data);
+            infos.forEach(function(e) {
+                if (unique[e.storeID]) unique[e.storeID][e.socketName] = 1;
+                else {
+                    var temp = {};
+                    temp[e.socketName] = 1;
+                    unique[e.storeID] = temp;
+                }
+            });
+            var storeIDs = Object.keys(unique);            
+            // console.log('socketAdmin.js:57', storeIDs);
+            storeIDs.forEach(function(storeID) {
+                Object.keys(unique[storeID]).forEach(function(socketName) {
+                    // console.log('socketAdmin.js:60', storeID, socketName);
+                    io.forward(
+                        data.sender,
+                        {type: 'store', clientID: storeID },
+                        data.msg.msg,
+                        socketName);
+                });
+            });
+        });
 
         //send to shipper
         if (data.msg.typeid <= 6)
