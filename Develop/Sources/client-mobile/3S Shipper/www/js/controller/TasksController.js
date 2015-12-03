@@ -6,12 +6,14 @@
 app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoading', '$ionicPopup', '$timeout', 'socketShipper', function($rootScope, $scope, dataFactory, $ionicLoading, $ionicPopup, $timeout, socketShipper) {
 
   $scope.haveIssue = false;
+
   //Get All Task Be Issued
   getAllTaskBeIssued();
 
   //Get All Task of Shipper
   getListOfTask();
 
+  //-----SOCKET-----//
   //Socket on grab express order
   $rootScope.$on("shipper:express:order:success", function(event, args) {
 	var des = {
