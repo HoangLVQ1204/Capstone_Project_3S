@@ -74,11 +74,17 @@ module.exports = function(sequelize, DataTypes) {
               where:{
                 'storeid':storeid
               }
+            }).then(function (store) {
+                return store;
+            }, function (err) {
+                throw err;
             });
           },
 
           postOneStore: function(newStore){
-            return store.build(newStore).save();
+            return store.build(newStore).save().then(function (store) {
+                return store;
+            }).then(sequelize.handler);
           },
 
           deleteStore: function (stores) {
@@ -157,7 +163,7 @@ module.exports = function(sequelize, DataTypes) {
                         where:{
                             'storeid':storeid
                         }
-                    });
+                    }).then(sequelize.handler);
                 },
 
 

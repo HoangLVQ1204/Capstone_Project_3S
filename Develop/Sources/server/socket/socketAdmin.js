@@ -11,7 +11,9 @@ module.exports = function(socket, io, app) {
     });
 
     socket.on('admin:messageIssue', function(data) {
-        data.msg.orderList.map(function (order) {
+        var promises = data.msg.orderList.map(function (order) {
+            //var msg = new Object();
+            //msg['title'] = data.msg.msg;
             var socketName = "";
             if (data.msg.typeid == 1 || data.msg.typeid == 2 || data.msg.typeid == 3 || data.msg.typeid == 6) {
                 data.msg.msg['content'] = "Pending problem of your order " + order.orderid + " has been resolved...";
@@ -29,25 +31,46 @@ module.exports = function(socket, io, app) {
                 data.msg.msg['content'] = "Your cancel request of order " + order.orderid + " has been accepted...";
                 socketName = 'store:issue:cancel';
             }
-            db.managestore.getOwnerOfStore(order.storeid)
+            //console.log(socketName, '0000');
+            return db.managestore.getOwnerOfStore(order.storeid)
                 .then(function (user) {
                     data.msg.msg['username'] = user[0].managerid;
                     notificationManage.postFromSever(data.msg.msg);
-                    io.forward(
-                        {
-                            type: 'admin',
-                            clientID: data.sender
-                        },
-                        {type: 'store', clientID: order.storeid},
-
-                        data.msg.msg
-                        ,
-                        socketName);
+                    console.log(socketName, 'AAA');
+                    return { storeID: order.storeid, socketName: socketName };                    
                 })
-        })
+        });
 
+        Promise.all(promises)
+        .then(function(infos) {            
+            var unique = {};
+            // console.log('socketAdmin.js:47', data);
+            infos.forEach(function(e) {
+                if (unique[e.storeID]) unique[e.storeID][e.socketName] = 1;
+                else {
+                    var temp = {};
+                    temp[e.socketName] = 1;
+                    unique[e.storeID] = temp;
+                }
+            });
+            var storeIDs = Object.keys(unique);            
+            // console.log('socketAdmin.js:57', storeIDs);
+            storeIDs.forEach(function(storeID) {
+                Object.keys(unique[storeID]).forEach(function(socketName) {
+                    // console.log('socketAdmin.js:60', storeID, socketName);
+                    io.forward(
+                        data.sender,
+                        {type: 'store', clientID: storeID },
+                        data.msg.msg,
+                        socketName);
+                });
+            });
+        });
+
+        //send to shipper
         if (data.msg.typeid <= 6)
             data.msg.msg['content'] = 'Your issue has been resolved';
+        //console.log(data.msg.orderList[0].orderid,'BBB');
         if (data.msg.typeid == 7)
             data.msg.msg['content'] = "Order " + data.msg.orderList[0].orderid + " has been cancel by store...";
         if (data.msg.typeid == 8)
@@ -66,6 +89,8 @@ module.exports = function(socket, io, app) {
                 type: data.msg.typeid
             },
             'shipper:issue:resolve')
+        //console.log('Issue', data.msg);
+
     });
 
     socket.on('admin:message:confirmPayment', function(data) {
@@ -101,6 +126,7 @@ module.exports = function(socket, io, app) {
                     { type: 'store', clientID: data.msg.storeid},
                     data.msg.msg,
                     'store:notification:blockStore');
+                console.log('Block store', data.msg);
             });
 
 
@@ -116,6 +142,7 @@ module.exports = function(socket, io, app) {
                     { type: 'shipper', clientID: shipperid},
                     data.msg.msg,
                     'shipper:notification:newTask');
+                console.log('New Task', data.msg);
             });
             })
 

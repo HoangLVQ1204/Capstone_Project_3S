@@ -4,6 +4,7 @@
 
 var _ = require('lodash');
 var configConstant = require('../config/configConstant');
+var Q = require('q');
 // var server = require('../server');
 
 module.exports = function (app) {
@@ -16,8 +17,8 @@ module.exports = function (app) {
      * Get All Task Inactive, Active, Processing of Shipper by shipperID
      * @author: quyennv
      */
-    var getTasks = function (req, res, next) {
-        var shipperid = req.user.username;
+    var getTasks = function (shipperid) {
+        // var shipperid = req.user.username;
         var task = db.task;
 
         return db.order.getAllTaskOfShipper(task, shipperid)
@@ -56,9 +57,10 @@ module.exports = function (app) {
                         }
                     });
                 }
-                res.status(200).json(group);
+                return group;
+
             }, function (err) {
-                next(err);
+                throw err;
             })
     };
 
@@ -68,20 +70,16 @@ module.exports = function (app) {
      * This function is used to return json data for task history API
      *
      * */
-    var getHistory = function (req, res, next) {
-        var shipper = _.cloneDeep(req.user);
-        var shipperid = shipper.username;
-        var page = _.cloneDeep(req.query.page);
-        page = page? page : 0;
+    var getHistory = function (shipperid, page) {
         var History = db.task;
         var Order = db.order;
         var OrderStatus = db.orderstatus;
         var getHistory = History.getAllHistoryOfShipper(shipperid, page, Order, OrderStatus);
         var getTotal = History.countTotalTaskHistoryOfShipper(shipperid);
-        Promise.all([getHistory, getTotal])
+        return Promise.all([getHistory, getTotal])
             .then(function (p) {
                 var history = (p[0]) ? p[0] : [];
-                var total = (p[1]) ? p[1] : 0;
+                var total = (p[1].dataValues) ? p[1].dataValues : 0;
                 var listHistory = [];
                 history.map(function (order) {
                     order = order.toJSON();
@@ -109,9 +107,9 @@ module.exports = function (app) {
                 var result = {};
                 result['current'] = curentPageResult;
                 result['total'] = total;
-                return res.status(200).json(result);
+                return result;
             }, function (err) {
-                next(err);
+                throw(err);
             })
     };
 
@@ -144,23 +142,18 @@ module.exports = function (app) {
             });
     };
 
-    /*
+    /**
      * By HuyTDH - 10/20/2015
-     *
      * This function is used to return json data for task detail API
-     *
      * */
-    var getDetail = function (req, res, next) {
-        var detailtaskid = req.query.taskid;
+    var getDetail = function (shipperid, detailtaskid){
         var Order = db.order;
         var OrderStatus = db.orderstatus;
         var Goods = db.goods;
         var Task = db.task;
         var Store = db.store;
         var Stock = db.stock;
-        var shipper = _.cloneDeep(req.user);
-        var shipperid = shipper.username;
-        Order.getOrderDetailById(detailtaskid, shipperid, OrderStatus, Goods, Task, Store, Stock)
+        return Order.getOrderDetailById(detailtaskid, shipperid, OrderStatus, Goods, Task, Store, Stock)
             .then(function (rs) {
                 if (rs) {
                     rs = rs.toJSON();
@@ -169,18 +162,16 @@ module.exports = function (app) {
                         delete rs['deliveryaddress'];
                         delete rs['completedate'];
                     }
-                    req.statuslist = configConstant.statusList[type];
-                    req.detail = rs;
-                    var resObj = {
-                        "detail": req.detail,
-                        "statuslist": req.statuslist
+                    var statuslist = configConstant.statusList[type];
+                    return {
+                        "detail": rs,
+                        "statuslist": statuslist
                     };
-                    return res.status(200).json(resObj);
                 } else {
-                    return res.status(400).json('Can not found this task detail');
+                    throw new Error('Can not find this task detail');
                 }
             }, function (err) {
-                return res.status(400).json('Can not found this task detail');
+                throw new Error('Can not find this task detail');
             });
     };
 
@@ -189,23 +180,23 @@ module.exports = function (app) {
         return res.status(200).json(rs);
     };
 
-    var nextStep = function (req, res, next) {
-        var shipper = _.cloneDeep(req.user);
-        var shipperid = shipper.username;
+    /**
+     * By HuyTDH - 10/20/2015
+     * This function allows shipper to change order status to next step in their task
+     */
+    var nextStep = function(shipperid, data){
         var Order = db.order;
         var Task = db.task;
-        var data = _.cloneDeep(req.body);
         if (data) {
             var key = data.code;
             var taskid = data.taskid;
-            Order.shipperGetOneOrder(taskid, key, shipperid, Task).then(function (orderObj) {
+            return Order.shipperGetOneOrder(taskid, key, shipperid, Task).then(function (orderObj) {
                 if (orderObj) {
                     // DATA TO SEND SOCKET
                     var receiver = {
                         type: 'store',
                         clientID: orderObj.storeid
                     };
-
                     var msg = {
                         type: 'info',
                         title: 'Info: Change Status Order',
@@ -215,9 +206,7 @@ module.exports = function (app) {
                         username: orderObj.storeid,
                         createddate: new Date()
                     };
-
                     var msgAdmin = {};
-
                     var customer = {
                         order: [orderObj.orderid],
                         geoText: orderObj.deliveryaddress
@@ -228,8 +217,6 @@ module.exports = function (app) {
                     var nextStatus = 0;
                     var nextStatusName = '';
                     var isRequireCode = false;
-                    // :TODO Need to check is canceled
-                    // :TODO Need to check is canceled
                     var statusList = configConstant.statusList[orderObj.tasks[0].typeid];
                     var taskBegin = statusList[0];
                     var taskDone = statusList[statusList.length - 1];
@@ -245,17 +232,16 @@ module.exports = function (app) {
                             isRequireCode = st.requiredcode;
                         }
                     }
-
                     // Update status of order
                     server.socket.updateStatusOrder(orderObj.orderid, nextStatusName);
 
                     var completeDate = (nextStatus == configConstant.doneStatus)? new Date(): orderObj.completedate;
                     var stockID = (nextStatus == configConstant.inStockStatus)? configConstant.stockID : null;
                     if (isRequireCode) {
-                        db.confirmationcode.checkCode(key, data.confirmcode, orderObj.statusid)
+                        return db.confirmationcode.checkCode(key, data.confirmcode, orderObj.statusid)
                             .then(function (codeObj) {
                             if (codeObj) {
-                                orderObj.updateOrderStatus(nextStatus, completeDate, stockID).then(function (rs) {
+                                return orderObj.updateOrderStatus(nextStatus, completeDate, stockID).then(function (rs) {
                                     if(oldStatus == pickUpStatusID){
                                         db.profile.getProfileUser(shipperid).then(function(profile){
                                             msg['profile'] = profile;
@@ -264,7 +250,6 @@ module.exports = function (app) {
                                         });
                                     }else {
                                         server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
-
                                     }
                                     // SEND SOCKET FOR ADMINS
                                     server.socket.forward('server', 'admin', msgAdmin, 'shipper:change:order:status');
@@ -275,33 +260,33 @@ module.exports = function (app) {
                                         db.notification.addNotification(msg);
                                     });
                                     if(oldStatus == taskBegin.statusid){
-                                        Task.updateTaskStatus(configConstant.taskActive, taskid, shipperid).then(function (ok) {
+                                        return Task.updateTaskStatus(configConstant.taskActive, taskid, shipperid).then(function (ok) {
                                             server.socket.startTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
-                                            return res.status(200).json("Your task was active!");
+                                            return "Your task was active!";
                                         },function(er){
-                                            return res.status(400).json("Sorry! Something went wrong!");
+                                            throw new Error("Sorry! Something went wrong!");
                                         });
                                     }else if(nextStatus == taskDone.statusid){
-                                        Task.updateTaskStatus(configConstant.taskDone,taskid,shipperid).then(function(ok){
+                                        return Task.updateTaskStatus(configConstant.taskDone,taskid,shipperid).then(function(ok){
                                             server.socket.finishTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
-                                            return res.status(200).json("Your task was done!");
+                                            return "Your task was done!";
                                         },function(er){
-                                            return res.status(400).json("Sorry! Something went wrong!");
+                                            throw new Error("Sorry! Something went wrong!");
                                         });
                                     }else{
-                                        return res.status(200).json("Your order has been moved to next step! Continue your work!");
+                                        return "Your order has been moved to next step! Continue your work!";
                                     }
                                 }, function (er) {
-                                    return res.status(400).json("Update failed!");
+                                    throw new Error("Update failed!");
                                 });
                             } else {
-                                return res.status(400).json("Wrong Code!");
+                                throw new Error("Wrong Code!");
                             }
                         }, function (err) {
-                            return res.status(400).json("Wrong Code!");
+                            throw new Error("Checking code failed!");
                         });
                     } else {
-                        orderObj.updateOrderStatus(nextStatus, completeDate, stockID)
+                        return orderObj.updateOrderStatus(nextStatus, completeDate, stockID)
                             .then(function (rs) {
                             server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
                             // SEND SOCKET FOR ADMINS
@@ -313,35 +298,35 @@ module.exports = function (app) {
                                 db.notification.addNotification(msg);
                             });
                             if(oldStatus == taskBegin.statusid){
-                                Task.updateTaskStatus(configConstant.taskActive,taskid,shipperid).then(function(ok){
+                                return Task.updateTaskStatus(configConstant.taskActive,taskid,shipperid).then(function(ok){
                                     server.socket.startTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
-                                    return res.status(200).json("Your task was active!");
+                                    return "Your task was active!";
                                 },function(er){
-                                    return res.status(400).json("Sorry! Something went wrong!");
+                                    throw new Error("Sorry! Something went wrong!");
                                 });
                             }else if(nextStatus == taskDone.statusid){
-                                Task.updateTaskStatus(configConstant.taskDone,taskid,shipperid).then(function(ok){
+                                return Task.updateTaskStatus(configConstant.taskDone,taskid,shipperid).then(function(ok){
                                     server.socket.finishTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
-                                    return res.status(200).json("Your task was done!");
+                                    return "Your task was done!";
                                 },function(er){
-                                    return res.status(400).json("Sorry! Something went wrong!");
+                                    throw new Error("Sorry! Something went wrong!");
                                 });
                             }else{
-                                return res.status(200).json("Your order has been moved to next step! Continue your work!");
+                                return "Your order has been moved to next step! Continue your work!";
                             }
                         }, function (er) {
-                            return res.status(400).json("Update failed!");
+                            throw new Error("Updating failed!");
                         });
                     }
                 }else{
-                    return res.status(400).json("Update failed!");
+                    throw new Error("Update failed!");
                 }
             }, function () {
-                return res.status(400).json("Can't find this order!");
+                throw new Error("Can't find this order!");
             });
         }
         else{
-            return res.status(400).json("Can't go to next step");
+            throw new Error("Can't go to next step");
         }
     };
 
@@ -350,31 +335,28 @@ module.exports = function (app) {
      * @author: quyennv - 6/11
      */
 
-    var createIssuePending = function (req, res, next) {
+    var createIssuePending = function (shipperID, issue, orders, categoryissue) {
         var issueType;
         var task = db.task;
-        var listStores = [];        
+        var listStores = [];
 
         //Instance new Issue
-        var newIssue = _.cloneDeep(req.body[0].issue);
-        var shipperID = req.user.username;
+        var newIssue = _.cloneDeep(issue);
         newIssue.isresolved = false;
         newIssue.resolvetype = null;
         newIssue.createddate = new Date();
         newIssue.sender =  shipperID;
-        var orders = _.cloneDeep(req.body[0].orders);
-        var categoryissue = _.cloneDeep(req.body[0].categoryissue);
 
         // Update status of shipper
         server.socket.updateIssueForShipper(shipperID, true);
 
-        console.log('shipperController:357 -- newIssue', newIssue);
-        db.issue.createNewIssue(newIssue)
+        return db.issue.createNewIssue(newIssue)
             .then(function(issue) {
                 issueType = issue.dataValues.typeid;
                 //UPDATE task status of task to 'Processing'
                 //Case: Pending
                 var newStatus = 4;
+
                 if (_.parseInt(categoryissue) === 1) {
                     task.getTaskOfShipperByOrder(shipperID, 'pending', [])
                         .then(function(items){
@@ -419,7 +401,7 @@ module.exports = function (app) {
                 // Lay adminID
                 // Sinh ra cac notification and insert vao bang notification
                 var receiver = [
-                    { room: req.user.username },
+                    { room: shipperID },
                     'admin'
                 ];
 
@@ -428,7 +410,7 @@ module.exports = function (app) {
                     title: 'Issue:',
                     content: 'Shipper ' + shipperID + ' sent an issue.',
                     url: '#/admin/issueBox?content?issueid=' + issue.dataValues.issueid,
-                    isread: false,            
+                    isread: false,
                     createddate: new Date()
                 };
 
@@ -463,7 +445,6 @@ module.exports = function (app) {
                 })
                 .then(function (storeIDs) {
                     storeIDs = _.uniq(storeIDs, 'storeid');
-                    console.log('StoreID:463', storeIDs);
                     storeIDs = storeIDs.map(function(e){
                         return e.storeid;
                     });
@@ -485,7 +466,7 @@ module.exports = function (app) {
                     });
 
                     return Promise.all(promises);
-                    
+
                 })
                 .then(function(data) {
                     console.log('shipperController:480', data.length);
@@ -533,20 +514,6 @@ module.exports = function (app) {
 
                 });
 
-                //Respon data
-
-                // Insert into orderissue
-                //var newOrderIssue = {};
-                //newOrderIssue.issueid = issue.issueid;
-                //var isPending = true;
-                //_.each(orders, function(orderID) {
-                //    newOrderIssue.orderid = orderID;
-                //    db.orderissue.createOrderIssue(newOrderIssue);
-                //    if (_.parseInt(categoryissue) === 1) {
-                //        //Change isPending
-                //        db.order.changeIsPendingOrder(orderID, isPending);
-                //    }
-                //});
                 var group = [];
                 group.push({
                     'issueid': issue.dataValues.issueid,
@@ -559,9 +526,10 @@ module.exports = function (app) {
                     server.socket.updatePendingOrder(shipperID, true);
                 };
 
-                res.status(200).json(group);
+                return group;
+
             }, function (err) {
-                next(err);
+                throw err;
             });
     };
 
@@ -569,10 +537,10 @@ module.exports = function (app) {
      * Change is pending of order
      * @author: quyennv
      */
-    var changeIsPending = function(req, res, next) {
-        //console.log('quyen', req.user.username);
-        var shipperid = req.user.username;
-        var issueId = req.body.issueId;
+    var changeIsPending = function(shipperid, issueId) {
+        // var shipperid = req.user.username;
+        // var issueId = req.body.issueId;
+        var result;
         var task = db.task;
         var order = db.order;
         var orderissue = db.orderissue;
@@ -604,12 +572,13 @@ module.exports = function (app) {
             .then(function(tasks){
                 var listOrdersOfCurrentShip = [];
                 var listOrdersAsignToOther = [];
+                var deferred = Q.defer()
                 if(_.isEmpty(tasks) == false) {
+
                     _.each(tasks, function(task){
                         //Issue of current task not resolved -> Waiting for Admin
                         if (task.isresolved == false) {
-                            //console.log(resMess[0]);
-                            res.status(200).json(resMess[0]);
+                            deferred.resolve(resMess[0]);
                         } else {
                             _.each(task['orderissues'], function(item) {
                                 //If admin assign task for another shipper
@@ -622,14 +591,12 @@ module.exports = function (app) {
                             })
                         }
                     });
+
                     if (listOrdersAsignToOther.length > 0) {
-                        //TODO: Assign to other shipper. Current shipper cannot update order
-                        //_.each(listOrdersFail, function(orderID) {
-                        //    //Change isPending
-                        //    db.order.changeIsPendingOrder(orderID, false);
-                        //});
-                        res.status(200).json(resMess[1]);
+                        result = resMess[1];
+                        deferred.resolve(resMess[1]);
                     }
+
                     if (listOrdersOfCurrentShip.length > 0) {
                         var msgToStore = {
                             type: 'info',
@@ -641,7 +608,7 @@ module.exports = function (app) {
                         };
                         //change isPending of Order
                         _.each(listOrdersOfCurrentShip, function(orderID) {
-                            //Change isPending
+                            //change isPending
                             db.order.changeIsPendingOrder(orderID, false);
                         });
                         //add new notification
@@ -685,7 +652,6 @@ module.exports = function (app) {
                             // server.socket.updateIssueForShipper(shipperid, false);
 
                             // Notify order canceled by Store
-                            var haveCancel = false;
                             console.log("ListOrderOfShipperWhenIssue+++++:688", listOrdersOfCurrentShip)
                             db.order.getManyOrder(listOrdersOfCurrentShip)
                             .then(function(orderIDs){
@@ -695,17 +661,19 @@ module.exports = function (app) {
                                 console.log("listOrderCanceled+++++++: 694", orderIDs);
                                 if (orderIDs.length > 0) {
                                     //res message continue, but some order canceled by store
-                                    res.status(200).json(resMess[3]);
+                                    deferred.resolve(resMess[3]);
                                 } else {
                                     //res mesage continue
-                                    res.status(200).json(resMess[2]);
+                                    deferred.resolve(resMess[2]);
                                 }
                             });
                         });
                     }
+
+                    return deferred.promise;
                 }
             }, function(err) {
-                next(err);
+                throw err;
             })
     };
 
@@ -785,16 +753,16 @@ module.exports = function (app) {
         return res.status(200).json(req.dataMap);
     };
 
-    var getAllShipper = function(req, res, next) {
+    var getAllShipper = function() {
         return db.user.getAllUsersHasRole(1, db.profile, db.workingstatus)
             .then(function(shipper) {
-                res.status(200).json(shipper);
+                return shipper;
             }, function(err) {
-                next(err);
-            })
+                throw err;
+            });
     };
 
-    var getAllOrderToAssignTask = function (req, res, next) {
+    var getAllOrderToAssignTask = function () {
         var orderList=[];
         var promise=[];
         return db.order.getAllOrderToAssignTask(db.orderstatus, db.task, db.taskstatus)
@@ -823,25 +791,21 @@ module.exports = function (app) {
                             orderList.push(newOrder);
                         }
                     }
-                })
-                res.status(200).json(orderList);
+                });
+                return orderList;
             }, function(err) {
-                next(err);
+               throw err;
             })
-
     };
 
-    var getAllShipperWithTask = function (req, res, next) {
+    var getAllShipperWithTask = function () {
         var listReturn = [];
         return db.user.getAllShipperWithTask(db.task, db.profile, db.order, db.orderstatus, db.tasktype, db.taskstatus)
             .then(function(shipperList) {
-                //console.log("--------------Data Task Shipper -------------------");
-
-                //console.log(shipper);
                  shipperList.forEach(function (shipper) {
                      var listTask = [];
                      var shiperObj = {};
-                     console.log(shipper);
+                    //console.log(shipper);
                    shipper['tasks'].forEach(function (task) {
                         var add = task.order.getCustomerAddress();
                         task = task.toJSON();
@@ -856,11 +820,9 @@ module.exports = function (app) {
                     //shipper['tasks'] = _.cloneDeep(rs);
                     listReturn.push(shipper);
                 });
-               return listReturn;
+                return listReturn;
             }, function(err) {
-                next(err);
-            }).then(function(listReturn){
-                res.status(200).json(listReturn);
+                throw err;
             })
     };
 
@@ -899,8 +861,8 @@ module.exports = function (app) {
             })
     };
 
-    var updateTaskForShipper = function (req, res, next) {
-        var shipperList = req.body;
+    var updateTaskForShipper = function (shipperList) {
+
         shipperList.forEach(function(shipperTasks){
             if(shipperTasks.tasks) {
                 shipperTasks.tasks.forEach(function(task){
@@ -911,18 +873,22 @@ module.exports = function (app) {
             }
         });
 
-        return shipperList.map(function (shipper) {
+        var promise = [];
+
+        shipperList.map(function (shipper) {
             shipper.tasks.map(function (task) {
-                db.task.assignTaskForShipper(task)
+                promise.push(db.task.assignTaskForShipper(task)
                     .then(function(newTask) {
-                         res.status(201).json(newTask);
+                        console.log(newTask)
+                         return newTask
                         //console.log(newTask.taskid)
                     }, function(err) {
-                        next(err);
-                    })
+                        throw err;
+                    }));
             })
 
-        })
+        });
+        return Promise.all(promise);
     };
 
     //// START - Get status of shipper
@@ -948,8 +914,7 @@ module.exports = function (app) {
     * @author: quyennv
     */
 
-    var getTaskBeIssuePending = function (req, res, next) {
-        var shipperid = req.user.username;
+    var getTaskBeIssuePending = function (shipperid) {
         var task = db.task;
         var order = db.order;
         var orderissue = db.orderissue;
@@ -986,9 +951,11 @@ module.exports = function (app) {
                             });
                     });
                 }
-                res.status(200).json(group);
+
+                return group;
+
             }, function(err) {
-                next(err);
+                throw err;
             })
     };
 
@@ -1125,27 +1092,29 @@ module.exports = function (app) {
     };
 
     //function create new shipperid
-    var createShipperID = function(req, res, next){
+    var createShipperID = function(){
         var isExisted = false;
+        var promise;
         do
         {
             var str = "000000" + parseInt(Math.random()*1000000);
             var formatStr = str.substr(str.length - 6);
             var newShipperID = "SP" + formatStr;
             //console.log(newShipperID);
-            db.user.findUserByUsername(newShipperID)
+            promise = db.user.findUserByUsername(newShipperID)
                 .then(function(shipper){
-                    console.log(newShipperID, shipper);
+                    //console.log(newShipperID, shipper);
                     if(!shipper){
                         //console.log('AAA');
                         isExisted = true;
-                        res.status(200).json(newShipperID);
+                        return newShipperID;
                     }
                 },function(err){
-                    //console.log(newShipperID, shipper);
-                    res.status(400).json("Can not get new shipperid");
+                    throw err;
                 });
         } while (isExisted);
+        //console.log(data);
+        return promise;
     };
 
 

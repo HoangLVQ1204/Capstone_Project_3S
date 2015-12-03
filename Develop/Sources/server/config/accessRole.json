@@ -6,7 +6,7 @@
     },
     {
       "url": "/user/profile/:username",
-      "role": [2,3]
+      "role": [1,2,3]
     },
     {
       "url": "/admin",
@@ -148,14 +148,81 @@
 
     {
       "url": "/admin/adminReport",
-      "role": [1,2]
+      "role": [3]
     },
 
     {
       "url": "/api/admin/order/countOrder",
       "role": [3]
+    },
+
+    {
+      "url": "/api/shipper/getNewShipperID",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/user/addNewUser",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/store",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/store/getNewStoreID",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/shipper/getAllShipperWithTask",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/shipper/getAllOrderToAssignTask",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/shipper/updateTaskForShipper",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/shipper/getAllShipper",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/store/getLatestLedgerOfStore/:storeid",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/store/updateLedgerForOrder/:storeid",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/store/postNewLedger",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/getIssueContent/:issueid?",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/updateResolveIssue/:issueid?",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/storeDetail/:storeid",
+      "role": [3]
     }
-    
-      
-    
 ]

@@ -1,7 +1,7 @@
 /**
  * Created by Kaka Hoang Huy on 9/30/2015.
  */
-app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoading', '$timeout', function ($scope, $ionicPopup, dataFactory, $ionicLoading, $timeout) {
+app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoading', '$timeout', 'socketShipper', function ($scope, $ionicPopup, dataFactory, $ionicLoading, $timeout, socketShipper) {
 
   //Get All Task of shipper
   $scope.isSend = false;
@@ -159,6 +159,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
         });
       });
     }
+    console.log("listOrderActive", $scope.listOrderActive);
     //Fill to "Order" dropdown list
     $scope.selectable = listOrderInactive;
     //Fill to "Order" dropdown list
@@ -225,6 +226,10 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
         $scope.showLoading();
       } else {
         $ionicLoading.hide();
+      }
+      if (des.id == 3 || des.id == 5) {
+        // Shipper continue
+        socketShipper.updateHaveIssue(false);
       }
     });
   };
@@ -296,6 +301,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
         if (issue.category.categoryID == 1) {
 
           //$scope.listOrders
+          console.log("listOrderActiveAAAAA", $scope.listOrderActive);
           listOrders = $scope.listOrderActive;
           if (listOrders.length == 0) {
             var msg5 = {
