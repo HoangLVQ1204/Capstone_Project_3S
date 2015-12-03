@@ -12,8 +12,6 @@ module.exports = function(socket, io, app) {
 
     socket.on('admin:messageIssue', function(data) {
         data.msg.orderList.map(function (order) {
-            //var msg = new Object();
-            //msg['title'] = data.msg.msg;
             var socketName = "";
             if (data.msg.typeid == 1 || data.msg.typeid == 2 || data.msg.typeid == 3 || data.msg.typeid == 6) {
                 data.msg.msg['content'] = "Pending problem of your order " + order.orderid + " has been resolved...";
@@ -31,12 +29,10 @@ module.exports = function(socket, io, app) {
                 data.msg.msg['content'] = "Your cancel request of order " + order.orderid + " has been accepted...";
                 socketName = 'store:issue:cancel';
             }
-            //console.log(socketName, '0000');
             db.managestore.getOwnerOfStore(order.storeid)
                 .then(function (user) {
                     data.msg.msg['username'] = user[0].managerid;
                     notificationManage.postFromSever(data.msg.msg);
-                    console.log(socketName, 'AAA');
                     io.forward(
                         {
                             type: 'admin',
@@ -50,10 +46,8 @@ module.exports = function(socket, io, app) {
                 })
         })
 
-        //send to shipper
         if (data.msg.typeid <= 6)
             data.msg.msg['content'] = 'Your issue has been resolved';
-        //console.log(data.msg.orderList[0].orderid,'BBB');
         if (data.msg.typeid == 7)
             data.msg.msg['content'] = "Order " + data.msg.orderList[0].orderid + " has been cancel by store...";
         if (data.msg.typeid == 8)
@@ -72,8 +66,6 @@ module.exports = function(socket, io, app) {
                 type: data.msg.typeid
             },
             'shipper:issue:resolve')
-        //console.log('Issue', data.msg);
-
     });
 
     socket.on('admin:message:confirmPayment', function(data) {
@@ -109,7 +101,6 @@ module.exports = function(socket, io, app) {
                     { type: 'store', clientID: data.msg.storeid},
                     data.msg.msg,
                     'store:notification:blockStore');
-                console.log('Block store', data.msg);
             });
 
 
@@ -125,7 +116,6 @@ module.exports = function(socket, io, app) {
                     { type: 'shipper', clientID: shipperid},
                     data.msg.msg,
                     'shipper:notification:newTask');
-                console.log('New Task', data.msg);
             });
             })
 
