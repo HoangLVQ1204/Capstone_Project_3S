@@ -598,8 +598,11 @@
 	
 	<!--[if lt IE 10]><script type="text/javascript" src="js/placeholder.js"></script><![endif]-->
 	
-	<script>		
-		if (window.location.href.indexOf('#') > 0) window.location = '/';
+	<script>			
+		$(window).on('hashchange', function() {
+			if (window.location.href.indexOf('#') > 0) window.location = '/';
+		});	
+		if (window.location.href.indexOf('#') > 0) window.location = '/';	
 	</script>
 	</body>
 
