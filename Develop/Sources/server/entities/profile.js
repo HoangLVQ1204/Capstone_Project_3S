@@ -31,13 +31,45 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
-    addresscoordination: {
-      type: DataTypes.TEXT,
+    // addresscoordination: {
+    //   type: DataTypes.TEXT,
+    //   allowNull: true
+    // },
+    avatar: {
+      type: DataTypes.STRING,
       allowNull: true
     }
   }, {
     freezeTableName: true,
-    timestamps: false
+    timestamps: false,
+    classMethods: {
+      getProfileUser: function(username){
+        return profile.findOne({
+          where: {
+            username: username
+          }
+        });
+      },
+      addNewProfile: function(newProfile){
+        return profile.build(newProfile).save().then(sequelize.handler);
+      },
+      updateProfile: function(newProfile){
+        return profile.update({
+            'name': newProfile.name,
+            'identitycard': newProfile.identitycard,
+            'address': newProfile.address,
+            'dob': newProfile.dob,
+            'email': newProfile.email,
+            'phonenumber': newProfile.phonenumber,
+            'avatar': newProfile.avatar
+        },{
+            where: {
+              'username': newProfile.username
+
+            }
+        })
+      }
+    }
   });
   return profile
 };

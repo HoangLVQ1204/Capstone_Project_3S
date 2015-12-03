@@ -5,23 +5,224 @@
       "role": [2,3,4]
     },
     {
+      "url": "/user/profile/:username",
+      "role": [1,2,3]
+    },
+    {
       "url": "/admin",
       "role": [1,2,3,4]
     },
     {
-      "url": "/xyz",
-      "role": [1,2]
+      "url": "/api/tasks",
+      "role": [1]
     },
     {
-      "url": "/api/tasks",
-      "role": [1,3]
+      "url": "/api/issue",
+      "role": [1]
     },
     {
       "url": "/store/dashboard",
-      "role": [1,2,3,4]
+      "role": [1,2]
     },
-  {
-    "url": "/orders",
-    "role": [1,2]
-  }
+    {
+      "url": "/orders",
+      "role": [1,2]
+    },
+
+    {
+      "url": "/api/getAllStoreName",
+      "role": [2]
+    },
+
+    {
+      "url": "/api/shipper/history",
+      "role": [1]
+    },
+    {
+      "url": "/api/getAllTaskCancel",
+      "role": [1]
+    },
+    {
+      "url": "/api/changeIsPendingOrder",
+      "role": [1]
+    },
+    {
+      "url": "/api/shipper/getTaskBeIssuePending",
+      "role": [1]
+    },
+    {
+      "url": "/api/shipper/nextstep",
+      "role": [1]
+    },
+    {
+      "url": "/api/shipper/status",
+      "role": [1]
+    },
+    {
+      "url": "/api/shipper/countTasks",
+      "role": [1]
+    },
+    {
+      "url": "/api/shipper/change-status",
+      "role": [1]
+    },
+    {
+      "url": "/api/shipper/detail",
+      "role": [1]
+    },
+
+    {
+      "url": "/store/orderdetail",
+      "role": [1,2]
+    },
+
+    {
+      "url": "/api/getProvince",
+      "role": [2]
+    },
+
+    {
+      "url": "/api/notifications",
+      "role": [1,2,3]
+    },
+    
+    {
+      "url": "/api/notifications/total",
+      "role": [1,2,3]
+    },
+
+    {
+      "url": "/api/notifications/unread",
+      "role": [1,2,3]
+    },
+
+    {
+      "url": "/api/notifications/:notification_id",
+      "role": [1,2,3]
+    },
+
+    {
+      "url": "/orders/:orderid",
+       "role": [2]
+    },
+    
+    {
+      "url": "/api/store/deleteGoods",
+      "role": [2]
+    },
+
+    {
+      "url": "/api/store/goods",
+      "role": [2]
+    },
+
+    {
+      "url": "/store/transactionHistory",
+      "role": [2]
+    },
+
+    {
+      "url": "/store/orderHistory",
+      "role": [2]
+    },
+
+    {
+      "url": "/api/store/getAllOrder",
+      "role": [2]
+    },
+    
+    {
+      "url": "/api/store/ledger/getLedgerList",
+      "role": [2]
+    },
+
+    {
+      "url": "/api/storeDetail",
+      "role": [2]
+    },
+
+    {
+      "url": "/store/orders/cancel",
+      "role": [2]
+    },
+
+    {
+      "url": "/admin/adminReport",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/admin/order/countOrder",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/shipper/getNewShipperID",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/user/addNewUser",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/store",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/store/getNewStoreID",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/shipper/getAllShipperWithTask",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/shipper/getAllOrderToAssignTask",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/shipper/updateTaskForShipper",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/shipper/getAllShipper",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/store/getLatestLedgerOfStore/:storeid",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/store/updateLedgerForOrder/:storeid",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/store/postNewLedger",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/getIssueContent/:issueid?",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/updateResolveIssue/:issueid?",
+      "role": [3]
+    },
+
+    {
+      "url": "/api/storeDetail/:storeid",
+      "role": [3]
+    }
 ]

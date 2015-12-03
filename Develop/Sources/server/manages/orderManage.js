@@ -1,79 +1,70 @@
 /**
  * Created by Cao Khanh on 21/10/2015.
  */
-var _ = require('lodash');
+ var _ = require('lodash');
+ var Q = require('q');
+ var config = require('../config/config');
 
-module.exports = function (app) {
+ module.exports = function (app) {
     var db = app.get('models');
+    var server = app.get('io');
 
-    var params = function (req, res, next, order_id) {
+    var params = function (req, res, next, orderid) {
         var OrderStatus = db.orderstatus;
         var goods = db.goods;
         var confirmCode = db.confirmationcode;
-        return db.order.storeGetOneOrder(OrderStatus,goods,confirmCode,order_id)
-            .then(function (order) {
-                if (order) {
-                    req.orderRs = order;
-                    next();
-                } else {
-                    next(new Error('No order with id'));
-                }
+        return db.order.storeGetOneOrder(OrderStatus,goods,confirmCode,orderid)
+        .then(function (order) {
+            if (order) {
+                req.orderRs = order;
+                next();
+            } else {
+                next(new Error('No order with id'));
+            }
 
-            }, function (err) {
-                next(err);
-            });
+        }, function (err) {
+            next(err);
+        });
 
     };
 
-    var getAllOrder = function (req, res, next) {
+    /*
+        by KhanhKC
+        this function use to get all order for a store
+    */
+    function getAllOrder(storeId){            
+            var orderStatus = db.orderstatus;
+            var order = db.order;
+            var ordertype = db.ordertype;
 
-        var storeId = req.user.stores[0];
-        var orderStatus = db.orderstatus;
-        var order = db.order;
-        var ordertype = db.ordertype;
-        return order.storeGetAllOrders(orderStatus,ordertype, storeId)
+            return order.storeGetAllOrders(orderStatus,ordertype, storeId)
             .then(function (orders) {
                 var listOrders = [];
                 var statusname = '';
                 var createDate = '';
-                var doneDate ='';
+                var completedate ='';
                 var ledgerid ='';
                 _.each(orders, function(order){
-                    if(order['orderstatus'] == null){
-                        statusname = '';
-                    } else {
-                        statusname = order['orderstatus'].dataValues.statusname;
-                    }
-                    if(order.dataValues.createdate == null){
-                        createDate = '';
-                    }else {
-                        createDate = order.dataValues.createdate;
-                    }
-                    if(order.dataValues.donedate == null){
-                        doneDate = '';
-                    }else {
-                        doneDate = order.dataValues.donedate;
-                    }
-                    if(order.dataValues.ledgerid == null){
-                        ledgerid = '';
-                    }else {
-                        ledgerid = order.dataValues.ledgerid;
-                    }
+                    statusname = (order['orderstatus'])? order['orderstatus'].dataValues.statusname:'';
+                    createDate = order.dataValues.createdate? order.dataValues.createdate:'';
+                    completedate = order.dataValues.completedate? order.dataValues.completedate:'';
+                    ledgerid = order.dataValues.ledgerid?order.dataValues.ledgerid:'';
+                    var fullDeliveryAddress = order.getCustomerAddress();
                     listOrders.push({
                         'orderid': order.dataValues.orderid,
                         'statusname': statusname,
-                        'deliveryaddress': order.dataValues.deliveryaddress,
                         'recipientname' : order.dataValues.recipientname,
                         'recipientphone' : order.dataValues.recipientphone,
-                        'isdraff': order.dataValues.isdraff,
-                        'iscancel':order.dataValues.iscancel,
+                        'isdraff': order.dataValues.isdraff,                        
                         'ispending': order.dataValues.ispending,
                         'cod': order.dataValues.cod,
                         'fee' : order.dataValues.fee,
                         'createdate' : createDate,
-                        'donedate' : doneDate,
+                        'completedate' : completedate,
                         'ordertype': order['ordertype'].dataValues.typename,
-                        'ledgerid': ledgerid
+                        'ledgerid': ledgerid,
+                        'fullDeliveryAddress': fullDeliveryAddress,
+                        'iscancel' : order.dataValues.iscancel
 
                     })
                 });
@@ -89,40 +80,39 @@ module.exports = function (app) {
                 group['Done'] = group['Done'] || [];
                 group['Inprocess'] = group['Inprocess'] || [];
                 _.each(listOrders, function(item) {
-                    if(item['isdraff']) {
-                        group['Draff'].push(item);
-                    }else if(_.isEqual(item['statusname'],'Done')){
-                        group['Done'].push(item);
-                    }else if(item['ispending']) {
-                        group['Inprocess'].push(item);
-                    }
-                    else if(!_.isEqual(item['statusname'],'Canceling')&&!_.isEqual(item['statusname'],'Cancel') ){
-                        group['Inprocess'].push(item);
-                    }
-                    if(!_.isEqual(item['createdate'],'')){
-                        var date = new Date(item['createdate']);
-                        date.setHours(0,0,0,0);
-                        var today = new Date();
-                        today.setHours(0,0,0,0);
-                        if(date.valueOf() === today.valueOf())
-                            todayOrder ++;
-                    }
+                    if(item.ledgerid == ''){
+                        totalNewOrder++;
+                        if(item['isdraff']) {
+                            group['Draff'].push(item);
+                            totalNewOrder--;
+                        }else if(_.isEqual(item['statusname'],'Done')|| _.isEqual(item['statusname'],'Cancel') ){
+                            group['Done'].push(item);
+                            totalNewCod = totalNewCod + parseInt(item.cod);
+                            totalNewFee = totalNewFee + parseInt(item.fee);
+                        }else {
+                            group['Inprocess'].push(item);
+                        }                        
 
-                    if(!_.isEqual(item['donedate'],'')){
-                        var date = new Date(item['donedate']);
-                        date.setHours(0,0,0,0);
-                        var today = new Date();
-                        today.setHours(0,0,0,0);
-                        if(date.valueOf() === today.valueOf()){
-                            todayCod = todayCod + parseInt(item.cod);
-                            todayFee = todayFee + parseInt(item.fee);
+                        if(!_.isEqual(item['createdate'],'' && !item['isdraff'])){
+                            var date = new Date(item['createdate']);
+                            date.setHours(0,0,0,0);
+                            var today = new Date();
+                            today.setHours(0,0,0,0);
+                            if(date.valueOf() === today.valueOf())
+                                todayOrder ++;
                         }
 
-                    }
-                    if(item.ledgerid == ''){
-                        totalNewCod = totalNewCod + parseInt(item.cod);
-                        totalNewFee = totalNewFee + parseInt(item.fee);
-                        totalNewOrder++;
+                        if(!_.isEqual(item['completedate'],'')){
+                            var date = new Date(item['completedate']);
+                            date.setHours(0,0,0,0);
+                            var today = new Date();
+                            today.setHours(0,0,0,0);
+                            if(date.valueOf() === today.valueOf()){
+                                todayCod = todayCod + parseInt(item.cod);
+                                todayFee = todayFee + parseInt(item.fee);
+                            }
+
+                        }
                     }
 
                 });
@@ -134,94 +124,264 @@ module.exports = function (app) {
                 group['Total'].push(todayFee);
                 group['Total'].push(totalNewOrder);
 
-                res.status(200).json(group);
-            }, function (err) {
-                next(err);
-            })
-    };
-    var getOne = function (req, res, next) {
-        //var listOrders = [];
-        //var statusname = '';
-        //var deliveryaddress = '';
-        //var recipientname = '';
-        //var recipientphone = '';
-        //var donedate = '';
-        //var createdate = '';
-        //var cod = 0;
-        //var fee = 0;
-        //console.log(req.orderRs['orderid']);
-        //var order = {
-        //    orderid : req.orderRs['orderid'],
-        //    deliveryaddress : req.orderRs['deliveryaddress'],
-        //    recipientname : req.orderRs['recipientname'],
-        //    recipientphone : req.orderRs['recipientphone'],
-        //    statusid : req.orderRs['statusid'],
-        //    isdraff : req.orderRs['isdraff'],
-        //    iscancel : req.orderRs['iscancel'],
-        //    ispending : req.orderRs['ispending'],
-        //    cod : req.orderRs['cod'],
-        //    fee : req.orderRs['fee'],
-        //    donedate : req.orderRs['donedate'],
-        //    createdate : req.orderRs['createdate'],
-        //    statusname : req.orderRs['orderstatus'].statusname
-        //};
-        //
-        //var rs =  req.orderRs['goods'];
-        //_.each(rs, function(item) {
-        //    console.log(item.dataValues.goodsid);
-        //});
-        res.status(200).json(req.orderRs);
-    };
+                return group;
+                
+                }, function (err) {
+                   throw err;
+            });
+    }
 
-    var post = function (req, res, next) {
-        var newOrder = req.body.order;
+/*
+    *By Khanh KC
+    *This function use to calculateShipper for an Order 
+    */
+    var calculateShipFee = function(district, innerCity, ordertypeid){
+        if(innerCity.indexOf(district)> -1){
+            if(ordertypeid == '1'){
+                fee = 10000;
+            }else {
+                fee = 20000;
+            }                
+        }else {
+            if(ordertypeid == '1'){
+                fee = 20000;
+            }else {
+                fee = 30000;
+            }       
+        }
+        return fee;
+    }; 
+
+/*
+     * By KhanhKC - 14/11/2015
+     * This function is used to caculate over weight fee of order       
+*/
+    var calculateOverWeightFee = function (district, innerCity, listgoods){
+        var totalWeight = 0;
+        var overWeightFee = 0;
+        for(var i = 0; i <listgoods.length;i++){
+            totalWeight = totalWeight + listgoods[i].weight*listgoods[i].amount;
+        }                  
+        if(totalWeight > 4000 ){
+
+            if(innerCity.indexOf(district)> -1){
+                overWeightFee = (totalWeight - 4000)*2*2;
+
+            }else {
+                overWeightFee = (totalWeight - 4000)*2*2.5;
+            }
+
+        }
+        return overWeightFee;
+    }
+
+/*
+    * By KhanhKC
+    * This function is use to create confirm codes for an Order
+    */
+    var GenerateRandomCode = function(length){
+        var code = "";
+        var chars = "123456789";
+        for( var i=0; i < length; i++ )
+            code += chars.charAt(Math.floor(Math.random() * chars.length));
+        return code;
+    }
+
+/*
+    * By KhanhKC
+    * This function is use to add an Order to database
+    */
+
+function postOneOrder(data){
+    var newOrder = {};
+        /*
+         * By HuyTDH - 09/10/2015
+         * This function is used to create ID for order       
+         */
+         var str = "000000" + parseInt(Math.random()*1000000);
+         var formatStr = str.substr(str.length - 6);
+         var newOrderID = "OD" + formatStr;
+         newOrder.orderid = newOrderID;
+         /*end*/
+         var district = data.order.deliverydistrictid;
+         var innerCity = config.filterLocation.in;
+         var ordertypeid = data.order.ordertypeid;
+         var fee = calculateShipFee (district, innerCity,ordertypeid);         
+         var overWeightFee = calculateOverWeightFee (district, innerCity,data.goods)
+
+         newOrder.storeid = data.order.storeid;
+         newOrder.ordertypeid = data.order.ordertypeid;
+         newOrder.pickupaddress = data.order.pickupaddress;
+         newOrder.deliveryaddress = data.order.deliveryaddress;
+         newOrder.recipientphone = data.order.recipientphone;
+         newOrder.recipientname = data.order.recipientname;
+         newOrder.statusid = data.order.statusid;
+         newOrder.ispending = 'false';
+         newOrder.isdraff = data.order.isdraff;        
+         newOrder.createdate = new Date();         
+         newOrder.fee = fee; 
+         newOrder.overweightfee = overWeightFee;
+         newOrder.deliveryprovinceid = data.order.deliveryprovinceid;
+         newOrder.deliverydistrictid = data.order.deliverydistrictid;
+         newOrder.deliverywardid = data.order.deliverywardid;
+         newOrder.cod = parseInt(data.order.cod)?parseInt(data.order.cod):0;
+
+         var code1 = {
+            'codecontent' : parseInt(data.order.gatheringCode),
+            'typeid' : 2,
+            'orderid' : newOrder.orderid        
+        };
+        var code2 = {
+            'codecontent' : parseInt(data.order.deliverCode),
+            'typeid' : 6,
+            'orderid' : newOrder.orderid
+        };       
+
+        var code3 = {
+            'codecontent' : GenerateRandomCode(6),
+            'typeid' : 3,
+            'orderid' : newOrder.orderid
+        };        
+        var code4 = {
+            'codecontent' : GenerateRandomCode(6),
+            'typeid' : 5,
+            'orderid' : newOrder.orderid
+        };
+        var code5 = {
+            'codecontent' : GenerateRandomCode(6),
+            'typeid' : 4,
+            'orderid' : newOrder.orderid
+        };
         return db.order.postOneOrder(newOrder)
-            //.then(function (order) {
-            //    res.status(201).json(order);
-            //}, function(err){
-            //    next(err);
-            //})
-    };
+        .then(function (order) {
+            db.confirmationcode.postOneCode(code1);
+            db.confirmationcode.postOneCode(code2);
+            db.confirmationcode.postOneCode(code3);
+            db.confirmationcode.postOneCode(code4);
+            db.confirmationcode.postOneCode(code5);
+            for(var i = 0; i < data.goods.length; i++){
+                var good = {};                    
+                good.orderid = newOrderID;
+                good.stockid = null;
+                good.goodsname = data.goods[i].goodsname;
+                good.description = data.goods[i].description;
+                good.weight = parseInt(data.goods[i].weight);
+                good.lengthsize = parseInt(data.goods[i].lengthsize);
+                good.widthsize = parseInt(data.goods[i].widthsize);
+                good.heightsize = parseInt(data.goods[i].heightsize);
+                good.amount = parseInt(data.goods[i].amount);
+                db.goods.postOneGood(good).then(function(goodsObj){
 
-    var put = function (req, res, next) {
-        var order = {};
-        var update = req.body;
-
-        order.orderid = update.orderid;
-        order.storeid = update.storeid;
-        order.ordertypeid = update.ordertypeid;
-        order.pickupaddress = update.pickupaddress;
-        order.deliveryaddress = update.deliveryaddress;
-        order.pickupdate = update.pickupdate;
-        order.deliverydate = update.deliverydate;
-        order.recipientphone = update.recipientphone;
-        order.recipientname = update.recipientname;
-
-        return db.order.putOrder(order)
-            .then(function(save){
-                if(save){
-                    res.status(201).json(order);
-                }else {
-                    next( new Error('Cannot save user'));
-                }
-            })
-    };
-
-    var deleteOrder = function (req, res, next) {
-        req.orderRs = req.orderRs.toJSON();
-        var deleteGoods = db.goods.deleteGood(req.orderRs.orderid);
-        var deleteCode = db.confirmationcode.deleteConfirmCode(req.orderRs.orderid);
-        Promise.all([deleteCode,deleteGoods]).then(function(){
-            db.order.deleteDraffOrder(req.orderRs.orderid)
-                .then(function() {
-                    res.status(200).json("DELETED!");
-                }, function(err) {
-                    next(new Error("Delete draft fail!"));
                 });
-        },function(){
-            next(new Error("Delete draft fail!"));
+
+            }
+            var response = order.toJSON();
+            response.customerAddress = order.getCustomerAddress();
+            return response;
+
+        },function(err){
+            throw err;
         });
-    };
+}
+
+/*
+    By KhanhKC
+    This function is use to update order when user edit info of an order
+*/
+function updateOrder(req){
+    var district = req.body.order.deliverydistrictid;
+    var innerCity = config.filterLocation.in;
+    var order = {}; 
+    var updateOrder = req.body.order;
+    var listupdateGoods = req.body.listgoods;
+    var clStoreid = req.user.stores[0].storeid;        
+
+    order.ordertypeid = updateOrder.ordertypeid;
+    order.recipientname = updateOrder.recipientname;
+    order.recipientphone = updateOrder.recipientphone;
+    order.deliveryaddress = updateOrder.deliveryaddress;
+    order.deliveryprovinceid = updateOrder.deliveryprovinceid;
+    order.deliverydistrictid = updateOrder.deliverydistrictid;
+    order.deliverywardid = updateOrder.deliverywardid;
+    order.ordertypeid = updateOrder.ordertypeid;
+    order.fee = calculateShipFee (district, innerCity,updateOrder.ordertypeid);
+    order.cod = updateOrder.cod;
+    order.overweightfee = calculateOverWeightFee (district, innerCity, listupdateGoods);
+
+    return db.order.getOneOrder(updateOrder.orderid)
+    .then(function(orderRs){
+        if(orderRs.storeid == clStoreid){
+            db.goods.deleteGood(updateOrder.orderid)
+            .then(function(){
+                db.order.updateOrder(order,updateOrder.orderid)
+                .then(function(){   
+                    var d = Q.defer();                         
+                        for(var i =0; i <listupdateGoods.length;i++){
+                            var updateGoods = listupdateGoods[i];
+                            var newGoods = {
+                                goodsname  : updateGoods.goodsname,
+                                orderid    : updateOrder.orderid,
+                                weight     : updateGoods.weight,
+                                lengthsize : updateGoods.lengthsize,
+                                widthsize  : updateGoods.widthsize,
+                                heightsize : updateGoods.heightsize,
+                                description: updateGoods.description,
+                                amount     : updateGoods.amount
+                            }
+                            db.goods.postOneGood(newGoods)                        
+                        }
+                    d.resolve(true);
+                    return d.promise;
+                })
+            })           
+          
+        }else {
+            throw err;
+        }
+    })
+}
+
+var updateExpressOrder = function (req, res, next) {
+ var order = req.body.order;
+ return db.order.updateExpressOrder({
+     statusid : order.statusId,
+     isdraff: order.isDraff,
+ },order.orderId)
+ .then(function (rs) {
+    res.status(201).json(rs);
+}, function (err) {
+ next(err);
+})
+};
+
+/* 
+    by KhanhKC
+    this function use to delete an Order
+*/
+  
+    function deleteOrder(orderId){
+        var deleteGoods = db.goods.deleteGood(orderId);
+        var deleteCode = db.confirmationcode.deleteConfirmCode(orderId);
+        return Promise.all([deleteCode,deleteGoods]).then(function(data){
+            throw new Error("Delete draft fail!");
+            console.log("---DATA RES ---");
+            console.log(data);
+            db.order.deleteDraffOrder(orderId)
+            .then(function() {
+                throw new Error("Delete draft fail!");
+            }, function(err) {
+                console.log("--- ERROR DELETED ---");
+                console.log(err);
+                console.log("--- ERROR DELETED ---");
+                throw new Error("Delete draft fail!");
+            });
+        },function(){
+            // console.log("--- ERROR DELETED ---");
+            // console.log(err);
+            // console.log("--- ERROR DELETED ---");
+            throw new Error("Delete draft fail!");
+        });
+    }
 
     var putDraff = function(req, res, next){
         db.order.submitDraffOrder(req.body.orderid)
@@ -232,24 +392,176 @@ module.exports = function (app) {
         });
     };
 
-    var cancelOrder = function (req, res, next) {
-        db.order.cancelOrder( req.orderRs.orderid);
-            //.then(function(){
-            //    res.sendStatus(200).json();
-            //}, function(err) {
-            //    next(err);
-            //});
+/*
+* Store request cance order
+* @author: quyennv - 11/11
+*/
+
+var cancelOrder = function (ownerStoreUser, storeID, orderID) {
+
+    var issueCancel = {
+        typeid: 7,
+        description: 'Store ' + storeID +  ' request cancel',
+        isresolved: false,
+        resolvetype: null,
+        createddate: new Date(),
+        sender: ownerStoreUser
     };
 
+   //Add new issue
+   return db.issue.createNewIssue(issueCancel)
+   .then(function(issue){
+        //create new orderissue
+        var newOrderIssue = {};
+        newOrderIssue.issueid = issue.issueid;
+        newOrderIssue.orderid = _.clone(orderID, true);
+        db.orderissue.createOrderIssue(newOrderIssue);
 
-    return {
-        getAllOrder: getAllOrder,
-        getOne: getOne,
-        postOne: post,
-        params: params,
-        put : put,
-        deleteOrder : deleteOrder,
-        putDraff : putDraff,
-        cancelOrder: cancelOrder,
-    }
+        //msg to Admin
+        var msgRequestCancel = {
+            type: 'issue',
+            title: 'Issue',
+            content: 'Store ' + storeID + ' requested cancel an order',
+            url: '#/admin/issueBox/content?issueid=' + issue.dataValues.issueid,
+            isread: false,
+            createddate: new Date()
+        };
+
+        //Update isCancel = true
+        db.order.getOneOrder(orderID)
+        .then(function(orders){
+            orders = orders.toJSON();
+            orders.iscancel = true;
+            return db.order.updateOrderStatus(orders);
+        })
+        .then(function(data){
+            //get Admin
+            return db.user.getUserByRole(3)
+        })
+        .then(function(admins){
+            admins = admins.map(function(e) {
+                return e.toJSON();
+            });
+            //insert notification to admin
+            var promises = admins.map(function(e){
+                var newData = _.clone(msgRequestCancel, true);
+                newData.username = e.username;
+                return db.notification.addNotification(newData);
+            });
+
+            return Promise.all(promises);
+        })
+        .then(function(data){
+           //send socket
+           var sender = {
+            type: 'store',
+            clientID: storeID
+        };
+        server.socket.forward(
+            sender,
+            'admin',
+            msgRequestCancel,
+            'admin::issue:cancelorder'
+            );
+
+        return true;
+
+    });
+    }, function(err){
+        throw err;
+    })
+};
+
+var getOrderList = function (req, res, next) {
+    var list = [];
+    db.order.getAllOrder(db.orderstatus, db.ordertype, db.store)
+    .then(function(orderList){
+        orderList = orderList.map(function (order) {
+            var add = order.getCustomerAddress();
+                //console.log(add);
+                order = order.toJSON();
+                order['deliveryaddress'] = add;
+                //var newOrder = _.clone(order.toJSON());
+                //list.push(newOrder);
+                return order;
+            });
+
+        res.status(200).json(orderList);
+    }, function(err) {
+        next(err);
+    });
+};
+
+var getTodayTotal = function (req, res, next) {
+    var total = new Object();
+    db.order.getTodayTotalDelivery()
+    .then(function(fee){
+        db.order.getTodayTotalCoD()
+        .then(function(cod){
+            total['fee'] = fee;
+            total['cod'] = cod;
+            res.status(200).json(total);
+        }, function(err) {
+            next(err);
+        })
+    }, function(err) {
+        next(err);
+    });
+};
+
+
+/*
+    By KhanhKC
+    This function is use to get list order of a store
+*/
+function storeGetOrderList (storeId){
+    var orderStatus = db.orderstatus;
+    return db.order.storeGetAllOrders(db.orderstatus,db.ordertype,storeId)
+    .then(function(list){
+
+        var tempList = [];
+
+        list.forEach(function(order,index){
+            if(!order.isdraff){
+                tempList.push(order.toJSON());
+            }
+        })
+
+        tempList = tempList.map(function(order, index) {
+            order.fullDeliveryAddress = list[index].getCustomerAddress(); 
+            return order;    
+        });
+
+         return tempList;
+    }, function(err) {
+        throw err;
+    });
+};
+
+var countOrder = function (req, res, next){
+    var storeid = req.query.storeid;
+
+    db.order.countOrder(storeid)
+    .then(function(listRs){
+        res.status(200).json(listRs);
+    },function(err){
+        next(err);
+    })
+}
+
+
+return {
+    getAllOrder: getAllOrder,
+    postOneOrder: postOneOrder,
+    params: params,
+    updateExpressOrder : updateExpressOrder,
+    updateOrder : updateOrder,
+    deleteOrder : deleteOrder,
+    putDraff : putDraff,
+    cancelOrder: cancelOrder,
+    getOrderList: getOrderList,
+    getTodayTotal: getTodayTotal,
+    storeGetOrderList : storeGetOrderList,
+    countOrder : countOrder
+}
 }

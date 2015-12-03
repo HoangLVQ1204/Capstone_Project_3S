@@ -3,6 +3,14 @@
  */
 (function (ng) {
     angular.module('app')
+        .directive('adminStoreListLayout',function(){
+            return {
+                templateUrl: '/components/adminStoreList/layout.html',
+                replace: true,
+                restrict: 'E',
+                scope: false
+            }
+        })
         .directive('adminStoreList', function () {
             return {
                 controller: 'adminStoreListController',
@@ -41,7 +49,7 @@
                             query.before = new Date(res[1]);
                         }
                              ctrl.search(query, attr.stCustomDate);
-                       // console.log(1);
+                        // console.log(attr.stCustomDate);
                     });
 
                     attr.$observe('stPredicate', function (newValue, oldValue) {
@@ -66,14 +74,14 @@
                         linkedCalendars: false,
                         autoUpdateInput: false,
                         locale: {
-                            format: "DD/MM/YYYY"
+                            //format: "DD/MM/YYYY"
 
                         }
                     });
 
                     element.on('apply.daterangepicker', function(ev, picker) {
                         element.val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-                        //$scope.dateRange = $('#daterange').val();
+                        //alert(1);
                         scope.$apply(function(){
                             scope.dateRange = element.val();
                         });

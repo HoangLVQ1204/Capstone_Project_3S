@@ -19,17 +19,21 @@
       <div ng-if = "issue.category.categoryID == 2" class="item item-select" fancy-select ng-model="issue.type" items="cancelReasons" item-label="typeName">
         {{issue.type.typeName || 'Reason of Issue'}}
       </div>
-      <div ng-if = "issue.category.categoryID != 1" class="item item-divider">Order</div>
-      <div  ng-if = "issue.category.categoryID != 1" class="item item-select" fancy-select ng-model="issue.issuedOrder" multi-select="true" items="selectable" item-label="text">
+      <div ng-if = "issue.category.categoryID != 1&&issue.type.typeID ==4" class="item item-divider">Order</div>
+      <div  ng-if = "issue.category.categoryID != 1&&issue.type.typeID ==4" class="item item-select" fancy-select ng-model="issue.issuedOrder" multi-select="true" items="listOrderBroken" item-label="text">
+        {{parseMulti(issue.issuedOrder) || 'Order get an Issue'}}
+      </div>
+      <div ng-if = "issue.category.categoryID != 1&&issue.type.typeID ==5" class="item item-divider">Order</div>
+      <div  ng-if = "issue.category.categoryID != 1&&issue.type.typeID ==5" class="item item-select" fancy-select ng-model="issue.issuedOrder" multi-select="true" items="listOrderShipping" item-label="text">
         {{parseMulti(issue.issuedOrder) || 'Order get an Issue'}}
       </div>
 
       <!--Issue content-->
       <div class="item item-divider">Description
       </div>
-      <textarea style="width: 100%; height: 220px; padding: 15px" ng-model="issue.description">
+      <textarea style="width: 100%; height: 150px; padding: 15px" ng-model="issue.description">
       </textarea>
-      <button class="button button-block btCommon" type="submit">Send</button>
+      <button ng-class="(isSend==true) ? 'not-active' : ''" class="button button-block btCommon" type="submit"><i class="ion-android-send"></i>&nbsp;&nbsp;Send</button>
     </form>
   </ion-content>
 </ion-view>
@@ -102,10 +106,11 @@
       <h3 class="popup-title" style="font-size: 1.2em; font-weight: bold">Issue Pending</h3>
     </div>
     <div class="popup-body">
-      <span>Your task is pending. Click 'Continue' to continue.</span>
+      <span>Your task is pending. Click 'Continue' to continue.</span><br/>
+      <a class="button icon-left ion-ios7-telephone button-calm button-outline" ng-href="tel: +840905507734">Call Admin</a>
     </div>
     <div class="popup-buttons">
-      <a ng-click="changeIsPendingOrder({{issueId}})" class="button btn-success-cus ">Continue</a>
+      <a ng-click="changeIsPendingOrderIssue(issueId)" ng-class="(btnContinue==true) ? 'not-active' : ''" class="button btn-success-cus ">Continue</a>
     </div>
   </div>
 </script>

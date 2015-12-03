@@ -8,11 +8,12 @@ var GoogleMapsAPI = require('googlemaps');
 
 var config = {
 	// key: 'AIzaSyALajTCGOGkS_TZBAXyUkjtWdSk5t4TIyY',	// Server key
-	key: 'AIzaSyBeZoB6x9vE6s3okxnACQ2H_cprqfiI6aE',
+	key: 'AIzaSyCGFowrKhTz9GskvfzAGR6_rGFbsaCorOw',
 	secure: true
 };
 
 var gmAPI = new GoogleMapsAPI(config);
+
 
 var api = {};
 
@@ -25,13 +26,13 @@ api.getDistanceFromOneToMany = function(origin, destinations) {
 		if (index > 0) destinationsString += '|';
 		destinationsString += dest.latitude + ',' + dest.longitude;		
 	});
-	// console.log(originString, destinationsString);
+
 	var request = {
         origins: originString,
         destinations: destinationsString,
         mode: 'driving',        
         units: 'metric',
-        language: 'vi'
+        language: 'en'
 	};
 
 	var d = Q.defer();
@@ -40,13 +41,14 @@ api.getDistanceFromOneToMany = function(origin, destinations) {
 			d.reject(err);			
 		} else {
 			if (response.status === 'OK') {
-				// console.log('response', response.rows[0].elements);
+				console.log('response', response.rows);
 				var results = response.rows[0].elements.map(function(element, index) {
-		            return {
-		                distance: element.distance,
-		                id: index
-		            };
-		        });                    
+						return {
+							distance: element.distance,
+							duration: element.duration,
+							id: index
+						};
+		        });
 	            d.resolve(results);
 			} else {			
 				d.reject(response.status + ': ' + response.error_message);
@@ -58,12 +60,15 @@ api.getDistanceFromOneToMany = function(origin, destinations) {
 
 api.getClosestShippers = function(store, shippers, filter) {
 	// filter shippers by status
+
+	console.log('validShippers', shippers);
+
 	var validShippers = shippers.filter(function(shipper) {
-		return shipper.status === filter.status;
-	});
+		return (shipper.isConnected === filter.isConnected && shipper.haveIssue === filter.haveIssue && shipper.numTasks < filter.maxTasks);
+	});	
 
 	return api.getDistanceFromOneToMany(store, validShippers)
-	.then(function(results) {		
+	.then(function(results) {
 		// filter by radius
 		results = results.filter(function(e) {
 			return e.distance.value <= filter.radius;
@@ -81,7 +86,8 @@ api.getClosestShippers = function(store, shippers, filter) {
 		results = results.map(function(e) {
 			return {
 				shipperID: validShippers[e.id].shipperID,
-				distanceText: e.distance.text
+				distanceText: e.distance.text,
+				durationText: e.duration.text
 			};
 		});		
 		
@@ -92,9 +98,60 @@ api.getClosestShippers = function(store, shippers, filter) {
 	});
 };
 
-// (function test() {
-// 	console.log('unit test -- googlemapUti');
-// 	api.getDistanceFromOneToMany();
-// })();
+/*
+	Input: geoText (String)
+	Output: Promise({
+		latitude: double
+		longitude: double
+	})
+*/
+api.getLatLng = function(geoText) {
+    var d = Q.defer();
+    gmAPI.geocode({
+        address: geoText
+    }, function(err, response) {
+        if (err) {
+			d.reject(err);			
+		} else {
+			if (response.status === 'OK') {
+				//console.log('getlatlng', response.results[0].geometry);
+				d.resolve({
+	                latitude: response.results[0].geometry.location.lat,
+	                longitude: response.results[0].geometry.location.lng
+	            });
+			} else {			
+				d.reject(response.status + ': ' + response.error_message);
+			}
+		}
+    });
+
+    return d.promise;
+};
+
+api.getGeoText = function(latitude, longitude) {
+	var latlng = latitude + ',' + longitude;
+	var d = Q.defer();
+    gmAPI.reverseGeocode({
+        latlng: latlng
+        // location_type: 'APPROXIMATE'
+    }, function(err, response) {
+        if (err) {
+			d.reject(err);			
+		} else {
+			if (response.status === 'OK') {
+				//console.log('getlatlng', response.results[0].geometry);
+				var geoText = 'Not Available';
+				if (response.results[0]) {
+					geoText = response.results[0].formatted_address;
+				}
+    			d.resolve(geoText);
+			} else {			
+				d.reject(response.status + ': ' + response.error_message);
+			}
+		}
+    });
+
+    return d.promise;
+};
 
 module.exports = api;           

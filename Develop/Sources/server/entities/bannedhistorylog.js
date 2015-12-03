@@ -5,14 +5,20 @@ module.exports = function(sequelize, DataTypes) {
     logid: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     adminid: {
       type: DataTypes.STRING,
       allowNull: true,
       primaryKey: true
     },
-    username: {
+    shipperid: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      primaryKey: true
+    },
+    storeid: {
       type: DataTypes.STRING,
       allowNull: true,
       primaryKey: true
@@ -26,12 +32,24 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     type: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: true
     }
   }, {
     freezeTableName: true,
-    timestamps: false
+    timestamps: false,
+    classMethods: {
+      postNewLog : function (log) {
+        return bannedhistorylog.create({
+          'adminid': log.adminid,
+          'shipperid': log.shipperid,
+          'storeid': log.storeid,
+          'reason': log.reason,
+          'bannedtime': log.bannedtime,
+          'type': log.type
+        })
+      }
+    }
   });
   return bannedhistorylog;
 };

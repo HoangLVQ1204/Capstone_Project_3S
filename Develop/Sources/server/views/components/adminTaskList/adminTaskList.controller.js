@@ -2,11 +2,11 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminTaskListController($scope,$state, $http, $filter, config) {
+function adminTaskListController($scope,$state, dataService, $filter, config, $rootScope) {
 
 
 
-    $scope.taskList = [];
+
     var smsData = {verticalEdge: 'right',
         horizontalEdge: 'bottom'};
 
@@ -16,44 +16,61 @@ function adminTaskListController($scope,$state, $http, $filter, config) {
             value: ''
         },
         {
-            option: 'Name',
-            value: 'name'
+            option: 'ShipperID',
+            value: 'shipperid'
         },{
-            option: 'Address',
-            value: 'address'
+            option: 'StoreID',
+            value: 'order.storeid'
         },{
-            option: 'Payment',
-            value: 'payment'
+            option: 'OrderID',
+            value: 'orderid'
+        },{
+            option: 'Order Status',
+            value: 'orderstatus.statusname'
+        },{
+            option: 'Task Status',
+            value: 'taskstatus.statusname'
+        },{
+            option: 'Type',
+            value: 'tasktype.typename'
         }];
     $scope.selected = $scope.searchOptions[0];
-    $scope.dateRange = '';
+    $scope.dateRange = null;
     $scope.taskStatusOptions =[];
     $scope.taskTypeOptions =[];
 
-    $http.get(config.baseURI + "/api/getAllTaskStatus").success(function(response){
-        $scope.taskStatusOptions = response;
-        $scope.taskStatusOptions.sort(ComparatorStatus);
-        //console.log(response);
-    }).then(function () {
-        $http.get(config.baseURI  + "/api/getTaskList").success(function(response){
-            $scope.taskList = response;
-        })
-        .then(function () {
-        $http.get(config.baseURI + "/api/getAllTaskType").success(function(response){
-            $scope.taskTypeOptions= response;
-            $scope.taskStatusOptions.sort(ComparatorType);
+    getDataFromServer();
+
+    function getDataFromServer(){
+        $scope.taskList = [];
+        dataService.getDataServer(config.baseURI + "/api/getAllTaskStatus").then(function(response){
+            $scope.taskStatusOptions = response.data;
+            $scope.taskStatusOptions.sort(ComparatorStatus);
             //console.log(response);
-        })
-         .then(function () {
-           //    $scope.selected =$scope.taskStatusOptions[0];
-            $scope.taskList.map(function (task) {
-                task.selectedStatus =  $scope.taskStatusOptions[task.taskstatus.statusid-1];
-                task.selectedType =  $scope.taskTypeOptions[task.tasktype.typeid-1];
-            });
+        }).then(function () {
+            dataService.getDataServer(config.baseURI  + "/api/getTaskList").then(function(response){
+                $scope.taskList = response.data;
+                $scope.taskList.sort(dateSort);
             })
+                .then(function () {
+                    dataService.getDataServer(config.baseURI + "/api/getAllTaskType").then(function(response){
+                        $scope.taskTypeOptions= response.data;
+                        $scope.taskStatusOptions.sort(ComparatorType);
+                        //console.log(response);
+                    })
+                        .then(function () {
+                            //    $scope.selected =$scope.taskStatusOptions[0];
+                            $scope.taskList.map(function (task) {
+                                task.selectedStatus =  $scope.taskStatusOptions[task.taskstatus.statusid-1];
+                                task.selectedType =  $scope.taskTypeOptions[task.tasktype.typeid-1];
+                            });
+                        })
+                })
         })
-    })
-    $scope.displayedCollection = [].concat($scope.taskList);
+        $scope.displayedCollection = [].concat($scope.taskList);
+    }
+
+
 
     //----------------------------------
     //FUNCTION SHOW CONFIRM PAYMENT MODAL
@@ -73,7 +90,6 @@ function adminTaskListController($scope,$state, $http, $filter, config) {
         $("#inputValue").val(0);
         $scope.isValid = $('#inputValue').parsley( 'validate' );
 
-        console.log($('#inputValue'));
     };
 
     function ComparatorStatus(a,b){
@@ -91,48 +107,58 @@ function adminTaskListController($scope,$state, $http, $filter, config) {
         //----------------------------------
     //FUNCTION GET ALL STATUS OF TASK
     //-----------------------------------
-    var getAllTaskStatus = function (){
-        //alert(1);
-        $http.get(config.baseURI + "/api/getAllTaskStatus").success(function(response){
-            $scope.taskStatusOptions= response;
-            //response.map(function(status){
-            //    var options = new Object();
-            //    options.option = status.statusname;
-            //})
-            console.log($scope.taskList);
-
-        })
-    }
+    //var getAllTaskStatus = function (){
+    //    //alert(1);
+    //     dataService.getDataServer(config.baseURI + "/api/getAllTaskStatus").success(function(response){
+    //        $scope.taskStatusOptions= response;
+    //        //response.map(function(status){
+    //        //    var options = new Object();
+    //        //    options.option = status.statusname;
+    //        //})
+    //        console.log($scope.taskList);
+    //
+    //    })
+    //}
     //$scope.getAllTaskStatus = getAllTaskStatus;
 
     //----------------------------------
     //FUNCTION GET ALL TYPE OF TASK
     //-----------------------------------
-    var getAllTaskType = function (){
-        ////console.log(11);
-        $http.get(config.baseURI + "/api/getAllTaskType").success(function(response){
-            $scope.taskTypeOptions= response;
-            //console.log(response);
-        })
-    }
+    //var getAllTaskType = function (){
+    //    ////console.log(11);
+    //     dataService.getDataServer(config.baseURI + "/api/getAllTaskType").success(function(response){
+    //        $scope.taskTypeOptions= response;
+    //        //console.log(response);
+    //    })
+    //}
 
     //-----------------------------------
     //FUNCTION SAVE TASK STATE
     //-----------------------------------
-    $scope.saveTaskState = function (){
-        ////console.log(11);
-        $http.put(config.baseURI + "/api/updateAllTaskState", $scope.taskList).then(function success(response){
-            smsData.theme="theme-inverse";
-            $.notific8($("#sms-success").val(), smsData);
-            //console.log(response);
-        },function (error) {
-            smsData.theme="danger";
-            //data.sticky="true";
-            $.notific8($("#sms-fail").val(), smsData);
-            console.log(error)
-        })
-    }
+    //$scope.saveTaskState = function (){
+    //    ////console.log(11);
+    //    $http.put(config.baseURI + "/api/updateAllTaskState", $scope.taskList).then(function success(response){
+    //        smsData.theme="theme-inverse";
+    //        $.notific8($("#sms-success").val(), smsData);
+    //        //console.log(response);
+    //    },function (error) {
+    //        smsData.theme="danger";
+    //        //data.sticky="true";
+    //        $.notific8($("#sms-fail").val(), smsData);
+    //        console.log(error)
+    //    })
+    //}
 
+
+    var dateSort =  function(x, y){
+        if (x.taskdate > y.taskdate) {
+            return -1;
+        }
+        if (x.taskdate < y.taskdate) {
+            return 1;
+        }
+        return 0;
+    };
     //----------------------------------
     //FUNCTION LOAD SCRIPT
     //-----------------------------------
@@ -142,8 +168,14 @@ function adminTaskListController($scope,$state, $http, $filter, config) {
 
     });
 
+    $rootScope.$on("shipper:change:order:status", function(event,args){
+        getDataFromServer();
+    });
 
+    $rootScope.$on("shipper:change:task:status", function(event,args){
+        getDataFromServer();
+    });
 }
 
-adminTaskListController.$inject = ['$scope','$state', '$http', '$filter', 'config'];
+adminTaskListController.$inject = ['$scope','$state', 'dataService', '$filter', 'config', '$rootScope'];
 angular.module('app').controller('adminTaskListController',adminTaskListController);

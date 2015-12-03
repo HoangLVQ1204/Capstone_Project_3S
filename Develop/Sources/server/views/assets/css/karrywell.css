@@ -16,11 +16,22 @@ body.leftMenu .mm-menu:not(.mm-right).mm-hassearch .mm-panel {
      content: '\25BC';
 }
 .st-selected {
-     background-color: #62707d !important;
-     color: white !important;
+     background-color: #B2DFDB !important;
+     /*color: white !important;*/
 }
 
 .fail-task {
      /*background-color: #62707d !important;*/
      color: red !important;
+}
+.mail_active {
+     background: aliceblue;
+}
+
+.table_active {
+     background: #FFEBEE;
+}
+
+.widget-collapse header a {
+     text-decoration: none;
 }

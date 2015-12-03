@@ -4,7 +4,7 @@ angular.module('app')
             controller: 'storeOrderController',
             templateUrl: '/components/storeOrder/storeOrder.html',
             controllerAs: 'storeOrder',
-            scope: {},
+            scope: false,
             //replace: true,
             restrict: 'E'
         }

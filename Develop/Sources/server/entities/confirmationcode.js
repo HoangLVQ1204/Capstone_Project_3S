@@ -5,7 +5,8 @@ module.exports = function(sequelize, DataTypes) {
     codeid: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     codecontent: {
       type: DataTypes.INTEGER,
@@ -27,8 +28,14 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(db) {
       },
-      postOneGood: function(newGood){
-        return goods.build(newGood).save();
+      postOneCode: function(newCode){
+        return confirmationcode.build(
+          {
+            codecontent: newCode.codecontent,
+            typeid: newCode.typeid,
+            orderid: newCode.orderid
+          }
+        ).save();
       },
 
       deleteConfirmCode: function (orderid) {
@@ -41,6 +48,16 @@ module.exports = function(sequelize, DataTypes) {
 
       putOrder: function (currentOrder) {
         return currentOrder.save();
+      },
+
+      checkCode: function (orderid, code, type) {
+        return confirmationcode.findOne({
+          where: {
+            orderid: orderid,
+            codecontent: code,
+            typeid: type
+          }
+        });
       }
     }
   });

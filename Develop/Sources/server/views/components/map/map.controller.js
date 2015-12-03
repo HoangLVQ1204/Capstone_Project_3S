@@ -1,55 +1,11 @@
 /**
- * Created by hoanglvq on 10/22/15.
- */
-/**
  * Created by hoanglvq on 10/19/15.
  */
 
 
-// /*
-//     Helper functions
-// */
-function initShipperMarker($scope, geocoder, maps, shipperMarker) {
-    shipperMarker.icon = $scope.shipperIcon;
-}
-
-function initStoreMarker($scope, geocoder, maps, storeMarker) {
-    storeMarker.icon = $scope.storeIcon;
-    geocoder.geocode({
-            'location': {
-                lat: storeMarker.latitude,
-                lng: storeMarker.longitude
-            }
-        }, function(results, status) {
-            var geoText = 'Not Available';
-            if (status === maps.GeocoderStatus.OK) {
-                if (results[0]) {
-                    geoText = results[0].formatted_address;
-
-                }
-            }               
-            storeMarker.geoText = geoText;                                   
-        }); 
-}
-
-function initCustomerMarker($scope, geocoder, maps, customerMarker) {    
-    customerMarker.customerID = customerMarker.order[0];
-    customerMarker.order.forEach(function(order) {        
-        $scope.orders[order].customerID = customerMarker.customerID;
-    });
-
-    customerMarker.icon = $scope.customerIcon;
-    geocoder.geocode({
-        address: customerMarker.geoText
-    }, function(results, status) {
-        if (status === maps.GeocoderStatus.OK) {
-            customerMarker.latitude = results[0].geometry.location.lat();
-            customerMarker.longitude = results[0].geometry.location.lng();
-        } else {
-            alert('Geocode was not successful for the following reason: ' + status);
-        }
-    });
-}
+/*
+    Helper functions
+*/
 
 var arrows = [];
 
@@ -106,8 +62,7 @@ function displayRelationship(model, object_1, object_2, $scope) {
             lng: model.longitude
         };
         //console.log(store, customer);
-        if (dest_1 && dest_2)
-            $scope.drawTwoArrows(start, dest_1, dest_2);
+        $scope.drawTwoArrows(start, dest_1, dest_2);
     });                
 }
 
@@ -119,15 +74,18 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
     $scope.customerMarkers = $scope.customerMarkers || [];
     $scope.orders = $scope.orders || {};                
 
-    console.log($scope.shipperMarkers == mapService.getShipperMarkers());
+    // console.log($scope.shipperMarkers == mapService.getShipperMarkers());
 
     $scope.circleRadius = $scope.circleRadius || 1000000000;
 
     var initCenter = {
-        latitude: 21.013419,
-        longitude: 105.526180
+        latitude: 21.028141,
+        longitude: 105.834045
     }
 
+    var initZoom = 16;
+
+    $scope.zoom = $scope.zoom || initZoom;
     $scope.center = $scope.center || initCenter;
 
     $scope.shipperControl = {};
@@ -143,14 +101,6 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
             + Địa điểm đến
 
          */
-        $scope.shipperIcon = 'http://maps.google.com/mapfiles/kml/shapes/motorcycling.png';            
-        $scope.storeIcon = 'http://maps.google.com/mapfiles/kml/shapes/homegardenbusiness.png';
-        $scope.customerIcon = 'http://maps.google.com/mapfiles/kml/shapes/man.png';            
-
-        $scope.sourceIcon = 'https://chart.googleapis.com/chart?' +
-            'chst=d_map_pin_letter&chld=S|FFFF00|000000';
-        $scope.disabledIcon = 'http://chart.apis.google.com/chart?' +
-            'chst=d_map_pin_letter&chld=x|3366FF';
 
         $scope.arrowSymbol = {
             path: maps.SymbolPath.FORWARD_CLOSED_ARROW
@@ -185,7 +135,7 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
          */
         $scope.map = {
             center: $scope.center,
-            zoom: 16,
+            zoom: $scope.zoom,
             control: {},
             dragging: true
         }
@@ -202,37 +152,27 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
             }
         }
 
-        
-        // Initilize some attribute for markers
-        $scope.shipperMarkers.forEach(function(shipperMarker) {                        
-            initShipperMarker($scope, geocoder, maps, shipperMarker);
-        });        
-
-        $scope.storeMarkers.forEach(function(storeMarker) {
-            initStoreMarker($scope, geocoder, maps, storeMarker);
-        });
-
-        $scope.customerMarkers.forEach(function(customerMarker) {            
-            initCustomerMarker($scope, geocoder, maps, customerMarker);
-        });   
-
 
         // Events for markers        
         $scope.shipperEvents = {
             mouseover: function(gMarker, eventName, model, mouseEvent) {                                 
-                console.log('mouseover', model.order);                
+                model = _.find($scope.shipperMarkers, function(e) {
+                    return e.shipperID == model.shipperID;
+                });
+                if (!!model == false) return;
                 console.log('mouseover storeMarkers', $scope.storeMarkers);
                 console.log('mouseover customerMarkers', $scope.customerMarkers);
+                // console.log('avatar', model);
                 var content = '<div>' + 
-                        '<h5>' + model.shipperID + '</h5>' +
+                        '<strong>' + model.shipperID + '</strong><br><strong>' + model.geoText + '</strong></div>' +
                         '<ul>';
 
                 model.order.forEach(function(order) {
-                    content += '<li>' + order + '</li>';
+                    content += '<li>' + order + '(' + $scope.orders[order].status + ($scope.orders[order].isPending ? ' <em>PENDING</em>' : '') + ')</li>';
                 });     
 
                 content += '</ul>' +
-                        'Status: <span>' + model.status + '</span>' +
+                        // 'Status: <span>' + model.status + '</span>' +
                         '</div>';
                 $scope.openInfo(gMarker, content);
 
@@ -246,13 +186,18 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
         };    
         $scope.storeEvents = {
             mouseover: function(gMarker, eventName, model, mouseEvent) {                                 
-                console.log('mouseover', model.order);
+                model = _.find($scope.storeMarkers, function(e) {
+                    return e.storeID == model.storeID;
+                });
+                if (!!model == false) return;
+                console.log('mouseover shipperMarkers', $scope.shipperMarkers);
+                console.log('mouseover customerMarkers', $scope.customerMarkers);
                 var content = '<div>' + 
                         '<strong>' + model.geoText + '</strong>' +
                         '<ul>';
 
                 model.order.forEach(function(order) {
-                    content += '<li>' + order + '</li>';
+                    content += '<li>' + order + '(' + $scope.orders[order].status + ($scope.orders[order].isPending ? ' <em>PENDING</em>' : '') + ')</li>';
                 });     
                                     
                 content += '</ul>' +                        
@@ -269,12 +214,18 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
         };    
         $scope.customerEvents = {
             mouseover: function(gMarker, eventName, model, mouseEvent) {                                 
+                model = _.find($scope.customerMarkers, function(e) {
+                    return e.customerID == model.customerID;
+                });
+                if (!!model == false) return;
+                console.log('mouseover storeMarkers', $scope.storeMarkers);
+                console.log('mouseover shipperMarkers', $scope.shipperMarkers);
                 var content = '<div>' + 
                         '<strong>' + model.geoText + '</strong>' +
                         '<ul>';
 
                 model.order.forEach(function(order) {
-                    content += '<li>' + order + '</li>';
+                    content += '<li>' + order + '(' + $scope.orders[order].status + ($scope.orders[order].isPending ? ' <em>PENDING</em>' : '') + ')</li>';
                 });     
                                     
                 content += '</ul>' +                        
@@ -290,37 +241,6 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
             }
         };    
 
-        // Test real-time
-
-         // setTimeout(function() {
-         //     console.log('time out');
-         //     var newOrder = "order1";
-         //     var shipperID = "shipper_1";
-         //     var storeID = "store_3";
-         //     var newStore = {
-         //         "order": [newOrder],
-         //         "latitude": 21.031526,
-         //         "longitude": 105.813359,
-         //         "storeID": storeID
-         //     };
-         //     var geoText = "306 Kim Mã,Ba Đình,Hà Nội,Việt Nam";
-         //     var newCustomer = {
-         //         "order": [newOrder],
-         //         "geoText": geoText
-         //     };
-         //     initStoreMarker($scope, geocoder, maps, newStore);
-         //     $scope.orders[newOrder] = {
-         //         "shipperID": shipperID,
-         //         "storeID": storeID
-         //     };
-         //     initCustomerMarker($scope, geocoder, maps, newCustomer);
-         //     // Add all new information
-         //     $scope.shipperMarkers[0].order.push(newOrder);
-         //     $scope.storeMarkers.push(newStore);
-         //     $scope.customerMarkers.push(newCustomer);
-         //     $scope.$apply();
-         // }, 5000);
-
         // Filling control for all angular-google-map directives
         uiGmapIsReady.promise().then(function(instances) {
             var myMap = instances[0].map;                                
@@ -331,17 +251,21 @@ function mapController($scope,uiGmapGoogleMapApi,uiGmapIsReady,mapService){
             };
 
             $scope.drawTwoArrows = function(start, dest_1, dest_2) {
-                var end = {
-                    lat: dest_1.latitude,
-                    lng: dest_1.longitude
-                };                    
-                drawArrow(start, end, $scope.arrowSymbol, 'blue', maps, myMap);
+                if (dest_1) {
+                    var end = {
+                        lat: dest_1.latitude,
+                        lng: dest_1.longitude
+                    };                    
+                    drawArrow(start, end, $scope.arrowSymbol, 'blue', maps, myMap);
+                }                
 
-                var end = {
-                    lat: dest_2.latitude,
-                    lng: dest_2.longitude
-                };
-                drawArrow(start, end, $scope.arrowSymbol, 'blue', maps, myMap);
+                if (dest_2) {
+                    var end = {
+                        lat: dest_2.latitude,
+                        lng: dest_2.longitude
+                    };
+                    drawArrow(start, end, $scope.arrowSymbol, 'blue', maps, myMap);
+                }                
             };
         });            
 

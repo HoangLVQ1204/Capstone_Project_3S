@@ -2,7 +2,7 @@
  * Created by hoanglvq on 9/22/15.
  */
 
-function storeDashboardController($scope,$state,dataService, $http, config){
+function storeDashboardController($scope,$state,dataService, $http, config, $rootScope){
 
     //Option for drop down list
     $scope.searchOptionsInProcess = [
@@ -24,12 +24,12 @@ function storeDashboardController($scope,$state,dataService, $http, config){
         },
         {
             option: 'Delivery Address',
-            value: 'deliveryaddress'
+            value: 'fullDeliveryAddress'
         },
-        {
-            option: 'Create Date',
-            value: 'createdate'
-        },
+        // {
+        //     option: 'Create Date',
+        //     value: 'createdate'
+        // },
         {
             option: 'Type',
             value: 'ordertype'
@@ -49,13 +49,13 @@ function storeDashboardController($scope,$state,dataService, $http, config){
             option: 'Order ID',
             value: 'orderid'
         },
-        {
-            option: 'Done Date',
-            value: 'donedate'
-        },
+        // {
+        //     option: 'Done Date',
+        //     value: 'donedate'
+        // },
         {
             option: 'Delivery Address',
-            value: 'deliveryaddress'
+            value: 'fullDeliveryAddress'
         },
         {
             option: 'Cusotmer',
@@ -76,7 +76,7 @@ function storeDashboardController($scope,$state,dataService, $http, config){
             value: 'orderid'
         },{
             option: 'Delivery Address',
-            value: 'deliveryaddress'
+            value: 'fullDeliveryAddress'
         },
         {
             option: 'Cusotmer',
@@ -87,29 +87,7 @@ function storeDashboardController($scope,$state,dataService, $http, config){
             value: 'recipientphone'
         }
     ];
-    //$scope.searchOptionsIssue= [
-    //    {
-    //        option: 'All',
-    //        value: ''
-    //    },
-    //    {
-    //        option: 'Order ID',
-    //        value: 'orderid'
-    //    },{
-    //        option: 'Delivery Address',
-    //        value: 'deliveryaddress'
-    //    },
-    //    {
-    //        option: 'Cusotmer',
-    //        value: 'recipientname'
-    //    },
-    //    {
-    //        option: 'Customer Phone',
-    //        value: 'recipientphone'
-    //    }
-    //];
 
-    //
     $scope.selectedInprocess =$scope.searchOptionsInProcess[0];
     $scope.selectedDone=$scope.searchOptionsDone[0];
     $scope.selectedDraff=$scope.searchOptionsDraff[0];
@@ -124,7 +102,8 @@ function storeDashboardController($scope,$state,dataService, $http, config){
     function getDataFromServer() {
         var urlBase = config.baseURI + '/orders';
         dataService.getDataServer(urlBase)
-            .success(function (rs) {
+            .then(function (res) {
+                var rs = res.data;
                 $scope.orderToday = rs['Total'][2];
                 $scope.totalCod = rs['Total'][0];
                 $scope.todayCod = rs['Total'][3];
@@ -132,22 +111,15 @@ function storeDashboardController($scope,$state,dataService, $http, config){
                 $scope.todayFee = rs['Total'][4];
                 $scope.totalOrder = rs['Total'][5];
                 $scope.ordersDraff = rs['Draff'];
-                //$scope.orderIssue = rs['Issue'];
                 $scope.orderInprocess= rs['Inprocess'];
                 $scope.orderDone= rs['Done'];
 
                 $scope.displayedCollectionDraff = [].concat($scope.ordersDraff);
-               // $scope.displayedCollectionIssue = [].concat($scope.orderIssue);
                 $scope.displayedCollectionInprocess = [].concat($scope.orderInprocess);
                 $scope.displayedCollectionDone = [].concat($scope.orderDone);
 
                 $scope.listDraff =  $scope.ordersDraff;
-
-
             })
-            .error(function (error) {
-                console.log('Unable to load customer data: ' + error);
-            });
     }
     $scope.Order = {};
 
@@ -167,16 +139,12 @@ function storeDashboardController($scope,$state,dataService, $http, config){
 
     //cancel in process order
     $scope.cancerOrder = function(){
-        if($scope.Order.statusname == 'Delivering' || $scope.Order.statusname == 'In stock' || $scope.Order.statusname == 'Bring to stock'){
-            var urlBase = config.baseURI + '/orders/cancel';
-            var cancelOrderId = $scope.Order.orderid;
-            console.log(cancelOrderId);
-            dataService.putDataServer(urlBase,cancelOrderId);
-        }
-        var index =  $scope.displayedCollectionInprocess.indexOf( $scope.Order);
-        if (index !== -1) {
-            $scope.displayedCollectionInprocess.splice(index, 1);
-        }
+        var urlBase = config.baseURI + '/store/orders/cancel';
+            dataService.postDataServer(urlBase,{orderid : $scope.Order.orderid})
+            .then(function(rs){
+               getDataFromServer();
+            });
+        
     };
 
     //delete Draff order
@@ -186,56 +154,73 @@ function storeDashboardController($scope,$state,dataService, $http, config){
             var index =  $scope.displayedCollectionDraff.indexOf( $scope.Order);
             if (index !== -1) {
                 $scope.displayedCollectionDraff.splice(index, 1);
+                $scope.ordersDraff.splice(index, 1);
             }
-            alertDelete.success();
+            var temp = {
+                    type: 'info',
+                    title: 'Info',
+                    content: 'Order '+$scope.Order.orderid + 'has been deleted successfully!',
+                    url: '#',
+                };
+                $rootScope.notify(temp);
         },function(err){
-            alertDelete.error();
+            var temp = {
+                    type: 'issue',
+                    title: 'OOPS!',
+                    content: 'Fail to delete order '+$scope.Order.orderid,
+                    url: '#',
+                };
+                $rootScope.notify(temp);
         });
 
 
     };
 
-    //submit draff order
-    $scope.submitDraff = function (order) {
-        var urlBase = config.baseURI + '/orders/putdraff';
-        for(var i = 0; i < $scope.listDraff.length; i++){
-            if ($scope.listDraff[i].orderid == order.orderid){
-                dataService.postDataServer(urlBase,$scope.listDraff[i]);
-                var index =  $scope.displayedCollectionDraff.indexOf(order);
-                if (index !== -1) {
-                    $scope.displayedCollectionDraff.splice(index, 1);
-                }
-            }
-        }
-    };
-
-
-
     $scope.$watch('$viewContentLoaded', function(event) {
         caplet();
+
+        // Test notification
+        // var abc = {
+        //     type: 'info',
+        //     title: 'Info: ',
+        //     content: 'aaaaaaaaaaaaaaaacreatedsuccessfully aaaaaaaaaaaaaaaaa.',
+        //     url: '/#/notiListdemo',
+        //     isread: false,
+        //     createddate: new Date()
+        // };
+        // $rootScope.notify(abc);
     });
 
-    var alertDelete = {
-        "success": function () {
-            var data = new Object();
-            data.verticalEdge = 'right';
-            data.horizontalEdge = 'top';
-            data.theme = 'success';
-            $.notific8($("#smsDeleted").val(), data);
-        },
-        "error": function () {
-            var data = new Object();
-            data.verticalEdge = 'right';
-            data.horizontalEdge = 'top';
-            data.theme = 'theme';
-            $.notific8($("#smsDeleteFail").val(), data);
+    /*
+        by HoangLVQ - 24/11/2015
+        This function is used to listen event which reload status order
+    */
+    $rootScope.$on("updateStatusOrder", function(event, data){
+        getDataFromServer();
+        if(data.msg.profile){
+            $rootScope.displayInfoShipper(data.msg.profile,data.msg.order);
         }
-    };
+    });
 
+    /*
+        by HoangLVQ - 24/11/2015
+        This function is used to listen event which update pendding order
+    */    
+     $rootScope.$on("updatePendingOrder", function(event, data){
+        getDataFromServer();
+     });
+
+    $scope.findShipperAgain = function(order) {
+        $rootScope.findExpressShipper({
+            orderID: order.orderid, 
+            customerAddress: order.fullDeliveryAddress
+        }, {}, true);
+    };
+    
 }
 
 
-storeDashboardController.$inject = ['$scope','$state','dataService','$http','config'];
+storeDashboardController.$inject = ['$scope','$state','dataService','$http','config','$rootScope'];
 
 angular.module('app').controller('storeDashboardController',storeDashboardController);
 

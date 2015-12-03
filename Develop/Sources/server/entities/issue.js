@@ -10,8 +10,8 @@ module.exports = function(sequelize, DataTypes) {
     },
     typeid: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true
+      allowNull: false
+      // primaryKey: true
     },
     description: {
       type: DataTypes.TEXT,
@@ -21,8 +21,16 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.BOOLEAN,
       allowNull: true
     },
+    resolvetype: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
     createddate: {
       type: DataTypes.DATE,
+      allowNull: true
+    },
+    sender: {
+      type: DataTypes.STRING,
       allowNull: true
     }
   }, {
@@ -39,11 +47,16 @@ module.exports = function(sequelize, DataTypes) {
           foreignKey: 'typeid',
           constraints: false
         });
+
+        issue.belongsTo(db.profile, {
+          foreignKey: 'sender',
+          constraints: false
+        });
       },
       createNewIssue: function(newIssue){
-        return issue.build({typeid: newIssue.typeid, description: newIssue.description, isresolved: newIssue.isresolved, createddate: newIssue.createddate}).save();
+        return issue.create({typeid: newIssue.typeid, description: newIssue.description, isresolved: newIssue.isresolved, resolvetype: newIssue.resolvetype, createddate: newIssue.createddate, sender: newIssue.sender});
       },
-      preChangeIsPending: function(task, order, issuetype, orderissue, shipperId, issueId){
+      changeIsPendingOfShipper: function(task, order, issuetype, orderissue, shipperId, issueId){
         return issue.findAll({
           attributes: ['issueid', 'typeid', 'isresolved'],
           where: {'issueid': issueId},
@@ -67,7 +80,8 @@ module.exports = function(sequelize, DataTypes) {
             }]
           }]
         });
-        return issue.build({categoryid: newIssue.categoryID, reason: newIssue.reason, description: newIssue.description}).save();
+        //?????
+        // return issue.build({categoryid: newIssue.categoryID, reason: newIssue.reason, description: newIssue.description}).save();
       },
 
       getAllIssue: function (issuetype, issuecategory) {
@@ -79,19 +93,21 @@ module.exports = function(sequelize, DataTypes) {
         })
       },
 
-      getIssueDetail: function (orderissue, issuetype, issuecategory, issueid, order, task, orderstatus, taskstatus) {
+      getIssueDetail: function (orderissue, issuetype, issuecategory, issueid, order, task, orderstatus, taskstatus, profile) {
         return issue.findOne({
           include: [{
             model: orderissue, attributes: ['orderid'],
             include: {
               model: order,
-              attributes: ['pickupaddress','deliveryaddress'],
+              attributes: ['pickupaddress','deliveryaddress', 'statusid','orderid','fee','storeid','ispending','iscancel'
+              ,'deliveryprovinceid','deliverydistrictid', 'deliverywardid'],
               include:[{
                 model: task,
                 include: {
                   model: taskstatus,
                   attributes: ['statusname']
-                }
+                },
+
               },{
                 model: orderstatus,
                 attributes: ['statusname']
@@ -100,10 +116,43 @@ module.exports = function(sequelize, DataTypes) {
           },{
             model: issuetype, attributes: ['categoryid', 'typename'],
             include: {model : issuecategory, attributes: ['categoryname']}
+          },{
+            model: profile, attributes: ['avatar']
           }],
           where: {
             'issueid': issueid
           }
+        }).then(sequelize.handler)
+      },
+
+      updateResolveIssue: function (issueid, type) {
+        return issue.update({
+              'isresolved': true,
+              'resolvetype': type
+            },{
+              where: {
+                'issueid': issueid
+              }
+            }).then(sequelize.handler)
+        },
+
+      getUserGetIssue: function () {
+        return issue.findAll(
+            { attributes: ['sender','issueid'],
+              where: {
+                'isresolved': false
+          }
+        })
+      },
+
+      getIssueBySender: function (sender) {
+        return issue.findOne({
+          where: {
+            sender: sender,
+            typeid: [1, 2, 3, 6, 8]
+          },
+          limit: 1,
+          order: '"createddate" DESC',
         })
       }
     }

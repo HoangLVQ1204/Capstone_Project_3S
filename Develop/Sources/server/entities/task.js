@@ -18,7 +18,7 @@ module.exports = function (sequelize, DataTypes) {
         },
         adminid: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         statusid: {
             type: DataTypes.INTEGER,
@@ -59,21 +59,24 @@ module.exports = function (sequelize, DataTypes) {
                     {as: 'shipper',foreignKey: 'shipperid'}
                 );
             },
-            getAllHistoryOfShipper: function (shipperid, modelOrder, modelOrderStatus) {
+            getAllHistoryOfShipper: function (shipperid, page, modelOrder, modelOrderStatus) {
+                var limitNum = (page > 0) ? 2 : 0;
                 return task.findAll({
-                    attributes: [['taskid', 'id'],['taskdate','date']],
+                    attributes: [['taskid', 'id'],['taskdate','date'],['statusid','taskstatus']],
+                    order: [['taskdate','DESC']],
+                    limit: limitNum,
+                    offset: limitNum * (page - 1),
                     where: {
                         shipperid: shipperid,
-                        //taskdate: taskdate
+                        statusid: {
+                            $in: [3, 5]
+                        }
                     },
                     include: [
                         {
                             model: modelOrder,
                             //limit: 1,
                             attributes: [['orderid', 'code'], 'statusid', 'fee', 'cod'],
-                            where:{
-                                //statusid: '1 or 2'
-                            },
                             include: {
                                 model: modelOrderStatus,
                                 attributes: [['statusname', 'statusid']]
@@ -82,6 +85,22 @@ module.exports = function (sequelize, DataTypes) {
                     ]
                 });
             },
+
+            //// START - count total task history of one shipper
+            //// HuyTDH 10-11-2015
+            countTotalTaskHistoryOfShipper: function(shipperid){
+                return task.findOne({
+                    attributes: [[sequelize.fn('COUNT', sequelize.col('taskid')), 'total']],
+                    where: {
+                        shipperid: shipperid,
+                        statusid: {
+                            $in: [3, 5]
+                        }
+                    }
+                });
+            },
+            //// END - count total task history of one shipper
+
             getMapdataById: function (orderModel, shipperID, order){
                 if(order=="all") {
                     return task.findAll({
@@ -129,7 +148,6 @@ module.exports = function (sequelize, DataTypes) {
                         },
 
             assignTaskForShipper: function(shipper){
-                //console.log(shipper);
                 return task.findOrCreate({
                     where: {
                         orderid: shipper.orderid,
@@ -142,20 +160,34 @@ module.exports = function (sequelize, DataTypes) {
                         taskdate: shipper.taskdate
                     }
                 }).spread(function(tasks, created){
+
                     if (!created && tasks.shipperid != shipper.shipperid)
                         if (tasks.statusid == 4){
                             task.create({
                                     'orderid': shipper.orderid,
                                     'shipperid': shipper.shipperid,
                                     'adminid': shipper.adminid,
-                                    'statusid': 1,
+                                    'statusid': 2,
                                     'typeid': shipper.typeid,
-                                    'taskdate': shipper.taskdate
+                                    'taskdate': new Date(Date.now())
                                 });
-                            task.updateStatusOfTask(tasks.taskid, 5);
+                            return task.updateStatusOfTask(tasks.taskid, 5);
                         }
-                    else  task.updateShipperOfTask(tasks.taskid, shipper.shipperid);
+                    else  return task.updateShipperOfTask(tasks.taskid, shipper.shipperid);
 
+                })
+            },
+
+            createTaskForShipper: function(dataTask){
+                return task.create({
+                    'orderid': dataTask.orderid,
+                    'shipperid': dataTask.shipperid,
+                    'adminid': dataTask.adminid,
+                    'statusid': dataTask.statusid,
+                    'typeid': dataTask.typeid,
+                    'taskdate': new Date(Date.now())
+                }).then(function(task){
+                    return task;
                 })
             },
 
@@ -188,11 +220,25 @@ module.exports = function (sequelize, DataTypes) {
                 })
             },
 
+            countTaskByShipperId: function(shipperid, taskStatusModel){
+                return task.findAll({
+                    attributes: ['statusid', [sequelize.fn('count', sequelize.col('task.statusid')), 'count']],
+                    group: ['task.statusid'],
+                    where:{
+                        shipperid: shipperid
+                    },
+                    //include: {
+                    //    model: taskStatusModel,
+                    //    attributes: ['statusname']
+                    //}
+                })
+			},
+
             getAll: function () {
               return task.findAll();
             },
 
-            updateTaskState: function (newTask) {
+            updateTaskState: function (newTask) {//especially for task list
                 return task.update(
                     {'statusid': newTask.selectedStatus.statusid, 'typeid': newTask.selectedType.typeid },
                     {
@@ -200,6 +246,74 @@ module.exports = function (sequelize, DataTypes) {
                             'taskid': newTask.taskid
                         }
                     })
+            },
+
+            updateTaskStatus: function (newStatus, taskid, shipperid) {
+                return task.update(
+                    {'statusid': newStatus},
+                    {
+                        where: {
+                            'taskid': taskid,
+                            'shipperid': shipperid
+                        }
+                    })
+            },
+
+            getTaskOfShipperByOrder: function(shipperid, type, orderids) {
+                if (type == "pending") {
+                    return task.findAll({
+                        //attributes: ['taskid'],
+                        where:{
+                            shipperid: shipperid,
+                            statusid: 2
+                        }
+                    })
+                } else {
+                    //cancel
+                    return task.findAll({
+                        //attributes: ['taskid'],
+                        where:{
+                            shipperid: shipperid,
+                            statusid: [1, 2],
+                            orderid: orderids
+                        }
+                    })
+                }
+            },
+
+            countProcessingTaskOfShipper: function (shipperid) {
+                return task.count(
+                    {
+                        where: {
+                            'statusid': 4,
+                            'shipperid': shipperid
+                        }
+                    })
+            },
+
+            updateTaskStatusAndType: function (newTask) {//for task
+                return task.update(
+                    {'statusid': newTask.statusid, 'typeid': newTask.typeid },
+                    {
+                        where: {
+                            'taskid': newTask.taskid
+                        }
+                    })
+            },
+            
+            deleteTask: function (currtask) {
+                return task.destroy(
+                    {where: {'taskid': currtask.taskid}});
+            },
+
+            adminCountTaskOfEachShipper:function(){
+                return task.findAll({
+                  attributes: ['shipperid', 
+                    [sequelize.fn('count', sequelize.col('taskid')),'numberTask'],
+                  ], 
+                  group: ['shipperid']
+
+              })
             }
         }
     });

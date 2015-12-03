@@ -43,10 +43,90 @@ module.exports = function (app) {
                 db.task.updateTaskState(task)
                     .then(function (task) {
                         //tasks = tasks.toJSON();
-                        res.status(200).json(task);
+                        res.status(201).json(task);
                     }, function (err) {
                         next(err);
                     })
+        })
+    };
+
+    var updateTaskNoShipper = function (req, res, next) {
+        var taskidlist = req.body;
+        return taskidlist.map(function (taskid) {
+                db.task.updateShipperOfTask(taskid, null)
+                    .then(function (task) {
+                        res.status(201).json(task);
+                    }, function (err) {
+                        next(err);
+                    })
+        })
+    }
+
+    var createTask = function(req,res,next){
+        var taskData = req.body;
+        console.log('createTask', taskData);
+        return db.task.createTaskForShipper(taskData)
+                .then(function(newTask) {
+                    console.log(newTask.taskid);
+                    res.status(201).json(newTask);
+                }, function(err) {
+                    next(err);
+                })
+    };
+
+    var countProcessingTaskOfShipper = function(req,res,next){
+        var shipperid = req.query.shipperid;
+        console.log(shipperid)
+        return db.task.countProcessingTaskOfShipper(shipperid)
+                .then(function(count) {
+                    //console.log(newTask.taskid);
+                    res.status(200).json(count);
+                }, function(err) {
+                    next(err);
+                })
+    };
+
+    var updateTaskStateOfIssue = function (req, res, next) {
+        var issue = req.body;
+        var promise = [];
+        issue.orderissues.map(function (orderissue) {
+            //console.log(orderissue.order);
+            if(orderissue.order.tasks.length>0)
+                promise.push(db.task.updateTaskStatusAndType(orderissue.order.tasks[0]));
+            promise.push(db.order.updateOrderStatus(orderissue.order));
+        });
+        return Promise.all(promise).then(function () {
+            res.status(201).json('OK');
+        }, function (err) {
+            next(err);
+        })
+    };
+
+    var updateStateOfStoreCancelIssue = function (req, res, next) {
+        var issue = req.body;
+        var promise = [];
+        issue.orderissues.map(function (orderissue) {
+
+            if(orderissue.order.tasks !== undefined && orderissue.order.tasks.length != 0){
+                promise.push(
+
+                    db.task.deleteTask(orderissue.order.tasks[0])
+                        .then(function (task) {
+                            db.order.updateOrderAfterStoreCancel(orderissue.order);
+                        }, function (err) {
+                            next(err);
+                        })
+                );
+            }else{
+                promise.push(
+                    db.order.updateOrderAfterStoreCancel(orderissue.order)
+                );
+            }
+        });
+        return Promise.all(promise).then(function () {
+            res.status(201).json('OK');
+        }, function (err) {
+            next(err);
         })
     };
 
@@ -54,6 +134,11 @@ module.exports = function (app) {
         getAllTask: getAllTask,
         getAllTaskType: getAllTaskType,
         getAllTaskStatus: getAllTaskStatus,
-        updateTaskState: updateTaskState
+        updateTaskState: updateTaskState,
+        updateTaskNoShipper: updateTaskNoShipper,
+        createTask: createTask,
+        countProcessingTaskOfShipper: countProcessingTaskOfShipper,
+        updateTaskStateOfIssue: updateTaskStateOfIssue,
+        updateStateOfStoreCancelIssue: updateStateOfStoreCancelIssue
     }
 }

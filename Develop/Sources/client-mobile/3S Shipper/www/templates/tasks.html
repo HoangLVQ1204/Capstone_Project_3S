@@ -2,25 +2,59 @@
 <ion-view title="Tasks">
   <ion-nav-back-button>
   </ion-nav-back-button>
-    <ion-tabs class="tabs-icon-top tabs-striped tabs-color-balanced">
-        <ion-tab title="Pickup" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart" badge="badgeCountPick" badge-style="badge-assertive" on-select="tabSelected('pickup')">
+    <ion-tabs class="tabs-striped tabs-color-balanced ">
+      <ion-tab title="Express" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart"  badge="badgeCountExpress" badge-style="badge-assertive" on-select="tabSelected('express')">
         <ion-pane>
-          <ion-content >
+          <ion-content>
+            <p ng-if="badgeCountExpress == 0" class="notasks">No Task</p>
             <ion-list>
-              <ion-item class="item-icon-right" ng-repeat="order in pickupTasks | orderBy: 'pickupdate' " type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.orderid}}', isCancel: '{{order.iscancel}}'})">
-                <div class="titleContent" style="min-height: 80px;">
+              <ion-item ng-class="(haveIssue==true) ? 'not-active' : ''" class="item-icon-right" ng-repeat="order in expressTasks" type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.taskid}}', isCancel: '{{order.iscancel}}'})">
+                <div class="titleContent" style="min-height: 90px;">
                   <div>
                     <img src="img/storeprofile.png"/>
                   </div>
                   <div>
-                    <!--<h2>{{order.orderid}} <i ng-if="order.issueid !== undefined" class="ion-android-alert"></i></h2>-->
                     <h2>{{order.orderid}}</h2>
                     <!--Inactive-->
-                    <p ng-show="{{order.statusid == 1}}" class="statusPd label">Inactive</p>
+                    <p ng-show="{{order.statusid == 1}}" class="statusWt label">Inactive</p>
                     <!--Actived-->
                     <p ng-show="{{order.statusid == 2}}" class="statusDn label">Actived</p>
-                    <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
-                    <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
+                    <!--Processing-->
+                    <p ng-show="{{order.statusid == 4}}" class="statusPd label">Processing</p>
+                    <div class="tasklocate">
+                      <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
+                      <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
+                    </div>
+                  </div>
+                </div>
+                <i class="icon ion-chevron-right icon-accessory"></i>
+              </ion-item>
+            </ion-list>
+          </ion-content>
+        </ion-pane>
+      </ion-tab>
+      <ion-tab title="Pickup" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart" badge="badgeCountPick" badge-style="badge-assertive" on-select="tabSelected('pickup')">
+        <ion-pane>
+          <ion-content>
+            <p ng-if="badgeCountPick == 0" class="notasks">No Task</p>
+            <ion-list>
+              <ion-item ng-class="(haveIssue==true) ? 'not-active' : ''" class="item-icon-right" ng-repeat="order in pickupTasks | orderBy: 'pickupdate' " type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.taskid}}', isCancel: '{{order.iscancel}}'})">
+                <div class="titleContent" style="min-height: 90px;">
+                  <div>
+                    <img src="img/storeprofile.png"/>
+                  </div>
+                  <div>
+                    <h2>{{order.orderid}}</h2>
+                    <!--Inactive-->
+                    <p ng-show="{{order.statusid == 1}}" class="statusWt label">Inactive</p>
+                    <!--Actived-->
+                    <p ng-show="{{order.statusid == 2}}" class="statusDn label">Actived</p>
+                    <!--Processing-->
+                    <p ng-show="{{order.statusid == 4}}" class="statusPd label">Processing</p>
+                    <div class="tasklocate">
+                      <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
+                      <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
+                    </div>
                   </div>
                 </div>
                 <i class="icon ion-chevron-right icon-accessory"></i>
@@ -32,47 +66,27 @@
       <ion-tab title="Ship" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart"  badge="badgeCountShip" badge-style="badge-assertive" on-select="tabSelected('ship')">
         <ion-pane>
           <ion-content >
+            <p ng-if="badgeCountShip == 0" class="notasks">No Task</p>
             <ion-list>
-              <ion-item class="item-icon-right" ng-repeat="order in shipTasks | orderBy: 'deliverydate'" type="item-text-wrap"  ui-sref="app.detail({orderId: '{{order.orderid}}'})">
-                <div class="titleContent" style="min-height: 80px;">
+              <ion-item ng-class="(haveIssue==true) ? 'not-active' : ''" class="item-icon-right" ng-repeat="order in shipTasks | orderBy: 'deliverydate'" type="item-text-wrap"  ui-sref="app.detail({orderId: '{{order.taskid}}', isCancel: '{{order.iscancel}}'})">
+                <div class="titleContent" style="min-height: 90px;">
                   <div>
                     <img src="img/storeprofile.png"/>
                   </div>
                   <div>
                     <h2>{{order.orderid}}</h2>
                     <!--Inactive-->
-                    <p ng-show="{{order.statusid == 1}}" class="statusPd label">Inactive</p>
+                    <p ng-show="{{order.statusid == 1}}" class="statusWt label">Inactive</p>
                     <!--Actived-->
                     <p ng-show="{{order.statusid == 2}}" class="statusDn label">Actived</p>
-                    <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
-                    <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
+                    <!--Processing-->
+                    <p ng-show="{{order.statusid == 4}}" class="statusPd label">Processing</p>
+                    <div class="tasklocate">
+                      <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
+                      <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
+                    </div>
                   </div>
                 </div>
-                <i class="icon ion-chevron-right icon-accessory"></i>
-              </ion-item>
-            </ion-list>
-          </ion-content>
-        </ion-pane>
-      </ion-tab>
-      <ion-tab title="Express" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart"  badge="badgeCountExpress" badge-style="badge-assertive" on-select="tabSelected('express')">
-        <ion-pane>
-          <ion-content>
-            <ion-list>
-              <ion-item class="item-icon-right" ng-repeat="order in expressTasks" type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.orderid}}'})">
-               <div class="titleContent" style="min-height: 80px;">
-                 <div>
-                   <img src="img/storeprofile.png"/>
-                 </div>
-                 <div>
-                   <h2>{{order.orderid}}</h2>
-                   <!--Inactive-->
-                   <p ng-show="{{order.statusid == 1}}" class="statusPd label">Inactive</p>
-                   <!--Actived-->
-                   <p ng-show="{{order.statusid == 2}}" class="statusDn label">Actived</p>
-                   <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
-                   <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
-                 </div>
-               </div>
                 <i class="icon ion-chevron-right icon-accessory"></i>
               </ion-item>
             </ion-list>
@@ -82,20 +96,25 @@
       <ion-tab title="Return" icon-off="ion-ios-cart-outline" icon-on="ion-ios-cart"  badge="badgeCountReturn" badge-style="badge-assertive" on-select="tabSelected('express')">
         <ion-pane>
           <ion-content>
+            <p ng-if="badgeCountReturn == 0" class="notasks">No Task</p>
             <ion-list>
-              <ion-item class="item-icon-right" ng-repeat="order in returnTasks" type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.orderid}}'})">
-                <div class="titleContent" style="min-height: 80px;">
+              <ion-item ng-class="(haveIssue==true) ? 'not-active' : ''" class="item-icon-right" ng-repeat="order in returnTasks" type="item-text-wrap" ui-sref="app.detail({orderId: '{{order.taskid}}', isCancel: '{{order.iscancel}}'})">
+                <div class="titleContent" style="min-height: 90px;">
                   <div>
                     <img src="img/storeprofile.png"/>
                   </div>
                   <div>
                     <h2>{{order.orderid}}</h2>
                     <!--Inactive-->
-                    <p ng-show="{{order.statusid == 1}}" class="statusPd label">Inactive</p>
+                    <p ng-show="{{order.statusid == 1}}" class="statusWt label">Inactive</p>
                     <!--Actived-->
                     <p ng-show="{{order.statusid == 2}}" class="statusDn label">Actived</p>
-                    <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
-                    <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
+                    <!--Processing-->
+                    <p ng-show="{{order.statusid == 4}}" class="statusPd label">Processing</p>
+                    <div class="tasklocate">
+                      <p><i class="ion-ios-location"></i> {{order.pickupaddress}}</p>
+                      <p><i class="ion-ios-flag"></i> {{order.deliveryaddress}}</p>
+                    </div>
                   </div>
                 </div>
                 <i class="icon ion-chevron-right icon-accessory"></i>
@@ -104,21 +123,22 @@
           </ion-content>
         </ion-pane>
       </ion-tab>
-      <div class="fixed">
-        <a type="button" href="#/app/bestway/{{tabParam}}" class="btn-cus btn-primary-cus btn-circle-cus btn-xl-cus"><i class="ion-ios-paperplane" style="font-size: 26px"></i></a>
-      </div>
+      <!--<div class="fixed">-->
+        <!--<a type="button" href="#/app/bestway/{{tabParam}}" class="btn-cus btn-primary-cus btn-circle-cus btn-xl-cus"><i class="ion-ios-paperplane" style="font-size: 26px"></i></a>-->
+      <!--</div>-->
     </ion-tabs>
-  <script id="loading.html" type="text/ng-template">
-    <div class="popup">
-      <div class="popup-head">
-        <h3 class="popup-title" style="font-size: 1.2em; font-weight: bold">Issue Pending</h3>
-      </div>
-      <div class="popup-body">
-        <span>Your task is pending. Click 'Continue' to continue.</span>
-      </div>
-      <div class="popup-buttons">
-        <a ng-click="changeIsPending({{issueId}})" class="button btn-success-cus ">Continue</a>
-      </div>
-    </div>
-  </script>
 </ion-view>
+<script id="loading.html" type="text/ng-template">
+  <div class="popup">
+    <div class="popup-head">
+      <h3 class="popup-title" style="font-size: 1.2em; font-weight: bold">Issue Pending</h3>
+    </div>
+    <div class="popup-body">
+      <span>Your task is pending. Click 'Continue' to continue.</span><br/>
+      <a class="button icon-left ion-ios7-telephone button-calm button-outline" ng-href="tel: +840905507734">Call Admin</a>
+    </div>
+    <div class="popup-buttons">
+      <a ng-click="changeIsPending({{issueId}})" ng-class="(btnContinue==true) ? 'not-active' : ''" class="button btn-success-cus ">Continue</a>
+    </div>
+  </div>
+</script>

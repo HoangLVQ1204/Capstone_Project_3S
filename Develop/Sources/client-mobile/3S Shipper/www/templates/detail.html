@@ -1,14 +1,13 @@
 <ion-view view-title="Order Detail">
   <ion-content padding="true" class="has-header">
     <div id="map_canvas">
-      <map shipper-markers="shippers" store-markers="stores" customer-markers="customers" orders="orders"></map>
+      <map shipper-markers="shippers" store-markers="stores" customer-markers="customers" orders="orders" center="center"></map>
     </div>
     <div class="checkout-wrap">
       <ul class="checkout-bar">
         <!--<li class="visited first"></li>-->
         <a ng-repeat="status in statuslist" href="#" ng-click="openPopover($event)">
-          <li
-            ng-class="{visited: status.statusid < order.statusid, active: status.statusid==order.statusid, next: status.statusid > order.statusid}"></li>
+          <li ng-class="{visited: status.statusid < order.statusid, active: status.statusid==order.statusid, next: status.statusid > order.statusid}"></li>
         </a>
       </ul>
     </div>
@@ -21,71 +20,80 @@
         <div class="item item-input">
           <span class="input-label">Order code:</span>
 
-          <p class="">{{order.code}}</p>
+          <p class="detail-p detail-orderid">{{order.orderid}}</p>
         </div>
-        <label class="item item-input">
+        <div class="item item-input">
           <span class="input-label">Status:</span>
 
-          <p class="">{{order.status}}</p>
-        </label>
-        <label class="item item-input">
+          <p class="detail-p statusDn label">{{order.orderstatus.status}}</p>
+        </div>
+        <div class="item item-input">
           <span class="input-label">Recipient:</span>
 
-          <p class="">{{order.recipientname}}<br/>{{order.recipientphone}}</p>
-        </label>
-        <label class="item item-input">
-          <span class="input-label">Pick-up Address</span>
+          <p class="detail-p">{{order.recipientname}}<br/>{{order.recipientphone}}</p>
+        </div>
+        <div class="item item-input">
+          <span class="input-label">Pick-up<br/>Address:</span>
 
-          <p class="">{{order.pickupaddress}}</p>
-        </label>
-        <label class="item item-input">
+          <p class="detail-p">{{order.store.name}}<br/>{{order.store.phonenumber}}<br/>{{order.pickupaddress}}</p>
+        </div>
+        <div class="item item-input">
           <span class="input-label">Pick-up date:</span>
 
-          <p class="">{{order.pickupdate | date : 'dd-MM-yyyy'}}</p>
-        </label>
-        <label class="item item-input">
-          <span class="input-label">Delivery Address:</span>
+          <p class="detail-p">{{order.pickupdate | date : 'dd-MM-yyyy'}}</p>
+        </div>
+        <div class="item item-input" ng-if="order.tasks[0].typeid != 1">
+          <span class="input-label">Delivery<br/>Address:</span>
 
-          <p class="">{{order.deliveryaddress}}</p>
-        </label>
-        <label class="item item-input">
+          <p class="detail-p">{{order.deliveryaddress}}</p>
+        </div>
+        <div class="item item-input" ng-if="order.ordertypeid == 1">
+          <span class="input-label">Stock:</span>
+
+          <p class="detail-p">{{order.stock.name}}<br/>{{order.stock.address}}</p>
+        </div>
+        <div class="item item-input" ng-if="order.tasks[0].typeid != 1">
           <span class="input-label">Delivery Date:</span>
 
-          <p class="">{{order.deliverydate | date : 'dd-MM-yyyy'}}</p>
-        </label>
-        <label class="item item-input">
+          <p class="detail-p">{{order.completedate | date : 'dd-MM-yyyy'}}</p>
+        </div>
+        <div class="item item-input">
           <span class="input-label">COD:</span>
 
-          <p class="">{{order.cod | number}} VND</p>
-        </label>
-        <label class="item item-input">
+          <p class="detail-p">{{order.cod | number}} VND</p>
+        </div>
+        <div class="item item-input">
           <span class="input-label">Fee:</span>
 
-          <p class="">{{order.fee | number}} VND</p>
-        </label>
-        <label class="item item-input">
-          <span class="input-label">Goods Information:</span>
-
-          <p class="">
-            Weight: {{order.weight}} (g)<br/>
-            Size: {{order.lengthsize}} x {{order.widthsize}} x {{order.heightsize}} (cm)
+          <p class="detail-p">{{order.fee | number}} VND</p>
+        </div>
+        <div class="item item-input">
+          <span class="input-label">Goods<br/>Information:</span>
+          <ul>
+            <li ng-repeat="goods in order.goods">
+          <p class="detail-p">
+            <span ng-if="order.goods.length>1">{{$index+1}}.</span> {{goods.goodsname}} x {{goods.amount}} (items)<br/>
+             - Weight: {{goods.weight}} (g)<br/>
+             - Size: {{goods.lengthsize}} x {{goods.widthsize}} x {{goods.heightsize}} (cm)
           </p>
-        </label>
+            </li>
+            </ul>
+        </div>
       </div>
     </div>
     <button ng-repeat="status in statuslist"
-            ng-if="status.statusid == order.statusid && status.nextAction" class="button button-full button-positive"
-            ng-click="showConfirm(order.statusid, status.nextAction)">{{status.nextAction}}
+            ng-if="status.statusid == order.statusid && status.nextAction && order.tasks[0].statusid != 5" class="button button-block btCommon"
+            ng-click="showConfirm(order.statusid, status.nextAction)"><i class="ion-checkmark"></i>&nbsp;&nbsp;{{status.nextAction}}
     </button>
     <!--</ion-content>-->
-    <script id="status-popover.html" type="text/ng-template">
-      <ion-popover-view>
-        <ion-content>
-          {{currentStatus}}
-        </ion-content>
-      </ion-popover-view>
-    </script>
-    </div>
+    <!--<script id="status-popover.html" type="text/ng-template">-->
+      <!--<ion-popover-view>-->
+        <!--<ion-content>-->
+          <!--{{currentStatus}}-->
+        <!--</ion-content>-->
+      <!--</ion-popover-view>-->
+    <!--</script>-->
+    <!--</div>-->
   </ion-content>
   <script id="confirm-modal.html" type="text/ng-template">
     <ion-modal-view>
@@ -154,7 +162,7 @@
       </div>
     </div>
   </script>
-  <div class="fixed-button">
+  <!-- <div class="fixed-button">
     <a type="button" href="#/app/bestway/pickup" class="btn-cus btn-primary-cus btn-circle-cus btn-xl-cus"><i class="ion-ios-paperplane" style="font-size: 26px"></i></a>
-  </div>
+  </div> -->
 </ion-view>

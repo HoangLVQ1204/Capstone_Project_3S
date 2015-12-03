@@ -23,7 +23,7 @@ html {
 
 body {
   background: #1C1D1F;
-  color: #6f7b8a;
+  color: rgba(0,0,0,0.87);
   font-family: "Ubuntu";
   font-weight: 300;
   min-width: 320px;
@@ -219,7 +219,7 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
   background: #20242b;
   height: 100%;
   left: 0;
-  margin-left: 50px;
+  /*margin-left: 50px;*/
   min-width: 320px;
   overflow: hidden;
   position: absolute;
@@ -430,15 +430,15 @@ body.nav-collapse-in #nav {
 }
 
 a.logo {
-  background: url(../img/logo_white.png) no-repeat center center;
+  background: url(../img/karrywell.png) no-repeat center center;
   display: block;
   height: 50px;
   position: relative;
 }
 
 body.leftMenu {
-  background: url(../img/logo_white_icon.png) no-repeat;
-  background-position: 11px 10px;
+  background: url(../img/karrywell.png) no-repeat;
+  background-position: 11px -4px;
   background-color: #262a33;
 }
 body.leftMenu:after {
@@ -9408,7 +9408,7 @@ footer#site-footer article p {
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   #header .logo-area a.logo {
-    background: url(../img/logo2x.png) no-repeat center center;
+    background: url(../img/karrywell2.png) no-repeat center center;
     background-size: 120px 30px;
   }
 

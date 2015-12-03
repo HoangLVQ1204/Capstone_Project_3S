@@ -4,13 +4,20 @@ roleID int PRIMARY KEY,
 roleName varchar(20)
 );
 
-CREATE TABLE WorkingStatus
+/*CREATE TABLE WorkingStatus
 (
 statusID int PRIMARY KEY,
 statusName varchar(20)
 --working status cua shipper: busy, available, away--
-);
+);*/
 
+-- UserStatus: user duoc accept boi admin hay chua
+--1 la chua inactive, 2 la active, 3 la ban--
+create table UserStatus
+(
+ statusID int PRIMARY KEY,
+ statusName varchar(10)
+);
 
 CREATE TABLE "user"
 (
@@ -18,9 +25,7 @@ username varchar(20) PRIMARY KEY,
 password varchar(255),
 userRole int REFERENCES Role(roleID),
 -- 0 la admin, 1  --
-userStatus int,
- --0 la chua accept, 1 la bi ban, 2 la binh thuong--
- workingStatusID int REFERENCES WorkingStatus(statusID)
+userStatus int REFERENCES UserStatus(statusID)
  );
 
 CREATE TABLE Profile
@@ -32,7 +37,7 @@ address varchar(100),
 DoB date,
 email varchar(50),
 phoneNumber varchar(11),
-addressCoordination text
+avatar varchar(50)
 );
 
 
@@ -43,9 +48,11 @@ storeID varchar(8) PRIMARY KEY,
 name varchar(50),
 description text,
 address varchar(100),
-addressCoordination text,
+latitude varchar(30),
+longitude varchar(30),
 phoneNumber varchar(11),
 email varchar(50),
+avatar varchar(50),
 registeredDate timestamp
 );
 
@@ -149,6 +156,7 @@ taskDate date
 CREATE TABLE Goods
 (
 goodsID int PRIMARY KEY,
+goodsName varchar(20),
 orderID varchar(8) REFERENCES "order"(orderID),
 stockID int REFERENCES Stock(stockID),
 weight float,
@@ -188,12 +196,14 @@ categoryID int REFERENCES IssueCategory(categoryID),
 typeName text
 );
 
+--resolveType: 1: continue, 2: changeShipper
 CREATE TABLE Issue
 (
 issueID SERIAL PRIMARY KEY,
 typeID int REFERENCES IssueType(typeID),
 description text,
 isResolved boolean,
+resolveType int,
 createdDate date
 );
 
@@ -229,12 +239,14 @@ updater varchar(20) REFERENCES "user"(username)
 
 CREATE TABLE BannedHistoryLog
 (
-logID int PRIMARY KEY,
+logID SERIAL PRIMARY KEY,
 adminID varchar(20) REFERENCES "user"(username),
-username varchar(20)REFERENCES "user"(username),
+shipperID varchar(20)REFERENCES "user"(username),
+storeID varchar(8) REFERENCES store(storeID),
 reason text,
 bannedTime date,
-type varchar(5)
+type int
+--1 la ban, 2 la unban--
 );
 
 
@@ -261,6 +273,6 @@ DROP TABLE ManageStore;
 DROP TABLE Store;
 DROP TABLE Profile;
 DROP TABLE "user";
-DROP TABLE WorkingStatus;
+DROP TABLE UserStatus;
 DROP TABLE Role;
 */

@@ -22,10 +22,9 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    workingstatusid: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      primaryKey: true
+    logintime: {
+      type: DataTypes.DATE,
+      allowNull: true
     }
   }, {
     freezeTableName: true,
@@ -34,13 +33,9 @@ module.exports = function(sequelize, DataTypes) {
       authenticate: function(plainTextPassword){
         return bcrypt.compareSync(plainTextPassword, this.password);
       },
-      encyptPassword: function(plainTextPassword){
-        if(!plainTextPassword){
-          return ''
-        }else{
-          var salt = bcrypt.genSaltSync(10);
-          return bcrypt.hashSync(plainTextPassword,salt);
-        }
+
+      isBanned: function(){
+        return (this.userstatus == 3 ? true : false);
       }
     },
     classMethods: {
@@ -49,6 +44,11 @@ module.exports = function(sequelize, DataTypes) {
           foreignKey: 'username',
           constraints: false
         });
+
+        //user.belongsTo(db.workingstatus, {
+        //  foreignKey: 'workingstatusid',
+        //  constraints: false
+        //});
 
         user.hasMany(db.task,
             {as:'assigner', foreignKey: 'adminid'}
@@ -59,8 +59,18 @@ module.exports = function(sequelize, DataTypes) {
 
       },
 
+      encyptPassword: function(plainTextPassword){
+        if(!plainTextPassword){
+          return ''
+        }else{
+          var salt = bcrypt.genSaltSync(10);
+          return bcrypt.hashSync(plainTextPassword,salt);
+        }
+      },
+
       getAllUsers: function() {
-        return user.findAll({});
+        return user.findAll({})
+        .then(sequelize.handler);
       },
 
       getAllUsersHasRole: function(role, profile) {
@@ -82,8 +92,29 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
 
-      postOneUser: function(newUser){
-        return user.build(newUser).save();
+
+      findUserDetail:  function(username,profile){
+        return user.findOne({
+          include:[{model:profile}],
+          where: {
+            username: username
+          }
+        });
+      },
+
+      getUserByRole: function(role) {
+        return user.findAll({
+          attributes: ['username'],
+          where: {
+            userrole: role
+          }
+        }).then(sequelize.handler);
+      },
+
+      addNewUser: function(newUser){
+
+        newUser.password = user.encyptPassword(newUser.password);
+        return user.build(newUser).save().then(sequelize.handler);
       },
 
       deleteUser: function (users) {
@@ -91,17 +122,29 @@ module.exports = function(sequelize, DataTypes) {
       },
 
       putUser: function(currentUser) {
-        return currentUser.save();
+        return user.update({
+          'password': user.encyptPassword(currentUser.password),
+          'userrole': currentUser.userrole,
+          'userstatus': currentUser.userstatus
+        },{where: {
+          'username': currentUser.username
+        }})
+        .then(sequelize.handler);
       },
 
       getAllShipperWithTask: function(task, profile, order, orderstatus, tasktype, taskstatus) {
+        //neu processing = true thi chi lay loai processing
+
         return user.findAll({
           include:[{
             model: task,
             as:'tasks',
+            //required: false,
             include: [
               {
-              model: order,
+                model: order,
+                attributes: ['orderid', 'storeid','pickupaddress','statusid','deliveryaddress','deliveryprovinceid',
+                  'deliverydistrictid', 'deliverywardid','iscancel'],
                 include: [{model: orderstatus,  attributes: ['statusname']}]
               },
               {
@@ -110,16 +153,54 @@ module.exports = function(sequelize, DataTypes) {
               },
               {
                 model: taskstatus,
+                //required: false,
                 attributes: ['statusname'],
                 where:{
-                  statusid: [1,4]
+                  statusid: 1
                 }
               }
+
             ]
           },{model: profile}],
           where: {
             'userrole': 1
             //'username': 'task.shipperid'
+          }
+        });
+      },
+
+      getAllTaskProcessingOfShipper: function(task, profile, order, orderstatus, tasktype, taskstatus, shipperid) {
+        //neu processing = true thi chi lay loai processing
+        return user.findAll({
+          include:[{
+            model: task,
+            as:'tasks',
+            //required: false,
+            include: [
+              {
+                model: order,
+                attributes: ['orderid', 'storeid','pickupaddress','statusid','deliveryaddress','deliveryprovinceid',
+                  'deliverydistrictid', 'deliverywardid','iscancel'],
+                include: [{model: orderstatus,  attributes: ['statusname']}]
+              },
+              {
+                model: tasktype,
+                attributes: ['typename']
+              },
+              {
+                model: taskstatus,
+                //required: false,
+                attributes: ['statusname'],
+                where:{
+                  statusid: 4
+                }
+              }
+
+            ]
+          },{model: profile}],
+          where: {
+            'userrole': 1,
+            'username': shipperid
           }
         });
       },
@@ -136,11 +217,47 @@ module.exports = function(sequelize, DataTypes) {
       //    }
       //  })
       //}
-    }
-  }
+        }
+      },
+
+      //getShipperStatus: function(shipperid) {
+      //  return user.findOne({
+      //    attributes: [['workingstatusid', 'status']],
+      //    where: {
+      //      username: shipperid
+      //    }
+      //  });
+      //},
+
+      updateLoginTime: function(username, loginTime) {
+        return user.update({
+          'logintime': loginTime
+        },{where: {
+          'username': username
+        }})
+      },
+
+      checkTokenTime: function (username, tokenTime) {
+        return user.findOne({
+          where: {
+            'username': username,
+            'logintime': {
+              $lte: tokenTime
+            }
+          }
+        })
+      },
+
+      updateUserStatus: function(username, status) {//for ban store function
+        return user.update({
+          'userstatus': status
+        },{where: {
+          'username': username
+        }})
+      },
   }
 
-  })
+  });
   return user;
 };
 

@@ -3,7 +3,7 @@
  */
 
 
-function socketStore($q,socketService,authService,mapService){
+function socketStore($q,socketService,authService,mapService,$rootScope){
 
     var EPSILON = 1e-8;
 
@@ -13,75 +13,67 @@ function socketStore($q,socketService,authService,mapService){
     /*
         add handlers
     */
-    socketService.on('store:register:location', function(data) {
-        mapService.setMapData(data.msg.mapData)
-        .then(function() {
-            console.log('register', data);
-        });
+
+    
+    socketService.on('store:register:location', function(data) {        
+        // console.log('register', mapService.setMapData, data.msg.mapData);
+        mapService.setMapData(data.msg.mapData);
     });
 
-    socketService.on('store:find:shipper', function(data) {
-        var shipper = data.msg.shipper;        
-        console.log('shipper returned', shipper);
-
-        // Test selectShipper
-        api.selectShipper(shipper, {});
+    socketService.on('shipper:change:order:status', function(data) {
+        $rootScope.$emit("updateStatusOrder", data);
+        $rootScope.notify(data.msg);
+        data['message'] = data.msg.content;
     });
 
-    socketService.on('store:update:shipper', function(data) {
-        console.log('store:update:shipper', data);
-        var shipper = data.msg.shipper;
-        mapService.updateShipper(shipper);
+    socketService.on('store:issue:pending', function(data) {
+        console.log('store:issue:pending', data);
+        $rootScope.$emit("updatePendingOrder", data.msg);
+        $rootScope.notify(data.msg, 1);
     });
 
-    socketService.on('store:delete:shipper', function(data) {
-        console.log('delete shipper', data);
-        var shipper = data.msg.shipper;
-        mapService.deleteShipper(shipper.shipperID);
+    socketService.on('store:issue:cancel', function(data) {
+        console.log('store:issue:cancel', data);
+        $rootScope.$emit("updatePendingOrder", data.msg);
+        $rootScope.notify(data.msg);
     });
 
-    socketService.on('store:update:order', function(data) {
-        console.log('store:update:order', data);
-        var orders = data.msg.orders;
-        orders.forEach(function(e) {
-            mapService.updateOrder(e.orderID, e.orderInfo);
-        });
-        console.log('after update', mapService.getOrders());
+    socketService.on('store:issue:continue', function(data) {
+         $rootScope.$emit("updatePendingOrder", data.msg);
+         $rootScope.notify(data.msg, 1);
+    });
+
+    socketService.on('store:message:confirmPayment', function(data) {
+        $rootScope.$emit("store:message:confirmPayment", data.msg);
+        $rootScope.notify(data.msg);
+    });
+
+    socketService.on('store:notification:blockStore', function(data) {
+        $rootScope.$emit("logoutStore", data.msg);
     });
 
     api.getCurrentUser = function() {
-        var currentUser = authService.getCurrentInfoUser();        
-        // TODO: Change later
-        currentUser.latitude = 21.028784;
-        currentUser.longitude = 105.826088;
-
+        var currentUser = authService.getCurrentInfoUser();
         var dataStore = {
-            storeID: currentUser.stores[0],
-            latitude: currentUser.latitude,
-            longitude: currentUser.longitude              
+            storeID: currentUser.stores[0].storeid,
+            latitude: parseFloat(currentUser.stores[0].latitude),
+            longitude: parseFloat(currentUser.stores[0].longitude)
         };
         return dataStore;
     };
 
     api.registerSocket = function(){
         var user = api.getCurrentUser();
-        // console.log('storeee', user);
-        mapService.addStore(user)
-        .then(function() {                
-            socketService.sendPacket(
-            { 
-                type: 'store',
-                clientID: user.storeID 
-            },
-            'server',
-            {
-                store: user
-            },
-            'store:register:location');
-
-            // Test findShipper
-            api.findShipper();
-        });
+        socketService.sendPacket(
+        { 
+            type: 'store',
+            clientID: user.storeID 
+        },
+        'server',
+        {
+            store: user
+        },
+        'client:register');
     };
     
     api.findShipper = function() {
@@ -99,52 +91,43 @@ function socketStore($q,socketService,authService,mapService){
         'store:find:shipper');
     };
 
-    api.selectShipper = function(shipper, customer) {
-        /*
-            customer = {
-                geoText
-            }
-
-            shipper = {
-                ....                
-            }
-        */
-        // TODO: update DB to get orderID
-
-        // Fake data
-        var orderID = 'order_1';
-        customer.geoText = "Cát Linh,Ba Đình,Hà Nội,Việt Nam";
+    api.selectShipper = function(shipper, customer, orderID) {
         customer.order = [orderID];
 
-        mapService.addShipper(shipper)
-        .then(function() {            
-            return api.getCurrentUser();
-        })
-        .then(function(user) {
-            mapService.addOrder(orderID, user, shipper, customer)
-            .then(function() {
-                socketService.sendPacket(
-                {
-                    type: 'store',
-                    clientID: user.storeID
-                },
-                {
-                    type: 'shipper',
-                    clientID: shipper.shipperID
-                },
-                {
-                    orderID: orderID,
-                    shipper: shipper,
-                    store: user,
-                    customer: customer
-                },
-                'store:choose:shipper');
-            });            
-        });        
+        var user = api.getCurrentUser();        
+        socketService.sendPacket(
+        {
+            type: 'store',
+            clientID: user.storeID
+        },
+        {
+            type: 'shipper',
+            clientID: shipper.shipperID
+        },
+        {
+            orderID: orderID,
+            shipper: shipper,
+            store: user,
+            customer: customer
+        },
+        'store:choose:shipper');
     };
 
+    api.cancelExpress = function() {
+        var user = api.getCurrentUser();
+        socketService.sendPacket(
+        {
+            type: 'store',
+            clientID: user.storeID
+        },
+        'server',
+        {
+            store: user
+        },
+        'store:remove:express');
+    }
     return api;        
 };
 
-socketStore.$inject = ['$q','socketService','authService','mapService'];
+socketStore.$inject = ['$q','socketService','authService','mapService','$rootScope'];
 angular.module('app').factory('socketStore', socketStore);

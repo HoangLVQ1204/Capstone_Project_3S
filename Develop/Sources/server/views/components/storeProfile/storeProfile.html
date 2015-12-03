@@ -1,0 +1,162 @@
+<div>
+
+    <div class="nav-collapse" style="margin-left: 0px;">
+
+
+        <!-- //breadcrumb-->
+
+        <div id="">
+
+            <div class="row panel">
+                <div id="overview">
+                    <div class="row">
+                        <div class="col-sm-11">
+                            <section class="profile-cover">
+                                <div class="profile-avatar">
+                                    <div>
+                                        <img alt="" src="assets/img/avatar5.png" class="circle">
+                                        <span>{{store.managestores[0].user.profile.name}}</span>
+                                    </div>
+                                    <!-- <a class="btn btn-theme" title="Add friends"><i class="fa fa-plus"></i> friends</a>
+                                    <a class="btn btn-theme-inverse" ><i class="fa fa-comments"></i> messages</a> -->
+                                </div>
+                                <!-- <div class="profile-status">
+                                    <a class="btn"> 14,548 <small>Sales</small></a>
+                                    <a class="btn"> 254 <small> Follower</small></a>
+                                </div> -->
+                            </section>
+                        </div>
+                      
+                    </div>
+                    <!-- //row-->
+                </div>
+                <br>
+                <div class="col-lg-8">
+
+                    <div class="row">
+
+                        <div class="col-md-4 align-lg-center">
+                            <img alt="" src={{store.avatar}} class="circle" style="max-width:120px; border:5px #edece5 solid; margin:25px 0;">
+
+                            <div class="form-group">
+                                <button type="button" class="btn btn-theme"> Choose picture...</button>
+                            </div>
+
+                        </div>
+                        <div class="col-md-8 ">
+                            <br>
+                            <h3><strong>Store</strong> Information</h3>
+                            <hr>                             
+                            <form id="formID" data-parsley-validate>
+
+                                <div class="form-group row" >
+                                    <div class="col-md-6">
+                                        <label class="control-label">StoreID</label>
+                                        <input type="text" class="form-control" ng-model="store.storeid" disabled>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                    <label class="control-label" >Name</label>
+                                    <input disabled type="text" class="form-control" ng-model="store.name" required placeholder="full name..">
+                                </div>    
+                                </div>
+                                                            
+
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label class="control-label">Registered Date</label>
+                                        <input disabled class="form-control" disabled value="{{store.registereddate|date:'dd/MM/yyyy'}}" parsley-americandate="true" required placeholder="Date of birth..">
+
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="control-label">Phone number</label>
+                                        <input disabled type="text" class="form-control" ng-model="store.phonenumber" parsley-type="digits" parsley-rangelength="[10,11]" required placeholder="Phone number..">
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Address</label>
+                                    <input disabled class="form-control" ng-model="store.address" placeholder="Address.." required>
+                                </div>
+                                                               
+                            </form>
+
+                              <br>
+                            <h3><strong>User</strong> Information</h3>
+                            <hr>
+                            
+                            <form id="formID2" data-parsley-validate>
+
+                                <div class="form-group row" >                                    
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" >Name</label>
+                                    <input disabled type="text" class="form-control" ng-model="store.managestores[0].user.profile.name" required placeholder="full name..">
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label class="control-label">Registered Date</label>
+                                        <input disabled class="form-control" disabled value="{{store.registereddate|date:'dd/MM/yyyy'}}" parsley-americandate="true" required placeholder="Date of birth..">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="control-label" >Email Address</label>
+                                        <input disabled type="text" class="form-control" ng-model="store.email" parsley-type="email" required placeholder="Email...">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label class="control-label">Identitycard</label>
+                                        <input disabled class="form-control" disabled value="{{store.managestores[0].user.profile.identitycard}}" parsley-americandate="true" required placeholder="Date of birth..">
+
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="control-label">Phone number</label>
+                                        <input disabled type="text" class="form-control" ng-model="store.managestores[0].user.profile.phonenumber" parsley-type="digits" parsley-rangelength="[10,11]" required placeholder="Phone number..">
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Address</label>
+                                    <input disabled class="form-control" ng-model="store.address" placeholder="Address.." required>
+                                </div>
+                                <hr>
+                                <div class="form-group">
+                                    <button disabled type="button" class="btn btn-theme" ng-click="update()"> Update</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /row-->
+                    </div>
+                    <!-- /#tab4-->
+
+
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="widget-rating row">
+                        
+                    </div>
+                    <!-- end widget-rating-->
+                    <!-- <h3><strong>FRIENDS</strong> List </h3>
+                    <hr> -->
+                    <div class="widget-friend">
+                        
+                    </div>
+                    <!-- <hr>
+                    <div class="tooltip-area">
+                        <a class="btn btn-inverse" title="more friends" href="#menu-right"><i class="fa fa-book"></i></a>
+                        <button class="btn btn-inverse" title="unfriends"><i class="fa fa-trash-o"></i></button>
+                    </div> -->
+                </div>
+            </div>
+            <!-- //content > row-->
+
+        </div>
+        <!-- //content-->
+
+
+    </div>
+</div>

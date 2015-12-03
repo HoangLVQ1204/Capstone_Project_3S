@@ -1,5 +1,5 @@
 /* jshint indent: 2 */
-
+var moment         = require('moment');
 module.exports = function(sequelize, DataTypes) {
   var generalledger =  sequelize.define('generalledger', {
     ledgerid: {
@@ -70,13 +70,13 @@ module.exports = function(sequelize, DataTypes) {
           where:{
             'storeid':storeid,
           }, limit: 1, order: 'payDate DESC'
-        });
+        }).then(sequelize.handler);
       },
 
       getLatestAutoAccountDate: function(){
         return generalledger.findOne({
           where:{
-            $and: [{'amount':  null}, {'payfrom': null}]
+            $and: [{'amount':  null}, {'payfrom': 3}]
           }, limit: 1, order: 'payDate DESC'
         });
       },
@@ -85,9 +85,9 @@ module.exports = function(sequelize, DataTypes) {
         return generalledger.findOne({
           where:{
             'storeid': storeid,
-            $and: [{'amount':  null}, {'payfrom': null}]
+            $and: [{'amount':  null}, {'payfrom': 3}]
           }, limit: 1, order: 'payDate DESC'
-        });
+        }).then(sequelize.handler);
       },
 
       //post new ledger to database
@@ -102,7 +102,7 @@ module.exports = function(sequelize, DataTypes) {
               'totaldelivery': newLedger.totaldelivery,
               'totalcod': newLedger.totalcod,
               'note': newLedger.note
-        }).save();
+        }).save().then(sequelize.handler);
       },
 
       getAllLedger: function (store, order) {
@@ -115,6 +115,40 @@ module.exports = function(sequelize, DataTypes) {
               model: order
              // as: 'order'
             }]
+        })
+      },
+
+      getLedgerOfStore: function (store, storeid, perioddate, latestAutoDate) {
+        //console.log(moment(perioddate).subtract(10, 'days').calendar());
+          if (perioddate != 'null')
+          {
+            return generalledger.findAll({
+              include:[{
+                model: store
+                //as: 'store'
+              }],where: {
+                'storeid': storeid,
+                'paydate':  latestAutoDate
+              }
+            })
+          }
+          else return generalledger.findAll({
+            include:[{
+              model: store
+              //as: 'store'
+            }],where: {
+              'storeid': storeid,
+              'paydate': {
+                gt: latestAutoDate
+              }
+            }
+          })
+      },
+      storeGetAllLedger: function (storeid) {
+        return generalledger.findAll({
+          where: {
+            'storeid': storeid
+          }
         })
       }
   }

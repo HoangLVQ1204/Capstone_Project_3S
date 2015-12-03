@@ -5,15 +5,15 @@ module.exports = function(sequelize, DataTypes) {
     goodsid: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
+    },
+    goodsname: {
+      type: DataTypes.TEXT,
+      allowNull: true
     },
     orderid: {
       type: DataTypes.STRING,
-      allowNull: true,
-      primaryKey: true
-    },
-    stockid: {
-      type: DataTypes.INTEGER,
       allowNull: true,
       primaryKey: true
     },
@@ -47,21 +47,71 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     classMethods: {
       associate: function(db) {
+        goods.belongsTo(db.order, {
+          foreignKey: 'orderid'
+        });
       },
       postOneGood: function(newGood){
-        return goods.build(newGood).save();
+        return goods.build(
+          {
+            goodsname: newGood.goodsname,
+            orderid: newGood.orderid,
+            stockid: newGood.stockid,
+            weight: parseFloat(newGood.weight),
+            lengthsize: parseFloat(newGood.lengthsize),
+            widthsize: parseFloat(newGood.widthsize),
+            heightsize: parseFloat(newGood.heightsize),
+            description: newGood.description,
+            amount: newGood.amount
+          }
+        ).save()
       },
 
       deleteGood: function (orderid) {
-        goods.destroy({
+        return goods.destroy({
           where: {
             orderid: orderid
           }
         });
       },
 
+
+      updateGoods: function (currentGoods,goodsid) {
+        return goods.update(
+          currentGoods,
+          {
+            where:{
+              'goodsid': goodsid
+            }
+          })
+      },
+
       putOrder: function (currentOrder) {
         return currentOrder.save();
+      },
+
+      // HuyTDH check gooods belongs to order of store
+      checkGoodsBelongStore: function(goodsid, storeid, orderModel){
+        return goods.findOne({
+          where: {
+            goodsid: goodsid
+          },
+          include:{
+            model: orderModel,
+            where: {
+              storeid: storeid
+            }
+          }
+        })
+      },
+
+      // HuyTDH 18-11-2015: delete goods by goodsid
+      deleteGoodsByID: function (goodsid) {
+        return goods.destroy({
+          where: {
+            goodsid: goodsid
+          }
+        });
       }
     }
   });

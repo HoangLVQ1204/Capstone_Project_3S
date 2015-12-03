@@ -23,8 +23,11 @@ module.exports  = function(app){
      * This function is used to check token if valid
      *
      * */
-    var checkToken = function(){        
+    var checkToken = function(){
         return function(req,res,next){
+            console.log("---DATA REQ---");
+            console.log(req.headers);
+            console.log("---DATA REQ---");
             expressJwt(req,res,next);
         }
     };
@@ -38,27 +41,39 @@ module.exports  = function(app){
      * (3) : admin
      *
      * */
-    var checkRole = function(){
-        return function(req,res,next){
+    var checkRole = function () {
+        return function (req, res, next) {
+            var tokenTime = req.user.time;
+            var username = req.user.username;
 
-            var currentRoute        = req.route.path;
-            console.log('ccc', currentRoute);
-            var currentRole         = req.user.userrole;
-            var currentAccessRoles  = [];
-            config.pathAccessRole.forEach(function(item){
-                console.log(item);
-                if(item.url == currentRoute){
-                    currentAccessRoles = item.role;
-                    return;
+            db.user.findUserByUsername(username).then(function(user){
+                if(user.isBanned()){
+                    res.status(401).send('Banned');
+                }else{
+                    db.user.checkTokenTime(username, tokenTime).then(function (tk) {
+                        if (tk) {
+                            var currentRoute = req.route.path;
+                            var currentRole = req.user.userrole;
+                            var currentAccessRoles = [];
+                            config.pathAccessRole.forEach(function (item) {
+                                if (item.url == currentRoute) {
+                                    currentAccessRoles = item.role;
+                                    return;
+                                }
+                            });
+                            if (currentAccessRoles.indexOf(currentRole) != -1) {
+                                next();
+                            } else {
+                                res.status(401).send('Your permission is denied')
+                            }
+                        } else {
+                            res.status(401).send('Your account was log in at another place!')
+                        }
+                    }, function () {
+                        res.status(401).send('Your account was log in at another place!')
+                    })
                 }
-            });
-
-            if(currentAccessRoles.indexOf(currentRole) != -1){
-                next();
-            }else{
-                console.log("err");
-                res.status(401).send('Your permission is denied');
-            }
+            })
         }
     }
 
@@ -88,20 +103,17 @@ module.exports  = function(app){
 
                         if(!user.authenticate(passWord)){
                             res.status(401).send('Wrong password');
+                        }else if(user.isBanned()){
+                            console.log(user.isBanned());
+                            res.status(401).send('Banned');
                         }else{
-
-                            //db.managestore.getAllData(db)
-                            //    .then(function(data){
-                            //        console.log("DATA HERE: ");
-                            //        console.log(data);
-                            //    })
-
+                            var loginTime = new Date()
+                            db.user.updateLoginTime(user.username, loginTime)
                             if(user.userrole == 2 ){
-                                db.managestore.getStoresOfUser(user.username)
-                                    .then(function(listStore){                                        
+                                db.managestore.getStoresOfUser(user.username,db.store)
+                                    .then(function(listStore){
                                         var stores = listStore.map(function(data){
-                                            console.log(data.toJSON().storeid);
-                                            return data.toJSON().storeid;
+                                            return data.toJSON().store;
                                         });
                                         user.stores = stores;
                                         req.user = user;
@@ -110,11 +122,9 @@ module.exports  = function(app){
                                         next(err);
                                     });
                             }else{
-                                // console.log('other role', req.user);
                                 req.user = user;
                                 next();
                             }
-
                         }
                     }
                 },function(err){
@@ -136,7 +146,6 @@ module.exports  = function(app){
                 username       : user.username,
                 userrole       : user.userrole,
                 userstatus     : user.userstatus,
-                workingstatusid: user.workingstatusid,
                 stores         : user.stores,
                 time           : new Date()
             },

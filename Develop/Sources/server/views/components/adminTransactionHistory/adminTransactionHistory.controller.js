@@ -2,7 +2,7 @@
  * Created by Hoang on 10/18/2015.
  */
 
-function adminTransactionHistoryController($scope,$state, $http, $location, config) {
+function adminTransactionHistoryController($scope,$state, dataService, $location, config) {
 
     $scope.ledgerList = [];
     $scope.autoList = [];
@@ -27,12 +27,6 @@ function adminTransactionHistoryController($scope,$state, $http, $location, conf
         },{
             option: 'Balance',
             value: 'balance'
-        },{
-            option: 'Delivery',
-            value: 'totaldelivery'
-        },{
-            option: 'Cash on delivery',
-            value: 'totalcod'
         }];
 
     $scope.searchAutoOptions = [
@@ -62,19 +56,44 @@ function adminTransactionHistoryController($scope,$state, $http, $location, conf
     $scope.dateRange = '';
     $scope.autoDateRange = '';
 
-    $http.get(config.baseURI + "/api/ledgerList").success(function(response){
+     dataService.getDataServer(config.baseURI + "/api/ledgerList").then(function(response){
        // $scope.ledgerList = response;
-        response.map(function(ledger){
-            if (ledger.amount == null) $scope.autoList.push(ledger)
-            else  $scope.ledgerList.push(ledger);
+        response.data.map(function(ledger){
+            ledger.balance = parseInt(ledger.balance);
+            ledger.totalcod = parseInt(ledger.totalcod);
+            ledger.totaldelivery = parseInt(ledger.totaldelivery);
+
+            if (ledger.amount == null)
+            {
+                //ledger.fromDate = new Date(ledger.paydate);
+                //ledger.fromDate.setDate(ledger.fromDate.getDate()-7);
+                $scope.autoList.push(ledger)
+            }
+            else
+            {
+                $scope.ledgerList.push(ledger);
+                ledger.amount = parseInt(ledger.amount);
+            }
         })
-        //console.log(1);
-       //console.log(response);
+        $scope.ledgerList.sort(dateSort);
+        $scope.autoList.sort(dateSort);
+        //console.log( $scope.ledgerList);
+        //console.log(response);
     })
 
     $scope.displayedLedgerCollection = [].concat($scope.ledgerList);
     $scope.displayedAutoCollection = [].concat($scope.autoList);
 
+
+    var dateSort =  function(x, y){
+                if (x.paydate > y.paydate) {
+                    return -1;
+                }
+                if (x.paydate < y.paydate) {
+                    return 1;
+                }
+                return 0;
+            };
 
     //----------------------------------
     //FUNCTION LOAD SCRIPT
@@ -91,5 +110,5 @@ function adminTransactionHistoryController($scope,$state, $http, $location, conf
 
 }
 
-adminTransactionHistoryController.$inject = ['$scope','$state', '$http', '$location', 'config'];
+adminTransactionHistoryController.$inject = ['$scope','$state', 'dataService', '$location', 'config'];
 angular.module('app').controller('adminTransactionHistoryController',adminTransactionHistoryController);

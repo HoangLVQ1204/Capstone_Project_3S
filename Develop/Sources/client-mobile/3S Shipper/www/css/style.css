@@ -53,6 +53,20 @@ a {
  text-decoration: none;
 }
 
+.tab-item {
+  line-height: 4px;
+}
+
+/*popup format*/
+ .popup .popup-body > span {
+    font-size: 1.2em;
+    line-height: 1.5;
+}
+
+ .popup > .popup-head {
+  border-bottom: 1px solid grey !important;
+}
+
 /*END Common*/
 
 /*---START Task & History---*/
@@ -84,6 +98,21 @@ a {
   font-weight: bold;
   color: #9B9B9B;
   font-size: 1.2em;
+}
+
+.titleContent div:nth-child(2) p {
+  margin-top: 4px !important;
+}
+
+.tasklocate > p{
+  /*width: 200px;*/
+}
+
+.notasks {
+  font-size: 2em;
+  color: #9B9B9B;
+  margin-top: 15px;
+  margin-left: 5px;
 }
 
 /*Side left - Header bar && nav bar*/
@@ -161,6 +190,18 @@ div.fixed {
   border-radius: 50px;
 }
 
+.history-fail {
+  background-color: #ef473a;
+}
+
+.history-done {
+  background-color: #33cd5f;
+}
+
+.not-active {
+  pointer-events: none;
+  cursor: default;
+}
 /* ---END StyleSheet of Task & History---*/
 
 /*---START StyleSheet of Profile---*/
@@ -197,6 +238,11 @@ div.fixed {
 
 #listProfile > div > p {
   font-size: 1.2em;
+}
+
+.format-display {
+  max-width: 140px;
+  min-width: 140px;
 }
 
 /*---END StyleSheet of Profile---*/
@@ -390,6 +436,16 @@ div.fixed-button {
   /*border: 3px solid #8AC007;*/
 }
 
+.detail-p {
+  margin-top: 0px !important;
+}
+
+.detail-orderid {
+  font-weight: bold;
+  color: #9B9B9B;
+  font-size: 1em;
+}
+
 /*--END StyleSheet For Order's Detail--*/
 
 /*START fancy-select*/
@@ -426,7 +482,7 @@ fancy-select .list {
 /*START GOOGLE MAP */
 #map_canvas {
   width: 100%;
-  height: 50%;
+  height: 90%;
   margin: 0;
   position: relative;
 }

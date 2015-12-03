@@ -16,25 +16,20 @@
                 <!--<li><a href="#" class="icon-toolsbar nav-mini"><i class="fa fa-bars"></i></a></li>-->
             <!--</ul>-->
             <ul class="nav navbar-nav navbar-right tooltip-area">
-                <li><a href="#menu-right" data-toggle="tooltip" title="Right Menu" data-container="body" data-placement="left"><i class="fa fa-align-right"></i></a></li>
-                <li class="hidden-xs hidden-sm"><a href="#" class="h-seperate">Help</a></li>
-                <li><button class="btn btn-circle btn-header-search" ><i class="fa fa-search"></i></button></li>
-                <li><a href="#" class="nav-collapse avatar-header">
-                    <img alt="" src="assets/img/avatar.png"  class="circle">
-                    <span class="badge">3</span>
+               
+                <li><a href="/#/admin/notification" class="avatar-header">
+                    <img alt="" src="{{admin.avatar}}"  class="circle">
+                    <span class="badge" ng-show="$root.numberUnreadNoti">{{ $root.numberUnreadNoti }}</span>
                 </a>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
-                        <em><strong>Hi</strong>, Nutprawee </em> <i class="dropdown-icon fa fa-angle-down"></i>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" target="_self">
+                        <em><strong>Hi</strong>, Admin</em> <i class="dropdown-icon fa fa-angle-down"></i>
                     </a>
                     <ul class="dropdown-menu pull-right icon-right arrow">
-                        <li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
-                        <li><a href="#"><i class="fa fa-cog"></i> Setting </a></li>
-                        <li><a href="#"><i class="fa fa-bookmark"></i> Bookmarks</a></li>
-                        <li><a href="#"><i class="fa fa-money"></i> Make a Deposit</a></li>
+                        <li><a ui-sref="admin.userDetail({username: admin.username})"><i class="fa fa-user"></i> Profile</a></li>
                         <li class="divider"></li>
-                        <li><a href="#"><i class="fa fa-sign-out"></i> Signout </a></li>
+                        <li><a href="#" ng-click="signOut()"><i class="fa fa-sign-out"></i> Signout </a></li>
                     </ul>
                     <!-- //dropdown-menu-->
                 </li>
@@ -76,34 +71,38 @@
                 <!--<span><i class="icon  fa fa-laptop"></i></span>-->
             <!--</li>-->
             <li>
-                <span><i class="icon  fa fa-laptop"></i> Dashboard</span>
+                <span><i class="icon  fa fa-laptop"></i> <a href="/#/admin/dashboard">Dashboard</a></span>
             </li>
             <li>
                 <span><i class="icon  fa fa-th-list"></i> Order</span>
                 <ul>
                     <li><a href="#"> Add New Order </a></li>
-                    <li><a href="#"> Order List </a></li>
+                    <li><a href="/#/admin/orderList"> Order List </a></li>
                 </ul>
             </li>
             <li>
                 <span><i class="icon  fa fa-shopping-cart"></i> Store </span>
                 <ul>
-                    <li><a href="#"> Accept Store </a></li>
+                    <li><a href="/#/admin/addStore"> Add Store </a></li>
                     <li><a href="/#/admin/storeList"> Store's List </a></li>
-                    <li><a href="/#/admin/transactionHistory">Transaction history</a></li>
+                    <li><a href="/#/admin/transactionHistory"> Transaction history</a></li>
+                    <li><a href="/#/admin/issueBox"> Issue Box
+                        <span class="badge bg-inverse pull-right" ng-show="$root.unreadMail > 0">{{$root.unreadMail}}</span>
+                    </a>
+                    </li>
                 </ul>
             </li>
             <li>
-                <span><i class="icon  fa fa-truck"></i> Shipper </span>
+                <span><i class="icon fa fa-truck"></i> Shipper </span>
                 <ul>
-                    <li><a href="#"> Add New Shipper</a></li>
-                    <li><a href="#"> Shipper's List</a></li>
+                    <li><a href="/#/admin/addShipper"> Add New Shipper</a></li>
+                    <li><a href="/#/admin/shipperList"> Shipper's List</a></li>
                     <li><a href="/#/admin/taskList"> Task List</a></li>
                     <li><a href="/#/admin/assignTask"> Assign Task</a></li>
                 </ul>
             </li>
             <li>
-                <span><a href="/#/admin/issueBox"><i class="icon  fa fa-bullhorn"></i> Issue Box </a></span>
+                <span><i class="icon  fa fa-book"></i> <a href="/#/admin/adminReport">Report</a></span>
             </li>
         </ul>
     </nav>

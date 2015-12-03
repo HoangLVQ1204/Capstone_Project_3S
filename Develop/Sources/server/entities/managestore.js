@@ -15,18 +15,22 @@ module.exports = function(sequelize, DataTypes) {
   }, {
         freezeTableName: true,
         timestamps: false,
-        instanceMethods: {
 
-        },
         classMethods: {
             associate: function(db){
                 managestore.belongsTo(db.user,{
                     foreignKey: 'managerid'
                 });
+                managestore.belongsTo(db.store,{
+                    foreignKey: 'storeid'
+                });
             },
-            getStoresOfUser: function(username){
+            getStoresOfUser: function(username,store){
                 return managestore.findAll({
-                  attributes: ['storeid'],
+                  include:[{
+                      model: store,
+                      attributes: ['storeid','latitude','longitude']
+                  }],
                   where: {
                     managerid: username
                   }
@@ -38,6 +42,26 @@ module.exports = function(sequelize, DataTypes) {
                         model: db.user
                     }]
                 })
+            },
+            getUsersByStoreID: function (storeID){
+                return managestore.findAll({
+                    attributes: [['managerid','manager']],
+                    where: {
+                        storeid: storeID
+                    }
+                })
+            },
+            addNewManageStore: function(newManageStore){
+                console.log('En', newManageStore)
+                return managestore.build(newManageStore).save();
+            },
+            getOwnerOfStore: function(storeIDs) {
+                return managestore.findAll({
+                    attributes: ['managerid'],
+                    where: {
+                        storeid: storeIDs
+                    }
+                });
             }
         }
       }

@@ -2,21 +2,32 @@
  * Created by hoanglvq on 9/22/15.
  */
 
-function adminController($scope,$state,$http,$q,$rootScope,config){
+function adminController($scope,$state,$http,$q,$rootScope,config,socketService,authService,socketAdmin){
+
+
     $scope.getUser = function(){
-        console.log("get Users");
         return $http({
-            url: config.baseURI + '/users',
+            url: config.baseURI + '/api/user/:user',
             method: 'GET'
         }).then(function(data){
             $scope.data  = data;
         }).catch(function(error){
             console.log(error);
         });
+    };
+
+    authService.getProfileUser().then(function (admin) {
+        $scope.admin = admin.data;
+    });
+
+
+    $scope.signOut = function(){
+        socketService.disconnect();
+        authService.signOut();
+        $state.go("login");
     }
 
     $scope.$watch('$viewContentLoaded', function(event) {
-
         $('nav#menu-ver').mmenu({
             searchfield   :  false,
             slidingSubmenus	: false
@@ -31,8 +42,9 @@ function adminController($scope,$state,$http,$q,$rootScope,config){
         });
         caplet();
     });
+
 }
 
-adminController.$inject = ['$scope','$state','$http','$q','$rootScope','config'];
+adminController.$inject = ['$scope','$state','$http','$q','$rootScope','config','socketService','authService','socketAdmin'];
 angular.module('app').controller('adminController',adminController);
 

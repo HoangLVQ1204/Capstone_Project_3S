@@ -19,7 +19,8 @@
             <div id="nav-scroll">
                 <div class="mail-list">
                     <header>
-                        <h2 class="header-text">issue</h2>
+
+                        <h2 class="header-text pull-left">issue</h2>
                         <div class="mail-seach">
                             <input type="text" placeholder="Search Issue" ng-model="mailSearch" class="form-control" />
                         </div>
@@ -28,32 +29,36 @@
                                 <i class="dropdown-icon fa fa-angle-down"></i>
                             </button>
                             <ul class="dropdown-menu  pull-right">
-                                <li><a href="#"> Selete All</a></li>
-                                <li><a href="#"> Unselete All </a></li>
+                                <li><a href="" ng-click="customFilter.issuetype.issuecategory.categoryname = '';customFilter.isresolved=true"> Resolved</a></li>
+                                <li><a href="" ng-click="customFilter.issuetype.issuecategory.categoryname = '';customFilter.isresolved=false"> Unresolved </a></li>
                                 <li class="divider"></li>
-                                <li><a href="#"> Move to trash</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#"> Action </a></li>
+                                <li><a href="" ng-click="customFilter.issuetype.issuecategory.categoryname = 'Shipper Pending'; customFilter.isresolved=''">Shipper Pending</a></li>
+                                <li><a href="" ng-click="customFilter.issuetype.issuecategory.categoryname = 'Shipper Cancel'; customFilter.isresolved=''">Shipper Cancel</a></li>
+                                <li><a href="" ng-click="customFilter.issuetype.issuecategory.categoryname = 'Store Cancel'; customFilter.isresolved=''">Store Cancel</a></li>
+
                             </ul>
                             <!-- //dropdown-menu-->
                         </div>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-theme btn-transparent"><i class="fa fa-clock-o"></i></button>
-                            <button type="button" class="btn btn-theme btn-transparent active"><i class="fa fa-inbox"></i></button>
-                            <button type="button" class="btn btn-theme btn-transparent "><i class="fa fa-check"></i></button>
+                        <div class="btn-group " >
+                            <!--<button type="button" class="btn btn-theme btn-transparent"><i class="fa fa-clock-o"></i></button>-->
+                            <button type="button" class="btn btn-theme btn-transparent active" ng-click="customFilter.issuetype.issuecategory.categoryname = '';customFilter.isresolved=''"><i class="fa fa-inbox"></i></button>
+                            <!--<button type="button" class="btn btn-theme btn-transparent" ng-click="mailSearch.isresolved=true"><i class="fa fa-check"></i></button>-->
                         </div>
-
                     </header>
 
-                    <ul class="mlist"  ng-repeat="issue in issueList| filter: mailSearch">
-                        <li>
-                            <a class="mail-favourite active"><i class=" glyphicon glyphicon-ok"></i></a>
-
+                    <ul class="mlist"  ng-repeat="issue in issueList| filter: mailSearch | filter: customFilter | startFrom:currentPage*pageSize | limitTo:pageSize">
+                        <li ui-sref-active="mail_active">
+                            <a  ng-show="issue.isresolved" class="mail-favourite active"><i class=" glyphicon glyphicon-ok"></i></a>
+                            <a  ng-show="!issue.isresolved" class="mail-favourite"><i class=" glyphicon glyphicon-ok"></i></a>
 													<span>
-                                                        <h5><a ui-sref="admin.issueBox.content({issueid: issue.issueid})">
-                                                            <strong>{{issue.issuetype.typename}}</strong></a>
-                                                            <p ng-show="issue.isresolved" class="label bg-danger" style="width: 35%; padding: inherit">Unresolved</p>
-                                                            <p ng-show="!issue.isresolved" class="label bg-success" style="width: 35%; padding: inherit">Resolved</p>
+                                                        <h5><a ng-show="!issue.isresolved" ui-sref="admin.issueBox.content({issueid: issue.issueid})">
+                                                            <strong>{{issue.issuetype.typename}}</strong>
+                                                        </a>
+                                                            <a ng-show="issue.isresolved" ui-sref="admin.issueBox.content({issueid: issue.issueid})">
+                                                            {{issue.issuetype.typename}}
+                                                        </a>
+                                                            <!--<p ng-show="issue.isresolved" class="label bg-danger" style="width: 35%; padding: inherit">Unresolved</p>-->
+                                                            <!--<p ng-show="!issue.isresolved" class="label bg-success" style="width: 35%; padding: inherit">Resolved</p>-->
                                                         </h5>
 
 														<p><strong>{{issue.issuetype.issuecategory.categoryname}}</strong>
@@ -62,21 +67,24 @@
 														<p>{{issue.createddate | fromNow}}</p>
 														<label data-color="warning"></label>
 														<div class="mail-tools">
-                                                            <a href="#" title="reply"><i class="fa fa-reply"></i></a>
-                                                            <a href="#" title="move to trash"><i class="fa fa-trash-o"></i></a>
+                                                            <!--<a href="#" title="reply"><i class="fa fa-reply"></i></a>-->
+                                                            <!--<a href="#" title="move to trash"><i class="fa fa-trash-o"></i></a>-->
                                                         </div>
 													</span>
                         </li>
                     </ul>
                     <footer>
                         <div class="pull-right">
-                            <span class="mail-pagination"></span>
+
+                            <span class="mail-pagination">{{currentPage+1}}/{{numberOfPages()}}</span>
                             <ul class="pagination">
-                                <li><a href="#"><i class="fa fa-angle-left"></i></a></li>
-                                <li><a href="#"><i class="fa fa-angle-right"></i></a></li>
+                                <li><button class="btn btn-default" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1"><i class="fa fa-angle-left"></i></button></li>
+                                <li><button  class="btn btn-default" ng-disabled="currentPage >= issueList.length/pageSize - 1" ng-click="currentPage=currentPage+1"><i class="fa fa-angle-right"></i></button></li>
+
                             </ul>
                         </div>
                     </footer>
+
                 </div>
             </div>
             <!-- //nav-scroller-->
@@ -88,72 +96,5 @@
 
     </div>
 
-    <!--////////////////////////////////////////////////////////////////////////-->
-    <!--//////////     MODAL EFFECT DEMO    //////////-->
-    <!--//////////////////////////////////////////////////////////////////////-->
-    <!--&ndash;&gt;-->
-    <div id="md-effect-confirm" class="modal fade" tabindex="-1" data-width="750">
-        <div class="modal-header bg-inverse bd-inverse-darken">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
-            <h4 class="modal-title">Confirm payment</h4>
-        </div>
-        <!-- //modal-header-->
-        <div class="modal-body">
-            <form name="myForm" data-parsley-validate>
-            <table class="table table-striped">
-                <thead>
-                <tr>
 
-                    <th width="20%" class="text-left">Store</th>
-                    <th width="15%" class="text-right">Delivery(VND)</th>
-                    <th width="15%" class="text-right">CoD(VND)</th>
-                    <th width="15%" class="text-right">Total(VND)</th>
-                    <th width="35%">Pay</th>
-                    <th class="text-right"></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>{{selectedStore.name}}</td>
-                    <td class="text-right">{{selectedStore.generalledgers[0].totaldelivery }}</td>
-                    <td class="text-right">{{selectedStore.generalledgers[0].totalcod}}</td>
-                    <td class="text-right">{{selectedStore.generalledgers[0].totaldelivery - selectedStore.generalledgers[0].totalcod - payFee}}VND</td>
-
-                    <td class="text-right">
-                        <!--<div class="col-lg-16">-->
-                            <!--<div class="input-icon input-group-sm">-->
-                                <!--<i class="fa fa-search ico"></i>-->
-
-                                <input type="search" id="inputValue" ng-change="checkOK($event)" parsley-type="number" required class="form-control input-group-sm text-right" ng-model="payFee">
-                            <!--</div>-->
-                        <!--</div>-->
-                    </td>
-                    <td  class="text-right">
-                    <span class="tooltip-area">
-                    <a class="btn btn-danger" title="Confirm" ng-click="postLedger(selectedStore)"> <i class="fa fa-check-circle"></i> </a>
-                    </span>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            </form>
-        </div>
-        <!-- //modal-body-->
-    </div>
-    <!-- //modal-->
-    <div id="md-effect-block" class="modal fade" tabindex="-1" data-width="400">
-        <div class="modal-header bg-inverse bd-inverse-darken">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
-            <h4 class="modal-title">Confirm Block</h4>
-        </div>
-        <!-- //modal-header-->
-        <div class="modal-body align-xs-center">
-            <form name="myForm">
-                <h5><strong>Are you sure to block {{selectedStore.name}}???</strong></h5><br>
-                <button type="button" class="btn btn-success btn-transparent" ng-click="blockStore(selectedStore)"><i class="fa fa-check-circle"></i> Yes</button>
-                <button type="button" class="btn btn-danger btn-transparent" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i> No</button>
-            </form>
-        </div>
-        <!-- //modal-body-->
-    </div>
 </div>
