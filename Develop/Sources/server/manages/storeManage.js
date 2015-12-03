@@ -196,13 +196,14 @@ module.exports = function(app) {
     };
 
     var postNewLedger = function(newLedger){
-        return db.generalledger.postNewLedger(newLedger)
-            .then(function(ledger) {
-                //console.log(ledger);
-                return ledger;
-            }, function(err) {
-                throw err;
-            });
+
+            return db.generalledger.postNewLedger(newLedger)
+                .then(function(ledger) {
+                    //console.log(ledger);
+                    return ledger;
+                }, function(err) {
+                    throw err;
+                });
     };
 
     /*
