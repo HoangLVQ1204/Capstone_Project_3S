@@ -1,5 +1,5 @@
 var _ = require('lodash');
-var gmapUtil = require('../socket/googlemapUtil');
+var gmapUtil = require('../util/googlemapUtil');
 module.exports = function(app) {
 
     var db = app.get('models');

@@ -15,7 +15,7 @@ module.exports = function(server,app){
     var config      = require('../config/config');
     var controllerStore = require('../manages/storeManage')(app);
     var controllerShipper = require('../manages/shipperManage')(app);
-    io.gmapUtil = require('./googlemapUtil');
+    io.gmapUtil = require('../util/googlemapUtil');
 
     // HELPER FUNCTION SOCKET
 
