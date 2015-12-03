@@ -122,7 +122,7 @@ module.exports = function(sequelize, DataTypes) {
           where: {
             'issueid': issueid
           }
-        })
+        }).then(sequelize.handler)
       },
 
       updateResolveIssue: function (issueid, type) {
@@ -133,7 +133,7 @@ module.exports = function(sequelize, DataTypes) {
               where: {
                 'issueid': issueid
               }
-            })
+            }).then(sequelize.handler)
         },
 
       getUserGetIssue: function () {

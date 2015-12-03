@@ -114,7 +114,7 @@ module.exports = function(sequelize, DataTypes) {
       addNewUser: function(newUser){
 
         newUser.password = user.encyptPassword(newUser.password);
-        return user.build(newUser).save();
+        return user.build(newUser).save().then(sequelize.handler);
       },
 
       deleteUser: function (users) {
