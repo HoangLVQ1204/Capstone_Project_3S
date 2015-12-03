@@ -26,8 +26,8 @@ module.exports = function (app) {
             })
         .post(checkAll,function(req,res,next){
             var data = req.body;
-            controller.postOneOrder(data).then(function(){
-                res.status(200).json("Post successfully!");
+            controller.postOneOrder(data).then(function(data){
+                res.status(200).json(data);
             })
             .catch(function(er){
                     next(err);

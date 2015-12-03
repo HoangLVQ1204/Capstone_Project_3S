@@ -621,7 +621,6 @@ module.exports = function(sequelize, DataTypes) {
               ),
               'month'
             ],
-            ['ordertypeid', 'type'],
             [
               sequelize.fn('sum',
                   sequelize.col('fee')
@@ -635,7 +634,7 @@ module.exports = function(sequelize, DataTypes) {
               'codSum'
             ]
           ],
-          group: ['storeid', 'year', 'month', 'type'],
+          group: ['storeid', 'year', 'month'],
           order: ['store', 'month']
         })
       },

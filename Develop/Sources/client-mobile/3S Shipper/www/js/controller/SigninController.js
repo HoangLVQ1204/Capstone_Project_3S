@@ -27,7 +27,7 @@ app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService',
           if (typeof res == "undefined") {
             $ionicLoading.hide();
             showError({
-              message: 'Connection Network is Not Available. Try again !'
+              message: 'Your network connection failed. Please check your network connection and try again'
             });
           } else {
             authService.saveToken(res.data.token);
@@ -36,7 +36,7 @@ app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService',
               $ionicLoading.hide();
               authService.signOut();
               showError({
-                message: 'Username or Password is invalid'
+                message: 'Username or Password is invalid. Try again.'
               });
             } else {
               socketService.authenSocket()
