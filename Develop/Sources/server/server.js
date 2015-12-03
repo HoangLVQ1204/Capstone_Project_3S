@@ -19,8 +19,8 @@ app.set('models', models);
 // For HOME PAGE
 app.use(express.static(path.resolve('views/frontEnd')));
 app.get('/', function(req, res, next) {
-    // console.log('you request homepage');    
-    res.status(200).sendFile(path.join(__dirname + '/views/frontEnd/index-1-youtube.html'));
+    // console.log('you request homepage', req.url);    
+    res.status(200).sendFile(path.join(__dirname + '/views/frontEnd/home.html'));
 });
 
 app.use('/app', express.static(path.resolve('views')));

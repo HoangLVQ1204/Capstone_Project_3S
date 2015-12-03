@@ -139,7 +139,7 @@
 
 				<p>Let Us Make You Happy!</p>
 
-				<a href="http://localhost:3000/app/#/auth/login"class="btn open-newsletter btn-color">JOIN WITH US</a>
+				<a href="/app/#/auth/login"class="btn open-newsletter btn-color">JOIN WITH US</a>
 
 				<a class="btn open-content btn-light about-content">SUPPORT US</a>
 				
@@ -597,7 +597,10 @@
 	<script src="js/main.js"></script>
 	
 	<!--[if lt IE 10]><script type="text/javascript" src="js/placeholder.js"></script><![endif]-->
-
+	
+	<script>		
+		if (window.location.href.indexOf('#') > 0) window.location = '/';
+	</script>
 	</body>
 
 </html>
