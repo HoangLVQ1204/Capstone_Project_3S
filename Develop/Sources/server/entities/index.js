@@ -29,10 +29,10 @@ sequelize.handler = function(data) {
 				throw new Error('Result is empty');
 			}
 		}
-		// console.log('handler case 1', data);
+		console.log('handler case 1', data);
 		return data;
 	} else {
-		// console.log('handler case 2', data);
+		console.log('handler case 2', data);
 		throw new Error('Result is empty');
 	}
 };

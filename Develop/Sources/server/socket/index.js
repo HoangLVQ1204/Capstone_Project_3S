@@ -926,6 +926,8 @@ module.exports = function(server,app){
         return io.updateListShipper();
     })
     .then(function() {
+        console.log('initial shippers', io.shippers);
+        console.log('initial stores', io.stores);
         io
             .on('connect', socketioJwt.authorize({
                 secret: config.secrets.jwt,
@@ -956,6 +958,7 @@ module.exports = function(server,app){
                         } else {
                             io.addShipper(shipper, socket)
                             .then(function() {
+                                // console.log('added shipper', io.shippers);
                                 require('./socketShipper')(socket, io, app);
                             });
                         }

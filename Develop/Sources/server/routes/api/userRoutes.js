@@ -7,6 +7,7 @@ module.exports = function(app){
 	var checkAll = [authManage.checkToken(),authManage.checkRole()];
 
  	app.param('username', controller.params);
+ 	app.param('user', controller.paramUsername);
 
 	app.post('/api/user/addNewUser', checkAll,function(req,res,next){
 		var user = req.body;
@@ -22,13 +23,11 @@ module.exports = function(app){
 
 	app.route('/api/user/:user')
 		.get(checkAll,function(req,res,next){
-			res.status(200).json(req.user.toJSON());
+			res.status(200).json(req.userRequest.toJSON());
 		})
 		.put(controller.putUser);
 
 	app.route('/api/userProfile/:user')
-		.put(controller.putProfile);
-
-	app.param('user', controller.paramUsername);
+		.put(controller.putProfile);	
 
 }

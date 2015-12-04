@@ -8,7 +8,7 @@ module.exports = function(app) {
         return db.user.findUserByUsername(username)
         .then(function(user) {
             if (user) {
-                req.user = user;
+                req.userRequest = user;
                 next();
             } else {
                 next(new Error('No user with that username'));
@@ -19,7 +19,7 @@ module.exports = function(app) {
     };
     
     var get = function(req,res,next) {        
-        var user = req.user;
+        var user = req.userRequest;
         db.user.getAllUsers()
             .then(function(users) {
                 res.status(200).json(users);
@@ -29,7 +29,7 @@ module.exports = function(app) {
     };
 
     var getProfileUser = function(req,res,next){
-        var username = req.user.username;
+        var username = req.userRequest.username;
         db.profile.getProfileUser(username)
             .then(function(user){
                 res.status(200).json(user);
@@ -43,7 +43,7 @@ module.exports = function(app) {
         return db.user.findUserDetail(username, db.profile)
             .then(function(user) {
                 if (user) {
-                    req.user = user;
+                    req.userRequest = user;
                     next();
                 } else {
                     next(new Error('No user with that id'));
@@ -54,11 +54,11 @@ module.exports = function(app) {
     };
 
     var getUserDetail = function(req, res, next) {
-        res.status(200).json(req.user.toJSON());
+        res.status(200).json(req.userRequest.toJSON());
     };
 
     var putUser = function (req, res, next) {
-        var curUser = req.user.toJSON();
+        var curUser = req.userRequest.toJSON();
         var newUser = req.body;
         //console.log(curUser.toJSON());
         //console.log(newUser);
@@ -76,7 +76,7 @@ module.exports = function(app) {
     };
 
     var putProfile = function (req, res, next) {
-        var curUser = req.user.profile.toJSON();
+        var curUser = req.userRequest.profile.toJSON();
         var newUser = req.body;
         //console.log(curUser);
         //console.log(newUser);
