@@ -98,16 +98,17 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
           listGoodIsBroken.push({
             'val': item.orderid,
             'text': item.orderid
-          })
+          });
+
+          listShipping.push({
+            'val': item.orderid,
+            'text': item.orderid
+          });
         }
         listOrderInactive.push({
           'val': item.orderid,
           'text': item.orderid
         });
-        listShipping.push({
-          'val': item.orderid,
-          'text': item.orderid
-        })
 
       });
     }
@@ -126,7 +127,13 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
           listGoodIsBroken.push({
             'val': item.orderid,
             'text': item.orderid
-          })
+          });
+
+          listShipping.push({
+            'val': item.orderid,
+            'text': item.orderid
+          });
+          
         }
 
         listOrderInactive.push({
