@@ -3,6 +3,7 @@ var _ = require('lodash');
 module.exports = function(app) {
 
     var db = app.get('models');
+    var server = app.get('io');
 
     var params = function(req, res, next, username) {
         return db.user.findUserByUsername(username)
@@ -94,7 +95,11 @@ module.exports = function(app) {
 
     //function add new Shipper to system
     var addNewUser = function(user){
-
+        // console.log('addNewUser', user);
+        server.socket.addShipper({ 
+            shipperID: user.account.username, 
+            isConnected: false 
+        });
         user['account']['logintime'] = new Date();
         user['account']['password'] = user['account']['username'];
 
