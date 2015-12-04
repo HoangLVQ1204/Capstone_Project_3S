@@ -52,14 +52,12 @@ module.exports = function(socket, io, app) {
     });
 
     socket.on('shipper:update:haveIssue', function(data) {
-        // console.log('shipper:update:haveIssue', data);
         io.updateIssueForShipper(data.msg.shipper.shipperID, data.msg.shipper.haveIssue);
         console.log(io.getOneShipper(data.msg.shipper.shipperID));
     });
 
     socket.on('shipper:reject:order', function(data) {
         var shipper = data.msg.shipper;
-        console.log('shipper reject order', shipper);
         var storeID = io.pendingShippers[shipper.shipperID].storeID;
         io.removePendingShipper(shipper.shipperID);        
         if (io.getNumberPendingShippersOfStore(storeID) == 0) {

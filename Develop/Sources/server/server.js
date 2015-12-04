@@ -16,7 +16,16 @@ var server = require('http').createServer(app);
 // setup middleware
 app.set('models', models);
 
-app.use(express.static(path.resolve('views')));
+// For HOME PAGE
+app.use(express.static(path.resolve('views/frontEnd')));
+app.get('/', function(req, res, next) {
+    // console.log('you request homepage', req.url);    
+    res.status(200).sendFile(path.join(__dirname + '/views/frontEnd/home.html'));
+});
+
+app.use('/app', express.static(path.resolve('views')));
+app.use('/assets', express.static(path.resolve('views/assets')));
+app.use('/components', express.static(path.resolve('views/components')));
 app.use('/libs', express.static(path.resolve('node_modules')));
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
@@ -33,6 +42,7 @@ require('./routes')(app);
 //
 var schedule       = require('./config/ledgerSchedule')( app);
 schedule.autoPayment();
+
 
 // setup global error handler
 app.use(function (err, req, res, next) {

@@ -1,8 +1,9 @@
 var _ = require('lodash');
-var gmapUtil = require('../socket/googlemapUtil');
+var gmapUtil = require('../util/googlemapUtil');
 module.exports = function(app) {
 
     var db = app.get('models');
+    var server = app.get('io');
     //db.generalledger.belongsTo(db.store);
 
 
@@ -36,6 +37,8 @@ module.exports = function(app) {
     var postNewStore = function(newStore) {
        // console.log(newStore.address);
         //return
+        // console.log('postNewStore:39', newStore);        
+
         return gmapUtil.getLatLng(newStore.address).then(function (map) {
             newStore['latitude'] = map.latitude+"";
             newStore['longitude'] = map.longitude+"";
@@ -43,6 +46,12 @@ module.exports = function(app) {
         }, function(err) {
             throw err;
         }).then(function () {
+            server.socket.addStore({
+                storeID: newStore.storeid,
+                latitude: newStore.latitude,
+                longitude: newStore.longitude,
+                geoText: newStore.address
+            });
             return db.store.postOneStore(newStore)
                 .then(function(store) {
                     //console.log(store);
@@ -79,6 +88,7 @@ module.exports = function(app) {
     };
 
     var getLatestLedgerOfStore = function(storeid){
+        console.log('getLatestLedgerOfStore:82', storeid);
         return db.generalledger.getLatestLedgerOfStore(storeid)
             .then(function(ledger) {
                 return ledger;

@@ -188,6 +188,7 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
 	  .then(function (res) {
 		var rs = res.data;
 		formatData(rs);
+		console.log('rrrrssss', rs);
 		//Hide IonicLoading without Issue Pending
 		if (!$scope.haveIssue) {
 		  $ionicLoading.hide();
@@ -223,7 +224,7 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
 	}
 	if (undefined !== rs['Express'] && rs['Express'].length) {
 	  isIssued(rs['Express']);
-	  $scope.expressTasks = rs['Express'];
+	  $scope.expressTasks = rs['Express'];	  
 	  $scope.badgeCountExpress = rs['Express'].length;
 	} else {
 	  $scope.expressTasks = [];
