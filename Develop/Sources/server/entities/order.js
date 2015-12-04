@@ -159,7 +159,7 @@ module.exports = function(sequelize, DataTypes) {
           //where: {'ispending': false},
           include: [{
             model: task,
-            attributes: ['typeid', 'statusid', 'taskdate'],
+            attributes: ['taskid', 'typeid', 'statusid', 'taskdate'],
             where: {
               shipperid: shipperid,
               //taskdate: taskdate,
@@ -193,7 +193,7 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
 
-      getOrderDetailById: function (taskID, shipperID, orderStatusModel, goodsModel, taskModel, storeModel, stockModel) {
+      getOrderDetailById: function (taskID, shipperID, orderStatusModel, goodsModel, taskModel, storeModel, stockModel) {        
         return order.findOne({
           attributes:{ exclude: ['ledgerid', 'createdate', 'isdraff', 'pickupaddresscoordination', 'deliveryaddresscoordination']},
           where: {

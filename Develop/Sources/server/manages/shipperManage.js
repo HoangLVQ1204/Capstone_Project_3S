@@ -23,6 +23,7 @@ module.exports = function (app) {
 
         return db.order.getAllTaskOfShipper(task, shipperid)
             .then(function (tasks) {
+                // console.log('getAllTaskOfShipper:26', tasks[0].tasks);
                 var group = {};
                 if (_.isEmpty(tasks) == false) {
                     var listTasks = [];
