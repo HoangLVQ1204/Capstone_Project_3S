@@ -17,10 +17,11 @@ module.exports = function (app) {
     app.route('/orders')
         .get(checkAll,function(req,res,next){
                 var storeId = req.user.stores[0].storeid;
+                console.log('get /orders', storeId);
                 controller.getAllOrder(storeId).then(function(data){
                     res.status(200).json(data);
                 })
-                .catch(function(er){
+                .catch(function(err){
                     next(err);
                 })
             })
@@ -29,7 +30,7 @@ module.exports = function (app) {
             controller.postOneOrder(data).then(function(data){
                 res.status(200).json(data);
             })
-            .catch(function(er){
+            .catch(function(err){
                     next(err);
             })
         });
@@ -45,7 +46,7 @@ module.exports = function (app) {
             controller.updateOrder(req).then(function(){
                 res.status(200).json("Update successfully!");
             })
-            .catch(function(er){
+            .catch(function(err){
                     next(err);
             })
         })
