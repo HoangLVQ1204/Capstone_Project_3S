@@ -833,8 +833,8 @@ module.exports = function(server,app){
             order: _.clone(customer.order),
             geoText: customer.geoText
         };
-        for(var i =  0; i < io.customers.length; i++){
-            if (_.isEqual(io.customers[i], searchCustomer)) {
+        for(var i = io.customers.length - 1; i >= 0 ; i--){
+            if (_.isEqual(io.customers[i].order, searchCustomer.order)) {
                 io.customers.splice(i, 1);
                 break;
             }
@@ -901,6 +901,7 @@ module.exports = function(server,app){
         START - Update information of socket when shipper finished a task
      */
     io.finishTask = function(orderID, storeid, shipperid, customer){
+        console.log('finishTask:904', orderID, storeid, shipperid, customer);
         io.removeOrder(orderID);
         io.removeOrderOfShipper(shipperid, orderID);
         io.removeOrderOfStore(storeid, orderID);
@@ -914,6 +915,7 @@ module.exports = function(server,app){
         if(socketStore){
             io.leaveRoom(socketStore,roomID);
         }
+        console.log('after finishTask:918', io.customers, io.shippers, io.stores);
     };
 
 
