@@ -71,22 +71,22 @@
                 <!--<span><i class="icon  fa fa-laptop"></i></span>-->
             <!--</li>-->
             <li>
-                <span><i class="icon  fa fa-laptop"></i> <a href="/#/admin/dashboard">Dashboard</a></span>
+                <span><i class="icon  fa fa-laptop"></i> <a ui-sref="admin.dashboard">Dashboard</a></span>
             </li>
             <li>
                 <span><i class="icon  fa fa-th-list"></i> Order</span>
                 <ul>
                     <li><a href="#"> Add New Order </a></li>
-                    <li><a href="/#/admin/orderList"> Order List </a></li>
+                    <li><a href="/app/#/admin/orderList"> Order List </a></li>
                 </ul>
             </li>
             <li>
                 <span><i class="icon  fa fa-shopping-cart"></i> Store </span>
                 <ul>
-                    <li><a href="/#/admin/addStore"> Add Store </a></li>
-                    <li><a href="/#/admin/storeList"> Store's List </a></li>
-                    <li><a href="/#/admin/transactionHistory"> Transaction history</a></li>
-                    <li><a href="/#/admin/issueBox"> Issue Box
+                    <li><a href="/app/#/admin/addStore"> Add Store </a></li>
+                    <li><a href="/app/#/admin/storeList"> Store's List </a></li>
+                    <li><a href="/app/#/admin/transactionHistory"> Transaction history</a></li>
+                    <li><a href="/app/#/admin/issueBox"> Issue Box
                         <span class="badge bg-inverse pull-right" ng-show="$root.unreadMail > 0">{{$root.unreadMail}}</span>
                     </a>
                     </li>
@@ -95,14 +95,14 @@
             <li>
                 <span><i class="icon fa fa-truck"></i> Shipper </span>
                 <ul>
-                    <li><a href="/#/admin/addShipper"> Add New Shipper</a></li>
-                    <li><a href="/#/admin/shipperList"> Shipper's List</a></li>
-                    <li><a href="/#/admin/taskList"> Task List</a></li>
-                    <li><a href="/#/admin/assignTask"> Assign Task</a></li>
+                    <li><a href="/app/#/admin/addShipper"> Add New Shipper</a></li>
+                    <li><a href="/app/#/admin/shipperList"> Shipper's List</a></li>
+                    <li><a href="/app/#/admin/taskList"> Task List</a></li>
+                    <li><a href="/app/#/admin/assignTask"> Assign Task</a></li>
                 </ul>
             </li>
             <li>
-                <span><i class="icon  fa fa-book"></i> <a href="/#/admin/adminReport">Report</a></span>
+                <span><i class="icon  fa fa-book"></i> <a ui-sref="admin.adminReport">Report</a></span>
             </li>
         </ul>
     </nav>
