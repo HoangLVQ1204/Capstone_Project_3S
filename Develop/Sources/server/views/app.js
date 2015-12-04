@@ -27,10 +27,10 @@ angular.module('app', [
 
     $stateProvider
 
-        .state('home',{
-            url: '',
-            template: '<h1>Home Page đang trong quá trình xây dựng !!!!</h1>',
-        })
+        // .state('home',{
+        //     url: '',
+        //     template: '<h1>Home Page đang trong quá trình xây dựng !!!!</h1>',
+        // })
 
         .state('login',{
             url: '/auth/login',

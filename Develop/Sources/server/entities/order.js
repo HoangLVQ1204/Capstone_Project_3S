@@ -159,13 +159,14 @@ module.exports = function(sequelize, DataTypes) {
           //where: {'ispending': false},
           include: [{
             model: task,
-            attributes: ['taskid', 'typeid', 'statusid', 'taskdate'],
+            attributes: ['typeid', 'statusid', 'taskdate'],
             where: {
               shipperid: shipperid,
               //taskdate: taskdate,
               statusid: [1, 2, 4]
             }
-          }]
+          }
+          ]
         });
       },
 
@@ -268,6 +269,9 @@ module.exports = function(sequelize, DataTypes) {
         })
       },
 
+      putOrder: function (order) {
+        return order.save();
+      },
 
       postOneOrder: function(newOrder){
         return order.build(newOrder).save();
@@ -327,8 +331,8 @@ module.exports = function(sequelize, DataTypes) {
               'statusid':  [7, 8]
             }
           })
-        },
-
+        },	
+     
       cancelOrder: function(orderid) {
         return order.update(
             {
@@ -339,7 +343,7 @@ module.exports = function(sequelize, DataTypes) {
             { where: { orderid: orderid }} /* where criteria */
         )
 	},
-
+	
 	 updateLedgerForOrder: function(storeid, paydate, ledgerid){
         return order.update(
             {'ledgerid': ledgerid},
@@ -352,8 +356,6 @@ module.exports = function(sequelize, DataTypes) {
           }
         }).then(sequelize.handler)
       },
-
-
 
       getAllOrderToAssignTask: function(orderstatus, task, taskstatus){
         return order.findAll({
@@ -379,6 +381,7 @@ module.exports = function(sequelize, DataTypes) {
               }
             }]
         })
+
       },
 
       getTaskBeIssuePending: function(task, issue, issuetype, orderissue, shipperId) {
@@ -695,7 +698,6 @@ module.exports = function(sequelize, DataTypes) {
           }
         })
       }
-
 
     }
   });
