@@ -752,6 +752,7 @@ module.exports = function(server,app){
         if (!io.shipperContainOrderID(temp, orderID))
             temp.order.push(orderID);
         io.shippers[shipperID] = temp;
+        io.updateNumTasksByShipperID(shipperID);
     };
 
     io.removeOrderOfShipper = function(shipperID, orderID) {
@@ -763,6 +764,7 @@ module.exports = function(server,app){
             }
         }
         io.shippers[shipperID] = temp;
+        io.updateNumTasksByShipperID(shipperID);
     };
 
     /*
@@ -897,7 +899,9 @@ module.exports = function(server,app){
     io.changeShipperOfOrder = function(shipperID, orderID){
         for( i in io.orders){
             if(i === orderID){
+                io.removeOrderOfShipper(io.orders[i].shipperID, orderID);                
                 io.orders[i].shipperID = shipperID;
+                io.updateOrderOfShipper(shipperID, orderID);
                 return true;
             }
         }
