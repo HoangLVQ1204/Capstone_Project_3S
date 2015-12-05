@@ -193,7 +193,7 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
 
-      getOrderDetailById: function (taskID, shipperID, orderStatusModel, goodsModel, taskModel, storeModel, stockModel) {
+      getOrderDetailById: function (taskID, shipperID, orderStatusModel, goodsModel, taskModel, storeModel, stockModel) {        
         return order.findOne({
           attributes:{ exclude: ['ledgerid', 'createdate', 'isdraff', 'pickupaddresscoordination', 'deliveryaddresscoordination']},
           where: {
@@ -241,7 +241,7 @@ module.exports = function(sequelize, DataTypes) {
             }
           ],
           order: 'createdate DESC'
-        }).then(sequelize.handler);
+        });
       },
 
       storeGetOneOrder: function (oderstatusModel, goodsModel,confirmationCodeModel, order_id) {

@@ -23,6 +23,7 @@ module.exports = function (app) {
 
         return db.order.getAllTaskOfShipper(task, shipperid)
             .then(function (tasks) {
+                // console.log('getAllTaskOfShipper:26', tasks[0].tasks);
                 var group = {};
                 if (_.isEmpty(tasks) == false) {
                     var listTasks = [];
@@ -347,8 +348,10 @@ module.exports = function (app) {
         newIssue.createddate = new Date();
         newIssue.sender =  shipperID;
 
-        // Update status of shipper
-        server.socket.updateIssueForShipper(shipperID, true);
+        // Update haveIssue of shipper
+        console.log('shipperManage:352 newIssue', newIssue);
+        if (newIssue.typeid != 4 && newIssue.typeid != 5)
+            server.socket.updateIssueForShipper(shipperID, true);
 
         return db.issue.createNewIssue(newIssue)
             .then(function(issue) {

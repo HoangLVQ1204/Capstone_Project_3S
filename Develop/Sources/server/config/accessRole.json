@@ -224,5 +224,10 @@
     {
       "url": "/api/storeDetail/:storeid",
       "role": [3]
+    },
+
+    {
+      "url": "/api/user/:user",
+      "role": [3]
     }
 ]

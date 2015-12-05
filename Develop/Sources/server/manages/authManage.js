@@ -25,9 +25,9 @@ module.exports  = function(app){
      * */
     var checkToken = function(){
         return function(req,res,next){
-            console.log("---DATA REQ---");
-            console.log(req.headers);
-            console.log("---DATA REQ---");
+            // console.log("---DATA REQ---");
+            // console.log(req.headers);
+            // console.log("---DATA REQ---");
             expressJwt(req,res,next);
         }
     };
