@@ -263,7 +263,7 @@ module.exports = function(server,app){
     
     // Define observer for watching io.shippers, io.stores, io.customers, io.orders
     var observer = function(changes) {
-
+        console.log('observer run');
         for (shipperID in io.shippers) {
             if (io.shippers[shipperID].isConnected) {
                 io.reply({ type: 'shipper', clientID: shipperID }, 
@@ -639,7 +639,9 @@ module.exports = function(server,app){
     };
 
     io.updateOrder = function(orderID, newOrder) {
-        io.orders[orderID] = _.merge(io.orders[orderID], newOrder);
+        var temp = _.clone(io.orders[orderID], true);
+        temp = _.merge(temp, newOrder);
+        io.orders[orderID] = temp;
     };
 
     io.updateStatusOrder = function(orderID, status) {
@@ -727,6 +729,12 @@ module.exports = function(server,app){
         else 
             temp.icon = icons.shipperIcon;
         io.shippers[shipperID] = temp;  
+    };    
+
+    io.updateIconShipper = function(shipperID, iconName) {
+        var temp = _.clone(io.shippers[shipperID], true);
+        temp.icon = icons[iconName + 'Icon'];
+        io.shippers[shipperID] = temp;
     };
 
     io.updateLocationShipper = function(shipper) {
@@ -914,6 +922,7 @@ module.exports = function(server,app){
      */
     io.updatePendingOrder = function(shipperid, status){
         var orders = io.getOrdersOfShipper(shipperid);
+        console.log('updatePendingOrder', shipperid, status);
         orders.forEach(function(e) {
             e.orderInfo.isPending = status;
             io.updateOrder(e.orderID, e.orderInfo);

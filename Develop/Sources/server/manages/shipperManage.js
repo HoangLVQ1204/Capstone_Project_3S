@@ -119,9 +119,9 @@ module.exports = function (app) {
         var OrderStatus = db.orderstatus;
         var Goods = db.goods;
         var Task = db.task;
-        //var shipper = _.cloneDeep(req.user);
-        //var shipperid = shipper.username;
-        var shipperid = 'SP000001';
+        var shipper = _.cloneDeep(req.user);
+        var shipperid = shipper.username;
+        // var shipperid = 'SP000001';
         Order.getOrderDetailById(detailtaskid, shipperid, OrderStatus, Goods, Task)
             .then(function (rs) {
                 if (rs) {
@@ -351,7 +351,7 @@ module.exports = function (app) {
         // Update haveIssue of shipper
         console.log('shipperManage:352 newIssue', newIssue);
         if (newIssue.typeid != 4 && newIssue.typeid != 5)
-            server.socket.updateIssueForShipper(shipperID, true);
+            server.socket.updateIssueForShipper(shipperID, true);        
 
         return db.issue.createNewIssue(newIssue)
             .then(function(issue) {
@@ -525,7 +525,7 @@ module.exports = function (app) {
 
                 // Update data in socket
                 var listPending = [1,2,3,6];
-                if(listPending.indexOf(issueType) >= 0){
+                if(listPending.indexOf(issueType) >= 0){                    
                     server.socket.updatePendingOrder(shipperID, true);
                 };
 

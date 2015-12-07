@@ -159,7 +159,7 @@ module.exports = function(sequelize, DataTypes) {
           //where: {'ispending': false},
           include: [{
             model: task,
-            attributes: ['typeid', 'statusid', 'taskdate'],
+            attributes: ['taskid', 'typeid', 'statusid', 'taskdate'],
             where: {
               shipperid: shipperid,
               //taskdate: taskdate,
