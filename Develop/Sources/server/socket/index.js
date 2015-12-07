@@ -638,6 +638,12 @@ module.exports = function(server,app){
         delete io.orders[orderID];
     };
 
+    io.removeOrderFull = function(orderID) {
+        var shipperID = io.orders[orderID].shipperID;
+        var storeID = io.orders[orderID].storeID;
+        
+    };
+
     io.updateOrder = function(orderID, newOrder) {
         var temp = _.clone(io.orders[orderID], true);
         temp = _.merge(temp, newOrder);
@@ -884,8 +890,7 @@ module.exports = function(server,app){
 
     io.removeCustomer = function(customer) {
         var searchCustomer = {
-            order: _.clone(customer.order),
-            geoText: customer.geoText
+            order: _.clone(customer.order)            
         };
         for(var i = io.customers.length - 1; i >= 0 ; i--){
             if (_.isEqual(io.customers[i].order, searchCustomer.order)) {
@@ -972,7 +977,6 @@ module.exports = function(server,app){
         if(socketStore){
             io.leaveRoom(socketStore,roomID);
         }
-        console.log('after finishTask:918', io.customers, io.shippers, io.stores);
     };
 
 
