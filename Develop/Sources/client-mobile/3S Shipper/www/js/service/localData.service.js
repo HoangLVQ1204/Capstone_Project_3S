@@ -2,7 +2,7 @@
  * Created by Kaka Hoang Huy on 11/19/2015.
  */
 
-app.factory('$localstorage', ['$window', function($window) {
+app.factory('$localStorage', ['$window', function($window) {
   return {
     set: function(key, value) {
       $window.localStorage[key] = value;
