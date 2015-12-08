@@ -37,17 +37,19 @@ function adminShipperListController($scope,$state, dataService, $filter, config,
         })
         $scope.displayedCollection = [].concat($scope.shipperList);
         getShipperOnline();
+        console.log('shipper list', $scope.displayedCollection);
     })
 
 
     function getShipperOnline(){
         socketAdmin.listShippers.map(function (shipper) {
             var result = $.grep($scope.shipperList, function(e){ return e.username == shipper.shipperID; });
-
-            if (shipper.isConnected)
-                result[0]['workingStatus'] = 'Online';
-            else
-                result[0]['workingStatus'] = 'Offline';
+            // console.log('getShipperOnline', shipper, result);
+            if (result.length > 0)
+                if (shipper.isConnected)
+                    result[0]['workingStatus'] = 'Online';
+                else
+                    result[0]['workingStatus'] = 'Offline';
         });
     }
 

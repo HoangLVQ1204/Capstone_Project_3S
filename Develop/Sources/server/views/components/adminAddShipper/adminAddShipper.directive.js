@@ -24,13 +24,16 @@
                         singleDatePicker: true,
                         showDropdowns: true,
                         autoUpdateInput: false
-                    });
-
+                    });                    
                     element.on('apply.daterangepicker', function(ev, picker) {
+                        // console.log('singleDatePicker', scope.newShipper, scope.user, element);
                         element.val(picker.startDate.format('MM/DD/YYYY'));
                         //$scope.dateRange = $('#daterange').val();
                         scope.$apply(function(){
-                            scope.newShipper.profile.dob = element.val();
+                            if (scope.newShipper)
+                                scope.newShipper.profile.dob = element.val();
+                            else if (scope.user) 
+                                scope.user.profile.dob = element.val();
                             element.parsley( 'validate' );
                         });
                         //console.log(element.val())
