@@ -110,7 +110,7 @@ module.exports = function(sequelize, DataTypes) {
                 });
           },
 
-          getStoreLatestTotal: function (generalledger, bannedhistorylog, managestore, user){
+          getAllStoreWithLedger: function (generalledger, bannedhistorylog, managestore, user){
                 return store.findAll({
                     include: [{
                         model: generalledger,

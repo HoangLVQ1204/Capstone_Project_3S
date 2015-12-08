@@ -7,12 +7,16 @@ function adminStoreDetailController($scope,$state, dataService, $filter, config,
     var smsData = {verticalEdge: 'right',
         horizontalEdge: 'bottom'};
     //$scope.newShipper.profile.dob = null;
+    getDataFromServer();
 
-    dataService.getDataServer(config.baseURI + "/api/storeDetail/" + $scope.storeid).then(function(response){
-        $scope.store = response.data;
-        //$scope.shipper.dob =  new Date($scope.shipper.dob,;
-        //console.log(response);
-    })
+    function getDataFromServer(){
+        dataService.getDataServer(config.baseURI + "/api/storeDetail/" + $scope.storeid).then(function(response){
+            $scope.store = response.data;
+            //$scope.shipper.dob =  new Date($scope.shipper.dob,;
+            //console.log(response);
+        })
+    }
+
 
     //----------------------------------
     //FUNCTION update account info
