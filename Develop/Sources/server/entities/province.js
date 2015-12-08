@@ -32,6 +32,9 @@ module.exports = function(sequelize, DataTypes) {
       },
       getAllProvince: function(districtModel,wardModel) {
         return province.findAll({
+           where: {
+              provinceid : '01'
+           },
            include: [{
             model: districtModel,
             include: [{

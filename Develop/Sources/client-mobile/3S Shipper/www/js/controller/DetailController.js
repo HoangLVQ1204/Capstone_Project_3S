@@ -2,9 +2,20 @@
  * Created by Kaka Hoang Huy on 10/19/2015.
  */
 
-function detailController($scope, $stateParams, dataService, $cordovaGeolocation, $ionicPopup, $ionicPopover, uiGmapGoogleMapApi, uiGmapIsReady, $rootScope, $ionicLoading, mapService, authService) {
-
+function detailController($scope, $stateParams, dataService, $cordovaGeolocation, $ionicPopup, $ionicPopover, uiGmapGoogleMapApi, uiGmapIsReady, $rootScope, $ionicLoading, mapService, authService) {  
   $scope.isCancel = $stateParams.isCancel;
+  $scope.shippers = mapService.getShipperMarkers();
+  $scope.stores = mapService.getStoreMarkers();
+  $scope.customers = mapService.getCustomerMarkers();
+  $scope.orders = mapService.getOrders();
+  var currentUser = authService.getCurrentInfoUser();
+  $scope.center = {
+      // :TODO get address of shipper
+      //latitude: currentUser.latitude,
+      //longitude: currentUser.longitude
+      latitude: 21.013419,
+      longitude: 105.526180
+  };
   //shipper category of issue = cancel
   if ($scope.isCancel == "true") {
     $scope.isBackdropShowing = false;
@@ -73,20 +84,6 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
     });
   };  
 
-  $scope.shippers = mapService.getShipperMarkers();
-  $scope.stores = mapService.getStoreMarkers();
-  $scope.customers = mapService.getCustomerMarkers();
-  $scope.orders = mapService.getOrders();
-  var currentUser = authService.getCurrentInfoUser();
-  $scope.center = {
-      // :TODO get address of shipper
-      //latitude: currentUser.latitude,
-      //longitude: currentUser.longitude
-      latitude: 21.013419,
-      longitude: 105.526180
-  };
-  console.log($scope.center);
-
   getDetailFromServer();
 
   function getDetailFromServer() {
@@ -154,31 +151,6 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
           title: "Successfully!",
           content: rs.data
         }).then(function (ok) {
-          //Reload
-          getDetailFromServer();
-        });
-      },
-      function (err) {
-        $ionicPopup.alert({
-          title: "Can not go to next step of order",
-          content: "Error: " + err.data
-        })
-      });
-  };
-
-  $scope.nextStepConfirm = function step(confirmationCode) {
-    var urlBase = config.hostServer + 'api/shipper/nextstep/';
-    var data = {
-      confirmcode: confirmationCode,
-      code: $scope.order.orderid,
-      taskid: $stateParams.orderId
-    };
-    dataService.putDataServer(urlBase, data)
-      .then(function (rs) {
-        $ionicPopup.alert({
-          title: "Successfully!",
-          content: rs.data
-        }).then(function (rs) {
           //Reload
           getDetailFromServer();
         });

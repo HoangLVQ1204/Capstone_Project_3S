@@ -27,10 +27,10 @@ angular.module('app', [
 
     $stateProvider
 
-        .state('home',{
-            url: '',
-            template: '<h1>Home Page đang trong quá trình xây dựng !!!!</h1>',
-        })
+        // .state('home',{
+        //     url: '',
+        //     template: '<h1>Home Page đang trong quá trình xây dựng !!!!</h1>',
+        // })
 
         .state('login',{
             url: '/auth/login',
@@ -467,7 +467,7 @@ angular.module('app', [
     };
 
     function loading(){
-        var overlay=$('<div class="load-overlay" style="text-align:center; margin: 0 auto;"><div><div class="c1"></div><div class="c2"></div><div class="c3"></div><div class="c4"></div></div><span>Finding Shipper...</span><button id="btnCancelExpress" class="btn btn-theme-inverse">Cancel</button></div>');
+        var overlay=$('<div class="load-overlay" style="text-align:center; margin: 0 auto;"><div><div class="c1"></div><div class="c2"></div><div class="c3"></div><div class="c4"></div></div><span>Finding Shipper...<button id="btnCancelExpress" class="btn btn-theme-inverse" style="margin-top: 10px;">Cancel</button></span></div>');
         $("body").append(overlay);
         overlay.css('opacity',3).fadeIn("slow");
     }

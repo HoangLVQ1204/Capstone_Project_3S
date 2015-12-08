@@ -26,7 +26,7 @@ module.exports = function (app) {
     app.route('/api/updateResolveIssue/:issueid?')
         .put(checkAll,function(req,res,next){
             var id = req.query.issueid;
-            var updateIssue = req.body;
+            var updateIssue = req.body;            
             controller.updateResolveIssue(id, updateIssue.resolvetype).then(function(data){
                 res.status(201).json(data);
             })

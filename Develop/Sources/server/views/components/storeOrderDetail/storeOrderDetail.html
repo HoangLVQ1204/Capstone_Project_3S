@@ -20,7 +20,9 @@
           </div>
           <div class="form-group row">
             <div class="col-md-6"><h4>Order status:</h4></div>
-            <div class="col-md-6"><h4>{{order.orderstatus.statusname}}</h4></div> 
+            <div ng-if="order.orderstatus.statusname =='Canceling'" class="col-md-6"><h4>Returning</h4></div> 
+            <div ng-if="order.iscancel" class="col-md-6"><h4>Canceling</h4></div>
+            <div ng-if="!order.iscancel && order.orderstatus !='Canceling'" class="col-md-6"><h4>{{order.orderstatus.statusname}}</h4></div>
           </div>
             <div class="form-group row">
                 <div class="col-md-6"><h4>Pending: </h4></div>
@@ -207,7 +209,7 @@
 </table>
 <hr>
 <div class="form-group">
-  <button ng-disabled="order.statusid>1" ng-if="disabled" type="button" ng-click="changeToEn()" class="btn btn-theme"> Edit Order</button>
+  <button ng-disabled="order.statusid>1 || order.iscancel" ng-if="disabled" type="button" ng-click="changeToEn()" class="btn btn-theme"> Edit Order</button>
 
   <button ng-if="!disabled" type="submit" class="btn btn-theme"> Update Order</button>
   <button ng-if="!disabled" type="button" ng-click="updateOldOrderToServer()" class="btn btn-inverse"> Cancel</button>
