@@ -6,10 +6,10 @@ app.controller('HistoryCtrl', ['$scope', 'dataService', '$localStorage', functio
   $scope.totalTask = 0;
   $scope.totalLoaded = 0;
   $scope.page = 1;
-  var localSaved = $localStorage.getObject('history');
-  if(localSaved['data']){
+  // var localSaved = $localStorage.getObject('history');
+  // if(localSaved['data']){
 
-  }
+  // }
   getHistoryFromServer(1);
   $scope.loadMore = function(){
     getHistoryFromServer($scope.page);
