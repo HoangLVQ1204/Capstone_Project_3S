@@ -19,7 +19,6 @@ module.exports = function (app) {
             },function(err){
                 next(err);
             })
-        
     };
 
     // START HELPER FUNCTIONS

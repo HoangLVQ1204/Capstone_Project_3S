@@ -21,7 +21,7 @@ function adminStoreDetailController($scope,$state, dataService, $filter, config,
     //----------------------------------
     //FUNCTION update account info
     //-----------------------------------
-    $scope.update = function(){
+    $scope.updateStore = function(){
         var valid = $('#formID').parsley( 'validate' );
         if (!valid) return;
         //console.log($scope.user.profile);

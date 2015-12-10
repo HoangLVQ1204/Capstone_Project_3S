@@ -91,7 +91,7 @@ module.exports = function(sequelize, DataTypes) {
             return stores.destroy()
           },
 
-          putStore: function(currentStore){
+          updateStore: function(currentStore){
             return currentStore.save();
           },
 

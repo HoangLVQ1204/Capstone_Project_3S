@@ -66,7 +66,7 @@ module.exports = function(app) {
         var store = req.store;
         var update = req.body;
         _.merge(store, update);
-        return db.store.putStore(store)
+        return db.store.updateStore(store)
             .then(function(saved) {
                 if (saved) {
                     res.status(201).json(store);

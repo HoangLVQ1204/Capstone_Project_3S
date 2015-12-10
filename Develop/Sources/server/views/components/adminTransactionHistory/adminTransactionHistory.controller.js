@@ -55,34 +55,39 @@ function adminTransactionHistoryController($scope,$state, dataService, $location
     $scope.autoSelected =$scope.searchAutoOptions[0];
     $scope.dateRange = '';
     $scope.autoDateRange = '';
+    getDataFromServer();
 
-     dataService.getDataServer(config.baseURI + "/api/ledgerList").then(function(response){
-       // $scope.ledgerList = response;
-        response.data.map(function(ledger){
-            ledger.balance = parseInt(ledger.balance);
-            ledger.totalcod = parseInt(ledger.totalcod);
-            ledger.totaldelivery = parseInt(ledger.totaldelivery);
+    function getDataFromServer(){
+        dataService.getDataServer(config.baseURI + "/api/ledgerList").then(function(response){
+            // $scope.ledgerList = response;
+            response.data.map(function(ledger){
+                ledger.balance = parseInt(ledger.balance);
+                ledger.totalcod = parseInt(ledger.totalcod);
+                ledger.totaldelivery = parseInt(ledger.totaldelivery);
 
-            if (ledger.amount == null)
-            {
-                //ledger.fromDate = new Date(ledger.paydate);
-                //ledger.fromDate.setDate(ledger.fromDate.getDate()-7);
-                $scope.autoList.push(ledger)
-            }
-            else
-            {
-                $scope.ledgerList.push(ledger);
-                ledger.amount = parseInt(ledger.amount);
-            }
+                if (ledger.amount == null)
+                {
+                    //ledger.fromDate = new Date(ledger.paydate);
+                    //ledger.fromDate.setDate(ledger.fromDate.getDate()-7);
+                    $scope.autoList.push(ledger)
+                }
+                else
+                {
+                    $scope.ledgerList.push(ledger);
+                    ledger.amount = parseInt(ledger.amount);
+                }
+            })
+            $scope.ledgerList.sort(dateSort);
+            $scope.autoList.sort(dateSort);
+            //console.log( $scope.ledgerList);
+            //console.log(response);
         })
-        $scope.ledgerList.sort(dateSort);
-        $scope.autoList.sort(dateSort);
-        //console.log( $scope.ledgerList);
-        //console.log(response);
-    })
 
-    $scope.displayedLedgerCollection = [].concat($scope.ledgerList);
-    $scope.displayedAutoCollection = [].concat($scope.autoList);
+        $scope.displayedLedgerCollection = [].concat($scope.ledgerList);
+        $scope.displayedAutoCollection = [].concat($scope.autoList);
+    };
+
+
 
 
     var dateSort =  function(x, y){
