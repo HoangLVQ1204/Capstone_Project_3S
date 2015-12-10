@@ -4,7 +4,7 @@
 app.controller('ProfileCtrl', ['$scope', 'dataService', function ($scope, dataService) {
   $scope.profile = {};
   getProfile();
-  var getProfile = function () {
+  function getProfile() {
     var urlBase = config.hostServer + 'user/profile/' + getCurrentInfoUser().username;
     dataService.getDataServer(urlBase).then(function (rs) {
       $scope.profile = rs.data;
