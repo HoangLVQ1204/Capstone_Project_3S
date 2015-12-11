@@ -72,6 +72,9 @@ module.exports = function (app) {
      *
      * */
     var getHistory = function (shipperid, page) {
+        if(!parseInt(page)){
+            throw new Error("Page is not a number");
+        }
         var History = db.task;
         var Order = db.order;
         var OrderStatus = db.orderstatus;
@@ -110,7 +113,7 @@ module.exports = function (app) {
                 result['total'] = total;
                 return result;
             }, function (err) {
-                throw(err);
+                throw new Error(err.message);
             })
     };
 
@@ -119,9 +122,9 @@ module.exports = function (app) {
         var OrderStatus = db.orderstatus;
         var Goods = db.goods;
         var Task = db.task;
-        //var shipper = _.cloneDeep(req.user);
-        //var shipperid = shipper.username;
-        var shipperid = 'SP000001';
+        var shipper = _.cloneDeep(req.user);
+        var shipperid = shipper.username;
+        // var shipperid = 'SP000001';
         Order.getOrderDetailById(detailtaskid, shipperid, OrderStatus, Goods, Task)
             .then(function (rs) {
                 if (rs) {
@@ -340,7 +343,13 @@ module.exports = function (app) {
         var issueType;
         var task = db.task;
         var listStores = [];
-
+        if(_.isNull(shipperID) || _.isNull(issue) || _.isNull(orders) || _.isNull(categoryissue)) {
+            throw new Error('NullException');
+        }
+        categoryissue = parseInt(categoryissue)?parseInt(categoryissue):0;
+        if (categoryissue != 1 || categoryissue !=2) {
+            throw new Error('NullException');
+        }
         //Instance new Issue
         var newIssue = _.cloneDeep(issue);
         newIssue.isresolved = false;
@@ -351,7 +360,7 @@ module.exports = function (app) {
         // Update haveIssue of shipper
         console.log('shipperManage:352 newIssue', newIssue);
         if (newIssue.typeid != 4 && newIssue.typeid != 5)
-            server.socket.updateIssueForShipper(shipperID, true);
+            server.socket.updateIssueForShipper(shipperID, true);        
 
         return db.issue.createNewIssue(newIssue)
             .then(function(issue) {
@@ -359,8 +368,7 @@ module.exports = function (app) {
                 //UPDATE task status of task to 'Processing'
                 //Case: Pending
                 var newStatus = 4;
-
-                if (_.parseInt(categoryissue) === 1) {
+                if (categoryissue === 1) {
                     task.getTaskOfShipperByOrder(shipperID, 'pending', [])
                         .then(function(items){
                                 _.each(items, function(subitem){
@@ -525,7 +533,7 @@ module.exports = function (app) {
 
                 // Update data in socket
                 var listPending = [1,2,3,6];
-                if(listPending.indexOf(issueType) >= 0){
+                if(listPending.indexOf(issueType) >= 0){                    
                     server.socket.updatePendingOrder(shipperID, true);
                 };
 
@@ -541,8 +549,7 @@ module.exports = function (app) {
      * @author: quyennv
      */
     var changeIsPending = function(shipperid, issueId) {
-        // var shipperid = req.user.username;
-        // var issueId = req.body.issueId;
+        var issueId = parseInt(issueId)? parseInt(issueId) : 0;
         var result;
         var task = db.task;
         var order = db.order;

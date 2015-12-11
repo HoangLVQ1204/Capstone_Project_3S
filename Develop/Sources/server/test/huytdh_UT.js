@@ -21,46 +21,27 @@ describe("SHIPPER-MANAGE FUNCTIONS TEST:", function () {
      */
     describe("FUNCTION GET ALL TASK HISTORY:", function () {
         //TEST CASE SP01_01
-        it.only("Test case SP01_01", function (done) {
+        it("Test case SP01_01", function (done) {
             shipperManage.getHistory("SP000002", 1).then(function(rs){
-                expect({ foo: 'baz' }).to.have.property('foo')
-                    .and.not.equal('baz');
-                //console.log(rs);
-                //expect(rs).to.equal(2);
-                done();
             },function(er){
                 //expect(false).to.be.true;
-                done();
             }).then(function(){
-                //done();
+                done();
             });
         });
 
-        it("Test case OD01_02", function (done) {
-            shipperManage.getAllOrder(null).then(function(rs){
+        it("Test case SP01_01", function (done) {
+            shipperManage.getHistory("SP000001", 1).then(function(rs){
             },function(er){
-                expect(er).to.equal("Can't not get datas");
+                //expect(false).to.be.true;
             }).then(function(){
                 done();
             });
         });
 
-    });
-
-    describe("FUNCTION2 GET ALL ORDER:", function () {
-        //TEST CASE SP01_01
-        it("Test case OD01_01", function (done) {
-            shipperManage.getAllOrder("STR001").then(function(rs){
-                expect(rs).not.to.be.null;
-            },function(er){
-                expect(er).to.be.null;
-            }).then(function(){
-                done();
-            });
-        });
-
-        it("Test case OD01_02", function (done) {
-            shipperManage.getAllOrder(null).then(function(rs){
+        it("Test case SP01_02", function (done) {
+            shipperManage.getHistory(null, null).then(function(rs){
+                console.log(rs)
             },function(er){
                 expect(er).to.equal("Can't not get datas");
             }).then(function(){

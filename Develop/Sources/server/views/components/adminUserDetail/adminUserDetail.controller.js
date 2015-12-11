@@ -7,17 +7,22 @@ function adminUserDetailController($scope,$state, dataService, $filter, config, 
     var smsData = {verticalEdge: 'right',
         horizontalEdge: 'bottom'};
     //$scope.newShipper.profile.dob = null;
+    getDataFromServer();
 
-    dataService.getDataServer(config.baseURI + "/api/user/" + $scope.username).then(function(response){
-        $scope.user = response.data;
-        //$scope.shipper.dob =  new Date($scope.shipper.dob,;
-        //console.log(response);
-    })
+    function getDataFromServer(){
+        dataService.getDataServer(config.baseURI + "/api/user/" + $scope.username).then(function(response){
+            $scope.user = response.data;
+            //$scope.shipper.dob =  new Date($scope.shipper.dob,;
+            //console.log(response);
+        })
+
+    }
+
 
     //----------------------------------
     //FUNCTION update account info
     //-----------------------------------
-    $scope.updateAccountInfo = function(){
+    $scope.updateUserInfo = function(){
         var valid = $('#formID').parsley( 'validate' );
         if (!valid) return;
         //console.log($scope.user.profile);

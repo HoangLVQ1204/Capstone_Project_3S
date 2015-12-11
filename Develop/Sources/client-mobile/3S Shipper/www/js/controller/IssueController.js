@@ -278,25 +278,25 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
       if ( typeof issue === "undefined" || issue.category === null || typeof issue.category === "undefined") {
         var msg1 = {
           id: 999,
-          content: 'Please choose Type !'
+          content: 'Please choose category'
         }
         $scope.showAlert(msg1);
       } else if (issue.type === null || typeof issue.type === "undefined") {
         var msg2 = {
           id: 999,
-          content: 'Please choose Reason !'
+          content: 'Please choose reason'
         }
         $scope.showAlert(msg2);
       } else if (issue.category.categoryID != 1 && typeof issue.issuedOrder === "undefined") {
         var msg3 = {
           id: 999,
-          content: 'Please choose Order !'
+          content: 'Please choose order'
         }
         $scope.showAlert(msg3);
       } else if (typeof issue.description === "undefined" || issue.description === "") {
         var msg4 = {
           id: 999,
-          content: 'Please write Content !'
+          content: 'Please write content'
         }
         $scope.showAlert(msg4);
       } else {
@@ -356,7 +356,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
               rs = rs.data
               $ionicPopup.alert({
                 title: 'Success',
-                content: 'Your Issue is sent to Admin'
+                content: 'Your Issue is sent to Admin. Wait for Admin to resolve.'
               }).then(function(res) {
                 $scope.isSend = false;
 

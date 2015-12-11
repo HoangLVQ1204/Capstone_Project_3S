@@ -263,7 +263,7 @@ module.exports = function(server,app){
     
     // Define observer for watching io.shippers, io.stores, io.customers, io.orders
     var observer = function(changes) {
-
+        //console.log('observer run');
         for (shipperID in io.shippers) {
             if (io.shippers[shipperID].isConnected) {
                 io.reply({ type: 'shipper', clientID: shipperID }, 
@@ -638,8 +638,16 @@ module.exports = function(server,app){
         delete io.orders[orderID];
     };
 
+    io.removeOrderFull = function(orderID) {
+        var shipperID = io.orders[orderID].shipperID;
+        var storeID = io.orders[orderID].storeID;
+        
+    };
+
     io.updateOrder = function(orderID, newOrder) {
-        io.orders[orderID] = _.merge(io.orders[orderID], newOrder);
+        var temp = _.clone(io.orders[orderID], true);
+        temp = _.merge(temp, newOrder);
+        io.orders[orderID] = temp;
     };
 
     io.updateStatusOrder = function(orderID, status) {
@@ -727,6 +735,12 @@ module.exports = function(server,app){
         else 
             temp.icon = icons.shipperIcon;
         io.shippers[shipperID] = temp;  
+    };    
+
+    io.updateIconShipper = function(shipperID, iconName) {
+        var temp = _.clone(io.shippers[shipperID], true);
+        temp.icon = icons[iconName + 'Icon'];
+        io.shippers[shipperID] = temp;
     };
 
     io.updateLocationShipper = function(shipper) {
@@ -876,8 +890,7 @@ module.exports = function(server,app){
 
     io.removeCustomer = function(customer) {
         var searchCustomer = {
-            order: _.clone(customer.order),
-            geoText: customer.geoText
+            order: _.clone(customer.order)            
         };
         for(var i = io.customers.length - 1; i >= 0 ; i--){
             if (_.isEqual(io.customers[i].order, searchCustomer.order)) {
@@ -914,6 +927,7 @@ module.exports = function(server,app){
      */
     io.updatePendingOrder = function(shipperid, status){
         var orders = io.getOrdersOfShipper(shipperid);
+        console.log('updatePendingOrder', shipperid, status);
         orders.forEach(function(e) {
             e.orderInfo.isPending = status;
             io.updateOrder(e.orderID, e.orderInfo);
@@ -963,7 +977,6 @@ module.exports = function(server,app){
         if(socketStore){
             io.leaveRoom(socketStore,roomID);
         }
-        console.log('after finishTask:918', io.customers, io.shippers, io.stores);
     };
 
 
@@ -976,8 +989,8 @@ module.exports = function(server,app){
         return io.updateListShipper();
     })
     .then(function() {
-        console.log('initial shippers', io.shippers);
-        console.log('initial stores', io.stores);
+        // console.log('initial shippers', io.shippers);
+        // console.log('initial stores', io.stores);
         io
             .on('connect', socketioJwt.authorize({
                 secret: config.secrets.jwt,

@@ -79,7 +79,7 @@ module.exports = function(sequelize, DataTypes) {
               }
             }]
           }]
-        });
+        }).then(sequelize.handler);
         //?????
         // return issue.build({categoryid: newIssue.categoryID, reason: newIssue.reason, description: newIssue.description}).save();
       },
