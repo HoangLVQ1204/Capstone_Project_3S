@@ -364,21 +364,21 @@ var updateExpressOrder = function (req, res, next) {
         var deleteCode = db.confirmationcode.deleteConfirmCode(orderId);
         return Promise.all([deleteCode,deleteGoods]).then(function(data){
             throw new Error("Delete draft fail!");
-            console.log("---DATA RES ---");
-            console.log(data);
+            //console.log("---DATA RES ---");
+            //console.log(data);
             db.order.deleteDraffOrder(orderId)
             .then(function() {
                 throw new Error("Delete draft fail!");
             }, function(err) {
-                console.log("--- ERROR DELETED ---");
-                console.log(err);
-                console.log("--- ERROR DELETED ---");
+                //console.log("--- ERROR DELETED ---");
+                //console.log(err);
+                //console.log("--- ERROR DELETED ---");
                 throw new Error("Delete draft fail!");
             });
         },function(){
-            // console.log("--- ERROR DELETED ---");
-            // console.log(err);
-            // console.log("--- ERROR DELETED ---");
+            // //console.log("--- ERROR DELETED ---");
+            // //console.log(err);
+            // //console.log("--- ERROR DELETED ---");
             throw new Error("Delete draft fail!");
         });
     }

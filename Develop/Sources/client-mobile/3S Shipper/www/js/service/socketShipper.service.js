@@ -56,12 +56,12 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
           '<div class="popup-body">' +
             '<span style="font-size: 2.5em; display: block; margin: 7px 0">{{counter}}</span>' +
             '<div id="graborder">' +
-            '<p>Có một đơn hàng ở địa cách đây {{data.msg.distanceText}}.</p>' +
-            '<p>Bạn có muốn nhận đơn hàng này ?</p>' +
+            '<p>There is an express order is {{data.msg.distanceText}} away from here.</p>' +
+            '<p>Grab it now?</p>' +
             '</div>' +
           '</div>' +
           '<div class="popup-buttons">' +
-            '<a href="#" ng-click="stop(true)" class="button btn-default-cus" >Cancel</a>' +
+            '<a href="#" ng-click="stop(true)" class="button btn-default-cus" >Ignore</a>' +
             '<a ng-click="grabExpressOrder()" class="button btn-success-cus btn-default-cus">Grab</a>' +
           '</div>' +
         '</div>',

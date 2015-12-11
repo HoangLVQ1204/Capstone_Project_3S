@@ -263,7 +263,7 @@ module.exports = function(server,app){
     
     // Define observer for watching io.shippers, io.stores, io.customers, io.orders
     var observer = function(changes) {
-        console.log('observer run');
+        //console.log('observer run');
         for (shipperID in io.shippers) {
             if (io.shippers[shipperID].isConnected) {
                 io.reply({ type: 'shipper', clientID: shipperID }, 
@@ -989,8 +989,8 @@ module.exports = function(server,app){
         return io.updateListShipper();
     })
     .then(function() {
-        console.log('initial shippers', io.shippers);
-        console.log('initial stores', io.stores);
+        // console.log('initial shippers', io.shippers);
+        // console.log('initial stores', io.stores);
         io
             .on('connect', socketioJwt.authorize({
                 secret: config.secrets.jwt,
