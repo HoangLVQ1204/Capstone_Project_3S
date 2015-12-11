@@ -72,6 +72,9 @@ module.exports = function (app) {
      *
      * */
     var getHistory = function (shipperid, page) {
+        if(!parseInt(page)){
+            throw new Error("Page is not a number");
+        }
         var History = db.task;
         var Order = db.order;
         var OrderStatus = db.orderstatus;
@@ -110,7 +113,7 @@ module.exports = function (app) {
                 result['total'] = total;
                 return result;
             }, function (err) {
-                throw(err);
+                throw new Error(err.message);
             })
     };
 
