@@ -28,16 +28,19 @@ function adminShipperListController($scope,$state, dataService, $filter, config,
         }];
     $scope.selected = $scope.searchOptions[0];
     $scope.dateRange = '';
+    getDataFromServer();
 
-    dataService.getDataServer(config.baseURI + "/api/shipper/getAllShipper").then(function(response){
-        $scope.shipperList= response.data;
-        $scope.shipperList.map(function (shipper) {
-            shipper['workingStatus'] = 'Offline';
-            if (shipper.userstatus == 3)  shipper['workingStatus'] = 'Block';
+    function getDataFromServer(){
+        dataService.getDataServer(config.baseURI + "/api/shipper/getAllShipper").then(function(response){
+            $scope.shipperList= response.data;
+            $scope.shipperList.map(function (shipper) {
+                shipper['workingStatus'] = 'Offline';
+                if (shipper.userstatus == 3)  shipper['workingStatus'] = 'Block';
+            })
+            $scope.displayedCollection = [].concat($scope.shipperList);
+            getShipperOnline();
         })
-        $scope.displayedCollection = [].concat($scope.shipperList);
-        getShipperOnline();
-    })
+    }
 
 
     function getShipperOnline(){

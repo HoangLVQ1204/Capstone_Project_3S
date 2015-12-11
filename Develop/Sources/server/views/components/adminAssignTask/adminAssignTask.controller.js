@@ -104,11 +104,6 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
 
     }
 
-
-
-
-
-
     $scope.assignTask = function () {
         dataService.putDataServer(config.baseURI + "/api/shipper/updateTaskForShipper", $scope.tasksList)
             .then(function success(response){

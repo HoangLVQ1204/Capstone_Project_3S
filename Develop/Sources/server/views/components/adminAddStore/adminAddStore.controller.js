@@ -3,29 +3,34 @@
  */
 
 function adminAddStoreController($scope,$state, $http, $filter, config, dataService) {
-
-    $scope.shipperList = [];
-
     var smsData = {verticalEdge: 'right',
         horizontalEdge: 'bottom'};
-    $scope.newStoreOwner = new Object();
-    $scope.newStoreOwner.account = new Object();
-    $scope.newStoreOwner.profile = new Object();
-    $scope.newStoreOwner.profile.avatar = "assets/avatar/store_ower/Default.png";
-    $scope.newStore = new Object();
-    $scope.newStore.avatar = "assets/avatar/store/Default.jpg";
-    //$scope.newStoreOwner.profile.dob = null;
+    getDataFromServer();
 
-    dataService.getDataServer(config.baseURI + "/api/store/getNewStoreOwnerID").then(function(rs){
-        $scope.newStoreOwner.account.username = rs.data;
-        $scope.newStoreOwner.profile.username = rs.data;
-        //console.log(response);
-    })
+    function getDataFromServer(){
+        $scope.shipperList = [];
 
-    dataService.getDataServer(config.baseURI + "/api/store/getNewStoreID").then(function(rs){
-        $scope.newStore.storeid = rs.data;
-        //console.log(response);
-    })
+
+        $scope.newStoreOwner = new Object();
+        $scope.newStoreOwner.account = new Object();
+        $scope.newStoreOwner.profile = new Object();
+        $scope.newStoreOwner.profile.avatar = "assets/avatar/store_ower/Default.png";
+        $scope.newStore = new Object();
+        $scope.newStore.avatar = "assets/avatar/store/Default.jpg";
+        //$scope.newStoreOwner.profile.dob = null;
+
+        dataService.getDataServer(config.baseURI + "/api/store/getNewStoreOwnerID").then(function(rs){
+            $scope.newStoreOwner.account.username = rs.data;
+            $scope.newStoreOwner.profile.username = rs.data;
+            //console.log(response);
+        });
+
+        dataService.getDataServer(config.baseURI + "/api/store/getNewStoreID").then(function(rs){
+            $scope.newStore.storeid = rs.data;
+            //console.log(response);
+        });
+    }
+
 
     $scope.createStore = function () {
        var valid = $('#formStore').parsley( 'validate' );
