@@ -340,7 +340,13 @@ module.exports = function (app) {
         var issueType;
         var task = db.task;
         var listStores = [];
-
+        if(_.isNull(shipperID) || _.isNull(issue) || _.isNull(orders) || _.isNull(categoryissue)) {
+            throw new Error('NullException');
+        }
+        categoryissue = parseInt(categoryissue)?parseInt(categoryissue):0;
+        if (categoryissue != 1 || categoryissue !=2) {
+            throw new Error('NullException');
+        }
         //Instance new Issue
         var newIssue = _.cloneDeep(issue);
         newIssue.isresolved = false;
@@ -359,8 +365,7 @@ module.exports = function (app) {
                 //UPDATE task status of task to 'Processing'
                 //Case: Pending
                 var newStatus = 4;
-
-                if (_.parseInt(categoryissue) === 1) {
+                if (categoryissue === 1) {
                     task.getTaskOfShipperByOrder(shipperID, 'pending', [])
                         .then(function(items){
                                 _.each(items, function(subitem){
@@ -541,8 +546,7 @@ module.exports = function (app) {
      * @author: quyennv
      */
     var changeIsPending = function(shipperid, issueId) {
-        // var shipperid = req.user.username;
-        // var issueId = req.body.issueId;
+        var issueId = parseInt(issueId)? parseInt(issueId) : 0;
         var result;
         var task = db.task;
         var order = db.order;
