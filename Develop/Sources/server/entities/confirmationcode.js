@@ -43,7 +43,7 @@ module.exports = function(sequelize, DataTypes) {
           where: {
             orderid: orderid
           }
-        });
+        }).then(sequelize.handler);
       },
 
       putOrder: function (currentOrder) {

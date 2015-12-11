@@ -145,7 +145,7 @@ module.exports = function(sequelize, DataTypes) {
                                 $in: liststoreid
                             }
                         }
-                    });
+                    }).then(sequelize.handler);
                 },
               //,
 
