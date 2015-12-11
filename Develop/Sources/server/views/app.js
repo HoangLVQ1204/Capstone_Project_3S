@@ -60,7 +60,7 @@ angular.module('app', [
             template: '<admin-layout></admin-layout>',
             controller: function($scope, $rootScope, mapService, authService){
                 var mode = { type: "all" };
-                // setTimeout(function() {                    
+                // setTimeout(function() {
                 //     mapService.setMode(mode);
                 //     $rootScope.$apply();
                 //  }, 1500);
@@ -80,7 +80,7 @@ angular.module('app', [
             template: '<admin-store-list-layout></admin-store-list-layout>',
             controller: function($scope, $rootScope, mapService){
                 var mode = { type: "all" };
-                // setTimeout(function() {                    
+                // setTimeout(function() {
                 //     mapService.setMode(mode);
                 //     $rootScope.$apply();
                 //  }, 1500);
@@ -121,7 +121,7 @@ angular.module('app', [
             template: '<admin-shipper-list-layout></admin-shipper-list-layout>',
             controller: function($scope, $rootScope, mapService){
                 var mode = { type: "all" };
-                // setTimeout(function() {                    
+                // setTimeout(function() {
                 //     mapService.setMode(mode);
                 //     $rootScope.$apply();
                 //  }, 1500);
@@ -202,7 +202,7 @@ angular.module('app', [
              template: '<layout></layout>',
              controller: function($scope, $rootScope, mapService, authService){
                  var mode = { type: "all" };
-                 // setTimeout(function() {                    
+                 // setTimeout(function() {
                  //    mapService.setMode(mode);
                  //    $rootScope.$apply();
                  // }, 1500);
@@ -232,7 +232,7 @@ angular.module('app', [
              template: '<store-order-detail-layout></store-order-detail-layout>',
              controller: function($scope, $rootScope, mapService, authService, $stateParams){
                  var mode = { type: 'orderdetail', orderID: $stateParams.orderid };
-                 // setTimeout(function() {                    
+                 // setTimeout(function() {
                  //    mapService.setMode(mode);
                  //    $rootScope.$apply();
                  // }, 1500);
@@ -280,7 +280,7 @@ angular.module('app', [
             url: '/adminReport',
             template: '<admin-report></admin-report>',
             resolve: {
-                
+
                      dataExNo: function($http,config, reportService){
                          return reportService.getExNoFromServer();
                      },
@@ -293,7 +293,7 @@ angular.module('app', [
                      dataOverView: function($http,config, reportService){
                          return reportService.getDataOverView();
                      }
-                
+
             },
             controller: function($scope,dataExNo,dataComCan,dataCodFee,dataOverView){
                 $scope.dataChart = {
@@ -301,7 +301,7 @@ angular.module('app', [
                     dataComCan  : dataComCan,
                     dataCodFee  : dataCodFee,
                     dataOverView: dataOverView
-                }               
+                }
             },
             access: config.role.admin
         })
@@ -326,14 +326,14 @@ angular.module('app', [
     //$rootScope.onlineShipper = 0;
     //$rootScope.unreadMail = 0;
     $rootScope.readNewNoti = function(notification) {
-        var urlBase = config.baseURI + '/api/notifications/' + notification.notificationid;     
+        var urlBase = config.baseURI + '/api/notifications/' + notification.notificationid;
         // console.log('readNotification', urlBase);
         dataService.putDataServer(urlBase, notification)
         .then(function(data) {
             // console.log('press notification', data.data);
             if ($state.current.name == 'store.notification' || $state.current.name == 'admin.notification') {
                 $state.go($state.current.name, {}, { reload: true });
-            }            
+            }
         });
     };
 
@@ -344,11 +344,11 @@ angular.module('app', [
             horizontalEdge: 'bottom',
             verticalEdge: 'right',
             theme: (notification.type === 'issue' ? 'danger' : 'success')
-        };                
+        };
         var template = '<div style="white-space: pre-wrap;" class="btn" id="noti' + notification.notificationid + '" onclick="location.href=\'' + notification.url + '\'">' +
                 '<h4 style="color: white"><strong>' + notification.title + '</strong></h4>' +
                 '<span style="color: white">' + notification.content + '</span>'
-                '</div>';        
+                '</div>';
         $.notific8(template, data);
         console.log('current $state', $state.current.name);
         $('#noti' + notification.notificationid).on('click', function() {
@@ -375,7 +375,7 @@ angular.module('app', [
                 $rootScope.displayNotification(notification);
             } else if (type == 2) { // Update unread notification + Database
                 $rootScope.numberUnreadNoti += 1;
-                notificationService.setTotalUnreadNotifications($rootScope.numberUnreadNoti);    
+                notificationService.setTotalUnreadNotifications($rootScope.numberUnreadNoti);
                 notificationService.addNotification(notification)
                 .then(function(data) {
                     notification.notificationid = data.data.notificationid;
@@ -385,11 +385,11 @@ angular.module('app', [
         } else {    // type == undefined, only display
             $rootScope.displayNotification(notification);
         }
-    };    
+    };
 
     // combo functions for express order
     $rootScope.updateExpressOrder = function(orderID, isDraff, statusId) {
-        var urlBase = config.baseURI + '/orders/updateExpressOrder';                            
+        var urlBase = config.baseURI + '/orders/updateExpressOrder';
         var order = {};
         order.isDraff = isDraff;
         order.orderId = orderID;
@@ -442,7 +442,7 @@ angular.module('app', [
     };
 
     $rootScope.createExpressOrder = function(order, goods, isDraft){
-        var urlBaseOrder = config.baseURI + '/orders';        
+        var urlBaseOrder = config.baseURI + '/orders';
 
         order.isdraff = isDraft;
         if (isDraft) order.statusid = null;
@@ -462,7 +462,7 @@ angular.module('app', [
                 if (isDraft) return order;
                 else {
                     return $rootScope.createExpressTask(order, $rootScope.rightShipper.shipperID);
-                }   
+                }
             });
     };
 
@@ -501,7 +501,7 @@ angular.module('app', [
         var s = 0;
         $rootScope.listRightShippers = [];
         var should = true;
-        $rootScope.loopFindShipper = setInterval(function(){            
+        $rootScope.loopFindShipper = setInterval(function(){
             if (!should) return;
             // console.log('interval', order, goods);
             if($rootScope.listRightShippers.length != 0){
@@ -573,7 +573,7 @@ angular.module('app', [
                     .then(function(order) {
                         console.log('Create draft order', order);
                     });
-                }        
+                }
             }
         },1000);
     };
@@ -598,7 +598,7 @@ angular.module('app', [
             .then(function(order) {
                 console.log('Create draft order', order);
             });
-        }        
+        }
     };
 
     // END - combo functions
@@ -680,10 +680,3 @@ angular.module('app', [
 
     });
 })
-
-
-
-
-
-
-
