@@ -399,6 +399,10 @@ var updateExpressOrder = function (req, res, next) {
 
 var cancelOrder = function (ownerStoreUser, storeID, orderID) {
 
+    if(_.isNull(ownerStoreUser) || _.isNull(storeID) || _.isNull(orderID)) {
+        throw new Error('NullException');
+    }
+
     var issueCancel = {
         typeid: 7,
         description: 'Store ' + storeID +  ' request cancel',
