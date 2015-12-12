@@ -47,11 +47,11 @@ function issueContentController($scope,$stateParams, dataService, authService,co
                 //console.log(error)
                 return;
             }else {
-
                 $scope.issue.resolvetype = $scope.resolveType;
 
-                if ($scope.issue.resolvetype == 2)//pending issue
+                if ($scope.issue.resolvetype == 2){//pending issue
                     resolveChangeShipperIssue();
+                }
 
                 if ($scope.issue.resolvetype == 1) {//contiunue
                     resolveContinueIssue();

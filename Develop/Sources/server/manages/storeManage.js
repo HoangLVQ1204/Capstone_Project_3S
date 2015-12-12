@@ -66,7 +66,7 @@ module.exports = function(app) {
         var store = req.store;
         var update = req.body;
         _.merge(store, update);
-        return db.store.putStore(store)
+        return db.store.updateStore(store)
             .then(function(saved) {
                 if (saved) {
                     res.status(201).json(store);
@@ -98,7 +98,7 @@ module.exports = function(app) {
     };
 
     var getAllStoreWithLedger = function(req, res, next){
-        return db.store.getStoreLatestTotal(db.generalledger, db.bannedhistorylog, db.managestore, db.user)
+        return db.store.getAllStoreWithLedger(db.generalledger, db.bannedhistorylog, db.managestore, db.user)
             .then(function(store) {
                 res.status(200).json(store);
             }, function(err) {

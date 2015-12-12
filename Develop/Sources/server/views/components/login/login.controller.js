@@ -24,7 +24,6 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
                 authService.saveToken(res.data.token);
                 socketService.authenSocket()
                 .then(function() {
-
                     if(authService.isRightRole(config.role.admin)){
                         socketAdmin.registerSocket();
                         $state.go('admin.dashboard');
@@ -34,7 +33,6 @@ function loginController($scope,$rootScope,$state,authService,config,socketStore
                         socketStore.registerSocket();
                         $state.go('store.dashboard');
                     }
-
                 });
             })
             .catch(function(rs){

@@ -216,7 +216,7 @@ module.exports = function (app) {
                         });
                     }
                 }, function(err){
-                    console.log('Insert new issue get an error');
+                    //console.log('Insert new issue get an error');
                 });
             }
 
@@ -226,7 +226,7 @@ module.exports = function (app) {
 
     var getUserGetIssue = function (req, res, next) {
         var log = req.body;
-        console.log(log);
+        //console.log(log);
         return db.issue.getUserGetIssue()
             .then(function (list) {
                 res.status(200).json(list);

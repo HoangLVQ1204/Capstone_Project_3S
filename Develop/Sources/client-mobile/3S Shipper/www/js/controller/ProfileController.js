@@ -1,11 +1,11 @@
 /**
  * Created by Kaka Hoang Huy on 9/30/2015.
  */
-app.controller('ProfileCtrl', ['$scope', 'dataService', function ($scope, dataService) {
+app.controller('ProfileCtrl', ['$scope', 'dataService', 'authService', function ($scope, dataService, authService) {
   $scope.profile = {};
   getProfile();
-  var getProfile = function () {
-    var urlBase = config.hostServer + 'user/profile/' + getCurrentInfoUser().username;
+  function getProfile() {
+    var urlBase = config.hostServer + 'user/profile/' + authService.getCurrentInfoUser().username;
     dataService.getDataServer(urlBase).then(function (rs) {
       $scope.profile = rs.data;
       $scope.profile.avatar = config.hostServer + $scope.profile.avatar;
