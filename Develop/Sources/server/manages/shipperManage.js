@@ -347,7 +347,9 @@ module.exports = function (app) {
             throw new Error('NullException');
         }
         categoryissue = parseInt(categoryissue)?parseInt(categoryissue):0;
-        if (categoryissue != 1 || categoryissue !=2) {
+        if (categoryissue == 1 || categoryissue ==2) {
+            //continue
+        } else {
             throw new Error('NullException');
         }
         //Instance new Issue
