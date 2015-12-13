@@ -7,11 +7,11 @@ module.exports = function(app) {
 	var notificationManage = require('../manages/notificationManage')(app);
 	var storeManage = require('../manages/storeManage')(app);
 	var server = app.get('io')
-	var autoPayment = function () {
+	var autoPayment = function (day, hour, minutes) {
 		var rule = new cron.RecurrenceRule();
-		rule.dayOfWeek = [0];
-		rule.hour = 23;
-		rule.minute = 59;
+		rule.dayOfWeek = day;
+		rule.hour = hour;
+		rule.minute = minutes;
 		//rule.second = 30;
 		cron.scheduleJob(rule, function(){
 			var date, totalcod, totaldelivery;

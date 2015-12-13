@@ -865,7 +865,7 @@ module.exports = function (app) {
     };
 
     var updateTaskForShipper = function (shipperList) {
-
+        if (shipperList == null) throw new Error('Null Exception');
         shipperList.forEach(function(shipperTasks){
             if(shipperTasks.tasks) {
                 shipperTasks.tasks.forEach(function(task){
