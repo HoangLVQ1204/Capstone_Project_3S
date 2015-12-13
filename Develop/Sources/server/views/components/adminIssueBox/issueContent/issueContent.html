@@ -122,6 +122,7 @@
         <div class="modal-body align-xs-center">
             <form name="myForm">
                 <h5><strong>Are you sure to resolve this issue by {{resolveTypeValue[resolveType-1]}} options???</strong></h5><br>
+                <p ng-show="issue.typeid==2">Go to Assign Task page to assign task for other Shipper</p>
                 <p ng-show="issue.typeid==4">- All order status change to Cancel<br>-Task status of shippers change to Fail</p>
                 <p ng-show="issue.typeid==5">- All order status change to Cancelling<br>-Task type of shippers change to Return</p>
                 <p ng-show="issue.typeid==7 && issue.orderissues[0].order.statusid > 2 && issue.orderissues[0].order.statusid != 4">- Order status change to Cancelling<br>-Task type of shipper change to Return</p>
@@ -129,9 +130,10 @@
                 <p ng-show="issue.typeid==7 && issue.orderissues[0].order.statusid == 4">- You have to assign this order to a shipper to return order to store </p>
                 <hr>
 
-                <button type="button" class="btn btn-danger" ng-click="updateResolve()"><i class="fa fa-check-circle"></i> Yes</button>
+                <button ng-show="resolveType!=2"type="button" class="btn btn-danger" ng-click="updateResolve()"><i class="fa fa-check-circle"></i> Yes</button>
+                <button ng-show="resolveType==2" type="button" class="btn btn-danger" ng-click="goToProcessing()"><i class="fa  fa-mail-forward"></i> AssignTask</button>
                 <button type="button" class="btn btn-inverse" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i> No</button>
-                <button ng-show="resolveType==2 && processingTask>0" type="button" class="btn btn-danger" ng-click="goToProcessing()"><i class="fa  fa-mail-forward"></i> AssignTask</button>
+
             </form>
         </div>
         <!-- //modal-body-->

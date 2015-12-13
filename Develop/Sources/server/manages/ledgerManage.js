@@ -40,17 +40,7 @@ module.exports = function (app) {
 /*
     By KhanhKC
     This function is use to get all transaction of a store
-*/
-    // var storeGetAllLedger = function (req, res, next) {
-    //     var storeId = req.user.stores[0].storeid;
-    //     db.generalledger.storeGetAllLedger(storeId)
-    //     .then(function(list){
-    //         res.status(200).json(list);
-    //     }, function(err) {
-    //         next(err);
-    //     });
-    // };
-
+*/    
     function storeGetAllLedger(storeid){
        return db.generalledger.storeGetAllLedger(storeid)
         .then(function(list){

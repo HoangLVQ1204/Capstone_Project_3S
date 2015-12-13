@@ -70,7 +70,7 @@ module.exports = function(sequelize, DataTypes) {
           where:{
             'storeid':storeid,
           }, limit: 1, order: 'payDate DESC'
-        });
+        }).then(sequelize.handler);
       },
 
       getLatestAutoAccountDate: function(){
@@ -149,7 +149,7 @@ module.exports = function(sequelize, DataTypes) {
           where: {
             'storeid': storeid
           }
-        })
+        }).then(sequelize.handler);
       }
   }
 });

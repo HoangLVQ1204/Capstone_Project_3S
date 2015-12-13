@@ -8,8 +8,6 @@ function adminAddStoreController($scope,$state, $http, $filter, config, dataServ
     getDataFromServer();
 
     function getDataFromServer(){
-        $scope.shipperList = [];
-
 
         $scope.newStoreOwner = new Object();
         $scope.newStoreOwner.account = new Object();

@@ -2,11 +2,11 @@
 
     <div class="nav-collapse" style="margin-left: 0px;">
 
-        <ol class="breadcrumb">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Library</a></li>
-            <li class="active">Data</li>
-        </ol>
+        <!--<ol class="breadcrumb">-->
+            <!--<li><a href="#">Home</a></li>-->
+            <!--<li><a href="#">Library</a></li>-->
+            <!--<li class="active">Data</li>-->
+        <!--</ol>-->
         <!-- //breadcrumb-->
 
         <div id="content">
@@ -86,7 +86,7 @@
                                     <tr class="odd gradeX" ng-repeat= "x in displayedCollection track by ($index)">
                                         <td>{{x.taskid}}</td>
                                         <td><a ui-sref="admin.userDetail({username: x.shipperid})">{{x.shipperid}}</a></td>
-                                        <td>{{x.orderid}}</td>
+                                        <td><a ui-sref="admin.orderDetail({orderid: x.orderid})">{{x.orderid}}</a></td>
                                         <td class="center"> <a ui-sref="admin.storeDetail({storeid:x.order.storeid})">{{x.order.storeid}}</a></td>
                                         <td class="center"> {{x.order.orderstatus.statusname}}</td>
                                         <td class="center">
