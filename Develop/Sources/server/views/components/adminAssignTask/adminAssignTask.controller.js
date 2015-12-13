@@ -5,8 +5,6 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
     var currentUser = authService.getCurrentInfoUser();
     $scope.pickedShipper = null;
     $scope.taskList = [];
-
-
     $scope.displayedTaskCollection = [].concat($scope.taskList);
     $scope.oldTasks = [];//old Task
     getDataFromServer(true);
