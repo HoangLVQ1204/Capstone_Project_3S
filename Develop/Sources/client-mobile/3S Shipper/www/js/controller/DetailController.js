@@ -163,6 +163,31 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
       });
   };
 
+  $scope.nextStepConfirm = function step(confirmationCode) {
+    var urlBase = config.hostServer + 'api/shipper/nextstep/';
+    var data = {
+      confirmcode: confirmationCode,
+      code: $scope.order.orderid,
+      taskid: $stateParams.orderId
+    };
+    dataService.putDataServer(urlBase, data)
+      .then(function (rs) {
+        $ionicPopup.alert({
+          title: "Successfully!",
+          content: rs.data
+        }).then(function (rs) {
+          //Reload
+        getDetailFromServer();
+        });
+      },
+      function (err) {
+        $ionicPopup.alert({
+          title: "Can not go to next step of order",
+          content: "Error: " + err.data
+        })
+      });
+  };
+
   //// POPOVER (TOOLTIP)
   // .fromTemplateUrl() method
   $ionicPopover.fromTemplateUrl('status-popover.html', {

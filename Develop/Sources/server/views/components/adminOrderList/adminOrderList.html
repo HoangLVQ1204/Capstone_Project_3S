@@ -2,11 +2,11 @@
 
     <div class="nav-collapse" style="margin-left: 0px;">
 
-        <ol class="breadcrumb">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Library</a></li>
-            <li class="active">Data</li>
-        </ol>
+        <!--<ol class="breadcrumb">-->
+            <!--<li><a href="#">Home</a></li>-->
+            <!--<li><a href="#">Library</a></li>-->
+            <!--<li class="active">Data</li>-->
+        <!--</ol>-->
         <!-- //breadcrumb-->
 
         <div id="content">
@@ -38,7 +38,7 @@
                                                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> {{selectedDate.option}} <span class="caret"></span> </button>
                                                         <ul class="dropdown-menu align-xs-left" role="menu">
                                                             <li><a href="" ng-click="selectedDate = dateOptions[0]">Pickup Date</a></li>
-                                                            <li><a href="" ng-click="selectedDate = dateOptions[1]">Delivery Date</a></li>
+                                                            <li><a href="" ng-click="selectedDate = dateOptions[1]">Complete Date</a></li>
                                                         </ul>
                                                     </div>
                                                 </span>
@@ -70,7 +70,7 @@
                                         <th st-sort="pickupaddress" class="text-center sortable">Pickup Address</th>
                                         <th st-sort="deliveryaddress" class="text-center sortable">Delivery Address</th>
                                         <th st-sort="deliveryaddress" class="text-center sortable">Pickup Date</th>
-                                        <th st-sort="deliveryaddress" class="text-center sortable">Delivery Date</th>
+                                        <th st-sort="deliveryaddress" class="text-center sortable">Complete Date</th>
                                         <!--<th st-sort="order.storeid" class="text-center sortable">DateOfBirth</th>-->
                                         <th st-sort="orderstatus.statusname" class="text-center sortable">Status</th>
 
