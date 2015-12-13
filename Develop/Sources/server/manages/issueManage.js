@@ -17,6 +17,9 @@ module.exports = function (app) {
 
     var getIssueDetail = function (id) {
        // console.log(id);
+        if (id == null) throw new Error('Null Exception');
+        id = parseInt(id) ? parseInt(id) : 0;
+
         return db.issue.getIssueDetail(db.orderissue, db.issuetype, db.issuecategory, id, db.order, db.task, db.orderstatus, db.taskstatus, db.profile)
             .then(function (issue) {
                 var rs = issue.orderissues.map(function (order) {
@@ -35,7 +38,11 @@ module.exports = function (app) {
     };
 
     var updateResolveIssue = function (id, resolvetype) {
-       // console.log(id);
+        // console.log(id);
+        if (id == null || resolvetype == null) throw new Error('Null Exception');
+        id = parseInt(id) ? parseInt(id) : 0;
+        resolvetype = parseInt(resolvetype) ? parseInt(resolvetype) : 0;
+        if (resolvetype<1 || resolvetype>4) throw new Error('Bound Exception');
         return db.issue.updateResolveIssue(id, resolvetype)
             .then(function (issue) {
                 return issue;

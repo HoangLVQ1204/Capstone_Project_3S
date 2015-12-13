@@ -96,6 +96,7 @@ module.exports = function(app) {
     //function add new Shipper to system
     var addNewUser = function(user){
         // console.log('addNewUser', user);
+        if (user == null) throw new Error('Null Exception');
         server.socket.addShipper({ 
             shipperID: user.account.username, 
             isConnected: false 

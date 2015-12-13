@@ -40,8 +40,8 @@ app.set('io', {
 // setup routes
 require('./routes')(app);
 //
-var schedule       = require('./config/ledgerSchedule')( app);
-schedule.autoPayment();
+var schedule       = require('./util/ledgerSchedule')( app);
+schedule.autoPayment(0, 23, 59);
 
 
 // setup global error handler
