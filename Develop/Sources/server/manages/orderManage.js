@@ -136,20 +136,25 @@
     *This function use to calculateShipper for an Order 
     */
     var calculateShipFee = function(district, innerCity, ordertypeid){
-        if(innerCity.indexOf(district)> -1){
+        if(district && innerCity && ordertypeid){
+            if(innerCity.indexOf(district)> -1){
             if(ordertypeid == '1'){
                 fee = 10000;
             }else {
                 fee = 20000;
             }                
-        }else {
-            if(ordertypeid == '1'){
-                fee = 20000;
             }else {
-                fee = 30000;
-            }       
+                if(ordertypeid == '1'){
+                    fee = 20000;
+                }else {
+                    fee = 30000;
+                }       
+            }
+            return fee;    
+        }else{
+            return "Undefind";
         }
-        return fee;
+        
     }; 
 
 /*
@@ -157,22 +162,27 @@
      * This function is used to caculate over weight fee of order       
 */
     var calculateOverWeightFee = function (district, innerCity, listgoods){
-        var totalWeight = 0;
-        var overWeightFee = 0;
-        for(var i = 0; i <listgoods.length;i++){
-            totalWeight = totalWeight + listgoods[i].weight*listgoods[i].amount;
-        }                  
-        if(totalWeight > 4000 ){
+        if(district && innerCity && listgoods){
+            var totalWeight = 0;
+            var overWeightFee = 0;
+            for(var i = 0; i <listgoods.length;i++){
+                totalWeight = totalWeight + listgoods[i].weight*listgoods[i].amount;
+            }                  
+            if(totalWeight > 4000 ){
 
-            if(innerCity.indexOf(district)> -1){
-                overWeightFee = (totalWeight - 4000)*2*2;
+                if(innerCity.indexOf(district)> -1){
+                    overWeightFee = (totalWeight - 4000)*2*2;
 
-            }else {
-                overWeightFee = (totalWeight - 4000)*2*2.5;
+                }else {
+                    overWeightFee = (totalWeight - 4000)*2*2.5;
+                }
+
             }
-
+            return overWeightFee;    
+        }else {
+            return "Undefind";
         }
-        return overWeightFee;
+        
     }
 
 /*
@@ -193,7 +203,8 @@
     */
 
 function postOneOrder(data){
-    var newOrder = {};
+    if(data){
+        var newOrder = data.order;
         /*
          * By HuyTDH - 09/10/2015
          * This function is used to create ID for order       
@@ -209,49 +220,28 @@ function postOneOrder(data){
          var fee = calculateShipFee (district, innerCity,ordertypeid);         
          var overWeightFee = calculateOverWeightFee (district, innerCity,data.goods)
 
-         newOrder.storeid = data.order.storeid;
-         newOrder.ordertypeid = data.order.ordertypeid;
-         newOrder.pickupaddress = data.order.pickupaddress;
-         newOrder.deliveryaddress = data.order.deliveryaddress;
-         newOrder.recipientphone = data.order.recipientphone;
-         newOrder.recipientname = data.order.recipientname;
-         newOrder.statusid = data.order.statusid;
+         // newOrder.storeid = data.order.storeid;
+         // newOrder.ordertypeid = data.order.ordertypeid;
+         // newOrder.pickupaddress = data.order.pickupaddress;
+         // newOrder.deliveryaddress = data.order.deliveryaddress;
+         // newOrder.recipientphone = data.order.recipientphone;
+         // newOrder.recipientname = data.order.recipientname;
+         // newOrder.statusid = data.order.statusid;
          newOrder.ispending = 'false';
-         newOrder.isdraff = data.order.isdraff;        
+         //newOrder.isdraff = data.order.isdraff;        
          newOrder.createdate = new Date();         
          newOrder.fee = fee; 
          newOrder.overweightfee = overWeightFee;
-         newOrder.deliveryprovinceid = data.order.deliveryprovinceid;
-         newOrder.deliverydistrictid = data.order.deliverydistrictid;
-         newOrder.deliverywardid = data.order.deliverywardid;
+         // newOrder.deliveryprovinceid = data.order.deliveryprovinceid;
+         // newOrder.deliverydistrictid = data.order.deliverydistrictid;
+         // newOrder.deliverywardid = data.order.deliverywardid;
          newOrder.cod = parseInt(data.order.cod)?parseInt(data.order.cod):0;
 
-         var code1 = {
-            'codecontent' : parseInt(data.order.gatheringCode),
-            'typeid' : 2,
-            'orderid' : newOrder.orderid        
-        };
-        var code2 = {
-            'codecontent' : parseInt(data.order.deliverCode),
-            'typeid' : 6,
-            'orderid' : newOrder.orderid
-        };       
-
-        var code3 = {
-            'codecontent' : GenerateRandomCode(6),
-            'typeid' : 3,
-            'orderid' : newOrder.orderid
-        };        
-        var code4 = {
-            'codecontent' : GenerateRandomCode(6),
-            'typeid' : 5,
-            'orderid' : newOrder.orderid
-        };
-        var code5 = {
-            'codecontent' : GenerateRandomCode(6),
-            'typeid' : 4,
-            'orderid' : newOrder.orderid
-        };
+        var code1 = {'codecontent' : parseInt(data.order.gatheringCode),'typeid' : 2,'orderid' : newOrder.orderid};
+        var code2 = {'codecontent' : parseInt(data.order.deliverCode),'typeid' : 6,'orderid' : newOrder.orderid}; 
+        var code3 = {'codecontent' : GenerateRandomCode(6),'typeid' : 3,'orderid' : newOrder.orderid};        
+        var code4 = {'codecontent' : GenerateRandomCode(6),'typeid' : 5,'orderid' : newOrder.orderid};
+        var code5 = { 'codecontent' : GenerateRandomCode(6),'typeid' : 4, 'orderid' : newOrder.orderid};
         return db.order.postOneOrder(newOrder)
         .then(function (order) {
             db.confirmationcode.postOneCode(code1);
@@ -281,7 +271,9 @@ function postOneOrder(data){
 
         },function(err){
             throw err;
-        });
+        });    
+    }else{ return "data is empty"}
+    
 }
 
 /*
@@ -289,23 +281,24 @@ function postOneOrder(data){
     This function is use to update order when user edit info of an order
 */
 function updateOrder(req){
+    if(req){
     var district = req.body.order.deliverydistrictid;
     var innerCity = config.filterLocation.in;
-    var order = {}; 
     var updateOrder = req.body.order;
+    var order = updateOrder; 
     var listupdateGoods = req.body.listgoods;
     var clStoreid = req.user.stores[0].storeid;        
 
-    order.ordertypeid = updateOrder.ordertypeid;
-    order.recipientname = updateOrder.recipientname;
-    order.recipientphone = updateOrder.recipientphone;
-    order.deliveryaddress = updateOrder.deliveryaddress;
-    order.deliveryprovinceid = updateOrder.deliveryprovinceid;
-    order.deliverydistrictid = updateOrder.deliverydistrictid;
-    order.deliverywardid = updateOrder.deliverywardid;
-    order.ordertypeid = updateOrder.ordertypeid;
+    // order.ordertypeid = updateOrder.ordertypeid;
+    // order.recipientname = updateOrder.recipientname;
+    // order.recipientphone = updateOrder.recipientphone;
+    // order.deliveryaddress = updateOrder.deliveryaddress;
+    // order.deliveryprovinceid = updateOrder.deliveryprovinceid;
+    // order.deliverydistrictid = updateOrder.deliverydistrictid;
+    // order.deliverywardid = updateOrder.deliverywardid;
+    // order.ordertypeid = updateOrder.ordertypeid;
     order.fee = calculateShipFee (district, innerCity,updateOrder.ordertypeid);
-    order.cod = updateOrder.cod;
+    // order.cod = updateOrder.cod;
     order.overweightfee = calculateOverWeightFee (district, innerCity, listupdateGoods);
 
     return db.order.getOneOrder(updateOrder.orderid)
@@ -338,7 +331,9 @@ function updateOrder(req){
         }else {
             throw err;
         }
-    })
+    })    
+    }else{return "Data is empty"};
+    
 }
 
 var updateExpressOrder = function (req, res, next) {
@@ -364,22 +359,14 @@ var updateExpressOrder = function (req, res, next) {
         var deleteCode = db.confirmationcode.deleteConfirmCode(orderId);
         return Promise.all([deleteCode,deleteGoods]).then(function(data){
             throw new Error("Delete draft fail!");
-            //console.log("---DATA RES ---");
-            //console.log(data);
             db.order.deleteDraffOrder(orderId)
-            .then(function() {
-                throw new Error("Delete draft fail!");
+            .then(function(err) {
+                throw err;
             }, function(err) {
-                //console.log("--- ERROR DELETED ---");
-                //console.log(err);
-                //console.log("--- ERROR DELETED ---");
-                throw new Error("Delete draft fail!");
+                throw  err;
             });
-        },function(){
-            // //console.log("--- ERROR DELETED ---");
-            // //console.log(err);
-            // //console.log("--- ERROR DELETED ---");
-            throw new Error("Delete draft fail!");
+        },function(err){
+            throw err;
         });
     }
 
@@ -566,6 +553,8 @@ return {
     getOrderList: getOrderList,
     getTodayTotal: getTodayTotal,
     storeGetOrderList : storeGetOrderList,
-    countOrder : countOrder
+    countOrder : countOrder,
+    calculateShipFee : calculateShipFee,
+    calculateOverWeightFee: calculateOverWeightFee
 }
 }

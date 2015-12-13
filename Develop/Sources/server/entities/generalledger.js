@@ -149,7 +149,7 @@ module.exports = function(sequelize, DataTypes) {
           where: {
             'storeid': storeid
           }
-        })
+        }).then(sequelize.handler);
       }
   }
 });
