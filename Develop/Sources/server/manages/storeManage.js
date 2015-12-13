@@ -415,9 +415,8 @@ module.exports = function(app) {
             createStoreID: createStoreID,
             postNewManageStore: postNewManageStore,
             getAllStores: getAllStores,
-           getAllLedger: getAllLedger,
-           getLedgerOfStore: getLedgerOfStore,
-           storeGetAllLedger : storeGetAllLedger
-
+            getAllLedger: getAllLedger,
+            getLedgerOfStore: getLedgerOfStore,
+            storeGetAllLedger : storeGetAllLedger
     }
 }
