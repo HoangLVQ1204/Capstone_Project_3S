@@ -38,6 +38,7 @@ module.exports = function(app) {
        // console.log(newStore.address);
         //return
         // console.log('postNewStore:39', newStore);        
+        if (newStore == null) throw new Error('Null Exception');
 
         return gmapUtil.getLatLng(newStore.address).then(function (map) {
             newStore['latitude'] = map.latitude+"";
@@ -89,6 +90,7 @@ module.exports = function(app) {
 
     var getLatestLedgerOfStore = function(storeid){
         console.log('getLatestLedgerOfStore:82', storeid);
+        if (storeid == null) throw new Error('Null Exception');
         return db.generalledger.getLatestLedgerOfStore(storeid)
             .then(function(ledger) {
                 return ledger;
@@ -188,6 +190,7 @@ module.exports = function(app) {
 
     var updateLedgerForOrder = function(storeid){
         var ledger;
+        if (storeid == null) throw new Error('Null Exception');
         return db.generalledger.getLatestAutoAccountWithStoreID(storeid)
             .then(function(total) {
                 ledger = total;
@@ -206,7 +209,7 @@ module.exports = function(app) {
     };
 
     var postNewLedger = function(newLedger){
-
+        if (newLedger == null) throw new Error('Null Exception');
             return db.generalledger.postNewLedger(newLedger)
                 .then(function(ledger) {
                     //console.log(ledger);
@@ -234,6 +237,7 @@ module.exports = function(app) {
     }
 
     var getStoreDetail = function(storeid){
+        if (storeid == null) throw new Error('Null Exception');
         return db.store.getStoreDetail(storeid, db.managestore, db.user, db.profile)
             .then(function (store) {
                 return store;
@@ -333,6 +337,60 @@ module.exports = function(app) {
         return db.store.getAllStores().then(function(rs){
             return rs;
         })
+    };
+
+    var getAllLedger = function (req, res, next) {
+
+        return db.generalledger.getAllLedger(db.store, db.order)
+            .then(function (ledgerList) {
+                res.status(200).json(ledgerList);
+            }, function (err) {
+                next(err);
+            })
+    };
+
+    var getLedgerOfStore = function (req, res, next) {
+        var storeid = req.params.storeid;
+        var perioddate = req.params.perioddate;
+
+        if (req.params.perioddate != 'null')
+            perioddate = new Date(perioddate);
+
+        return db.generalledger.getLatestAutoAccountDate()
+            .then(function (ledger) {
+                if (ledger != null)
+                    db.generalledger.getLedgerOfStore(db.store, storeid, perioddate, ledger.paydate)
+                        .then(function (ledgerList) {
+                            res.status(200).json(ledgerList);
+                        }, function (err) {
+                            next(err);
+                        })
+            }, function (err) {
+                next(err);
+            })
+    };
+
+    /*
+     By KhanhKC
+     This function is use to get all transaction of a store
+     */
+    // var storeGetAllLedger = function (req, res, next) {
+    //     var storeId = req.user.stores[0].storeid;
+    //     db.generalledger.storeGetAllLedger(storeId)
+    //     .then(function(list){
+    //         res.status(200).json(list);
+    //     }, function(err) {
+    //         next(err);
+    //     });
+    // };
+
+    function storeGetAllLedger(storeid){
+        return db.generalledger.storeGetAllLedger(storeid)
+            .then(function(list){
+                return list;
+            }, function(err) {
+                throw err;
+            });
     }
 
        return {
@@ -356,7 +414,9 @@ module.exports = function(app) {
             createStoreOwnerID: createStoreOwnerID,
             createStoreID: createStoreID,
             postNewManageStore: postNewManageStore,
-            getAllStores: getAllStores
-
+            getAllStores: getAllStores,
+            getAllLedger: getAllLedger,
+            getLedgerOfStore: getLedgerOfStore,
+            storeGetAllLedger : storeGetAllLedger
     }
 }

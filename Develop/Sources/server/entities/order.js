@@ -241,7 +241,7 @@ module.exports = function(sequelize, DataTypes) {
             }
           ],
           order: 'createdate DESC'
-        });
+        }).then(sequelize.handler);
       },
 
       storeGetOneOrder: function (oderstatusModel, goodsModel,confirmationCodeModel, order_id) {
@@ -319,7 +319,7 @@ module.exports = function(sequelize, DataTypes) {
       deleteDraffOrder: function (orderid) {
         return order.destroy(
             { where: { orderid: orderid }}
-        )
+        ).then(sequelize.handler);
 		},
 
   		getTotalShipCoDOfStore: function(storeid, paydate){

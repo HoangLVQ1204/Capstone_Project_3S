@@ -21,8 +21,6 @@ module.exports = function(sequelize, DataTypes) {
           foreignKey: 'orderid',
           constraints: false
         });
-
-
       },
       createOrderIssue: function(newOrderIssue) {
         return orderissue.build(newOrderIssue).save();

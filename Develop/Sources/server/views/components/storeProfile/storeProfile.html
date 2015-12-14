@@ -8,7 +8,7 @@
         <div id="">
 
             <div class="row panel">
-                <div id="overview">
+<!--                 <div id="overview">
                     <div class="row">
                         <div class="col-sm-11">
                             <section class="profile-cover">
@@ -17,19 +17,14 @@
                                         <img alt="" src="assets/img/avatar5.png" class="circle">
                                         <span>{{store.managestores[0].user.profile.name}}</span>
                                     </div>
-                                    <!-- <a class="btn btn-theme" title="Add friends"><i class="fa fa-plus"></i> friends</a>
-                                    <a class="btn btn-theme-inverse" ><i class="fa fa-comments"></i> messages</a> -->
-                                </div>
-                                <!-- <div class="profile-status">
-                                    <a class="btn"> 14,548 <small>Sales</small></a>
-                                    <a class="btn"> 254 <small> Follower</small></a>
-                                </div> -->
+                                    </div>
+                                
                             </section>
                         </div>
                       
                     </div>
-                    <!-- //row-->
-                </div>
+                    
+                </div> -->
                 <br>
                 <div class="col-lg-8">
 
@@ -82,22 +77,18 @@
                             </form>
 
                               <br>
-                            <h3><strong>User</strong> Information</h3>
+                            <h3><strong>Manager</strong> Information</h3>
                             <hr>
                             
                             <form id="formID2" data-parsley-validate>
 
                                 <div class="form-group row" >                                    
 
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label" >Name</label>
-                                    <input disabled type="text" class="form-control" ng-model="store.managestores[0].user.profile.name" required placeholder="full name..">
-                                </div>
+                                </div>                                
                                 <div class="form-group row">
                                     <div class="col-md-6">
-                                        <label class="control-label">Registered Date</label>
-                                        <input disabled class="form-control" disabled value="{{store.registereddate|date:'dd/MM/yyyy'}}" parsley-americandate="true" required placeholder="Date of birth..">
+                                        <label class="control-label" >Name</label>
+                                        <input disabled type="text" class="form-control" ng-model="store.managestores[0].user.profile.name" required placeholder="full name..">
                                     </div>
                                     <div class="col-md-6">
                                         <label class="control-label" >Email Address</label>
@@ -118,13 +109,13 @@
                                     </div>
 
                                 </div>
-                                <div class="form-group">
+                               <!--  <div class="form-group">
                                     <label class="control-label">Address</label>
                                     <input disabled class="form-control" ng-model="store.address" placeholder="Address.." required>
-                                </div>
+                                </div> -->
                                 <hr>
                                 <div class="form-group">
-                                    <button disabled type="button" class="btn btn-theme" ng-click="update()"> Update</button>
+                                    <button disabled type="button" class="btn btn-theme" ng-click="update()"> Edit</button>
                                 </div>
                             </form>
                         </div>
