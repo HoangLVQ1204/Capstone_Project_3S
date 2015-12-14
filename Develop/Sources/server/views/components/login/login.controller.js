@@ -4,12 +4,6 @@
 
 function loginController($scope,$rootScope,$state,authService,config,socketStore,socketAdmin,socketShipper,socketService){
 
-
-    var showError = function(error){
-        $scope.showUserError = true;
-        $scope.errorMessage = error.message;
-    };
-
     $scope.submit = function(){
 
             var main=$("#main");
