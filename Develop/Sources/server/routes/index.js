@@ -6,7 +6,6 @@ var loginRoutes   = require('./loginRoutes');
 var userRoutes    = require('./api/userRoutes');
 var shipperRoutes = require('./api/shipperRoutes');
 var orderRoutes = require('./api/orderRoutes');
-var ledgerRoutes = require('./api/ledgerRoutes');
 var taskRoutes = require('./api/taskRoutes');
 var issueRoutes = require('./api/issueRoutes');
 var provinceRoutes = require('./api/provinceRoutes');
@@ -19,7 +18,6 @@ module.exports = function (app) {
     shipperRoutes(app);
     orderRoutes(app);
     storeRoutes(app);
-    ledgerRoutes(app);
     taskRoutes(app);
     issueRoutes(app);
     provinceRoutes(app);   

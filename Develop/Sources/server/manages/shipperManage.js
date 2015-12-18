@@ -23,6 +23,7 @@ module.exports = function (app) {
 
         return db.order.getAllTaskOfShipper(task, shipperid)
             .then(function (tasks) {
+                // console.log('getAllTaskOfShipper:26', tasks[0].tasks);
                 var group = {};
                 if (_.isEmpty(tasks) == false) {
                     var listTasks = [];
@@ -71,6 +72,9 @@ module.exports = function (app) {
      *
      * */
     var getHistory = function (shipperid, page) {
+        if(!parseInt(page)){
+            throw new Error("Page is not a number");
+        }
         var History = db.task;
         var Order = db.order;
         var OrderStatus = db.orderstatus;
@@ -109,7 +113,7 @@ module.exports = function (app) {
                 result['total'] = total;
                 return result;
             }, function (err) {
-                throw(err);
+                throw new Error(err.message);
             })
     };
 
@@ -118,9 +122,9 @@ module.exports = function (app) {
         var OrderStatus = db.orderstatus;
         var Goods = db.goods;
         var Task = db.task;
-        //var shipper = _.cloneDeep(req.user);
-        //var shipperid = shipper.username;
-        var shipperid = 'SP000001';
+        var shipper = _.cloneDeep(req.user);
+        var shipperid = shipper.username;
+        // var shipperid = 'SP000001';
         Order.getOrderDetailById(detailtaskid, shipperid, OrderStatus, Goods, Task)
             .then(function (rs) {
                 if (rs) {
@@ -339,7 +343,15 @@ module.exports = function (app) {
         var issueType;
         var task = db.task;
         var listStores = [];
-
+        if(_.isNull(shipperID) || _.isNull(issue) || _.isNull(orders) || _.isNull(categoryissue)) {
+            throw new Error('NullException');
+        }
+        categoryissue = parseInt(categoryissue)?parseInt(categoryissue):0;
+        if (categoryissue == 1 || categoryissue ==2) {
+            //continue
+        } else {
+            throw new Error('NullException');
+        }
         //Instance new Issue
         var newIssue = _.cloneDeep(issue);
         newIssue.isresolved = false;
@@ -347,8 +359,10 @@ module.exports = function (app) {
         newIssue.createddate = new Date();
         newIssue.sender =  shipperID;
 
-        // Update status of shipper
-        server.socket.updateIssueForShipper(shipperID, true);
+        // Update haveIssue of shipper
+        //console.log('shipperManage:352 newIssue', newIssue);
+        if (newIssue.typeid != 4 && newIssue.typeid != 5)
+            server.socket.updateIssueForShipper(shipperID, true);        
 
         return db.issue.createNewIssue(newIssue)
             .then(function(issue) {
@@ -356,8 +370,7 @@ module.exports = function (app) {
                 //UPDATE task status of task to 'Processing'
                 //Case: Pending
                 var newStatus = 4;
-
-                if (_.parseInt(categoryissue) === 1) {
+                if (categoryissue === 1) {
                     task.getTaskOfShipperByOrder(shipperID, 'pending', [])
                         .then(function(items){
                                 _.each(items, function(subitem){
@@ -428,19 +441,19 @@ module.exports = function (app) {
                     admins = admins.map(function(e) {
                         return e.toJSON();
                     })
-                    console.log('shipperController:446', admins);
+                    //console.log('shipperController:446', admins);
                     // insert to notification
                     var promises = admins.map(function(e) {
                         var data = _.clone(msgToAdmin, true);
                         data.username = e.username;
-                        console.log('data', data);
+                        //console.log('data', data);
                         return db.notification.addNotification(data);
                     });
 
                     return Promise.all(promises);
                 })
                 .then(function(data) {
-                    console.log('shipperController:458', data.length);
+                    //console.log('shipperController:458', data.length);
                     return db.order.getStoresOfOrder(orders);
                 })
                 .then(function (storeIDs) {
@@ -455,13 +468,13 @@ module.exports = function (app) {
                     ownerStores = ownerStores.map(function(e) {
                         return e.toJSON();
                     });
-                    console.log('shipperController:473', ownerStores);
+                    //console.log('shipperController:473', ownerStores);
 
                     // insert to notification to store
                     var promises = ownerStores.map(function(e) {
                         var data = _.clone(msgToStore, true);
                         data.username = e.managerid;
-                        console.log('data', data);
+                        //console.log('data', data);
                         return db.notification.addNotification(data);
                     });
 
@@ -469,8 +482,8 @@ module.exports = function (app) {
 
                 })
                 .then(function(data) {
-                    console.log('shipperController:480', data.length);
-                    console.log('send notification to store and admin');
+                    //console.log('shipperController:480', data.length);
+                    //console.log('send notification to store and admin');
                     // Send socket
                     var sender = {
                         type: 'shipper',
@@ -497,7 +510,7 @@ module.exports = function (app) {
                         );
                     //Issue Cancel
                     } else if (_.parseInt(categoryissue) === 2) {
-                        console.log("shipperMaanges:516", listStores);
+                        //console.log("shipperMaanges:516", listStores);
                         listStores.forEach(function(storeID){
                             server.socket.forward(
                                 sender,
@@ -522,7 +535,7 @@ module.exports = function (app) {
 
                 // Update data in socket
                 var listPending = [1,2,3,6];
-                if(listPending.indexOf(issueType) >= 0){
+                if(listPending.indexOf(issueType) >= 0){                    
                     server.socket.updatePendingOrder(shipperID, true);
                 };
 
@@ -538,8 +551,7 @@ module.exports = function (app) {
      * @author: quyennv
      */
     var changeIsPending = function(shipperid, issueId) {
-        // var shipperid = req.user.username;
-        // var issueId = req.body.issueId;
+        var issueId = parseInt(issueId)? parseInt(issueId) : 0;
         var result;
         var task = db.task;
         var order = db.order;
@@ -633,7 +645,7 @@ module.exports = function (app) {
                             return Promise.all(promises);
                         })
                         .then(function (data) {
-                            console.log('send notification continue to store');
+                            //console.log('send notification continue to store');
                             // send socket
                             var sender = {
                                 type: 'shipper',
@@ -652,13 +664,13 @@ module.exports = function (app) {
                             // server.socket.updateIssueForShipper(shipperid, false);
 
                             // Notify order canceled by Store
-                            console.log("ListOrderOfShipperWhenIssue+++++:688", listOrdersOfCurrentShip)
+                            //console.log("ListOrderOfShipperWhenIssue+++++:688", listOrdersOfCurrentShip)
                             db.order.getManyOrder(listOrdersOfCurrentShip)
                             .then(function(orderIDs){
                                 orderIDs = orderIDs.map(function(e) {
                                     return e.toJSON();
                                 });
-                                console.log("listOrderCanceled+++++++: 694", orderIDs);
+                                //console.log("listOrderCanceled+++++++: 694", orderIDs);
                                 if (orderIDs.length > 0) {
                                     //res message continue, but some order canceled by store
                                     deferred.resolve(resMess[3]);
@@ -829,26 +841,26 @@ module.exports = function (app) {
     var getAllShipperWithTaskForProcessing = function (req, res, next) {
         var shipperid = req.params.shipperid;
         var listReturn = [];
-        //console.log(shipperid)
+        ////console.log(shipperid)
         return db.user.getAllTaskProcessingOfShipper(db.task, db.profile, db.order, db.orderstatus, db.tasktype, db.taskstatus, shipperid)
             .then(function(shipperList) {
-                //console.log("--------------Data Task Shipper -------------------");
+                ////console.log("--------------Data Task Shipper -------------------");
 
-                //console.log(shipper);
+                ////console.log(shipper);
                 shipperList.forEach(function (shipper) {
                     var listTask = [];
                     var shiperObj = {};
-                    console.log(shipper);
+                    //console.log(shipper);
                     shipper['tasks'].forEach(function (task) {
                         var add = task.order.getCustomerAddress();
                         task = task.toJSON();
                         task['order']['deliveryaddress'] = add;
-                        //console.log(task);
+                        ////console.log(task);
                         listTask.push(task)
                     });
                     shipper = shipper.toJSON();
                     shipper['tasks']= listTask;
-                    //console.log(shipper.tasks[0].order);
+                    ////console.log(shipper.tasks[0].order);
                     //shiperObj = _.cloneDeep(shipper.toJSON());
                     //shipper['tasks'] = _.cloneDeep(rs);
                     listReturn.push(shipper);
@@ -862,7 +874,7 @@ module.exports = function (app) {
     };
 
     var updateTaskForShipper = function (shipperList) {
-
+        if (shipperList == null) throw new Error('Null Exception');
         shipperList.forEach(function(shipperTasks){
             if(shipperTasks.tasks) {
                 shipperTasks.tasks.forEach(function(task){
@@ -879,9 +891,9 @@ module.exports = function (app) {
             shipper.tasks.map(function (task) {
                 promise.push(db.task.assignTaskForShipper(task)
                     .then(function(newTask) {
-                        console.log(newTask)
+                        //console.log(newTask)
                          return newTask
-                        //console.log(newTask.taskid)
+                        ////console.log(newTask.taskid)
                     }, function(err) {
                         throw err;
                     }));

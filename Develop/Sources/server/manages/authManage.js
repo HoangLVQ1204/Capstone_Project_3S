@@ -25,9 +25,9 @@ module.exports  = function(app){
      * */
     var checkToken = function(){
         return function(req,res,next){
-            console.log("---DATA REQ---");
-            console.log(req.headers);
-            console.log("---DATA REQ---");
+            // console.log("---DATA REQ---");
+            // console.log(req.headers);
+            // console.log("---DATA REQ---");
             expressJwt(req,res,next);
         }
     };
@@ -104,7 +104,7 @@ module.exports  = function(app){
                         if(!user.authenticate(passWord)){
                             res.status(401).send('Wrong password');
                         }else if(user.isBanned()){
-                            console.log(user.isBanned());
+                            //console.log(user.isBanned());
                             res.status(401).send('Banned');
                         }else{
                             var loginTime = new Date()
@@ -168,7 +168,7 @@ module.exports  = function(app){
 
             var newToken = signToken(req.user);
 
-            console.log("New Token: "+newToken);
+            //console.log("New Token: "+newToken);
 
             res.json({
                 token: newToken

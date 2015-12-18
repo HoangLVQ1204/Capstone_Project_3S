@@ -84,14 +84,14 @@ module.exports = function(sequelize, DataTypes) {
           postOneStore: function(newStore){
             return store.build(newStore).save().then(function (store) {
                 return store;
-            }).then(sequelize.handler);
+            });
           },
 
           deleteStore: function (stores) {
             return stores.destroy()
           },
 
-          putStore: function(currentStore){
+          updateStore: function(currentStore){
             return currentStore.save();
           },
 
@@ -110,7 +110,7 @@ module.exports = function(sequelize, DataTypes) {
                 });
           },
 
-          getStoreLatestTotal: function (generalledger, bannedhistorylog, managestore, user){
+          getAllStoreWithLedger: function (generalledger, bannedhistorylog, managestore, user){
                 return store.findAll({
                     include: [{
                         model: generalledger,
@@ -145,7 +145,7 @@ module.exports = function(sequelize, DataTypes) {
                                 $in: liststoreid
                             }
                         }
-                    });
+                    }).then(sequelize.handler);
                 },
               //,
 

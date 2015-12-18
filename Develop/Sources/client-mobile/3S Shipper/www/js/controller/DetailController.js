@@ -2,9 +2,20 @@
  * Created by Kaka Hoang Huy on 10/19/2015.
  */
 
-function detailController($scope, $stateParams, dataService, $cordovaGeolocation, $ionicPopup, $ionicPopover, uiGmapGoogleMapApi, uiGmapIsReady, $rootScope, $ionicLoading, mapService, authService) {
-
+function detailController($scope, $stateParams, dataService, $cordovaGeolocation, $ionicPopup, $ionicPopover, uiGmapGoogleMapApi, uiGmapIsReady, $rootScope, $ionicLoading, mapService, authService) {  
   $scope.isCancel = $stateParams.isCancel;
+  $scope.shippers = mapService.getShipperMarkers();
+  $scope.stores = mapService.getStoreMarkers();
+  $scope.customers = mapService.getCustomerMarkers();
+  $scope.orders = mapService.getOrders();
+  var currentUser = authService.getCurrentInfoUser();
+  $scope.center = {
+      // :TODO get address of shipper
+      //latitude: currentUser.latitude,
+      //longitude: currentUser.longitude
+      latitude: 21.013419,
+      longitude: 105.526180
+  };
   //shipper category of issue = cancel
   if ($scope.isCancel == "true") {
     $scope.isBackdropShowing = false;
@@ -72,20 +83,6 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
       if(code) $scope.nextStepConfirm(code);
     });
   };  
-
-  $scope.shippers = mapService.getShipperMarkers();
-  $scope.stores = mapService.getStoreMarkers();
-  $scope.customers = mapService.getCustomerMarkers();
-  $scope.orders = mapService.getOrders();
-  var currentUser = authService.getCurrentInfoUser();
-  $scope.center = {
-      // :TODO get address of shipper
-      //latitude: currentUser.latitude,
-      //longitude: currentUser.longitude
-      latitude: 21.013419,
-      longitude: 105.526180
-  };
-  console.log($scope.center);
 
   getDetailFromServer();
 
@@ -180,7 +177,7 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
           content: rs.data
         }).then(function (rs) {
           //Reload
-          getDetailFromServer();
+        getDetailFromServer();
         });
       },
       function (err) {

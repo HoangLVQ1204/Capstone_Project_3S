@@ -12,37 +12,37 @@
         <div id="">
 
             <div class="row panel">
-                <div id="overview">
-                    <div class="row">
-                        <div class="col-sm-9">
-                            <section class="profile-cover">
-                                <div class="profile-avatar">
-                                    <div>
-                                        <img alt="" src="{{store.managestores[0].user.profile.avatar}}" class="circle">
-                                       <span> <a ui-sref="admin.userDetail({username: store.managestores[0].user.profile.username})"> {{store.managestores[0].user.profile.name}}</a></span>
-                                    </div>
-                                    <!--<a class="btn btn-theme" title="Add friends"><i class="fa fa-eye"></i> profile</a>-->
+                <!--<div id="overview">-->
+                    <!--<div class="row">-->
+                        <!--<div class="col-sm-9">-->
+                            <!--<section class="profile-cover">-->
+                                <!--<div class="profile-avatar">-->
+                                    <!--<div>-->
+                                        <!--<img alt="" src="{{store.managestores[0].user.profile.avatar}}" class="circle">-->
+                                       <!--<span> <a ui-sref="admin.userDetail({username: store.managestores[0].user.profile.username})"> {{store.managestores[0].user.profile.name}}</a></span>-->
+                                    <!--</div>-->
+                                    <!--&lt;!&ndash;<a class="btn btn-theme" title="Add friends"><i class="fa fa-eye"></i> profile</a>&ndash;&gt;-->
 
-                                </div>
-                                <!--<div class="profile-status">-->
-                                    <!--<a class="btn"> 14,548 <small>Sales</small></a>-->
-                                    <!--<a class="btn"> 254 <small> Follower</small></a>-->
                                 <!--</div>-->
-                            </section>
-                        </div>
-                         <!--//content > row > col-sm-9 -->
+                                <!--&lt;!&ndash;<div class="profile-status">&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<a class="btn"> 14,548 <small>Sales</small></a>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<a class="btn"> 254 <small> Follower</small></a>&ndash;&gt;-->
+                                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                            <!--</section>-->
+                        <!--</div>-->
+                         <!--&lt;!&ndash;//content > row > col-sm-9 &ndash;&gt;-->
 
-                        <div class="col-sm-3">
-                            <section class="profile-about">
-                                <h3>Description</h3>
-                                <hr>
-                                <p>{{store.description}}</p>
-                            </section>
-                        </div>
-                         <!--//content > row > col-lg-3 -->
-                    </div>
-                    <!-- //row-->
-                </div>
+                        <!--<div class="col-sm-3">-->
+                            <!--<section class="profile-about">-->
+                                <!--<h3>Description</h3>-->
+                                <!--<hr>-->
+                                <!--<p>{{store.description}}</p>-->
+                            <!--</section>-->
+                        <!--</div>-->
+                         <!--&lt;!&ndash;//content > row > col-lg-3 &ndash;&gt;-->
+                    <!--</div>-->
+                    <!--&lt;!&ndash; //row&ndash;&gt;-->
+                <!--</div>-->
                 <br>
                 <div>
 
@@ -61,6 +61,8 @@
                         <div class="col-md-8 ">
                             <br>
                             <h2><strong>{{store.name}}</strong></h2>
+                            <br>
+                            <h5>Manager: <a ui-sref="admin.userDetail({username: store.managestores[0].user.profile.username})"> {{store.managestores[0].user.profile.name}}</a></h5>
                             <hr>
                              <textarea class="form-control" id="sms-success"  rows="5" style="display:none">
 																	 <i class="fa fa-check-circle"></i> Update successfully<br>
@@ -111,7 +113,7 @@
                                 </div>
                                 <hr>
                                 <div class="form-group">
-                                    <button type="button" class="btn btn-theme" ng-click="update()"> Update</button>
+                                    <button type="button" class="btn btn-theme" ng-click="updateStore()"> Update</button>
                                 </div>
                             </form>
                         </div>

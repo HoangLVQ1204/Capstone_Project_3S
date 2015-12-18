@@ -3,6 +3,7 @@ var _ = require('lodash');
 
 module.exports = function (app) {
     var db = app.get('models');
+    var server = app.get('io');
 
     var getAllTask = function (req, res, next) {
 
@@ -64,10 +65,10 @@ module.exports = function (app) {
 
     var createTask = function(req,res,next){
         var taskData = req.body;
-        console.log('createTask', taskData);
+        //console.log('createTask', taskData);
         return db.task.createTaskForShipper(taskData)
                 .then(function(newTask) {
-                    console.log(newTask.taskid);
+                    //console.log(newTask.taskid);
                     res.status(201).json(newTask);
                 }, function(err) {
                     next(err);
@@ -76,10 +77,10 @@ module.exports = function (app) {
 
     var countProcessingTaskOfShipper = function(req,res,next){
         var shipperid = req.query.shipperid;
-        console.log(shipperid)
+        //console.log(shipperid)
         return db.task.countProcessingTaskOfShipper(shipperid)
                 .then(function(count) {
-                    //console.log(newTask.taskid);
+                    ////console.log(newTask.taskid);
                     res.status(200).json(count);
                 }, function(err) {
                     next(err);
@@ -89,9 +90,14 @@ module.exports = function (app) {
     var updateTaskStateOfIssue = function (req, res, next) {
         var issue = req.body;
         var promise = [];
-        issue.orderissues.map(function (orderissue) {
-            //console.log(orderissue.order);
-            if(orderissue.order.tasks.length>0)
+        //console.log('updateTaskStateOfIssue:93', issue);
+        issue.orderissues.map(function (orderissue) {            
+            if (issue.typeid == 4) {
+                server.socket.finishTask(orderissue.order.orderid, orderissue.order.storeid,
+                    orderissue.order.tasks[0].shipperid, { order: [orderissue.order.orderid] });
+            }
+
+            if(orderissue.order.tasks.length>0)                
                 promise.push(db.task.updateTaskStatusAndType(orderissue.order.tasks[0]));
             promise.push(db.order.updateOrderStatus(orderissue.order));
         });

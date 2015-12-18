@@ -24,19 +24,21 @@ function adminStoreListController($scope,$state, dataService, authService, confi
         ];
     $scope.selected =$scope.searchOptions[0];
     $scope.dateRange = '';
+    getDataFromServer();
 
-    //get latest date of auto calculate
-    dataService.getDataServer(config.baseURI + "/api/store/getLatestAutoAccountDate").then(function(response){
-        $scope.latestAutoDate= response.data;
-        $scope.fromAutoDate = new Date($scope.latestAutoDate);
-        $scope.fromAutoDate.setDate($scope.fromAutoDate.getDate()-7);
-    })
+    function getDataFromServer(){
+        //get latest date of auto calculate
+        dataService.getDataServer(config.baseURI + "/api/store/getLatestAutoAccountDate").then(function(response){
+            $scope.latestAutoDate= response.data;
+            $scope.fromAutoDate = new Date($scope.latestAutoDate);
+            $scope.fromAutoDate.setDate($scope.fromAutoDate.getDate()-7);
+        })
 
-    //get List to display
-    dataService.getDataServer(config.baseURI + "/api/store/getAllLedger").then(function(response){
-        $scope.storeList = response.data;
-        $scope.storeList.sort(dateSort);
-    }).then(function () {
+        //get List to display
+        dataService.getDataServer(config.baseURI + "/api/store/getAllLedger").then(function(response){
+            $scope.storeList = response.data;
+            $scope.storeList.sort(dateSort);
+        }).then(function () {
             $scope.storeList.map(function (store) {
                 //var resultCoD = $.grep($scope.currentCoD, function(e){ return e.storeid == store.storeid; });
                 //if ($scope.currentCoD.length > 0)
@@ -47,7 +49,7 @@ function adminStoreListController($scope,$state, dataService, authService, confi
                 //if ($scope.currentFee.length > 0)
                 //store.currentFee =  parseInt(resultFee[0].totalFee);
                 if (store.generalledgers.length > 0)
-                store.generalledgers[0].balance =  parseInt(store.generalledgers[0].balance);
+                    store.generalledgers[0].balance =  parseInt(store.generalledgers[0].balance);
 
                 dataService.getDataServer(config.baseURI + "/api/store/getLatestLedgerOfStore/" + store.storeid).then(function(response){
                     if (response.data!=null) {
@@ -61,15 +63,15 @@ function adminStoreListController($scope,$state, dataService, authService, confi
                     if (!store['currentFee']) store['currentFee']=0;
                     if (!store['currentCoD']) store['currentCoD']=0;
                     return store;
-                })
+                });
                 //console.log(store);
-            })
+            });
             //console.log($scope.storeList);
-        })
+        });
 
+        $scope.displayedCollection = [].concat($scope.storeList);
+    }
 
-
-    $scope.displayedCollection = [].concat($scope.storeList);
 
     //----------------------------------
     //FUNCTION SHOW CONFIRM PAYMENT MODAL
@@ -95,6 +97,10 @@ function adminStoreListController($scope,$state, dataService, authService, confi
     $scope.showConfirmAgain = function (event){
         //alert(1);
         if (!$scope.isValid) return;
+        if ($scope.payFee == 0) {
+            $.notific8($("#sms-fail-zero").val(), smsData);
+            return;
+        }
         event.preventDefault();
         //$scope.getLatestLedgerOfStore(storeid);
         //console.log( $scope.selectedStore.totalcod);

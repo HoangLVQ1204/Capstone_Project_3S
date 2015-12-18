@@ -18,7 +18,7 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
   $rootScope.$on("shipper:express:order:success", function(event, args) {
 	var des = {
 	  id: 999,
-	  content: 'You just grab a new order'
+	  content: 'You just grab a new order!s'
 	};
 	$scope.showAlert(des);
   });
@@ -57,7 +57,7 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
     console.log('Shipper: canceled:', args);
     var des = {
         id: 999,
-        content: 'Store ' + args.storeid + ' has found a shipper or canceled order'
+        content: 'Store ' + args.storeid + ' has found another shipper or canceled order'
     }
     $scope.showAlert(des);
   });
@@ -188,6 +188,7 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
 	  .then(function (res) {
 		var rs = res.data;
 		formatData(rs);
+		console.log('rrrrssss', rs);
 		//Hide IonicLoading without Issue Pending
 		if (!$scope.haveIssue) {
 		  $ionicLoading.hide();
@@ -223,7 +224,7 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
 	}
 	if (undefined !== rs['Express'] && rs['Express'].length) {
 	  isIssued(rs['Express']);
-	  $scope.expressTasks = rs['Express'];
+	  $scope.expressTasks = rs['Express'];	  
 	  $scope.badgeCountExpress = rs['Express'].length;
 	} else {
 	  $scope.expressTasks = [];

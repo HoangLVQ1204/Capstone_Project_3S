@@ -1,11 +1,15 @@
 /**
  * Created by Kaka Hoang Huy on 9/30/2015.
  */
-app.controller('HistoryCtrl', ['$scope', 'dataService', '$localstorage', function ($scope, dataFactory, $localstorage) {
+app.controller('HistoryCtrl', ['$scope', 'dataService', '$localStorage', function ($scope, dataFactory, $localstorage) {
   $scope.historyorders = [];
   $scope.totalTask = 0;
   $scope.totalLoaded = 0;
   $scope.page = 1;
+  // var localSaved = $localStorage.getObject('history');
+  // if(localSaved['data']){
+
+  // }
   getHistoryFromServer(1);
   $scope.loadMore = function(){
     getHistoryFromServer($scope.page);

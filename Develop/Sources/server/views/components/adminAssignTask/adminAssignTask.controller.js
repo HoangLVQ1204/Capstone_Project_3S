@@ -5,8 +5,6 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
     var currentUser = authService.getCurrentInfoUser();
     $scope.pickedShipper = null;
     $scope.taskList = [];
-
-
     $scope.displayedTaskCollection = [].concat($scope.taskList);
     $scope.oldTasks = [];//old Task
     getDataFromServer(true);
@@ -103,11 +101,6 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
 
 
     }
-
-
-
-
-
 
     $scope.assignTask = function () {
         dataService.putDataServer(config.baseURI + "/api/shipper/updateTaskForShipper", $scope.tasksList)

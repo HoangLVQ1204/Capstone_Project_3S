@@ -72,25 +72,7 @@ function adminTaskListController($scope,$state, dataService, $filter, config, $r
 
 
 
-    //----------------------------------
-    //FUNCTION SHOW CONFIRM PAYMENT MODAL
-    //-----------------------------------
-    $scope.showConfirm = function (event, store){
-        //alert(1);
-        $scope.payFee = 0;
-        $scope.payCoD = 0;
-        $scope.selectedStore = store;
-        event.preventDefault();
-        //$scope.getLatestLedgerOfStore(storeid);
-        //console.log( $scope.selectedStore.totalcod);
-        //var data=$(this).data();
-        var data = new Object();
-        data.effect="md-flipVer";
-        $("#md-effect-confirm").attr('class','modal fade').addClass(data.effect).modal('show');
-        $("#inputValue").val(0);
-        $scope.isValid = $('#inputValue').parsley( 'validate' );
 
-    };
 
     function ComparatorStatus(a,b){
         if (a.statusid < b.statusid) return -1;
