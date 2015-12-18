@@ -61,7 +61,14 @@ module.exports = function(server,app){
             receiver: receiver,
             msg: msg
         };
-        io.receiverSocket(receiver).emit(eventName, reply, callback);
+        try {
+            if (io.receiverSocket(receiver))
+                io.receiverSocket(receiver).emit(eventName, reply, callback);
+            else 
+                throw new Error('Invalid receiver');
+        } catch (e) {
+            throw new Error('Invalid receiver');
+        }
     };
 
     /*
@@ -78,12 +85,16 @@ module.exports = function(server,app){
         };
 
         var listEvents = [].concat(eventName);
-        [].concat(receiver).forEach(function(type, index) {
-            data.receiver = type;
-            var connection = io.receiverSocket(type);
-            if(connection) connection.emit(listEvents[index], data, callback);
-
-        });
+        try {
+            [].concat(receiver).forEach(function(type, index) {
+                data.receiver = type;
+                var connection = io.receiverSocket(type);
+                if(connection) connection.emit(listEvents[index], data, callback);
+                else throw new Error('Invalid receiver');
+            });
+        } catch (e) {
+            throw new Error('Invalid receiver');
+        }  
     };
 
     /*
@@ -91,15 +102,19 @@ module.exports = function(server,app){
         This function is used to add socket to room
      */
     io.addToRoom = function(socket, roomID) {
-        socket.join(roomID, function() {
-            console.log(socket.id, 'join to room', roomID);
-            console.log('Room ' + roomID+ ":::::: ");// + io.sockets.clients(roomID));
-            var clients_in_the_room = io.sockets.adapter.rooms[roomID];
-            for (var clientId in clients_in_the_room ) {
-                console.log('client: %s', clientId); //Seeing is believing
-                //var client_socket = io.sockets.connected[clientId];//Do whatever you want with this
-            }
-        });
+        if (socket) {
+            socket.join(roomID, function() {
+                console.log(socket.id, 'join to room', roomID);
+                console.log('Room ' + roomID+ ":::::: ");// + io.sockets.clients(roomID));
+                var clients_in_the_room = io.sockets.adapter.rooms[roomID];
+                for (var clientId in clients_in_the_room ) {
+                    console.log('client: %s', clientId); //Seeing is believing
+                    //var client_socket = io.sockets.connected[clientId];//Do whatever you want with this
+                }
+            });
+        } else {
+            throw new Error('Invalid input');
+        }  
     };
 
     /*
@@ -107,14 +122,18 @@ module.exports = function(server,app){
         This function is used to remove socket from room
      */
     io.leaveRoom = function(socket, roomID) {
-        socket.leave(roomID, function() {
-            console.log(socket.id, 'leave room', roomID);
-            console.log('Room ' + roomID+ ":::::: ");// + io.sockets.clients(roomID));
-            var clients_in_the_room = io.sockets.adapter.rooms[roomID];
-            for (var clientId in clients_in_the_room ) {
-                console.log('client: %s', clientId); //Seeing is believing
-            }
-        });
+        if (socket) {
+            socket.leave(roomID, function() {
+                console.log(socket.id, 'leave room', roomID);
+                console.log('Room ' + roomID+ ":::::: ");// + io.sockets.clients(roomID));
+                var clients_in_the_room = io.sockets.adapter.rooms[roomID];
+                for (var clientId in clients_in_the_room ) {
+                    console.log('client: %s', clientId); //Seeing is believing
+                }
+            });
+        } else {
+            throw new Error('Invalid input');
+        }
     };
 
 
@@ -423,7 +442,8 @@ module.exports = function(server,app){
         result.customer = [];
         result.orders = {};
 
-        var store = io.getOneStore(storeID);
+        if (!io.containStore(storeID)) return result;
+        var store = io.getOneStore(storeID);        
         result.store.push(store);
         store.order.forEach(function(orderID) {            
             result.orders[orderID] = _.clone(io.orders[orderID], true);
@@ -477,6 +497,7 @@ module.exports = function(server,app){
         result.customer = [];
         result.orders = {};
 
+        if (!io.containShipper(shipperID)) return result;
         var shipper = io.getOneShipper(shipperID);
         result.shipper.push(shipper);
         shipper.order.forEach(function(orderID) {
@@ -606,6 +627,7 @@ module.exports = function(server,app){
     };
 
     io.getOneStore = function(storeID) {
+        if (!io.containStore(storeID)) return null;
         var store = _.clone(io.stores[storeID], true);
         return {            
             storeID: storeID,
@@ -786,6 +808,7 @@ module.exports = function(server,app){
         This function is used to get Shipper Info by SocketID
      */
     io.getShipperBySocketID = function(socketID) {
+        if (!socketID) return null;
         var shipperIDs = Object.keys(io.shippers);
         var shipperID = _.find(shipperIDs, function(e) {
             return io.shippers[e].socketID === socketID;
@@ -795,7 +818,6 @@ module.exports = function(server,app){
     };
 
     io.disconnectShipper = function(shipperID) {
-        console.log('disconnectShipper');
         var temp = _.clone(io.shippers[shipperID], true);
         temp.isConnected = false;
         if (temp.order.length > 0)
@@ -810,7 +832,8 @@ module.exports = function(server,app){
          This function is used to get Shipper Info by ShipperID
      */
     io.getOneShipper = function(shipperID) {
-        var shipper = _.clone(io.shippers[shipperID], true);
+        if (!io.containShipper(shipperID)) return null;
+        var shipper = _.clone(io.shippers[shipperID], true);        
         return {
             shipperID: shipperID,
             order: shipper.order,

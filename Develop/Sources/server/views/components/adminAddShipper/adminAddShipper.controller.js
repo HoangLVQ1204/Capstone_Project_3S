@@ -20,8 +20,8 @@ function adminAddShipperController($scope,$state, $http, $filter, config, dataSe
             //console.log(response);
         });
 
-    $scope.createShipper = function () {
-       var valid = $('#formID').parsley( 'validate' );
+    $scope.createShipper = function () {        
+       var valid = $('#formID').parsley( 'validate' );       
         if (!valid) return;
         $scope.newShipper.account.userrole = 1;
         $scope.newShipper.account.userstatus = 2;
