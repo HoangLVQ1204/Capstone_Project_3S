@@ -164,5 +164,5 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
     $httpProvider.interceptors.push('jwtInterceptor');
 
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/tasks');
+    $urlRouterProvider.otherwise('/app/tasks');
   });
