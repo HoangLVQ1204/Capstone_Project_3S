@@ -39,12 +39,16 @@ app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService',
                 message: 'Username or Password is invalid. Try again.'
               });
             } else {
-              socketService.authenSocket()
-                .then(function(){
-                  socketShipper.registerSocket();
-                  $state.go('app.tasks');
-                  //$ionicLoading.hide();
-                });
+              socketService.connect()
+              .then(function() {
+                socketShipper.initHandlers();
+                return socketService.authenSocket();
+              })
+              .then(function(){
+                socketShipper.registerSocket();
+                $state.go('app.tasks');
+                //$ionicLoading.hide();
+              });
             }
           }
         })
