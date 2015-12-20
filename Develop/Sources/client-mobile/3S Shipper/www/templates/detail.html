@@ -27,7 +27,7 @@
 
           <p class="detail-p statusDn label">{{order.orderstatus.status}}</p>
         </div>
-        <div class="item item-input">
+        <div class="item item-input" ng-if="order.tasks[0].typeid != 1">
           <span class="input-label">Recipient:</span>
 
           <p class="detail-p">{{order.recipientname}}<br/>{{order.recipientphone}}</p>
