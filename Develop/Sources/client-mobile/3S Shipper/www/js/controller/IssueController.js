@@ -82,6 +82,12 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
           'val': item.orderid,
           'text': item.orderid
         });
+        if (item.orderstatusid == 3) {
+          listGoodIsBroken.push({
+            'val': item.orderid,
+            'text': item.orderid
+          });
+        }
       });
     }
     if (undefined !== rs['Ship'] && rs['Ship'].length) {
@@ -133,7 +139,6 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
             'val': item.orderid,
             'text': item.orderid
           });
-          
         }
 
         listOrderInactive.push({

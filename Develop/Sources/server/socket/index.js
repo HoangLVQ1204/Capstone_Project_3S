@@ -67,7 +67,8 @@ module.exports = function(server,app){
             else 
                 throw new Error('Invalid receiver');
         } catch (e) {
-            throw new Error('Invalid receiver');
+            console.error('io.forward ' + e);
+            // throw new Error('Invalid receiver');
         }
     };
 
@@ -93,7 +94,8 @@ module.exports = function(server,app){
                 else throw new Error('Invalid receiver');
             });
         } catch (e) {
-            throw new Error('Invalid receiver');
+            console.error('io.forward ' + e);
+            // throw new Error('Invalid receiver');
         }  
     };
 

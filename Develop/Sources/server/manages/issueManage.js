@@ -111,7 +111,8 @@ module.exports = function (app) {
                     if (_.isEmpty(tasks) == false) {
                         _.each(tasks, function(task){
                                 listOrders.push(task.orderid);
-                        })
+                        });
+                        console.log("issueManage: 115", listOrders);
                         //Add new issue
                         db.issue.createNewIssue(issueDisconnect)
                         .then(function(issue){
