@@ -15,7 +15,7 @@
             <ul class="nav navbar-nav navbar-right tooltip-area">
                 <li class="hidden-xs hidden-sm"><a href="#" class="h-seperate">Help</a></li>
                 <li>
-                    <a href="/#/store/notification"  class="avatar-header">
+                    <a ui-sref="store.notification" class="avatar-header">
                         <img alt="" ng-src="{{inforUser.avatar}}"  class="circle">
                         <span class="badge" ng-show="$root.numberUnreadNoti">{{ $root.numberUnreadNoti }}</span>
                     </a>
@@ -27,7 +27,7 @@
                     <ul class="dropdown-menu pull-right icon-right arrow">
                         <li><a ui-sref="store.storeProfile"><i class="fa fa-user"></i> Profile</a></li>
                         <li class="divider"></li>
-                        <li><a href="#" ng-click="signOut()"><i class="fa fa-sign-out"></i> Signout </a></li>
+                        <li><a ui-sref="login" ng-click="signOut()"><i class="fa fa-sign-out"></i> Signout </a></li>
                     </ul>
                     <!-- //dropdown-menu-->
                 </li>

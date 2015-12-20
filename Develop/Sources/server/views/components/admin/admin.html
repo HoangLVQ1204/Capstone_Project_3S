@@ -17,7 +17,7 @@
             <!--</ul>-->
             <ul class="nav navbar-nav navbar-right tooltip-area">
                
-                <li><a href="/#/admin/notification" class="avatar-header">
+                <li><a ui-sref="admin.notification" class="avatar-header">
                     <img alt="" src="{{admin.avatar}}"  class="circle">
                     <span class="badge" ng-show="$root.numberUnreadNoti">{{ $root.numberUnreadNoti }}</span>
                 </a>
@@ -29,7 +29,7 @@
                     <ul class="dropdown-menu pull-right icon-right arrow">
                         <li><a ui-sref="admin.userDetail({username: admin.username})"><i class="fa fa-user"></i> Profile</a></li>
                         <li class="divider"></li>
-                        <li><a href="#" ng-click="signOut()"><i class="fa fa-sign-out"></i> Signout </a></li>
+                        <li><a ui-sref="login" ng-click="signOut()"><i class="fa fa-sign-out"></i> Signout </a></li>
                     </ul>
                     <!-- //dropdown-menu-->
                 </li>
