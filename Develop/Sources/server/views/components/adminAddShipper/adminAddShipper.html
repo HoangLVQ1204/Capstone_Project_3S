@@ -43,7 +43,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label class="control-label">Indentity Card</label>
-                                        <input type="text" class="form-control" ng-model="newShipper.profile.identitycard" required parsley-rangelength="[9,9]" parsley-type="digits" placeholder="Indentity card..">
+                                        <input type="text" class="form-control" ng-model="newShipper.profile.identitycard" required parsley-rangelength="[9,12]" parsley-type="digits" placeholder="Indentity card..">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -63,9 +63,9 @@
                                     <!--<label class="control-label">Confirm Password</label>-->
                                     <!--<input type="password" class="form-control"  parsley-trigger="keyup" required  parsley-equalto="#pword" placeholder="Confirm Password" parsley-error-message="Password don't match" >-->
                                 <!--</div>-->
-
                                 <div class="form-group row">
                                     <div class="col-md-6">
+                                        <input type="hidden" id="elemCurrent" value="12/10/2015">
                                         <label class="control-label">Date of birth</label>
                                         <input class="form-control"  value="10/24/1984" single-date-picker ng-model="newShipper.profile.dob" parsley-americandate="true" required placeholder="Date of birth..">
 
@@ -73,7 +73,7 @@
 
                                     <div class="col-md-6">
                                         <label class="control-label">Phone number</label>
-                                        <input type="text" class="form-control" ng-model="newShipper.profile.phonenumber" parsley-type="digits" parsley-rangelength="[10,11]" required placeholder="Phone number..">
+                                        <input type="text" class="form-control" ng-model="newShipper.profile.phonenumber" parsley-type="phone" parsley-rangelength="[10,15]" required placeholder="Phone number..">
                                     </div>
 
                                 </div>

@@ -77,12 +77,16 @@ module.exports = function(app) {
     };
 
     var putProfile = function (req, res, next) {
-        var curUser = req.userRequest.profile.toJSON();
+        console.log(req.userRequest.toJSON());
+        var curUser = {};
+        if (req.userRequest.profile)
+            curUser = req.userRequest.profile.toJSON();
         var newUser = req.body;
         //console.log(curUser);
         //console.log(newUser);
 
         _.merge(curUser, newUser);
+        console.log('putProfile', curUser, newUser);
 
         //delete curUser.profile;
         return db.profile.updateProfile(curUser)
