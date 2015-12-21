@@ -220,22 +220,26 @@ function postOneOrder(data){
          var fee = calculateShipFee (district, innerCity,ordertypeid);         
          var overWeightFee = calculateOverWeightFee (district, innerCity,data.goods)
 
-         // newOrder.storeid = data.order.storeid;
-         // newOrder.ordertypeid = data.order.ordertypeid;
-         // newOrder.pickupaddress = data.order.pickupaddress;
-         // newOrder.deliveryaddress = data.order.deliveryaddress;
-         // newOrder.recipientphone = data.order.recipientphone;
-         // newOrder.recipientname = data.order.recipientname;
-         // newOrder.statusid = data.order.statusid;
+         newOrder.storeid = data.order.storeid;
+         newOrder.ordertypeid = data.order.ordertypeid;
+         newOrder.pickupaddress = data.order.pickupaddress;
+         newOrder.deliveryaddress = data.order.deliveryaddress;
+         newOrder.recipientphone = data.order.recipientphone;
+         newOrder.recipientname = data.order.recipientname;
+         newOrder.statusid = data.order.statusid;
          newOrder.ispending = 'false';
-         //newOrder.isdraff = data.order.isdraff;        
+         newOrder.isdraff = data.order.isdraff;   
+         newOrder.ledgerid = null;   
          newOrder.createdate = new Date();         
+         newOrder.pickupdate = null;
+         newOrder.completedate = null;
          newOrder.fee = fee; 
          newOrder.overweightfee = overWeightFee;
-         // newOrder.deliveryprovinceid = data.order.deliveryprovinceid;
-         // newOrder.deliverydistrictid = data.order.deliverydistrictid;
-         // newOrder.deliverywardid = data.order.deliverywardid;
+         newOrder.deliveryprovinceid = data.order.deliveryprovinceid;
+         newOrder.deliverydistrictid = data.order.deliverydistrictid;
+         newOrder.deliverywardid = data.order.deliverywardid;
          newOrder.cod = parseInt(data.order.cod)?parseInt(data.order.cod):0;
+         // console.log(newOrder.createdate);
 
         var code1 = {'codecontent' : parseInt(data.order.gatheringCode),'typeid' : 2,'orderid' : newOrder.orderid};
         var code2 = {'codecontent' : parseInt(data.order.deliverCode),'typeid' : 6,'orderid' : newOrder.orderid}; 
@@ -270,6 +274,7 @@ function postOneOrder(data){
             return response;
 
         },function(err){
+            console.log('orderManage.js:274', err);
             throw err;
         });    
     }else{ return "data is empty"}
@@ -289,16 +294,16 @@ function updateOrder(req){
     var listupdateGoods = req.body.listgoods;
     var clStoreid = req.user.stores[0].storeid;        
 
-    // order.ordertypeid = updateOrder.ordertypeid;
-    // order.recipientname = updateOrder.recipientname;
-    // order.recipientphone = updateOrder.recipientphone;
-    // order.deliveryaddress = updateOrder.deliveryaddress;
-    // order.deliveryprovinceid = updateOrder.deliveryprovinceid;
-    // order.deliverydistrictid = updateOrder.deliverydistrictid;
-    // order.deliverywardid = updateOrder.deliverywardid;
-    // order.ordertypeid = updateOrder.ordertypeid;
+    order.ordertypeid = updateOrder.ordertypeid;
+    order.recipientname = updateOrder.recipientname;
+    order.recipientphone = updateOrder.recipientphone;
+    order.deliveryaddress = updateOrder.deliveryaddress;
+    order.deliveryprovinceid = updateOrder.deliveryprovinceid;
+    order.deliverydistrictid = updateOrder.deliverydistrictid;
+    order.deliverywardid = updateOrder.deliverywardid;
+    order.ordertypeid = updateOrder.ordertypeid;
     order.fee = calculateShipFee (district, innerCity,updateOrder.ordertypeid);
-    // order.cod = updateOrder.cod;
+    order.cod = updateOrder.cod;
     order.overweightfee = calculateOverWeightFee (district, innerCity, listupdateGoods);
 
     return db.order.getOneOrder(updateOrder.orderid)

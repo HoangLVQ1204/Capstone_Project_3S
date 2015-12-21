@@ -26,11 +26,14 @@ var app = angular.module('starter', ['ionic', 'ngCordova','uiGmapgoogle-maps','a
         StatusBar.styleDefault();
       }
     });
-    //window.localStorage.removeItem('EHID');
+    // window.localStorage.removeItem('EHID');
     ////Check Is firt time sign in
     if (authService.isLogged()) {
-      socketService.authenSocket()
-        .then(function(){
+      socketService.connect()
+      .then(function() {
+        socketShipper.initHandlers();
+        return socketService.authenSocket();
+      }).then(function(){
           socketShipper.registerSocket();
           $rootScope.isGrabbing = false;
           $state.go("app.tasks");
@@ -164,5 +167,5 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
     $httpProvider.interceptors.push('jwtInterceptor');
 
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/tasks');
+    $urlRouterProvider.otherwise('sign-in');
   });
