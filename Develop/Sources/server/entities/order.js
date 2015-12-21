@@ -103,9 +103,10 @@ module.exports = function(sequelize, DataTypes) {
     freezeTableName: true,
     timestamps: false,
     instanceMethods: {
-      updateOrderStatus: function (nextStatus, completeDate, stockID) {
+      updateOrderStatusShipper: function (nextStatus, pickDate, completeDate, stockID) {
         return this.update({
           statusid: nextStatus,
+          pickupdate: pickDate,
           completedate: completeDate,
           stockid: stockID
         })
