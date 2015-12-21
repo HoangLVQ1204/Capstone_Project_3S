@@ -6,7 +6,7 @@
 function socketShipper($rootScope, $q,socketService,authService,mapService, $ionicLoading, $timeout) {
 
 
-  var EPSILON = 1e-4;
+  var EPSILON = 1e-6;
 
   var currentLocation = null;
   var api = {};
