@@ -492,10 +492,12 @@ var getTodayTotal = function (req, res, next) {
     var total = new Object();
     db.order.getTodayTotalDelivery()
     .then(function(fee){
+           // console.log(fee);
         db.order.getTodayTotalCoD()
         .then(function(cod){
             total['fee'] = fee;
             total['cod'] = cod;
+
             res.status(200).json(total);
         }, function(err) {
             next(err);

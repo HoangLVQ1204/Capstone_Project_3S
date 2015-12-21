@@ -477,21 +477,26 @@ module.exports = function(sequelize, DataTypes) {
 
       //// HoangNK - get total delivery and cod of day
       getTodayTotalDelivery: function () {
-        //console.log( moment().format('DD/MM/YYYY'));
+
+        var newDate =  new Date();
+        newDate.setHours(0,0,0,0);
+        //console.log(newDate);
         return order.sum('fee',{
           where: {
-            completedate: moment().format(),
-            statusid: [7,8]
+            'completedate': {$gte: newDate},
+            'statusid': [7,8]
           }
         })
       },
 
       getTodayTotalCoD: function () {
         //console.log( moment().format('DD/MM/YYYY'));
+        var newDate =  new Date();
+        newDate.setHours(0,0,0,0);
         return order.sum('cod',{
           where: {
-            completedate: moment().format(),
-            statusid: [7,8]
+            'completedate': {$gte: newDate},
+            'statusid': [7,8]
           }
         })
       },

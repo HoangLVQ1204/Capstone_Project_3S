@@ -95,6 +95,7 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
                     //console.log($scope.orderList);
                 });
                 //$scope.moveAllProcessingTask($scope.originShipperID);
+                getShipperOnline();
             })
         })
 
@@ -329,15 +330,34 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
     //    //}
     //}
 
-    $rootScope.$on("shipper:change:order:status", function(event,args){
-        getDataFromServer(false);
+    //$rootScope.$on("shipper:change:order:status", function(event,args){
+    //    getDataFromServer(false);
+    //});
+
+    $rootScope.$on("shipper:change:task:active", function(dataMsg){
+        console.log(dataMsg);
+        //getDataFromServer(false)
     });
 
-    $rootScope.$on("shipper:change:task:status", function(event,args){
-        getDataFromServer(false)
+    function getShipperOnline(){
+        socketAdmin.listShippers.map(function (shipper) {
+
+            var result = $.grep($scope.shipperList, function(e){ return e.username == shipper.shipperID; });
+            // console.log('getShipperOnline', shipper, result);
+            if (result.length > 0)
+                if (shipper.isConnected)
+                    result[0]['workingStatus'] = 'Online';
+                else
+                    result[0]['workingStatus'] = 'Offline';
+        });
+        //console.log($scope.shipperList);
+    };
+
+    $rootScope.$on("admin:dashboard:getShipperList", function(event, args){
+
+        getShipperOnline();
+
     });
-
-
 }
 
 adminAssignTaskController.$inject = ['$scope','$state', '$http', 'authService', 'config', 'dataService','socketAdmin', '$rootScope'];
