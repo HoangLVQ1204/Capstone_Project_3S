@@ -5,46 +5,52 @@
 app.controller('ChangeStatusCtrl', ['$scope', '$ionicPopup', 'dataService', function ($scope, $ionicPopup, dataService) {
   $scope.isDisabled = false;
   $scope.tasks = {};
-  $scope.status = true;
+  $scope.menu = {
+    status: true
+  };
   var co = 0;
   var getStatus = function(){
     var urlStatus =  config.hostServer + 'api/shipper/status';
     dataService.getDataServer(urlStatus).then(function(stt){
-      $scope.status = stt.data;
-      console.log(stt.data);
+      $scope.menu.status = stt.data.statusss;
     });
   };
   getStatus();
   $scope.changeStatus = function () {
-    var urlCountTask = config.hostServer + 'api/shipper/countTasks';
-    dataService.getDataServer(urlCountTask).then(function (rs) {
-      $scope.tasks = rs.data;
-      console.log($scope.tasks.Active);
-      if ($scope.tasks.Active > 0) {
-        console.log('11111112');
-        var content = "You have " + $scope.tasks.Active + " active task(s)." +
-          "You need to finish or send issue to cancel your task first!";
-        showAlert("Error", content);
-      } else {
-        if ($scope.Inactive > 0) {
-          var msg = "You have " + $scope.Inactive + " undone task(s)! If you go offline, your task will be remove! Still want to offline?";
-          showConfirm("Warning", msg).then(function () {
-            if (res) {
-              sendChangeRequest();
-            }
-          });
+    $scope.menu.status = !$scope.menu.status;
+    if(!$scope.menu.status){
+      sendChangeRequest();  
+    }else{
+      var urlCountTask = config.hostServer + 'api/shipper/countTasks';
+      dataService.getDataServer(urlCountTask).then(function (rs) {
+        $scope.tasks = rs.data;
+        console.log($scope.tasks.Active);
+        if ($scope.tasks.Active > 0) {
+          var content = "You have " + $scope.tasks.Active + " active task(s)." +
+            "You need to finish or send issue to cancel your task first!";
+          showAlert("Error", content);
+        } else {
+          if ($scope.Inactive > 0) {
+            var msg = "You have " + $scope.Inactive + " undone task(s)! If you go offline, your task will be remove! Still want to offline?";
+            showConfirm("Warning", msg).then(function () {
+              if (res) {
+                sendChangeRequest();
+              }
+            });
+          }
         }
-      }
-    }, function (er) {
-      showAlert("Error", "Fail to load data from server!");
-    });
+      }, function (er) {
+        showAlert("Error", "Fail to load data from server!");
+      });
+    }
   };
   var sendChangeRequest = function () {
     var urlBase = config.hostServer + 'api/shipper/change-status';
     var data = {
-      status: !$scope.status
+      status: !$scope.menu.status
     };
     dataService.putDataServer(urlBase, data).then(function (rs) {
+      $scope.menu.status = !$scope.menu.status;
       showAlert("Success", "Your status has been changed!");
     }, function (er) {
       showAlert("Error", er.data);

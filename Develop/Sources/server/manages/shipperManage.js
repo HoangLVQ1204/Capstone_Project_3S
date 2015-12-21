@@ -213,7 +213,15 @@ module.exports = function (app) {
                         createddate: new Date()
                     };
                     var msgAdmin = {
-                        taskid: taskid
+                        type: 'info',
+                        title: 'Info: Change Status Order',
+                        content: orderObj.orderid + " changes status.",
+                        taskid: taskid,
+                        // url: '#/admin/orderdetail?orderid='+orderObj.orderid
+                        url: '#/admin/dashboard'
+                    };
+                    var msgAdminTask = {
+                        orderid: orderObj.orderid
                     };
                     var customer = {
                         order: [orderObj.orderid],
@@ -918,16 +926,8 @@ module.exports = function (app) {
     var getShipperStatus = function(req, res, next){
         var shipper = _.cloneDeep(req.user);
         var shipperid = shipper.username;
-        var User = db.user;
-        //User.getShipperStatus(shipperid).then(function(rs){
-        //    rs = rs.toJSON();
-        //    var rss = (rs.status != 1);
-        //    res.status(200).json(rss);
-        //},function(er){
-        //    res.status(400).json("Cant not get status of shipper!");
-        //});
-        //// TODO: Only change status on socket
-        res.status(200).json({'status': true});
+        var stt = server.socket.shippers[shipperid].isConnected;
+        res.status(200).json({'status': stt});
     };
     //// END - Get status of shipper
 
@@ -1016,22 +1016,12 @@ module.exports = function (app) {
     //// START change status of shipper
     //// HuyTDH 03-11-15
     var changeShipperStatus = function(req, res, next){
-        var shipperid =  req.user.username;
+        var shipper = _.cloneDeep(req.user);
+        var shipperid = shipper.username;
         var data = _.cloneDeep(req.body);
-        var User = db.user;
-        User.findUserByUsername(shipperid)
-        .then(function(shipper){
-             if(shipper){
-                 shipper.workingstatus = data.status;
-                User.putUser(shipper).then(function(rs){
-                    res.status(200).json("Change status successfully!");
-                }, function(er){
-                    res.status(400).json("Can not change your status");
-                });
-             }
-        },function(err){
-            res.status(400).json("Can not change your status");
-        });
+        var status = data.status;
+        server.socket.shippers[shipperid].isConnected = status;
+        res.status(200).json("Change status successfully!");
     };
     //// END change status of shipper
 
