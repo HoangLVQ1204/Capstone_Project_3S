@@ -136,6 +136,9 @@ module.exports = function (app) {
             shipperCtrl.nextStep(shipperid, data).then(function(rs){
                 return res.status(200).json(rs);
             })
+            .catch(function(err){
+                return res.status(400).json(err.message);
+            })
         });
 
     app.route('/api/shipper/mapdata/:order')
