@@ -561,6 +561,9 @@ module.exports = function(server,app){
             result.store.push(io.getOneStore(storeID));            
         });
         result.customer = _.clone(io.customers, true);
+        // result.customer = result.customer.filter(function(e) {
+        //     return !!io.orders[e.order[0]];
+        // });
         result.orders = _.clone(io.orders, true);
         
         // console.log('getDataForAdmin', result);
@@ -659,13 +662,19 @@ module.exports = function(server,app){
     };
 
     io.removeOrder = function(orderID) {
+        var shipperID = io.orders[orderID].shipperID;
+        var storeID = io.orders[orderID].storeID;
+        var customer = { order: [orderID] };
+        io.removeOrderOfShipper(shipperID, orderID);
+        io.removeOrderOfStore(storeID, orderID);
+        io.removeCustomer(customer);
         delete io.orders[orderID];
     };
 
     io.removeOrderFull = function(orderID) {
         var shipperID = io.orders[orderID].shipperID;
         var storeID = io.orders[orderID].storeID;
-        
+        var customer = { order: [orderID] };
     };
 
     io.updateOrder = function(orderID, newOrder) {
