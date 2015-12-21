@@ -21,6 +21,8 @@ module.exports = function(app){
 
 	app.get('/user/profile/:username',checkAll,controller.getProfileUser);
 
+	app.get('/api/profile/getAllProfileToCheck',controller.getAllProfileToCheck);
+
 	app.route('/api/user/:user')
 		.get(checkAll,function(req,res,next){
 			res.status(200).json(req.userRequest.toJSON());

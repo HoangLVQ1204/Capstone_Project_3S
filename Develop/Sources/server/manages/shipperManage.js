@@ -897,9 +897,7 @@ module.exports = function (app) {
         shipperList.map(function (shipper) {
             shipper.tasks.map(function (task) {
                 if (task.taskid == null) db.order.updateStockForOrder(task.order.orderid, 1);
-                console.log('--------------')
-                console.log(task);
-                console.log('--------------')
+
                 promise.push(db.task.assignTaskForShipper(task)
                     .then(function(newTask) {
 

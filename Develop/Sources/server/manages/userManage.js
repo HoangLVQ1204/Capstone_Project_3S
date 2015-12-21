@@ -120,6 +120,15 @@ module.exports = function(app) {
 
     };
 
+    var getAllProfileToCheck = function(req,res,next){
+
+        db.profile.getAllProfileToCheck()
+            .then(function(list){
+                res.status(200).json(list);
+            },function(err){
+                next(err);
+            });
+    };
     return {
         get: get,
         getProfileUser: getProfileUser,
@@ -128,7 +137,8 @@ module.exports = function(app) {
         getUserDetail: getUserDetail,
         putUser: putUser,
         putProfile: putProfile,
-        addNewUser: addNewUser
+        addNewUser: addNewUser,
+        getAllProfileToCheck: getAllProfileToCheck
     }
 }
 

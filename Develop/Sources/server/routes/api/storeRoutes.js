@@ -43,12 +43,15 @@ module.exports = function(app){
 	app.route('/api/store/getTotalCoD')
 		.get(controller.getTotalCoD);
 
+	app.route('/api/store/getAllStoreToCheck')
+		.get(controller.getAllStoreToCheck);
+
 	app.route('/api/store/addManageStore')
 		.post(controller.postNewManageStore);
 
     app.route('/api/store')
     	.get(controller.get)
-    	.post(checkAll,function(req,res,next){
+    	.post(function(req,res,next){
 			var newStore = req.body;
 			controller.postNewStore(newStore).then(function(data){
 				res.status(201).json(data);
