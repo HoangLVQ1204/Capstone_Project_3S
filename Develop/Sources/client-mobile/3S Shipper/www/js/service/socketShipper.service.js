@@ -6,11 +6,11 @@
 function socketShipper($rootScope, $q,socketService,authService,mapService, $ionicLoading, $timeout) {
 
 
-  var EPSILON = 1e-6;
+  var EPSILON = 1e-4;
 
   var currentLocation = null;
   var api = {};
-
+  $rootScope.receiveOrderSuccess = false;
   /*
    add handlers
    */
@@ -37,9 +37,9 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
 
     socketService.on('shipper:add:order', function(data) {
       var msg = data.msg;
-      console.log('shipper:add:order');
       if (!$rootScope.receiveOrderSuccess) {
-        $rootScope.$emit('shipper:express:order:success', msg);
+        console.log('shipper:add:order');
+        $rootScope.$broadcast('shipper:express:order:success', msg);
         $rootScope.receiveOrderSuccess = true;
       }      
     });

@@ -15,13 +15,13 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
 
   //-----SOCKET-----//
   //Socket on grab express order
-  $rootScope.$on("shipper:express:order:success", function(event, args) {
-	var des = {
-	  id: 999,
-	  content: 'You just grab a new order!s'
-	};
-	console.log('success success showAlert');
-	$scope.showAlert(des);
+  $scope.$on("shipper:express:order:success", function(event, args) {
+  	var des = {
+  	  id: 999,
+  	  content: 'You just grab a new order!s'
+  	};
+  	console.log('success success showAlert');
+  	$scope.showAlert(des);
   });
 
   //socket on issue
