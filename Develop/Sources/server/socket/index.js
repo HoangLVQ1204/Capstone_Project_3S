@@ -285,7 +285,7 @@ module.exports = function(server,app){
     
     // Define observer for watching io.shippers, io.stores, io.customers, io.orders
     var observer = function(changes) {
-        //console.log('observer run');
+        console.log('observer run', io.shippers);
         for (shipperID in io.shippers) {
             if (io.shippers[shipperID].isConnected) {
                 io.reply({ type: 'shipper', clientID: shipperID }, 
@@ -712,8 +712,12 @@ module.exports = function(server,app){
             
         return io.gmapUtil.getGeoText(temp.latitude, temp.longitude)
         .then(function(geoText) {
+            console.log('gmapUtil', geoText);
             temp.geoText = geoText;
             io.shippers[shipper.shipperID] = temp;
+        })
+        .catch(function(err) {
+            console.log('io.updateShipper', err);
         });
     };
 
@@ -778,9 +782,20 @@ module.exports = function(server,app){
     };
 
     io.updateLocationShipper = function(shipper) {
+        var EPSILON = 1e-3;
         var temp = _.clone(io.shippers[shipper.shipperID], true);
+        var currentLocation = {
+            latitude: temp.latitude,
+            longitude: temp.longitude
+        };
         temp.latitude = shipper.latitude;
         temp.longitude = shipper.longitude;
+        if (currentLocation.latitude && currentLocation.longitude
+            && Math.abs(currentLocation.latitude - position.coords.latitude) <= EPSILON
+            && Math.abs(currentLocation.longitude - position.coords.longitude) <= EPSILON) {
+            console.log('the same location');
+            return Promise.resolve();
+        }
         return io.gmapUtil.getGeoText(temp.latitude, temp.longitude)
         .then(function(geoText) {
             temp.geoText = geoText;
@@ -1043,6 +1058,7 @@ module.exports = function(server,app){
 
                         var shipper = data.msg.shipper;
                         if (io.containShipper(shipper.shipperID)) {
+                            console.log('io.containShipper');
                             io.updateShipper(shipper, socket)
                             .then(function() {
                                 var orders = io.getOrdersOfShipper(shipper.shipperID);
@@ -1050,10 +1066,11 @@ module.exports = function(server,app){
                                     e.orderInfo.isPending = false;
                                     io.updateOrder(e.orderID, e.orderInfo);
                                 });
-                                // console.log('after connect', orders);
+                                // console.log('after connect', orders);                                
                                 require('./socketShipper')(socket, io, app);
                             });
                         } else {
+                            console.log('io.addShipper');
                             io.addShipper(shipper, socket)
                             .then(function() {
                                 // console.log('added shipper', io.shippers);

@@ -8,7 +8,7 @@ var GoogleMapsAPI = require('googlemaps');
 
 var config = {
 	// key: 'AIzaSyALajTCGOGkS_TZBAXyUkjtWdSk5t4TIyY',	// Server key
-	key: 'AIzaSyCGFowrKhTz9GskvfzAGR6_rGFbsaCorOw',
+	key: 'AIzaSyAj3vEJVfSLqDLUO5UMPBAm3IN8gUPh5Og',
 	secure: true
 };
 
