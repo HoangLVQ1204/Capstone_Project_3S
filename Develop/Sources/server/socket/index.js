@@ -285,7 +285,7 @@ module.exports = function(server,app){
     
     // Define observer for watching io.shippers, io.stores, io.customers, io.orders
     var observer = function(changes) {
-        //console.log('observer run');
+        console.log('observer run', io.shippers);
         for (shipperID in io.shippers) {
             if (io.shippers[shipperID].isConnected) {
                 io.reply({ type: 'shipper', clientID: shipperID }, 
