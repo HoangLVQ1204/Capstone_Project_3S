@@ -50,6 +50,11 @@ module.exports = function(sequelize, DataTypes) {
           }
         });
       },
+      getAllProfileToCheck: function(){
+        return profile.findAll({
+          attributes: ['email', 'identitycard', 'phonenumber']
+        });
+      },
       addNewProfile: function(newProfile){
         return profile.build(newProfile).save();
       },

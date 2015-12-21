@@ -106,7 +106,7 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
     $scope.assignTask = function () {
         dataService.putDataServer(config.baseURI + "/api/shipper/updateTaskForShipper", $scope.tasksList)
             .then(function success(response){
-
+            console.log(response.data);
             var data = new Object();
             data.verticalEdge='right';
             data.horizontalEdge='bottom';
@@ -334,9 +334,15 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
     //    getDataFromServer(false);
     //});
 
-    $rootScope.$on("shipper:change:task:active", function(dataMsg){
-        console.log(dataMsg);
-        //getDataFromServer(false)
+    $rootScope.$on("shipper:change:task:active", function(event, dataMsg){
+        console.log(dataMsg.msg);
+        var taskid = dataMsg.msg.taskid;
+        var result = $.grep($scope.taskList, function(e){ return e.taskid == taskid; });
+        console.log(result);
+        if (result.length > 0){
+            var index = $scope.taskList.indexOf(result[0]);
+            $scope.taskList.splice(index, 1);
+        }
     });
 
     function getShipperOnline(){

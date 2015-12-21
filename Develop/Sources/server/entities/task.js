@@ -174,7 +174,6 @@ module.exports = function (sequelize, DataTypes) {
                             return task.updateStatusOfTask(tasks.taskid, 5);
                         }
                     else  return task.updateShipperOfTask(tasks.taskid, shipper.shipperid);
-
                 })
             },
 
