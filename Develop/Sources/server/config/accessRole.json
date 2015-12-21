@@ -193,7 +193,7 @@
 
     {
       "url": "/api/shipper/getAllShipper",
-      "role": [3]
+      "role": [2,3]
     },
 
     {
