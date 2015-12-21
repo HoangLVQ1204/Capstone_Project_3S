@@ -38,7 +38,10 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
     socketService.on('shipper:add:order', function(data) {
       var msg = data.msg;
       console.log('shipper:add:order');
-      $rootScope.$emit('shipper:express:order:success', msg);
+      if (!$rootScope.receiveOrderSuccess) {
+        $rootScope.$emit('shipper:express:order:success', msg);
+        $rootScope.receiveOrderSuccess = true;
+      }      
     });
 
     socketService.on('shipper:remove:express', function(data) {
@@ -50,7 +53,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
     socketService.on('shipper:choose:express', function(data) {      
       //Ionic Loading
       $rootScope.show = function() {
-        console.log('rootScope.show', $rootScope.counter);
+        console.log('rootScope.show ' + $rootScope.counter);
         $ionicLoading.show({
           template: '<div class="popup">' +
             '<div class="popup-head" style="background-color: rgb(239, 71, 58);'  +
@@ -73,7 +76,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
         });
       };
 
-      $rootScope.hide = function(){
+      $rootScope.hide = function(){        
         $rootScope.isGrabbing = false;
         console.log("hide");
         $ionicLoading.hide();
@@ -94,6 +97,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
         var mytimeout = $timeout($rootScope.onTimeout, 1000);
 
         $rootScope.stop = function (sendSocket) {
+          $rootScope.receiveOrderSuccess = false;
           $timeout.cancel(mytimeout);          
           $rootScope.hide();
           if (sendSocket) {
