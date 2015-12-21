@@ -80,7 +80,7 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
     });
 
     socketService.on('shipper:change:task:active',function(data){
-        $rootScope.$emit("shipper:change:task:active", data.msg);
+        $rootScope.$emit("shipper:change:task:active", data);
         console.log('change task status');
         //$rootScope.notify(data.msg, 1);
     });
