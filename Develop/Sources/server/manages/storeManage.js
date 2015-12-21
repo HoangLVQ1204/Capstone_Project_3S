@@ -53,6 +53,9 @@ module.exports = function(app) {
                 longitude: newStore.longitude,
                 geoText: newStore.address
             });
+            console.log('-------------');
+            console.log(newStore);
+            console.log('-------------');
             return db.store.postOneStore(newStore)
                 .then(function(store) {
                     //console.log(store);

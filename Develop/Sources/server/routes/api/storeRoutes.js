@@ -51,12 +51,13 @@ module.exports = function(app){
 
     app.route('/api/store')
     	.get(controller.get)
-    	.post(function(req,res,next){
+    	.post(checkAll,function(req,res,next){
 			var newStore = req.body;
 			controller.postNewStore(newStore).then(function(data){
 				res.status(201).json(data);
 			})
 				.catch(function(err){
+					console.log(err);
 					next(err);
 				})
 		});

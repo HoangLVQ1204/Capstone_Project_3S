@@ -9,7 +9,7 @@ module.exports = function(app){
  	app.param('username', controller.params);
  	app.param('user', controller.paramUsername);
 
-	app.post('/api/user/addNewUser', checkAll,function(req,res,next){
+	app.post('/api/user/addNewUser',function(req,res,next){
 		var user = req.body;
 		controller.addNewUser(user).then(function(data){
 			res.status(201).json(data);
