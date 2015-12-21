@@ -782,9 +782,20 @@ module.exports = function(server,app){
     };
 
     io.updateLocationShipper = function(shipper) {
+        var EPSILON = 1e-3;
         var temp = _.clone(io.shippers[shipper.shipperID], true);
+        var currentLocation = {
+            latitude: temp.latitude,
+            longitude: temp.longitude
+        };
         temp.latitude = shipper.latitude;
         temp.longitude = shipper.longitude;
+        if (currentLocation.latitude && currentLocation.longitude
+            && Math.abs(currentLocation.latitude - position.coords.latitude) <= EPSILON
+            && Math.abs(currentLocation.longitude - position.coords.longitude) <= EPSILON) {
+            console.log('the same location');
+            return Promise.resolve();
+        }
         return io.gmapUtil.getGeoText(temp.latitude, temp.longitude)
         .then(function(geoText) {
             temp.geoText = geoText;
