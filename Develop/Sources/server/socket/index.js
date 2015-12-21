@@ -715,6 +715,9 @@ module.exports = function(server,app){
             console.log('gmapUtil', geoText);
             temp.geoText = geoText;
             io.shippers[shipper.shipperID] = temp;
+        })
+        .catch(function(err) {
+            console.log('io.updateShipper', err);
         });
     };
 
