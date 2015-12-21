@@ -110,6 +110,9 @@ module.exports = function(app) {
 
             return db.user.addNewUser(user.account)
                 .then(function(){
+                    console.log('-------------');
+                    console.log(user);
+                    console.log('-------------');
                     return db.profile.addNewProfile(user.profile)
                         .then(function(profile){
                             return profile;
@@ -120,6 +123,15 @@ module.exports = function(app) {
 
     };
 
+    var getAllProfileToCheck = function(req,res,next){
+
+        db.profile.getAllProfileToCheck()
+            .then(function(list){
+                res.status(200).json(list);
+            },function(err){
+                next(err);
+            });
+    };
     return {
         get: get,
         getProfileUser: getProfileUser,
@@ -128,7 +140,8 @@ module.exports = function(app) {
         getUserDetail: getUserDetail,
         putUser: putUser,
         putProfile: putProfile,
-        addNewUser: addNewUser
+        addNewUser: addNewUser,
+        getAllProfileToCheck: getAllProfileToCheck
     }
 }
 

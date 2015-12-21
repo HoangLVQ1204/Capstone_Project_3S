@@ -53,6 +53,9 @@ module.exports = function(app) {
                 longitude: newStore.longitude,
                 geoText: newStore.address
             });
+            console.log('-------------');
+            console.log(newStore);
+            console.log('-------------');
             return db.store.postOneStore(newStore)
                 .then(function(store) {
                     //console.log(store);
@@ -391,7 +394,17 @@ module.exports = function(app) {
             }, function(err) {
                 throw err;
             });
-    }
+    };
+
+    var getAllStoreToCheck = function(req,res,next){
+
+        db.store.getAllStoreToCheck()
+            .then(function(list){
+                res.status(200).json(list);
+            },function(err){
+                next(err);
+            });
+    };
 
        return {
             get: get,
@@ -417,6 +430,7 @@ module.exports = function(app) {
             getAllStores: getAllStores,
             getAllLedger: getAllLedger,
             getLedgerOfStore: getLedgerOfStore,
-            storeGetAllLedger : storeGetAllLedger
+            storeGetAllLedger : storeGetAllLedger,
+            getAllStoreToCheck: getAllStoreToCheck
     }
 }

@@ -17,7 +17,7 @@ function adminShipperListController($scope,$state, dataService, $filter, config,
         },
         {
             option: 'ShipperID',
-            value: 'profile.shipperid'
+            value: 'username'
         },
         {
             option: 'Name',

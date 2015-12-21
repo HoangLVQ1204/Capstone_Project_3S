@@ -95,6 +95,7 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
                     //console.log($scope.orderList);
                 });
                 //$scope.moveAllProcessingTask($scope.originShipperID);
+                getShipperOnline();
             })
         })
 
@@ -105,7 +106,7 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
     $scope.assignTask = function () {
         dataService.putDataServer(config.baseURI + "/api/shipper/updateTaskForShipper", $scope.tasksList)
             .then(function success(response){
-
+            console.log(response.data);
             var data = new Object();
             data.verticalEdge='right';
             data.horizontalEdge='bottom';
@@ -262,7 +263,7 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
     $scope.goInbox = function(){
         var issue = $.grep($scope.listUserHasIssue, function(e){ return e.sender ==  $scope.originShipperID;});
         //console.log(issue[0])
-        $state.go('admin.issueBox.content',{issueid: issue[0].issueid});
+        $state.go('admin.issueBox');
     }
 
     //----------------------------------
@@ -329,15 +330,40 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
     //    //}
     //}
 
-    $rootScope.$on("shipper:change:order:status", function(event,args){
-        getDataFromServer(false);
+    //$rootScope.$on("shipper:change:order:status", function(event,args){
+    //    getDataFromServer(false);
+    //});
+
+    $rootScope.$on("shipper:change:task:active", function(event, dataMsg){
+        console.log(dataMsg.msg);
+        var taskid = dataMsg.msg.taskid;
+        var result = $.grep($scope.taskList, function(e){ return e.taskid == taskid; });
+        console.log(result);
+        if (result.length > 0){
+            var index = $scope.taskList.indexOf(result[0]);
+            $scope.taskList.splice(index, 1);
+        }
     });
 
-    $rootScope.$on("shipper:change:task:status", function(event,args){
-        getDataFromServer(false)
+    function getShipperOnline(){
+        socketAdmin.listShippers.map(function (shipper) {
+
+            var result = $.grep($scope.shipperList, function(e){ return e.username == shipper.shipperID; });
+            // console.log('getShipperOnline', shipper, result);
+            if (result.length > 0)
+                if (shipper.isConnected)
+                    result[0]['workingStatus'] = 'Online';
+                else
+                    result[0]['workingStatus'] = 'Offline';
+        });
+        //console.log($scope.shipperList);
+    };
+
+    $rootScope.$on("admin:dashboard:getShipperList", function(event, args){
+
+        getShipperOnline();
+
     });
-
-
 }
 
 adminAssignTaskController.$inject = ['$scope','$state', '$http', 'authService', 'config', 'dataService','socketAdmin', '$rootScope'];

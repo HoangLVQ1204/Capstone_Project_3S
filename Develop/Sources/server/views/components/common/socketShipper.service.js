@@ -6,7 +6,7 @@
 function socketShipper($rootScope, $q,socketService,authService,mapService) {
 
 
-    var EPSILON = 1e-7;
+    var EPSILON = 1e-6;
 
     var currentLocation = null;
     var api = {};

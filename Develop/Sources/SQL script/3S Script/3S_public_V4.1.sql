@@ -12690,6 +12690,13 @@ INSERT INTO "public"."ward" VALUES ('32245', 'Tân Ân', 'Xã', '8 38 45N, 105 0
 INSERT INTO "public"."ward" VALUES ('32248', 'Đất Mũi', 'Xã', '8 36 41N, 104 47 12E', '973');
 
 
+-- ----------------------------
+-- Records of generalledger
+-- ----------------------------
+INSERT INTO "public"."generalledger" VALUES ('99', 'AD000001', 'STR001', null, '0', '2015-12-29 00:00:00+07', null, '3', '0', '0');
+INSERT INTO "public"."generalledger" VALUES ('192', 'AD000001', 'STR002', null, '0', '2015-12-29 00:00:00+07', null, '3', '0', '0');
+INSERT INTO "public"."generalledger" VALUES ('194', 'AD000001', 'STR003', null, '0', '2015-12-29 00:00:00+07', null, '3', '0', '0');
+INSERT INTO "public"."generalledger" VALUES ('293', 'AD000001', 'STR004', null, '0', '2015-12-29 00:00:00+07', null, '3', '0', '0');
 
 -- ----------------------------
 -- Alter Sequences Owned By 

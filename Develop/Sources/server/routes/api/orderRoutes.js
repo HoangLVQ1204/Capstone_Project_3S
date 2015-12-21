@@ -39,7 +39,7 @@ module.exports = function (app) {
         .put(controller.updateExpressOrder)    
         
     app.route('/orders/:orderid')
-        .get(checkAll, function(req,res,next){
+        .get(function(req,res,next){
              res.status(200).json(req.orderRs);
         })
         .put(checkAll,function(req,res,next) {
