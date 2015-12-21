@@ -1047,6 +1047,7 @@ module.exports = function(server,app){
 
                         var shipper = data.msg.shipper;
                         if (io.containShipper(shipper.shipperID)) {
+                            console.log('io.containShipper');
                             io.updateShipper(shipper, socket)
                             .then(function() {
                                 var orders = io.getOrdersOfShipper(shipper.shipperID);
@@ -1058,6 +1059,7 @@ module.exports = function(server,app){
                                 require('./socketShipper')(socket, io, app);
                             });
                         } else {
+                            console.log('io.addShipper');
                             io.addShipper(shipper, socket)
                             .then(function() {
                                 // console.log('added shipper', io.shippers);
