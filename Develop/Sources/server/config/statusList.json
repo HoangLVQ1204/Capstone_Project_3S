@@ -36,8 +36,8 @@
     {
       "statusid": 4,
       "statusname": "In stock",
-      "nextAction": "Start deliver",
-      "requiredcode": false
+      "nextAction": "Check out stock",
+      "requiredcode": true
     },
     {
       "statusid": 5,

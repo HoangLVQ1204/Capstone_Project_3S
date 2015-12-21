@@ -165,6 +165,8 @@ module.exports = function (app) {
                     if(rs.tasks[0].typeid == 1){
                         delete rs['deliveryaddress'];
                         delete rs['completedate'];
+                        delete rs['recipientname'];
+                        delete rs['recipientphone'];
                     }
                     var statuslist = configConstant.statusList[type];
                     return {
@@ -210,7 +212,13 @@ module.exports = function (app) {
                         username: orderObj.storeid,
                         createddate: new Date()
                     };
-                    var msgAdmin = {};
+                    var msgAdmin = {
+                        type: 'info',
+                        title: 'Info: Change Status Order',
+                        content: orderObj.orderid + " changes status.",
+                        // url: '#/admin/orderdetail?orderid='+orderObj.orderid
+                        url: '#/admin/dashboard'
+                    };
                     var customer = {
                         order: [orderObj.orderid],
                         geoText: orderObj.deliveryaddress
@@ -240,12 +248,13 @@ module.exports = function (app) {
                     server.socket.updateStatusOrder(orderObj.orderid, nextStatusName);
 
                     var completeDate = (nextStatus == configConstant.doneStatus)? new Date(): orderObj.completedate;
+                    var pickedDate = (oldStatus == pickUpStatusID)? new Date(): orderObj.pickupdate;
                     var stockID = (nextStatus == configConstant.inStockStatus)? configConstant.stockID : null;
                     if (isRequireCode) {
                         return db.confirmationcode.checkCode(key, data.confirmcode, orderObj.statusid)
                             .then(function (codeObj) {
                             if (codeObj) {
-                                return orderObj.updateOrderStatus(nextStatus, completeDate, stockID).then(function (rs) {
+                                return orderObj.updateOrderStatusShipper(nextStatus, pickedDate, completeDate, stockID).then(function (rs) {
                                     if(oldStatus == pickUpStatusID){
                                         db.profile.getProfileUser(shipperid).then(function(profile){
                                             msg['profile'] = profile;
@@ -290,7 +299,7 @@ module.exports = function (app) {
                             throw new Error("Checking code failed!");
                         });
                     } else {
-                        return orderObj.updateOrderStatus(nextStatus, completeDate, stockID)
+                        return orderObj.updateOrderStatusShipper(nextStatus, pickedDate, completeDate, stockID)
                             .then(function (rs) {
                             server.socket.forward('server', receiver, msg, 'shipper:change:order:status');
                             // SEND SOCKET FOR ADMINS
