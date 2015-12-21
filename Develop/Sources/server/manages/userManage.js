@@ -110,9 +110,6 @@ module.exports = function(app) {
 
             return db.user.addNewUser(user.account)
                 .then(function(){
-                    console.log('-------------');
-                    console.log(user);
-                    console.log('-------------');
                     return db.profile.addNewProfile(user.profile)
                         .then(function(profile){
                             return profile;

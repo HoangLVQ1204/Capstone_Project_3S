@@ -85,7 +85,10 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
                         var shipperHasIssue = $.grep($scope.listUserHasIssue, function(e){ return e.sender == shipper.username;});
                         if (shipperHasIssue.length > 0) shipper['hasIssue'] = true;
                         else shipper['hasIssue'] = false;
+
+                        shipper['workingStatus'] = 'Offline';
                     });
+                    getShipperOnline();
                     //console.log( $scope.tasksList);
                 });
 
@@ -95,7 +98,7 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
                     //console.log($scope.orderList);
                 });
                 //$scope.moveAllProcessingTask($scope.originShipperID);
-                getShipperOnline();
+
             })
         })
 
@@ -336,20 +339,26 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
 
     $rootScope.$on("shipper:change:task:active", function(event, dataMsg){
         console.log(dataMsg.msg);
-        var taskid = dataMsg.msg.taskid;
-        var result = $.grep($scope.taskList, function(e){ return e.taskid == taskid; });
-        console.log(result);
+        var orderid = dataMsg.msg.orderid;
+        var result = $.grep($scope.taskList, function(e){ return e.orderid == orderid; });
+        //console.log(result);
         if (result.length > 0){
             var index = $scope.taskList.indexOf(result[0]);
             $scope.taskList.splice(index, 1);
+        };
+        //console.log($scope.orderList);
+        result = $.grep($scope.orderList, function(e){ return e.order.orderid == orderid; });
+        //console.log(result);
+        if (result.length > 0){
+            var index = $scope.orderList.indexOf(result[0]);
+            $scope.orderList.splice(index, 1);
         }
     });
 
     function getShipperOnline(){
         socketAdmin.listShippers.map(function (shipper) {
-
-            var result = $.grep($scope.shipperList, function(e){ return e.username == shipper.shipperID; });
-            // console.log('getShipperOnline', shipper, result);
+            var result = $.grep($scope.tasksList, function(e){ return e.username == shipper.shipperID; });
+             //console.log('getShipperOnline', shipper);
             if (result.length > 0)
                 if (shipper.isConnected)
                     result[0]['workingStatus'] = 'Online';
