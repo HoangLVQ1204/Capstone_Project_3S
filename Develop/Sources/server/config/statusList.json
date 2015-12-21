@@ -28,12 +28,6 @@
 
   "2": [
     {
-      "statusid": 0,
-      "statusname": "Waiting",
-      "nextAction": "Start",
-      "requiredcode": false
-    },
-    {
       "statusid": 4,
       "statusname": "In stock",
       "nextAction": "Check out stock",
@@ -81,18 +75,6 @@
   ],
 
   "4": [
-    {
-      "statusid": 1,
-      "statusname": "Waiting",
-      "nextAction": "Start",
-      "requiredcode": false
-    },
-    {
-      "statusid": 2,
-      "statusname": "Picking up",
-      "nextAction": "Check code pick up",
-      "requiredcode": true
-    },
     {
       "statusid": 6,
       "statusname": "Returning",
