@@ -2,8 +2,9 @@
  * Created by hoanglvq on 10/25/15.
  */
 app
-  .factory('socketService',function($rootScope, $q){
-    var socket = io(config.hostServer);
+  .factory('socketService',function($rootScope, $q, $state){
+    // var socket = io(config.hostServer);
+    var socket = null;
 
     //socket.on('connect',function(){
     //  socket
@@ -12,10 +13,15 @@ app
     //    })
     //    .emit('authenticate',{token: localStorage.getItem('EHID')});
     //})
+    // console.log('abc');
+    // socket.on('disconnect', function() {
+    //   console.log('DISCONNECTED');
+    // });
 
-    socket.on('disconnect', function() {
-      console.log('DISCONNECTED');
-    });
+    // socket.on('connect_error', function() {
+    //   console.log('error');
+    //   $state.go('sign-in');
+    // });
 
     var api = {};
 
@@ -70,6 +76,7 @@ app
     };
 
     api.connect = function() {
+      if (socket == null) socket = io(config.hostServer);
       var d = $q.defer();
       if (socket.connected) {
         console.log('socket is already connected');
