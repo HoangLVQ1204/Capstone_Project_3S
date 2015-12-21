@@ -16,6 +16,7 @@ module.exports = function(server,app){
     var controllerStore = require('../manages/storeManage')(app);
     var controllerShipper = require('../manages/shipperManage')(app);
     io.gmapUtil = require('../util/googlemapUtil');
+    io.set( 'origins', '*:*' );
 
 
 
