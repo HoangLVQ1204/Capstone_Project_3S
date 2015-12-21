@@ -17,6 +17,10 @@
 																	 <i class="fa fa-exclamation-triangle"></i> Create fail<br>
 																	There is an error to add new Store.....
 																</textarea>
+                <textarea class="form-control" id="sms-fail-date"  rows="5" style="display:none">
+																	 <i class="fa fa-exclamation-triangle"></i> Error<br>
+																	Date of birth is wrong... please pick date before 01/01/2014
+																</textarea>
                 <form id="validate-wizard" class="wizard-step">
                     <ul>
                         <li><a href="#step1" data-toggle="tab">1</a></li>
@@ -52,7 +56,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="control-label">Indentity Card</label>
-                                                    <input type="text" class="form-control" ng-model="newStoreOwner.profile.identitycard" required parsley-rangelength="[9,9]" parsley-type="digits" placeholder="Indentity card..">
+                                                    <input type="text" class="form-control" ng-model="newStoreOwner.profile.identitycard" required parsley-rangelength="[9,12]" parsley-type="digits" placeholder="Indentity card..">
                                                 </div>
                                             </div>
                                             <div class="form-group">

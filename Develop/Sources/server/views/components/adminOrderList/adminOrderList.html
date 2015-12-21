@@ -81,7 +81,8 @@
                                     <tbody align="center" >
 
                                     <tr class="odd gradeX" ng-repeat= "x in displayedCollection">
-                                        <td>{{x.orderid}}<label class="color-danger" ng-show="x.iscancel">Cancelling</label>
+                                        <td><a ui-sref="admin.orderDetail({orderid: x.orderid})">{{x.orderid}}</a>
+                                            <br ng-show="x.iscancel"><label class="color-danger" ng-show="x.iscancel">Cancelling</label>
                                             <br ng-show="x.ispending"><label class="color-danger" ng-show="x.ispending">IsPending</label></td></td>
                                         <td><a ui-sref="admin.storeDetail({storeid:x.storeid})">{{x.store.name}}</a></td>
                                         <td>{{x.pickupaddress}}</td>

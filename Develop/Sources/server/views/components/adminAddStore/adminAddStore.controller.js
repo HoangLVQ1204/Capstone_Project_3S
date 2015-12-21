@@ -92,6 +92,15 @@ function adminAddStoreController($scope,$state, $http, $filter, config, dataServ
                     var $valid = content.parsley( 'validate' );
                     if(!$valid){
                         return false;
+                    };
+                    var dob = new Date($scope.newStoreOwner.profile.dob);
+                    if (dob.getFullYear()>2014)
+                    {
+                        smsData.theme="danger";
+                        //data.sticky="true";
+                        $.notific8($("#sms-fail-date").val(), smsData);
+                        //console.log(error)
+                        return false;
                     }
                 };
                 // Set the name for the next tab

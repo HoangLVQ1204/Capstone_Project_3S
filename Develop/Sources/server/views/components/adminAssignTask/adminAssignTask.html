@@ -136,7 +136,9 @@
                                         <tbody align="center" >
 
                                         <tr class="odd gradeX" ng-repeat= "x in displayedTaskCollection">
-                                            <td class="text-left">{{x.order.orderid}}</td>
+                                            <td class="text-left">
+                                                {{x.order.orderid}}
+                                            </td>
                                             <td cs-select-checkbox="x"  select-action="pickTask(x)" select-mode="multiple">{{x.order.orderstatus.statusname}}</td>
                                             <td>{{x.taskstatus.statusname}}</td>
                                         </tr>
@@ -208,9 +210,11 @@
                                         <tbody align="center" >
 
                                         <tr class="odd gradeX"  ng-repeat= "x in displayedOrderCollection" >
-                                            <td>{{x.order.orderid}}
+                                            <td> <a ui-sref="admin.orderDetail({orderid: x.order.orderid})">{{x.order.orderid}}</a>
                                                 <br ng-show="x.statusid==4"><label class="color-danger" ng-show="x.statusid==4">Processing</label>
                                                 <br ng-show="x.order.iscancel"><label class="color-danger" ng-show="x.order.iscancel">IsCancel</label>
+
+
                                             </td>
 
                                             <td cs-select-checkbox="x" id="{{x.order.orderid}}" select-action="pickOrder(x)" select-mode="multiple" shipper-row="$parent.isPicked">{{x.order.pickupaddress}}</td>

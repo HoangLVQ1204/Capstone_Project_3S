@@ -697,6 +697,16 @@ module.exports = function(sequelize, DataTypes) {
             'statusid': [8, 6]
           }
         })
+      },
+
+      updateStockForOrder: function(orderid, stockid){
+
+        return order.update({
+        'stockid': stockid},
+        {where: {
+            'orderid': orderid
+          }
+        })
       }
 
     }

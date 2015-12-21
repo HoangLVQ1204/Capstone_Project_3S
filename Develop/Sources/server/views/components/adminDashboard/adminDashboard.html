@@ -8,7 +8,7 @@
                                 <h5><strong>AVAILABLE</strong> SHIPPER </h5>
                                 <h2>{{onlineShipper}}</h2>
                                 <div class="progress progress-xs progress-white progress-over-tile">
-                                    <div class="progress-bar progress-bar-white" aria-valuetransitiongoal="8590" aria-valuemax="10000"></div>
+                                    <div class="progress-bar progress-bar-white" aria-valuetransitiongoal="1" aria-valuemax="1"></div>
                                 </div>
                                 <label class="progress-label label-white"> <strong>{{totalShipper - onlineShipper}} shippers is offline now</strong> </label>
                             </section>
@@ -24,7 +24,7 @@
                                 <h5><strong>TASK</strong> TODAY</h5>
                                 <h2>{{totalTaskToday}}</h2>
                                 <div class="progress progress-xs progress-white progress-over-tile" >
-                                    <div id="progressTask" class="progress-bar progress-bar-white" style="width: 33%;"></div>
+                                    <div id="progressTask" class="progress-bar progress-bar-white" aria-valuetransitiongoal="1" aria-valuemax="1" style="width: 33%;"></div>
                                 </div>
                                 <label class="progress-label label-white">{{totalDoneToday}} tasks have been done today</label>
                             </section>
@@ -42,7 +42,7 @@
                                 <h2 ng-if="todayTotal.fee != null">{{todayTotal.fee}}VND</h2>
                                 <h2 ng-if="todayTotal.fee == null">0VND</h2>
                                 <div class="progress progress-xs progress-white progress-over-tile">
-                                    <div class="progress-bar  progress-bar-white" aria-valuemax="{{todayTotal.cod+todayTotal.fee}}" aria-valuenow="{{todayTotal.cod}}" style="width: 86%;"></div>
+                                    <div class="progress-bar  progress-bar-white" aria-valuetransitiongoal="1" aria-valuemax="1" style="width: 86%;"></div>
                                 </div>
                                 <label class="progress-label label-white" ng-if="todayTotal.cod != null"> CoD service today is {{todayTotal.cod}}VND </a> </label>
                                 <label class="progress-label label-white" ng-if="todayTotal.cod == null"> CoD service today is 0VND </a> </label>
@@ -132,7 +132,10 @@
                                                 <tr class="odd gradeX" ng-repeat="x in displayedInactiveList">
                                                     <td>{{x.taskid}}</td>
                                                     <td><a ui-sref="admin.userDetail({username: x.shipperid})">{{x.shipperid}}</a></td>
-                                                    <td>{{x.orderid}}</td>
+                                                    <td><a ui-sref="admin.orderDetail({orderid: x.orderid})">{{x.orderid}}</a>
+                                                        <br ng-show="x.order.iscancel"><label class="color-danger" ng-show="x.order.iscancel">Cancelling</label>
+                                                        <br ng-show="x.ispending"><label class="color-danger" ng-show="x.order.ispending">IsPending</label>
+                                                    </td>
                                                     <td class="center"><a ui-sref="admin.storeDetail({storeid: x.order.storeid})"> {{x.order.storeid}}</a></td>
                                                     <td class="center"> {{x.order.orderstatus.statusname}}</td>
 

@@ -262,7 +262,7 @@ function adminAssignTaskController($scope,$state, $http, authService, config, da
     $scope.goInbox = function(){
         var issue = $.grep($scope.listUserHasIssue, function(e){ return e.sender ==  $scope.originShipperID;});
         //console.log(issue[0])
-        $state.go('admin.issueBox.content',{issueid: issue[0].issueid});
+        $state.go('admin.issueBox');
     }
 
     //----------------------------------

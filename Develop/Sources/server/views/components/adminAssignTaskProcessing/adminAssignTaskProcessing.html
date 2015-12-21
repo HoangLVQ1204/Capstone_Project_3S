@@ -203,7 +203,7 @@
                                         <tbody align="center" >
 
                                         <tr class="odd gradeX"  ng-repeat= "x in displayedOrderCollection" >
-                                            <td>{{x.order.orderid}}
+                                            <td><a ui-sref="admin.orderDetail({orderid: x.order.orderid})">{{x.order.orderid}}</a>
                                                 <br ng-show="x.statusid==4"><label class="color-danger" ng-show="x.statusid==4">Processing</label>
                                             </td>
 
