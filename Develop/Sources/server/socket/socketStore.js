@@ -7,6 +7,7 @@ var config   = require('../config/config');
 var _ = require('lodash');
 
 module.exports = function(socket, io) {
+    console.log('socketStore.js');
 	io.addToRoom(socket, 'store');
 
     socket.on('disconnect', function() {

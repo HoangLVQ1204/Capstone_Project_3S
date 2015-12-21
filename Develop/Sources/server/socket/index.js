@@ -1051,7 +1051,7 @@ module.exports = function(server,app){
                                     e.orderInfo.isPending = false;
                                     io.updateOrder(e.orderID, e.orderInfo);
                                 });
-                                // console.log('after connect', orders);
+                                // console.log('after connect', orders);                                
                                 require('./socketShipper')(socket, io, app);
                             });
                         } else {
