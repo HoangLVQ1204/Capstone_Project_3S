@@ -122,11 +122,13 @@ function adminDashboardController($scope,$state,dataService, config, $rootScope,
     });
 
     $rootScope.$on("shipper:change:order:status", function(event,args){
+        console.log('rootScope in adminDashboardController');
         //alert(2);
         getDataFromServer();
     });
 
     $rootScope.$on("shipper:change:task:status", function(event,args){
+        console.log('rootScope in adminDashboardController');
         getDataFromServer();
     });
 }
