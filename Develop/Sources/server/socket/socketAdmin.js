@@ -2,7 +2,7 @@
 
 
 module.exports = function(socket, io, app) {
-	
+    console.log('socketAdmin.js');	
     io.addToRoom(socket, 'admin');
     var notificationManage = require('../manages/notificationManage')(app);
     var db = app.get('models');

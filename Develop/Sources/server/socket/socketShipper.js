@@ -4,6 +4,7 @@
 var _ = require('lodash');
 
 module.exports = function(socket, io, app) {
+    console.log('socketShipper.js');
     io.addToRoom(socket, 'shipper');
 
     var issueManage = require('../manages/issueManage')(app);
