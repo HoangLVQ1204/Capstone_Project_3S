@@ -712,6 +712,7 @@ module.exports = function(server,app){
             
         return io.gmapUtil.getGeoText(temp.latitude, temp.longitude)
         .then(function(geoText) {
+            console.log('gmapUtil', geoText);
             temp.geoText = geoText;
             io.shippers[shipper.shipperID] = temp;
         });
