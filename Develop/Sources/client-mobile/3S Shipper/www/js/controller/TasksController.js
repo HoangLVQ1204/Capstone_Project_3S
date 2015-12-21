@@ -20,6 +20,7 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
 	  id: 999,
 	  content: 'You just grab a new order!s'
 	};
+	console.log('success success showAlert');
 	$scope.showAlert(des);
   });
 

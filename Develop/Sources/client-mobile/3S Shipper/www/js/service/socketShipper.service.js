@@ -6,7 +6,7 @@
 function socketShipper($rootScope, $q,socketService,authService,mapService, $ionicLoading, $timeout) {
 
 
-  var EPSILON = 1e-7;
+  var EPSILON = 1e-6;
 
   var currentLocation = null;
   var api = {};
@@ -37,6 +37,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
 
     socketService.on('shipper:add:order', function(data) {
       var msg = data.msg;
+      console.log('shipper:add:order');
       $rootScope.$emit('shipper:express:order:success', msg);
     });
 
@@ -46,9 +47,10 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
       $rootScope.$broadcast('shipper:canceled', {storeid: data.msg.store.storeID});
     });
 
-    socketService.on('shipper:choose:express', function(data) {
+    socketService.on('shipper:choose:express', function(data) {      
       //Ionic Loading
       $rootScope.show = function() {
+        console.log('rootScope.show', $rootScope.counter);
         $ionicLoading.show({
           template: '<div class="popup">' +
             '<div class="popup-head" style="background-color: rgb(239, 71, 58);'  +
@@ -92,7 +94,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
         var mytimeout = $timeout($rootScope.onTimeout, 1000);
 
         $rootScope.stop = function (sendSocket) {
-          $timeout.cancel(mytimeout);
+          $timeout.cancel(mytimeout);          
           $rootScope.hide();
           if (sendSocket) {
             var currentUser = authService.getCurrentInfoUser();
