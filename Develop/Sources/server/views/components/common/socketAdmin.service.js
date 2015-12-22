@@ -154,6 +154,40 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
             'admin:messageIssue');
     };
 
+    api.issueMessageProcessing = function(issue, shipperID) {
+        //var shipperList = [
+        var orderList = [];
+        var msgToStore = {
+            type: 'info',
+            title: 'Info',
+            //content: msg,
+            url: '#/store/dashboard',
+            isread: false,
+            createddate: new Date()
+        };
+
+        issue.orderissues.map(function (orderissue) {
+            var order = new Object();
+            order['storeid'] = orderissue.order.storeid;
+            order['orderid'] = orderissue.order.orderid;
+            orderList.push(order);
+        })
+        var user = api.getCurrentUser();
+        socketService.sendPacket(
+            {
+                type: 'admin',
+                clientID: user.adminID
+            },
+            'server',
+            {
+                orderList: orderList,
+                shipperid: shipperID,
+                typeid: issue.typeid,
+                msg: msgToStore
+            },
+            'admin:messageIssue');
+    }
+
 
     api.confirmPaymentMessage = function (storeid, newLedgerID) {//send message after confirm payment
         //var shipperList = [
