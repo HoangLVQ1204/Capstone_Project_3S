@@ -732,7 +732,8 @@ module.exports = function(server,app){
         temp.socketID = socket.id;
         temp.isConnected = true;
         temp.numTasks = io.countNumTasksByShipperID(shipper.shipperID);
-
+        if (!temp.haveIssue) temp.icon = icons.shipperIcon;
+        else temp.icon = icons.issueIcon;
             
         return io.gmapUtil.getGeoText(temp.latitude, temp.longitude)
         .then(function(geoText) {

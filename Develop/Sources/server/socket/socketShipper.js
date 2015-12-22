@@ -29,7 +29,7 @@ module.exports = function(socket, io, app) {
             console.log('issueManage.createIssueDisconnect', shipper.shipperID);
             issueManage.createIssueDisconnect(shipper.shipperID);
             io.shipperIssueToStore(shipper.shipperID, true);
-        }, 10000);
+        }, 300000);
 
         io.shipperIssueToStore(shipper.shipperID, false);
         io.disconnectShipper(shipper.shipperID);
