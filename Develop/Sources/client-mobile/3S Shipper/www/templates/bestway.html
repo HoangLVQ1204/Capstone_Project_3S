@@ -1,6 +1,9 @@
 <ion-view view-title="BestWay">
   <ion-content padding="true" class="has-header">
-    <div id="map" lat="21.012529248181444" lng="105.52563034439083" zoom="8" map></div>
+    <!-- <div id="map" lat="21.012529248181444" lng="105.52563034439083" zoom="8" map></div> -->
+    <div id="map_canvas">
+      <map shipper-markers="shippers" store-markers="stores" customer-markers="customers" orders="orders" center="center"></map>
+    </div>
     <div class="list">
       <button class="button button-block btCommon"><i class="ion-android-locate"></i>&nbsp;&nbsp;Refresh</button>
       <label class="item item-input item-select">

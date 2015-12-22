@@ -120,6 +120,9 @@ module.exports = function(sequelize, DataTypes) {
 
       getLedgerOfStore: function (store, storeid, perioddate, latestAutoDate) {
         //console.log(moment(perioddate).subtract(10, 'days').calendar());
+
+        latestAutoDate.setHours(0,0,0,0);
+        console.log(latestAutoDate);
           if (perioddate != 'null')
           {
             return generalledger.findAll({
@@ -128,7 +131,10 @@ module.exports = function(sequelize, DataTypes) {
                 //as: 'store'
               }],where: {
                 'storeid': storeid,
-                'paydate':  latestAutoDate
+                'payfrom': 3,
+                'paydate':  {
+                  gte: latestAutoDate
+                }
               }
             })
           }
