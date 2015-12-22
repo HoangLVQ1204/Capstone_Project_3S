@@ -196,7 +196,7 @@ module.exports = function(app) {
             .then(function(total) {
                 ledger = total;
             }, function(err) {
-                next(err);
+                throw err;
             }).then(function () {
                 if (ledger != null)
                 db.order.updateLedgerForOrder(storeid, ledger.paydate, ledger.ledgerid)
