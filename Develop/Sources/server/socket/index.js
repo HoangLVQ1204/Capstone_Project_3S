@@ -141,19 +141,27 @@ module.exports = function(server,app){
 
 
     var icons = {
-        shipperIcon: 'http://maps.google.com/mapfiles/kml/shapes/motorcycling.png',           
-        storeIcon: 'http://maps.google.com/mapfiles/kml/shapes/homegardenbusiness.png',
-        customerIcon: 'http://maps.google.com/mapfiles/kml/shapes/man.png',
-        issueIcon: 'http://maps.google.com/mapfiles/kml/shapes/caution.png',
+        // shipperIcon: 'http://maps.google.com/mapfiles/kml/shapes/motorcycling.png',           
+        // storeIcon: 'http://maps.google.com/mapfiles/kml/shapes/homegardenbusiness.png',
+        // customerIcon: 'http://maps.google.com/mapfiles/kml/shapes/man.png',
+        // storeIcon: 'http://maps.google.com/mapfiles/kml/pal3/icon48.png',
+        // issueIcon: 'http://maps.google.com/mapfiles/kml/shapes/caution.png',
         issueIcon2: 'http://maps.google.com/mapfiles/kml/pal3/icon33.png',
         disconnectIcon: 'http://maps.google.com/mapfiles/kml/pal3/icon33.png',
         pink48: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/48/Map-Marker-Bubble-Pink-icon.png',
         pink32: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Pink-icon.png',
-        blue48: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/48/Map-Marker-Bubble-Azure-icon.png',
+        // customerIcon: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/48/Map-Marker-Bubble-Azure-icon.png',
         blue32: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Azure-icon.png',
         green48: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/48/Map-Marker-Bubble-Chartreuse-icon.png',
-        green32: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Chartreuse-icon.png'
-    };
+        green32: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Bubble-Chartreuse-icon.png',
+        shipperIcon: 'http://cdn.webiconset.com/map-icons/images/pin2.png',
+        // storeIcon: 'http://cdn.webiconset.com/map-icons/images/pin6.png',
+        // customerIcon: 'http://maps.google.com/mapfiles/kml/pal2/icon13.png',
+        // shipperIcon: 'http://maps.google.com/mapfiles/ms/icons/cycling.png',
+        storeIcon: 'http://maps.google.com/mapfiles/ms/icons/homegardenbusiness.png',
+        issueIcon: 'http://maps.google.com/mapfiles/ms/icons/caution.png',
+        customerIcon: 'http://maps.google.com/mapfiles/ms/micons/man.png'
+    };    
 
 
     /*
@@ -238,7 +246,8 @@ module.exports = function(server,app){
      numTasks,
      icon,
      geoText,
-     haveIssue
+     haveIssue,
+     issueToStore
      }
      */
     io.shippers = {};
@@ -454,7 +463,15 @@ module.exports = function(server,app){
         for (shipperID in io.shippers) {            
             var shipper = io.getOneShipper(shipperID);
             if (shipper.icon == icons.disconnectIcon) {
-                shipper.icon = icons.issueIcon;
+                if (shipper.issueToStore) {
+                    shipper.icon = icons.issueIcon;                                                        
+                }
+                else {
+                    shipper.icon = icons.shipperIcon;
+                    shipper.order.forEach(function(orderID) {
+                        result.orders[orderID].isPending = false;
+                    });
+                }
             }
             shipper.order = shipper.order.filter(function(e) {
                 return io.orders[e].storeID == storeID;
@@ -485,7 +502,7 @@ module.exports = function(server,app){
             if (customer.order.length > 0)
                 result.customer.push(customer);
         }
-
+        console.log('result order for store', result.orders);
         return result;
     };
 
@@ -552,7 +569,7 @@ module.exports = function(server,app){
         result.store = [];
         result.customer = [];
         result.orders = {};
-
+        console.log('getDataForAdmin', io.shippers);
         Object.keys(io.shippers).forEach(function(shipperID) {
             var shipper = io.getOneShipper(shipperID);
             if (shipper.isConnected || shipper.icon != icons.shipperIcon)
@@ -771,6 +788,13 @@ module.exports = function(server,app){
         io.shippers[shipper.shipperID] = temp;
     };
 
+    io.shipperIssueToStore = function(shipperID, issueToStore) {
+        var temp = _.clone(io.shippers[shipperID], true);
+        temp.issueToStore = issueToStore;
+        io.shippers[shipperID] = temp;
+        console.log('io.shipperIssueToStore', io.shippers[shipperID]);
+    };
+
     io.updateIssueForShipper = function(shipperID, haveIssue) {
         console.log('updateIssueForShipper', shipperID, haveIssue);
         var temp = _.clone(io.shippers[shipperID], true);
@@ -859,6 +883,7 @@ module.exports = function(server,app){
         else
             temp.icon = icons.shipperIcon;
         io.shippers[shipperID] = temp;
+        console.log('io.disconnectShipper', io.shippers[shipperID]);
     };
 
     /*
@@ -877,7 +902,8 @@ module.exports = function(server,app){
             numTasks: shipper.numTasks,
             icon: shipper.icon,
             geoText: shipper.geoText,
-            haveIssue: shipper.haveIssue
+            haveIssue: shipper.haveIssue,
+            issueToStore: shipper.issueToStore
         };
     };
 
