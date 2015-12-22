@@ -97,6 +97,7 @@ function adminOrderDetailController($scope,$stateParams,dataService, $http, conf
         dataService.getDataServer(urlBase)
             .then(function (rs) {
                 $scope.order = rs.data;
+                $scope.order.fee = $scope.order.fee - $scope.order.overweightfee;
                 $scope.listgoods = rs.data.goods;
                 console.log("---DATA ORDER---");
                 console.log(rs);
