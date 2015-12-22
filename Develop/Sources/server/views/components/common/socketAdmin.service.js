@@ -31,11 +31,20 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
         });
     }
 
+    socketService.on('ping', function(data){
+        socketService.emit('pong', {beat: 1});
+    });
+
     socketService.on('admin:register:location', function(data) {
         mapService.setMapData(data.msg.mapData);
         if (data.msg.shipperList != null) updateListShipper(data.msg.shipperList);
         $rootScope.$emit("admin:dashboard:getShipperList", data.msg.shipperList);
     });
+
+    socketService.on('admin:add:order', function(data) {
+        console.log('admin:add:order');
+        $rootScope.$emit("shipper:change:task:status", data.msg);
+    });    
 
     socketService.on('admin:issue:notification', function(data) {
         getUnreadMail().then(function () {
@@ -144,6 +153,40 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
             },
             'admin:messageIssue');
     };
+
+    api.issueMessageProcessing = function(issue, shipperID) {
+        //var shipperList = [
+        var orderList = [];
+        var msgToStore = {
+            type: 'info',
+            title: 'Info',
+            //content: msg,
+            url: '#/store/dashboard',
+            isread: false,
+            createddate: new Date()
+        };
+
+        issue.orderissues.map(function (orderissue) {
+            var order = new Object();
+            order['storeid'] = orderissue.order.storeid;
+            order['orderid'] = orderissue.order.orderid;
+            orderList.push(order);
+        })
+        var user = api.getCurrentUser();
+        socketService.sendPacket(
+            {
+                type: 'admin',
+                clientID: user.adminID
+            },
+            'server',
+            {
+                orderList: orderList,
+                shipperid: shipperID,
+                typeid: issue.typeid,
+                msg: msgToStore
+            },
+            'admin:messageIssue');
+    }
 
 
     api.confirmPaymentMessage = function (storeid, newLedgerID) {//send message after confirm payment

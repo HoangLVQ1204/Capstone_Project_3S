@@ -2,7 +2,14 @@
  * Created by Kaka Hoang Huy on 9/30/2015.
  */
 
-app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService', 'socketShipper', 'socketService', function($scope,$state, $ionicLoading, authService, socketShipper, socketService){
+app.controller('SignInCtrl', ['$scope','$state', '$ionicLoading', 'authService', 'socketShipper', 'socketService', '$rootScope', function($scope,$state, $ionicLoading, authService, socketShipper, socketService, $rootScope){
+  console.log('SigninController.js');
+  if (authService.isLogged()) {
+    $rootScope.isGrabbing = false;
+    $state.go("app.tasks");    
+  } else {
+    console.log('stay in SignInCtrl');
+  }
 
   var showError = function(error){
     $scope.showUserError = true;

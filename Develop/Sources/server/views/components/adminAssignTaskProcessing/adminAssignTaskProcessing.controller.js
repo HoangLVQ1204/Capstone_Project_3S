@@ -248,7 +248,8 @@ function adminAssignTaskProcessingController($scope,$state, $rootScope, authServ
                     //console.log(error)
                 });
                 promise.then(function () {
-                    socketAdmin.issueMessage($scope.issue);
+                    // Correct send issue to shipper
+                    socketAdmin.issueMessageProcessing($scope.issue, $scope.originShipperID);
                     $rootScope.unreadMail--;
                     smsData.theme="theme-inverse";
                     $("#md-effect-dialog").attr('class','modal fade').addClass(smsData.effect).modal('show');
@@ -342,6 +343,7 @@ function adminAssignTaskProcessingController($scope,$state, $rootScope, authServ
                 }
             })
         });
+        console.log('adminAssignTaskProcessing.controller.js', listShipper);
         socketAdmin.taskNotification(listShipper);
     }
 

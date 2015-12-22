@@ -63,7 +63,7 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
   });
 
   uiGmapGoogleMapApiProvider.configure({
-    key: 'AIzaSyBk3UVYSjs7KpBjwg0RDU1eCNFwwG2HSEs',
+    key: 'AIzaSyAJ2h2y-g5g825gT_N13aMeU9NS0dsoK_Y',
     v: '3.20',
     libraries: 'geometry,visualization,drawing,places',
     language: 'vi'    

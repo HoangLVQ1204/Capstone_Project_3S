@@ -14,22 +14,14 @@ function storeOrderHistoryController($rootScope,$scope,dataService,$state, $http
             value: ''
         },
         {
-            option: 'OrderID',
+            option: 'Order ID',
             value: 'orderid'
-        },
-        
-        {
-            option: 'Pickup Address',
-            value: 'pickupaddress'
-        },
-        {
-            option: 'Delivery Address',
-            value: 'fullDeliveryAddress'
         },
         {
             option: 'Status',
             value: 'orderstatus.statusname'
         }];
+
     $scope.dateOptions = [
         {
             option: 'Create date',

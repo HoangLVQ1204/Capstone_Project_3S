@@ -3,7 +3,7 @@
  */
 
 
-function socketShipper($rootScope, $q,socketService,authService,mapService, $ionicLoading, $timeout) {
+function socketShipper($rootScope, $q,socketService,authService,mapService, $ionicLoading, $timeout, $stateParams, $state) {
 
 
   var EPSILON = 1e-6;
@@ -17,6 +17,9 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
    */
   api.initHandlers = function() {
     // init handlers
+    socketService.on('ping', function(data){
+        socketService.emit('pong', {beat: 1});
+    });
     
     socketService.on('shipper:register:location', function(data) {
       console.log('register', data);
@@ -27,7 +30,17 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
     socketService.on('shipper:issue:resolve', function(data) {
       console.log('shipper:issue:resolve', data.msg.notification);
       //$rootScope.$broadcast('issue:resolve', {type: data.msg.type, content: data.msg.notification.content});
-      $rootScope.$broadcast('issue:resolve', {type: data.msg.type});
+      var msg = "Your issue has been resolved";
+      if (data.msg.type == 4 || data.msg.type == 5) {
+        msg = "Your issue cancel has beeen accepted";
+      }
+      if (data.msg.type == 7){
+        msg = data.msg.notification.content
+      }
+      if (data.msg.type == 8) {
+        msg = "Reconnect successfully";
+      }
+      $rootScope.$broadcast('issue:resolve', {content: msg});
     });
 
     //receive new task socket
@@ -53,6 +66,11 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
 
     socketService.on('shipper:choose:express', function(data) {      
       $rootScope.isExpressShow = true;
+      //redirect to task screen when appear Grab order screen
+      if ($state.current.name == 'app.detail' && $stateParams.isCancel || $state.current.name == 'app.issue') {
+        console.log("go to task");
+        $state.go('app.tasks');
+      }
       //Ionic Loading
       $rootScope.show = function() {
         console.log('rootScope.show ' + $rootScope.counter);
@@ -118,7 +136,9 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
               'shipper:reject:order');
           }
         };
-        $rootScope.show();
+        setTimeout(function() {
+          $rootScope.show();
+        }, 500);
       }else{
         // TODO: Wait until modal hide
       }
@@ -197,23 +217,28 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
       navigator.geolocation.getCurrentPosition(function(position){
         currentLocation = position.coords;
         dataShipper.latitude = position.coords.latitude;
-        dataShipper.longitude = position.coords.longitude;
-
+        dataShipper.longitude = position.coords.longitude;        
         d.resolve(dataShipper);
       },function(){
         d.reject("Can't get your current location! Please check your connection");
+      }, {
+        enableHighAccuracy:true
       });
     }
 
     return d.promise;
   };
 
+  api.getCurrentLocation = function() {
+    return currentLocation;
+  }
+
   api.watchCurrentPosition = function() {
 
     var geo_success = function(position) {
       if (currentLocation
-          && Math.abs(currentLocation.latitude - position.coords.latitude) <= EPSILON
-          && Math.abs(currentLocation.longitude - position.coords.longitude) <= EPSILON) {
+          && (Math.abs(currentLocation.latitude - position.coords.latitude) <= EPSILON
+          || Math.abs(currentLocation.longitude - position.coords.longitude) <= EPSILON)) {
           console.log('the same location');
           return;
       }
@@ -305,5 +330,5 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
   return api;
 }
 
-socketShipper.$inject = ['$rootScope', '$q','socketService','authService','mapService', '$ionicLoading', '$timeout'];
+socketShipper.$inject = ['$rootScope', '$q','socketService','authService','mapService', '$ionicLoading', '$timeout', '$stateParams', '$state'];
 app.factory('socketShipper', socketShipper);
