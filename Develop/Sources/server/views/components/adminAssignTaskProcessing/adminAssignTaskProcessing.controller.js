@@ -342,6 +342,7 @@ function adminAssignTaskProcessingController($scope,$state, $rootScope, authServ
                 }
             })
         });
+        console.log('adminAssignTaskProcessing.controller.js', listShipper);
         socketAdmin.taskNotification(listShipper);
     }
 
