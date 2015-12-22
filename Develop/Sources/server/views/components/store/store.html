@@ -67,14 +67,11 @@
                 <!-- //avatar-detail-->
 
                 <div class="avatar-link btn-group btn-group-justified">
-                    <a class="btn" ui-sref="store.storeProfile"  title="Portfolio"><i class="fa fa-briefcase"></i></a>
-                    <a class="btn"  data-toggle="modal" href="#md-notification" title="Notification">
+                    <a class="btn" ui-sref="store.orderList"  title="Order's list"><i class="fa fa-briefcase"></i></a>
+                    <a class="btn"  data-toggle="modal" ui-sref="store.notification" title="Notification">
                         <i class="fa fa-bell-o"></i><em class="green"></em>
                     </a>
-                    <a class="btn"  data-toggle="modal" href="#md-messages"  title="Messages">
-                        <i class="fa fa-envelope-o"></i><em class="active"></em>
-                    </a>
-                    <a class="btn" href="#menu-right" title="Contact List"><i class="fa fa-book"></i></a>
+                    <a class="btn" ui-sref="store.transactionHistory" title="Payment"><i class="fa fa-book"></i></a>
                 </div>
                 <!-- //avatar-link-->
 
@@ -90,19 +87,13 @@
 
             <div class="widget-collapse dark">
                 <header>
-                    <a  ui-sref="store.orderHistory"><i class="fa fa-shopping-cart"></i> Order's history</a>
+                    <a  ui-sref="store.orderList"><i class="fa fa-shopping-cart"></i> Order's list</a>
                 </header>
             </div>
 
             <div class="widget-collapse dark">
                 <header>
                     <a  ui-sref="store.transactionHistory"><i class="fa fa-money"></i> Payment</a>
-                </header>
-            </div>
-
-            <div class="widget-collapse dark">
-                <header>
-                    <a  ui-sref="store.storeProfile"><i class="fa fa-money"></i> Profile</a>
                 </header>
             </div>
 
