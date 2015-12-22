@@ -10,7 +10,8 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
 
   var currentLocation = null;
   var api = {};
-
+  $rootScope.receiveOrderSuccess = false;
+  $rootScope.isExpressShow = false;
   /*
    add handlers
    */
@@ -37,9 +38,9 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
 
     socketService.on('shipper:add:order', function(data) {
       var msg = data.msg;
-      console.log('shipper:add:order');
       if (!$rootScope.receiveOrderSuccess) {
-        $rootScope.$emit('shipper:express:order:success', msg);
+        console.log('shipper:add:order');
+        $rootScope.$broadcast('shipper:express:order:success', msg);
         $rootScope.receiveOrderSuccess = true;
       }      
     });
@@ -51,6 +52,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
     });
 
     socketService.on('shipper:choose:express', function(data) {      
+      $rootScope.isExpressShow = true;
       //Ionic Loading
       $rootScope.show = function() {
         console.log('rootScope.show ' + $rootScope.counter);
