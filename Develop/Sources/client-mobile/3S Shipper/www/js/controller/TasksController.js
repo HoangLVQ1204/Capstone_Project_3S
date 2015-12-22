@@ -5,6 +5,7 @@
 
 app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoading', '$ionicPopup', '$timeout', 'socketShipper', function($rootScope, $scope, dataFactory, $ionicLoading, $ionicPopup, $timeout, socketShipper) {
 
+  console.log("TaskCtrl");
   $rootScope.haveIssue = false;
 
   //Get All Task Be Issued
