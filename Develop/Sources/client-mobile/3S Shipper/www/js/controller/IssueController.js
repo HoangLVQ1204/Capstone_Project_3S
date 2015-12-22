@@ -1,7 +1,7 @@
 /**
  * Created by Kaka Hoang Huy on 9/30/2015.
  */
-app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoading', '$timeout', 'socketShipper', function ($scope, $ionicPopup, dataFactory, $ionicLoading, $timeout, socketShipper) {
+app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoading', 'socketShipper', '$state', '$ionicHistory', function ($scope, $ionicPopup, dataFactory, $ionicLoading, socketShipper, $state, $ionicHistory) {
 
   //Get All Task of shipper
   $scope.isSend = false;
@@ -82,7 +82,7 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
           'val': item.orderid,
           'text': item.orderid
         });
-        if (item.orderstatusid == 3) {
+        if (item.orderstatusid == 3 && item.statusid != 4) {
           listGoodIsBroken.push({
             'val': item.orderid,
             'text': item.orderid
@@ -171,13 +171,13 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
         });
       });
     }
-    console.log("listOrderActive", $scope.listOrderActive);
     //Fill to "Order" dropdown list
     $scope.selectable = listOrderInactive;
     //Fill to "Order" dropdown list
     $scope.listOrderShipping = listShipping;
     //Fill to cancel (goood is broken)
     $scope.listOrderBroken = listGoodIsBroken;
+    console.log("goodFail", $scope.listOrderBroken);
   }
 
   //Fill to "Type" dropdown list
@@ -367,7 +367,13 @@ app.controller('IssueCtrl',['$scope','$ionicPopup', 'dataService', '$ionicLoadin
 
                 //Pass to function changeIsPendingOrder
                 $scope.issueId = rs[0].issueid;
-
+                if (rs[0].catissue == 2) {
+                  $state.go('app.tasks');
+                  // $ionicNavBarDelegate.showBackButton(false);
+                  $ionicHistory.nextViewOptions({
+                    historyRoot: true
+                  });
+                }
                 //1 is Pending
                 if (rs[0].catissue == 1) {
                   $scope.haveIssue = true;
