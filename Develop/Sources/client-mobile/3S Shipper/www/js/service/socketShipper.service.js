@@ -197,16 +197,21 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
       navigator.geolocation.getCurrentPosition(function(position){
         currentLocation = position.coords;
         dataShipper.latitude = position.coords.latitude;
-        dataShipper.longitude = position.coords.longitude;
-
+        dataShipper.longitude = position.coords.longitude;        
         d.resolve(dataShipper);
       },function(){
         d.reject("Can't get your current location! Please check your connection");
+      }, {
+        enableHighAccuracy:true
       });
     }
 
     return d.promise;
   };
+
+  api.getCurrentLocation = function() {
+    return currentLocation;
+  }
 
   api.watchCurrentPosition = function() {
 
