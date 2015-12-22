@@ -31,6 +31,10 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
         });
     }
 
+    socketService.on('ping', function(data){
+        socketService.emit('pong', {beat: 1});
+    });
+
     socketService.on('admin:register:location', function(data) {
         mapService.setMapData(data.msg.mapData);
         if (data.msg.shipperList != null) updateListShipper(data.msg.shipperList);

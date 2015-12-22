@@ -17,6 +17,9 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
    */
   api.initHandlers = function() {
     // init handlers
+    socketService.on('ping', function(data){
+        socketService.emit('pong', {beat: 1});
+    });
     
     socketService.on('shipper:register:location', function(data) {
       console.log('register', data);

@@ -13,7 +13,9 @@ function socketStore($q,socketService,authService,mapService,$rootScope){
     /*
         add handlers
     */
-
+    socketService.on('ping', function(data){
+        socketService.emit('pong', {beat: 1});
+    });
     
     socketService.on('store:register:location', function(data) {        
         // console.log('register', mapService.setMapData, data.msg.mapData);
