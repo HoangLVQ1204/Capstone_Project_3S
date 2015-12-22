@@ -182,7 +182,7 @@ angular.module('app', [
             url: '/orderDetail?orderid',
             template: '<admin-order-detail-layout></admin-order-detail-layout>',
             controller: function($scope, $rootScope, mapService, authService, $stateParams){
-                var mode = { type: 'all'};
+                var mode = { type: 'orderdetail', orderID: $stateParams.orderid };
                 //// setTimeout(function() {
                 ////    mapService.setMode(mode);
                 ////    $rootScope.$apply();
@@ -194,12 +194,18 @@ angular.module('app', [
                 $scope.stores = mapService.getStoreMarkers(mode);
                 $scope.customers = mapService.getCustomerMarkers(mode);
                 $scope.orders = mapService.getOrders(mode);
-                //console.log($scope.orders);
-                //console.log('controller state', $scope.shippers, $scope.stores, $scope.customers, $scope.orders);
-                //$scope.center = {
-                //    latitude: authService.getCurrentInfoUser().stores[0].latitude,
-                //    longitude: authService.getCurrentInfoUser().stores[0].longitude
-                //}
+                console.log($scope.orders);
+                console.log('controller state', $scope.shippers, $scope.stores, $scope.customers, $scope.orders);
+                $scope.center = {};
+                if ($scope.shippers.length > 0) {
+                    $scope.center.latitude = $scope.shippers[0].latitude;
+                    $scope.center.longitude = $scope.shippers[0].longitude;
+                } else {
+                    // Set to location of FPT University 21.013939, 105.527510
+                    $scope.center.latitude = 21.013939;
+                    $scope.center.longitude = 105.527510;
+                }
+                console.log('center map', $scope.center);
             },
             access: config.role.admin
         })

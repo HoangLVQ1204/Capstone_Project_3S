@@ -37,6 +37,11 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
         $rootScope.$emit("admin:dashboard:getShipperList", data.msg.shipperList);
     });
 
+    socketService.on('admin:add:order', function(data) {
+        console.log('admin:add:order');
+        $rootScope.$emit("shipper:change:task:status", data.msg);
+    });    
+
     socketService.on('admin:issue:notification', function(data) {
         getUnreadMail().then(function () {
             $rootScope.$emit("admin:issue:newIssue", data.msg);

@@ -2,19 +2,18 @@
  * Created by Kaka Hoang Huy on 10/19/2015.
  */
 
-function detailController($scope, $stateParams, dataService, $cordovaGeolocation, $ionicPopup, $ionicPopover, uiGmapGoogleMapApi, uiGmapIsReady, $rootScope, $ionicLoading, mapService, authService) {  
+function detailController($scope, $stateParams, dataService, $cordovaGeolocation, $ionicPopup, $ionicPopover, uiGmapGoogleMapApi, uiGmapIsReady, $rootScope, $ionicLoading, mapService, authService, socketShipper) {  
   $scope.isCancel = $stateParams.isCancel;
   $scope.shippers = mapService.getShipperMarkers();
   $scope.stores = mapService.getStoreMarkers();
   $scope.customers = mapService.getCustomerMarkers();
   $scope.orders = mapService.getOrders();
-  var currentUser = authService.getCurrentInfoUser();
-  $scope.center = {
-      // :TODO get address of shipper
-      //latitude: currentUser.latitude,
-      //longitude: currentUser.longitude
-      latitude: 21.013419,
-      longitude: 105.526180
+  // var currentUser = authService.getCurrentInfoUser();    
+  var currentUser = socketShipper.getCurrentLocation()  
+  // console.log('DetailController.js:12', currentUser);
+  $scope.center = {        
+      latitude: currentUser.latitude,
+      longitude: currentUser.longitude
   };
   //shipper category of issue = cancel
   if ($scope.isCancel == "true") {
@@ -211,7 +210,7 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
     return;
     var myLatlng = new google.maps.LatLng(centerPoint.lat, centerPoint.lgt),
       mapOptions = {
-        zoom: 10,
+        zoom: 14,
         center: myLatlng
         //mapTypeId: google.maps.MapTypeId.SATELLITE
       },
@@ -258,5 +257,5 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
   //// END - functions area
 }
 
-detailController.$inject = ['$scope', '$stateParams', 'dataService', '$cordovaGeolocation', '$ionicPopup', '$ionicPopover', 'uiGmapGoogleMapApi', 'uiGmapIsReady', '$rootScope', '$ionicLoading', 'mapService', 'authService'];
+detailController.$inject = ['$scope', '$stateParams', 'dataService', '$cordovaGeolocation', '$ionicPopup', '$ionicPopover', 'uiGmapGoogleMapApi', 'uiGmapIsReady', '$rootScope', '$ionicLoading', 'mapService', 'authService', 'socketShipper'];
 app.controller('DetailCtrl', detailController);

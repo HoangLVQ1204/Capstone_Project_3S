@@ -118,17 +118,18 @@ function adminDashboardController($scope,$state,dataService, config, $rootScope,
     };
 
     $rootScope.$on("admin:dashboard:getShipperList", function(event, args){
+        console.log('admin:dashboard:getShipperList in adminDashboardController');
         $scope.onlineShipper = socketAdmin.listOnlineShipper.length;
     });
 
     $rootScope.$on("shipper:change:order:status", function(event,args){
-        console.log('rootScope in adminDashboardController');
+        console.log('shipper:change:order:status in adminDashboardController');
         //alert(2);
         getDataFromServer();
     });
 
     $rootScope.$on("shipper:change:task:status", function(event,args){
-        console.log('rootScope in adminDashboardController');
+        console.log('shipper:change:task:status in adminDashboardController');
         getDataFromServer();
     });
 }
