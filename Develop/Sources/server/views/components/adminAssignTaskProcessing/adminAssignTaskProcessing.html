@@ -74,8 +74,8 @@
                                     <tr class="odd gradeX" ng-repeat= "x in displayedShipperCollection" cs-select="x" select-mode="single" ng-model="$parent.isPicked" select-action="pickShipper(x)">
                                         <td class="text-center"><a ui-sref="admin.userDetail({username: x.username})"> {{x.username}}</a>
                                             <br ng-show="x.hasIssue"><label class="color-danger" ng-show="x.hasIssue">Issue</label>
-                                            <br ng-show="x.workingStatus == 'Offline'">
-                                            <label class="color-default" ng-show="x.workingStatus == 'Offline'">{{x.workingStatus}}</label>
+                                            <span class="label label-default" ng-show="x.workingStatus == 'Offline'">{{x.workingStatus}}</span>    
+                                            <span class="label bg-success" ng-show="x.workingStatus == 'Online'">{{x.workingStatus}}</span>
                                         </td>
                                         <td>{{x.profile.name}}</td>
                                     </tr>
