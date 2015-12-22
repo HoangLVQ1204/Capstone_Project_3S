@@ -217,8 +217,8 @@ function postOneOrder(data){
          var district = data.order.deliverydistrictid;
          var innerCity = config.filterLocation.in;
          var ordertypeid = data.order.ordertypeid;
-         var fee = calculateShipFee (district, innerCity,ordertypeid);         
-         var overWeightFee = calculateOverWeightFee (district, innerCity,data.goods)
+         var fee = calculateShipFee (district, innerCity,ordertypeid) + calculateOverWeightFee (district, innerCity,data.goods);         
+         var overWeightFee = calculateOverWeightFee (district, innerCity,data.goods);
 
          newOrder.storeid = data.order.storeid;
          newOrder.ordertypeid = data.order.ordertypeid;

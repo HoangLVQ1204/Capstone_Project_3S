@@ -101,6 +101,7 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
                 console.log(rs);
                 console.log("=============");
                 $scope.order = rs.data;
+                $scope.order.fee = $scope.order.fee - $scope.order.overweightfee;
                 $scope.listgoods = rs.data.goods;
 
                 $scope.numOldGoods = rs.data.goods.length;
