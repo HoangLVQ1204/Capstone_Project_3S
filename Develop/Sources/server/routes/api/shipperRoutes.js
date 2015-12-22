@@ -137,7 +137,7 @@ module.exports = function (app) {
                 return res.status(200).json(rs);
             })
             .catch(function(err){
-                return res.status(400).json(err.messages);
+                return res.status(400).json(err.message);
             })
         });
 
