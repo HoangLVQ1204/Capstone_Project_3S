@@ -82,9 +82,15 @@ function adminAssignTaskProcessingController($scope,$state, $rootScope, authServ
                     });
                     //console.log( $scope.tasksList);
                 });
+                getShipperOnline();
+                //console.log($scope.originShipperID);
+                var shipper = $.grep($scope.tasksList, function(e){ return e.username == $scope.originShipperID; });
+                console.log(shipper);
+                shipper[0]['isSelected'] = true;
+                $scope.pickShipper(shipper[0]);
+
                 $scope.moveAllProcessingTask($scope.originShipperID);
-
-
+                shipper[0]['isSelected'] = false;
             })
     })
 
@@ -141,7 +147,7 @@ function adminAssignTaskProcessingController($scope,$state, $rootScope, authServ
         //console.log(order)
         if ($scope.pickedShipper == null) return;
 
-        if ($scope.pickedShipper.hasIssue){
+        if ($scope.pickedShipper.hasIssue || $scope.pickedShipper['workingStatus'] == 'Offline'){
             var data = new Object();
             data.verticalEdge='right';
             data.horizontalEdge='bottom';
@@ -265,6 +271,7 @@ function adminAssignTaskProcessingController($scope,$state, $rootScope, authServ
     $scope.moveAllProcessingTask = function(shipperid){
 
         var i=0;
+
         while (i<$scope.taskList.length)
             $scope.pickTask($scope.taskList[i]);
         //console.log(originShipper[0].tasks);
@@ -277,7 +284,7 @@ function adminAssignTaskProcessingController($scope,$state, $rootScope, authServ
     $scope.moveAllOrderToShipper = function(shipperid){
         if ($scope.pickedShipper == null) return;
 
-        if ($scope.pickedShipper.hasIssue){
+        if ($scope.pickedShipper.hasIssue || $scope.pickedShipper['workingStatus'] == 'Offline'){
             var data = new Object();
             data.verticalEdge='right';
             data.horizontalEdge='bottom';
@@ -347,6 +354,18 @@ function adminAssignTaskProcessingController($scope,$state, $rootScope, authServ
         }
         return 0;
     };
+
+    function getShipperOnline(){
+        socketAdmin.listShippers.map(function (shipper) {
+            var result = $.grep($scope.shipperList, function(e){ return e.username == shipper.shipperID; });
+            // console.log('getShipperOnline', shipper, result);
+            if (result.length > 0)
+                if (shipper.isConnected)
+                    result[0]['workingStatus'] = 'Online';
+                else
+                    result[0]['workingStatus'] = 'Offline';
+        });
+    }
     //----------------------------------
     //FUNCTION LOAD SCRIPT
     //-----------------------------------
@@ -356,7 +375,11 @@ function adminAssignTaskProcessingController($scope,$state, $rootScope, authServ
 
     });
 
+    $rootScope.$on("admin:dashboard:getShipperList", function(event, args){
 
+        getShipperOnline();
+
+    });
 
 
 }

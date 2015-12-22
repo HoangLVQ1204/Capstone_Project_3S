@@ -62,7 +62,7 @@ function adminDashboardController($scope,$state,dataService, config, $rootScope,
                      if (task.statusid == 3)  $scope.doneList.push(task);
                      if (task.statusid == 5)  $scope.failList.push(task);
                      if (dateCompare(new Date(task.taskdate), new Date(Date.now()))) {
-                         $scope.totalTaskToday++;
+                         if (task.statusid != 5) $scope.totalTaskToday++;
                          if (task.statusid == 3) $scope.totalDoneToday++;
                      }
                 });
@@ -122,11 +122,13 @@ function adminDashboardController($scope,$state,dataService, config, $rootScope,
     });
 
     $rootScope.$on("shipper:change:order:status", function(event,args){
+        console.log('rootScope in adminDashboardController');
         //alert(2);
         getDataFromServer();
     });
 
     $rootScope.$on("shipper:change:task:status", function(event,args){
+        console.log('rootScope in adminDashboardController');
         getDataFromServer();
     });
 }

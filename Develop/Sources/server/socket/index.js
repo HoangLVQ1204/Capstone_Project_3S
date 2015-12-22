@@ -16,6 +16,7 @@ module.exports = function(server,app){
     var controllerStore = require('../manages/storeManage')(app);
     var controllerShipper = require('../manages/shipperManage')(app);
     io.gmapUtil = require('../util/googlemapUtil');
+    io.set( 'origins', '*:*' );
 
 
 
@@ -280,11 +281,11 @@ module.exports = function(server,app){
      */
     io.pendingShippers = {};
 
-
+    io.disconnectedShippers = {};
     
     // Define observer for watching io.shippers, io.stores, io.customers, io.orders
     var observer = function(changes) {
-        //console.log('observer run');
+        console.log('observer run', io.shippers);
         for (shipperID in io.shippers) {
             if (io.shippers[shipperID].isConnected) {
                 io.reply({ type: 'shipper', clientID: shipperID }, 
@@ -561,6 +562,9 @@ module.exports = function(server,app){
             result.store.push(io.getOneStore(storeID));            
         });
         result.customer = _.clone(io.customers, true);
+        // result.customer = result.customer.filter(function(e) {
+        //     return !!io.orders[e.order[0]];
+        // });
         result.orders = _.clone(io.orders, true);
         
         // console.log('getDataForAdmin', result);
@@ -658,14 +662,25 @@ module.exports = function(server,app){
         });
     };
 
+    io.containOrder = function(orderID) {
+        return !!io.orders[orderID];
+    };
+
     io.removeOrder = function(orderID) {
+        if (!io.containOrder(orderID)) return;
+        var shipperID = io.orders[orderID].shipperID;
+        var storeID = io.orders[orderID].storeID;
+        var customer = { order: [orderID] };
+        io.removeOrderOfShipper(shipperID, orderID);
+        io.removeOrderOfStore(storeID, orderID);
+        io.removeCustomer(customer);
         delete io.orders[orderID];
     };
 
     io.removeOrderFull = function(orderID) {
         var shipperID = io.orders[orderID].shipperID;
         var storeID = io.orders[orderID].storeID;
-        
+        var customer = { order: [orderID] };
     };
 
     io.updateOrder = function(orderID, newOrder) {
@@ -702,8 +717,12 @@ module.exports = function(server,app){
             
         return io.gmapUtil.getGeoText(temp.latitude, temp.longitude)
         .then(function(geoText) {
+            console.log('gmapUtil', geoText);
             temp.geoText = geoText;
             io.shippers[shipper.shipperID] = temp;
+        })
+        .catch(function(err) {
+            console.log('io.updateShipper', err);
         });
     };
 
@@ -768,9 +787,20 @@ module.exports = function(server,app){
     };
 
     io.updateLocationShipper = function(shipper) {
+        var EPSILON = 1e-3;
         var temp = _.clone(io.shippers[shipper.shipperID], true);
+        var currentLocation = {
+            latitude: temp.latitude,
+            longitude: temp.longitude
+        };
         temp.latitude = shipper.latitude;
         temp.longitude = shipper.longitude;
+        if (currentLocation.latitude && currentLocation.longitude
+            && Math.abs(currentLocation.latitude - shipper.latitude) <= EPSILON
+            && Math.abs(currentLocation.longitude - shipper.longitude) <= EPSILON) {
+            console.log('the same location');
+            return Promise.resolve();
+        }
         return io.gmapUtil.getGeoText(temp.latitude, temp.longitude)
         .then(function(geoText) {
             temp.geoText = geoText;
@@ -1026,13 +1056,14 @@ module.exports = function(server,app){
                 var dataToken = socket.decoded_token;
                 socket.on("client:register",function(data){
                     if(dataToken.userrole == 1){
-
                         console.log("---This is Data Shipper---");
                         console.log(data);
                         console.log("---This is Data Shipper---");
 
                         var shipper = data.msg.shipper;
+                        clearTimeout(io.disconnectedShippers[shipper.shipperID]);
                         if (io.containShipper(shipper.shipperID)) {
+                            console.log('io.containShipper');
                             io.updateShipper(shipper, socket)
                             .then(function() {
                                 var orders = io.getOrdersOfShipper(shipper.shipperID);
@@ -1040,10 +1071,11 @@ module.exports = function(server,app){
                                     e.orderInfo.isPending = false;
                                     io.updateOrder(e.orderID, e.orderInfo);
                                 });
-                                // console.log('after connect', orders);
+                                // console.log('after connect', orders);                                
                                 require('./socketShipper')(socket, io, app);
                             });
                         } else {
+                            console.log('io.addShipper');
                             io.addShipper(shipper, socket)
                             .then(function() {
                                 // console.log('added shipper', io.shippers);

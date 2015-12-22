@@ -27,12 +27,59 @@ function adminAddStoreController($scope,$state, $http, $filter, config, dataServ
             $scope.newStore.storeid = rs.data;
             //console.log(response);
         });
+
+        dataService.getDataServer(config.baseURI + "/api/profile/getAllProfileToCheck")
+            .then(function(rs){
+                $scope.profileCheckList = rs.data;
+                //console.log(response);
+            });
+
+        dataService.getDataServer(config.baseURI + "/api/store/getAllStoreToCheck")
+            .then(function(rs){
+                $scope.storeCheckList = rs.data;
+                //console.log(response);
+            });
     }
 
+    function checkProfileInfo(profile){
+        var result = $.grep($scope.profileCheckList,
+            function(e){ return e.email == profile.email});
+        if (result.length > 0) return 1;
+        result = $.grep($scope.profileCheckList,
+            function(e){ return e.phonenumber == profile.phonenumber});
+        if (result.length > 0) return 2;
+        result = $.grep($scope.profileCheckList,
+            function(e){ return e.identitycard == profile.identitycard});
+        if (result.length > 0) return 3;
+        return 0;
+    }
+
+    function checkStoreInfo(store){
+        var result = $.grep($scope.profileCheckList,
+            function(e){ return e.email == store.email});
+        if (result.length > 0) return 1;
+        result = $.grep($scope.profileCheckList,
+            function(e){ return e.phonenumber == store.phonenumber});
+        if (result.length > 0) return 2;
+
+        return 0;
+    }
 
     $scope.createStore = function () {
        var valid = $('#formStore').parsley( 'validate' );
         if (!valid) return;
+
+        $scope.checkStore = checkStoreInfo($scope.newStore);
+        //console.log($scope.checkProfile);
+        if ($scope.checkStore != 0){
+            smsData.theme="danger";
+            //data.sticky="true";
+            if ($scope.checkStore == 1) $.notific8($("#sms-fail-email").val(), smsData);
+            else $.notific8($("#sms-fail-phone").val(), smsData)
+            //console.log(error)
+            return;
+        }
+
         $scope.newStoreOwner.account.userrole = 2;
         $scope.newStoreOwner.account.userstatus = 2;
         $scope.newStoreOwner.profile.dob = new Date($scope.newStoreOwner.profile.dob);
@@ -91,6 +138,28 @@ function adminAddStoreController($scope,$state, $http, $filter, config, dataServ
                 if(typeof  content.attr("parsley-validate") != 'undefined'){
                     var $valid = content.parsley( 'validate' );
                     if(!$valid){
+                        return false;
+                    };
+                    var dob = new Date($scope.newStoreOwner.profile.dob);
+                    if (dob.getFullYear()>2014)
+                    {
+                        smsData.theme="danger";
+                        //data.sticky="true";
+                        $.notific8($("#sms-fail-date").val(), smsData);
+                        //console.log(error)
+                        return false;
+                    };
+
+                    $scope.checkProfile = checkProfileInfo($scope.newStoreOwner.profile);
+                    //console.log($scope.checkProfile);
+                    if ($scope.checkProfile != 0){
+                        smsData.theme="danger";
+                        //data.sticky="true";
+
+                        if ($scope.checkProfile == 3) $.notific8($("#sms-fail-identity").val(), smsData);
+                        else if ($scope.checkProfile == 1) $.notific8($("#sms-fail-email").val(), smsData);
+                        else $.notific8($("#sms-fail-phone").val(), smsData)
+                        //console.log(error)
                         return false;
                     }
                 };

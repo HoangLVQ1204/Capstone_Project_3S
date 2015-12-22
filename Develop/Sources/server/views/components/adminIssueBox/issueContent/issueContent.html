@@ -79,7 +79,7 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="order in issue.orderissues">
-                            <td class="text-center">{{order.orderid}}</td>
+                            <td class="text-center"><a ui-sref="admin.orderDetail({orderid: order.orderid})">{{order.orderid}}</a></td>
                             <td class="text-center" ng-show="issue.issuetype.categoryid!=3"><a ui-sref="admin.storeDetail({storeid: order.order.storeid})">{{order.order.storeid}}</a></td>
                             <td class="text-center" ng-show="issue.issuetype.categoryid==3"><a ui-sref="admin.userDetail({username: order.order.tasks[0].shipperid})">{{order.order.tasks[0].shipperid}}</a></td>
                             <td>{{order.order.pickupaddress}}</td>

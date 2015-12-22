@@ -15,25 +15,18 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
 
   //-----SOCKET-----//
   //Socket on grab express order
-  $rootScope.$on("shipper:express:order:success", function(event, args) {
-	var des = {
-	  id: 999,
-	  content: 'You just grab a new order!s'
-	};
-	$scope.showAlert(des);
+  $scope.$on("shipper:express:order:success", function(event, args) {
+  	// show popup when grab screen not showing
+    var des = {
+  	  id: 999,
+  	  content: 'You just grab a new order!s'
+  	};
+  	console.log('success success showAlert');    
+    $scope.showAlert(des);
   });
 
   //socket on issue
   $scope.$on("issue:resolve", function (event, args) {
-    //!$scope.haveIssue
-	// if (args.type !== 1 && args.type !== 2 && args.type !== 3 && args.type !== 6 && args.type !== 7 && args.type !== 8) {
-	//   var des = {
-	// 	id: 999,
-	// 	content: 'Your Task is resolved'
-	//   };
-	//   $scope.showAlert(des);
-	// }
-
     //Continue not show this
     console.log("haveIssue:", $scope.haveIssue);
     if (!$scope.haveIssue) {
@@ -41,9 +34,11 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
          id: 999,
          content: 'Your Task is resolved'
       };
-      $scope.showAlert(des);
+    console.log("ExpressShowing: ", $rootScope.isExpressShow);
+      if(!$rootScope.isExpressShow) {
+        $scope.showAlert(des);
+      }
     }
-
   });
 
   //socket new Task shipper:task:newTask
@@ -188,7 +183,6 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
 	  .then(function (res) {
 		var rs = res.data;
 		formatData(rs);
-		console.log('rrrrssss', rs);
 		//Hide IonicLoading without Issue Pending
 		if (!$scope.haveIssue) {
 		  $ionicLoading.hide();
