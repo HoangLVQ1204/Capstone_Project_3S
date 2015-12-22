@@ -111,6 +111,7 @@ function issueContentController($scope,$stateParams, dataService, authService,co
     //function resolve return issue
     function resolveReturnIssue(){
         //console.log($scope.issue);
+        var isCancelInStock = false;
         if ($scope.issue.typeid == 4){
             $scope.issue.orderissues.map(function (issue) {
                 issue.order.tasks[0].statusid = 5;//fail task
@@ -154,6 +155,13 @@ function issueContentController($scope,$stateParams, dataService, authService,co
                 
                     }
                 }
+                else {
+                    if (issue.order.tasks.length > 0){
+                        isCancelInStock = true;
+                        issue.order.tasks[0].typeid = 4;//return
+                        promise.push(dataService.putDataServer(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue));
+                    }
+                }
 
             });
 
@@ -161,6 +169,7 @@ function issueContentController($scope,$stateParams, dataService, authService,co
                 var promises = resolveIssue();
                 promises.then(function () {
                     if ($scope.issue.orderissues[0].order.statusid != 4) socketAdmin.issueMessage($scope.issue);
+                    if ($scope.issue.orderissues[0].order.statusid == 4 && isCancelInStock) socketAdmin.issueMessage($scope.issue);
                     $rootScope.unreadMail--;
                 })
 
