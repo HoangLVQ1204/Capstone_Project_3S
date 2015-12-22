@@ -826,6 +826,7 @@ module.exports = function(server,app){
             && (Math.abs(currentLocation.latitude - shipper.latitude) <= EPSILON
             || Math.abs(currentLocation.longitude - shipper.longitude) <= EPSILON)) {
             console.log('the same location');
+            io.shippers[shipper.shipperID] = temp;
             return Promise.resolve();
         }
         return io.gmapUtil.getGeoText(temp.latitude, temp.longitude)
