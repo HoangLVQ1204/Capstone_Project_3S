@@ -231,6 +231,30 @@ function detailController($scope, $stateParams, dataService, $cordovaGeolocation
     })
   }
 
+  //socket
+  //Socket on grab express order
+  $scope.$on("shipper:express:order:success", function(event, args) {
+    var des = {
+      id: 999,
+      content: 'You just grab a new order!s'
+    };
+    console.log('success success showAlert');
+    $scope.showAlert(des);
+  });
+
+  //show alert
+  $scope.showAlert = function(des) {
+    var alertPopup = $ionicPopup.alert({
+      title: 'Information',
+      template: des.content
+    });
+    alertPopup.then(function(res) {
+      //reload data
+      console.log("You got it");
+      // getListOfTask();
+    });
+  };
+
   //// END - functions area
 }
 

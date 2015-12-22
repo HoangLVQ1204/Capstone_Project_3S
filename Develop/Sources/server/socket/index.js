@@ -281,7 +281,7 @@ module.exports = function(server,app){
      */
     io.pendingShippers = {};
 
-
+    io.disconnectedShippers = {};
     
     // Define observer for watching io.shippers, io.stores, io.customers, io.orders
     var observer = function(changes) {
@@ -1058,12 +1058,12 @@ module.exports = function(server,app){
                 var dataToken = socket.decoded_token;
                 socket.on("client:register",function(data){
                     if(dataToken.userrole == 1){
-
                         console.log("---This is Data Shipper---");
                         console.log(data);
                         console.log("---This is Data Shipper---");
 
                         var shipper = data.msg.shipper;
+                        clearTimeout(io.disconnectedShippers[shipper.shipperID]);
                         if (io.containShipper(shipper.shipperID)) {
                             console.log('io.containShipper');
                             io.updateShipper(shipper, socket)
