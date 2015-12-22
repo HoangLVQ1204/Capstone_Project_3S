@@ -144,6 +144,7 @@ module.exports = function(sequelize, DataTypes) {
               //as: 'store'
             }],where: {
               'storeid': storeid,
+              'payfrom': [1,2],
               'paydate': {
                 gt: latestAutoDate
               }

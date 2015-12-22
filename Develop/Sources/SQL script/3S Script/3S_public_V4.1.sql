@@ -123,7 +123,7 @@ CREATE SEQUENCE "public"."task_taskid_seq"
  INCREMENT 1
  MINVALUE 1
  MAXVALUE 9223372036854775807
- START 14
+ START 163
  CACHE 1;
 
 -- ----------------------------
@@ -1005,14 +1005,21 @@ WITH (OIDS=FALSE)
 -- ----------------------------
 -- Records of generalledger
 -- ----------------------------
-INSERT INTO "public"."generalledger" VALUES ('1231', 'AD000001', 'STR002', null, '0', '2015-10-31 23:59:59+07', null, '3', '0', '0');
-INSERT INTO "public"."generalledger" VALUES ('1232', 'AD000001', 'STR003', null, '0', '2015-10-31 23:59:59+07', null, '3', '0', '0');
-INSERT INTO "public"."generalledger" VALUES ('1233', 'AD000001', 'STR004', null, '0', '2015-10-31 23:59:59+07', null, '3', '0', '0');
+INSERT INTO "public"."generalledger" VALUES ('6', 'AD000001', 'STR004', '20000', '-30000', '2015-12-21 05:25:29+07', null, '2', '20000', '50000');
 INSERT INTO "public"."generalledger" VALUES ('1234', 'AD000001', 'STR001', null, '-730000', '2015-10-31 23:59:59+07', null, '3', '20000', '750000');
 INSERT INTO "public"."generalledger" VALUES ('1235', 'AD000001', 'STR001', '730000', '0', '2015-11-02 02:14:07+07', null, '2', '20000', '20000');
 INSERT INTO "public"."generalledger" VALUES ('1236', 'AD000001', 'STR001', null, '10000', '2015-11-07 23:59:59+07', null, '3', '10000', '0');
-INSERT INTO "public"."generalledger" VALUES ('1237', 'AD000001', 'STR002', null, '0', '2015-11-07 23:59:59+07', null, '3', '0', '0');
-INSERT INTO "public"."generalledger" VALUES ('1238', 'AD000001', 'STR001', '10000', '0', '2015-11-08 03:10:36+07', null, '1', '0', '0');
+INSERT INTO "public"."generalledger" VALUES ('1237', 'AD000001', 'STR001', '10000', '0', '2015-11-08 03:10:36+07', null, '1', '0', '0');
+INSERT INTO "public"."generalledger" VALUES ('1239', 'AD000001', 'STR001', null, '-20000', '2015-11-14 23:59:59+07', null, '3', '20000', '40000');
+INSERT INTO "public"."generalledger" VALUES ('1240', 'AD000001', 'STR001', '20000', '0', '2015-11-15 04:47:18+07', null, '2', '20000', '20000');
+INSERT INTO "public"."generalledger" VALUES ('1241', 'AD000001', 'STR002', null, '-990000', '2015-11-21 23:59:59+07', null, '3', '10000', '1000000');
+INSERT INTO "public"."generalledger" VALUES ('1243', 'AD000001', 'STR002', '990000', '0', '2015-11-23 04:56:56+07', null, '2', '10000', '10000');
+INSERT INTO "public"."generalledger" VALUES ('1321', 'AD000001', 'STR001', null, '-20000', '2015-12-19 23:59:59+07', null, '3', '10000', '30000');
+INSERT INTO "public"."generalledger" VALUES ('1322', 'AD000001', 'STR001', '20000', '0', '2015-12-21 05:03:20+07', null, '2', '10000', '10000');
+INSERT INTO "public"."generalledger" VALUES ('1334', 'AD000001', 'STR002', null, '-180000', '2015-12-19 23:59:59+07', null, '3', '20000', '200000');
+INSERT INTO "public"."generalledger" VALUES ('1335', 'AD000001', 'STR003', null, '20000', '2015-12-19 23:59:59+07', null, '3', '20000', '0');
+INSERT INTO "public"."generalledger" VALUES ('1336', 'AD000001', 'STR004', null, '-50000', '2015-12-19 23:59:59+07', null, '3', '20000', '70000');
+INSERT INTO "public"."generalledger" VALUES ('1339', 'AD000001', 'STR002', '180000', '0', '2015-12-21 05:11:57+07', null, '2', '20000', '20000');
 
 -- ----------------------------
 -- Table structure for goods
@@ -1208,22 +1215,22 @@ WITH (OIDS=FALSE)
 -- ----------------------------
 -- Records of order
 -- ----------------------------
-INSERT INTO "public"."order" VALUES ('OD033334', 'STR002', null, '1', 'Ngõ Bà Triệu,Lê Đại Hành,Hồ Tây, Hà Nội', '23', null, '2015-11-27 23:24:00.254+07', null, '0789677567', 'Nguyen Van CCC', null, '1', 'f', null, 'f', '20000', '500000', '5000', '01', '018', '00526', null, null);
-INSERT INTO "public"."order" VALUES ('OD052651', 'STR002', null, '2', 'Ngõ Bà Triệu,Lê Đại Hành,Hồ Tây, Hà Nội', '345', null, '2015-11-27 23:54:47.995+07', null, '0987866787', 'Ngo Thi Thanh V', null, null, 'f', null, 't', '20000', '500000', '24000', '01', '008', '00331', null, null);
-INSERT INTO "public"."order" VALUES ('OD097614', 'STR001', '1', '1', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', '30, Lạc Long Quân', '2015-11-03 03:06:47+07', '2015-11-02 22:33:05+07', '2015-11-05 03:07:17+07', '01666335588', 'Trần Văn A', '1236', '7', 'f', null, 'f', '10000', '0', '8000', '01', '003', '00103', null, null);
-INSERT INTO "public"."order" VALUES ('OD228063', 'STR001', null, '1', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', '30', null, '2015-11-27 23:00:32.872+07', null, '0677566466', 'Nguyen Thi Kieu C', null, '1', 'f', null, 'f', '20000', '40000', '0', '01', '018', '00526', null, null);
-INSERT INTO "public"."order" VALUES ('OD385512', 'STR001', null, '1', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', '40 Duy Tân', null, '2015-11-27 22:30:32.206+07', null, '03456434654', 'Nguyen Van B', null, '1', 'f', null, 'f', '20000', '70000', '0', '01', '276', '04927', null, null);
-INSERT INTO "public"."order" VALUES ('OD416288', 'STR002', null, '2', 'Ngõ Bà Triệu,Lê Đại Hành,Hồ Tây, Hà Nội', '34', null, '2015-11-27 23:53:10.536+07', null, '09675674667', 'Le Thi Tra Y', null, null, 'f', null, 't', '30000', '100000', '0', '01', '276', '10000', null, null);
+INSERT INTO "public"."order" VALUES ('OD033334', 'STR003', '1', '1', '314 Bà Triệu,Lê Đại Hành,Hai Bà Trưng,Hà Nội', '23', '2015-12-16 05:17:45+07', '2015-12-15 23:24:00+07', '2015-12-18 05:17:58+07', '0789677567', 'Nguyen Van Cau', null, '7', 'f', null, 'f', '20000', '0', '0', '01', '018', '00526', null, null);
+INSERT INTO "public"."order" VALUES ('OD052651', 'STR002', null, '2', 'Ngõ Bà Triệu,Lê Đại Hành,Hồ Tây, Hà Nội', '345', null, '2015-11-27 23:54:47.995+07', null, '0987866787', 'Ngo Thi Thanh Van', null, null, 'f', null, 't', '20000', '500000', '24000', '01', '008', '00331', null, null);
+INSERT INTO "public"."order" VALUES ('OD097614', 'STR001', '1', '1', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', '30, Lạc Long Quân', '2015-11-03 03:06:47+07', '2015-11-02 22:33:05+07', '2015-11-05 03:07:17+07', '01666335588', 'Trần Văn Anh', '1236', '7', 'f', null, 'f', '10000', '0', '8000', '01', '003', '00103', null, null);
+INSERT INTO "public"."order" VALUES ('OD228063', 'STR001', null, '1', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', '30', null, '2015-11-27 23:00:32.872+07', null, '0677566466', 'Nguyen Thi Kieu Chinh', null, '1', 'f', null, 'f', '20000', '40000', '0', '01', '018', '00526', null, null);
+INSERT INTO "public"."order" VALUES ('OD385512', 'STR004', '1', '1', '133 Thái Hà,Trung Liệt,Đống Đa,Hà Nội', '40 Duy Tân', '2015-12-16 05:23:46+07', '2015-12-15 22:30:32+07', '2015-12-18 05:24:04+07', '03456434654', 'Nguyen Van Bac', '1336', '7', 'f', null, 'f', '20000', '70000', '0', '01', '276', '04927', null, null);
+INSERT INTO "public"."order" VALUES ('OD416288', 'STR002', null, '2', 'Ngõ Bà Triệu,Lê Đại Hành,Hồ Tây, Hà Nội', '34', null, '2015-11-27 23:53:10.536+07', null, '09675674667', 'Le Thi Tra Yen', null, null, 'f', null, 't', '30000', '100000', '0', '01', '276', '10000', null, null);
 INSERT INTO "public"."order" VALUES ('OD516692', 'STR001', null, '1', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', '134', null, '2015-11-27 23:04:31.126+07', null, '07663344224', 'Tran Dinh Hoang Huy', null, '1', 'f', null, 'f', '10000', '30000', '32160', '01', '002', '00037', null, null);
-INSERT INTO "public"."order" VALUES ('OD613046', 'STR001', null, '2', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', '543', null, '2015-11-28 00:02:20.645+07', null, '01643543446', 'Tran Thi N', null, null, 'f', null, 't', '20000', '12000', '0', '01', '005', '00157', null, null);
-INSERT INTO "public"."order" VALUES ('OD638589', 'STR002', null, '1', 'Ngõ Bà Triệu,Lê Đại Hành,Hồ Tây, Hà Nội', '45', null, '2015-11-27 23:26:01.855+07', null, '0788688577', 'Le Van C', null, '1', 'f', null, 'f', '20000', '2000000', '10000', '01', '268', '09538', null, null);
-INSERT INTO "public"."order" VALUES ('OD669907', 'STR001', null, '1', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', 'Xòm Hòa Bình', null, '2015-11-27 21:48:42.475+07', null, '01653445345', 'Nguyễn Văn A', null, '1', 'f', null, 'f', '20000', '50000', '17500', '01', '276', '10012', null, null);
-INSERT INTO "public"."order" VALUES ('OD702638', 'STR001', null, '2', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', '42', null, '2015-11-27 23:59:58.476+07', null, '0986565453', 'Nguyen Van Q', null, null, 'f', null, 't', '30000', '500000', '0', '01', '016', '00376', null, null);
+INSERT INTO "public"."order" VALUES ('OD613046', 'STR001', null, '2', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', '543', null, '2015-11-28 00:02:20.645+07', null, '01643543446', 'Tran Thi Na', null, null, 'f', null, 't', '20000', '12000', '0', '01', '005', '00157', null, null);
+INSERT INTO "public"."order" VALUES ('OD638589', 'STR002', '1', '1', 'Ngõ Bà Triệu,Lê Đại Hành,Hồ Tây, Hà Nội', '45', '2015-12-16 05:08:32+07', '2015-12-15 23:26:01+07', '2015-12-18 15:08:54+07', '0788688577', 'Le Van Cung', '1334', '7', 'f', null, 'f', '20000', '200000', '10000', '01', '268', '09538', null, null);
+INSERT INTO "public"."order" VALUES ('OD669907', 'STR001', null, '1', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', 'Xóm Hòa Bình', null, '2015-11-27 21:48:42.475+07', null, '01653445345', 'Nguyễn Văn An', null, '1', 'f', null, 'f', '20000', '50000', '17500', '01', '276', '10012', null, null);
+INSERT INTO "public"."order" VALUES ('OD702638', 'STR001', null, '2', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', '42', null, '2015-11-27 23:59:58.476+07', null, '0986565453', 'Nguyen Van Quan', null, null, 'f', null, 't', '30000', '500000', '0', '01', '016', '00376', null, null);
 INSERT INTO "public"."order" VALUES ('OD720944', 'STR001', '1', '1', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', '23', '2015-10-27 02:16:45+07', '2015-10-26 22:48:22+07', '2015-10-28 02:17:13+07', '09686868686', 'Trần Văn Chien', '1236', '7', 'f', null, 'f', '20000', '750000', '10000', '01', '018', '00526', null, null);
-INSERT INTO "public"."order" VALUES ('OD794692', 'STR001', null, '1', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', '23232', null, '2015-11-27 22:57:10.188+07', null, '0987566456', 'Tran Thi Van A', null, '1', 'f', null, 'f', '10000', '30000', '0', '01', '007', '00280', null, null);
-INSERT INTO "public"."order" VALUES ('OD796286', 'STR002', null, '1', 'Ngõ Bà Triệu,Lê Đại Hành,Hồ Tây, Hà Nội', '23', null, '2015-11-27 23:21:05.437+07', null, '0877566455', 'Nguyen Khac Hoang', null, '1', 'f', null, 'f', '10000', '1000000', '0', '01', '006', '00178', null, null);
-INSERT INTO "public"."order" VALUES ('OD809450', 'STR002', null, '2', 'Ngõ Bà Triệu,Lê Đại Hành,Hồ Tây, Hà Nội', '43434', null, '2015-11-27 23:42:29.084+07', null, '3434343434', 'ewewe', null, null, 'f', null, 't', '20000', '4000', '0', '01', '001', '00001', null, null);
-INSERT INTO "public"."order" VALUES ('OD818019', 'STR001', null, '1', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', '343', null, '2015-11-27 22:53:06.12+07', null, '0967676788', 'Nguyen Thi Kieu A', null, '1', 'f', null, 'f', '20000', '40000', '0', '01', '016', '00403', null, null);
+INSERT INTO "public"."order" VALUES ('OD794692', 'STR001', '1', '1', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', '23232', '2015-12-15 04:59:37+07', '2015-12-14 22:57:10+07', '2015-12-18 04:59:56+07', '0987566456', 'Tran Thi Van Anh', '1321', '7', 'f', null, 'f', '10000', '30000', '0', '01', '007', '00280', null, null);
+INSERT INTO "public"."order" VALUES ('OD796286', 'STR002', '1', '1', 'Ngõ Bà Triệu,Lê Đại Hành,Hồ Tây, Hà Nội', '23', '2015-11-17 04:52:48+07', '2015-10-18 23:21:05+07', '2015-11-20 04:53:17+07', '0877566455', 'Nguyen Khac Hoang', '1241', '7', 'f', null, 'f', '10000', '1000000', '0', '01', '006', '00178', null, null);
+INSERT INTO "public"."order" VALUES ('OD809450', 'STR002', null, '2', 'Ngõ Bà Triệu,Lê Đại Hành,Hồ Tây, Hà Nội', '43434', null, '2015-11-27 23:42:29.084+07', null, '0978748293', 'Nguyen Thi Nga', null, null, 'f', null, 't', '20000', '4000', '0', '01', '001', '00001', null, null);
+INSERT INTO "public"."order" VALUES ('OD818019', 'STR001', '1', '1', '180 Hàng Bông,Hoàn Kiếm,Hà Nội,Việt Nam', '343', '2015-11-08 04:45:15+07', '2015-11-07 22:53:06+07', '2015-11-11 04:45:36+07', '0967676788', 'Nguyen Thi Kieu Anh', '1239', '7', 'f', null, 'f', '20000', '40000', '0', '01', '016', '00403', null, null);
 
 -- ----------------------------
 -- Table structure for orderissue
@@ -1488,6 +1495,18 @@ INSERT INTO "public"."task" VALUES ('14', 'OD720944', 'SP000002', 'AD000001', '3
 INSERT INTO "public"."task" VALUES ('15', 'OD720944', 'SP000001', 'AD000001', '3', '2', '2015-10-28 02:03:53+07');
 INSERT INTO "public"."task" VALUES ('16', 'OD097614', 'SP000001', 'AD000001', '3', '1', '2015-11-03 02:19:36+07');
 INSERT INTO "public"."task" VALUES ('17', 'OD097614', 'SP000003', 'AD000001', '3', '2', '2015-11-03 03:06:11+07');
+INSERT INTO "public"."task" VALUES ('18', 'OD818019', 'SP000003', 'AD000001', '3', '1', '2015-11-08 04:42:23+07');
+INSERT INTO "public"."task" VALUES ('19', 'OD818019', 'SP000005', 'AD000001', '3', '2', '2015-11-10 04:43:37+07');
+INSERT INTO "public"."task" VALUES ('20', 'OD796286', 'SP000002', 'AD000001', '3', '1', '2015-11-17 04:51:07+07');
+INSERT INTO "public"."task" VALUES ('21', 'OD796286', 'SP000003', 'AD000001', '3', '2', '2015-11-19 04:51:55+07');
+INSERT INTO "public"."task" VALUES ('22', 'OD794692', 'SP000005', 'AD000001', '3', '1', '2015-12-17 04:58:22+07');
+INSERT INTO "public"."task" VALUES ('23', 'OD794692', 'SP000002', 'AD000001', '3', '2', '2015-12-15 04:59:02+07');
+INSERT INTO "public"."task" VALUES ('24', 'OD638589', 'SP000003', 'AD000001', '3', '1', '2015-12-16 05:06:34+07');
+INSERT INTO "public"."task" VALUES ('26', 'OD638589', 'SP000004', 'AD000001', '3', '2', '2015-12-18 05:07:30+07');
+INSERT INTO "public"."task" VALUES ('167', 'OD033334', 'SP000005', 'AD000001', '3', '1', '2015-12-16 05:16:15+07');
+INSERT INTO "public"."task" VALUES ('168', 'OD033334', 'SP000001', 'AD000001', '3', '2', '2015-12-17 05:17:01+07');
+INSERT INTO "public"."task" VALUES ('169', 'OD385512', 'SP000001', 'AD000001', '3', '1', '2015-12-16 05:22:35+07');
+INSERT INTO "public"."task" VALUES ('170', 'OD385512', 'SP000003', 'AD000001', '3', '2', '2015-12-18 05:23:18+07');
 
 -- ----------------------------
 -- Table structure for taskstatus
@@ -12707,14 +12726,6 @@ INSERT INTO "public"."ward" VALUES ('32244', 'Rạch Gốc', 'Thị Trấn', '',
 INSERT INTO "public"."ward" VALUES ('32245', 'Tân Ân', 'Xã', '8 38 45N, 105 03 22E', '973');
 INSERT INTO "public"."ward" VALUES ('32248', 'Đất Mũi', 'Xã', '8 36 41N, 104 47 12E', '973');
 
-
--- ----------------------------
--- Records of generalledger
--- ----------------------------
-INSERT INTO "public"."generalledger" VALUES ('99', 'AD000001', 'STR001', null, '0', '2015-12-29 00:00:00+07', null, '3', '0', '0');
-INSERT INTO "public"."generalledger" VALUES ('192', 'AD000001', 'STR002', null, '0', '2015-12-29 00:00:00+07', null, '3', '0', '0');
-INSERT INTO "public"."generalledger" VALUES ('194', 'AD000001', 'STR003', null, '0', '2015-12-29 00:00:00+07', null, '3', '0', '0');
-INSERT INTO "public"."generalledger" VALUES ('293', 'AD000001', 'STR004', null, '0', '2015-12-29 00:00:00+07', null, '3', '0', '0');
 
 -- ----------------------------
 -- Alter Sequences Owned By 
