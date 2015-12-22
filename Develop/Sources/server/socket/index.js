@@ -814,7 +814,7 @@ module.exports = function(server,app){
     };
 
     io.updateLocationShipper = function(shipper) {
-        var EPSILON = 1e-3;
+        var EPSILON = 1e-5;
         var temp = _.clone(io.shippers[shipper.shipperID], true);
         var currentLocation = {
             latitude: temp.latitude,
