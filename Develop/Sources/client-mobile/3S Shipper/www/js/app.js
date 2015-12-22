@@ -63,11 +63,10 @@ app.config(function ($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvi
   });
 
   uiGmapGoogleMapApiProvider.configure({
-    key: 'AIzaSyA_tcRSfGJdCCDLvGXGPZqdOMQC9bniNoo',
-    v: '3.17',
-    libraries: '',
-    language: 'en',
-    sensor: 'false',
+    key: 'AIzaSyBk3UVYSjs7KpBjwg0RDU1eCNFwwG2HSEs',
+    v: '3.20',
+    libraries: 'geometry,visualization,drawing,places',
+    language: 'vi'    
   });
     $stateProvider
 
