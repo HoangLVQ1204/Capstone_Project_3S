@@ -1090,7 +1090,7 @@ module.exports = function(server,app){
                         console.log("---This is Data Shipper---");
 
                         var shipper = data.msg.shipper;
-                        clearTimeout(io.disconnectedShippers[shipper.shipperID]);
+                        // clearTimeout(io.disconnectedShippers[shipper.shipperID]);
                         if (io.containShipper(shipper.shipperID)) {
                             console.log('io.containShipper');
                             io.updateShipper(shipper, socket)
