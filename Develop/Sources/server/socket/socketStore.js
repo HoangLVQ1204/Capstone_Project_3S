@@ -85,6 +85,7 @@ module.exports = function(socket, io) {
         var msg = data.msg;
 
         io.forward(sender, receiver, msg, 'shipper:add:order');
+        io.forward(sender, 'admin', msg, 'admin:add:order')
         io.addOrder(msg.orderID, msg.store, msg.shipper, msg.customer)
         .then(function() {
             io.updateNumTasksByShipperID(msg.shipper.shipperID);            

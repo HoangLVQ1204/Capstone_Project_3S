@@ -5,7 +5,8 @@
 
 app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoading', '$ionicPopup', '$timeout', 'socketShipper', function($rootScope, $scope, dataFactory, $ionicLoading, $ionicPopup, $timeout, socketShipper) {
 
-  $scope.haveIssue = false;
+  console.log("TaskCtrl");
+  $rootScope.haveIssue = false;
 
   //Get All Task Be Issued
   getAllTaskBeIssued();
@@ -13,49 +14,50 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
   //Get All Task of Shipper
   getListOfTask();
 
-  //-----SOCKET-----//
+  //----- START SOCKET-----//
   //Socket on grab express order
-  $scope.$on("shipper:express:order:success", function(event, args) {
-  	// show popup when grab screen not showing
-    var des = {
-  	  id: 999,
-  	  content: 'You just grab a new order!s'
-  	};
-  	console.log('success success showAlert');    
-    $scope.showAlert(des);
-  });
+  // $scope.$on("shipper:express:order:success", function(event, args) {
+  // 	// show popup when grab screen not showing
+  //   var des = {
+  // 	  id: 999,
+  // 	  content: 'You just grab a new order!s'
+  // 	};
+  // 	console.log('success success showAlert');
+  //   $scope.showAlert(des);
+  // });
 
-  //socket on issue
-  $scope.$on("issue:resolve", function (event, args) {
-    //Continue not show this
-    console.log("haveIssue:", $scope.haveIssue);
-    if (!$scope.haveIssue) {
-      var des = {
-         id: 999,
-         content: 'Your Task is resolved'
-      };
-    console.log("ExpressShowing: ", $rootScope.isExpressShow);
-      if(!$rootScope.isExpressShow) {
-        $scope.showAlert(des);
-      }
-    }
-  });
+  // //socket on issue
+  // $scope.$on("issue:resolve", function (event, args) {
+  //   //Continue not show this
+  //   console.log("args", args);
+  //   console.log("haveIssue:", $scope.haveIssue);
+  //   if (!$scope.haveIssue) {
+  //     var des = {
+  //        id: 999,
+  //        content: args.content
+  //     };
+  //     console.log("ExpressShowing: ", $rootScope.isExpressShow);
+  //       if(!$rootScope.isExpressShow) {
+  //         $scope.showAlert(des);
+  //       }
+  //     }
+  // });
 
-  //socket new Task shipper:task:newTask
-  $scope.$on("shipper:task:newTask", function(event, args){
-    console.log("Reload New Task");
-    getListOfTask();
-  });
+  // //socket new Task shipper:task:newTask
+  // $scope.$on("shipper:task:newTask", function(event, args){
+  //   console.log("Reload New Task");
+  //   getListOfTask();
+  // });
 
-  //socket order express canceled
-  $scope.$on("shipper:canceled", function(event, args){
-    console.log('Shipper: canceled:', args);
-    var des = {
-        id: 999,
-        content: 'Store ' + args.storeid + ' has found another shipper or canceled order'
-    }
-    $scope.showAlert(des);
-  });
+  // //socket order express canceled
+  // $scope.$on("shipper:canceled", function(event, args){
+  //   console.log('Shipper: canceled:', args);
+  //   var des = {
+  //       id: 999,
+  //       content: 'Store ' + args.storeid + ' has found another shipper or canceled order'
+  //   }
+  //   $scope.showAlert(des);
+  // });
 
   //TODO: Select tab for find bestway screen
   $scope.tabSelected = function(tab) {
@@ -89,7 +91,7 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
 		$scope.showLoading();
 	  } else {
 		//TODO
-		$scope.haveIssue = false;
+		$rootScope.haveIssue = false;
 		getListOfTask();
 		$ionicLoading.hide();
 	  }
@@ -132,7 +134,7 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
 		  		socketShipper.updateHaveIssue(true);
 		  	}, 2000);
 
-			$scope.haveIssue = true;
+			$rootScope.haveIssue = true;
 			//show ionicLoading
 			$scope.showLoading();
 		  }
@@ -172,7 +174,7 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
    * StatusTasks are 'Inactive' and 'Active'
    * */
   function getListOfTask() {
-	if (!$scope.haveIssue) {
+	if (!$rootScope.haveIssue) {
 	  $ionicLoading.show({
 		noBackdrop: false,
 		template: '<ion-spinner icon="bubbles" class="spinner-balanced"/>'
@@ -184,7 +186,7 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
 		var rs = res.data;
 		formatData(rs);
 		//Hide IonicLoading without Issue Pending
-		if (!$scope.haveIssue) {
+		if (!$rootScope.haveIssue) {
 		  $ionicLoading.hide();
 		}
 
@@ -202,35 +204,35 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
   function formatData(rs) {
 	if (undefined !== rs['Pickup'] && rs['Pickup'].length) {
 	  isIssued(rs['Pickup']);
-	  $scope.pickupTasks = rs['Pickup'];
-	  $scope.badgeCountPick = rs['Pickup'].length;
+	  $rootScope.pickupTasks = rs['Pickup'];
+	  $rootScope.badgeCountPick = rs['Pickup'].length;
 	} else {
-	  $scope.pickupTasks = [];
-	  $scope.badgeCountPick = 0;
+	  $rootScope.pickupTasks = [];
+	  $rootScope.badgeCountPick = 0;
 	}
 	if (undefined !== rs['Ship'] && rs['Ship'].length) {
 	  isIssued(rs['Ship']);
-	  $scope.shipTasks = rs['Ship'];
-	  $scope.badgeCountShip = rs['Ship'].length;
+	  $rootScope.shipTasks = rs['Ship'];
+	  $rootScope.badgeCountShip = rs['Ship'].length;
 	} else {
-	  $scope.shipTasks = [];
-	  $scope.badgeCountShip = 0;
+	  $rootScope.shipTasks = [];
+	  $rootScope.badgeCountShip = 0;
 	}
 	if (undefined !== rs['Express'] && rs['Express'].length) {
 	  isIssued(rs['Express']);
-	  $scope.expressTasks = rs['Express'];	  
-	  $scope.badgeCountExpress = rs['Express'].length;
+	  $rootScope.expressTasks = rs['Express'];	  
+	  $rootScope.badgeCountExpress = rs['Express'].length;
 	} else {
-	  $scope.expressTasks = [];
-	  $scope.badgeCountExpress = 0;
+	  $rootScope.expressTasks = [];
+	  $rootScope.badgeCountExpress = 0;
 	}
 	if (undefined !== rs['Return'] && rs['Return'].length) {
 	  isIssued(rs['Return']);
-	  $scope.returnTasks = rs['Return'];
-	  $scope.badgeCountReturn = rs['Return'].length;
+	  $rootScope.returnTasks = rs['Return'];
+	  $rootScope.badgeCountReturn = rs['Return'].length;
 	} else {
-	  $scope.returnTasks = [];
-	  $scope.badgeCountReturn = 0;
+	  $rootScope.returnTasks = [];
+	  $rootScope.badgeCountReturn = 0;
 	}
   }
 

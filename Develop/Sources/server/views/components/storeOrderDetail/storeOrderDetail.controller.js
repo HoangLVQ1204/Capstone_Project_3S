@@ -68,7 +68,7 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
           type: 'issue',
           title: 'OOPS!',
           content: 'You must add at least one goods to order!',
-          url: '',
+          url: ''
         };
         $rootScope.notify(temp);        
       }else if($(this).parsley( 'validate' )){
@@ -96,11 +96,15 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
         var urlBase = config.baseURI + '/orders/' + $scope.orderid;
         dataService.getDataServer(urlBase)
             .then(function (rs) {
+                console.log("=============");
+                console.log("Data rs: ");
+                console.log(rs);
+                console.log("=============");
                 $scope.order = rs.data;
                 $scope.listgoods = rs.data.goods;
-                console.log("---DATA ORDER---");
-                console.log(rs);
-                console.log("---DATA ORDER---");
+
+                $scope.numOldGoods = rs.data.goods.length;
+
                var confirmationcode = rs.data.confirmationcodes;
                for(var i = 0; i < confirmationcode.length;i++){
                   if(confirmationcode[i].typeid ==2){
@@ -153,23 +157,29 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
 
     $scope.updateOldOrderToServer = function(){
         var urlBase = config.baseURI + '/orders/' + $scope.orderid;
+
         var data = {
             order: $scope.oldOrder,
             listgoods: $scope.oldOrder.goods
         }
 
-        dataService.putDataServer(urlBase,data)
-            .then(function(sc){
-                $scope.disabled = true;
-                getOrderFromServer();
-            },function(er){
-                var err = {
-                    type:'issue',
-                    title: 'Error',
-                    content: "Can't cancel this order! Try again!"
-                };
-                $rootScope.notify(err);
-            });
+        console.log("numOldGoods " + $scope.numOldGoods);
+        console.log("data.listgoods.length " + data.listgoods.length);
+
+
+            dataService.putDataServer(urlBase, data)
+                .then(function (sc) {
+                    $scope.disabled = true;
+
+                    getOrderFromServer();
+                }, function (er) {
+                    var err = {
+                        type: 'issue',
+                        title: 'Error',
+                        content: "Can't cancel this order! Try again!"
+                    };
+                    $rootScope.notify(err);
+                });
     }
 
     $scope.newGood = {};

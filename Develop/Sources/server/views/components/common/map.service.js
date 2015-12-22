@@ -41,14 +41,30 @@ function mapServiceFn($q,$http,uiGmapGoogleMapApi,uiGmapIsReady,authService){
                 returnedShipperMarkers.push(_.clone(e, true));
             });
         } else if (currentMode.type == 'orderdetail') {
+            console.log('orderdetail info', orders[currentMode.orderID]);
             var currentUser = authService.getCurrentInfoUser();
-            for (var k = 0; k < shipperMarkers.length; ++k) {
-                var e = _.clone(shipperMarkers[k], true);
-                e.order = e.order.filter(function(item) {
-                    return item == currentMode.orderID;
-                });
-                if (e.order.length > 0 || currentUser.userrole == 1) returnedShipperMarkers.push(e);
-            }
+            if (currentUser.userrole == 3) {
+                if (orders[currentMode.orderID]) {
+                    var shipperID = orders[currentMode.orderID].shipperID;
+                    for (var k = 0; k < shipperMarkers.length; ++k) {
+                        if (shipperMarkers[k].shipperID == shipperID) {
+                            var e = _.clone(shipperMarkers[k], true);
+                            e.order = e.order.filter(function(item) {
+                                return item == currentMode.orderID;
+                            });
+                            if (e.order.length > 0) returnedShipperMarkers.push(e);
+                        }                        
+                    }    
+                }
+            } else {
+                for (var k = 0; k < shipperMarkers.length; ++k) {
+                    var e = _.clone(shipperMarkers[k], true);
+                    e.order = e.order.filter(function(item) {
+                        return item == currentMode.orderID;
+                    });
+                    if (e.order.length > 0 || currentUser.userrole == 1) returnedShipperMarkers.push(e);
+                }
+            }            
         } else if (currentMode.type == 'shipper') {            
             var find = _.find(shipperMarkers, function(e) {
                 return currentMode.shipperID == e.shipperID;
@@ -75,12 +91,27 @@ function mapServiceFn($q,$http,uiGmapGoogleMapApi,uiGmapIsReady,authService){
             });
         } else if (currentMode.type == 'orderdetail') {
             var currentUser = authService.getCurrentInfoUser();            
-            for (var k = 0; k < storeMarkers.length; ++k) {
-                var e = _.clone(storeMarkers[k], true);
-                e.order = e.order.filter(function(item) {
-                    return item == currentMode.orderID;
-                });
-                if (e.order.length > 0 || currentUser.userrole == 2) returnedStoreMarkers.push(e);
+            if (currentUser.userrole == 3) {
+                if (orders[currentMode.orderID]) {
+                    var storeID = orders[currentMode.orderID].storeID;
+                    for (var k = 0; k < storeMarkers.length; ++k) {
+                        if (storeMarkers[k].storeID == storeID) {
+                            var e = _.clone(storeMarkers[k], true);
+                            e.order = e.order.filter(function(item) {
+                                return item == currentMode.orderID;
+                            }); 
+                            if (e.order.length > 0) returnedStoreMarkers.push(e);
+                        }                        
+                    }    
+                }
+            } else {
+                for (var k = 0; k < storeMarkers.length; ++k) {
+                    var e = _.clone(storeMarkers[k], true);
+                    e.order = e.order.filter(function(item) {
+                        return item == currentMode.orderID;
+                    });
+                    if (e.order.length > 0 || currentUser.userrole == 2) returnedStoreMarkers.push(e);
+                }            
             }            
         } else if (currentMode.type == 'store') {            
             var find = _.find(storeMarkers, function(e) {

@@ -52,13 +52,19 @@ function adminStoreListController($scope,$state, dataService, authService, confi
                     store.generalledgers[0].balance =  parseInt(store.generalledgers[0].balance);
 
                 dataService.getDataServer(config.baseURI + "/api/store/getLatestLedgerOfStore/" + store.storeid).then(function(response){
+
                     if (response.data!=null) {
-                        store['currentBalance'] = response.data.balance;
-                        store['currentFee'] = response.data.totaldelivery;
-                        store['currentCoD'] = response.data.totalcod;
-                    }
+                        store['currentBalance'] = parseInt(response.data.balance);
+                        store['currentFee'] = parseInt(response.data.totaldelivery);
+                        store['currentCoD'] = parseInt(response.data.totalcod);
+                    };
+                    if (!store['currentBalance']) store['currentBalance']=0;
+                    if (!store['currentFee']) store['currentFee']=0;
+                    if (!store['currentCoD']) store['currentCoD']=0;
                     //console.log(response);
-                }).then(function () {
+                }).catch(function () {
+                    //console.log('Then: ', store.storeid);
+                    //console.log(response.data);
                     if (!store['currentBalance']) store['currentBalance']=0;
                     if (!store['currentFee']) store['currentFee']=0;
                     if (!store['currentCoD']) store['currentCoD']=0;
@@ -211,9 +217,9 @@ function adminStoreListController($scope,$state, dataService, authService, confi
             dataService.putDataServer(config.baseURI +"/api/store/updateLedgerForOrder/" + ledger.storeid).then(function(response){
 
             }).catch(function(error){
-                smsData.theme="danger";
-                $.notific8($("#sms-fail").val(), smsData);
-                console.log(error);
+                //smsData.theme="danger";
+                //$.notific8($("#sms-fail").val(), smsData);
+                //console.log(error);
             })
         }
         dataService.postDataServer(config.baseURI + "/api/store/postNewLedger", ledger).then(function success(response){

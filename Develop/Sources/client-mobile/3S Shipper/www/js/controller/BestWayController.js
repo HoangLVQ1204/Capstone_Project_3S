@@ -16,5 +16,8 @@ app.controller('BestWayCtrl', ['$scope','$stateParams','mapService' function($sc
     $scope.selectAllOpt = true;
   }
 
+  $scope.refresh = function() {
+    console.log('refresh', $scope.selectOpt);
+  };
 
 }])
