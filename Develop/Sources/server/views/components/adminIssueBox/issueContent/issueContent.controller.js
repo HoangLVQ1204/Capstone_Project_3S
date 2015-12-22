@@ -143,6 +143,17 @@ function issueContentController($scope,$stateParams, dataService, authService,co
                     issue.order.tasks[0].statusid = 2;//active task
                     issue.order.tasks[0].typeid = 4;//return
                     promise.push(dataService.putDataServer(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue));
+                }else {
+                    if (issue.order.tasks.length > 0){
+                        issue.order.iscancel = false;
+                        //cancel order
+                        //issue.order.statusid = 6;//canceling order
+                        //issue.order.orderstatus.statusname = 'Canceling';//cancel order
+                        //issue.order.tasks[0].statusid = 2;//active task
+                        issue.order.tasks[0].typeid = 4;//return
+                        promise.push(dataService.putDataServer(config.baseURI + "/api/updateTaskStateOfIssue", $scope.issue));
+                
+                    }
                 }
                 else {
                     if (issue.order.tasks.length > 0){
