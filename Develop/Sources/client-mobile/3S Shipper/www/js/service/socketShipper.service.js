@@ -234,8 +234,8 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
 
     var geo_success = function(position) {
       if (currentLocation
-          && Math.abs(currentLocation.latitude - position.coords.latitude) <= EPSILON
-          && Math.abs(currentLocation.longitude - position.coords.longitude) <= EPSILON) {
+          && (Math.abs(currentLocation.latitude - position.coords.latitude) <= EPSILON
+          || Math.abs(currentLocation.longitude - position.coords.longitude) <= EPSILON)) {
           console.log('the same location');
           return;
       }

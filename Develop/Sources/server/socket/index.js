@@ -292,7 +292,7 @@ module.exports = function(server,app){
 
     io.disconnectedShippers = {};
     
-    // Define observer for watching io.shippers, io.stores, io.customers, io.orders
+    // Define observer for watching io.shippers, io.stores, io.customers, io.orders    
     var observer = function(changes) {
         console.log('observer run', io.shippers);
         for (shipperID in io.shippers) {
@@ -326,8 +326,7 @@ module.exports = function(server,app){
     Object.observe(io.shippers, observer);
     Object.observe(io.stores, observer);
     Object.observe(io.customers, observer);
-    Object.observe(io.orders, observer);
-    
+    Object.observe(io.orders, observer);    
 
 
     // HELPER FUNCTION DATA SOCKET
@@ -569,7 +568,7 @@ module.exports = function(server,app){
         result.store = [];
         result.customer = [];
         result.orders = {};
-        console.log('getDataForAdmin', io.shippers);
+        // console.log('getDataForAdmin', io.shippers);
         Object.keys(io.shippers).forEach(function(shipperID) {
             var shipper = io.getOneShipper(shipperID);
             if (shipper.isConnected || shipper.icon != icons.shipperIcon)
@@ -586,7 +585,7 @@ module.exports = function(server,app){
         });
         result.orders = _.clone(io.orders, true);
         
-        // console.log('getDataForAdmin', result);
+        console.log('getDataForAdmin', result);
         return result;
     };
 
@@ -732,14 +731,15 @@ module.exports = function(server,app){
         temp.socketID = socket.id;
         temp.isConnected = true;
         temp.numTasks = io.countNumTasksByShipperID(shipper.shipperID);
-        if (!temp.haveIssue) temp.icon = icons.shipperIcon;
-        else temp.icon = icons.issueIcon;
+        if (temp.haveIssue) temp.icon = icons.issueIcon;
+        else temp.icon = icons.shipperIcon;
             
         return io.gmapUtil.getGeoText(temp.latitude, temp.longitude)
         .then(function(geoText) {
-            console.log('gmapUtil', geoText);
+            // console.log('gmapUtil', geoText);
             temp.geoText = geoText;
             io.shippers[shipper.shipperID] = temp;
+            console.log('io.updateShipper', io.shippers[shipper.shipperID]);
         })
         .catch(function(err) {
             console.log('io.updateShipper', err);
@@ -823,8 +823,8 @@ module.exports = function(server,app){
         temp.latitude = shipper.latitude;
         temp.longitude = shipper.longitude;
         if (currentLocation.latitude && currentLocation.longitude
-            && Math.abs(currentLocation.latitude - shipper.latitude) <= EPSILON
-            && Math.abs(currentLocation.longitude - shipper.longitude) <= EPSILON) {
+            && (Math.abs(currentLocation.latitude - shipper.latitude) <= EPSILON
+            || Math.abs(currentLocation.longitude - shipper.longitude) <= EPSILON)) {
             console.log('the same location');
             return Promise.resolve();
         }
