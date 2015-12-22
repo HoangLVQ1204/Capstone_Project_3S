@@ -187,6 +187,12 @@ module.exports = function(sequelize, DataTypes) {
                     return store.findAll({
                         attributes: ['storeid','name']                        
                     });
+                },
+
+                getAllStoreToCheck: function(){
+                    return store.findAll({
+                        attributes: ['email', 'phonenumber']
+                    });
                 }
         }
     });

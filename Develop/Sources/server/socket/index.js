@@ -662,7 +662,12 @@ module.exports = function(server,app){
         });
     };
 
+    io.containOrder = function(orderID) {
+        return !!io.orders[orderID];
+    };
+
     io.removeOrder = function(orderID) {
+        if (!io.containOrder(orderID)) return;
         var shipperID = io.orders[orderID].shipperID;
         var storeID = io.orders[orderID].storeID;
         var customer = { order: [orderID] };
@@ -791,8 +796,8 @@ module.exports = function(server,app){
         temp.latitude = shipper.latitude;
         temp.longitude = shipper.longitude;
         if (currentLocation.latitude && currentLocation.longitude
-            && Math.abs(currentLocation.latitude - position.coords.latitude) <= EPSILON
-            && Math.abs(currentLocation.longitude - position.coords.longitude) <= EPSILON) {
+            && Math.abs(currentLocation.latitude - shipper.latitude) <= EPSILON
+            && Math.abs(currentLocation.longitude - shipper.longitude) <= EPSILON) {
             console.log('the same location');
             return Promise.resolve();
         }

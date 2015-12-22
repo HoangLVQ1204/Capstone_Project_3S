@@ -43,6 +43,9 @@ module.exports = function(app){
 	app.route('/api/store/getTotalCoD')
 		.get(controller.getTotalCoD);
 
+	app.route('/api/store/getAllStoreToCheck')
+		.get(controller.getAllStoreToCheck);
+
 	app.route('/api/store/addManageStore')
 		.post(controller.postNewManageStore);
 
@@ -54,6 +57,7 @@ module.exports = function(app){
 				res.status(201).json(data);
 			})
 				.catch(function(err){
+					console.log(err);
 					next(err);
 				})
 		});

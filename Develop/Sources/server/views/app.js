@@ -171,12 +171,33 @@ angular.module('app', [
             access: config.role.admin
         })
 
-        .state('admin.storeDetail',{
-            url: '/storeDetail?storeid',
-            template: '<admin-store-detail></admin-store-detail>',
-            //parent: 'admin.issueBox',
+        .state('admin.orderDetail',{
+            url: '/orderDetail?orderid',
+            template: '<admin-order-detail-layout></admin-order-detail-layout>',
+            controller: function($scope, $rootScope, mapService, authService, $stateParams){
+                var mode = { type: 'all'};
+                //// setTimeout(function() {
+                ////    mapService.setMode(mode);
+                ////    $rootScope.$apply();
+                //// }, 1500);
+                mapService.setMode(mode);
+                //// $rootScope.$apply();
+                //// mapService.setMode(mode);
+                $scope.shippers = mapService.getShipperMarkers(mode);
+                $scope.stores = mapService.getStoreMarkers(mode);
+                $scope.customers = mapService.getCustomerMarkers(mode);
+                $scope.orders = mapService.getOrders(mode);
+                //console.log($scope.orders);
+                //console.log('controller state', $scope.shippers, $scope.stores, $scope.customers, $scope.orders);
+                //$scope.center = {
+                //    latitude: authService.getCurrentInfoUser().stores[0].latitude,
+                //    longitude: authService.getCurrentInfoUser().stores[0].longitude
+                //}
+            },
             access: config.role.admin
         })
+
+
 
         .state('admin.acceptStore',{
             url: '/acceptStore',
