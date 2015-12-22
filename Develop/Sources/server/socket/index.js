@@ -562,9 +562,11 @@ module.exports = function(server,app){
             result.store.push(io.getOneStore(storeID));            
         });
         result.customer = _.clone(io.customers, true);
-        // result.customer = result.customer.filter(function(e) {
-        //     return !!io.orders[e.order[0]];
-        // });
+        result.customer = result.customer.filter(function(e) {
+            if (e.order.length > 0)
+                return !!io.orders[e.order[0]];
+            else return false;
+        });
         result.orders = _.clone(io.orders, true);
         
         // console.log('getDataForAdmin', result);

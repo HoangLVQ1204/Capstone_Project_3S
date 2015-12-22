@@ -64,12 +64,12 @@ app.controller('TasksCtrl', ['$rootScope', '$scope', 'dataService', '$ionicLoadi
   });
 
   //TODO: Select tab for find bestway screen
-  //$scope.tabSelected = function(tab) {
-  //  $scope.tabParam = tab;
-  //  if (typeof $scope.tabParam === "undefined" || $scope.tabParam === "") {
-  //    $scope.tabParam = "all";
-  //  }
-  //};
+  $scope.tabSelected = function(tab) {
+   $scope.tabParam = tab;
+   if (typeof $scope.tabParam === "undefined" || $scope.tabParam === "") {
+     $scope.tabParam = "all";
+   }
+  };
 
   //START Show IonicLoading
   $scope.showLoading = function(){
