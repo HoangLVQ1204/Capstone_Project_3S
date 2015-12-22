@@ -171,6 +171,13 @@ angular.module('app', [
             access: config.role.admin
         })
 
+        .state('admin.storeDetail',{
+            url: '/storeDetail?storeid',
+            template: '<admin-store-detail></admin-store-detail>',
+            //parent: 'admin.issueBox',
+            access: config.role.admin
+        })
+
         .state('admin.orderDetail',{
             url: '/orderDetail?orderid',
             template: '<admin-order-detail-layout></admin-order-detail-layout>',

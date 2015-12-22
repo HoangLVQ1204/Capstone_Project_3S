@@ -25,6 +25,7 @@ module.exports = function (app) {
 
         return db.generalledger.getLatestAutoAccountDate()
             .then(function (ledger) {
+                console.log(ledger);
                 if (ledger != null)
                     db.generalledger.getLedgerOfStore(db.store, storeid, perioddate, ledger.paydate)
                         .then(function (ledgerList) {
