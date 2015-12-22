@@ -1067,6 +1067,10 @@ module.exports = function(server,app){
 
 
     // RUN
+    function sendHeartbeat(){
+        setTimeout(sendHeartbeat, 8000);
+        io.sockets.emit('ping', { beat : 1 });
+    }
 
     io.updateListStore()
     .then(function() {
@@ -1082,6 +1086,12 @@ module.exports = function(server,app){
             }))
             .on('authenticated', function(socket){
                 console.log("--HAVE CONNECTION--");
+                // Send heartbeat
+                socket.on('pong', function(data){
+                    console.log("Pong received from client");
+                });
+                setTimeout(sendHeartbeat, 8000);
+                
                 var dataToken = socket.decoded_token;
                 socket.on("client:register",function(data){
                     if(dataToken.userrole == 1){
