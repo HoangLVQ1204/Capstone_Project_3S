@@ -31,7 +31,7 @@ module.exports = function(socket, io, app) {
             io.shipperIssueToStore(shipper.shipperID, true);
         // }, 150000);
 
-        io.shipperIssueToStore(shipper.shipperID, false);
+        // io.shipperIssueToStore(shipper.shipperID, false);
         io.disconnectShipper(shipper.shipperID);
     });
 

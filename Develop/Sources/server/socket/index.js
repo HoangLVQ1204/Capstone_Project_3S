@@ -1088,10 +1088,10 @@ module.exports = function(server,app){
             .on('authenticated', function(socket){
                 console.log("--HAVE CONNECTION--");
                 // Send heartbeat
-                socket.on('pong', function(data){
-                    console.log("Pong received from client");
-                });
-                setTimeout(sendHeartbeat, 8000);
+                // socket.on('pong', function(data){
+                //     console.log("Pong received from client");
+                // });
+                // setTimeout(sendHeartbeat, 8000);
                 
                 var dataToken = socket.decoded_token;
                 socket.on("client:register",function(data){

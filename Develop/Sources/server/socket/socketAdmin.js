@@ -77,9 +77,9 @@ module.exports = function(socket, io, app) {
             data.msg.msg['content'] = "Reconnect successfully";
         data.msg.msg['username'] = data.msg.shipperid;
         data.msg.msg['url'] = '#';
-        notificationManage.postFromSever(data.msg.msg);
-        io.updateIssueForShipper(data.msg.shipperid, false);
+        notificationManage.postFromSever(data.msg.msg);        
         if (data.msg.newShipperID) {
+            io.updateIssueForShipper(data.msg.shipperid, false);
             io.updatePendingOrder(data.msg.newShipperID, false);
         }
         io.forward(
