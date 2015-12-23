@@ -276,18 +276,19 @@ module.exports = function (app) {
                                         msg['username'] = manager;
                                         db.notification.addNotification(msg);
                                     });
+                                    if(nextStatus == taskDone.statusid){
+                                        return Task.updateTaskStatus(configConstant.taskDone,taskid,shipperid).then(function(ok){
+                                            server.socket.finishTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
+                                            return "Your task was done!";
+                                        },function(er){
+                                            throw new Error("Sorry! Something went wrong!");
+                                        });
+                                    } else
                                     if(oldStatus == taskBegin.statusid){
                                         return Task.updateTaskStatus(configConstant.taskActive, taskid, shipperid).then(function (ok) {
                                             server.socket.startTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
                                             server.socket.forward('server', 'admin', msgAdminTask, 'shipper:change:task:active');
                                             return "Your task was active!";
-                                        },function(er){
-                                            throw new Error("Sorry! Something went wrong!");
-                                        });
-                                    }else if(nextStatus == taskDone.statusid){
-                                        return Task.updateTaskStatus(configConstant.taskDone,taskid,shipperid).then(function(ok){
-                                            server.socket.finishTask(orderObj.orderid, orderObj.storeid, shipperid, customer);
-                                            return "Your task was done!";
                                         },function(er){
                                             throw new Error("Sorry! Something went wrong!");
                                         });
