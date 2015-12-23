@@ -182,6 +182,7 @@ function socketAdmin(socketService,authService,mapService, $rootScope, notificat
             {
                 orderList: orderList,
                 shipperid: shipperID,
+                newShipperID:issue.orderissues[0].order.tasks[0].shipperid,
                 typeid: issue.typeid,
                 msg: msgToStore
             },

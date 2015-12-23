@@ -78,6 +78,10 @@ module.exports = function(socket, io, app) {
         data.msg.msg['username'] = data.msg.shipperid;
         data.msg.msg['url'] = '#';
         notificationManage.postFromSever(data.msg.msg);
+        io.updateIssueForShipper(data.msg.shipperid, false);
+        if (data.msg.newShipperID) {
+            io.updatePendingOrder(data.msg.newShipperID, false);
+        }
         io.forward(
             {
                 type: 'admin',
