@@ -267,8 +267,8 @@ function adminStoreListController($scope,$state, dataService, authService, confi
             });
             $scope.ledgerListOfStore.map(function (ledger) {
                 if (ledger.amount != null) {
-
-                    ledger.amount = parseInt(ledger.amount);
+                    if (ledger.payfrom==2) ledger.amount = -1 * parseInt(ledger.amount);
+                    else ledger.amount = parseInt(ledger.amount);
                     ledger.balance = parseInt(ledger.balance);
                     ledger.totalcod = parseInt(ledger.totalcod);
                     ledger.totaldelivery = parseInt(ledger.totaldelivery);
