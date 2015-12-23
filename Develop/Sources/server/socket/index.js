@@ -462,15 +462,15 @@ module.exports = function(server,app){
         for (shipperID in io.shippers) {            
             var shipper = io.getOneShipper(shipperID);
             if (shipper.icon == icons.disconnectIcon) {
-                if (shipper.issueToStore) {
+                // if (shipper.issueToStore) {
                     shipper.icon = icons.issueIcon;                                                        
-                }
-                else {
-                    shipper.icon = icons.shipperIcon;
-                    shipper.order.forEach(function(orderID) {
-                        result.orders[orderID].isPending = false;
-                    });
-                }
+                // }
+                // else {
+                //     shipper.icon = icons.shipperIcon;
+                //     shipper.order.forEach(function(orderID) {
+                //         result.orders[orderID].isPending = false;
+                //     });
+                // }
             }
             shipper.order = shipper.order.filter(function(e) {
                 return io.orders[e].storeID == storeID;

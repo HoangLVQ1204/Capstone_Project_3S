@@ -28,7 +28,7 @@ module.exports = function(socket, io, app) {
         // io.disconnectedShippers[shipper.shipperID] = setTimeout(function(){
         //     console.log('issueManage.createIssueDisconnect', shipper.shipperID);
             issueManage.createIssueDisconnect(shipper.shipperID);
-            io.shipperIssueToStore(shipper.shipperID, true);
+            // io.shipperIssueToStore(shipper.shipperID, true);
         // }, 150000);
 
         // io.shipperIssueToStore(shipper.shipperID, false);
