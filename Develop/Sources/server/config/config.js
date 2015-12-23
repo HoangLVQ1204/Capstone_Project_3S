@@ -5,7 +5,7 @@ var config = {
 	dev: 'development',
 	prod: 'production',
 	test: 'testing',
-	port: process.env.PORT || 3000,
+	port: process.env.PORT || 80,
 	expireTime: 24*60*10*60,
 
 	// Config authentication & authorization

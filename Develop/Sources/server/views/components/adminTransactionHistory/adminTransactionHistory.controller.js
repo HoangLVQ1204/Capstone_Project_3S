@@ -69,10 +69,14 @@ function adminTransactionHistoryController($scope,$state, dataService, $location
                 {
                     //ledger.fromDate = new Date(ledger.paydate);
                     //ledger.fromDate.setDate(ledger.fromDate.getDate()-7);
+
                     $scope.autoList.push(ledger)
                 }
                 else
                 {
+                    if (ledger.payfrom==2) ledger.amount = -1 * parseInt(ledger.amount);
+                    else ledger.amount = parseInt(ledger.amount);
+                    
                     $scope.ledgerList.push(ledger);
                     ledger.amount = parseInt(ledger.amount);
                 }
