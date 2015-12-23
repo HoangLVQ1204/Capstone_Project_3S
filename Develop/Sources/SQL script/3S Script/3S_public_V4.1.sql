@@ -77,7 +77,7 @@ CREATE SEQUENCE "public"."generalledger_ledgerid_seq"
  INCREMENT 1
  MINVALUE 1
  MAXVALUE 9223372036854775807
- START 1
+ START 1501
  CACHE 1;
 
 -- ----------------------------
@@ -123,7 +123,7 @@ CREATE SEQUENCE "public"."task_taskid_seq"
  INCREMENT 1
  MINVALUE 1
  MAXVALUE 9223372036854775807
- START 163
+ START 31
  CACHE 1;
 
 -- ----------------------------
@@ -1503,10 +1503,10 @@ INSERT INTO "public"."task" VALUES ('22', 'OD794692', 'SP000005', 'AD000001', '3
 INSERT INTO "public"."task" VALUES ('23', 'OD794692', 'SP000002', 'AD000001', '3', '2', '2015-12-15 04:59:02+07');
 INSERT INTO "public"."task" VALUES ('24', 'OD638589', 'SP000003', 'AD000001', '3', '1', '2015-12-16 05:06:34+07');
 INSERT INTO "public"."task" VALUES ('26', 'OD638589', 'SP000004', 'AD000001', '3', '2', '2015-12-18 05:07:30+07');
-INSERT INTO "public"."task" VALUES ('167', 'OD033334', 'SP000005', 'AD000001', '3', '1', '2015-12-16 05:16:15+07');
-INSERT INTO "public"."task" VALUES ('168', 'OD033334', 'SP000001', 'AD000001', '3', '2', '2015-12-17 05:17:01+07');
-INSERT INTO "public"."task" VALUES ('169', 'OD385512', 'SP000001', 'AD000001', '3', '1', '2015-12-16 05:22:35+07');
-INSERT INTO "public"."task" VALUES ('170', 'OD385512', 'SP000003', 'AD000001', '3', '2', '2015-12-18 05:23:18+07');
+INSERT INTO "public"."task" VALUES ('27', 'OD033334', 'SP000005', 'AD000001', '3', '1', '2015-12-16 05:16:15+07');
+INSERT INTO "public"."task" VALUES ('28', 'OD033334', 'SP000001', 'AD000001', '3', '2', '2015-12-17 05:17:01+07');
+INSERT INTO "public"."task" VALUES ('29', 'OD385512', 'SP000001', 'AD000001', '3', '1', '2015-12-16 05:22:35+07');
+INSERT INTO "public"."task" VALUES ('30', 'OD385512', 'SP000003', 'AD000001', '3', '2', '2015-12-18 05:23:18+07');
 
 -- ----------------------------
 -- Table structure for taskstatus
