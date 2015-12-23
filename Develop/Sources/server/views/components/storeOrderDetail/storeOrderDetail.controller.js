@@ -114,7 +114,10 @@ function storeOrderDetailController($scope,$stateParams,dataService, $http, conf
 
                   if(confirmationcode[i].typeid ==5){
                     $scope.codeForCustomer = confirmationcode[i].codecontent;
-                  }                  
+                  }    
+                  if(confirmationcode[i].typeid ==6){
+                    $scope.codeReturnStore = confirmationcode[i].codecontent;
+                  }                                
                }
                if($scope.order.ordertypeid == 1){
                   $scope.deliveryType = "Normal";
