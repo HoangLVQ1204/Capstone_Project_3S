@@ -308,7 +308,7 @@ function socketShipper($rootScope, $q,socketService,authService,mapService, $ion
 
   api.updateHaveIssue = function(haveIssue) {
     var currentUser = authService.getCurrentInfoUser();
-    console.log('updateHaveIssue');
+    console.log('updateHaveIssue', haveIssue);
     socketService.connect()
     .then(function() {
       socketService.sendPacket(
